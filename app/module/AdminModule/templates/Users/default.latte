@@ -1,0 +1,74 @@
+{block breadcrumbLast}
+<li><a n:href="Users:">Users</a></li>
+    {/block}
+
+{block content}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box grey-cascade">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-users"></i>Users
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-toolbar">
+                    <div class="btn-group">
+                        <a n:href="Users:add"
+                           class="btn green">
+                            Add User 
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+                <table class="datatable table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Username
+                            </th>
+                            <th>
+                                Role
+                            </th>
+                            <th>
+                                Edit
+                            </th>
+                            <th>
+                                Delete
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr n:foreach="$users as $user"
+                            class="odd gradeX">
+                            <td>
+                                {$user->id}
+                            </td>
+                            <td>
+                                {$user->username}
+                            </td>
+                            <td>
+                                {$user->rolesArray|implode:', '}
+                            </td>
+                            <td>
+                                <a n:href="Users:edit, $user->id">
+                                    Edit
+                                </a>
+                            </td>
+                            <td>
+                                <a n:href="Users:delete, $user->id" class="delete-confirm">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

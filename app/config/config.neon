@@ -1,0 +1,100 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+#
+# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
+# http://nette.org/security-warning
+#
+includes:
+	- extensions/authentication.neon
+	- extensions/webloader.neon
+	- extensions/doctrine.neon
+
+	- components/components.neon
+	- model/model.neon
+	- form/form.neon
+	- presenters/presenters.neon
+
+parameters:
+
+
+php:
+	date.timezone: Europe/Prague
+	# zlib.output_compression: yes
+
+
+nette:
+	application:
+		errorPresenter: 'Base:Error'
+		catchExceptions: FALSE
+		mapping:
+			*: App\*Module\Presenters\*Presenter
+
+	session:
+		autoStart: true
+		expiration: 14 days
+
+	debugger:
+		#email: "pupe.dupe@gmail.com"
+
+
+services:
+	authenticator: App\Model\Authenticator\UserAuthenticator
+
+	- App\RouterFactory
+	router: @App\RouterFactory::createRouter
+
+	urlScript:
+		factory: @httpRequest::getUrl()
+
+
+	# Authorizator
+	authorizator:
+		class: Nette\Security\Permission
+		setup:
+			# Roles
+			- addRole('guest')
+			- addRole('client', 'guest')
+			- addRole('programmer', 'client')
+			- addRole('manager', 'programmer')
+
+			- addRole('admin', 'manager')
+			- addRole('superadmin', 'admin')
+
+
+			# Resources
+			- addResource('front')
+
+			- addResource('admin')
+			- addResource('sign')
+			- addResource('dashboard')
+			- addResource('tasks')
+			- addResource('comments') 
+			- addResource('projects') 
+			- addResource('companies')
+
+			- addResource('users')
+
+			- addResource('service')
+
+			# Privilegies
+			- deny('guest')
+
+			- allow('guest', 'front')
+			- allow('guest', ['sign','dashboard'])
+
+			- allow('client', 'admin', 'view')
+			- allow('client', 'dashboard', 'view')
+			- allow('client', 'tasks', 'view')
+			- allow('client', 'tasks', 'add')
+			- allow('client', 'tasks', 'edit')
+			- allow('client', 'comments', 'view')
+			- allow('client', 'projects', 'view')        
+
+			- allow('manager', 'companies')
+			- allow('manager', 'tasks')
+			- allow('manager', 'comments')
+			- allow('manager', 'projects')
+
+			- allow('admin', 'users')
+
+			- allow('superadmin') # Full access for superadmin role

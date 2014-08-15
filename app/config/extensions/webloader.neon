@@ -1,0 +1,141 @@
+extensions:
+    webloader: WebLoader\Nette\Extension
+
+services:
+    cssUrlFilter: WebLoader\Filter\CssUrlsFilter(%wwwDir%)
+    cssUrlReplacerAssets: WebLoader\Filter\CssUrlReplacerFilter(["../img/", "../../img/"], "../assets/img/")
+    cssUrlReplacerUniform: WebLoader\Filter\CssUrlReplacerFilter(["../images/"], "../assets/img/uniform/")
+    cssUrlReplacerSelect2: WebLoader\Filter\CssUrlReplacerFilter(["select2"], "../assets/img/select2/select2")
+    cssUrlReplacerDatatables: WebLoader\Filter\CssUrlReplacerFilter(["../../media/"], "../assets/plugins/datatables/media/")
+    cssUrlReplacerMultiselect: WebLoader\Filter\CssUrlReplacerFilter(["../img/"], "../assets/plugins/jquery-multi-select/img/")
+    lessFilter: WebLoader\Filter\LessFilter
+    cssMinFilter: WebLoader\Filter\CssMinFilter
+    varFilter: WebLoader\Filter\VariablesFilter([basePath=@urlScript::getBasePath()])
+
+webloader:
+    css:
+        front:
+            files:
+                - {files: ["*.less"], from: %wwwDir%/less/front/includes}
+            filters:
+                - @cssUrlFilter
+                - @cssMinFilter
+            fileFilters:
+                - @lessFilter
+
+        admin:
+            files:
+                - {files: ["*.less"], from: %wwwDir%/less/admin/includes}
+            filters:
+                - @cssUrlFilter
+                - @cssMinFilter
+            fileFilters:
+                - @lessFilter
+
+        metronicCore:
+            remoteFiles:
+                - "http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all"
+            files:
+                - ../assets/plugins/font-awesome/less/font-awesome.less
+                - ../assets/plugins/simple-line-icons/simple-line-icons.less
+                - ../assets/plugins/bootstrap/css/bootstrap.css
+                - ../assets/plugins/uniform/css/uniform.default.css
+            filters:
+                - @cssUrlFilter
+                - @cssMinFilter
+                - @cssUrlReplacerUniform
+            fileFilters:
+                - @lessFilter
+
+        metronicPlugin:
+            files:
+                - ../assets/plugins/bootstrap-datepicker/build/build.less
+                - ../assets/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css
+                - ../assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css
+                - ../assets/plugins/bootstrap-toastr/toastr.min.css
+                - ../assets/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css
+                - ../assets/plugins/jquery-multi-select/css/multi-select.css
+                - ../assets/plugins/select2/select2.css
+            filters:
+                - @cssUrlFilter
+                - @cssMinFilter
+                - @cssUrlReplacerSelect2
+                - @cssUrlReplacerDatatables
+                - @cssUrlReplacerMultiselect
+            fileFilters:
+                - @lessFilter
+
+        metronicTheme:
+            files:
+                - {files: ["components.css"], from: %wwwDir%/assets/css}
+                - {files: ["plugins.css"], from: %wwwDir%/assets/css}
+                - {files: ["layout.css"], from: %wwwDir%/assets/css}
+                - {files: ["default.css"], from: %wwwDir%/assets/css/themes}
+                - {files: ["custom.css"], from: %wwwDir%/assets/css}
+            filters:
+                - @cssUrlFilter
+                - @cssUrlReplacerAssets
+                - @cssMinFilter
+
+        print:
+            files:
+                - {files: ["*.less"], from: %wwwDir%/less/print/includes}
+            filters:
+                - @cssUrlFilter
+                - @cssMinFilter
+            fileFilters:
+                - @lessFilter
+
+    js:
+        app:
+            files:
+                - ../assets/scripts/metronic.js
+                - ../assets/scripts/layout.js
+                - ../assets/scripts/quick-sidebar.js
+                - ../assets/scripts/custom/components-pickers.js
+                - ../assets/scripts/custom/html-editors.js
+                - ../assets/scripts/custom/components-form-tools.js
+                - ../assets/scripts/custom/ui-toastr.js
+                - ../assets/scripts/custom/fullscreen.js
+                - ../assets/scripts/custom/table-managed.js
+                - ../assets/scripts/custom/login.js
+                - ../assets/scripts/custom/background.js
+                - ../assets/scripts/custom/components-dropdowns.js
+                - ../assets/scripts/init.js
+            filters:
+                - @varFilter
+        appPlugins:
+            files:
+                - ../js/netteForms.js
+        metronicPlugins:
+            files:
+                - ../assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js
+                - ../assets/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js
+                - ../assets/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js
+                - ../assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js
+                - ../assets/plugins/bootstrap-touchspin/bootstrap.touchspin.js
+                - ../assets/plugins/bootstrap-toastr/toastr.min.js
+                - ../assets/plugins/fuelux/js/spinner.min.js
+                - ../assets/plugins/datatables/media/js/jquery.dataTables.min.js
+                - ../assets/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js
+                - ../assets/plugins/jquery-validation/js/jquery.validate.min.js
+                - ../assets/plugins/jquery-multi-select/js/jquery.multi-select.js
+                - ../assets/plugins/select2/select2.min.js
+                - ../assets/plugins/backstretch/jquery.backstretch.min.js
+        metronicCore:
+            files:
+                - ../assets/plugins/jquery-1.11.0.min.js
+                - ../assets/plugins/jquery-migrate-1.2.1.min.js
+                - ../assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js
+                - ../assets/plugins/bootstrap/js/bootstrap.min.js
+                - ../assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js
+                - ../assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js
+                - ../assets/plugins/jquery.blockui.min.js
+                - ../assets/plugins/jquery.cokie.min.js
+                - ../assets/plugins/uniform/jquery.uniform.min.js
+        metronicCoreIE9:
+            files:
+                - ../assets/plugins/respond.min.js
+                - ../assets/plugins/excanvas.min.js
+
+                

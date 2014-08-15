@@ -1,0 +1,1 @@
+php ../vendor/dg/ftp-deployment/Deployment/deployment.php deployment.php

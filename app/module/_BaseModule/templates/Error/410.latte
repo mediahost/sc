@@ -1,0 +1,28 @@
+{var $robots = noindex}
+
+{block content}
+<div class="page-inner">
+    <img src="{$basePath}/images/earth.jpg" class="img-responsive" alt="">
+</div>
+<div class="container error-404">
+    <h1>410</h1>
+    <h2>Houston, we have a problem.</h2>
+    <p>
+        The page you requested has been taken off the site. We apologize for the inconvenience.
+    </p>
+    <p>
+        <a href="{$homepage}">Return home</a>
+        <br>
+    </p>
+</div>
+{/block}
+
+{block title}
+Page Not Found
+{/block}
+
+{block bodyClass}
+{include parent}
+page-404-3
+{/block}
+
