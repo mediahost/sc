@@ -44,42 +44,6 @@
                 </a>
             </li>
 
-            <li n:if="$user->isAllowed('tasks', 'view')"
-                class="{ifCurrent Tasks:*} active{/ifCurrent}">
-                <a n:href="Tasks:">
-                    <i class="fa fa-tasks"></i>
-                    <span class="title">
-                        Tasks
-                    </span>
-                    <span class="selected">
-                    </span>
-                </a>
-            </li>
-
-            <li n:if="$user->isAllowed('projects', 'view')"
-                class="{ifCurrent Projects:*} active{/ifCurrent}">
-                <a n:href="Projects:">
-                    <i class="fa fa-codepen"></i>
-                    <span class="title">
-                        Projects
-                    </span>
-                    <span class="selected">
-                    </span>
-                </a>
-            </li>
-
-            <li n:if="$user->isAllowed('companies', 'view')"
-                class="{ifCurrent Companies:*} active{/ifCurrent}">
-                <a n:href="Companies:">
-                    <i class="fa fa-building"></i>
-                    <span class="title">
-                        Companies
-                    </span>
-                    <span class="selected">
-                    </span>
-                </a>
-            </li>
-
             <li  n:if="$user->isAllowed('users', 'view')"
                 class="{ifCurrent Users:*} active{/ifCurrent} last">
                 <a n:href="Users:">

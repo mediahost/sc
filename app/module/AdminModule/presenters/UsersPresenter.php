@@ -11,7 +11,7 @@ use Tracy\Debugger as Debug;
 class UsersPresenter extends BasePresenter
 {
 
-    /** @var \App\Model\Facade\User @inject */
+    /** @var \App\Model\Facade\Users @inject */
     public $userFacade;
 
     /** @var array */

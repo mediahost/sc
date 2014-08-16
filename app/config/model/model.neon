@@ -4,5 +4,4 @@ services:
 	- App\Model\Facade\Roles
 	- App\Model\Facade\Registration
 
-	- App\Model\Facade\ExtUserFacade
 	- App\Model\Storage\RegistrationStorage

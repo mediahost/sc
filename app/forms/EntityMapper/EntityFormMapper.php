@@ -15,17 +15,17 @@ use Tracy\Debugger as Debug;
 class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 {
 
-    /** @var Facade\Role */
-    private $roleFacade;
+    /** @var Facade\Roles */
+    private $roles;
 
-    /** @var Facade\User */
-    private $userFacade;
+    /** @var Facade\Users */
+    private $users;
 
-    public function __construct(EntityManager $entityManager, Facade\Role $roleFacade, Facade\User $userFacade)
+    public function __construct(EntityManager $entityManager, Facade\Roles $roles, Facade\Users $users)
     {
         parent::__construct($entityManager);
-        $this->roleFacade = $roleFacade;
-        $this->userFacade = $userFacade;
+        $this->roles = $roles;
+        $this->users = $users;
     }
 
     public function load($entity, $form)

@@ -12,13 +12,13 @@ use Tracy\Debugger as Debug;
 class UserFormFactory extends FormFactory
 {
 
-    /** @var \App\Model\Facade\Role */
+    /** @var \App\Model\Facade\Roles */
     private $roleFacade;
 
     /** @var array */
     private $roles;
 
-    public function __construct(IFormFactory $formFactory, \App\Model\Facade\Role $roleFacade)
+    public function __construct(IFormFactory $formFactory, \App\Model\Facade\Roles $roleFacade)
     {
         parent::__construct($formFactory);
         $this->roleFacade = $roleFacade;

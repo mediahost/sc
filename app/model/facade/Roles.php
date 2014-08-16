@@ -2,17 +2,29 @@
 
 namespace App\Model\Facade;
 
+use Kdyby\Doctrine\EntityDao,
+	App\Model\Entity;
+
 class Roles extends Base
 {
+	
+	/** @var EntityDao */
+	private $roles;
 
-    /**
+	private function init()
+	{
+		$this->roles = $this->em->getDao(Entity\Role::getClassName());
+	}
+
+	
+	/**
      * 
      * @param type $name
      * @return \App\Model\Entity\User
      */
     public function findByName($name)
     {
-        return $this->dao->findOneBy(array('name' => $name));
+        return $this->roles->findOneBy(array('name' => $name));
     }
     
     /**
@@ -35,7 +47,7 @@ class Roles extends Base
         if ($this->isUnique($name)) { // check unique
             $entity = new \App\Model\Entity\User\Role;
             $entity->setName($name);
-            return $this->save($entity);
+            return $this->roles->save($entity);
         }
         return NULL;
     }

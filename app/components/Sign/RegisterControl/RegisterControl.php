@@ -21,10 +21,11 @@ class RegisterControl extends Control
 	/** @var \App\Model\Storage\RegistrationStorage */
 	private $registration;
 	
-	/** @var \App\Model\Facade\User */
+	/** @var \App\Model\Facade\Users */
 	private $users;
 	
-	public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Model\Storage\RegistrationStorage $reg, \App\Model\Facade\User $users)
+	
+	public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Model\Storage\RegistrationStorage $reg, \App\Model\Facade\Users $users)
 	{
 		$this->em = $em;
 		$this->registration = $reg;
