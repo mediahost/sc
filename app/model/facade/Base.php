@@ -4,16 +4,12 @@ namespace App\Model\Facade;
 
 abstract class Base extends \Nette\Object
 {
-
-    /** @var \Kdyby\Doctrine\EntityDao @deprecated */
-    protected $dao;
 	
 	/** @var \Kdyby\Doctrine\EntityManager */
 	protected $em;
 	
-    public function __construct(\Kdyby\Doctrine\EntityDao $dao, \Kdyby\Doctrine\EntityManager $em)
+    public function __construct(\Kdyby\Doctrine\EntityManager $em)
     {
-        $this->dao = $dao;
 		$this->em = $em;
 		
 		$this->init();
@@ -53,4 +49,5 @@ abstract class Base extends \Nette\Object
 	{
 		
 	}
+
 }

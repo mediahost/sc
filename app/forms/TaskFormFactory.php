@@ -20,6 +20,7 @@ class TaskFormFactory extends FormFactory
     /** @var array */
     private $projects;
 
+
     /** @var Facade\User */
     private $userFacade;
 
