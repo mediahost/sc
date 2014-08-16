@@ -1,0 +1,29 @@
+{var $robots = noindex}
+
+{block content}
+<div class="page-inner">
+    <img src="{$basePath}/images/earth.jpg" class="img-responsive" alt="">
+</div>
+<div class="container error-404">
+    <h1>Oops...</h1>
+    <h2>Houston, we have a problem.</h2>
+    <p>
+        Your browser sent a request that this server could not understand or process.
+    </p>
+    <p>
+        <a href="{$homepage}">Return home</a>
+        <br>
+    </p>
+</div>
+{/block}
+
+{block title}
+Oops...
+{/block}
+
+{block bodyClass}
+{include parent}
+page-404-3
+{/block}
+
+

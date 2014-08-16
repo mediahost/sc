@@ -1,0 +1,8 @@
+services:
+	- App\Model\Facade\Auths(@doctrine.dao(App\Model\Entity\Auth))
+	- App\Model\Facade\Users(@doctrine.dao(App\Model\Entity\User))
+	- App\Model\Facade\Roles(@doctrine.dao(App\Model\Entity\Role))
+	- App\Model\Facade\Registration(@doctrine.dao(App\Model\Entity\Auth))
+
+	- App\Model\Facade\ExtUserFacade
+	- App\Model\Storage\RegistrationStorage

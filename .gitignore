@@ -1,0 +1,46 @@
+#################
+## Log
+#################
+/log/*
+!/log/.htaccess
+!/log/web.config
+
+#################
+## Temp
+#################
+/temp/*
+/www/webtemp/*
+!/temp/.htaccess
+!/temp/web.config
+
+#################
+## Nette configs
+#################
+*.local.neon
+
+#################
+## Composer
+#################
+composer.lock
+
+#################
+## Vendor (3rd side libs)
+################
+/vendor/*
+!/vendor/others
+
+#################
+## NetBeans
+################
+/nbproject/*
+
+#################
+## PhpStorm
+################
+.idea
+
+/tmp/*
+/purge/*
+/deployment/*
+!/deployment/deployment.bat
+!/www/webtemp/.htaccess

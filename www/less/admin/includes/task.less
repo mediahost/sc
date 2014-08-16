@@ -1,0 +1,117 @@
+/***
+Comments
+***/
+.chats {
+    .in {
+        &.public {
+            .message {
+                border-color: #F3565D;
+                .arrow {
+                    border-right-color: #F3565D;
+                }
+            }
+        }
+    }
+}
+
+/***
+View Page
+***/
+
+.view-page {
+    padding-bottom: 20px;
+    h1 {
+        margin-bottom: 20px;
+    }
+    h2 {  
+        a {
+            color: #000;
+            &:hover {
+                color: #0d638f;
+                text-decoration: none;
+            }
+        }
+    }
+    hr {
+        margin-top: 30px !important;
+    }
+    .space10 {
+        height: 10px;
+    }
+    .main-block {
+        padding-bottom: 20px;
+        h3, h2, h1, h4 {
+            margin-top: 0;
+        }
+    }
+    .view-tag-data { 
+        margin-bottom: 10px;
+        ul {
+            margin-bottom: 5px;
+            &.view-tags {
+                a, span {
+                    background: #eee;
+                    padding: 1px 4px;
+                    margin: 0 4px 4px 0;
+                    display: inline-block;
+                    &:hover {
+                        background: #ddd;
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+        li {
+            padding: 0;
+            i {
+                color: #78cff8;
+            }
+            a, span {
+                padding: 0;
+                color: #555;
+                margin-right: 8px;
+            }
+        }
+        .view-tag-data-inner {
+            text-align: right;
+        }
+        img {
+            margin-bottom: 12px;
+        }
+    }
+    .news-img img {
+        margin-top: 9px;
+    }
+    .chat-form {
+        .textarea-btn {
+            .input-group-btn {
+                button {
+                    height: 94px;
+                }
+            }
+            textarea {
+                height: 94px;
+            }
+        }
+    }
+}
+
+/*--Block Sidebar--*/
+.view-sidebar {
+    h2 {
+        font-size: 38.5px;
+        margin-bottom: 20px;
+    }
+}
+
+
+/*For Responsive*/
+@media (max-width: 768px) {
+    .view-page { 
+        .blog-tag-data { 
+            .blog-tag-data-inner {
+                text-align: left;
+            }
+        }
+    }
+}

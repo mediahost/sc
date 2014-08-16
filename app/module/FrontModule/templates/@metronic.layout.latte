@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="{$lang}" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="{$lang}" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="{$lang}"> <!--<![endif]-->
+
+    <!-- BEGIN HEAD -->
+    <head>
+        <title>{block title|striptags}Support Mediahost.sk{/block}</title>
+
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <meta name="robots" content="noindex,nofollow">
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->         
+        {control cssMetronicCore}
+        <!-- END GLOBAL MANDATORY STYLES -->
+
+        <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->        
+        {control cssMetronicPlugin}
+        <!-- END PAGE LEVEL PLUGIN STYLES -->
+
+        <!-- BEGIN THEME STYLES -->       
+        {control cssMetronicTheme}
+        <!-- END THEME STYLES -->
+
+        {control cssAdmin}
+        {control cssPrint}
+
+        <link href="{$basePath}/favicon.ico" rel="shortcut icon">
+
+        {block head}{/block}
+    </head>
+    <!-- END HEAD -->
+
+    <!-- BEGIN BODY -->
+    <body class="{block bodyClass}{/block}">
+        <script> document.documentElement.className += ' js'</script>
+
+        <div n:foreach="$flashes as $flash"
+             class="flash toast-ready hidden"
+             data-type="{$flash->type}">
+            {$flash->message}
+        </div>
+        
+        {include content}
+
+        {block scripts}
+        <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+        <!-- BEGIN CORE PLUGINS -->
+        <!--[if lt IE 9]>
+        {control jsMetronicCoreIE9}
+        <![endif]-->
+        {control jsMetronicCore}
+        <!-- END CORE PLUGINS -->
+
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        {control jsMetronicPlugins}
+        {control jsAppPlugins}
+        <!-- END PAGE LEVEL PLUGINS -->
+
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+        {control jsApp}
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <!-- END JAVASCRIPTS -->
+
+        {/block}
+    </body>
+</html>

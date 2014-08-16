@@ -1,0 +1,45 @@
+{block bodyClass}deny{/block}
+
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 coming-soon-header">
+            <a class="brand" n:href=":Front:Homepage:">
+                <img src="{$basePath}/assets/img/logo-big.png" alt="logo"/>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 coming-soon-content">
+            <h1>You haven't permission to this section!</h1>
+            <p>
+                You are still logged in, but your permission isn't too strong.
+            </p>
+            <br>
+            <a n:href="Sign:out" class="btn blue">
+                <span>Logout</span>
+                <i class="fa fa-sign-out"></i>
+            </a>
+            <ul class="social-icons margin-top-20">
+                <li>
+                    <a href="#" data-original-title="Facebook" class="facebook">
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-original-title="Twitter" class="twitter">
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-original-title="Goole Plus" class="googleplus">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--/end row-->
+    <div class="row">
+        <div class="col-md-12 coming-soon-footer">
+            2014 &copy; Countbox by Mediahost.
+        </div>
+    </div>
+</div>

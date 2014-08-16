@@ -1,0 +1,17 @@
+{block footer}
+
+<!-- BEGIN FOOTER -->
+<div class="page-footer">
+    <div class="page-footer-inner">
+        2014 &copy; Mediabox by Mediahost.
+        | PHP {=PHP_VERSION}
+        {ifset $_SERVER['SERVER_SOFTWARE']}| Server {$_SERVER['SERVER_SOFTWARE']}{/ifset}
+        | Nette Framework {=Nette\Framework::VERSION}
+    </div>
+    <div class="page-footer-tools">
+        <span class="go-top">
+            <i class="fa fa-angle-up"></i>
+        </span>
+    </div>
+</div>
+<!-- END FOOTER -->

@@ -1,0 +1,35 @@
+services:
+    doctrine: Kdyby\Doctrine\DI\OrmExtension
+    events: Kdyby\Events\DI\EventsExtension
+    annotations: Kdyby\Annotations\DI\AnnotationsExtension
+    translation: Kdyby\Translation\DI\TranslationExtension
+    validator: Kdyby\Validator\DI\ValidatorExtension
+
+    - App\Forms\EntityMapper\EntityFormMapper
+    - Venne\Bridges\Kdyby\DoctrineForms\FormFactoryFactory
+
+    metronicRenderer:
+        class: \App\Forms\Renderers\MetronicFormRenderer
+        arguments: [3, 9]
+
+    metronicFormFactory:
+        class: App\Forms\Form
+        arguments: [NULL, NULL]
+        implement: App\Forms\IFormFactory
+        autowired: no
+        setup:
+            - setRenderer(@metronicRenderer)
+
+    defaultFormFactory:
+        class: App\Forms\Form
+        arguments: [NULL, NULL]
+        implement: App\Forms\IFormFactory
+        autowired: no
+
+    - App\Forms\SignInFormFactory(@defaultFormFactory)
+    - App\Forms\UserFormFactory(@metronicFormFactory)
+
+nette:
+    latte:
+        macros:
+            - \Zeleznypa\Nette\Latte\Macros\FormMacros::install #Macro {button}

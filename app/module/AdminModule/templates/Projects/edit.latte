@@ -1,0 +1,25 @@
+{block breadcrumbLast}
+<li>
+    <a n:href="Projects:">Projects</a>
+    <span class="fa fa-angle-right"></span>
+</li>
+<li>
+    <a n:href="this">{if $isAdd}Add{else}Edit{/if}</a>
+</li>
+{/block}
+
+{block content}
+<div class="row">
+    <div class="col-md-8">
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-edit"></i>{if $isAdd}Add{else}Edit{/if} project
+                </div>
+            </div>
+            <div class="portlet-body form">
+                {control projectForm}
+            </div>
+        </div>
+    </div>
+</div>

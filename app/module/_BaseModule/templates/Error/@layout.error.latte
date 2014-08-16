@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="{$lang}" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="{$lang}" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="{$lang}"> <!--<![endif]-->
+
+    <head>
+        <title>{block title}Error{/block}</title>
+        
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <meta name="robots" content="noindex">
+
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->         
+        {control cssMetronicCore}
+        <!-- END GLOBAL MANDATORY STYLES -->
+
+        <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->        
+        {control cssMetronicPlugin}
+        <!-- END PAGE LEVEL PLUGIN STYLES -->
+
+        <!-- BEGIN THEME STYLES -->       
+        {control cssMetronicTheme}
+        <!-- END THEME STYLES -->
+
+        {control cssFront}
+        {control cssPrint}
+
+        <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+        
+        {block head}{/block}
+    </head>
+
+    <body class="{block bodyClass}{/block}">
+        
+        {include content}
+
+        {block scripts}
+        <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+        <!-- BEGIN CORE PLUGINS -->
+        <!--[if lt IE 9]>
+        {control jsMetronicCoreIE9}
+        <![endif]-->
+        {control jsMetronicCore}
+        <!-- END CORE PLUGINS -->
+
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        {control jsMetronicPlugins}
+        {control jsAppPlugins}
+        <!-- END PAGE LEVEL PLUGINS -->
+
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+        {control jsApp}
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <!-- END JAVASCRIPTS -->
+        {/block}
+        
+    </body>
+</html>
