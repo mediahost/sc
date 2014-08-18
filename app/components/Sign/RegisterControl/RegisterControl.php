@@ -36,6 +36,8 @@ class RegisterControl extends Control
     {
         $template = $this->template;
 		$template->oauth = $this->registration->isOauth();
+		$template->birthdate = $this->registration->isRequired('birthdate');
+		$template->email = $this->registration->isRequired('email');
         $template->setFile(__DIR__ . '/render.latte');
         $template->render();
     }
@@ -46,21 +48,31 @@ class RegisterControl extends Control
 	 */
 	protected function createComponentRegisterForm()
 	{
+		\Tracy\Debugger::barDump($this->registration->data);
+		
 		$form = new Form();
 		$form->getElementPrototype()->addAttributes(['autocomplete' => 'off']);
         $form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
         
         $form->addText('name', 'Name')
-//                ->setRequired('Please enter your username')
+                ->setRequired('Please enter your username')
                 ->setAttribute('placeholder', 'Full name');
 		
-		$form->addText('email', 'E-mail')
-                ->setRequired('Please enter your e-mail')
-				->setAttribute('placeholder', 'E-mail')
-				->setAttribute('autocomplete', 'off')
-				->addRule(function(Nette\Forms\Controls\TextInput $item){
-                            return $this->users->isUnique($item->value);
-                    }, 'This e-mail is used yet!');
+		if ($this->registration->isRequired('birthdate')) {
+			$form->addText('birthdate', 'Birthdate')
+				    ->setRequired('Please enter your username')
+					->setAttribute('placeholder', 'Birthdate');
+		}
+		
+		if ($this->registration->isRequired('email')) {
+			$form->addText('email', 'E-mail')
+				    ->setRequired('Please enter your e-mail')
+					->setAttribute('placeholder', 'E-mail')
+					->setAttribute('autocomplete', 'off')
+					->addRule(function(Nette\Forms\Controls\TextInput $item){
+						        return $this->users->isUnique($item->value);
+						}, 'This e-mail is used yet!');
+		}
 
 		if ($this->registration->isOauth()) {
 			$form->setDefaults($this->registration->defaults);

@@ -76,7 +76,7 @@ class FacebookControl extends Control
 					$auth = $this->storage->storeFromFacebook($fb->getUser(), $me, $fb->getAccessToken());
 
 					if ($this->storage->checkRequired()) { // Mám všechny povinné údaje pro registraci?
-						if (($user = $this->facade->findByEmail($me->email))) { // E-mail nemusím vždy dostat!
+						if (($user = $this->facade->findByEmail($this->storage->data->email))) { // E-mail nemusím vždy dostat!
 							// Merge
 							$this->facade->merge($user, $auth);
 						} else {

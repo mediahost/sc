@@ -127,7 +127,16 @@ class RegistrationStorage extends \Nette\Object
 		return $this->session->hasSection('registration');
 	}
 	
-	public function wipe()
+	public function isRequired($value)
+	{
+		if ($this->isOauth() && isset($this->data->$value)) {
+			return FALSE;
+		}
+		
+		return TRUE;
+	}
+
+		public function wipe()
 	{
 		$this->section->remove();
 	}	
