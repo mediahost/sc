@@ -35,7 +35,6 @@ class SignPresenter extends BasePresenter
     public function actionIn()
     {
 		$this->registration->wipe();
-//		\Tracy\Debugger::barDump($this->registrationStorage->user);
     }
 
 	public function actionRegister()
@@ -43,15 +42,7 @@ class SignPresenter extends BasePresenter
 		// Check if is user in registration process
 //		$this->checkInProcess();
 		
-		dump($this->registration->section);
-		dump($this->registration->session->hasSection('registration'));
-		
-		
 		$this->template->bool = $this->registration->isOauth();
-//
-//		$this->template->newUser = $this->registration->getUser();
-//		$this->template->data = $this->registration->data;
-//		$this->template->defaults = $this->registration->defaults;
 	}
 
 	public function actionMerge()

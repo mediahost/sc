@@ -24,6 +24,22 @@ class RegistrationStorage extends \Nette\Object
 	
 	public $session;
 	
+	/**
+	 * An array with requred items for registration
+	 * @var array
+	 */
+	private $required = ['email'];
+	
+	/**
+	 * IN => OUT
+	 * @var array
+	 */
+	private $facebookMap = [
+		'email' => 'email',
+		'birthday' => 'birthdate',
+		'name' => 'name'
+	];
+	
 	
 	public function __construct(\Nette\Http\Session $session, \Kdyby\Doctrine\EntityManager $em)
 	{
@@ -38,26 +54,23 @@ class RegistrationStorage extends \Nette\Object
 	 */
 	public function storeFromFacebook($id, $data, $token)
 	{
+
+		$this->data = $this->mapFromOAuth($this->facebookMap, $data);
+		
+		$this->defaults = [
+			'name' => $this->data->name,
+			'email' => $this->data->email,
+			'birthday' => $this->data->birthdate
+		];
+
 		$this->auth = new Entity\Auth();
 		$this->auth->key = $id;
 		$this->auth->source = 'facebook';
 		$this->auth->token = $token;
-		
-		
-		$this->data = $data;
-		
-		$this->defaults = NULL;
-		$this->defaults = [
-			'name' => $data->name,
-			'email' => $data->email
-		];
-		
-		
 
-		$this->setUser(new Entity\User());
-//		$this->auth = $auth;
-		$this->user->addAuth($this->auth);
-		
+		$this->user = new Entity\User();
+		$this->user->email = $data->email;
+
 		return $this->auth;
 	}
 	
@@ -81,6 +94,34 @@ class RegistrationStorage extends \Nette\Object
 		$this->auth->source = 'google';
 	}
 	
+	/**
+	 * 
+	 * @param array $map
+	 * @param \Nette\Utils\ArrayHash|array $data
+	 * @return array
+	 */
+	public function mapFromOAuth($map, $data)
+	{
+		$array = [];
+		
+		foreach ($map as $in => $out) {
+			$array[$out] = isset($data[$in]) ? $data[$in] : NULL;
+		}
+		
+		return \Nette\Utils\ArrayHash::from($array);
+	}
+	
+	public function checkRequired()
+	{
+		foreach ($this->required as $value) {
+			if ($this->data[$value] === NULL) {
+				return FALSE;
+			}
+		}
+		
+		return TRUE;
+	}
+
 	public function isOauth()
 	{
 		return $this->session->hasSection('registration');

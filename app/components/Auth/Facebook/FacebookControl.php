@@ -32,10 +32,10 @@ class FacebookControl extends Control
 	
 	public function __construct(Facebook $fb, \App\Model\Facade\Registration $facade, \App\Model\Storage\RegistrationStorage $storage)
 	{
-		parent::__construct();
+//		parent::__construct();
 		$this->facebook = $fb;
 		$this->facade = $facade;
-		$this->storage = $$storage;
+		$this->storage = $storage;
 	}
 
     public function render()
@@ -60,6 +60,8 @@ class FacebookControl extends Control
 
         $dialog->onResponse[] = function (LoginDialog $dialog) {
             $fb = $dialog->getFacebook();
+			
+			$this->storage->wipe();
 
             if (!$fb->getUser()) {
                 $this->presenter->flashMessage("We are sorry, facebook authentication failed.");
@@ -71,24 +73,24 @@ class FacebookControl extends Control
 
                 if (!$existing = $this->facade->findByFacebookId($fb->getUser())) {
 					// Registration or merging process
-					$this->storage->wipe();
-					$this->storage->storeFromFacebook($fb->getUser(), $me, $fb->getAccessToken());
+					$auth = $this->storage->storeFromFacebook($fb->getUser(), $me, $fb->getAccessToken());
 
-					if (($user = $this->facade->findByEmail($me->email))) {
-						// Merge
-//						$this->presenter->redirect('Sign:Merge');
-						
-						$this->facade->mergeFromFacebook($fb->getUser(), $me, $user, $fb->getAccessToken());
-						
+					if ($this->storage->checkRequired()) { // Mám všechny povinné údaje pro registraci?
+						if (($user = $this->facade->findByEmail($me->email))) { // E-mail nemusím vždy dostat!
+							// Merge
+							$this->facade->merge($user, $auth);
+						} else {
+							// Register
+							$this->facade->register($user, $auth);
+						}
 					} else {
-						// Register
 						$this->presenter->redirect('Sign:Register');
 					}
 				} else {
 					// Login process
 					$this->facade->updateFacebookAccessToken($fb->getUser(), $fb->getAccessToken());
 
-					$this->presenter->user->login(new \Nette\Security\Identity($existing->id, $existing->getRolesArray(), $existing->toArray()));
+					$this->presenter->user->login(new \Nette\Security\Identity($existing->id, $existing->getRolesPairs(), $existing->toArray()));
 				}
             } catch (FacebookApiException $e) {
                 \Tracy\Debugger::log($e->getMessage(), 'facebook');

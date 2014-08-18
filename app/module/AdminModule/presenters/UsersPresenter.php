@@ -23,12 +23,13 @@ class UsersPresenter extends BasePresenter
     /** @var \App\Model\Entity\User */
     private $user;
 
-    protected function startup()
-    {
-        parent::startup();
-        $this->isAllowed("users", "view");
-    }
 
+
+	/**
+	 * @secured
+	 * @resource('users')
+	 * @privilege('default')
+	 */
     public function actionDefault()
     {
         $this->users = $this->userFacade->findAll();
@@ -39,6 +40,11 @@ class UsersPresenter extends BasePresenter
         $this->template->users = $this->users;
     }
 
+	/**
+	 * @secured
+	 * @resource('users')
+	 * @privilege('add')
+	 */
     public function actionAdd()
     {
         $this->user = new \App\Model\Entity\User;
@@ -46,6 +52,12 @@ class UsersPresenter extends BasePresenter
         $this->setView("edit");
     }
 
+
+	/**
+	 * @secured
+	 * @resource('users')
+	 * @privilege('edit')
+	 */
     public function actionEdit($id)
     {
         $this->user = $this->userFacade->find($id);
@@ -56,12 +68,24 @@ class UsersPresenter extends BasePresenter
         $this->template->isAdd = $this->userFormFactory->isAdding();
     }
 
+
+	/**
+	 * @secured
+	 * @resource('users')
+	 * @privilege('view')
+	 */
     public function actionView($id)
     {
         $this->flashMessage("Not implemented yet.", 'warning');
         $this->redirect("default");
     }
 
+
+	/**
+	 * @secured
+	 * @resource('users')
+	 * @privilege('delete')
+	 */
     public function actionDelete($id)
     {
         $this->user = $this->userFacade->find($id);

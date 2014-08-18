@@ -6,7 +6,7 @@ use App\Model\Entity\User,
 	Kdyby\Doctrine\EntityDao;
 
 
-class User extends Base
+class Users extends Base
 {
 	
 	/** @var EntityDao */

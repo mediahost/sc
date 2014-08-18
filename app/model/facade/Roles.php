@@ -11,7 +11,7 @@ class Roles extends Base
 	/** @var EntityDao */
 	private $roles;
 
-	private function init()
+	protected function init()
 	{
 		$this->roles = $this->em->getDao(Entity\Role::getClassName());
 	}

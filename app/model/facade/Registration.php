@@ -2,7 +2,8 @@
 
 namespace App\Model\Facade;
 
-use Kdyby\Doctrine\EntityDao;
+use Kdyby\Doctrine\EntityDao,
+	App\Model\Entity;
 
 /**
  * Description of Registration
@@ -11,7 +12,7 @@ use Kdyby\Doctrine\EntityDao;
  */
 class Registration extends Base
 {
-	/** @var EntityDao @inject */
+	/** @var EntityDao */
 	private $users;
 	
 	/** @var EntityDao */
@@ -43,34 +44,18 @@ class Registration extends Base
 	
 	public function findByEmail($email)
 	{
-		return $this->dao->findOneBy(['email' => $email]);
+		return $this->users->findOneBy(['email' => $email]);
 	}
 	
-	public function registerFromFacebook($id, $me)
-	{
-		$auth = new Entity\Auth();
-		$auth->key = $id;
-		$auth->source = 'facebook';
-		
-		$role = $this->em->getDao(Entity\Role::getClassName())->findOneBy(['name' => 'guest']);
-		
-		$user = new Entity\User();
-		$user->addAuth($auth);
-		$user->addRole($role);
-		
+	public function merge($user,$auth)
+	{	
+		$user->addAuth($auth);	
 		return $this->users->save($user);
 	}
 	
-	public function mergeFromFacebook($id, $me, $user, $token)
+	public function register($user, $auth)
 	{
-		$auth = new Entity\Auth();
-		$auth->key = $id;
-		$auth->source = 'facebook';
-		$auth->token = $token;
 		
-		$user->addAuth($auth);
-		
-		return $this->users->save($user);
 	}
 
 }

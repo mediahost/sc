@@ -47,6 +47,7 @@ class RegisterControl extends Control
 	protected function createComponentRegisterForm()
 	{
 		$form = new Form();
+		$form->getElementPrototype()->addAttributes(['autocomplete' => 'off']);
         $form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
         
         $form->addText('name', 'Name')
@@ -56,6 +57,7 @@ class RegisterControl extends Control
 		$form->addText('email', 'E-mail')
                 ->setRequired('Please enter your e-mail')
 				->setAttribute('placeholder', 'E-mail')
+				->setAttribute('autocomplete', 'off')
 				->addRule(function(Nette\Forms\Controls\TextInput $item){
                             return $this->users->isUnique($item->value);
                     }, 'This e-mail is used yet!');
