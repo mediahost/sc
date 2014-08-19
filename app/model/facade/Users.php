@@ -68,7 +68,7 @@ class Users extends Base
 
 	
 	/**
-	 * 
+	 * Add role as Role entity, string or array of entites to user.
 	 * @param Entity\User $user
 	 * @param Entity\Role|string $role
 	 */
