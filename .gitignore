@@ -17,6 +17,7 @@
 ## Nette configs
 #################
 *.local.neon
+*.server.neon
 
 #################
 ## Composer
@@ -43,4 +44,5 @@ composer.lock
 /purge/*
 /deployment/*
 !/deployment/deployment.bat
+!/deployment/deployment.example.php
 !/www/webtemp/.htaccess
