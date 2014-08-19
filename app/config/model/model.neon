@@ -3,6 +3,5 @@ services:
 	- App\Model\Facade\Users
 	- App\Model\Facade\Roles
 	- App\Model\Facade\Registration
-
 	- App\Model\Storage\RegistrationStorage
-	- App\Model\Storage\MessagesStorage
+	- App\Model\Storage\MessageStorage
