@@ -60,7 +60,6 @@ class RegisterControl extends Control
 	 */
 	protected function createComponentRegisterForm()
 	{
-		\Tracy\Debugger::barDump($this->registration->data);
 
 		$form = new Form();
 		$form->getElementPrototype()->addAttributes(['autocomplete' => 'off']);
@@ -90,16 +89,15 @@ class RegisterControl extends Control
 
 		if ($this->registration->isOauth()) {
 			$form->setDefaults($this->registration->defaults);
-		} else {
+		}
+		
+		if (!$this->registration->isOauth()) {
 			$form->addPassword('password', 'Password')
 					->setRequired('Please enter your password')
 					->setAttribute('placeholder', 'Password');
 		}
 
-
-
 		$form->addSubmit('register', 'Register');
-
 
 		// call method signInFormSucceeded() on success
 		$form->onSuccess[] = $this->registerFormSucceeded;
@@ -141,7 +139,7 @@ class RegisterControl extends Control
 			$user->email = $values->email;
 			$user->addAuth($auth);
 
-			$this->users->addRole($user, ['superadmin', 'guest', 'kokot']);
+			$this->users->addRole($user, ['superadmin', 'guest', 'norris']);
 			$this->em->persist($user);
 		}
 
@@ -154,7 +152,6 @@ class RegisterControl extends Control
 
 interface IRegisterControlFactory
 {
-
 	/** @return RegisterControl */
 	function create();
 }

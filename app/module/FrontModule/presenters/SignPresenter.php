@@ -35,22 +35,34 @@ class SignPresenter extends BasePresenter
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public function actionDefault()
 	{
-		$this->redirect("in");
+		$this->redirect('in');
 	}
 
+	/**
+	 * 
+	 */
 	public function actionIn()
 	{
 		$this->registration->wipe();
 	}
 
+	/**
+	 * 
+	 */
 	public function actionLostPassword()
 	{
-		$this->flashMessage("Not implemented yet", "warning");
-		$this->redirect("in");
+		$this->flashMessage('Not implemented yet', 'warning');
+		$this->redirect('in');
 	}
 
+	/**
+	 * 
+	 */
 	public function actionRegister()
 	{
 		// Check if is user in registration process
@@ -59,12 +71,9 @@ class SignPresenter extends BasePresenter
 		$this->template->bool = $this->registration->isOauth();
 	}
 
-	public function actionMerge()
-	{
-		// Check if is user in merging process
-//		$this->checkInProcess();
-	}
-
+	/**
+	 * 
+	 */
 	public function actionVerify($code)
 	{
 		

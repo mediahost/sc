@@ -32,7 +32,7 @@ nette:
 		expiration: 14 days
 
 	debugger:
-		email: "pupe.dupe@gmail.com"
+		email: 'pupe.dupe@gmail.com'
 		bar:
 			- JanDrabek\MailPanel\MailPanel
 
