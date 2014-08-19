@@ -44,7 +44,7 @@
                 </a>
             </li>
 
-            <li  n:if="$user->isAllowed('users', 'view')"
+            <li  n:if="$user->isAllowed('admin', 'view')"
                 class="{ifCurrent Users:*} active{/ifCurrent} last">
                 <a n:href="Users:">
                     <i class="fa fa-users"></i>

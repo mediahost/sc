@@ -10,6 +10,7 @@ includes:
 	- extensions/doctrine.neon
 
 	- components/components.neon
+	- authorizator/authorizator.neon
 	- model/model.neon
 	- form/form.neon
 	- presenters/presenters.neon
@@ -51,56 +52,3 @@ services:
 
 	urlScript:
 		factory: @httpRequest::getUrl()
-
-
-	# Authorizator
-	authorizator:
-		class: Nette\Security\Permission
-		setup:
-			# Roles
-			- addRole('guest')
-			- addRole('client', 'guest')
-			- addRole('programmer', 'client')
-			- addRole('manager', 'programmer')
-
-			- addRole('admin', 'manager')
-			- addRole('superadmin', 'admin')
-
-
-			# Resources
-			- addResource('front')
-
-			- addResource('admin')
-			- addResource('sign')
-			- addResource('dashboard')
-			- addResource('tasks')
-			- addResource('comments') 
-			- addResource('projects') 
-			- addResource('companies')
-
-			- addResource('users')
-
-			- addResource('service')
-
-			# Privilegies
-			- deny('guest')
-
-			- allow('guest', 'front')
-			- allow('guest', ['sign','dashboard'])
-
-			- allow('client', 'admin', 'view')
-			- allow('client', 'dashboard', 'view')
-			- allow('client', 'tasks', 'view')
-			- allow('client', 'tasks', 'add')
-			- allow('client', 'tasks', 'edit')
-			- allow('client', 'comments', 'view')
-			- allow('client', 'projects', 'view')        
-
-			- allow('manager', 'companies')
-			- allow('manager', 'tasks')
-			- allow('manager', 'comments')
-			- allow('manager', 'projects')
-
-			- allow('admin', 'users')
-
-			- allow('superadmin') # Full access for superadmin role

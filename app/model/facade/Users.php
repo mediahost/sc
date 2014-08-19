@@ -48,7 +48,7 @@ class Users extends Base
 	 * @param type $password
 	 * @return \App\Model\Entity\User|null
 	 */
-	public function create($email, $password, Role $role)
+	public function create($email, $password, Entity\Role $role)
 	{
 		if ($this->findByEmail($email) === NULL) { // check unique
 			$user = new User;
@@ -60,6 +60,7 @@ class Users extends Base
 			$auth->hash = $password;
 			
 			$user->addRole($role);
+			$user->addAuth($auth);
 			
 			return $this->users->save($user);
 		}

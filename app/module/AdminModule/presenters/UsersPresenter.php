@@ -39,7 +39,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('users')
+	 * @resource('admin')
 	 * @privilege('default')
 	 */
     public function actionDefault()
@@ -54,7 +54,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('users')
+	 * @resource('admin')
 	 * @privilege('add')
 	 */
     public function actionAdd()
@@ -67,7 +67,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('users')
+	 * @resource('admin')
 	 * @privilege('edit')
 	 */
     public function actionEdit($id)
@@ -83,7 +83,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('users')
+	 * @resource('admin')
 	 * @privilege('view')
 	 */
     public function actionView($id)
@@ -95,7 +95,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('users')
+	 * @resource('admin')
 	 * @privilege('delete')
 	 */
     public function actionDelete($id)

@@ -79,25 +79,7 @@
                                     </button>
                                     <ul class="dropdown-menu pull-right" role="menu">
                                         {block breadcrumbActionsList}
-                                        <li n:if="$user->isAllowed('tasks', 'add')">
-                                            <a n:href="Tasks:add">
-                                                <i class="fa fa-tasks"></i>
-                                                Task
-                                            </a>
-                                        </li>
-                                        <li n:if="$user->isAllowed('projects', 'add')">
-                                            <a n:href="Projects:add">
-                                                <i class="fa fa-codepen"></i>
-                                                Project
-                                            </a>
-                                        </li>
-                                        <li n:if="$user->isAllowed('companies', 'add')">
-                                            <a n:href="Companies:add">
-                                                <i class="fa fa-building"></i>
-                                                Company
-                                            </a>
-                                        </li>
-                                        <li n:if="$user->isAllowed('users', 'add')">
+                                        <li n:if="$user->isAllowed('admin', 'add')">
                                             <a n:href="Users:add">
                                                 <i class="fa fa-user"></i>
                                                 User
