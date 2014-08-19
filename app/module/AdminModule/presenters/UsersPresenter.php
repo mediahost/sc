@@ -4,13 +4,20 @@ namespace App\AdminModule\Presenters;
 
 use Nette;
 use Tracy\Debugger as Debug;
+use App\Model\Entity;
 
 /**
  * Users presenter.
  */
 class UsersPresenter extends BasePresenter
 {
-
+	
+	/** @var \Kdyby\Doctrine\EntityManager @inject */
+	public $em;
+	
+	/** @var \Kdyby\Doctrine\EntityDao */
+	private $userDao;
+	
     /** @var \App\Model\Facade\Users @inject */
     public $userFacade;
 
@@ -23,6 +30,11 @@ class UsersPresenter extends BasePresenter
     /** @var \App\Model\Entity\User */
     private $user;
 
+	protected function startup()
+	{
+		parent::startup();
+		$this->userDao = $this->em->getDao(Entity\User::getClassName());
+	}
 
 
 	/**
@@ -32,7 +44,7 @@ class UsersPresenter extends BasePresenter
 	 */
     public function actionDefault()
     {
-        $this->users = $this->userFacade->findAll();
+        $this->users = $this->userDao->findAll();
     }
 
     public function renderDefault()
@@ -60,7 +72,7 @@ class UsersPresenter extends BasePresenter
 	 */
     public function actionEdit($id)
     {
-        $this->user = $this->userFacade->find($id);
+        $this->user = $this->userDao->find($id);
     }
 
     public function renderEdit()
@@ -88,10 +100,10 @@ class UsersPresenter extends BasePresenter
 	 */
     public function actionDelete($id)
     {
-        $this->user = $this->userFacade->find($id);
+        $this->user = $this->userDao->find($id);
         if ($this->user) {
             if (!$this->user->getProjectsCount()) {
-                $this->userFacade->delete($this->user);
+                $this->userDao->delete($this->user);
                 $this->flashMessage("Entity was deleted.", 'success');
             } else {
                 $this->flashMessage("User cannot be deleted. Remove roles first.", 'warning');
@@ -117,7 +129,7 @@ class UsersPresenter extends BasePresenter
     public function userFormSuccess($form)
     {
         if ($form['submitContinue']->submittedBy) {
-            $this->userFacade->save($this->user);
+            $this->userDao->save($this->user);
             $this->redirect("edit", $this->user->getId());
         }
         $this->redirect("Users:");
