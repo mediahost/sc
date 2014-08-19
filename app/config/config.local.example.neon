@@ -3,3 +3,7 @@ doctrine:
 	user: user
 	password: pasword
 	dbname: dbname
+
+parameters:
+	install:
+		startUsers: ['user_mail' = ['password', 'name_of_role']]

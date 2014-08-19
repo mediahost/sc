@@ -1,5 +1,6 @@
 services:
-    InstallPresenter:
-        class: App\FrontModule\Presenters\InstallPresenter
-        setup:
-            - setPathes(%tempDir%, %wwwDir%)
+	InstallPresenter:
+		class: App\FrontModule\Presenters\InstallPresenter
+		arguments: [%tempDir%, %wwwDir%]
+		setup:
+			- setUsers(%install.startUsers%)
