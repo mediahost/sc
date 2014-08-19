@@ -10,10 +10,9 @@ namespace App\Model\Storage;
 class MessageStorage extends \Nette\Object
 {
 	
-	public function getTemplate($filename, $params)
+	public function getTemplate($filename)
 	{
-		$latte = new Latte\Engine;
-		return $latte->renderToString(__DIR__ . $filename .'.latte', $params);
+		return __DIR__ .'/'. $filename . '.latte';
 	}
   
 }

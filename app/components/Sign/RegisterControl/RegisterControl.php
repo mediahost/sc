@@ -30,11 +30,11 @@ class RegisterControl extends Control
 	/** @var Nette\Mail\IMailer */
 	private $mailer;
 	
-	/** @var \App\Model\Storage\MessageStorage @inject */
+	/** @var \App\Model\Storage\MessageStorage */
 	private $messages;
 	
 	
-	public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Model\Storage\RegistrationStorage $reg, \App\Model\Facade\Users $users, Nette\Mail\IMailer $mailer)
+	public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Model\Storage\RegistrationStorage $reg, \App\Model\Facade\Users $users, Nette\Mail\IMailer $mailer, \App\Model\Storage\MessageStorage $messages)
 	{
 		$this->em = $em;
 		$this->registration = $reg;
@@ -42,6 +42,7 @@ class RegisterControl extends Control
 		
 		$this->registrationDao = $this->em->getDao(Entity\Registration::getClassName());
 		$this->mailer = $mailer;
+		$this->messages = $messages;
 	}
 
 	public function render()
@@ -123,9 +124,13 @@ class RegisterControl extends Control
 			
 			// ToDo: Uložit access token nebo ne ??
 			$message = new Nette\Mail\Message();
+			
+			$template = $this->createTemplate()->setFile($this->messages->getTemplate('registration'));
+			$template->code = $registration->verification_code;
+			
 			$message->setFrom('noreply@sc.com')
 					->addTo($email)
-					->setHtmlBody($this->messages->getTemplate('registration', ['code' => $registration->verification_code]));
+					->setHtmlBody($template);
 			$this->mailer->send($message);
 			
 		} else {
