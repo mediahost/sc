@@ -1,0 +1,5 @@
+
+doctrine:
+	user: user
+	password: pasword
+	dbname: dbname
