@@ -59,6 +59,8 @@ class UsersPresenter extends BasePresenter
 	 */
     public function actionAdd()
     {
+        $this->flashMessage("Not implemented yet.", 'warning');
+        $this->redirect("default");
         $this->user = new \App\Model\Entity\User;
         $this->userFormFactory->setAdding();
         $this->setView("edit");
@@ -72,6 +74,8 @@ class UsersPresenter extends BasePresenter
 	 */
     public function actionEdit($id)
     {
+        $this->flashMessage("Not implemented yet.", 'warning');
+        $this->redirect("default");
         $this->user = $this->userDao->find($id);
     }
 

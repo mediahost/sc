@@ -60,6 +60,15 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
     /**
      *
+     * @return int
+     */
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    /**
+     *
      * @param Role|array $element
      * @param bool $clear
      * @return self
