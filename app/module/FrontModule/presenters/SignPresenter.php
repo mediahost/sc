@@ -20,6 +20,9 @@ class SignPresenter extends BasePresenter
 	
     /** @var \App\Model\Storage\RegistrationStorage @inject */
     public $registration;
+	
+	/** @var \App\Model\Facade\Registration @inject */
+	public $registrationFacade;
 
 
     protected function startup() {
@@ -52,6 +55,11 @@ class SignPresenter extends BasePresenter
 		
 	}
 
+	public function actionActivate()
+	{
+		
+	}
+	
 	private function checkInProcess()
 	{
 		if (!$this->registration->isOauth()) {

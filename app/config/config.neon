@@ -34,10 +34,16 @@ nette:
 		expiration: 14 days
 
 	debugger:
-		#email: "pupe.dupe@gmail.com"
+		email: "pupe.dupe@gmail.com"
+		bar:
+			- JanDrabek\MailPanel\MailPanel
 
+#	mailer:
+#		smtp: false
 
 services:
+	nette.mailer: JanDrabek\MailPanel\SessionMailer
+
 	authenticator: App\Model\Authenticator\UserAuthenticator
 
 	- App\RouterFactory

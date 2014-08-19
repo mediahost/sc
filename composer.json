@@ -51,7 +51,8 @@
 		"h4kuna/exchange": "4.0.*",
 		"dg/ftp-deployment": "dev-master",
 		"zeleznypa/nette-button-macros": "dev-master",
-		"kdyby/facebook": "~1.1"
+		"kdyby/facebook": "~1.1",
+		"jandrabek/nette-mailpanel": "dev-master"
 	},
 	"require-dev": {
 		"nette/tester": "~1.1.0"

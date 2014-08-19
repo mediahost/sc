@@ -28,7 +28,7 @@ class RegistrationStorage extends \Nette\Object
 	 * An array with requred items for registration
 	 * @var array
 	 */
-	private $required = ['email'];
+	private $required = ['email','birthdate'];
 	
 	/**
 	 * IN => OUT
@@ -52,7 +52,7 @@ class RegistrationStorage extends \Nette\Object
 	 * Create an instance of User in session for future usage in registration
 	 * form from Facebook's data
 	 */
-	public function storeFromFacebook($id, $data, $token)
+	public function storeFromFacebook($id, $data, $token) // ToDo: $data je matoucí s $this->data, přejmenovat
 	{
 
 		$this->data = $this->mapFromOAuth($this->facebookMap, $data);
@@ -69,7 +69,7 @@ class RegistrationStorage extends \Nette\Object
 		$this->auth->token = $token;
 
 		$this->user = new Entity\User();
-		$this->user->email = $data->email;
+		$this->user->email = $this->data->email;
 
 		return $this->auth;
 	}
@@ -179,8 +179,17 @@ class RegistrationStorage extends \Nette\Object
 	}
 	
 	public function getDefaults() {
-		return $this->section->defaults;
+		return $this->section->defaults ? $this->section->defaults : [];
 	}
 	
-
+	public function toRegistration()
+	{
+		$registration = new Entity\Registration();
+		$registration->email = $this->user->email;
+		$registration->key = $this->auth->key;
+		$registration->source = $this->auth->source;
+		$registration->hash = $this->auth->hash;
+		
+		return $registration;
+	}
 }

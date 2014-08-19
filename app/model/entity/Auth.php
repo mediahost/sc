@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\Entity
  * 
  * @property User $user
+ * @property $key
+ * @property $source
+ * @property $token
+ * @property $hash
  */
 class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 {

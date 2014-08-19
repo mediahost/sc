@@ -97,7 +97,7 @@ class FacebookControl extends Control
                 $this->presenter->flashMessage("We are sorry, facebook authentication failed hard.");
             }
 
-            $this->presenter->redirect('Sign:Register'); // Wherever I want, optimal is backlink to original request
+            $this->presenter->redirect('Sign:in'); // Wherever I want, optimal is backlink to original request
         };
 
         return $dialog;

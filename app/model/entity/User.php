@@ -60,18 +60,25 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
     /**
      *
-     * @param Role $element
+     * @param Role|array $element
      * @param bool $clear
      * @return self
      */
-    public function addRole(Role $element, $clear = FALSE)
+    public function addRole($element, $clear = FALSE)
     {
-        if ($clear) {
-            $this->clearRoles();
-        }
-        if (!$this->roles->contains($element)) {
-            $this->roles->add($element);
-        }
+		if ($clear) {
+			$this->clearRoles();
+		}
+		
+		if (is_array($element)) {
+			foreach ($element as $item) {
+				$this->roles->add($item);
+			}
+		} else {
+			if (!$this->roles->contains($element)) {
+				$this->roles->add($element);
+			}
+		}
         return $this;
     }
 
@@ -120,7 +127,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	public function addAuth($auth)
 	{
-		$this->auths[] = $auth;
+		$this->auths->add($auth);
 		$auth->user = $this;
 	}
 }
