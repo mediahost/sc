@@ -2,7 +2,6 @@
 
 namespace App\AdminModule\Presenters;
 
-
 /**
  * Dashboard presenter.
  */
@@ -14,9 +13,9 @@ class DashboardPresenter extends BasePresenter
 	 * @resource('dashboard')
 	 * @privilege('view')
 	 */
-    public function actionDefault()
-    {
-        
-    }
+	public function actionDefault()
+	{
+		
+	}
 
 }

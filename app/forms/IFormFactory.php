@@ -10,8 +10,8 @@ namespace App\Forms;
 interface IFormFactory extends \Venne\Forms\IFormFactory
 {
 
-    /**
-     * @return Form
-     */
-    public function create();
+	/**
+	 * @return Form
+	 */
+	public function create();
 }

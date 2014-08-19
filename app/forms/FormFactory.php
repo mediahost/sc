@@ -10,26 +10,26 @@ namespace App\Forms;
 abstract class FormFactory implements IFormFactory
 {
 
-    /** @var \App\Forms\IFormFactory */
-    protected $formFactory;
+	/** @var \App\Forms\IFormFactory */
+	protected $formFactory;
 
-    /** @var bool */
-    protected $add = FALSE;
+	/** @var bool */
+	protected $add = FALSE;
 
-    public function __construct(IFormFactory $formFactory)
-    {
-        $this->formFactory = $formFactory;
-    }
+	public function __construct(IFormFactory $formFactory)
+	{
+		$this->formFactory = $formFactory;
+	}
 
-    public function setAdding($add = TRUE)
-    {
-        $this->add = $add;
-        return $this;
-    }
+	public function setAdding($add = TRUE)
+	{
+		$this->add = $add;
+		return $this;
+	}
 
-    public function isAdding()
-    {
-        return $this->add;
-    }
+	public function isAdding()
+	{
+		return $this->add;
+	}
 
 }

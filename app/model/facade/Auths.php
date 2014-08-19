@@ -7,6 +7,7 @@ use Kdyby\Doctrine\EntityDao,
 
 class Auths extends Base
 {
+
 	/** @var EntityDao */
 	private $auths;
 
@@ -15,12 +16,12 @@ class Auths extends Base
 		$this->auths = $this->em->getDao(Entity\Auth::getClassName());
 	}
 
-	
 	public function findByEmail($email)
 	{
 		return $this->auths->findOneBy([
-			'source' => 'app',
-			'key' => $email
+					'source' => 'app',
+					'key' => $email
 		]);
 	}
+
 }

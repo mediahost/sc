@@ -3,7 +3,7 @@
 namespace App\AdminModule\Presenters;
 
 use Nette,
-    App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
+	App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
 
 /**
  * BasePresenter
@@ -12,5 +12,5 @@ use Nette,
  */
 abstract class BasePresenter extends BaseBasePresenter
 {
-    
+	
 }

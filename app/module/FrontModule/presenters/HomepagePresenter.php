@@ -11,9 +11,9 @@ use Tracy\Debugger as Debug;
 class HomepagePresenter extends BasePresenter
 {
 
-    public function actionDefault()
-    {
-        $this->redirect(":Admin:Dashboard:");
-    }
+	public function actionDefault()
+	{
+		$this->redirect(":Admin:Dashboard:");
+	}
 
 }

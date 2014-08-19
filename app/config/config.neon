@@ -8,7 +8,6 @@ includes:
 	- extensions/authentication.neon
 	- extensions/webloader.neon
 	- extensions/doctrine.neon
-
 	- components/components.neon
 	- authorizator/authorizator.neon
 	- model/model.neon
@@ -17,11 +16,9 @@ includes:
 
 parameters:
 
-
 php:
 	date.timezone: Europe/Prague
 	# zlib.output_compression: yes
-
 
 nette:
 	application:

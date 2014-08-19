@@ -10,10 +10,10 @@ namespace App\Forms\Controls;
 class MultiSelect2 extends \Nette\Forms\Controls\MultiSelectBox
 {
 
-    public function __construct($label = NULL, array $items = NULL)
-    {
-        parent::__construct($label, $items);
-        $this->control->class = "multi-select";
-    }
+	public function __construct($label = NULL, array $items = NULL)
+	{
+		parent::__construct($label, $items);
+		$this->control->class = "multi-select";
+	}
 
 }

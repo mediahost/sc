@@ -11,10 +11,9 @@ class Users extends Base
 
 	/** @var EntityDao */
 	private $users;
-	
+
 	/** @var EntityDao */
 	private $roles;
-
 
 	protected function init()
 	{
@@ -53,21 +52,20 @@ class Users extends Base
 		if ($this->findByEmail($email) === NULL) { // check unique
 			$user = new User;
 			$user->email = $email;
-			
+
 			$auth = new Entity\Auth();
 			$auth->key = $email;
 			$auth->source = 'app';
 			$auth->hash = $password;
-			
+
 			$user->addRole($role);
 			$user->addAuth($auth);
-			
+
 			return $this->users->save($user);
 		}
 		return NULL;
 	}
 
-	
 	/**
 	 * Add role as Role entity, string or array of entites to user.
 	 * @param Entity\User $user
@@ -84,7 +82,8 @@ class Users extends Base
 				throw new \InvalidArgumentException;
 			}
 		}
-		
+
 		return $user->addRole($role);
 	}
+
 }

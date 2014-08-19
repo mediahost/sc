@@ -9,11 +9,11 @@ namespace App\Model\Storage;
  */
 class MessageStorage extends \Nette\Object
 {
-	
+
 	public function getTemplate($filename, $params)
 	{
 		$latte = new Latte\Engine;
-		return $latte->renderToString(__DIR__ . $filename .'.latte', $params);
+		return $latte->renderToString(__DIR__ . $filename . '.latte', $params);
 	}
-  
+
 }
