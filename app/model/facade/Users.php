@@ -15,7 +15,7 @@ class Users extends Base
 	/** @var EntityDao */
 	private $roles;
 
-		
+
 	protected function init()
 	{
 		$this->users = $this->em->getDao(User::getClassName());
