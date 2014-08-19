@@ -5,3 +5,4 @@ services:
 	- App\Model\Facade\Registration
 
 	- App\Model\Storage\RegistrationStorage
+	- App\Model\Storage\MessagesStorage

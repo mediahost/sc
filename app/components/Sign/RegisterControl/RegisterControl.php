@@ -30,6 +30,9 @@ class RegisterControl extends Control
 	/** @var Nette\Mail\IMailer */
 	private $mailer;
 	
+	/** @var \App\Model\Storage\MessageStorage @inject */
+	private $messages;
+	
 	
 	public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Model\Storage\RegistrationStorage $reg, \App\Model\Facade\Users $users, Nette\Mail\IMailer $mailer)
 	{
@@ -106,16 +109,25 @@ class RegisterControl extends Control
 	public function registerFormSucceeded(Form $form, $values)
 	{
 		if ($this->registration->isOauth()) {
+			
+			if (isset($this->registration->user->email)) {
+				$email = $this->registration->user->email;
+			} else {
+				$email = $values->email;
+				$this->registration->user->email = $email;
+			}
+			
 			$registration = $this->registration->toRegistration();
 			$registration->verification_code = Nette\Utils\Strings::random(32);
 			$this->em->persist($registration);
 			
 			// ToDo: Uložit access token nebo ne ??
 			$message = new Nette\Mail\Message();
-			$message->from = 'noreply@sc.com';
-			$message->body = '<html><body>Dear Google, I love you! M.' . 
-					'<a hred="'.$this->presenter->link('Front:Sign:verify', ['code' => $registration->verification_code]).'">Verify</a></body></html>';
+			$message->setFrom('noreply@sc.com')
+					->addTo($email)
+					->setHtmlBody($this->messages->getTemplate('registration', ['code' => $registration->verification_code]));
 			$this->mailer->send($message);
+			
 		} else {
 			$user = new Entity\User();
 			
