@@ -15,6 +15,15 @@ class Roles extends Base
 	{
 		$this->roles = $this->em->getDao(Entity\Role::getClassName());
 	}
+	
+	/**
+     * Get all roles
+     * @return array
+     */
+	public function getRoles()
+	{
+		return $this->roles->fetchPairs();
+	}
 
 	
 	/**
@@ -40,12 +49,12 @@ class Roles extends Base
     /**
      * Create role if isnt exists
      * @param type $name
-     * @return \App\Model\Entity\User\Role|null
+     * @return Entity\Role|null
      */
     public function create($name)
     {
         if ($this->isUnique($name)) { // check unique
-            $entity = new \App\Model\Entity\User\Role;
+            $entity = new Entity\Role;
             $entity->setName($name);
             return $this->roles->save($entity);
         }
