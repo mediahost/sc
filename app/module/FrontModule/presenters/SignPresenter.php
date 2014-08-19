@@ -76,7 +76,13 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionVerify($code)
 	{
+		if (!$this->registrationFacade->verify($code)) {
+			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
+		} else {
+			$this->presenter->flashMessage('User account has been creared.', 'success');
+		}
 		
+		$this->redirect('in');
 	}
 
 	private function checkInProcess()

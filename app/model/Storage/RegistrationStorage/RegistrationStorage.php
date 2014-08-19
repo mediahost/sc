@@ -20,6 +20,7 @@ class RegistrationStorage extends \Nette\Object
 
 	/** @var \Kdyby\Doctrine\EntityManager */
 	private $em;
+	
 	public $session;
 
 	/**
@@ -190,5 +191,5 @@ class RegistrationStorage extends \Nette\Object
 
 		return $registration;
 	}
-
+	
 }
