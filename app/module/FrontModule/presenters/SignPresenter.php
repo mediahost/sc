@@ -34,9 +34,20 @@ class SignPresenter extends BasePresenter
 		}
 	}
 
+	public function actionDefault()
+	{
+		$this->redirect("in");
+	}
+
 	public function actionIn()
 	{
 		$this->registration->wipe();
+	}
+
+	public function actionLostPassword()
+	{
+		$this->flashMessage("Not implemented yet", "warning");
+		$this->redirect("in");
 	}
 
 	public function actionRegister()
