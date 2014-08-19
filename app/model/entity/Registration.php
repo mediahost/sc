@@ -18,29 +18,29 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 {
-	
-    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
-	
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $email;
-	
+
+	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+
+	/**
+	 * @ORM\Column(type="string", nullable=false)
+	 */
+	protected $email;
+
 	/**
 	 * @ORM\Column(name="`key`", type="string", length=256)
 	 */
 	protected $key;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=256)
 	 */
 	protected $source;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
 	protected $token;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
@@ -50,5 +50,5 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\Column(type="string", length=256, nullable=false)
 	 */
 	protected $verification_code;
-	
+
 }

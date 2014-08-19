@@ -7,30 +7,29 @@ use Nette\Application\UI\Control,
 	Nette,
 	App\Model\Entity;
 
-
 /**
  *
  * @author Martin Šifra <me@martinsifra.cz>
  */
 class RegisterControl extends Control
 {
-		
+
 	/** @var \Kdyby\Doctrine\EntityManager */
 	private $em;
-	
+
 	/** @var \App\Model\Storage\RegistrationStorage */
 	private $registration;
-	
+
 	/** @var \App\Model\Facade\Users */
 	private $users;
-	
+
 	/** @var \Kdyby\Doctrine\EntityDao */
 	private $registrationDao;
-	
+
 	/** @var Nette\Mail\IMailer */
 	private $mailer;
-	
-	/** @var \App\Model\Storage\MessageStorage */
+
+	/** @var \App\Model\Storage\MessageStorage @inject */
 	private $messages;
 	
 	
@@ -39,7 +38,7 @@ class RegisterControl extends Control
 		$this->em = $em;
 		$this->registration = $reg;
 		$this->users = $users;
-		
+
 		$this->registrationDao = $this->em->getDao(Entity\Registration::getClassName());
 		$this->mailer = $mailer;
 		$this->messages = $messages;
@@ -62,31 +61,31 @@ class RegisterControl extends Control
 	protected function createComponentRegisterForm()
 	{
 		\Tracy\Debugger::barDump($this->registration->data);
-		
+
 		$form = new Form();
 		$form->getElementPrototype()->addAttributes(['autocomplete' => 'off']);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
-		
+
 		if ($this->registration->isRequired('birthdate')) {
-		$form->addText('name', 'Name')
-				->setRequired('Please enter your username')
-				->setAttribute('placeholder', 'Full name');
+			$form->addText('name', 'Name')
+					->setRequired('Please enter your username')
+					->setAttribute('placeholder', 'Full name');
 		}
-		
+
 		if ($this->registration->isRequired('birthdate')) {
 			$form->addText('birthdate', 'Birthdate')
 					->setRequired('Please enter your username')
 					->setAttribute('placeholder', 'Birthdate');
 		}
-		
+
 		if ($this->registration->isRequired('email')) {
 			$form->addText('email', 'E-mail')
 					->setRequired('Please enter your e-mail')
 					->setAttribute('placeholder', 'E-mail')
 					->setAttribute('autocomplete', 'off')
-					->addRule(function(Nette\Forms\Controls\TextInput $item){
-								return $this->users->isUnique($item->value);
-						}, 'This e-mail is used yet!');
+					->addRule(function(Nette\Forms\Controls\TextInput $item) {
+						return $this->users->isUnique($item->value);
+					}, 'This e-mail is used yet!');
 		}
 
 		if ($this->registration->isOauth()) {
@@ -98,7 +97,7 @@ class RegisterControl extends Control
 		}
 
 
-		
+
 		$form->addSubmit('register', 'Register');
 
 
@@ -110,18 +109,18 @@ class RegisterControl extends Control
 	public function registerFormSucceeded(Form $form, $values)
 	{
 		if ($this->registration->isOauth()) {
-			
+
 			if (isset($this->registration->user->email)) {
 				$email = $this->registration->user->email;
 			} else {
 				$email = $values->email;
 				$this->registration->user->email = $email;
 			}
-			
+
 			$registration = $this->registration->toRegistration();
 			$registration->verification_code = Nette\Utils\Strings::random(32);
 			$this->em->persist($registration);
-			
+
 			// ToDo: Uložit access token nebo ne ??
 			$message = new Nette\Mail\Message();
 			
@@ -132,10 +131,9 @@ class RegisterControl extends Control
 					->addTo($email)
 					->setHtmlBody($template);
 			$this->mailer->send($message);
-			
 		} else {
 			$user = new Entity\User();
-			
+
 			$auth = new Entity\Auth();
 			$auth->hash = \Nette\Security\Passwords::hash($values->hast);
 			$auth->key = $values->email;
@@ -146,16 +144,17 @@ class RegisterControl extends Control
 			$this->users->addRole($user, ['superadmin', 'guest', 'kokot']);
 			$this->em->persist($user);
 		}
-		
+
 		$this->em->flush();
-		
+
 		$this->presenter->redirect(':Admin:Dashboard:');
 	}
-}
 
+}
 
 interface IRegisterControlFactory
 {
+
 	/** @return RegisterControl */
 	function create();
 }

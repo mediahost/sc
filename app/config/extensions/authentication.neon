@@ -1,8 +1,5 @@
 extensions:
-    facebook: Kdyby\Facebook\DI\FacebookExtension
-
+	facebook: Kdyby\Facebook\DI\FacebookExtension
 
 facebook:
-    appId: "715517921837240"
-    appSecret: "cea6d6730f81f81b95f81f0ff527017a"
-    permissions: [email,user_birthday]
+	permissions: [email,user_birthday]

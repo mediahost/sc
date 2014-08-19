@@ -11,12 +11,12 @@ use Tracy\Debugger as Debug;
 class DenyPresenter extends BasePresenter
 {
 
-    public function actionDefault()
-    {
-        if (!$this->getUser()->isLoggedIn()) {
-            $this->redirect("Sign:");
-        }
-        $this->setLayout("metronic.layout");
-    }
+	public function actionDefault()
+	{
+		if (!$this->getUser()->isLoggedIn()) {
+			$this->redirect("Sign:");
+		}
+		$this->setLayout("metronic.layout");
+	}
 
 }

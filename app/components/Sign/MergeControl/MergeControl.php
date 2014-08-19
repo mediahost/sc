@@ -3,10 +3,9 @@
 namespace App\Components\Sign;
 
 use Nette\Application\UI\Control,
-    Nette\Application\UI\Form,
-    Nette,
+	Nette\Application\UI\Form,
+	Nette,
 	App\Model\Entity;
-
 
 /**
  *
@@ -14,26 +13,26 @@ use Nette\Application\UI\Control,
  */
 class MergeControl extends Control
 {
-		
+
 	/** @var \Kdyby\Doctrine\EntityManager */
 	private $em;
-	
+
 	/** @var \App\Model\Storage\RegistrationStorage */
 	private $registrationStorage;
-	
+
 	public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Model\Storage\RegistrationStorage $reg)
 	{
 		$this->em = $em;
 		$this->registrationStorage = $reg;
 	}
 
-    public function render()
-    {
-        $template = $this->template;
+	public function render()
+	{
+		$template = $this->template;
 		$template->bool = $this->registrationStorage->isOauth();
-        $template->setFile(__DIR__ . '/render.latte');
-        $template->render();
-    }
+		$template->setFile(__DIR__ . '/render.latte');
+		$template->render();
+	}
 
 	/**
 	 * Sign in form factory.
@@ -42,9 +41,9 @@ class MergeControl extends Control
 	protected function createComponentMergeForm()
 	{
 		$form = new Form();
-        $form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
-        
-        $form->addSubmit('yes', 'Yes');
+		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
+
+		$form->addSubmit('yes', 'Yes');
 		$form->addSubmit('no', 'No');
 
 
@@ -54,14 +53,16 @@ class MergeControl extends Control
 	}
 
 	public function registerFormSucceeded(Form $form, $values)
-	{       
-		
+	{
+
 		$this->presenter->redirect(':Admin:Dashboard:', ['merge' => NULL]);
 	}
+
 }
 
 interface IMergeControlFactory
 {
-    /** @return MergeControl */
-    function create();
+
+	/** @return MergeControl */
+	function create();
 }

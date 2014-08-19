@@ -11,5 +11,5 @@ use Nette;
  */
 abstract class BasePresenter extends \App\BaseModule\Presenters\BasePresenter
 {
-    
+	
 }

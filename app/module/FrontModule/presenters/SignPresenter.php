@@ -2,7 +2,6 @@
 
 namespace App\FrontModule\Presenters;
 
-
 /**
  * Sign in/out presenters.
  */
@@ -17,15 +16,16 @@ class SignPresenter extends BasePresenter
 
 	/** @var \App\Components\Sign\IMergeControlFactory @inject */
 	public $iMergeControlFactory;
-	
+
 	/** @var \App\Model\Storage\RegistrationStorage @inject */
 	public $registration;
-	
+
 	/** @var \App\Model\Facade\Registration @inject */
 	public $registrationFacade;
 
-
-	protected function startup() {
+	
+	protected function startup()
+	{
 		parent::startup();
 
 		// Logged user redirect away
@@ -35,16 +35,27 @@ class SignPresenter extends BasePresenter
 		}
 	}
 
+	public function actionDefault()
+	{
+		$this->redirect("in");
+	}
+
 	public function actionIn()
 	{
 		$this->registration->wipe();
+	}
+
+	public function actionLostPassword()
+	{
+		$this->flashMessage("Not implemented yet", "warning");
+		$this->redirect("in");
 	}
 
 	public function actionRegister()
 	{
 		// Check if is user in registration process
 //		$this->checkInProcess();
-		
+
 		$this->template->bool = $this->registration->isOauth();
 	}
 
@@ -52,38 +63,34 @@ class SignPresenter extends BasePresenter
 	{
 		// Check if is user in merging process
 //		$this->checkInProcess();
-		
 	}
 
 	public function actionVerify($code)
 	{
 		
 	}
-	
+
 	private function checkInProcess()
 	{
 		if (!$this->registration->isOauth()) {
 			$this->redirect(':Front:Sign:in');
 		}
-			
 	}
 
 // <editor-fold defaultstate="collapsed" desc="Components">
 
 	/** @return \App\Components\SignInControl */
-	protected function createComponentSignIn() {
+	protected function createComponentSignIn()
+	{
 		return $this->iSignInControlFactory->create();
 	}
 
 	/** @return \App\Components\Sign\RegisterControl */
-	protected function createComponentRegister() {
+	protected function createComponentRegister()
+	{
 		return $this->iRegisterControlFactory->create();
-	}
-
-	/** @return \App\Components\Sign\MergeControl */
-	protected function createComponentMerge() {
-		return $this->iMergeControlFactory->create();
 	}
 	
 // </editor-fold>
+	
 }

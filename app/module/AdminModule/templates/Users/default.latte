@@ -51,7 +51,7 @@
                                 {$user->username}
                             </td>
                             <td>
-                                {$user->rolesArray|implode:', '}
+                                {$user->rolesPairs|implode:', '}
                             </td>
                             <td>
                                 <a n:href="Users:edit, $user->id">

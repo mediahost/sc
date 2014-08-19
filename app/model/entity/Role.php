@@ -13,15 +13,15 @@ class Role extends \Kdyby\Doctrine\Entities\BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
-	
-    /**
-     * @ORM\Column(type="string", length=128)
-     */
-    protected $name;
 
-	
+	/**
+	 * @ORM\Column(type="string", length=128)
+	 */
+	protected $name;
+
 	public function setRole()
 	{
 		
 	}
+
 }

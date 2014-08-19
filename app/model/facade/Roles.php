@@ -7,7 +7,7 @@ use Kdyby\Doctrine\EntityDao,
 
 class Roles extends Base
 {
-	
+
 	/** @var EntityDao */
 	private $roles;
 
@@ -16,40 +16,48 @@ class Roles extends Base
 		$this->roles = $this->em->getDao(Entity\Role::getClassName());
 	}
 
-	
 	/**
-     * 
-     * @param type $name
-     * @return \App\Model\Entity\User
-     */
-    public function findByName($name)
-    {
-        return $this->roles->findOneBy(array('name' => $name));
-    }
-    
-    /**
-     * Check if name is unique
-     * @param type $name
-     * @return bool
-     */
-    public function isUnique($name)
-    {
-        return $this->findByName($name) === NULL;
-    }
+	 * Get all roles
+	 * @return array
+	 */
+	public function getRoles()
+	{
+		return $this->roles->fetchPairs();
+	}
 
-    /**
-     * Create role if isnt exists
-     * @param type $name
-     * @return \App\Model\Entity\User\Role|null
-     */
-    public function create($name)
-    {
-        if ($this->isUnique($name)) { // check unique
-            $entity = new \App\Model\Entity\User\Role;
-            $entity->setName($name);
-            return $this->roles->save($entity);
-        }
-        return NULL;
-    }
+	/**
+	 * 
+	 * @param type $name
+	 * @return \App\Model\Entity\User
+	 */
+	public function findByName($name)
+	{
+		return $this->roles->findOneBy(array('name' => $name));
+	}
+
+	/**
+	 * Check if name is unique
+	 * @param type $name
+	 * @return bool
+	 */
+	public function isUnique($name)
+	{
+		return $this->findByName($name) === NULL;
+	}
+
+	/**
+	 * Create role if isnt exists
+	 * @param type $name
+	 * @return Entity\Role|null
+	 */
+	public function create($name)
+	{
+		if ($this->isUnique($name)) { // check unique
+			$entity = new Entity\Role;
+			$entity->setName($name);
+			return $this->roles->save($entity);
+		}
+		return NULL;
+	}
 
 }
