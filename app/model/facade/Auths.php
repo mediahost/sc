@@ -23,5 +23,4 @@ class Auths extends Base
 			'key' => $email
 		]);
 	}
-
 }
