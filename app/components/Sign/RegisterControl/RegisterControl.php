@@ -123,6 +123,7 @@ class RegisterControl extends Control
 				$existing = $this->users->findByEmail($this->registration->user->email);
 				
 				// Přihlásit
+				$this->registration->wipe();
 				$this->presenter->user->login(new \Nette\Security\Identity($existing->id, $existing->getRolesPairs(), $existing->toArray()));
 				$this->presenter->flashMessage('You have been successfully registered and logged in!', 'success');
 				$this->presenter->redirect(':Admin:Dashboard:');
@@ -142,7 +143,7 @@ class RegisterControl extends Control
 		}
 		
 		
-		if (!isset($this->registration->user->email)) {
+		if ($values->email || ($this->registration->isOauth() && $this->registration->user->email !== NULL)) {
 			// Ověření e-mailu
 			$registration->verification_code = Nette\Utils\Strings::random(32);
 			$this->em->persist($registration);
@@ -157,7 +158,8 @@ class RegisterControl extends Control
 					->addTo($registration->email)
 					->setHtmlBody($template);
 			$this->mailer->send($message);
-			
+	
+			$this->registration->wipe();
 			$this->presenter->flashMessage('Verification code has been sent to your e-mail. Please check your inbox!', 'success');
 			$this->presenter->redirect(':Front:Sign:in');
 		}
