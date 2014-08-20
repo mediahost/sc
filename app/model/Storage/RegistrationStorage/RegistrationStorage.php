@@ -22,6 +22,9 @@ class RegistrationStorage extends \Nette\Object
 	private $em;
 	
 	public $session;
+	
+	/** @var \App\Model\Facade\Users */
+	private $userFacade;
 
 	/**
 	 * An array with requred items for registration
@@ -39,11 +42,12 @@ class RegistrationStorage extends \Nette\Object
 		'name' => 'name'
 	];
 
-	public function __construct(\Nette\Http\Session $session, \Kdyby\Doctrine\EntityManager $em)
+	public function __construct(\Nette\Http\Session $session, \Kdyby\Doctrine\EntityManager $em, \App\Model\Facade\Users $userFacade)
 	{
 		$this->section = $session->getSection('registration');
 		$this->session = $session;
 		$this->em = $em;
+		$this->userFacade = $userFacade;
 	}
 
 	/**
@@ -68,6 +72,7 @@ class RegistrationStorage extends \Nette\Object
 
 		$this->user = new Entity\User();
 		$this->user->email = $this->data->email;
+		$this->user = $this->userFacade->addRole($this->user, 'signed');
 
 		return $this->auth;
 	}
@@ -83,6 +88,7 @@ class RegistrationStorage extends \Nette\Object
 		
 		$this->user = new Entity\User();
 		$this->user->email = NULL;
+		$this->user = $this->userFacade->addRole($this->user, 'signed');
 		
 		return $this->auth;
 	}

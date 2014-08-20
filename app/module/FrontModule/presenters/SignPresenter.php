@@ -28,9 +28,11 @@ class SignPresenter extends BasePresenter
 	{
 		parent::startup();
 
+		$this->user->logout();
+		
 		// Logged user redirect away
 		if ($this->user->isLoggedIn()) {
-			$this->flashMessage('You have been already signed in.', 'warning'); // ToDo: Delete, 'cos showing after redirection throught this presenter, maybe.
+//			$this->flashMessage('You have been already signed in.', 'warning'); // ToDo: Delete, 'cos showing after redirection throught this presenter, maybe.
 			$this->redirect(':Admin:Dashboard:');
 		}
 	}
@@ -78,11 +80,13 @@ class SignPresenter extends BasePresenter
 	{
 		if (!$this->registrationFacade->verify($code)) {
 			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
+			$this->redirect('in');
 		} else {
 			$this->presenter->flashMessage('User account has been creared.', 'success');
+			$this->redirect(':Admin:Dashboard:');
 		}
 		
-		$this->redirect('in');
+
 	}
 
 	private function checkInProcess()

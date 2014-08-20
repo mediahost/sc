@@ -77,8 +77,11 @@ class FacebookControl extends Control
 							$this->facade->merge($user, $auth);
 						} else {
 							// Register
-							$this->facade->register($user, $auth);
+							$user = $this->facade->merge($this->storage->user, $this->storage->auth);
 						}
+						
+						$this->presenter->user->login(new \Nette\Security\Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+						$this->presenter->redirect(':Admin:Dashboard:');
 					} else {
 						$this->presenter->redirect('Sign:Register');
 					}
@@ -87,6 +90,7 @@ class FacebookControl extends Control
 					$this->facade->updateFacebookAccessToken($fb->getUser(), $fb->getAccessToken());
 
 					$this->presenter->user->login(new \Nette\Security\Identity($existing->id, $existing->getRolesPairs(), $existing->toArray()));
+					$this->presenter->redirect(':Admin:Dashboard:');
 				}
 			} catch (FacebookApiException $e) {
 				\Tracy\Debugger::log($e->getMessage(), 'facebook');

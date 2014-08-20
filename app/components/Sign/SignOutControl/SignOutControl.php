@@ -10,6 +10,11 @@ use Nette\Application\UI\Control;
 class SignOutControl extends Control
 {
 
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
 	public function render()
 	{
 		$template = $this->template;

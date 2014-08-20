@@ -106,48 +106,62 @@ class RegisterControl extends Control
 
 	public function registerFormSucceeded(Form $form, $values)
 	{
+		
+		// Namapování hodnot z formuláře
 		if ($this->registration->isOauth()) {
-
+			// Registrace přes OAuth
 			if ($this->registration->user->email !== NULL) {
-				$email = $this->registration->user->email;
+				// Ověřený e-mail
+				$user = $this->registration->user;
+				$auth = $this->registration->auth;
+				$user->addAuth($auth);
+				$user->clearRoles();
+				$this->users->addRole($user, ['signed']);
+				$this->em->persist($user);
+				$this->em->flush();
+				
+				$existing = $this->users->findByEmail($this->registration->user->email);
+				
+				// Přihlásit
+				$this->presenter->user->login(new \Nette\Security\Identity($existing->id, $existing->getRolesPairs(), $existing->toArray()));
+				$this->presenter->flashMessage('You have been successfully registered and logged in!', 'success');
+				$this->presenter->redirect(':Admin:Dashboard:');
 			} else {
-				$email = $values->email;
-				$this->registration->user->email = $email;
+				// Neověřený e-mail
+				$this->registration->user->email = $values->email;
+				$registration = $this->registration->toRegistration();
 			}
-
-			$registration = $this->registration->toRegistration();
+			
+		} else {
+			// Registrace přes formulář
+			$registration = new Entity\Registration();
+			$registration->email = $values->email;
+			$registration->key = $values->email;
+			$registration->source = 'app';
+			$registration->hash = \Nette\Security\Passwords::hash($values->password);
+		}
+		
+		
+		if (!isset($this->registration->user->email)) {
+			// Ověření e-mailu
 			$registration->verification_code = Nette\Utils\Strings::random(32);
 			$this->em->persist($registration);
-
-			// ToDo: Uložit access token nebo ne ??
-			$message = new Nette\Mail\Message();
+			$this->em->flush();
 			
+			// Odeslat e-mail
+			$message = new Nette\Mail\Message();
 			$template = $this->createTemplate()->setFile($this->messages->getTemplate('registration'));
 			$template->code = $registration->verification_code;
 			
 			$message->setFrom('noreply@sc.com')
-					->addTo($email)
+					->addTo($registration->email)
 					->setHtmlBody($template);
 			$this->mailer->send($message);
-		} else {
-			$user = new Entity\User();
-
-			$auth = new Entity\Auth();
-			$auth->hash = \Nette\Security\Passwords::hash($values->hash);
-			$auth->key = $values->email;
-			$auth->source = 'app';
-			$user->email = $values->email;
-			$user->addAuth($auth);
-
-			$this->users->addRole($user, ['signed', 'norris']);
-			$this->em->persist($user);
+			
+			$this->presenter->flashMessage('Verification code has been sent to your e-mail. Please check your inbox!', 'success');
+			$this->presenter->redirect(':Front:Sign:in');
 		}
-
-		$this->em->flush();
-
-		$this->presenter->redirect(':Admin:Dashboard:');
 	}
-
 }
 
 interface IRegisterControlFactory

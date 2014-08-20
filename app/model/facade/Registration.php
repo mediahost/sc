@@ -94,7 +94,7 @@ class Registration extends Base
 			$auth->hash = $registration->hash;
 			$user->addAuth($auth);
 			
-			$user->addRole($this->roles->findBy(['name' => 'guest']));
+			$user->addRole($this->roles->findBy(['name' => 'signed']));
 			
 			$this->em->remove($registration);
 			$this->em->persist($user);
