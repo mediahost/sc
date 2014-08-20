@@ -40,6 +40,8 @@ class InstallPresenter extends BasePresenter
 
 	public function setPathes($tempDir, $wwwDir)
 	{
+		\Tracy\Debugger::barDump($tempDir);
+		\Tracy\Debugger::barDump($wwwDir);
 		$this->tempDir = $tempDir;
 		$this->wwwDir = $wwwDir;
 		$this->installDir = $this->tempDir . "/install";

@@ -32,7 +32,7 @@ class Roles extends Base
 	 */
 	public function findByName($name)
 	{
-		return $this->roles->findOneBy(array('name' => $name));
+		return $this->roles->findOneBy(['name' => $name]);
 	}
 
 	/**

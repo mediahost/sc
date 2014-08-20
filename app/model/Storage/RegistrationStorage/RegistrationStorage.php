@@ -75,11 +75,16 @@ class RegistrationStorage extends \Nette\Object
 	/**
 	 * 
 	 */
-	public function registerFromTwitter($id)
+	public function storeFromTwitter($data)
 	{
 		$this->auth = new Entity\Auth();
-		$this->auth->key = $id;
+		$this->auth->key = $data->id;
 		$this->auth->source = 'twitter';
+		
+		$this->user = new Entity\User();
+		$this->user->email = NULL;
+		
+		return $this->auth;
 	}
 
 	/**

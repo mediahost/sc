@@ -17,10 +17,15 @@ class SignInControl extends Control
 
 	/** @var \App\Components\Auth\IFacebookControlFactory */
 	public $iFacebookControlFactory;
+	
+	/** @var \App\Components\Auth\ITwitterControlFactory */
+	public $iTwitterControlFactory;
 
-	public function __construct(\App\Components\Auth\IFacebookControlFactory $fb)
+	
+	public function __construct(\App\Components\Auth\IFacebookControlFactory $fb, \App\Components\Auth\ITwitterControlFactory $twitter)
 	{
 		$this->iFacebookControlFactory = $fb;
+		$this->iTwitterControlFactory = $twitter;
 	}
 
 	public function render()
@@ -75,16 +80,22 @@ class SignInControl extends Control
 		}
 	}
 
+	/** @return Auth\FacebookControl */
 	protected function createComponentFacebook()
 	{
 		return $this->iFacebookControlFactory->create();
+	}
+	
+	/** @return Auth\TwitterControl */
+	protected function createComponentTwitter()
+	{
+		return $this->iTwitterControlFactory->create();
 	}
 
 }
 
 interface ISignInControlFactory
 {
-
 	/** @return SignInControl */
 	function create();
 }

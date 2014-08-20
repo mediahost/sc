@@ -52,7 +52,8 @@
 		"dg/ftp-deployment": "dev-master",
 		"zeleznypa/nette-button-macros": "dev-master",
 		"kdyby/facebook": "~1.1",
-		"jandrabek/nette-mailpanel": "dev-master"
+		"jandrabek/nette-mailpanel": "dev-master",
+		"sodae/netrium-addons-twitter": "dev-nette-compatibility-22-dev"
 	},
 	"require-dev": {
 		"nette/tester": "~1.1.0"

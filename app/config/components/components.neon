@@ -2,5 +2,6 @@ services:
 	- App\Components\ISignInControlFactory
 	- App\Components\Sign\ISignOutControlFactory
 	- App\Components\Sign\IRegisterControlFactory
-	- App\Components\Sign\IMergeControlFactory
+	- App\Components\Sign\IMergeControlFactory	
 	- App\Components\Auth\IFacebookControlFactory
+	- App\Components\Auth\ITwitterControlFactory

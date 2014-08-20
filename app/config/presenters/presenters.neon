@@ -4,4 +4,4 @@ services:
 		arguments: [%tempDir%, %wwwDir%]
 		setup:
 			- setUsers(%install.startUsers%)
-		autowired: no
+		autowired: yes

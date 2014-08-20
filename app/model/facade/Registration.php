@@ -41,6 +41,15 @@ class Registration extends Base
 					'auths.source' => 'facebook'
 		]);
 	}
+	
+
+	public function findByTwitterId($id)
+	{
+		return $this->users->findOneBy([
+					'auths.key' => $id,
+					'auths.source' => 'twitter'
+		]);
+	}
 
 	public function updateFacebookAccessToken($id, $token)
 	{

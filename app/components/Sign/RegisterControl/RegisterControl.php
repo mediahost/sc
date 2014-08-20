@@ -108,7 +108,7 @@ class RegisterControl extends Control
 	{
 		if ($this->registration->isOauth()) {
 
-			if (isset($this->registration->user->email)) {
+			if ($this->registration->user->email !== NULL) {
 				$email = $this->registration->user->email;
 			} else {
 				$email = $values->email;
@@ -133,13 +133,13 @@ class RegisterControl extends Control
 			$user = new Entity\User();
 
 			$auth = new Entity\Auth();
-			$auth->hash = \Nette\Security\Passwords::hash($values->hast);
+			$auth->hash = \Nette\Security\Passwords::hash($values->hash);
 			$auth->key = $values->email;
 			$auth->source = 'app';
 			$user->email = $values->email;
 			$user->addAuth($auth);
 
-			$this->users->addRole($user, ['superadmin', 'guest', 'norris']);
+			$this->users->addRole($user, ['signed', 'norris']);
 			$this->em->persist($user);
 		}
 
