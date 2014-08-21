@@ -54,6 +54,9 @@ class TwitterControl extends Control
         try {
             $data = $this->authenticator->tryAuthenticate();
 			
+//			dump($data);
+//			exit();
+			
         } catch (Netrium\Addons\Twitter\AuthenticationException $e) {
             throw new NS\AuthenticationException('Twitter authentication did not approve', self::NOT_APPROVED, $e);
         }

@@ -41,39 +41,80 @@ class RegistrationStorage extends \Nette\Object
 		'birthday' => 'birthdate',
 		'name' => 'name'
 	];
+	
+	private $fromFacebook = ['id', 'first_name', 'last_name', 'email'];
+	
+	
+	
 
 	public function __construct(\Nette\Http\Session $session, \Kdyby\Doctrine\EntityManager $em, \App\Model\Facade\Users $userFacade)
-	{
+	{		
 		$this->section = $session->getSection('registration');
 		$this->session = $session;
 		$this->em = $em;
 		$this->userFacade = $userFacade;
+		
+		$this->section->warnOnUndefined = TRUE;
+		
+		// Initialization
+		$this->section->oauth = FALSE;
+		$this->auth = new Entity\Auth();
+		$this->user = new Entity\User();
 	}
 
 	/**
 	 * Create an instance of User in session for future usage in registration
 	 * form from Facebook's data
 	 */
-	public function storeFromFacebook($id, $data, $token) // ToDo: $data je matoucí s $this->data, přejmenovat
+	public function storeFromFacebook($data, $token) // ToDo: $data je matoucí s $this->data, přejmenovat
 	{
+		$this->section->oauth = TRUE;
 
+//		$facebookMap = [
+//			'email' => $this->user->email,
+//			'birthday' => NULL,
+//			'name' => [
+//				$this->user->firstname
+//			]
+//		];
+			
+//		foreach ($facebookMap as $in => $out) {
+//				$array[$out] = isset($data[$in]) ? $data[$in] : NULL;
+//		}
+		
+		dump($data);
+//		dump($this->user);
+//		dump($this->auth);
+		exit();
+		
 		$this->data = $this->mapFromOAuth($this->facebookMap, $data);
 
+		
+		$this->auth->setKey($data->id)
+				->setSource('facebook')
+				->setToken($token);
+		
+		$user = new Entity\User();
+		$user->email = $data->
+		
 		$this->defaults = [
 			'name' => $this->data->name,
 			'email' => $this->data->email,
 			'birthday' => $this->data->birthdate
 		];
 
-		$this->auth = new Entity\Auth();
-		$this->auth->key = $id;
-		$this->auth->source = 'facebook';
-		$this->auth->token = $token;
 
 		$this->user = new Entity\User();
 		$this->user->email = $this->data->email;
 		$this->user = $this->userFacade->addRole($this->user, 'signed');
 
+		
+
+		
+		
+		
+		
+		
 		return $this->auth;
 	}
 
@@ -82,6 +123,8 @@ class RegistrationStorage extends \Nette\Object
 	 */
 	public function storeFromTwitter($data)
 	{
+		$this->section->oauth = TRUE;
+		
 		$this->auth = new Entity\Auth();
 		$this->auth->key = $data->id;
 		$this->auth->source = 'twitter';
@@ -133,7 +176,8 @@ class RegistrationStorage extends \Nette\Object
 
 	public function isOauth()
 	{
-		return $this->session->hasSection('registration');
+//		return $this->session->hasSection('registration');
+		return $this->section->oauth;
 	}
 
 	public function isRequired($value)
@@ -153,6 +197,7 @@ class RegistrationStorage extends \Nette\Object
 	public function setAuth($auth)
 	{
 		$this->section->auth = $auth;
+//		$this->user->addAuth($this->section->auth);
 	}
 
 	/** @return Entity\Auth */

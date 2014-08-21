@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user")
  *
  * @property string $email
+ * @property string $firstname
+ * @property string $surname
  * @property \Doctrine\Common\Collections\ArrayCollection $auths
  * @property \Doctrine\ORM\PersistentCollection $roles
  *
@@ -34,6 +36,17 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	protected $roles;
 
+    /**
+     * @ORM\Column(type="string", length=256, nullable=true)
+     */
+    protected $firstname;
+    
+    /**
+     * @ORM\Column(type="string", length=256, nullable=true)
+     */
+    protected $surname;
+	
+	
 	public function __construct()
 	{
 		$this->auths = new \Doctrine\Common\Collections\ArrayCollection;

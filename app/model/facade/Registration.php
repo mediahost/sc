@@ -14,9 +14,6 @@ class Registration extends Base
 {
 
 	/** @var EntityDao */
-	private $users;
-
-	/** @var EntityDao */
 	private $auths;
 	
 	/** @var EntityDao */
@@ -25,13 +22,30 @@ class Registration extends Base
 	/** @var EntityDao */
 	private $roles;
 	
+	/** @var EntityDao */
+	private $users;
+	
 	
 	protected function init()
 	{
-		$this->users = $this->em->getDao(Entity\User::getClassName());
 		$this->auths = $this->em->getDao(Entity\Auth::getClassName());
 		$this->registrations = $this->em->getDao(Entity\Registration::getClassName());
 		$this->roles = $this->em->getDao(Entity\Role::getClassName());
+		$this->users = $this->em->getDao(Entity\User::getClassName());
+	}
+	
+	
+	/**
+	 * 
+	 * @param string $key 
+	 * @param string $source
+	 */
+	public function findByKey($key, $source)
+	{
+		return $this->users->findOneBy([
+					'auths.key' => $key,
+					'auths.source' => $source
+		]);
 	}
 
 	public function findByFacebookId($id)
