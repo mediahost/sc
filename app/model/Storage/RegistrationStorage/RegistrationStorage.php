@@ -44,6 +44,8 @@ class RegistrationStorage extends \Nette\Object
 	
 	private $fromFacebook = ['id', 'first_name', 'last_name', 'email'];
 	
+	private $fromTwitter = ['id'];
+	
 	
 	
 
@@ -60,6 +62,25 @@ class RegistrationStorage extends \Nette\Object
 		$this->section->oauth = FALSE;
 		$this->auth = new Entity\Auth();
 		$this->user = new Entity\User();
+	}
+	
+	/**
+	 * 
+	 */
+	public function store($source, $data)
+	{
+		switch ($source) {
+			case 'facebook':
+				$this->storeFromFacebook($data, $token);
+				break;
+			
+			case 'twitter':
+				$this->storeFromTwitter($data);
+				break;
+			
+			default :
+				throw new Exception('Wrong source of OAuth data specified.');
+		}
 	}
 
 	/**
@@ -174,10 +195,26 @@ class RegistrationStorage extends \Nette\Object
 		return TRUE;
 	}
 
+	/**
+	 * 
+	 * @return boolean
+	 */
 	public function isOauth()
 	{
-//		return $this->session->hasSection('registration');
-		return $this->section->oauth;
+		return (bool) $this->section->oauth;
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function isVerified()
+	{
+		if ($this->isOauth() && isset($this->user->email)) {
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
 
 	public function isRequired($value)

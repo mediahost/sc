@@ -36,15 +36,16 @@ class Registration extends Base
 	
 	
 	/**
-	 * 
-	 * @param string $key 
-	 * @param string $source
+	 * Find user by Auth key and source type.
+	 * @param string $source Source name
+	 * @param string $key Users's external identification
+	 * @return Entity\User
 	 */
-	public function findByKey($key, $source)
+	public function findByKey($source, $key)
 	{
 		return $this->users->findOneBy([
-					'auths.key' => $key,
-					'auths.source' => $source
+					'auths.source' => $source,
+					'auths.key' => $key
 		]);
 	}
 
@@ -72,6 +73,21 @@ class Registration extends Base
 
 		return $this->auths->save($auth);
 	}
+	
+	/**
+	 * Update OAuth access token.
+	 * @param string $source
+	 * @param string $id
+	 * @param string $token
+	 * @return Entity\Auth
+	 */
+	public function updateAccessToken($source, $id, $token)
+	{
+		$auth = $this->auths->findOneBy(['key' => $id]);
+		$auth->token = $token;
+
+		return $this->auths->save($auth);
+	}
 
 	public function findByEmail($email)
 	{
@@ -89,6 +105,12 @@ class Registration extends Base
 		
 	}
 
+	public function temporarilyRegister(Entity\Registration $registration)
+	{
+		$registration->verification_code = Nette\Utils\Strings::random(32);
+		return $this->registrations->save($registration);
+	}
+	
 	public function verify($code)
 	{
 		$registration = $this->registrations->findOneBy(['verification_code' => $code]);
