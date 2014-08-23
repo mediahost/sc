@@ -17,7 +17,8 @@ use Kdyby\Facebook\Facebook,
 use Netrium\Addons\Twitter\Authenticator as Twitter,
 	Netrium\Addons\Twitter\AuthenticationException as TwitterException;
 
-use App\Model\Entity\Auth,
+use App\Model\Entity,
+	App\Model\Entity\Auth,
 	App\Model\Entity\User,
 	App\Model\Entity\Registration;
 
@@ -58,6 +59,23 @@ class AuthControl extends Control
 		$this->facebook = $facebook;
 		$this->twitter = $twitter;
 	}
+	
+	public function renderRegistration()
+	{
+		$template = $this->template;
+		$template->oauth = $this->storage->isOAuth();
+		$template->birthdate = $this->storage->isRequired('birthdate');
+		$template->email = $this->storage->isRequired('email');
+		$template->setFile(__DIR__ . '/registration.latte');
+		$template->render();
+	}
+	
+	public function renderIcons()
+	{
+		$template = $this->template;
+		$template->setFile(__DIR__ . '/icons.latte');
+		$template->render();
+	}
 
 	/**
 	 * Register form factory.
@@ -66,22 +84,21 @@ class AuthControl extends Control
 	protected function createComponentRegisterForm()
 	{
 		$form = new Form();
-		$form->getElementPrototype()->addAttributes(['autocomplete' => 'off']);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
-		if ($this->registration->isRequired('birthdate')) {
+		if ($this->storage->isRequired('birthdate')) {
 			$form->addText('name', 'Name')
 					->setRequired('Please enter your username')
 					->setAttribute('placeholder', 'Full name');
 		}
 
-		if ($this->registration->isRequired('birthdate')) {
+		if ($this->storage->isRequired('birthdate')) {
 			$form->addText('birthdate', 'Birthdate')
 					->setRequired('Please enter your username')
 					->setAttribute('placeholder', 'Birthdate');
 		}
 
-		if ($this->registration->isRequired('email')) {
+		if ($this->storage->isRequired('email')) {
 			$form->addText('email', 'E-mail')
 					->setRequired('Please enter your e-mail')
 					->setAttribute('placeholder', 'E-mail')
@@ -91,14 +108,19 @@ class AuthControl extends Control
 					}, 'This e-mail is used yet!');
 		}
 
-		if ($this->registration->isOauth()) {
-			$form->setDefaults($this->registration->defaults);
+		if ($this->storage->isOAuth()) {
+			$form->setDefaults($this->storage->defaults);
 		}
 
-		if (!$this->registration->isOauth()) {
+		if (!$this->storage->isOAuth()) {
 			$form->addPassword('password', 'Password')
 					->setRequired('Please enter your password')
 					->setAttribute('placeholder', 'Password');
+			
+			$form->addPassword('password_verify', 'Password again:')
+					->addRule(Form::FILLED, 'Please enter password verification.')
+					->addConditionOn($form['password_verify'], Form::FILLED)
+							->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
 		}
 
 		$form->addSubmit('register', 'Register');
@@ -116,27 +138,25 @@ class AuthControl extends Control
 	public function registerFormSucceeded(Form $form, $values)
 	{
 		// Namapování hodnot z formuláře
-		if ($this->registration->isOauth()) {
+		
+		// Proces vyhodnocení
+		if ($this->storage->isOAuth()) {
 			// Registrace přes OAuth
-			if ($this->registration->user->email !== NULL) {
+			if ($this->storage->isVerified()) {
 				// Ověřený e-mail
-				$user = $this->registration->user;
-				$auth = $this->registration->auth;
-				$user->addAuth($auth);
-				$user->clearRoles();
-				$this->users->addRole($user, ['signed']);
-				$this->em->persist($user);
-				$this->em->flush();
-
-				$existing = $this->users->findByEmail($this->registration->user->email);
-
+				
+				$user = $this->facade->registration();
+				
+				// Totok: end
+				
 				// Přihlásit
-				$this->login($existing);
+				$this->login($user);
 			} else {
 				// Neověřený e-mail
-				$this->registration->user->email = $values->email;
-				$registration = $this->registration->toRegistration();
+				$this->storage->user->email = $values->email;
+				$registration = $this->storage->toRegistration();
 				// Ověření mailu
+				$this->verify($registration);
 			}
 
 		} else {
@@ -147,11 +167,6 @@ class AuthControl extends Control
 			$registration->source = 'app';
 			$registration->hash = \Nette\Security\Passwords::hash($values->password);
 			// Ověření mailu
-		}
-
-
-		if (!isset($this->registration->user->email)) {
-			// Ověření e-mailu
 			$this->verify($registration);
 		}
 	}
@@ -279,14 +294,11 @@ class AuthControl extends Control
 		$registration = $this->facade->temporarilyRegister($registration);
 
 		// Odeslat e-mail
-		$message = new Nette\Mail\Message();
-		// Do messages předat $template a tam si s tím pohrát.
-		$template = $this->createTemplate()->setFile($this->messages->getTemplate('registration')); // Tohle bude ve storage, ta poté vrátí $message
-		$template->code = $registration->verification_code;
+		$message = $this->messages->getRegistrationMail($this->createTemplate(), [
+			'code' => $registration->verification_code
+		]);
 
-		$message->setFrom('noreply@sc.com')
-				->addTo($registration->email)
-				->setHtmlBody($template); // Tohle buda taky v té storage
+		$message->addTo($registration->email);
 		$this->mailer->send($message);
 
 		$this->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');

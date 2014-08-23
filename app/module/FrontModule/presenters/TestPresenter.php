@@ -26,6 +26,9 @@ class TestPresenter extends BasePresenter
 
 		$this->users->addRole($user, ['superadmin', 'guest', 'kokot']);
 
+		$array = new \Nette\Utils\ArrayHash();
+		\Tracy\Debugger::barDump();
+		
 //		$this->em->persist($user);
 //		$this->em->flush();
 	}

@@ -7,15 +7,11 @@ namespace App\FrontModule\Presenters;
  */
 class SignPresenter extends BasePresenter
 {
-
 	/** @var \App\Components\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
-
-	/** @var \App\Components\Sign\IRegisterControlFactory @inject */
-	public $iRegisterControlFactory;
-
-	/** @var \App\Components\Sign\IMergeControlFactory @inject */
-	public $iMergeControlFactory;
+	
+	/** @var \App\components\Sign\IAuthControlFactory @inject */
+	public $iAuthControlFactory;
 
 	/** @var \App\Model\Storage\RegistrationStorage @inject */
 	public $registration;
@@ -23,13 +19,13 @@ class SignPresenter extends BasePresenter
 	/** @var \App\Model\Facade\Registration @inject */
 	public $registrationFacade;
 
-	
+
 	protected function startup()
 	{
 		parent::startup();
 
-		$this->user->logout();
-		
+//		$this->user->logout();
+
 		// Logged user redirect away
 		if ($this->user->isLoggedIn()) {
 //			$this->flashMessage('You have been already signed in.', 'warning'); // ToDo: Delete, 'cos showing after redirection throught this presenter, maybe.
@@ -38,7 +34,7 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function actionDefault()
 	{
@@ -46,15 +42,24 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function actionIn()
 	{
 		$this->registration->wipe();
 	}
+	
+	/**
+	 *
+	 */
+	public function actionOut()
+	{
+		$this->user->logout();
+		$this->redirect(':Front:Sign:in');
+	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function actionLostPassword()
 	{
@@ -63,18 +68,18 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function actionRegister()
 	{
 		// Check if is user in registration process
 //		$this->checkInProcess();
 
-		$this->template->bool = $this->registration->isOauth();
+		$this->template->bool = $this->registration->isOAuth();
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function actionVerify($code)
 	{
@@ -85,13 +90,13 @@ class SignPresenter extends BasePresenter
 			$this->presenter->flashMessage('User account has been creared.', 'success');
 			$this->redirect(':Admin:Dashboard:');
 		}
-		
+
 
 	}
 
 	private function checkInProcess()
 	{
-		if (!$this->registration->isOauth()) {
+		if (!$this->registration->isOAuth()) {
 			$this->redirect(':Front:Sign:in');
 		}
 	}
@@ -103,13 +108,13 @@ class SignPresenter extends BasePresenter
 	{
 		return $this->iSignInControlFactory->create();
 	}
-
-	/** @return \App\Components\Sign\RegisterControl */
-	protected function createComponentRegister()
+	
+	/** @return \App\components\Sign\AuthControl */
+	protected function createComponentAuth()
 	{
-		return $this->iRegisterControlFactory->create();
+		return $this->iAuthControlFactory->create();
 	}
-	
+
 // </editor-fold>
-	
+
 }

@@ -13,21 +13,13 @@ use Nette\Security as NS,
  * @author Martin Šifra <me@martinsifra.cz>
  */
 class SignInControl extends Control
-{
-
-	/** @var \App\Components\Auth\IFacebookControlFactory */
-	public $iFacebookControlFactory;
+{	
 	
-	/** @var \App\Components\Auth\ITwitterControlFactory */
-	public $iTwitterControlFactory;
-
-	
-	public function __construct(\App\Components\Auth\IFacebookControlFactory $fb, \App\Components\Auth\ITwitterControlFactory $twitter)
+	public function __construct()
 	{
-		$this->iFacebookControlFactory = $fb;
-		$this->iTwitterControlFactory = $twitter;
+		parent::__construct();
 	}
-
+	
 	public function render()
 	{
 		$template = $this->template;
@@ -79,19 +71,6 @@ class SignInControl extends Control
 			$form->addError('Incorrect login or password!');
 		}
 	}
-
-	/** @return Auth\FacebookControl */
-	protected function createComponentFacebook()
-	{
-		return $this->iFacebookControlFactory->create();
-	}
-	
-	/** @return Auth\TwitterControl */
-	protected function createComponentTwitter()
-	{
-		return $this->iTwitterControlFactory->create();
-	}
-
 }
 
 interface ISignInControlFactory
