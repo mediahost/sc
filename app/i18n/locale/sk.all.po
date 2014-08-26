@@ -1,0 +1,18 @@
+# Gettext keys exported by GettextTranslator and Translation Panel
+# Created: 2014-08-24 12:54:38
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2014-08-24 12:56+0100\n"
+"Project-Id-Version: Sourcecode\n"
+"POT-Creation-Date: 2014-08-24 12:34+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4 ? 1 : 2));\n"
+"Language: cs_CZ\n"
+"X-Generator: Poedit 1.6.8\n"
+
+msgid "Registration"
+msgstr "Registrácia"

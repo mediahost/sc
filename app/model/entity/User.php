@@ -46,6 +46,11 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
      */
     protected $surname;
 	
+    /**
+     * @ORM\Column(type="string", length=256, nullable=true)
+     */
+    protected $name;
+	
 	
 	public function __construct()
 	{

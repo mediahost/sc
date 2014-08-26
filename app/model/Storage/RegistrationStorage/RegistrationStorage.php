@@ -2,7 +2,13 @@
 
 namespace App\Model\Storage;
 
+use Nette\Http\Session,
+	Nette\Http\SessionSection,
+	App\Model\Facade\Users as UserFacade,
+	Nette\Utils\ArrayHash;
 use App\Model\Entity;
+
+use \Kdyby\Doctrine\EntityManager;
 
 /**
  * Description of RegistrationStorage
@@ -15,137 +21,126 @@ use App\Model\Entity;
 class RegistrationStorage extends \Nette\Object
 {
 
-	/** @var \Nette\Http\SessionSection */
+	/** @var SessionSection */
 	public $section;
 
-	/** @var \Kdyby\Doctrine\EntityManager */
+	/** @var EntityManager */
 	private $em;
 
+	/** @var Session */
 	public $session;
 
-	/** @var \App\Model\Facade\Users */
-	private $userFacade;
+	/** @var UserFacade */
+	private $facade;
 
 	/**
-	 * An array with requred items for registration
+	 * An array with required items in User entity for complete registration.
 	 * @var array
 	 */
-	private $required = ['email', 'birthdate'];
+	private $required = ['email'];
 
 	/**
-	 * IN => OUT
+	 * List of expecting values from FB, which we can and want process.
 	 * @var array
 	 */
-	private $facebookMap = [
-		'email' => 'email',
-		'birthday' => 'birthdate',
-		'name' => 'name'
-	];
+	private $facebookKeys = ['id', 'first_name', 'last_name', 'name', 'email', 'birthday'];
 
-	private $fromFacebook = ['id', 'first_name', 'last_name', 'email'];
-
-	private $fromTwitter = ['id'];
+	/**
+	 * List of expecting values from Twitter, which we can and want process.
+	 * @var array
+	 */
+	private $twitterKeys = ['id', 'name'];
 
 
-
-
-	public function __construct(\Nette\Http\Session $session, \Kdyby\Doctrine\EntityManager $em, \App\Model\Facade\Users $userFacade)
+	public function __construct(Session $session, EntityManager $em, UserFacade $facade)
 	{
 		$this->section = $session->getSection('registration');
 		$this->session = $session;
 		$this->em = $em;
-		$this->userFacade = $userFacade;
+		$this->facade = $facade;
 
 		$this->section->warnOnUndefined = TRUE;
 
 		// Initialization
-		$this->section->oauth = FALSE;
-		$this->auth = new Entity\Auth();
-		$this->user = new Entity\User();
+		$this->initSession();
 	}
 
 	/**
-	 *
+	 * Saving process from given OAuth to User and Auth entities in session.
+	 * @param type $source
+	 * @param type $data
+	 * @param type $token
+	 * @throws RegistrationStorageException
 	 */
-	public function store($source, $data)
+	public function store($source, $data, $token = NULL)
 	{
+
+		// Convert OAuth $data to ArrayHash object
+		if (!($data instanceof ArrayHash)) {
+			$data = ArrayHash::from($data, TRUE);
+		}
+
+		// Recognize source type
 		switch ($source) {
 			case 'facebook':
 				$this->storeFromFacebook($data, $token);
 				break;
 
 			case 'twitter':
-				$this->storeFromTwitter($data);
+				$this->storeFromTwitter($data, $token);
 				break;
 
 			default :
-				throw new Exception('Wrong source of OAuth data specified.');
+				throw new RegistrationStorageException('Unrecognized source of OAuth data.');
 		}
+
+		// If is set e-mail from OAuth, user is verified.
+		if (isset($this->user->email)) {
+			$this->section->verified = TRUE;
+		}
+
+		// Default values for registration form
+		$this->defaults = [
+			'reg_name' => $this->user->name,
+			'reg_email' => $this->user->email
+		];		
 	}
 
 	/**
-	 * Create an instance of User in session for future usage in registration
-	 * form from Facebook's data
+	 * Fill User and Auth entities with data from Facebook OAuth.
+	 * @param ArrayHash $data
+	 * @param string $token
+	 * @return void
 	 */
-	public function storeFromFacebook($data, $token) // ToDo: $data je matoucí s $this->data, přejmenovat
+	public function storeFromFacebook(ArrayHash $data, $token) // ToDo: $data je matoucí s $this->data, přejmenovat
 	{
 		$this->section->oauth = TRUE;
-
-//		$facebookMap = [
-//			'email' => $this->user->email,
-//			'birthday' => NULL,
-//			'name' => [
-//				$this->user->firstname
-//			]
-//		];
-
-//		foreach ($facebookMap as $in => $out) {
-//				$array[$out] = isset($data[$in]) ? $data[$in] : NULL;
-//		}
-
-
-		$this->data = $this->mapFromOAuth($this->facebookMap, $data);
-
+		$data = $this->checkKeys($this->facebookKeys, $data);
 
 		$this->auth->setKey($data->id)
 				->setSource('facebook')
 				->setToken($token);
 
-		$user = new Entity\User();
-		$user->email = $data->
-
-		$this->defaults = [
-			'name' => $this->data->name,
-			'email' => $this->data->email,
-			'birthday' => $this->data->birthdate
-		];
-
-
-		$this->user = new Entity\User();
-		$this->user->email = $this->data->email;
-		$this->user = $this->userFacade->addRole($this->user, 'signed');
-
-
-
-		return $this->auth;
+		$this->user->setEmail($data->email)
+				->setName($data->first_name . ' ' . $data->last_name);
 	}
 
 	/**
-	 *
+	 * Fill User and Auth entities with data from Titter OAuth.
+	 * @param ArrayHash $data
+	 * @param string $token
+	 * @return void
 	 */
-	public function storeFromTwitter($data)
+	public function storeFromTwitter(ArrayHash $data, $token)
 	{
 		$this->section->oauth = TRUE;
+		$data = $this->checkKeys($this->twitterKeys, $data);
 
-		$this->auth = new Entity\Auth();
-		$this->auth->key = $data->id;
-		$this->auth->source = 'twitter';
+		$this->auth->setKey($data->id)
+				->setSource('twitter')
+				->setToken($token);
 
-		$this->user = new Entity\User();
-		$this->user->email = NULL;
-		$this->user = $this->userFacade->addRole($this->user, 'signed');
-
-		return $this->auth;
+		$this->user->setName($data->name);
 	}
 
 	/**
@@ -159,26 +154,30 @@ class RegistrationStorage extends \Nette\Object
 	}
 
 	/**
-	 *
-	 * @param array $map
-	 * @param \Nette\Utils\ArrayHash|array $data
-	 * @return array
+	 * Check if all requested indexes aren't undefined.
+	 * @param array $keys
+	 * @param ArrayHash $data
+	 * @return ArrayHash
 	 */
-	public function mapFromOAuth($map, $data)
+	public function checkKeys($keys, ArrayHash $data)
 	{
-		$array = [];
-
-		foreach ($map as $in => $out) {
-			$array[$out] = isset($data[$in]) ? $data[$in] : NULL;
+		foreach ($keys as $key) {
+			if (!isset($data[$key])) {
+				$data->$key = NULL;
+			}
 		}
 
-		return \Nette\Utils\ArrayHash::from($array);
+		return $data;
 	}
 
+	/**
+	 *
+	 * @return boolean
+	 */
 	public function isComplete()
 	{
 		foreach ($this->required as $value) {
-			if ($this->data[$value] === NULL) {
+			if ($this->user->$value === NULL) {
 				return FALSE;
 			}
 		}
@@ -187,7 +186,7 @@ class RegistrationStorage extends \Nette\Object
 	}
 
 	/**
-	 *
+	 * Return whether registration or login process via OAuth have begun.
 	 * @return boolean
 	 */
 	public function isOAuth()
@@ -196,21 +195,22 @@ class RegistrationStorage extends \Nette\Object
 	}
 
 	/**
-	 *
+	 * Return whether the user is verified.
 	 * @return boolean
 	 */
 	public function isVerified()
 	{
-		if ($this->isOAuth() && isset($this->user->email)) {
-			return TRUE;
-		}
-
-		return FALSE;
+		return (bool) $this->section->verified;
 	}
 
-	public function isRequired($value)
+	/**
+	 * Returns whether is the requested value required, but empty from AOuth.
+	 * @param string $key Uset entity attribute name.
+	 * @return boolean
+	 */
+	public function isRequired($key) // Pokud bude $key NULL (prostě nic), tak zkontroluje jestli mám všechny required
 	{
-		if ($this->isOAuth() && isset($this->data->$value)) {
+		if ($this->isOAuth() && in_array($key, $this->required) && $this->user->$key !== NULL) {
 			return FALSE;
 		}
 
@@ -222,10 +222,10 @@ class RegistrationStorage extends \Nette\Object
 		$this->section->remove();
 	}
 
-	public function setAuth($auth)
+	/** @param Entity\Auth $auth */
+	public function setAuth(Entity\Auth $auth)
 	{
 		$this->section->auth = $auth;
-//		$this->user->addAuth($this->section->auth);
 	}
 
 	/** @return Entity\Auth */
@@ -234,7 +234,8 @@ class RegistrationStorage extends \Nette\Object
 		return $this->section->auth;
 	}
 
-	public function setUser($user)
+	/** @param Entity\User $user */
+	public function setUser(Entity\User $user)
 	{
 		$this->section->user = $user;
 	}
@@ -245,24 +246,16 @@ class RegistrationStorage extends \Nette\Object
 		return $this->section->user;
 	}
 
-	public function setData($data)
-	{
-		$this->section->data = $data;
-	}
-
-	public function getData()
-	{
-		return $this->section->data;
-	}
-
+	/** @param array $defaults */
 	public function setDefaults($defaults)
 	{
-		$this->section->defaults = $defaults;
+		$this->section->defaults = (array) $defaults;
 	}
 
+	/** @return array */
 	public function getDefaults()
 	{
-		return $this->section->defaults ? $this->section->defaults : [];
+		return $this->section->defaults;
 	}
 
 	public function toRegistration()
@@ -275,5 +268,30 @@ class RegistrationStorage extends \Nette\Object
 
 		return $registration;
 	}
+
+	/**
+	 * Set up all session properties to their default values.
+	 * @return void
+	 */
+	private function initSession() {
+		$defaults = [
+			'oauth' => FALSE,
+			'verified' => FALSE,
+			'auth' => new Entity\Auth(),
+			'user' => new Entity\User(),
+			'defaults' => []
+		];
+
+		foreach ($defaults as $property => $value) {
+			if (!isset($this->section->{$property})) {
+				$this->section->{$property} = $value;
+			}
+		}
+	}
+
+}
+
+class RegistrationStorageException extends \Exception
+{
 
 }

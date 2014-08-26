@@ -13,6 +13,8 @@ includes:
 	- model/model.neon
 	- form/form.neon
 	- presenters/presenters.neon
+	- translator/translator.neon
+	- mail/mail.neon
 
 parameters:
 
@@ -34,14 +36,9 @@ nette:
 	debugger:
 		email: 'pupe.dupe@gmail.com'
 		bar:
-			- JanDrabek\MailPanel\MailPanel
-
-#	mailer:
-#		smtp: false
+#			- JanDrabek\MailPanel\MailPanel
 
 services:
-	nette.mailer: JanDrabek\MailPanel\SessionMailer
-
 	authenticator: App\Model\Authenticator\UserAuthenticator
 
 	- App\RouterFactory

@@ -1,0 +1,12 @@
+nette:
+	mailer:
+#		smtp: true # zapne SmtpMailer místo SendmailMailer
+		smtp: true
+		host: smtp.gmail.com
+		secure: ssl
+		username: m.sifra@gmail.com
+		password: a1drsp2ach
+		# dále lze uvést host, port, username, password, secure, timeout
+
+services:
+#	nette.mailer: JanDrabek\MailPanel\SessionMailer

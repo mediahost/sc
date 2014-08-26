@@ -6,18 +6,24 @@ use Nette\Security as NS,
 	Nette\Application\UI\Control,
 	Nette\Application\UI\Form,
 	Nette,
-	Model;
+	Model,
+	GettextTranslator\Gettext as Translator;
 
 /**
  * Sign in form control
  * @author Martin Šifra <me@martinsifra.cz>
  */
 class SignInControl extends Control
-{	
+{
 	
-	public function __construct()
+	/** @var Translator */
+	private $translator;
+	
+	
+	public function __construct(Translator $translator)
 	{
 		parent::__construct();
+		$this->translator = $translator;
 	}
 	
 	public function render()
@@ -34,6 +40,7 @@ class SignInControl extends Control
 	protected function createComponentSignInForm()
 	{
 		$form = new Form();
+		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		$form->addText('username', 'Username')

@@ -46,7 +46,7 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionIn()
 	{
-		$this->registration->wipe();
+//		$this->registration->wipe();
 	}
 	
 	/**

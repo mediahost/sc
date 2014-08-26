@@ -4,6 +4,7 @@ namespace App\components\Sign;
 
 use	Nette\Application\UI\Control,
 	Nette\Application\UI\Form,
+	GettextTranslator\Gettext as Translator,
 	App\Model\Storage\RegistrationStorage as Storage,
 	App\Model\Facade\Registration as Facade,
 	Nette\Security\Identity,
@@ -30,6 +31,9 @@ use App\Model\Entity,
 class AuthControl extends Control
 {
 
+	/** @var Translator */
+	private $translator;
+	
 	/** @var Storage */
 	private $storage;
 
@@ -49,9 +53,10 @@ class AuthControl extends Control
 	private $messages;
 
 
-	public function __construct(Facade $facade, Storage $storage, IMailer $mailer, Messages $messages, Facebook $facebook, Twitter $twitter)
+	public function __construct(Translator $translator, Facade $facade, Storage $storage, IMailer $mailer, Messages $messages, Facebook $facebook, Twitter $twitter)
 	{
 		parent::__construct();
+		$this->translator = $translator;
 		$this->storage = $storage;
 		$this->facade = $facade;
 		$this->mailer = $mailer;
@@ -63,9 +68,8 @@ class AuthControl extends Control
 	public function renderRegistration()
 	{
 		$template = $this->template;
-		$template->oauth = $this->storage->isOAuth();
-		$template->birthdate = $this->storage->isRequired('birthdate');
-		$template->email = $this->storage->isRequired('email');
+		$template->setTranslator($this->translator);
+		$template->storage = $this->storage;
 		$template->setFile(__DIR__ . '/registration.latte');
 		$template->render();
 	}
@@ -83,49 +87,43 @@ class AuthControl extends Control
 	 */
 	protected function createComponentRegisterForm()
 	{
+		
 		$form = new Form();
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
-		if ($this->storage->isRequired('birthdate')) {
-			$form->addText('name', 'Name')
-					->setRequired('Please enter your username')
+		if ($this->storage->isRequired('name')) {
+			$form->addText('reg_name', 'Name')
 					->setAttribute('placeholder', 'Full name');
 		}
 
 		if ($this->storage->isRequired('birthdate')) {
-			$form->addText('birthdate', 'Birthdate')
-					->setRequired('Please enter your username')
+			$form->addText('reg_birthdate', 'Birthdate')
 					->setAttribute('placeholder', 'Birthdate');
 		}
 
 		if ($this->storage->isRequired('email')) {
-			$form->addText('email', 'E-mail')
+			$form->addText('reg_email', 'E-mail')
 					->setRequired('Please enter your e-mail')
 					->setAttribute('placeholder', 'E-mail')
-					->setAttribute('autocomplete', 'off')
-					->addRule(function(Nette\Forms\Controls\TextInput $item) {
-						return $this->users->isUnique($item->value);
+					->addRule(function(\Nette\Forms\Controls\TextInput $item) { // Tohle pouze v případě registrace přes aplikaci
+						return TRUE;//$this->users->isUnique($item->value);
 					}, 'This e-mail is used yet!');
 		}
 
-		if ($this->storage->isOAuth()) {
-			$form->setDefaults($this->storage->defaults);
-		}
-
 		if (!$this->storage->isOAuth()) {
-			$form->addPassword('password', 'Password')
+			$form->addPassword('reg_password', 'Password')
 					->setRequired('Please enter your password')
 					->setAttribute('placeholder', 'Password');
 			
-			$form->addPassword('password_verify', 'Password again:')
+			$form->addPassword('reg_password_verify', 'Password again:')
 					->addRule(Form::FILLED, 'Please enter password verification.')
-					->addConditionOn($form['password_verify'], Form::FILLED)
-							->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
+					->addConditionOn($form['reg_password_verify'], Form::FILLED)
+							->addRule(Form::EQUAL, 'Passwords must be equal.', $form['reg_password']);
 		}
-
+		
+		$form->setDefaults($this->storage->defaults);
 		$form->addSubmit('register', 'Register');
 
-		// call method signInFormSucceeded() on success
 		$form->onSuccess[] = $this->registerFormSucceeded;
 		return $form;
 	}
@@ -156,7 +154,7 @@ class AuthControl extends Control
 				$this->storage->user->email = $values->email;
 				$registration = $this->storage->toRegistration();
 				// Ověření mailu
-				$this->verify($registration);
+				$this->temporarilyRegister($registration);
 			}
 
 		} else {
@@ -167,7 +165,7 @@ class AuthControl extends Control
 			$registration->source = 'app';
 			$registration->hash = \Nette\Security\Passwords::hash($values->password);
 			// Ověření mailu
-			$this->verify($registration);
+			$this->temporarilyRegister($registration);
 		}
 	}
 
@@ -210,13 +208,13 @@ class AuthControl extends Control
 		try {
 			$data = $this->twitter->tryAuthenticate();
 			$source = 'twitter';
-
-			$this->process($source, $data['user']['id'], $data, $data['accessToken']['key']);
+			
+			$this->process($source, $data['user']->id, $data['user'], $data['accessToken']['key']);
 
 		} catch (TwitterException $e) {
 			\Tracy\Debugger::log($e->getMessage(), 'twitter');
 
-			throw new NS\AuthenticationException('Twitter authentication did not approve', self::NOT_APPROVED, $e);
+			throw new \Nette\Security\AuthenticationException('Twitter authentication did not approve', self::NOT_APPROVED, $e);
 		}
 	}
 
@@ -234,16 +232,17 @@ class AuthControl extends Control
 //			hodnoty, tak bych měl odsud přesměrovat na registraci.
 //			$user = $this->register();
 
-			$this->storage->store($source, $data);
+			$this->storage->store($source, $data, $token);
+			$this->presenter->redirect('Sign:Register');
 
 		}
 
 
 		// Update tokenu
-		$this->facade->updateAccessToken($source, $id, $token);
+//		$this->facade->updateAccessToken($source, $id, $token);
 
 		// Login
-		$this->login($user);
+//		$this->login($user);
 	}
 
 	/**
@@ -288,7 +287,7 @@ class AuthControl extends Control
 	 * @param Registration $registration
 	 * @throws \Nette\Application\AbortException
 	 */
-	private function verify(Registration $registration)
+	private function temporarilyRegister(Registration $registration)
 	{
 		// Ověření e-mailu
 		$registration = $this->facade->temporarilyRegister($registration);

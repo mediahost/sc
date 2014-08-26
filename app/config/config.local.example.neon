@@ -15,3 +15,22 @@ twitter:
 parameters:
 	install:
 		startUsers: ['user_mail' = ['password', 'name_of_role']]
+
+nette:
+	# Pro nastavení odesílání e-mailů do debugbaru je nutné mít nastavenou
+	# službu a zapnutý debugger bar MailPanel. Pro SMTP nebo mail() je nutné
+	# výše uvedené zakomentovat. Může existovt pouze jedna instance IMailer.
+	mailer:
+		smtp: true # Zapne SmtpMailer místo SendmailMailer využívající mail()
+		host: smtp.gmail.com
+		secure: ssl
+		username: user@gmail.com
+		password: heslo
+		# Lze uvést host, port, username, password, secure, timeout
+
+	debugger:
+		bar:
+			- JanDrabek\MailPanel\MailPanel
+
+services:
+	nette.mailer: JanDrabek\MailPanel\SessionMailer

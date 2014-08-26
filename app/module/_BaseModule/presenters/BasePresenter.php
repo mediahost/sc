@@ -18,9 +18,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	/** @var \App\Components\Sign\ISignOutControlFactory @inject */
 	public $iSignOutControlFactory;
+	
+    /** @var \GettextTranslator\Gettext @inject */
+    public $translator;
 
-	/** @var string */
-	private $lang;
+	/** @persistent string */
+	public $lang = 'en';
 
 	protected function startup()
 	{
@@ -47,10 +50,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	protected function beforeRender()
 	{
-		parent::beforeRender();
-
 		$this->template->lang = $this->lang;
+		$this->template->setTranslator($this->translator);
 	}
+	
 
 // <editor-fold defaultstate="collapsed" desc="Components">
 
@@ -64,7 +67,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 // <editor-fold defaultstate="collapsed" desc="lang">
 	private function _setLang()
 	{
-		$this->lang = "en";
+		$this->translator->setLang($this->lang);
+//		$this->lang = "en";
 	}
 
 // </editor-fold>
