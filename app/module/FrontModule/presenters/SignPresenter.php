@@ -70,8 +70,17 @@ class SignPresenter extends BasePresenter
 	/**
 	 *
 	 */
-	public function actionRegister()
+	public function actionRegister($source = NULL)
 	{
+		
+		if (!$this->registration->isSource($source)) {
+			$this->redirect('in');
+		} else {
+			if ($source === NULL) {
+				$this->registration->wipe();
+			}
+		}
+		
 		// Check if is user in registration process
 //		$this->checkInProcess();
 
@@ -83,12 +92,13 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionVerify($code)
 	{
-		if (!$this->registrationFacade->verify($code)) {
+		if ($user = $this->registrationFacade->verify($code)) {
+			$this->presenter->user->login(new \Nette\Security\Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+			$this->presenter->flashMessage('You have been successfully logged in!', 'success');
+			$this->presenter->redirect(':Admin:Dashboard:');
+		} else {
 			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
 			$this->redirect('in');
-		} else {
-			$this->presenter->flashMessage('User account has been creared.', 'success');
-			$this->redirect(':Admin:Dashboard:');
 		}
 
 

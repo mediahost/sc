@@ -17,6 +17,7 @@ use \Kdyby\Doctrine\EntityManager;
  *
  * @property Entity\Auth $auth
  * @property Entity\User $user
+ * @property array $defaults
  */
 class RegistrationStorage extends \Nette\Object
 {
@@ -32,6 +33,12 @@ class RegistrationStorage extends \Nette\Object
 
 	/** @var UserFacade */
 	private $facade;
+	
+	/**
+	 * List of valid sources names.
+	 * @var array
+	 */
+	private $sources = [NULL, 'facebook', 'twitter'];
 
 	/**
 	 * An array with required items in User entity for complete registration.
@@ -95,7 +102,7 @@ class RegistrationStorage extends \Nette\Object
 		}
 
 		// If is set e-mail from OAuth, user is verified.
-		if (isset($this->user->email)) {
+		if ($this->user->email !== NULL) {
 			$this->section->verified = TRUE;
 		}
 
@@ -140,7 +147,8 @@ class RegistrationStorage extends \Nette\Object
 				->setSource('twitter')
 				->setToken($token);
 
-		$this->user->setName($data->name);
+		$this->user->setEmail(NULL)
+				->setName($data->name);
 	}
 
 	/**
@@ -200,26 +208,42 @@ class RegistrationStorage extends \Nette\Object
 	 */
 	public function isVerified()
 	{
-		return (bool) $this->section->verified;
+		return /*(bool)*/ $this->section->verified;
 	}
 
 	/**
 	 * Returns whether is the requested value required, but empty from AOuth.
-	 * @param string $key Uset entity attribute name.
+	 * Without argument checks whether is any required property NULL.
+	 * @param NULL|string $key Uset entity attribute name.
 	 * @return boolean
 	 */
-	public function isRequired($key) // Pokud bude $key NULL (prostě nic), tak zkontroluje jestli mám všechny required
+	public function isRequired($key = NULL)
 	{
-		if ($this->isOAuth() && in_array($key, $this->required) && $this->user->$key !== NULL) {
-			return FALSE;
+		if ($key === NULL) {
+			foreach ($this->required as $property) {
+				if ($this->user->$property === NULL) {
+					return TRUE;
+				}
+			}
+		} else {
+			if ($this->isOAuth()) {
+				if (in_array($key, $this->required) && $this->user->$key === NULL) {
+					return TRUE;
+				}
+			} else {
+				return TRUE;
+			}
 		}
-
-		return TRUE;
+		
+		return FALSE;
 	}
 
+	/**
+	 * 
+	 */
 	public function wipe()
 	{
-		$this->section->remove();
+		$this->initSession(TRUE);
 	}
 
 	/** @param Entity\Auth $auth */
@@ -261,19 +285,21 @@ class RegistrationStorage extends \Nette\Object
 	public function toRegistration()
 	{
 		$registration = new Entity\Registration();
-		$registration->email = $this->user->email;
-		$registration->key = $this->auth->key;
-		$registration->source = $this->auth->source;
-		$registration->hash = $this->auth->hash;
+		$registration->setEmail($this->user->email)
+				->setName($this->user->name)
+				->setKey($this->auth->key)
+				->setSource($this->auth->source)
+				->setHash($this->auth->hash);
 
 		return $registration;
 	}
 
 	/**
 	 * Set up all session properties to their default values.
+	 * @param bool $force
 	 * @return void
 	 */
-	private function initSession() {
+	private function initSession($force = FALSE) {
 		$defaults = [
 			'oauth' => FALSE,
 			'verified' => FALSE,
@@ -281,14 +307,28 @@ class RegistrationStorage extends \Nette\Object
 			'user' => new Entity\User(),
 			'defaults' => []
 		];
-
-		foreach ($defaults as $property => $value) {
-			if (!isset($this->section->{$property})) {
-				$this->section->{$property} = $value;
+		
+		if ($force === FALSE) {
+			foreach ($defaults as $property => $value) {
+				if (!isset($this->section->{$property})) {
+					$this->section->{$property} = $value;
+				}
 			}
+		} else {
+			foreach ($defaults as $property => $value) {
+				$this->section->{$property} = $value;
+			}			
 		}
 	}
 
+	/**
+	 * Check if is the source name valid.
+	 * @param type $source
+	 */
+	public function isSource($source)
+	{
+		return in_array($source, $this->sources);
+	}
 }
 
 class RegistrationStorageException extends \Exception

@@ -56,10 +56,11 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	public function setHash($password, array $options = NULL)
 	{
-		if ($password !== "" && $password !== NULL) {
-			$this->hash = Passwords::hash($password, $options);
-		}
-		return $this;
+//		if ($password !== "" && $password !== NULL) {
+//			$this->hash = Passwords::hash($password, $options);
+//		}
+		
+		$this->hash = $password;
 	}
 
 	/**

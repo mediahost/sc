@@ -45,6 +45,11 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
 	protected $hash;
+	
+    /**
+     * @ORM\Column(type="string", length=512, nullable=true)
+     */
+    protected $name;
 
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=false)

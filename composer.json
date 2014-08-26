@@ -36,7 +36,7 @@
 		"dg/adminer-custom": "@dev",
 		
         "kdyby/doctrine": "2.1.*@dev",
-        "kdyby/events": "~2.2@dev",
+        "kdyby/events": "2.2.x-dev",
         "kdyby/console": "2.3.*@dev",
         "kdyby/annotations": "2.1.*@dev",
 		

@@ -45,39 +45,48 @@ class Registration extends Base
 	 */
 	public function findByKey($source, $key)
 	{
-		return $this->userDao->findOneBy([
-					'auths.source' => $source,
-					'auths.key' => $key
+		return $this->authDao->findOneBy([
+					'source' => $source,
+					'key' => $key
 		]);
 	}
 
 	/**
 	 * Update OAuth access token.
-	 * @param string $key
+	 * @param Auth $auth
 	 * @param string $token
 	 * @return Auth
 	 */
-	public function updateAccessToken($key, $token)
+	public function updateAccessToken(Auth $auth, $token)
 	{
-		$auth = $this->authDao->findOneBy(['key' => $key]);
 		$auth->token = $token;
-
 		return $this->authDao->save($auth);
 	}
 
+	/**
+	 * Find user by e-mail.
+	 * @param string $email
+	 * @return User
+	 */
 	public function findByEmail($email)
 	{
 		return $this->userDao->findOneBy(['email' => $email]);
 	}
 
-	public function merge($user, $auth)
+	/**
+	 * Add new Auth to existing User and save.
+	 * @param User $user
+	 * @param Auth $auth
+	 * @return User
+	 */
+	public function merge(User $user, Auth $auth)
 	{
 		$user->addAuth($auth);
 		return $this->userDao->save($user);
 	}
 
 	/**
-	 *
+	 * Connect Auth with User and save new entities.
 	 * @param User $user
 	 * @param Auth $auth
 	 * @return User
@@ -89,7 +98,7 @@ class Registration extends Base
 		$role = $this->roleDao->findOneBy(['name' => 'signed']);
 		$user->addRole($role);
 
-		return $user;
+		return $this->userDao->save($user);
 	}
 
 	/**
@@ -97,15 +106,15 @@ class Registration extends Base
 	 * @param Registration $registration
 	 * @return Registration
 	 */
-	public function temporarilyRegister(Entity\Registration $registration)
+	public function registerTemporarily(Entity\Registration $registration)
 	{
-		$registration->verification_code = Nette\Utils\Strings::random(32);
+		$registration->verification_code = \Nette\Utils\Strings::random(32);
 		return $this->registrationDao->save($registration);
 	}
 
 	/**
-	 *
-	 * @param type $code
+	 * Creat new Auth and User (if doesn'e exist) by given code.
+	 * @param string $code
 	 * @return boolean
 	 */
 	public function verify($code)
@@ -113,31 +122,26 @@ class Registration extends Base
 		$registration = $this->registrationDao->findOneBy(['verification_code' => $code]);
 
 		if ($registration) {
-			$user = $this->userDao->findOneBy(['email' => $registration->email]);
-
-			if (!$user) {
-				$user = new Entity\User();
-				$user->email = $registration->email;
-			}
-
 			$auth = new Entity\Auth();
 			$auth->key = $registration->key;
 			$auth->source = $registration->source;
 			$auth->token = $registration->token;
 			$auth->hash = $registration->hash;
-			$user->addAuth($auth);
-
-			$user->addRole($this->roleDao->findBy(['name' => 'signed'])); // Vyměnit za register (role se musí zadávat na jednom místě)
-
-			$this->em->remove($registration);
-			$this->em->persist($user);
-
-			$this->em->flush();
-
-			return TRUE;
+			
+			if (!$user = $this->userDao->findOneBy(['email' => $registration->email])) {
+				$user = new Entity\User();
+				$user->email = $registration->email;
+				$user->name = $registration->name;
+				$return = $this->register($user, $auth);
+			} else {
+				$return = $this->merge($user, $auth);
+			}
+			
+			$this->registrationDao->delete($registration);
+			return $return;
 		}
 
-		return FALSE;
+		return NULL;
 	}
 
 }

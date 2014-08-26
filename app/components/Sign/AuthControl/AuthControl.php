@@ -8,7 +8,7 @@ use	Nette\Application\UI\Control,
 	App\Model\Storage\RegistrationStorage as Storage,
 	App\Model\Facade\Registration as Facade,
 	Nette\Security\Identity,
-    Nette\Mail\IMailer,
+	Nette\Mail\IMailer,
 	App\Model\Storage\MessageStorage as Messages;
 
 use Kdyby\Facebook\Facebook,
@@ -33,7 +33,7 @@ class AuthControl extends Control
 
 	/** @var Translator */
 	private $translator;
-	
+
 	/** @var Storage */
 	private $storage;
 
@@ -48,7 +48,7 @@ class AuthControl extends Control
 
 	/** @var Twitter */
 	private $twitter;
-	
+
 	/** @var Messages */
 	private $messages;
 
@@ -64,7 +64,7 @@ class AuthControl extends Control
 		$this->facebook = $facebook;
 		$this->twitter = $twitter;
 	}
-	
+
 	public function renderRegistration()
 	{
 		$template = $this->template;
@@ -73,7 +73,7 @@ class AuthControl extends Control
 		$template->setFile(__DIR__ . '/registration.latte');
 		$template->render();
 	}
-	
+
 	public function renderIcons()
 	{
 		$template = $this->template;
@@ -87,18 +87,13 @@ class AuthControl extends Control
 	 */
 	protected function createComponentRegisterForm()
 	{
-		
+
 		$form = new Form();
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		if ($this->storage->isRequired('name')) {
 			$form->addText('reg_name', 'Name')
 					->setAttribute('placeholder', 'Full name');
-		}
-
-		if ($this->storage->isRequired('birthdate')) {
-			$form->addText('reg_birthdate', 'Birthdate')
-					->setAttribute('placeholder', 'Birthdate');
 		}
 
 		if ($this->storage->isRequired('email')) {
@@ -114,13 +109,13 @@ class AuthControl extends Control
 			$form->addPassword('reg_password', 'Password')
 					->setRequired('Please enter your password')
 					->setAttribute('placeholder', 'Password');
-			
+
 			$form->addPassword('reg_password_verify', 'Password again:')
 					->addRule(Form::FILLED, 'Please enter password verification.')
 					->addConditionOn($form['reg_password_verify'], Form::FILLED)
 							->addRule(Form::EQUAL, 'Passwords must be equal.', $form['reg_password']);
 		}
-		
+
 		$form->setDefaults($this->storage->defaults);
 		$form->addSubmit('register', 'Register');
 
@@ -136,36 +131,38 @@ class AuthControl extends Control
 	public function registerFormSucceeded(Form $form, $values)
 	{
 		// Namapování hodnot z formuláře
+		if ($this->storage->isRequired('name')) {
+			$this->storage->user->name = $values->reg_name;
+		}
 		
-		// Proces vyhodnocení
+		if ($this->storage->isRequired('email')) {
+			$this->storage->user->email = $values->reg_email;
+		}
+
+		// Data processing
 		if ($this->storage->isOAuth()) {
-			// Registrace přes OAuth
+			// Registrace veia OAuth
 			if ($this->storage->isVerified()) {
-				// Ověřený e-mail
-				
-				$user = $this->facade->registration();
-				
-				// Totok: end
-				
-				// Přihlásit
+				// Verified e-mail
+				\Tracy\Debugger::barDump($this->storage->isVerified());
+				exit();
+				$user = $this->mergeOrRegister();
 				$this->login($user);
 			} else {
-				// Neověřený e-mail
-				$this->storage->user->email = $values->email;
-				$registration = $this->storage->toRegistration();
-				// Ověření mailu
-				$this->temporarilyRegister($registration);
+				$this->registerTemporarily($this->storage->toRegistration());
 			}
-
 		} else {
-			// Registrace přes formulář
-			$registration = new Entity\Registration();
-			$registration->email = $values->email;
-			$registration->key = $values->email;
-			$registration->source = 'app';
-			$registration->hash = \Nette\Security\Passwords::hash($values->password);
-			// Ověření mailu
-			$this->temporarilyRegister($registration);
+			// Registration via aplication form
+			$reg = $this->storage->toRegistration();
+			$reg->setKey($values->reg_email)
+					->setSource('app')
+					->setHash(\Nette\Security\Passwords::hash($values->reg_password));
+
+			$this->registerTemporarily($reg);
+			
+			dump($values->reg_password);
+			dump(\Nette\Security\Passwords::hash($values->reg_password));
+			exit();
 		}
 	}
 
@@ -176,6 +173,8 @@ class AuthControl extends Control
 
 		/** @var LoginDialog $dialog */
 		$dialog->onResponse[] = function (LoginDialog $dialog) {
+			$this->storage->wipe();
+			
 			$fb = $dialog->getFacebook();
 
 			if (!$fb->getUser()) {
@@ -205,10 +204,12 @@ class AuthControl extends Control
 	 */
 	public function handleTwitter()
 	{
+		$this->storage->wipe();
+		
 		try {
 			$data = $this->twitter->tryAuthenticate();
 			$source = 'twitter';
-			
+
 			$this->process($source, $data['user']->id, $data['user'], $data['accessToken']['key']);
 
 		} catch (TwitterException $e) {
@@ -227,47 +228,24 @@ class AuthControl extends Control
 	 */
 	private function process($source, $id, $data, $token = NULL)
 	{
-		if (!$user = $this->facade->findByKey($source, $id)) { // Pořád nevím jestli vracet User nebo Auth
-//			Tady by měla proběhnout registrace nebo mergování, pokud nemám
-//			hodnoty, tak bych měl odsud přesměrovat na registraci.
-//			$user = $this->register();
+		if (!$auth = $this->facade->findByKey($source, $id)) {
 
 			$this->storage->store($source, $data, $token);
-			$this->presenter->redirect('Sign:Register');
 
+			if ($this->storage->isRequired()) {
+				$this->presenter->redirect('Sign:Register', $source);
+			} else {
+				$this->mergeOrRegister();
+			}
+			
+			$this->storage->wipe();
+		} else {			
+			$user = $auth->user;
+			$this->facade->updateAccessToken($auth, $token);
 		}
-
-
-		// Update tokenu
-//		$this->facade->updateAccessToken($source, $id, $token);
 
 		// Login
-//		$this->login($user);
-	}
-
-	/**
-	 *
-	 * @param string $source
-	 * @param string $data
-	 */
-	private function register($source, $data)
-	{
-		// Registration or merge
-		$this->storage->store($source, $data);
-
-		if ($this->storage->checkRequired()) { // Mám všechny povinné údaje pro registraci?
-			if (($user = $this->facade->findByEmail($this->storage->data->email))) { // E-mail nemusím vždy dostat!
-				// Merge
-				$this->facade->merge($user, $auth);
-			} else {
-				// Register
-				$user = $this->facade->merge($this->storage->user, $this->storage->auth);
-			}
-
-			$this->login($user);
-		} else {
-			$this->presenter->redirect('Sign:Register');
-		}
+		$this->login($user);
 	}
 
 	/**
@@ -281,16 +259,16 @@ class AuthControl extends Control
 		$this->presenter->flashMessage('You have been successfully logged in!', 'success');
 		$this->presenter->redirect(':Admin:Dashboard:');
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param Registration $registration
 	 * @throws \Nette\Application\AbortException
 	 */
-	private function temporarilyRegister(Registration $registration)
+	private function registerTemporarily(Registration $registration)
 	{
 		// Ověření e-mailu
-		$registration = $this->facade->temporarilyRegister($registration);
+		$registration = $this->facade->registerTemporarily($registration);
 
 		// Odeslat e-mail
 		$message = $this->messages->getRegistrationMail($this->createTemplate(), [
@@ -302,6 +280,19 @@ class AuthControl extends Control
 
 		$this->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
 		$this->presenter->redirect(':Front:Sign:in');
+	}
+	
+	/**
+	 * Choose registration or merging facade methods.
+	 * @return User
+	 */
+	private function mergeOrRegister()
+	{
+		if (($user = $this->facade->findByEmail($this->storage->user->email))) {
+			return $this->facade->merge($user, $this->storage->auth);
+		} else {
+			return $this->facade->register($this->storage->user, $this->storage->auth);
+		}
 	}
 }
 

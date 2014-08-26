@@ -18,23 +18,16 @@
             </div>
         </div>
 		{/if}
-
+		
+		
+		{dump $storage->user}
+		
 		{if $storage->isRequired('email')}
         <div class="form-group">
             {label reg_email, class=>'control-label visible-ie8 visible-ie9' /}
             <div class="input-icon">
                 <i class="fa fa-envelope"></i>
                 {input reg_email, class=>'form-control placeholder-no-fix'}
-            </div>
-        </div>
-		{/if}
-
-		{if $storage->isRequired('birthdate')}
-        <div class="form-group">
-            {label reg_birthdate, class=>'control-label visible-ie8 visible-ie9' /}
-            <div class="input-icon">
-                <i class="fa fa-calendar"></i>
-                {input reg_birthdate, class=>'form-control placeholder-no-fix'}
             </div>
         </div>
 		{/if}
