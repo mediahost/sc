@@ -95,7 +95,7 @@ class Registration extends Base
 	{
 		$user->addAuth($auth);
 
-		$role = $this->roleDao->findOneBy(['name' => 'signed']);
+		$role = $this->roleDao->findOneBy(['name' => 'candidate']);
 		$user->addRole($role);
 
 		return $this->userDao->save($user);
