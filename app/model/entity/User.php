@@ -145,6 +145,15 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		}
 		return $array;
 	}
+	
+	public function getRolesKeys()
+	{
+		$array = [];
+		foreach ($this->roles as $role) {
+			$array[] = $role->id;
+		}
+		return $array;
+	}
 
 	public function __toString()
 	{
