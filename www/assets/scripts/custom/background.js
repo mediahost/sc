@@ -16,7 +16,7 @@ var Background = function() {
         //main function to initiate the module
         init: function() {
 
-            if ($("body").hasClass("deny") || $("body").hasClass("login")) {
+            if ($("body").hasClass("deny") || $("body").hasClass("login") || $("body").hasClass("slideshow")) {
                 initBackground();
             }
 
