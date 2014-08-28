@@ -1,5 +1,5 @@
 {block breadcrumbLast}
-<li><a n:href="Users:">Users</a></li>
+<li><a n:href="Users:">{_'Users'}</a></li>
     {/block}
 
 {block content}
@@ -8,7 +8,7 @@
         <div class="portlet box grey-cascade">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="fa fa-users"></i>Users
+                    <i class="fa fa-users"></i>{_'Users'}
                 </div>
             </div>
             <div class="portlet-body">
@@ -16,7 +16,7 @@
                     <div class="btn-group">
                         <a n:href="Users:add"
                            class="btn green">
-                            Add User 
+                            {_'Add User'}
                             <i class="fa fa-plus"></i>
                         </a>
                     </div>
@@ -25,19 +25,19 @@
                     <thead>
                         <tr>
                             <th>
-                                ID
+                                {_'ID'}
                             </th>
                             <th>
-                                Username
+                                {_'Username'}
                             </th>
                             <th>
-                                Role
+                                {_'Role'}
                             </th>
                             <th>
-                                Edit
+                                {_'Edit'}
                             </th>
                             <th>
-                                Delete
+                                {_'Delete'}
                             </th>
                         </tr>
                     </thead>
@@ -55,12 +55,12 @@
                             </td>
                             <td>
                                 <a n:href="Users:edit, $user->id">
-                                    Edit
+                                    {_'Edit'}
                                 </a>
                             </td>
                             <td>
                                 <a n:href="Users:delete, $user->id" class="delete-confirm">
-                                    Delete
+                                    {_'Delete'}
                                 </a>
                             </td>
                         </tr>

@@ -1,10 +1,10 @@
 {block breadcrumbLast}
 <li>
-    <a n:href="Users:">Users</a>
+    <a n:href="Users:">{_'Users'}</a>
     <span class="fa fa-angle-right"></span>
 </li>
 <li>
-    <a n:href="this">{if $isAdd}Add{else}Edit{/if}</a>
+    <a n:href="this">{if $isAdd}{_'Add'}{else}{_'Edit'}{/if}</a>
 </li>
 {/block}
 
@@ -14,7 +14,7 @@
         <div class="portlet box green">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="fa fa-edit"></i>{if $isAdd}Add{else}Edit{/if} user
+                    <i class="fa fa-edit"></i>{if $isAdd}{_'Add'}{else}{_'Edit'}{/if} {_'user'}
                 </div>
             </div>
             <div class="portlet-body form">

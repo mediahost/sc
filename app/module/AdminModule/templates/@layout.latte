@@ -5,7 +5,7 @@
 
     <!-- BEGIN HEAD -->
     <head>
-        <title>{block title|striptags}Source-Code{/block}</title>
+        <title>{block title|striptags}{_'Source-Code'}{/block}</title>
 
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -56,8 +56,8 @@
                             <!-- BEGIN PAGE TITLE-->
                             <h3 class="page-title" n:block="pageTitle">
                                 {block pageTitleText}
-                                Source-Code
-                                <small>ver 2</small>
+                                {_'Source-Code'}
+                                <small>{_'ver 2'}</small>
                                 {/block}
                             </h3>
                             <!-- END PAGE TITLE--> 
@@ -73,7 +73,7 @@
                                             data-delay="1000" 
                                             data-close-others="true">
                                         <span>
-                                            {block breadcrumbActionsName}New{/block}
+                                            {block breadcrumbActionsName}{_'New'}{/block}
                                         </span>
                                         <i class="fa fa-angle-down"></i>
                                     </button>
@@ -82,7 +82,7 @@
                                         <li n:if="$user->isAllowed('admin', 'add')">
                                             <a n:href="Users:add">
                                                 <i class="fa fa-user"></i>
-                                                User
+                                                {_'User'}
                                             </a>
                                         </li>
                                         {/block}
@@ -93,11 +93,11 @@
                                 {block breadcrumbItems}
                                 <li>
                                     <i class="fa fa-home"></i>
-                                    <a n:href="Dashboard:">Home</a> 
+                                    <a n:href="Dashboard:">{_'Home'}</a> 
                                     <span class="fa fa-angle-right"></span>
                                 </li>
                                 {block breadcrumbLast}
-                                <li><a n:href="Dashboard:">Dashboard</a></li>
+                                <li><a n:href="Dashboard:">{_'Dashboard'}</a></li>
                                     {/block}
                                     {/block}
                             </ul>

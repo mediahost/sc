@@ -19,27 +19,27 @@
 <!-- BEGIN LOGIN -->
 <div class="content">
     {control signIn}
-	
-	{control auth:icons}
-    
+
+    {control auth:icons}
+
     <div class="forget-password">
-        <h4>Forgot your password ?</h4>
+        <h4>{_'Forgot your password?'}</h4>
         <p>
-            no worries, click <a n:href="lostPassword" id="forget-password">here</a> to set new password.
+            {_'no worries, click'} <a n:href="lostPassword" id="forget-password">{_'here'}</a> {_'to set new password'}.
         </p>
     </div>
 
     <div class="create-account">
         <p>
-            Don't have an account yet ?&nbsp; <a n:href="register" id="register-btn">
-                Create an account </a>
+            {_"Don't have an account yet?"}&nbsp; 
+            <a n:href="register" id="register-btn">{_'Create an account'}</a>
         </p>
     </div>
-    
+
 </div>
 <!-- END LOGIN -->
 <!-- BEGIN COPYRIGHT -->
 <div class="copyright">
-    2014 &copy; Source-Code by Mediahost.
+    2014 &copy; {_'Source-Code by Mediahost'}.
 </div>
 <!-- END COPYRIGHT -->

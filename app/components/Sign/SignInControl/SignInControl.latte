@@ -1,7 +1,7 @@
 {block}
 <!-- BEGIN LOGIN FORM -->
 {form signInForm, class=>'login-form'}
-    <h3 class="form-title">Login to your account</h3>
+    <h3 class="form-title">{_'Login to your account'}</h3>
     <div class="alert alert-danger" n:if="$form->ownErrors">
         <button class="close" data-close="alert"></button>
         {foreach $form->ownErrors as $error}

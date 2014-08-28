@@ -1,23 +1,23 @@
 {block}
-    {* Registration form *}
-    {form registerForm, class=>'login-form'}
-        <h3 class="form-title">Registration</h3>
-        <div class="alert alert-danger" n:if="$form->ownErrors">
-            <button class="close" data-close="alert"></button>
-            {foreach $form->ownErrors as $error}
-                <span>{$error}</span><br n:if="!$iterator->isLast()"/>
-            {/foreach}
-        </div>
+{* Registration form *}
+{form registerForm, class=>'login-form'}
+    <h3 class="form-title">{_'Registration'}</h3>
+    <div class="alert alert-danger" n:if="$form->ownErrors">
+        <button class="close" data-close="alert"></button>
+        {foreach $form->ownErrors as $error}
+            <span>{$error}</span><br n:if="!$iterator->isLast()"/>
+        {/foreach}
+    </div>
 
-        <div class="form-group">
-            {label name, class=>'control-label visible-ie8 visible-ie9' /}
-            <div class="input-icon">
-                <i class="fa fa-user"></i>
-                {input name, class=>'form-control placeholder-no-fix'}
-            </div>
+    <div class="form-group">
+        {label name, class=>'control-label visible-ie8 visible-ie9' /}
+        <div class="input-icon">
+            <i class="fa fa-user"></i>
+            {input name, class=>'form-control placeholder-no-fix'}
         </div>
-			
-		{if $email}
+    </div>
+
+    {if $email}
         <div class="form-group">
             {label email, class=>'control-label visible-ie8 visible-ie9' /}
             <div class="input-icon">
@@ -25,9 +25,9 @@
                 {input email, class=>'form-control placeholder-no-fix'}
             </div>
         </div>
-		{/if}
-			
-		{if !$oauth}
+    {/if}
+
+    {if !$oauth}
         <div class="form-group">
             {label password, class=>'control-label visible-ie8 visible-ie9' /}
             <div class="input-icon">
@@ -35,13 +35,13 @@
                 {input password, class=>'form-control placeholder-no-fix'}
             </div>
         </div>
-		{/if}
-		
-        <div class="form-actions">
-            {button register, class=>"btn green"}
-            {caption}
-            <i class="m-icon-swapright m-icon-white"></i>
-            {/button}
-        </div>
-    {/form}
+    {/if}
+
+    <div class="form-actions">
+        {button register, class=>"btn green"}
+        {caption}
+        <i class="m-icon-swapright m-icon-white"></i>
+        {/button}
+    </div>
+{/form}
 {/block}

@@ -5,20 +5,20 @@
     <img src="{$basePath}/images/earth.jpg" class="img-responsive" alt="">
 </div>
 <div class="container error-404">
-    <h1>Oops...</h1>
-    <h2>Houston, we have a problem.</h2>
+    <h1>{_'Oops...'}</h1>
+    <h2>{_'Houston, we have a problem.'}</h2>
     <p>
-        Your browser sent a request that this server could not understand or process.
+        {_'Your browser sent a request that this server could not understand or process.'}
     </p>
     <p>
-        <a href="{$homepage}">Return home</a>
+        <a href="{$homepage}">{_'Return home'}</a>
         <br>
     </p>
 </div>
 {/block}
 
 {block title}
-Oops...
+{_'Oops...'}
 {/block}
 
 {block bodyClass}

@@ -18,9 +18,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	/** @var \App\Components\Sign\ISignOutControlFactory @inject */
 	public $iSignOutControlFactory;
-	
-    /** @var \GettextTranslator\Gettext @inject */
-    public $translator;
+
+	/** @var \GettextTranslator\Gettext @inject */
+	public $translator;
 
 	/** @persistent string */
 	public $lang = 'en';
@@ -29,7 +29,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	{
 		parent::startup();
 
-		$this->_setLang();
+		$this->setLang();
+	}
+	
+	public function flashMessage($message, $type = 'info')
+	{
+		if (!$message instanceof \Nette\Utils\Html) {
+			$message = $this->translator->translate($message);
+		}
+		parent::flashMessage($message, $type);
 	}
 
 	public function checkRequirements($element)
@@ -53,7 +61,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$this->template->lang = $this->lang;
 		$this->template->setTranslator($this->translator);
 	}
-	
 
 // <editor-fold defaultstate="collapsed" desc="Components">
 
@@ -65,10 +72,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="lang">
-	private function _setLang()
+	private function setLang()
 	{
 		$this->translator->setLang($this->lang);
-//		$this->lang = "en";
 	}
 
 // </editor-fold>

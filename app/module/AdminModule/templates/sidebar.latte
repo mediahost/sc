@@ -37,7 +37,7 @@
                 <a n:href="Dashboard:">
                     <i class="fa fa-calendar"></i>
                     <span class="title">
-                        Dashboard
+                        {_'Dashboard'}
                     </span>
                     <span class="selected">
                     </span>
@@ -45,11 +45,11 @@
             </li>
 
             <li  n:if="$user->isAllowed('admin', 'view')"
-                class="{ifCurrent Users:*} active{/ifCurrent} last">
+                 class="{ifCurrent Users:*} active{/ifCurrent} last">
                 <a n:href="Users:">
                     <i class="fa fa-users"></i>
                     <span class="title">
-                        Users
+                        {_'Users'}
                     </span>
                     <span class="selected">
                     </span>
