@@ -2,10 +2,10 @@
 # Created: 2014-08-24 12:54:38
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2014-08-24 12:56+0100\n"
+"PO-Revision-Date: 2014-08-28 15:58+0100\n"
 "Project-Id-Version: Sourcecode\n"
 "POT-Creation-Date: 2014-08-24 12:34+0100\n"
-"Last-Translator: \n"
+"Last-Translator: Petr Poupě <pupe.dupe@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

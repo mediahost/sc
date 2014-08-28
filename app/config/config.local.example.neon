@@ -14,9 +14,9 @@ twitter:
 
 parameters:
 	install:
-                doctrine: FALSE
-                adminer: FALSE
-                startUsers: ['user_mail' = ['password', 'name_of_role']]
+		doctrine: FALSE
+		adminer: FALSE
+		startUsers: ['user_mail' = ['password', 'name_of_role']]
 
 nette:
 	mailer:
