@@ -32,16 +32,37 @@ class InstallPresenter extends BasePresenter
 	/** @var Nette\Security\IAuthorizator @inject */
 	public $permissions;
 
-	public function __construct($tempDir = NULL, $wwwDir = NULL)
+	public function __construct($tempDir = NULL, $wwwDir = NULL, $users = NULL)
 	{
 		parent::__construct();
 		$this->setPathes($tempDir, $wwwDir);
+		$this->setUsers($users);
+	}
+
+	protected function startup()
+	{
+		parent::startup();
+		if (!is_dir($this->installDir)) {
+			mkdir($this->installDir);
+		}
+	}
+
+	public function actionDefault()
+	{
+		$services = [
+			"roles" => ["Roles" => [$this->permissions->getRoles(), $this->roleFacade]],
+			"users" => ["Users" => [$this->initUsers, $this->roleFacade, $this->userFacade]],
+//			"adminer" => ["Adminer" => [$this->wwwDir]],
+		];
+		foreach ($services as $service => $serviceArr) {
+			$this->callService($service, $serviceArr);
+		}
+		
+		$this->terminate();
 	}
 
 	public function setPathes($tempDir, $wwwDir)
 	{
-		\Tracy\Debugger::barDump($tempDir);
-		\Tracy\Debugger::barDump($wwwDir);
 		$this->tempDir = $tempDir;
 		$this->wwwDir = $wwwDir;
 		$this->installDir = $this->tempDir . "/install";
@@ -56,38 +77,14 @@ class InstallPresenter extends BasePresenter
 		return $this;
 	}
 
-	protected function startup()
+	private function callService($service, array $data)
 	{
-		parent::startup();
-		if (!is_dir($this->installDir)) {
-			mkdir($this->installDir);
-		}
-	}
-
-	public function actionDefault()
-	{
-		$this->installAll();
-		$this->terminate();
-	}
-
-	private function installAll()
-	{
-		$services = [
-			"roles" => "Roles",
-			"users" => "Users",
-//			"adminer" => "Adminer",
-		];
-		foreach ($services as $service => $serviceName) {
-			$this->callService($service, $serviceName);
-		}
-	}
-
-	private function callService($service, $name)
-	{
+		list($name, $params) = each($data);
 		$lockFile = $this->installDir . "/" . $service;
 		if (!file_exists($lockFile)) {
-			$method = "init" . ucfirst($service);
-			if (\call_user_func([$this, $method])) {
+			$method = "install" . ucfirst($service);
+			$obj = new \App\Model\Installer\Installer;
+			if (\call_user_func_array([$obj, $method], $params)) {
 				$this->lockFile($lockFile);
 				$this->message($name . " - INSTALLED");
 			} else {
@@ -96,43 +93,6 @@ class InstallPresenter extends BasePresenter
 		} else {
 			$this->message($name . " - ALREADY INSTALLED");
 		}
-	}
-
-	/**
-	 * Set database as writable
-	 * @return boolean
-	 */
-	private function initAdminer()
-	{
-		chmod($this->wwwDir . "/adminer/database.sql", 0777);
-		return TRUE;
-	}
-
-	/**
-	 * Create all nested roles
-	 * @return boolean
-	 */
-	private function initRoles()
-	{
-		foreach ($this->permissions->getRoles() as $roleName) {
-			$this->roleFacade->create($roleName);
-		}
-		return TRUE;
-	}
-
-	/**
-	 * Create default users
-	 * @return boolean
-	 */
-	private function initUsers()
-	{
-		foreach ($this->initUsers as $initUserMail => $initUserData) {
-			$pass = $initUserData[0];
-			$role = $initUserData[1];
-			$roleEntity = $this->roleFacade->findByName($role);
-			$this->userFacade->create($initUserMail, $pass, $roleEntity);
-		}
-		return TRUE;
 	}
 
 	private function lockFile($lockFile)

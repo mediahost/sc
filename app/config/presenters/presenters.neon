@@ -1,7 +1,5 @@
 services:
 	InstallPresenter:
 		class: App\FrontModule\Presenters\InstallPresenter
-		arguments: [%tempDir%, %wwwDir%]
-		setup:
-			- setUsers(%install.startUsers%)
+		arguments: [%tempDir%, %wwwDir%, %install.startUsers%]
 		autowired: yes
