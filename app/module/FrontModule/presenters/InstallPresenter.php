@@ -49,15 +49,17 @@ class InstallPresenter extends BasePresenter
 
 	public function actionDefault()
 	{
-		$services = [
-			"roles" => ["Roles" => [$this->permissions->getRoles(), $this->roleFacade]],
-			"users" => ["Users" => [$this->initUsers, $this->roleFacade, $this->userFacade]],
-//			"adminer" => ["Adminer" => [$this->wwwDir]],
+		$services = [ // FUNCTION => [NAME => PARAMS]
+			'roles' => ['Roles' => [$this->permissions->getRoles(), $this->roleFacade]],
+			'users' => ['Users' => [$this->initUsers, $this->roleFacade, $this->userFacade]],
+			'doctrine' => ['Doctrine' => []],
+//			'adminer' => ['Adminer' => [$this->wwwDir]],
 		];
-		foreach ($services as $service => $serviceArr) {
-			$this->callService($service, $serviceArr);
+		foreach ($services as $function => $serviceArr) {
+			list($name, $params) = each($serviceArr);
+			$this->callService($function, $name, $params);
 		}
-		
+
 		$this->terminate();
 	}
 
@@ -65,10 +67,15 @@ class InstallPresenter extends BasePresenter
 	{
 		$this->tempDir = $tempDir;
 		$this->wwwDir = $wwwDir;
-		$this->installDir = $this->tempDir . "/install";
+		$this->installDir = $this->tempDir . '/install';
 		return $this;
 	}
 
+	/**
+	 * Set users to init
+	 * @param type $users
+	 * @return \App\FrontModule\Presenters\InstallPresenter
+	 */
 	public function setUsers($users)
 	{
 		if (is_array($users)) {
@@ -77,32 +84,45 @@ class InstallPresenter extends BasePresenter
 		return $this;
 	}
 
-	private function callService($service, array $data)
+	/**
+	 * Call functions from \App\Model\Installer\Installer
+	 * @param type $function
+	 * @param type $name
+	 * @param array $params
+	 */
+	private function callService($function, $name, array $params)
 	{
-		list($name, $params) = each($data);
-		$lockFile = $this->installDir . "/" . $service;
+		$lockFile = $this->installDir . '/' . $function;
 		if (!file_exists($lockFile)) {
-			$method = "install" . ucfirst($service);
-			$obj = new \App\Model\Installer\Installer;
-			if (\call_user_func_array([$obj, $method], $params)) {
+			$installer = new \App\Model\Installer\Installer;
+			$method = 'install' . ucfirst($function);
+			if (\call_user_func_array([$installer, $method], $params)) {
 				$this->lockFile($lockFile);
-				$this->message($name . " - INSTALLED");
+				$this->message($name . ' - INSTALLED');
 			} else {
-				$this->message($name . " - NOT INSTALLED");
+				$this->message($name . ' - NOT INSTALLED');
 			}
 		} else {
-			$this->message($name . " - ALREADY INSTALLED");
+			$this->message($name . ' - ALREADY INSTALLED');
 		}
 	}
 
+	/**
+	 * Lock instalation file
+	 * @param type $lockFile
+	 */
 	private function lockFile($lockFile)
 	{
-		file_put_contents($lockFile, "1");
+		file_put_contents($lockFile, '1');
 	}
 
+	/**
+	 * Print control message
+	 * @param type $message
+	 */
 	private function message($message)
 	{
-		echo $message . "<br/>";
+		echo $message . '<br/>';
 	}
 
 }

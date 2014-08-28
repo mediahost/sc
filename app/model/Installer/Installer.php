@@ -45,12 +45,25 @@ class Installer
 	}
 
 	/**
+	 * Update database
+	 * @return boolean
+	 */
+	public function installDoctrine()
+	{
+		$print = shell_exec('php index.php orm:schema-tool:update --force');
+		echo '-----------<br />';
+		echo '<pre>' . $print . '</pre>';
+		echo '-----------<br />';
+		return TRUE;
+	}
+
+	/**
 	 * Set database as writable
 	 * @return boolean
 	 */
 	public function installAdminer($wwwDir)
 	{
-		chmod($wwwDir . "/adminer/database.sql", 0777);
+		chmod($wwwDir . '/adminer/database.sql', 0777);
 		return TRUE;
 	}
 
