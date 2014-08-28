@@ -3,8 +3,11 @@
 namespace App\Forms\EntityMapper;
 
 use App\Model\Entity,
-	Doctrine\ORM\EntityManager,
-	App\Model\Facade;
+	Kdyby\Doctrine\EntityManager,
+	App\Model\Facade,
+	Kdyby\Doctrine\EntityDao,
+	App\Model\Facade\Users as UserFacade;
+
 use Tracy\Debugger as Debug;
 
 /**
@@ -14,37 +17,36 @@ use Tracy\Debugger as Debug;
  */
 class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 {
+	
+	/** @var EntityManager */
+	private $em;
+	
+	/** @var EntityDao */
+	private $roleDao;
+	
+	/** @var EntityDao */
+	private $authDao;
+	
+	/** @var UserFacade */
+	private $userFacade;
 
-	/** @var Facade\Roles */
-	private $roles;
 
-	/** @var Facade\Users */
-	private $users;
-
-	public function __construct(EntityManager $entityManager, Facade\Roles $roles, Facade\Users $users)
+	public function __construct(\Doctrine\ORM\EntityManager $entityManager, EntityManager $em, UserFacade $userFacade)
 	{
 		parent::__construct($entityManager);
-		$this->roles = $roles;
-		$this->users = $users;
+		$this->em = $em;
+		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
+		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
+		$this->userFacade = $userFacade;
 	}
 
 	public function load($entity, $form)
 	{
 		if ($entity instanceof Entity\User) {
-			$form->setValues(array(
-				"username" => $entity->getUsername(),
-				"roles" => $entity->getRolesArray(TRUE),
-			));
-		} else if ($entity instanceof Entity\Company) {
-			$form->setValues(array(
-				"name" => $entity->getName(),
-				"users" => $entity->getUsersArray(TRUE),
-			));
-		} else if ($entity instanceof Entity\Project) {
-			$form->setValues(array(
-				"name" => $entity->getName(),
-				"company" => $entity->getCompany() === NULL ? NULL : $entity->getCompany()->getId(),
-			));
+			$form->setValues([
+				'username' => $entity->email,
+				'roles' => $entity->getRolesKeys(),
+			]);
 		} else {
 			parent::load($entity, $form);
 		}
@@ -53,42 +55,19 @@ class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 	public function save($entity, $form)
 	{
 		if ($entity instanceof Entity\User) {
-			$entity->setUsername($form->values->username);
+			$entity->email = $form->values->username;
+			
 			if ($form->values->password !== NULL && $form->values->password !== "") {
-				$entity->setPassword($form->values->password);
+//				$entity->setPassword($form->values->password);
 			}
+			
 			$entity->clearRoles();
+			
 			foreach ($form->values->roles as $id) {
-				$item = $this->roleFacade->find($id);
+				$item = $this->roleDao->find($id);
 				if ($item) {
 					$entity->addRole($item);
 				}
-			}
-		} else if ($entity instanceof Entity\Company) {
-			$entity->setName($form->values->name);
-			$entity->clearUsers();
-			foreach ($form->values->users as $id) {
-				$item = $this->userFacade->find($id);
-				if ($item) {
-					$entity->addUser($item);
-				}
-			}
-		} else if ($entity instanceof Entity\Company) {
-			$entity->setName($form->values->name);
-			$entity->setCompany($this->companyFacade->find($id));
-		} else if ($entity instanceof Entity\Task) {
-			if ($form->values->solver === NULL) {
-				$entity->resetSolver();
-			}
-			parent::save($entity, $form);
-		} else if ($entity instanceof Entity\Comment) {
-			parent::save($entity, $form);
-			if ($form->values->message !== NULL) {
-				$message = htmlspecialchars($form->values->message);
-				$entity->setMessage(\App\Helpers::linkToAnchor($message));
-			}
-			if ($form->values->minutes > 0) {
-				$entity->setMinutes($form->values->minutes);
 			}
 		} else {
 			parent::save($entity, $form);

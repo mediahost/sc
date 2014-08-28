@@ -3,7 +3,10 @@
 namespace App\Model\Facade;
 
 use Kdyby\Doctrine\EntityDao,
-	App\Model\Entity;
+	App\Model\Entity\Auth,
+	App\Model\Entity\User,
+	App\Model\Entity,
+	App\Model\Entity\Role;
 
 /**
  * Description of Registration
@@ -14,97 +17,131 @@ class Registration extends Base
 {
 
 	/** @var EntityDao */
-	private $users;
+	private $authDao;
 
 	/** @var EntityDao */
-	private $auths;
-	
+	private $registrationDao;
+
 	/** @var EntityDao */
-	private $registrations;
-		
+	private $roleDao;
+
 	/** @var EntityDao */
-	private $roles;
-	
-	
+	private $userDao;
+
+
 	protected function init()
 	{
-		$this->users = $this->em->getDao(Entity\User::getClassName());
-		$this->auths = $this->em->getDao(Entity\Auth::getClassName());
-		$this->registrations = $this->em->getDao(Entity\Registration::getClassName());
-		$this->roles = $this->em->getDao(Entity\Role::getClassName());
+		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
+		$this->registrationDao = $this->em->getDao(Entity\Registration::getClassName());
+		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
+		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 	}
 
-	public function findByFacebookId($id)
+	/**
+	 * Find user by Auth key and source type.
+	 * @param string $source Source name
+	 * @param string $key Users's external identification
+	 * @return Entity\User
+	 */
+	public function findByKey($source, $key)
 	{
-		return $this->users->findOneBy([
-					'auths.key' => $id,
-					'auths.source' => 'facebook'
-		]);
-	}
-	
-
-	public function findByTwitterId($id)
-	{
-		return $this->users->findOneBy([
-					'auths.key' => $id,
-					'auths.source' => 'twitter'
+		return $this->authDao->findOneBy([
+					'source' => $source,
+					'key' => $key
 		]);
 	}
 
-	public function updateFacebookAccessToken($id, $token)
+	/**
+	 * Update OAuth access token.
+	 * @param Auth $auth
+	 * @param string $token
+	 * @return Auth
+	 */
+	public function updateAccessToken(Auth $auth, $token)
 	{
-		$auth = $this->auths->findOneBy(['key' => $id]);
 		$auth->token = $token;
-
-		return $this->auths->save($auth);
+		return $this->authDao->save($auth);
 	}
 
+	/**
+	 * Find user by e-mail.
+	 * @param string $email
+	 * @return User
+	 */
 	public function findByEmail($email)
 	{
-		return $this->users->findOneBy(['email' => $email]);
+		return $this->userDao->findOneBy(['email' => $email]);
 	}
 
-	public function merge($user, $auth)
+	/**
+	 * Add new Auth to existing User and save.
+	 * @param User $user
+	 * @param Auth $auth
+	 * @return User
+	 */
+	public function merge(User $user, Auth $auth)
 	{
 		$user->addAuth($auth);
-		return $this->users->save($user);
+		return $this->userDao->save($user);
 	}
 
-	public function register($user, $auth)
+	/**
+	 * Connect Auth with User and save new entities.
+	 * @param User $user
+	 * @param Auth $auth
+	 * @return User
+	 */
+	public function register(User $user, Auth $auth)
 	{
-		
+		$user->addAuth($auth);
+
+		$role = $this->roleDao->findOneBy(['name' => 'signed']);
+		$user->addRole($role);
+
+		return $this->userDao->save($user);
 	}
 
+	/**
+	 *
+	 * @param Registration $registration
+	 * @return Registration
+	 */
+	public function registerTemporarily(Entity\Registration $registration)
+	{
+		$registration->verification_code = \Nette\Utils\Strings::random(32);
+		return $this->registrationDao->save($registration);
+	}
+
+	/**
+	 * Creat new Auth and User (if doesn'e exist) by given code.
+	 * @param string $code
+	 * @return boolean
+	 */
 	public function verify($code)
 	{
-		$registration = $this->registrations->findOneBy(['verification_code' => $code]);
-		
+		$registration = $this->registrationDao->findOneBy(['verification_code' => $code]);
+
 		if ($registration) {
-			$user = $this->users->findOneBy(['email' => $registration->email]);
-			
-			if (!$user) {
-				$user = new Entity\User();
-				$user->email = $registration->email;
-			}
-			
 			$auth = new Entity\Auth();
 			$auth->key = $registration->key;
 			$auth->source = $registration->source;
 			$auth->token = $registration->token;
 			$auth->hash = $registration->hash;
-			$user->addAuth($auth);
 			
-			$user->addRole($this->roles->findBy(['name' => 'signed']));
+			if (!$user = $this->userDao->findOneBy(['email' => $registration->email])) {
+				$user = new Entity\User();
+				$user->email = $registration->email;
+				$user->name = $registration->name;
+				$return = $this->register($user, $auth);
+			} else {
+				$return = $this->merge($user, $auth);
+			}
 			
-			$this->em->remove($registration);
-			$this->em->persist($user);
-			
-			$this->em->flush();
-			
-			return TRUE;
+			$this->registrationDao->delete($registration);
+			return $return;
 		}
-		
-		return FALSE;
+
+		return NULL;
 	}
 
 }

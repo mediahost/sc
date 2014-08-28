@@ -28,7 +28,7 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 		list($email, $password) = $credentials;
 
 		$auth = $this->auths->findByEmail($email);
-
+				
 		if (!$auth) {
 			throw new Nette\Security\AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		} elseif (!\Nette\Security\Passwords::verify($password, $auth->hash)) { // ToDo: Tohle by mělo být v uivateli, v auth nebo v Nette
@@ -36,8 +36,9 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 		} elseif (\Nette\Security\Passwords::needsRehash($auth->hash)) {
 			$auth->hash = \Nette\Security\Passwords::hash($password);
 			$this->auths->save($auth);
+			dump('needsRehash');
 		}
-
+		
 		$user = $auth->user;
 
 		$arr = $user->toArray();

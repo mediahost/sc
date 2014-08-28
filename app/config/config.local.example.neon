@@ -17,3 +17,19 @@ parameters:
                 doctrine: FALSE
                 adminer: FALSE
                 startUsers: ['user_mail' = ['password', 'name_of_role']]
+
+nette:
+	mailer:
+		smtp: FALSE # při FALSE využívá mail(); při TRUE je potřeba nastavit údaje
+#		host: smtp.gmail.com
+#		secure: ssl
+#		username: user@gmail.com
+#		password: heslo
+
+# Při zakomentování bloku nette:mailer: je možné využít MailPanel níže
+#nette:
+#	debugger:
+#		bar:
+#			- JanDrabek\MailPanel\MailPanel
+#services:
+#	nette.mailer: JanDrabek\MailPanel\SessionMailer

@@ -47,7 +47,7 @@ class RegisterControl extends Control
 	public function render()
 	{
 		$template = $this->template;
-		$template->oauth = $this->registration->isOauth();
+		$template->oauth = $this->registration->isOAuth();
 		$template->birthdate = $this->registration->isRequired('birthdate');
 		$template->email = $this->registration->isRequired('email');
 		$template->setFile(__DIR__ . '/render.latte');
@@ -87,11 +87,11 @@ class RegisterControl extends Control
 					}, 'This e-mail is used yet!');
 		}
 
-		if ($this->registration->isOauth()) {
+		if ($this->registration->isOAuth()) {
 			$form->setDefaults($this->registration->defaults);
 		}
 		
-		if (!$this->registration->isOauth()) {
+		if (!$this->registration->isOAuth()) {
 			$form->addPassword('password', 'Password')
 					->setRequired('Please enter your password')
 					->setAttribute('placeholder', 'Password');
@@ -108,7 +108,7 @@ class RegisterControl extends Control
 	{
 		
 		// Namapování hodnot z formuláře
-		if ($this->registration->isOauth()) {
+		if ($this->registration->isOAuth()) {
 			// Registrace přes OAuth
 			if ($this->registration->user->email !== NULL) {
 				// Ověřený e-mail

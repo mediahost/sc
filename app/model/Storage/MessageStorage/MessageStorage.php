@@ -2,6 +2,10 @@
 
 namespace App\Model\Storage;
 
+use Nette\Bridges\ApplicationLatte\Template,
+	Nette\Mail\Message;
+
+
 /**
  * Description of MessageStorage
  *
@@ -9,10 +13,28 @@ namespace App\Model\Storage;
  */
 class MessageStorage extends \Nette\Object
 {
-
-	public function getTemplate($filename)
+	/**
+	 * 
+	 * @param Template $template
+	 * @param type $filename
+	 * @param type $parameters
+	 * @return Message
+	 */
+	public function getMessage(Template $template, $filename, $parameters)
 	{
-		return __DIR__ .'/'. $filename . '.latte';
+		$template->setFile(__DIR__ .'/'. $filename . '.latte')
+				->setParameters($parameters);
+
+		$message = new Message();
+		$message->setHtmlBody($template);
+		
+		return $message;
+	}
+	
+	public function getRegistrationMail(Template $template, $parameters)
+	{
+		$message = $this->getMessage($template, 'registration', $parameters);
+		return $message->setFrom('noreply@sc.com');
 	}
 
 }

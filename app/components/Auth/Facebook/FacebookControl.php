@@ -69,7 +69,7 @@ class FacebookControl extends Control
 
 				if (!$existing = $this->facade->findByFacebookId($fb->getUser())) {
 					// Registration or merging process
-					$auth = $this->storage->storeFromFacebook($fb->getUser(), $me, $fb->getAccessToken());
+					$auth = $this->storage->storeFromFacebook($me, $fb->getAccessToken());
 
 					if ($this->storage->checkRequired()) { // Mám všechny povinné údaje pro registraci?
 						if (($user = $this->facade->findByEmail($this->storage->data->email))) { // E-mail nemusím vždy dostat!

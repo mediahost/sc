@@ -34,12 +34,12 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 	protected $key;
 
 	/**
-	 * @ORM\Column(type="string", length=256)
+	 * @ORM\Column(type="string", length=32)
 	 */
 	protected $source;
 
 	/**
-	 * @ORM\Column(type="string", length=256, nullable=true)
+	 * @ORM\Column(type="string", length=1024, nullable=true)
 	 */
 	protected $token;
 
@@ -56,10 +56,11 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	public function setHash($password, array $options = NULL)
 	{
-		if ($password !== "" && $password !== NULL) {
-			$this->hash = Passwords::hash($password, $options);
-		}
-		return $this;
+//		if ($password !== "" && $password !== NULL) {
+//			$this->hash = Passwords::hash($password, $options);
+//		}
+		
+		$this->hash = $password;
 	}
 
 	/**

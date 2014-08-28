@@ -6,7 +6,8 @@ use Nette\Security as NS,
 	Nette\Application\UI\Control,
 	Nette\Application\UI\Form,
 	Nette,
-	Model;
+	Model,
+	GettextTranslator\Gettext as Translator;
 
 /**
  * Sign in form control
@@ -14,20 +15,17 @@ use Nette\Security as NS,
  */
 class SignInControl extends Control
 {
-
-	/** @var \App\Components\Auth\IFacebookControlFactory */
-	public $iFacebookControlFactory;
 	
-	/** @var \App\Components\Auth\ITwitterControlFactory */
-	public $iTwitterControlFactory;
-
+	/** @var Translator */
+	private $translator;
 	
-	public function __construct(\App\Components\Auth\IFacebookControlFactory $fb, \App\Components\Auth\ITwitterControlFactory $twitter)
+	
+	public function __construct(Translator $translator)
 	{
-		$this->iFacebookControlFactory = $fb;
-		$this->iTwitterControlFactory = $twitter;
+		parent::__construct();
+		$this->translator = $translator;
 	}
-
+	
 	public function render()
 	{
 		$template = $this->template;
@@ -42,6 +40,7 @@ class SignInControl extends Control
 	protected function createComponentSignInForm()
 	{
 		$form = new Form();
+		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		$form->addText('username', 'Username')
@@ -79,19 +78,6 @@ class SignInControl extends Control
 			$form->addError('Incorrect login or password!');
 		}
 	}
-
-	/** @return Auth\FacebookControl */
-	protected function createComponentFacebook()
-	{
-		return $this->iFacebookControlFactory->create();
-	}
-	
-	/** @return Auth\TwitterControl */
-	protected function createComponentTwitter()
-	{
-		return $this->iTwitterControlFactory->create();
-	}
-
 }
 
 interface ISignInControlFactory
