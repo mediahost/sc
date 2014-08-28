@@ -2,6 +2,6 @@ extensions:
 	gettextTranslator: GettextTranslator\DI\Extension
 
 gettextTranslator:
-    lang: en
-    files:
-        all: %appDir%/i18n/locale
+	lang: en
+	files:
+		all: %appDir%/lang/locale
