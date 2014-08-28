@@ -2,4 +2,7 @@ services:
 	InstallPresenter:
 		class: App\FrontModule\Presenters\InstallPresenter
 		arguments: [%tempDir%, %wwwDir%, %install.startUsers%]
+		setup:
+			- installDb(%install.doctrine%)
+			- installAdminer(%install.adminer%)
 		autowired: yes

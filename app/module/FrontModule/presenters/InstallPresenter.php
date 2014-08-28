@@ -32,6 +32,9 @@ class InstallPresenter extends BasePresenter
 	/** @var Nette\Security\IAuthorizator @inject */
 	public $permissions;
 
+	/** @var array */
+	private $toInstall = [];
+
 	public function __construct($tempDir = NULL, $wwwDir = NULL, $users = NULL)
 	{
 		parent::__construct();
@@ -46,16 +49,26 @@ class InstallPresenter extends BasePresenter
 			mkdir($this->installDir);
 		}
 	}
+	
+	public function installDb($doctrine = FALSE)
+	{
+		if ($doctrine) {
+			$this->toInstall['doctrine'] = ['Doctrine' => []];
+		}
+		$this->toInstall['roles'] = ['Roles' => [$this->permissions->getRoles(), $this->roleFacade]];
+		$this->toInstall['users'] = ['Users' => [$this->initUsers, $this->roleFacade, $this->userFacade]];
+	}
+	
+	public function installAdminer($adminer = FALSE)
+	{
+		if ($adminer) {
+			$this->toInstall['adminer'] = ['Adminer' => [$this->wwwDir]];
+		}
+	}
 
 	public function actionDefault()
 	{
-		$services = [ // FUNCTION => [NAME => PARAMS]
-			'roles' => ['Roles' => [$this->permissions->getRoles(), $this->roleFacade]],
-			'users' => ['Users' => [$this->initUsers, $this->roleFacade, $this->userFacade]],
-			'doctrine' => ['Doctrine' => []],
-//			'adminer' => ['Adminer' => [$this->wwwDir]],
-		];
-		foreach ($services as $function => $serviceArr) {
+		foreach ($this->toInstall as $function => $serviceArr) {
 			list($name, $params) = each($serviceArr);
 			$this->callService($function, $name, $params);
 		}
@@ -63,7 +76,7 @@ class InstallPresenter extends BasePresenter
 		$this->terminate();
 	}
 
-	public function setPathes($tempDir, $wwwDir)
+	private function setPathes($tempDir, $wwwDir)
 	{
 		$this->tempDir = $tempDir;
 		$this->wwwDir = $wwwDir;
@@ -76,7 +89,7 @@ class InstallPresenter extends BasePresenter
 	 * @param type $users
 	 * @return \App\FrontModule\Presenters\InstallPresenter
 	 */
-	public function setUsers($users)
+	private function setUsers($users)
 	{
 		if (is_array($users)) {
 			$this->initUsers = $users;
