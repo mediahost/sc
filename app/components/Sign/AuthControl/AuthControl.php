@@ -144,8 +144,6 @@ class AuthControl extends Control
 			// Registrace veia OAuth
 			if ($this->storage->isVerified()) {
 				// Verified e-mail
-				\Tracy\Debugger::barDump($this->storage->isVerified());
-				exit();
 				$user = $this->mergeOrRegister();
 				$this->login($user);
 			} else {
@@ -159,10 +157,6 @@ class AuthControl extends Control
 					->setHash(\Nette\Security\Passwords::hash($values->reg_password));
 
 			$this->registerTemporarily($reg);
-			
-			dump($values->reg_password);
-			dump(\Nette\Security\Passwords::hash($values->reg_password));
-			exit();
 		}
 	}
 
@@ -235,7 +229,7 @@ class AuthControl extends Control
 			if ($this->storage->isRequired()) {
 				$this->presenter->redirect('Sign:Register', $source);
 			} else {
-				$this->mergeOrRegister();
+				$user = $this->mergeOrRegister();
 			}
 			
 			$this->storage->wipe();
