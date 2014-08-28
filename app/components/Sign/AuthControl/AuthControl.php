@@ -77,6 +77,7 @@ class AuthControl extends Control
 	public function renderIcons()
 	{
 		$template = $this->template;
+		$template->setTranslator($this->translator);
 		$template->setFile(__DIR__ . '/icons.latte');
 		$template->render();
 	}

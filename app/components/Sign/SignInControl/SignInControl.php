@@ -22,13 +22,13 @@ class SignInControl extends Control
 	
 	public function __construct(Translator $translator)
 	{
-		parent::__construct();
 		$this->translator = $translator;
 	}
 	
 	public function render()
 	{
 		$template = $this->template;
+		$template->setTranslator($this->translator);
 		$template->setFile(__DIR__ . '/SignInControl.latte');
 		$template->render();
 	}
