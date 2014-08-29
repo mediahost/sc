@@ -4,7 +4,8 @@ namespace App\Model\Facade;
 
 use App\Model\Entity\User,
 	App\Model\Entity,
-	Kdyby\Doctrine\EntityDao;
+	Kdyby\Doctrine\EntityDao,
+	Tracy\Debugger as Debug;
 
 class Users extends Base
 {
@@ -14,11 +15,15 @@ class Users extends Base
 
 	/** @var EntityDao */
 	private $roles;
+	
+	/** @var EntityDao */
+	private $auths;
 
 	protected function init()
 	{
 		$this->users = $this->em->getDao(User::getClassName());
 		$this->roles = $this->em->getDao(Entity\Role::getClassName());
+		$this->auths = $this->em->getDao(Entity\Auth::getClassName());
 	}
 
 	/**
@@ -55,7 +60,7 @@ class Users extends Base
 
 			$auth = new Entity\Auth();
 			$auth->key = $email;
-			$auth->source = 'app';
+			$auth->source = Entity\Auth::SOURCE_APP;
 			$auth->hash = $password;
 
 			$user->addRole($role);
@@ -65,13 +70,36 @@ class Users extends Base
 		}
 		return NULL;
 	}
+	
+	/**
+	 * Hledá aplikační autorizaci odpovídající mailu.
+	 * V případě její absence tuto autorizaci vytvoří se zadaným heslem
+	 * @param User $user
+	 * @param type $password
+	 */
+	public function setAppPassword(User $user, $password)
+	{
+		$auth = $this->auths->findOneBy([
+					'source' => Entity\Auth::SOURCE_APP,
+					'key' => $user->email,
+					'user' => $user,
+		]);
+		if (!$auth) {
+			$auth = new Entity\Auth;
+			$auth->setUser($user);
+			$auth->setSource(Entity\Auth::SOURCE_APP);
+			$auth->setKey($user->email);
+		}
+		$auth->setPassword($password);
+		$this->auths->save($auth);
+	}
 
 	/**
 	 * Add role as Role entity, string or array of entites to user.
-	 * @param Entity\User $user
+	 * @param User $user
 	 * @param Entity\Role|string $role
 	 */
-	public function addRole(Entity\User $user, $role)
+	public function addRole(User $user, $role)
 	{
 		if (!($user instanceof Entity\Role)) {
 			if (is_string($role)) {
@@ -84,6 +112,14 @@ class Users extends Base
 		}
 
 		return $user->addRole($role);
+	}
+	
+	public function delete(User $user)
+	{
+		$user->clearRoles();
+		// TODO: delete auth
+		$this->users->save($user);
+		return $this->users->delete($user);
 	}
 
 }

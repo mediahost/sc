@@ -58,8 +58,6 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->flashMessage("Not implemented yet.", 'warning');
-		$this->redirect("default");
 		$this->user = new \App\Model\Entity\User;
 		$this->userFormFactory->setAdding();
 		$this->setView("edit");
@@ -72,8 +70,6 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->flashMessage("Not implemented yet.", 'warning');
-		$this->redirect("default");
 		$this->user = $this->userDao->find($id);
 	}
 
@@ -102,12 +98,8 @@ class UsersPresenter extends BasePresenter
 	{
 		$this->user = $this->userDao->find($id);
 		if ($this->user) {
-			if (!$this->user->getProjectsCount()) {
-				$this->userDao->delete($this->user);
-				$this->flashMessage("Entity was deleted.", 'success');
-			} else {
-				$this->flashMessage("User cannot be deleted. Remove roles first.", 'warning');
-			}
+			$this->userFacade->delete($this->user);
+			$this->flashMessage("Entity was deleted.", 'success');
 		} else {
 			$this->flashMessage("Entity was not found.", 'warning');
 		}

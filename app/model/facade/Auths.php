@@ -19,8 +19,15 @@ class Auths extends Base
 	public function findByEmail($email)
 	{
 		return $this->auths->findOneBy([
-					'source' => 'app',
-					'key' => $email
+					'source' => Entity\Auth::SOURCE_APP,
+					'key' => $email,
+		]);
+	}
+
+	public function findByUser(Entity\User $user)
+	{
+		return $this->auths->findBy([
+					'user' => $user,
 		]);
 	}
 

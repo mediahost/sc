@@ -53,13 +53,12 @@ class UserFormFactory extends FormFactory
 	public function create()
 	{
 		$form = $this->formFactory->create();
-		$form->addText('username', 'Username')
-				->setOption('description', 'username must be e-mail')
-				->addRule(Form::EMAIL, 'Username must be e-mail')
-				->addRule(Form::FILLED, 'Username must be filled')
-				->addRule(function(\Nette\Forms\Controls\TextInput $item) {
-//					return $this->entity ;//$this->userFacade->isUnique($item->value);
-				}, 'This e-mail is used yet!');
+		$mail = $form->addText('mail', 'Mail')
+				->addRule(Form::EMAIL, 'Fill right format')
+				->addRule(Form::FILLED, 'Mail must be filled');
+		if (!$this->isAdding()) {
+			$mail->setDisabled();
+		}
 				
 		$password = $form->addText('password', 'Password');
 		if ($this->isAdding()) {

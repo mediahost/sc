@@ -44,7 +44,7 @@ class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 	{
 		if ($entity instanceof Entity\User) {
 			$form->setValues([
-				'username' => $entity->email,
+				'mail' => $entity->email,
 				'roles' => $entity->getRolesKeys(),
 			]);
 		} else {
@@ -55,10 +55,12 @@ class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 	public function save($entity, $form)
 	{
 		if ($entity instanceof Entity\User) {
-			$entity->email = $form->values->username;
-			
+			if (isset($form->values->mail)) {
+				$entity->email = $form->values->mail;
+			}
+
 			if ($form->values->password !== NULL && $form->values->password !== "") {
-//				$entity->setPassword($form->values->password);
+				$this->userFacade->setAppPassword($entity, $form->values->password);
 			}
 			
 			$entity->clearRoles();

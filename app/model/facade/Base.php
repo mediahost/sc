@@ -39,12 +39,6 @@ abstract class Base extends \Nette\Object
 		return $this->dao->findAll();
 	}
 
-	/** @deprecated */
-	public function delete(\Kdyby\Doctrine\Entities\IdentifiedEntity $entity)
-	{
-		return $this->dao->delete($entity);
-	}
-
 	protected function init()
 	{
 		

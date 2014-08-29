@@ -71,15 +71,6 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 *
 	 * @return int
 	 */
-	public function getRolesCount()
-	{
-		return $this->roles->count();
-	}
-
-	/**
-	 *
-	 * @return int
-	 */
 	public function getUsername()
 	{
 		return $this->email;
@@ -134,6 +125,15 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	/**
 	 *
+	 * @return int
+	 */
+	public function getRolesCount()
+	{
+		return $this->roles->count();
+	}
+
+	/**
+	 *
 	 * @param bool $keysOnly if TRUE than return only keys
 	 * @return array
 	 */
@@ -155,15 +155,15 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $array;
 	}
 
-	public function __toString()
-	{
-		return $this->email;
-	}
-
 	public function addAuth($auth)
 	{
 		$this->auths->add($auth);
 		$auth->user = $this;
+	}
+
+	public function __toString()
+	{
+		return $this->email;
 	}
 
 }

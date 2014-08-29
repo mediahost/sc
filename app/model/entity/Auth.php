@@ -21,6 +21,10 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+	
+	const SOURCE_APP = "app";
+	const SOURCE_FACEBOOK = "facebook";
+	const SOURCE_TWITTER = "twitter";
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="User", inversedBy="auths", cascade={"persist"})
@@ -54,13 +58,12 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @param array with cost (4-31), salt (22 chars)
 	 * @return Auth
 	 */
-	public function setHash($password, array $options = NULL)
+	public function setPassword($password, array $options = NULL)
 	{
-//		if ($password !== "" && $password !== NULL) {
-//			$this->hash = Passwords::hash($password, $options);
-//		}
-		
-		$this->hash = $password;
+		if ($password !== "" && $password !== NULL) {
+			$this->hash = Passwords::hash($password, $options);
+		}
+		return $this;
 	}
 
 	/**
