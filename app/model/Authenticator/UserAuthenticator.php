@@ -10,10 +10,10 @@ use Nette;
 class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenticator
 {
 
-	/** @var \App\Model\Facade\Auths */
+	/** @var \App\Model\Facade\AuthFacade */
 	private $auths;
 
-	public function __construct(\App\Model\Facade\Auths $auths)
+	public function __construct(\App\Model\Facade\AuthFacade $auths)
 	{
 		$this->auths = $auths;
 	}

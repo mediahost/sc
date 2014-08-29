@@ -6,7 +6,7 @@ use App\Components\Control,
 	Nette\Application\UI\Form,
 	GettextTranslator\Gettext as Translator,
 	App\Model\Storage\RegistrationStorage as Storage,
-	App\Model\Facade\Registration as Facade,
+	App\Model\Facade\RegistrationFacade as Facade,
 	Nette\Security\Identity,
 	Nette\Mail\IMailer,
 	App\Model\Storage\MessageStorage as Messages;
@@ -248,7 +248,7 @@ class AuthControl extends Control
 	 * @param Registration $registration
 	 * @throws \Nette\Application\AbortException
 	 */
-	private function registerTemporarily(Registration $registration)
+	private function registerTemporarily(RegistrationFacade $registration)
 	{
 		// Ověření e-mailu
 		$registration = $this->facade->registerTemporarily($registration);

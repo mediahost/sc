@@ -27,7 +27,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	protected $email;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Auth", mappedBy="user", cascade={"persist"})
+	 * @ORM\OneToMany(targetEntity="Auth", mappedBy="user", cascade={"persist","remove"})
 	 * */
 	protected $auths;
 

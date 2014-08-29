@@ -18,7 +18,7 @@ class TwitterControl extends Control
 	/** @var Facebook */
 	private $facebook;
 
-	/** @var \App\Model\Facade\Registration */
+	/** @var \App\Model\Facade\RegistrationFacade */
 	public $facade;
 
 	/** @var \App\Model\Storage\RegistrationStorage */
@@ -27,7 +27,7 @@ class TwitterControl extends Control
     /** @var \Netrium\Addons\Twitter\Authenticator */
     protected $authenticator;
 
-	public function __construct(\Netrium\Addons\Twitter\Authenticator $twitter, \App\Model\Facade\Registration $facade, \App\Model\Storage\RegistrationStorage $storage)
+	public function __construct(\Netrium\Addons\Twitter\Authenticator $twitter, \App\Model\Facade\RegistrationFacade $facade, \App\Model\Storage\RegistrationStorage $storage)
 	{
 //		parent::__construct();
 		$this->authenticator = $twitter;

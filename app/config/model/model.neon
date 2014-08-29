@@ -1,7 +1,10 @@
 services:
-	- App\Model\Facade\Auths
-	- App\Model\Facade\Users
-	- App\Model\Facade\Roles
-	- App\Model\Facade\Registration
+	# Facades
+	- App\Model\Facade\AuthFacade(@doctrine.dao(App\Model\Entity\Auth))
+	- App\Model\Facade\UserFacade(@doctrine.dao(App\Model\Entity\User))
+	- App\Model\Facade\RoleFacade(@doctrine.dao(App\Model\Entity\Role))
+	- App\Model\Facade\RegistrationFacade(@doctrine.dao(App\Model\Entity\Auth))
+
+	# Storages
 	- App\Model\Storage\RegistrationStorage
 	- App\Model\Storage\MessageStorage

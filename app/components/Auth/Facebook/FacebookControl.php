@@ -21,13 +21,13 @@ class FacebookControl extends Control
 	/** @var Facebook */
 	private $facebook;
 
-	/** @var \App\Model\Facade\Registration */
+	/** @var \App\Model\Facade\RegistrationFacade */
 	public $facade;
 
 	/** @var \App\Model\Storage\RegistrationStorage */
 	public $storage;
 
-	public function __construct(Facebook $fb, \App\Model\Facade\Registration $facade, \App\Model\Storage\RegistrationStorage $storage)
+	public function __construct(Facebook $fb, \App\Model\Facade\RegistrationFacade $facade, \App\Model\Storage\RegistrationStorage $storage)
 	{
 //		parent::__construct();
 		$this->facebook = $fb;

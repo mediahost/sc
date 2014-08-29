@@ -7,7 +7,7 @@ use App\Model\Entity\User,
 	Kdyby\Doctrine\EntityDao,
 	Tracy\Debugger as Debug;
 
-class Users extends Base
+class UserFacade extends BaseFacade
 {
 
 	/** @var EntityDao */

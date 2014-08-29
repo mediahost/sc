@@ -13,7 +13,7 @@ use Kdyby\Doctrine\EntityDao,
  *
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class Registration extends Base
+class RegistrationFacade extends BaseFacade
 {
 
 	/** @var EntityDao */
@@ -103,8 +103,8 @@ class Registration extends Base
 
 	/**
 	 *
-	 * @param Registration $registration
-	 * @return Registration
+	 * @param RegistrationFacade $registration
+	 * @return RegistrationFacade
 	 */
 	public function registerTemporarily(Entity\Registration $registration)
 	{

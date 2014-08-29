@@ -6,7 +6,7 @@ use App\Model\Entity,
 	Kdyby\Doctrine\EntityManager,
 	App\Model\Facade,
 	Kdyby\Doctrine\EntityDao,
-	App\Model\Facade\Users as UserFacade;
+	App\Model\Facade\UserFacade as UserFacade;
 
 use Tracy\Debugger as Debug;
 

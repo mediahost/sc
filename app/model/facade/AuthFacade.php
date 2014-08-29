@@ -5,7 +5,7 @@ namespace App\Model\Facade;
 use Kdyby\Doctrine\EntityDao,
 	App\Model\Entity;
 
-class Auths extends Base
+class AuthFacade extends BaseFacade
 {
 
 	/** @var EntityDao */

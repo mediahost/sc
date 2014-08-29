@@ -8,7 +8,7 @@ use Nette\Application\UI\Form,
 	\Kdyby\Doctrine\EntityManager,
 	\Kdyby\Doctrine\EntityDao,
 	\App\Model\Storage\RegistrationStorage,
-	\App\Model\Facade\Users,
+	\App\Model\Facade\UserFacade,
 	Nette\Mail\IMailer,
 	\App\Model\Storage\MessageStorage,
 	GettextTranslator\Gettext as Translator;
@@ -26,7 +26,7 @@ class RegisterControl extends \App\Components\Control
 	/** @var RegistrationStorage */
 	private $registration;
 
-	/** @var Users */
+	/** @var UserFacade */
 	private $users;
 
 	/** @var EntityDao */
@@ -38,7 +38,7 @@ class RegisterControl extends \App\Components\Control
 	/** @var MessageStorage @inject */
 	private $messages;
 
-	public function __construct(Translator $translator, EntityManager $em, RegistrationStorage $reg, Users $users, IMailer $mailer, MessageStorage $messages)
+	public function __construct(Translator $translator, EntityManager $em, RegistrationStorage $reg, UserFacade $users, IMailer $mailer, MessageStorage $messages)
 	{
 		parent::__construct($translator);
 		$this->em = $em;

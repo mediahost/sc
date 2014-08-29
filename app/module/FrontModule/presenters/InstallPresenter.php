@@ -23,10 +23,10 @@ class InstallPresenter extends BasePresenter
 	/** @var array */
 	private $initUsers = [];
 
-	/** @var \App\Model\Facade\Users @inject */
+	/** @var \App\Model\Facade\UserFacade @inject */
 	public $userFacade;
 
-	/** @var \App\Model\Facade\Roles @inject */
+	/** @var \App\Model\Facade\RoleFacade @inject */
 	public $roleFacade;
 
 	/** @var Nette\Security\IAuthorizator @inject */

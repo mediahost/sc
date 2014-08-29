@@ -4,7 +4,7 @@ namespace App\Model\Storage;
 
 use Nette\Http\Session,
 	Nette\Http\SessionSection,
-	App\Model\Facade\Users as UserFacade,
+	App\Model\Facade\UserFacade as UserFacade,
 	Nette\Utils\ArrayHash;
 use App\Model\Entity;
 

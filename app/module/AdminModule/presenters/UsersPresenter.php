@@ -18,7 +18,7 @@ class UsersPresenter extends BasePresenter
 	/** @var \Kdyby\Doctrine\EntityDao */
 	private $userDao;
 
-	/** @var \App\Model\Facade\Users @inject */
+	/** @var \App\Model\Facade\UserFacade @inject */
 	public $userFacade;
 
 	/** @var array */

@@ -7,7 +7,7 @@ use Kdyby\Doctrine\EntityManager,
 	Kdyby\Doctrine\EntityDao;
 
 use App\Model\Entity\Role,
-	App\Model\Facade\Users as UserFacade;
+	App\Model\Facade\UserFacade as UserFacade;
 
 /**
  * UserFormFactory
@@ -17,7 +17,7 @@ use App\Model\Entity\Role,
 class UserFormFactory extends FormFactory
 {
 
-	/** @var \App\Model\Facade\Roles */
+	/** @var \App\Model\Facade\RoleFacade */
 	private $roleFacade;
 	
 	/** @var EntityManager */
@@ -33,7 +33,7 @@ class UserFormFactory extends FormFactory
 	private $roles;
 
 
-	public function __construct(IFormFactory $formFactory, \App\Model\Facade\Roles $roleFacade, EntityManager $em, UserFacade $userFacade)
+	public function __construct(IFormFactory $formFactory, \App\Model\Facade\RoleFacade $roleFacade, EntityManager $em, UserFacade $userFacade)
 	{
 		parent::__construct($formFactory);
 		$this->em = $em;

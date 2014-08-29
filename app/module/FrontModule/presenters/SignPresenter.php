@@ -16,7 +16,7 @@ class SignPresenter extends BasePresenter
 	/** @var \App\Model\Storage\RegistrationStorage @inject */
 	public $registration;
 
-	/** @var \App\Model\Facade\Registration @inject */
+	/** @var \App\Model\Facade\RegistrationFacade @inject */
 	public $registrationFacade;
 
 
