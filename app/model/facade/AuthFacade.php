@@ -30,5 +30,23 @@ class AuthFacade extends BaseFacade
 					'user' => $user,
 		]);
 	}
+	
+	public function recovery(Entity\Auth $auth, $password)
+	{
+		$auth->hash = \Nette\Security\Passwords::hash($password);
+		$user = $auth->user;
+		$user->recovery = NULL;
+		$this->em->persist($auth);
+		$this->em->persist($user);
+		$this->em->flush();
+		return $auth->user;
+	}
+	
+	public function findByRecovery($token)
+	{
+		return $this->auths->findOneBy([
+			'user.recovery' => $token
+		]);
+	}
 
 }

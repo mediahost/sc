@@ -11,19 +11,19 @@ class UserFacade extends BaseFacade
 {
 
 	/** @var EntityDao */
-	private $users;
+	private $userDao;
 
 	/** @var EntityDao */
-	private $roles;
+	private $roleDao;
 	
 	/** @var EntityDao */
-	private $auths;
+	private $authDao;
 
 	protected function init()
 	{
-		$this->users = $this->em->getDao(User::getClassName());
-		$this->roles = $this->em->getDao(Entity\Role::getClassName());
-		$this->auths = $this->em->getDao(Entity\Auth::getClassName());
+		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
+		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
 	}
 
 	/**
@@ -33,7 +33,7 @@ class UserFacade extends BaseFacade
 	 */
 	public function findByEmail($email)
 	{
-		return $this->users->findOneBy(['email' => $email]);
+		return $this->userDao->findOneBy(['email' => $email]);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class UserFacade extends BaseFacade
 			$user->addRole($role);
 			$user->addAuth($auth);
 
-			return $this->users->save($user);
+			return $this->userDao->save($user);
 		}
 		return NULL;
 	}
@@ -79,7 +79,7 @@ class UserFacade extends BaseFacade
 	 */
 	public function setAppPassword(User $user, $password)
 	{
-		$auth = $this->auths->findOneBy([
+		$auth = $this->authDao->findOneBy([
 					'source' => Entity\Auth::SOURCE_APP,
 					'key' => $user->email,
 					'user' => $user,
@@ -91,7 +91,7 @@ class UserFacade extends BaseFacade
 			$auth->setKey($user->email);
 		}
 		$auth->setPassword($password);
-		$this->auths->save($auth);
+		$this->authDao->save($auth);
 	}
 
 	/**
@@ -103,9 +103,9 @@ class UserFacade extends BaseFacade
 	{
 		if (!($user instanceof Entity\Role)) {
 			if (is_string($role)) {
-				$role = $this->roles->findOneBy(['name' => $role]);
+				$role = $this->roleDao->findOneBy(['name' => $role]);
 			} elseif (is_array($role)) {
-				$role = $this->roles->findBy(['name' => $role]);
+				$role = $this->roleDao->findBy(['name' => $role]);
 			} else {
 				throw new \InvalidArgumentException;
 			}
@@ -114,12 +114,16 @@ class UserFacade extends BaseFacade
 		return $user->addRole($role);
 	}
 	
-	public function delete(User $user)
+	public function delete(\Kdyby\Doctrine\Entities\BaseEntity $user)
 	{
 		$user->clearRoles();
-		// TODO: delete auth
-		$this->users->save($user);
-		return $this->users->delete($user);
+		$this->userDao->save($user); // ToDo: Do all in one row.
+		return $this->userDao->delete($user);
 	}
-
+	
+	public function forgotten(User $user)
+	{
+		$user->recovery = \Nette\Utils\Strings::random(32);
+		return $this->userDao->save($user);
+	}
 }

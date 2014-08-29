@@ -1,0 +1,30 @@
+
+{layout ../@metronic.layout.latte}
+
+{block bodyClass}login{/block}
+
+{block content}
+
+<!-- BEGIN LOGO -->
+<div class="logo">
+    <a n:href="Homepage:">
+        <img src="{$basePath}/assets/img/logo-big.png" alt=""/>
+    </a>
+</div>
+<!-- END LOGO -->
+<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+<div class="menu-toggler sidebar-toggler">
+</div>
+<!-- END SIDEBAR TOGGLER BUTTON -->
+
+<!-- BEGIN LOGIN -->
+<div class="content">
+    {control recovery}
+</div>
+<!-- END LOGIN -->
+<!-- BEGIN COPYRIGHT -->
+<div class="copyright">
+    2014 &copy; {_'Source-Code by Mediahost'}.
+</div>
+<!-- END COPYRIGHT -->
+	

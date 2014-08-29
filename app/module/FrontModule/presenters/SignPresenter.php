@@ -2,13 +2,32 @@
 
 namespace App\FrontModule\Presenters;
 
+use Kdyby\Doctrine\EntityManager,
+	Kdyby\Doctrine\EntityDao,
+	App\Model\Facade\UserFacade;
+
 /**
  * Sign in/out presenters.
  */
 class SignPresenter extends BasePresenter
 {
+	/** @var EntityManager @inject */
+	public $em;
+	
+	/** @var EntityDao */
+	private $userDao;
+	
+	/** @var UserFacade @inject */
+	public $userFacade;
+	
 	/** @var \App\Components\Sign\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
+	
+	/** @var \App\Components\Sign\IForgottenControlFactory @inject */
+	public $iForgottenControlFactory;
+	
+	/** @var \App\Components\Sign\IRecoveryControlFactory @inject */
+	public $iRecoveryControlFactory;
 	
 	/** @var \App\Components\Sign\IAuthControlFactory @inject */
 	public $iAuthControlFactory;
@@ -18,11 +37,15 @@ class SignPresenter extends BasePresenter
 
 	/** @var \App\Model\Facade\RegistrationFacade @inject */
 	public $registrationFacade;
+	
+	/** @var \App\Model\Facade\AuthFacade @inject */
+	public $authFacade;
 
 
 	protected function startup()
 	{
 		parent::startup();
+		$this->userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
 
 //		$this->user->logout();
 
@@ -46,7 +69,7 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionIn()
 	{
-//		$this->registration->wipe();
+		
 	}
 	
 	/**
@@ -57,14 +80,25 @@ class SignPresenter extends BasePresenter
 		$this->user->logout();
 		$this->redirect(':Front:Sign:in');
 	}
-
+	
 	/**
-	 *
+	 * @param string $token
+	 * @throws Nette\Application\BadRequestException
 	 */
-	public function actionLostPassword()
+	public function actionRecovery($token)
 	{
-		$this->flashMessage('Not implemented yet', 'warning');
-		$this->redirect('in');
+        if ($token !== NULL) {
+            $auth = $this->authFacade->findByRecovery($token);
+            
+            if ($auth !== NULL) {
+				$this['recovery']->setAuth($auth);
+			} else {
+                $this->flashMessage('Token to recovery your password is no longer active. Please request new.', 'info');
+                $this->redirect('forgotten');				
+			}
+        } else {
+            throw new \Nette\Application\BadRequestException;            
+        }
 	}
 
 	/**
@@ -124,7 +158,19 @@ class SignPresenter extends BasePresenter
 	{
 		return $this->iAuthControlFactory->create();
 	}
-
+	
+	/** @return \App\components\Sign\ForgottenControl */
+	protected function createComponentForgotten()
+	{
+		return $this->iForgottenControlFactory->create();
+	}
+	
+	/** @return \App\components\Sign\RecoveryControl */
+	protected function createComponentRecovery()
+	{
+		return $this->iRecoveryControlFactory->create();
+	}
+	
 // </editor-fold>
 
 }

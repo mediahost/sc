@@ -36,5 +36,11 @@ class MessageStorage extends \Nette\Object
 		$message = $this->getMessage($template, 'registration', $parameters);
 		return $message->setFrom('noreply@sc.com');
 	}
+	
+	public function getForgottenMail(Template $template, $parameters)
+	{
+		$message = $this->getMessage($template, 'forgotten', $parameters);
+		return $message->setFrom('noreply@sc.com');
+	}
 
 }
