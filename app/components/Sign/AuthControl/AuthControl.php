@@ -2,7 +2,7 @@
 
 namespace App\components\Sign;
 
-use	Nette\Application\UI\Control,
+use App\Components\Control,
 	Nette\Application\UI\Form,
 	GettextTranslator\Gettext as Translator,
 	App\Model\Storage\RegistrationStorage as Storage,
@@ -10,14 +10,11 @@ use	Nette\Application\UI\Control,
 	Nette\Security\Identity,
 	Nette\Mail\IMailer,
 	App\Model\Storage\MessageStorage as Messages;
-
 use Kdyby\Facebook\Facebook,
 	Kdyby\Facebook\Dialog\LoginDialog,
 	Kdyby\Facebook\FacebookApiException;
-
 use Netrium\Addons\Twitter\Authenticator as Twitter,
 	Netrium\Addons\Twitter\AuthenticationException as TwitterException;
-
 use App\Model\Entity,
 	App\Model\Entity\Auth,
 	App\Model\Entity\User,
@@ -30,9 +27,6 @@ use App\Model\Entity,
  */
 class AuthControl extends Control
 {
-
-	/** @var Translator */
-	private $translator;
 
 	/** @var Storage */
 	private $storage;
@@ -52,11 +46,9 @@ class AuthControl extends Control
 	/** @var Messages */
 	private $messages;
 
-
 	public function __construct(Translator $translator, Facade $facade, Storage $storage, IMailer $mailer, Messages $messages, Facebook $facebook, Twitter $twitter)
 	{
-		parent::__construct();
-		$this->translator = $translator;
+		parent::__construct($translator);
 		$this->storage = $storage;
 		$this->facade = $facade;
 		$this->mailer = $mailer;
@@ -67,8 +59,7 @@ class AuthControl extends Control
 
 	public function renderRegistration()
 	{
-		$template = $this->template;
-		$template->setTranslator($this->translator);
+		$template = $this->getTemplate();
 		$template->storage = $this->storage;
 		$template->setFile(__DIR__ . '/registration.latte');
 		$template->render();
@@ -76,8 +67,7 @@ class AuthControl extends Control
 
 	public function renderIcons()
 	{
-		$template = $this->template;
-		$template->setTranslator($this->translator);
+		$template = $this->getTemplate();
 		$template->setFile(__DIR__ . '/icons.latte');
 		$template->render();
 	}
@@ -102,7 +92,7 @@ class AuthControl extends Control
 					->setRequired('Please enter your e-mail')
 					->setAttribute('placeholder', 'E-mail')
 					->addRule(function(\Nette\Forms\Controls\TextInput $item) { // Tohle pouze v případě registrace přes aplikaci
-						return TRUE;//$this->users->isUnique($item->value);
+						return TRUE; //$this->users->isUnique($item->value);
 					}, 'This e-mail is used yet!');
 		}
 
@@ -114,7 +104,7 @@ class AuthControl extends Control
 			$form->addPassword('reg_password_verify', 'Password again:')
 					->addRule(Form::FILLED, 'Please enter password verification.')
 					->addConditionOn($form['reg_password_verify'], Form::FILLED)
-							->addRule(Form::EQUAL, 'Passwords must be equal.', $form['reg_password']);
+					->addRule(Form::EQUAL, 'Passwords must be equal.', $form['reg_password']);
 		}
 
 		$form->setDefaults($this->storage->defaults);
@@ -135,7 +125,7 @@ class AuthControl extends Control
 		if ($this->storage->isRequired('name')) {
 			$this->storage->user->name = $values->reg_name;
 		}
-		
+
 		if ($this->storage->isRequired('email')) {
 			$this->storage->user->email = $values->reg_email;
 		}
@@ -169,7 +159,7 @@ class AuthControl extends Control
 		/** @var LoginDialog $dialog */
 		$dialog->onResponse[] = function (LoginDialog $dialog) {
 			$this->storage->wipe();
-			
+
 			$fb = $dialog->getFacebook();
 
 			if (!$fb->getUser()) {
@@ -182,7 +172,6 @@ class AuthControl extends Control
 				$source = 'facebook';
 
 				$this->process($source, $fb->getUser(), $data, $fb->getAccessToken());
-
 			} catch (FacebookApiException $e) {
 				\Tracy\Debugger::log($e->getMessage(), 'facebook');
 
@@ -200,13 +189,12 @@ class AuthControl extends Control
 	public function handleTwitter()
 	{
 		$this->storage->wipe();
-		
+
 		try {
 			$data = $this->twitter->tryAuthenticate();
 			$source = 'twitter';
 
 			$this->process($source, $data['user']->id, $data['user'], $data['accessToken']['key']);
-
 		} catch (TwitterException $e) {
 			\Tracy\Debugger::log($e->getMessage(), 'twitter');
 
@@ -232,9 +220,9 @@ class AuthControl extends Control
 			} else {
 				$user = $this->mergeOrRegister();
 			}
-			
+
 			$this->storage->wipe();
-		} else {			
+		} else {
 			$user = $auth->user;
 			$this->facade->updateAccessToken($auth, $token);
 		}
@@ -276,7 +264,7 @@ class AuthControl extends Control
 		$this->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
 		$this->presenter->redirect(':Front:Sign:in');
 	}
-	
+
 	/**
 	 * Choose registration or merging facade methods.
 	 * @return User
@@ -289,12 +277,12 @@ class AuthControl extends Control
 			return $this->facade->register($this->storage->user, $this->storage->auth);
 		}
 	}
-}
 
+}
 
 interface IAuthControlFactory
 {
+
 	/** @return AuthControl */
 	function create();
 }
-

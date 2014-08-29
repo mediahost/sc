@@ -2,39 +2,45 @@
 
 namespace App\Components\Sign;
 
-use Nette\Application\UI\Control,
-	Nette\Application\UI\Form,
+use Nette\Application\UI\Form,
 	Nette,
-	App\Model\Entity;
+	App\Model\Entity,
+	\Kdyby\Doctrine\EntityManager,
+	\Kdyby\Doctrine\EntityDao,
+	\App\Model\Storage\RegistrationStorage,
+	\App\Model\Facade\Users,
+	Nette\Mail\IMailer,
+	\App\Model\Storage\MessageStorage,
+	GettextTranslator\Gettext as Translator;
 
 /**
  *
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class RegisterControl extends Control
+class RegisterControl extends \App\Components\Control
 {
 
-	/** @var \Kdyby\Doctrine\EntityManager */
+	/** @var EntityManager */
 	private $em;
 
-	/** @var \App\Model\Storage\RegistrationStorage */
+	/** @var RegistrationStorage */
 	private $registration;
 
-	/** @var \App\Model\Facade\Users */
+	/** @var Users */
 	private $users;
 
-	/** @var \Kdyby\Doctrine\EntityDao */
+	/** @var EntityDao */
 	private $registrationDao;
 
-	/** @var Nette\Mail\IMailer */
+	/** @var IMailer */
 	private $mailer;
 
-	/** @var \App\Model\Storage\MessageStorage @inject */
+	/** @var MessageStorage @inject */
 	private $messages;
-	
-	
-	public function __construct(\Kdyby\Doctrine\EntityManager $em, \App\Model\Storage\RegistrationStorage $reg, \App\Model\Facade\Users $users, Nette\Mail\IMailer $mailer, \App\Model\Storage\MessageStorage $messages)
+
+	public function __construct(Translator $translator, EntityManager $em, RegistrationStorage $reg, Users $users, IMailer $mailer, MessageStorage $messages)
 	{
+		parent::__construct($translator);
 		$this->em = $em;
 		$this->registration = $reg;
 		$this->users = $users;
@@ -46,7 +52,7 @@ class RegisterControl extends Control
 
 	public function render()
 	{
-		$template = $this->template;
+		$template = $this->getTemplate();
 		$template->oauth = $this->registration->isOAuth();
 		$template->birthdate = $this->registration->isRequired('birthdate');
 		$template->email = $this->registration->isRequired('email');
@@ -90,7 +96,7 @@ class RegisterControl extends Control
 		if ($this->registration->isOAuth()) {
 			$form->setDefaults($this->registration->defaults);
 		}
-		
+
 		if (!$this->registration->isOAuth()) {
 			$form->addPassword('password', 'Password')
 					->setRequired('Please enter your password')
@@ -106,7 +112,6 @@ class RegisterControl extends Control
 
 	public function registerFormSucceeded(Form $form, $values)
 	{
-		
 		// Namapování hodnot z formuláře
 		if ($this->registration->isOAuth()) {
 			// Registrace přes OAuth
@@ -119,9 +124,9 @@ class RegisterControl extends Control
 				$this->users->addRole($user, ['signed']);
 				$this->em->persist($user);
 				$this->em->flush();
-				
+
 				$existing = $this->users->findByEmail($this->registration->user->email);
-				
+
 				// Přihlásit
 				$this->registration->wipe();
 				$this->presenter->user->login(new \Nette\Security\Identity($existing->id, $existing->getRolesPairs(), $existing->toArray()));
@@ -132,7 +137,6 @@ class RegisterControl extends Control
 				$this->registration->user->email = $values->email;
 				$registration = $this->registration->toRegistration();
 			}
-			
 		} else {
 			// Registrace přes formulář
 			$registration = new Entity\Registration();
@@ -141,33 +145,35 @@ class RegisterControl extends Control
 			$registration->source = 'app';
 			$registration->hash = \Nette\Security\Passwords::hash($values->password);
 		}
-		
-		
+
+
 		if ($values->email || ($this->registration->isOauth() && $this->registration->user->email !== NULL)) {
 			// Ověření e-mailu
 			$registration->verification_code = Nette\Utils\Strings::random(32);
 			$this->em->persist($registration);
 			$this->em->flush();
-			
+
 			// Odeslat e-mail
 			$message = new Nette\Mail\Message();
 			$template = $this->createTemplate()->setFile($this->messages->getTemplate('registration'));
 			$template->code = $registration->verification_code;
-			
+
 			$message->setFrom('noreply@sc.com')
 					->addTo($registration->email)
 					->setHtmlBody($template);
 			$this->mailer->send($message);
-	
+
 			$this->registration->wipe();
 			$this->presenter->flashMessage('Verification code has been sent to your e-mail. Please check your inbox!', 'success');
 			$this->presenter->redirect(':Front:Sign:in');
 		}
 	}
+
 }
 
 interface IRegisterControlFactory
 {
+
 	/** @return RegisterControl */
 	function create();
 }

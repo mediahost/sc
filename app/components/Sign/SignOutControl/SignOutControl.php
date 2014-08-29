@@ -2,22 +2,18 @@
 
 namespace App\Components\Sign;
 
-use Nette\Application\UI\Control;
+use App\Components\Control,
+	GettextTranslator\Gettext as Translator;
 
 /**
- * 
+ * SignOutControl
  */
 class SignOutControl extends Control
 {
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
 	public function render()
 	{
-		$template = $this->template;
+		$template = $this->getTemplate();
 		$template->icon = NULL;
 		$template->setFile(__DIR__ . '/SignOutControl.latte');
 		$template->render();
@@ -25,7 +21,7 @@ class SignOutControl extends Control
 
 	public function renderIcon()
 	{
-		$template = $this->template;
+		$template = $this->getTemplate();
 		$template->icon = true;
 		$template->setFile(__DIR__ . '/SignOutControl.latte');
 		$template->render();

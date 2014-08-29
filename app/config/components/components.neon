@@ -1,5 +1,5 @@
 services:
-	- App\Components\ISignInControlFactory
+	- App\Components\Sign\ISignInControlFactory
 	- App\Components\Sign\ISignOutControlFactory
 	- App\Components\Sign\IRegisterControlFactory
 	- App\Components\Sign\IAuthControlFactory

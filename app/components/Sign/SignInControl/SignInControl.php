@@ -1,13 +1,10 @@
 <?php
 
-Namespace App\Components;
+Namespace App\Components\Sign;
 
-use Nette\Security as NS,
-	Nette\Application\UI\Control,
+use App\Components\Control,
 	Nette\Application\UI\Form,
-	Nette,
-	Model,
-	GettextTranslator\Gettext as Translator;
+	Nette;
 
 /**
  * Sign in form control
@@ -15,20 +12,10 @@ use Nette\Security as NS,
  */
 class SignInControl extends Control
 {
-	
-	/** @var Translator */
-	private $translator;
-	
-	
-	public function __construct(Translator $translator)
-	{
-		$this->translator = $translator;
-	}
-	
+
 	public function render()
 	{
-		$template = $this->template;
-		$template->setTranslator($this->translator);
+		$template = $this->getTemplate();
 		$template->setFile(__DIR__ . '/SignInControl.latte');
 		$template->render();
 	}
@@ -78,10 +65,12 @@ class SignInControl extends Control
 			$form->addError('Incorrect login or password!');
 		}
 	}
+
 }
 
 interface ISignInControlFactory
 {
+
 	/** @return SignInControl */
 	function create();
 }

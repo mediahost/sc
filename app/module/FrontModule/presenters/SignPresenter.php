@@ -7,10 +7,10 @@ namespace App\FrontModule\Presenters;
  */
 class SignPresenter extends BasePresenter
 {
-	/** @var \App\Components\ISignInControlFactory @inject */
+	/** @var \App\Components\Sign\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
 	
-	/** @var \App\components\Sign\IAuthControlFactory @inject */
+	/** @var \App\Components\Sign\IAuthControlFactory @inject */
 	public $iAuthControlFactory;
 
 	/** @var \App\Model\Storage\RegistrationStorage @inject */
