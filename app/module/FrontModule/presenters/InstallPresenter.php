@@ -10,6 +10,10 @@ use Tracy\Debugger as Debug;
  */
 class InstallPresenter extends BasePresenter
 {
+	
+	const PARAM_USERS = "startUsers";
+	const PARAM_DOCTRINE = "doctrine";
+	const PARAM_ADMINER = "adminer";
 
 	/** @var string */
 	private $tempDir;
@@ -35,11 +39,25 @@ class InstallPresenter extends BasePresenter
 	/** @var array */
 	private $toInstall = [];
 
-	public function __construct($tempDir = NULL, $wwwDir = NULL, $users = NULL)
+	/** @var array */
+	private $installParams = [];
+
+	public function __construct($tempDir = NULL, $wwwDir = NULL, $params = [])
 	{
 		parent::__construct();
 		$this->setPathes($tempDir, $wwwDir);
-		$this->setUsers($users);
+		$allowedParams = [
+			self::PARAM_USERS,
+			self::PARAM_DOCTRINE,
+			self::PARAM_ADMINER,
+		];
+		foreach ($allowedParams as $param) {
+			$value = NULL;
+			if (array_key_exists($param, $params)) {
+				$value = $params[$param];
+			}
+			$this->installParams[$param] = $value;
+		}
 	}
 
 	protected function startup()
@@ -48,22 +66,9 @@ class InstallPresenter extends BasePresenter
 		if (!is_dir($this->installDir)) {
 			mkdir($this->installDir);
 		}
-	}
-	
-	public function installDb($doctrine = FALSE)
-	{
-		if ($doctrine) {
-			$this->toInstall['doctrine'] = ['Doctrine' => []];
-		}
-		$this->toInstall['roles'] = ['Roles' => [$this->permissions->getRoles(), $this->roleFacade]];
-		$this->toInstall['users'] = ['Users' => [$this->initUsers, $this->roleFacade, $this->userFacade]];
-	}
-	
-	public function installAdminer($adminer = FALSE)
-	{
-		if ($adminer) {
-			$this->toInstall['adminer'] = ['Adminer' => [$this->wwwDir]];
-		}
+		$this->setUsers($this->installParams[self::PARAM_USERS]);
+		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
+		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
 	}
 
 	public function actionDefault()
@@ -95,6 +100,22 @@ class InstallPresenter extends BasePresenter
 			$this->initUsers = $users;
 		}
 		return $this;
+	}
+	
+	private function installDb($doctrine = FALSE)
+	{
+		if ($doctrine) {
+			$this->toInstall['doctrine'] = ['Doctrine' => []];
+		}
+		$this->toInstall['roles'] = ['Roles' => [$this->permissions->getRoles(), $this->roleFacade]];
+		$this->toInstall['users'] = ['Users' => [$this->initUsers, $this->roleFacade, $this->userFacade]];
+	}
+	
+	private function installAdminer($adminer = FALSE)
+	{
+		if ($adminer) {
+			$this->toInstall['adminer'] = ['Adminer' => [$this->wwwDir]];
+		}
 	}
 
 	/**
