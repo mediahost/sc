@@ -19,6 +19,7 @@ services:
 			# Resources
 			- addResource('front')
 			- addResource('dashboard')
+			- addResource('user_settings')
 			- addResource('candidate')
 			- addResource('company')
 			- addResource('admin')
@@ -31,6 +32,7 @@ services:
 
 			- allow('guest', 'front')
 			- allow('signed', 'dashboard', 'view')
+			- allow('signed', 'user_settings', 'view')
 
 			- allow('candidate', 'candidate', 'view')
 			- allow('company', 'company', 'view')
