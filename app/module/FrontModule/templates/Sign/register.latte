@@ -1,4 +1,3 @@
-
 {layout ../@metronic.layout.latte}
 
 {block bodyClass}login{/block}
@@ -12,16 +11,15 @@
     </a>
 </div>
 <!-- END LOGO -->
-<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-<div class="menu-toggler sidebar-toggler">
-</div>
-<!-- END SIDEBAR TOGGLER BUTTON -->
 
-<!-- BEGIN LOGIN -->
 <div class="content">
-    {control auth:registration}
+    <!-- BEGIN REGISTRATION FORM -->
+    <div class="register-form">
+        {control auth:registration}
+    </div>
+    <!-- END REGISTRATION FORM -->
 </div>
-<!-- END LOGIN -->
+    
 <!-- BEGIN COPYRIGHT -->
 <div class="copyright">
     2014 &copy; {_'Source-Code by Mediahost'}.

@@ -109,9 +109,17 @@ class AuthControl extends Control
 
 		$form->setDefaults($this->storage->defaults);
 		$form->addSubmit('register', 'Register');
+		$form->addSubmit('cancel', 'Cancel')
+				->setValidationScope(FALSE)
+				->onClick = $this->registerFormCancel;
 
 		$form->onSuccess[] = $this->registerFormSucceeded;
 		return $form;
+	}
+
+	public function registerFormCancel(\Nette\Forms\Controls\SubmitButton $button)
+	{
+		$this->presenter->redirect("Sign:in");
 	}
 
 	/**

@@ -1,11 +1,13 @@
 {block}
-{* Registration form *}
-{form registerForm, class=>'login-form'}
+{form registerForm}
     <h3 class="form-title">{_'Registration'}</h3>
-    <div class="alert alert-danger" n:if="$form->ownErrors">
+    <div class="alert alert-danger" n:if="$form->ownErrors || $form->errors">
         <button class="close" data-close="alert"></button>
         {foreach $form->ownErrors as $error}
-            <span>{$error}</span><br n:if="!$iterator->isLast()"/>
+            <span>{$error}</span><br/>
+        {/foreach}
+        {foreach $form->errors as $error}
+            <span>{$error}</span><br/>
         {/foreach}
     </div>
 
@@ -48,9 +50,11 @@
     {/if}
 
     <div class="form-actions">
-        {button register, class=>"btn green"}
-        {caption}
-        <i class="m-icon-swapright m-icon-white"></i>
+        {button cancel, class=>'btn'}
+        <i class="m-icon-swapleft"></i> {caption}
+        {/button}
+        {button register, class=>'btn green pull-right'}
+        {caption} <i class="m-icon-swapright m-icon-white"></i>
         {/button}
     </div>
 {/form}

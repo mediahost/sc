@@ -15,16 +15,16 @@ use App\Components\Control,
  */
 class ForgottenControl extends Control
 {
-	
+
 	/** @var UserFacade */
 	private $userFacade;
-	
+
 	/** @var IMailer */
 	private $mailer;
-	
+
 	/** @var Messages */
 	private $messages;
-	
+
 	public function __construct(\GettextTranslator\Gettext $translator, UserFacade $userFacade, IMailer $mailer, Messages $messages)
 	{
 		parent::__construct($translator);
@@ -52,21 +52,30 @@ class ForgottenControl extends Control
 		$form->addText('email', 'E-mail')
 				->setRequired('Please enter your e-mail')
 				->setAttribute('placeholder', 'E-mail')
-				->addRule(function(\Nette\Forms\Controls\TextInput $item) { // ToDo: Tohle by šlo eliminovat na jeden dotaz v success metodě
-					return $this->userFacade->findByEmail($item->value) !== NULL;
-				}, 'We not register any user with this e-mail address!');
+				->addRule(Form::EMAIL, 'Fill right format');
 
-		$form->addSubmit('send', 'Send request');
+		$form->addSubmit('send', 'Send');
+		$form->addSubmit('cancel', 'Cancel')
+				->setValidationScope(FALSE)
+				->onClick[] = $this->forgottenFormCancel;
 
 		$form->onSuccess[] = $this->forgottenFormSucceeded;
 		return $form;
 	}
 
+	public function forgottenFormCancel(\Nette\Forms\Controls\SubmitButton $button)
+	{
+		$this->presenter->redirect("Sign:in");
+	}
+
 	public function forgottenFormSucceeded(Form $form, $values)
 	{
 		$user = $this->userFacade->findByEmail($values->email);
+		if (!$user) {
+			$form['email']->addError('We not register any user with this e-mail address!');
+		}
 		$this->userFacade->forgotten($user);
-		
+
 		// Odeslat e-mail
 		$message = $this->messages->getRegistrationMail($this->createTemplate(), [
 			'token' => $user->recovery
@@ -74,6 +83,9 @@ class ForgottenControl extends Control
 
 		$message->addTo($user->email);
 		$this->mailer->send($message);
+
+		$this->presenter->flashMessage('Recovery link has been send to your mail.');
+		$this->presenter->redirect("Sign:in");
 	}
 
 }

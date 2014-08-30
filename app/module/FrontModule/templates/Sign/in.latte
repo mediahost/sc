@@ -11,33 +11,36 @@
     </a>
 </div>
 <!-- END LOGO -->
-<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-<div class="menu-toggler sidebar-toggler">
-</div>
-<!-- END SIDEBAR TOGGLER BUTTON -->
 
-<!-- BEGIN LOGIN -->
 <div class="content">
-    {control signIn}
+    <!-- BEGIN LOGIN FORM -->
+    <div class="login-form">
 
-    {control auth:icons}
+        {control signIn}
 
-    <div class="forget-password">
-        <h4>{_'Forgot your password?'}</h4>
-        <p>
-            {_'no worries, click'} <a n:href="lostPassword" id="forget-password">{_'here'}</a> {_'to set new password'}.
-        </p>
+        <div class="login-options">
+            <h4>{_'or login with'}</h4>
+            {control auth:icons}
+        </div>
+
+        <div class="forget-password">
+            <h4>{_'Forgot your password?'}</h4>
+            <p>
+                {_'no worries, click'} <a n:href="lostPassword">{_'here'}</a> {_'to set new password'}.
+            </p>
+        </div>
+
+        <div class="create-account">
+            <p>
+                {_"Don't have an account yet?"}&nbsp; 
+                <a n:href="register">{_'Create an account'}</a>
+            </p>
+        </div>
+
     </div>
-
-    <div class="create-account">
-        <p>
-            {_"Don't have an account yet?"}&nbsp; 
-            <a n:href="register" id="register-btn">{_'Create an account'}</a>
-        </p>
-    </div>
-
+    <!-- END LOGIN FORM -->
 </div>
-<!-- END LOGIN -->
+    
 <!-- BEGIN COPYRIGHT -->
 <div class="copyright">
     2014 &copy; {_'Source-Code by Mediahost'}.
