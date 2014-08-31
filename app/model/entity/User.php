@@ -52,7 +52,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
     protected $name;
 	
 	/**
-	 * @ORM\Column(type="string", length=256, nullable=false)
+	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
 	protected $recovery;
 	

@@ -53,18 +53,26 @@ class RecoveryControl extends Control
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		$form->addPassword('password', 'Password')
-				->setRequired('Please enter your password')
-				->setAttribute('placeholder', 'Password');
+				->setAttribute('placeholder', 'Password')
+				->setRequired('Please enter your password');
 
-		$form->addPassword('password_verify', 'Password again:')
-				->addRule(Form::FILLED, 'Please enter password verification.')
+		$form->addPassword('password_verify', 'Re-type Your Password')
+				->setAttribute('placeholder', 'Re-type Your Password')
 				->addConditionOn($form['password_verify'], Form::FILLED)
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
 
 		$form->addSubmit('recovery', 'Set new password');
+		$form->addSubmit('cancel', 'Back')
+				->setValidationScope(FALSE)
+				->onClick[] = $this->recoveryFormCancel;
 		
 		$form->onSuccess[] = $this->recoveryFormSucceeded;
 		return $form;
+	}
+
+	public function recoveryFormCancel(\Nette\Forms\Controls\SubmitButton $button)
+	{
+		$this->presenter->redirect("Sign:in");
 	}
 
 	public function recoveryFormSucceeded(Form $form, $values)

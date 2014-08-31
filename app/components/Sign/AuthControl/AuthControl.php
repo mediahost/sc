@@ -101,16 +101,16 @@ class AuthControl extends Control
 					->setRequired('Please enter your password')
 					->setAttribute('placeholder', 'Password');
 
-			$form->addPassword('reg_password_verify', 'Password again:')
-					->addRule(Form::FILLED, 'Please enter password verification.')
+			$form->addPassword('reg_password_verify', 'Re-type Your Password')
+					->setAttribute('placeholder', 'Re-type Your Password')
 					->addConditionOn($form['reg_password_verify'], Form::FILLED)
 					->addRule(Form::EQUAL, 'Passwords must be equal.', $form['reg_password']);
 		}
 
 		$form->setDefaults($this->storage->defaults);
 		$form->addSubmit('register', 'Register');
-		$form->addSubmit('cancel', 'Cancel')
-				->setValidationScope(FALSE)
+		$form->addSubmit('cancel', 'Back')
+						->setValidationScope(FALSE)
 				->onClick = $this->registerFormCancel;
 
 		$form->onSuccess[] = $this->registerFormSucceeded;
@@ -256,7 +256,7 @@ class AuthControl extends Control
 	 * @param Registration $registration
 	 * @throws \Nette\Application\AbortException
 	 */
-	private function registerTemporarily(RegistrationFacade $registration)
+	private function registerTemporarily(Registration $registration)
 	{
 		// Ověření e-mailu
 		$registration = $this->facade->registerTemporarily($registration);

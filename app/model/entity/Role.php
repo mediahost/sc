@@ -14,6 +14,10 @@ class Role extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+	const ROLE_GUEST = "guest";
+	const ROLE_SIGNED = "signed";
+	const ROLE_CANDIDATE = "candidate";
+
 	/**
 	 * @ORM\Column(type="string", length=128)
 	 */

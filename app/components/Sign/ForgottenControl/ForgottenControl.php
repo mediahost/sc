@@ -55,7 +55,7 @@ class ForgottenControl extends Control
 				->addRule(Form::EMAIL, 'Fill right format');
 
 		$form->addSubmit('send', 'Send');
-		$form->addSubmit('cancel', 'Cancel')
+		$form->addSubmit('cancel', 'Back')
 				->setValidationScope(FALSE)
 				->onClick[] = $this->forgottenFormCancel;
 
@@ -77,7 +77,7 @@ class ForgottenControl extends Control
 		$this->userFacade->forgotten($user);
 
 		// Odeslat e-mail
-		$message = $this->messages->getRegistrationMail($this->createTemplate(), [
+		$message = $this->messages->getForgottenMail($this->createTemplate(), [
 			'token' => $user->recovery
 		]);
 

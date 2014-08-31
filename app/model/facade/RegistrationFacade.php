@@ -28,7 +28,6 @@ class RegistrationFacade extends BaseFacade
 	/** @var EntityDao */
 	private $userDao;
 
-
 	protected function init()
 	{
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
@@ -95,7 +94,7 @@ class RegistrationFacade extends BaseFacade
 	{
 		$user->addAuth($auth);
 
-		$role = $this->roleDao->findOneBy(['name' => 'signed']);
+		$role = $this->roleDao->findOneBy(['name' => Role::ROLE_CANDIDATE]);
 		$user->addRole($role);
 
 		return $this->userDao->save($user);
@@ -127,7 +126,7 @@ class RegistrationFacade extends BaseFacade
 			$auth->source = $registration->source;
 			$auth->token = $registration->token;
 			$auth->hash = $registration->hash;
-			
+
 			if (!$user = $this->userDao->findOneBy(['email' => $registration->email])) {
 				$user = new Entity\User();
 				$user->email = $registration->email;
@@ -136,7 +135,7 @@ class RegistrationFacade extends BaseFacade
 			} else {
 				$return = $this->merge($user, $auth);
 			}
-			
+
 			$this->registrationDao->delete($registration);
 			return $return;
 		}

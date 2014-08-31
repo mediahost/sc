@@ -46,13 +46,15 @@ class SignPresenter extends BasePresenter
 	{
 		parent::startup();
 		$this->userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
-
-//		$this->user->logout();
-		// Logged user redirect away
-		if ($this->user->isLoggedIn()) {
-//			$this->flashMessage('You have been already signed in.', 'warning'); // ToDo: Delete, 'cos showing after redirection throught this presenter, maybe.
+	}
+	
+	private function isLoggedIn($redirect = TRUE)
+	{
+		$isLogged = $this->user->isLoggedIn();
+		if ($isLogged && $redirect) {
 			$this->redirect(':Admin:Dashboard:');
 		}
+		return $isLogged;
 	}
 
 	/**
@@ -68,7 +70,7 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionIn()
 	{
-		
+		$this->isLoggedIn();
 	}
 	
 	/**
@@ -85,7 +87,7 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionLostPassword()
 	{
-		
+		$this->isLoggedIn();
 	}
 
 	/**
@@ -94,6 +96,8 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionRecovery($token)
 	{
+		$this->isLoggedIn();
+		
 		if ($token !== NULL) {
 			$auth = $this->authFacade->findByRecovery($token);
 
@@ -113,6 +117,7 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionRegister($source = NULL)
 	{
+		$this->isLoggedIn();
 
 		if (!$this->registration->isSource($source)) {
 			$this->redirect('in');
@@ -133,6 +138,8 @@ class SignPresenter extends BasePresenter
 	 */
 	public function actionVerify($code)
 	{
+		$this->isLoggedIn();
+		
 		$user = $this->registrationFacade->verify($code);
 		if ($user) {
 			$this->presenter->user->login(new \Nette\Security\Identity($user->id, $user->getRolesPairs(), $user->toArray()));
