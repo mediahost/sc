@@ -30,12 +30,12 @@ class SignInControl extends Control
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
-		$form->addText('username', 'Username')
-//                ->setRequired('Please enter your username')
-				->setAttribute('placeholder', 'Username');
+		$form->addText('username', 'E-mail')
+				->setRequired('Please enter your e-mail')
+				->setAttribute('placeholder', 'E-mail');
 
 		$form->addPassword('password', 'Password')
-//                ->setRequired('Please enter your password')
+				->setRequired('Please enter your password')
 				->setAttribute('placeholder', 'Password');
 
 		$form->addCheckbox('remember', 'Remember me')
@@ -43,8 +43,6 @@ class SignInControl extends Control
 
 		$form->addSubmit('_submit', 'Login');
 
-
-		// call method signInFormSucceeded() on success
 		$form->onSuccess[] = $this->signInFormSucceeded;
 		return $form;
 	}

@@ -2,11 +2,8 @@
 <!-- BEGIN LOGIN FORM -->
 {form signInForm}
     <h3 class="form-title">{_'Login to your account'}</h3>
-    <div class="alert alert-danger" n:if="$form->ownErrors || $form->errors">
+    <div class="alert alert-danger" n:if="$form->errors">
         <button class="close" data-close="alert"></button>
-        {foreach $form->ownErrors as $error}
-            <span>{$error}</span><br/>
-        {/foreach}
         {foreach $form->errors as $error}
             <span>{$error}</span><br/>
         {/foreach}

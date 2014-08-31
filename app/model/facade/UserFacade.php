@@ -61,7 +61,7 @@ class UserFacade extends BaseFacade
 			$auth = new Entity\Auth();
 			$auth->key = $email;
 			$auth->source = Entity\Auth::SOURCE_APP;
-			$auth->hash = $password;
+			$auth->password = $password;
 
 			$user->addRole($role);
 			$user->addAuth($auth);

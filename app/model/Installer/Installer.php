@@ -33,7 +33,7 @@ class Installer
 	 * Create default users
 	 * @return boolean
 	 */
-	public function installUsers($users, $roleFacade, $userFacade)
+	public function installUsers(array $users, \App\Model\Facade\RoleFacade $roleFacade, \App\Model\Facade\UserFacade $userFacade)
 	{
 		foreach ($users as $initUserMail => $initUserData) {
 			$pass = $initUserData[0];
@@ -50,7 +50,7 @@ class Installer
 	 */
 	public function installDoctrine()
 	{
-		$print = shell_exec('php index.php orm:schema-tool:update --force');
+		$print = @shell_exec('php index.php orm:schema-tool:update --force');
 		echo '-----------<br />';
 		echo '<pre>' . $print . '</pre>';
 		echo '-----------<br />';
@@ -63,7 +63,7 @@ class Installer
 	 */
 	public function installAdminer($wwwDir)
 	{
-		chmod($wwwDir . '/adminer/database.sql', 0777);
+		@chmod($wwwDir . '/adminer/database.sql', 0777);
 		return TRUE;
 	}
 

@@ -136,4 +136,4 @@ webloader:
 		metronicCoreIE9:
 			files:
 				- ../assets/plugins/respond.min.js
-				- ../assets/plugins/excanvas.min.js               
+				- ../assets/plugins/excanvas.min.js
