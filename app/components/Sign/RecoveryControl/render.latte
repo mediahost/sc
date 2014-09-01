@@ -5,10 +5,13 @@
     <p>
         {_'Enter your new password'}:
     </p>
-    <div class="alert alert-danger" n:if="$form->ownErrors">
+    <div class="alert alert-danger" n:if="$form->ownErrors || $form->errors">
         <button class="close" data-close="alert"></button>
         {foreach $form->ownErrors as $error}
-            <span>{$error}</span><br n:if="!$iterator->isLast()"/>
+            <span>{$error}</span><br/>
+        {/foreach}
+        {foreach $form->errors as $error}
+            <span>{$error}</span><br/>
         {/foreach}
     </div>
 

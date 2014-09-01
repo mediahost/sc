@@ -5,6 +5,7 @@ Namespace App\Components\Sign;
 use App\Components\Control,
 	Nette\Application\UI\Form,
 	App\Model\Facade\UserFacade,
+	App\Model\Facade\AuthFacade,
 	Nette\Mail\IMailer,
 	App\Model\Storage\MessageStorage as Messages,
 	Nette;
@@ -18,6 +19,9 @@ class ForgottenControl extends Control
 
 	/** @var UserFacade */
 	private $userFacade;
+	
+	/** @var AuthFacade */
+	private $authFacade;
 
 	/** @var IMailer */
 	private $mailer;
@@ -25,10 +29,11 @@ class ForgottenControl extends Control
 	/** @var Messages */
 	private $messages;
 
-	public function __construct(\GettextTranslator\Gettext $translator, UserFacade $userFacade, IMailer $mailer, Messages $messages)
+	public function __construct(\GettextTranslator\Gettext $translator, UserFacade $userFacade, AuthFacade $authFacade, IMailer $mailer, Messages $messages)
 	{
 		parent::__construct($translator);
 		$this->userFacade = $userFacade;
+		$this->authFacade = $authFacade;
 		$this->mailer = $mailer;
 		$this->messages = $messages;
 	}
@@ -70,22 +75,27 @@ class ForgottenControl extends Control
 
 	public function forgottenFormSucceeded(Form $form, $values)
 	{
-		$user = $this->userFacade->findByEmail($values->email);
-		if (!$user) {
-			$form['email']->addError('We not register any user with this e-mail address!');
+		if ($form['send']->isSubmittedBy()) {
+			$auth = $this->authFacade->findByEmail($values->email);
+
+			if (!$auth) {
+				$form['email']->addError('We do not register any user with this e-mail address!');
+			} else {		
+				$user = $auth->user;
+				$this->userFacade->forgotten($user);
+
+				// Odeslat e-mail
+				$message = $this->messages->getForgottenMail($this->createTemplate(), [
+					'token' => $user->recovery
+				]);
+
+				$message->addTo($user->email);
+				$this->mailer->send($message);
+
+				$this->presenter->flashMessage('Recovery link has been send to your mail.');
+				$this->presenter->redirect("Sign:in");
+			}
 		}
-		$this->userFacade->forgotten($user);
-
-		// Odeslat e-mail
-		$message = $this->messages->getForgottenMail($this->createTemplate(), [
-			'token' => $user->recovery
-		]);
-
-		$message->addTo($user->email);
-		$this->mailer->send($message);
-
-		$this->presenter->flashMessage('Recovery link has been send to your mail.');
-		$this->presenter->redirect("Sign:in");
 	}
 
 }

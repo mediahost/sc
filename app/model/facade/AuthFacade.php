@@ -16,6 +16,11 @@ class AuthFacade extends BaseFacade
 		$this->auths = $this->em->getDao(Entity\Auth::getClassName());
 	}
 
+	/**
+	 * Find Auth by e-mail of application registration
+	 * @param type $email
+	 * @return type
+	 */
 	public function findByEmail($email)
 	{
 		return $this->auths->findOneBy([
