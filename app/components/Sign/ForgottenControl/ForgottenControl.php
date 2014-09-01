@@ -52,11 +52,11 @@ class ForgottenControl extends Control
 		$form->addText('email', 'E-mail')
 				->setRequired('Please enter your e-mail')
 				->setAttribute('placeholder', 'E-mail')
-				->addRule(Form::EMAIL, 'Fill right format');
+				->addRule(Form::EMAIL, 'Fill right e-mail format');
 
 		$form->addSubmit('send', 'Send');
 		$form->addSubmit('cancel', 'Back')
-				->setValidationScope(FALSE)
+						->setValidationScope(FALSE)
 				->onClick[] = $this->forgottenFormCancel;
 
 		$form->onSuccess[] = $this->forgottenFormSucceeded;
@@ -72,20 +72,21 @@ class ForgottenControl extends Control
 	{
 		$user = $this->userFacade->findByEmail($values->email);
 		if (!$user) {
-			$form['email']->addError('We not register any user with this e-mail address!');
+			$form['email']->addError('We not register any user with this e-mail!');
+		} else {
+			$this->userFacade->forgotten($user);
+
+			// Odeslat e-mail
+			$message = $this->messages->getForgottenMail($this->createTemplate(), [
+				'token' => $user->recovery
+			]);
+
+			$message->addTo($user->email);
+			$this->mailer->send($message);
+
+			$this->presenter->flashMessage('Recovery link has been send to your mail.');
+			$this->presenter->redirect("Sign:in");
 		}
-		$this->userFacade->forgotten($user);
-
-		// Odeslat e-mail
-		$message = $this->messages->getForgottenMail($this->createTemplate(), [
-			'token' => $user->recovery
-		]);
-
-		$message->addTo($user->email);
-		$this->mailer->send($message);
-
-		$this->presenter->flashMessage('Recovery link has been send to your mail.');
-		$this->presenter->redirect("Sign:in");
 	}
 
 }
