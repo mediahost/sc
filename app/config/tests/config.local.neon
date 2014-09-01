@@ -1,0 +1,35 @@
+doctrine:
+	host: localhost
+	user: user
+	password: pasword
+	dbname: dbname
+
+facebook:
+	appId: '715517921837240'
+	appSecret: 'cea6d6730f81f81b95f81f0ff527017a'
+
+twitter:
+	consumerKey: 'consumer_key'
+	consumerSecretKey: 'secret_key'
+
+parameters:
+	install:
+		doctrine: FALSE
+		adminer: FALSE
+		startUsers: ['user_mail' = ['password', 'name_of_role']]
+
+nette:
+	mailer:
+		smtp: FALSE # při FALSE využívá mail(); při TRUE je potřeba nastavit údaje
+#		host: smtp.gmail.com
+#		secure: ssl
+#		username: user@gmail.com
+#		password: heslo
+
+# Při zakomentování bloku nette:mailer: je možné využít MailPanel níže
+#nette:
+#	debugger:
+#		bar:
+#			- JanDrabek\MailPanel\MailPanel
+#services:
+#	nette.mailer: JanDrabek\MailPanel\SessionMailer
