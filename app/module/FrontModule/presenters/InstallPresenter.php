@@ -83,9 +83,6 @@ class InstallPresenter extends BasePresenter
 	public function actionDefault($printHtml = TRUE)
 	{
 		$this->printHtml = $printHtml;
-		if (!$this->printHtml) {
-			$this->message(NULL);
-		}
 		
 		foreach ($this->toInstall as $function => $serviceArr) {
 			list($name, $params) = each($serviceArr);
@@ -178,7 +175,7 @@ class InstallPresenter extends BasePresenter
 	 */
 	private function message($message)
 	{
-		echo $message . ($this->printHtml ? '<br/>' : '\n');
+		echo $message . ($this->printHtml ? '<br/>' : ' | ');
 	}
 
 }
