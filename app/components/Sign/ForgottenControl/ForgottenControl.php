@@ -57,11 +57,11 @@ class ForgottenControl extends Control
 		$form->addText('email', 'E-mail')
 				->setRequired('Please enter your e-mail')
 				->setAttribute('placeholder', 'E-mail')
-				->addRule(Form::EMAIL, 'Fill right format');
+				->addRule(Form::EMAIL, 'Fill right e-mail format');
 
 		$form->addSubmit('send', 'Send');
 		$form->addSubmit('cancel', 'Back')
-				->setValidationScope(FALSE)
+						->setValidationScope(FALSE)
 				->onClick[] = $this->forgottenFormCancel;
 
 		$form->onSuccess[] = $this->forgottenFormSucceeded;

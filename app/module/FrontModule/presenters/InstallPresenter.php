@@ -46,6 +46,9 @@ class InstallPresenter extends BasePresenter
 	/** @var array */
 	private $installParams = [];
 
+	/** @var bool */
+	private $printHtml;
+
 	public function __construct($tempDir = NULL, $wwwDir = NULL, $appDir = NULL, $params = [])
 	{
 		parent::__construct();
@@ -71,14 +74,16 @@ class InstallPresenter extends BasePresenter
 		if (!is_dir($this->installDir)) {
 			mkdir($this->installDir);
 		}
-//		$this->setUsers($this->installParams[self::PARAM_USERS]);
-//		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
-//		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
+		$this->setUsers($this->installParams[self::PARAM_USERS]);
+		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
+		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
 		$this->installComposer($this->installParams[self::PARAM_COMPOSER]);
 	}
 
-	public function actionDefault()
+	public function actionDefault($printHtml = TRUE)
 	{
+		$this->printHtml = $printHtml;
+		
 		foreach ($this->toInstall as $function => $serviceArr) {
 			list($name, $params) = each($serviceArr);
 			$this->callService($function, $name, $params);
@@ -170,7 +175,7 @@ class InstallPresenter extends BasePresenter
 	 */
 	private function message($message)
 	{
-		echo $message . '<br/>';
+		echo $message . ($this->printHtml ? '<br/>' : ' | ');
 	}
 
 }

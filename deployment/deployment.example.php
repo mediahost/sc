@@ -29,7 +29,7 @@ return array(
 		',
 		'allowdelete' => TRUE,
 		'after' => array(
-			$domain . '/install'
+			$domain . 'install?printHtml=0'
 		),
 		'purge' => array(
 			'temp/cache',
