@@ -206,7 +206,7 @@ class AuthControl extends Control
 		} catch (TwitterException $e) {
 			\Tracy\Debugger::log($e->getMessage(), 'twitter');
 
-			throw new \Nette\Security\AuthenticationException('Twitter authentication did not approve', self::NOT_APPROVED, $e);
+			throw new \Nette\Security\AuthenticationException('Twitter authentication did not approve');
 		}
 	}
 
