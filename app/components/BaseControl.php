@@ -29,5 +29,18 @@ abstract class BaseControl extends UI\Control
 		$template->setTranslator($this->translator);
 		return $template;
 	}
+	
+	public function dir()
+	{
+		return dirname($this->getReflection()->getFileName());
+	}
+
+
+	public function render()
+	{
+		$template = $this->template;
+		$template->setFile($this->dir() . '/default.latte');
+		$template->render();
+	}
 
 }

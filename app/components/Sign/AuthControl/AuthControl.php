@@ -25,41 +25,31 @@ use App\Model\Entity,
  *
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class AuthControl extends Control
+class AuthControl extends \App\Components\BaseControl
 {
 
-	/** @var Storage */
-	private $storage;
+	/** @var Storage @inject */
+	public $storage;
 
-	/** @var Facade */
-	private $facade;
+	/** @var Facade @inject */
+	public $facade;
 
-	/** @var IMailer */
-	private $mailer;
+	/** @var IMailer @inject */
+	public $mailer;
 
-	/** @var Facebook */
-	private $facebook;
+	/** @var Facebook @inject */
+	public $facebook;
 
-	/** @var Twitter */
-	private $twitter;
+	/** @var Twitter @inject */
+	public $twitter;
 
-	/** @var Messages */
-	private $messages;
+	/** @var Messages @inject */
+	public $messages;
 
-	public function __construct(Translator $translator, Facade $facade, Storage $storage, IMailer $mailer, Messages $messages, Facebook $facebook, Twitter $twitter)
-	{
-		parent::__construct($translator);
-		$this->storage = $storage;
-		$this->facade = $facade;
-		$this->mailer = $mailer;
-		$this->messages = $messages;
-		$this->facebook = $facebook;
-		$this->twitter = $twitter;
-	}
 
 	public function renderRegistration()
 	{
-		$template = $this->getTemplate();
+		$template = $this->template;
 		$template->storage = $this->storage;
 		$template->setFile(__DIR__ . '/registration.latte');
 		$template->render();
@@ -67,7 +57,7 @@ class AuthControl extends Control
 
 	public function renderIcons()
 	{
-		$template = $this->getTemplate();
+		$template = $this->template;
 		$template->setFile(__DIR__ . '/icons.latte');
 		$template->render();
 	}
