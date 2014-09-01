@@ -136,11 +136,13 @@ class RegistrationFacade extends BaseFacade
 				$return = $this->merge($user, $auth);
 			}
 
+			// Deleting registration entities with the same e-mail and source
 			$this->registrationDao->delete($registration);
 
 			$expired = $this->registrationDao->findBy([
 					'verification_code != ?0' => [$code],
-					'email = ?0' => [$registration->email]
+					'email = ?0' => [$registration->email],
+					'source = ?0' => [$registration->source]
 			]);
 			
 			foreach ($expired as $expire) {
