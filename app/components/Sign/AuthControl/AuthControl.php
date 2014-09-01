@@ -89,8 +89,9 @@ class AuthControl extends Control
 
 		if ($this->storage->isRequired('email')) {
 			$form->addText('reg_email', 'E-mail')
-					->setRequired('Please enter your e-mail')
 					->setAttribute('placeholder', 'E-mail')
+					->setRequired('Please enter your e-mail')
+					->addRule(Form::EMAIL, 'Fill right e-mail format')
 					->addRule(function(\Nette\Forms\Controls\TextInput $item) { // Tohle pouze v případě registrace přes aplikaci
 						return TRUE; //$this->users->isUnique($item->value);
 					}, 'This e-mail is used yet!');
