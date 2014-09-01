@@ -32,14 +32,12 @@
 	],
 	"require": {
 		"php": ">= 5.4.0",
-		"nette/nette": "~2.2.0",
+		"nette/nette": "~2.2.3",
 		"dg/adminer-custom": "@dev",
-		
-        "kdyby/doctrine": "2.1.*@dev",
-        "kdyby/events": "2.2.x-dev",
-        "kdyby/console": "2.3.*@dev",
-        "kdyby/annotations": "2.1.*@dev",
-		
+		"kdyby/doctrine": "2.1.*@dev",
+		"kdyby/events": "2.2.x-dev",
+		"kdyby/console": "2.3.*@dev",
+		"kdyby/annotations": "2.1.*@dev",
 		"kdyby/validator": "@dev",
 		"kdyby/doctrine-forms": "@dev",
 		"janmarek/webloader": "@dev",
@@ -56,7 +54,7 @@
 		"sodae/netrium-addons-twitter": "dev-nette-compatibility-22-dev"
 	},
 	"require-dev": {
-		"nette/tester": "~1.1.0"
+		"nette/tester": "~1.2.0"
 	},
 	"minimum-stability": "stable"
 }

@@ -130,10 +130,17 @@ class Helpers
 		return $jsDate;
 	}
 
+	/**
+	 * Function to translate link in text to HTML format of link
+	 * @param type $text
+	 * @param type $class
+	 * @param type $target
+	 * @return type
+	 */
 	public static function linkToAnchor($text, $class = NULL, $target = "_blank")
 	{
 		return preg_replace('@((http|https)://([\w-.]+)+(:\d+)?(/([\w/_\-.]*(\?\S+)?)?)?)@'
-				, '<a href="$1"' . ($class === NULL ? '' : (' class="' . $class . '"')) . ' target="' . $target . '">$1</a>'
+				, '<a href="$1"' . ($class ? (' class="' . $class . '"') : '') . ($target ? ' target="' . $target . '"' : '') . '>$1</a>'
 				, $text);
 	}
 
