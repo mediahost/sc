@@ -71,9 +71,9 @@ class InstallPresenter extends BasePresenter
 		if (!is_dir($this->installDir)) {
 			mkdir($this->installDir);
 		}
-//		$this->setUsers($this->installParams[self::PARAM_USERS]);
-//		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
-//		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
+		$this->setUsers($this->installParams[self::PARAM_USERS]);
+		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
+		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
 		$this->installComposer($this->installParams[self::PARAM_COMPOSER]);
 	}
 
