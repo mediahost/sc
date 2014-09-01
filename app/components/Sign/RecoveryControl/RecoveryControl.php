@@ -80,7 +80,7 @@ class RecoveryControl extends Control
 		$user = $this->authFacade->recovery($this->auth, $values->password);
 		
 		$this->presenter->user->login(new Nette\Security\Identity($user->id, $user->getRolesPairs(), $user->toArray()));
-		$this->presenter->flashMessage('Your password has benn successfully changed!', 'success');
+		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
 		$this->presenter->redirect(':Admin:Dashboard:');
 	}
 	

@@ -84,7 +84,7 @@ class ForgottenControl extends Control
 			$message->addTo($user->email);
 			$this->mailer->send($message);
 
-			$this->presenter->flashMessage('Recovery link has been send to your mail.');
+			$this->presenter->flashMessage('Recovery link has been sent to your mail.');
 			$this->presenter->redirect("Sign:in");
 		}
 	}
