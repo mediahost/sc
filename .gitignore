@@ -31,10 +31,14 @@ composer.lock
 !/vendor/others
 
 #################
-## Tests bat
+## Tests
 #################
-/tests/test.bat
 /tests/test.log
+
+#################
+## Bin
+#################
+/bin/test.bat
 
 #################
 ## NetBeans
