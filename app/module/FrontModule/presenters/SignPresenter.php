@@ -99,7 +99,7 @@ class SignPresenter extends BasePresenter
 		$this->isLoggedIn();
 		
 		if ($token !== NULL) {
-			$auth = $this->authFacade->findByRecovery($token);
+			$auth = $this->authFacade->findByValidToken($token);
 
 			if ($auth !== NULL) {
 				$this['recovery']->setAuth($auth);

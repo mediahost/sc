@@ -137,6 +137,16 @@ class RegistrationFacade extends BaseFacade
 			}
 
 			$this->registrationDao->delete($registration);
+
+			$expired = $this->registrationDao->findBy([
+					'verification_code != ?0' => [$code],
+					'email = ?0' => [$registration->email]
+			]);
+			
+			foreach ($expired as $expire) {
+				$this->registrationDao->delete($expire);
+			}
+
 			return $return;
 		}
 
