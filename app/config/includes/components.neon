@@ -1,6 +1,9 @@
 services:
 	- App\Components\Sign\ISignInControlFactory
 	- App\Components\Sign\ISignOutControlFactory
-	- App\Components\Sign\IAuthControlFactory
 	- App\Components\Sign\IForgottenControlFactory
 	- App\Components\Sign\IRecoveryControlFactory
+
+	authControlFactory:
+		implement: App\Components\Sign\IAuthControlFactory
+		inject: yes
