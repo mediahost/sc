@@ -1,5 +1,5 @@
 services:
 	InstallPresenter:
 		class: App\FrontModule\Presenters\InstallPresenter
-		arguments: [%tempDir%, %wwwDir%, %install%]
+		arguments: [%tempDir%, %wwwDir%, %appDir%, %install%]
 		autowired: yes

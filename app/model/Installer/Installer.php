@@ -67,4 +67,24 @@ class Installer
 		return TRUE;
 	}
 
+	/**
+	 * Install or update composer
+	 * @return boolean
+	 */
+	public function installComposer($appDir)
+	{
+		$oldcwd = getcwd();
+		chdir($oldcwd . "/..");
+		if (is_file($appDir . "/../composer.lock")) {
+			$print = @shell_exec('composer update');
+		} else {
+			$print = @shell_exec('composer instal');
+		}
+		chdir($oldcwd);
+		echo '-----------<br />';
+		echo '<pre>' . $print . '</pre>';
+		echo '-----------<br />';
+		return TRUE;
+	}
+
 }

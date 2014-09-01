@@ -14,12 +14,16 @@ class InstallPresenter extends BasePresenter
 	const PARAM_USERS = "startUsers";
 	const PARAM_DOCTRINE = "doctrine";
 	const PARAM_ADMINER = "adminer";
+	const PARAM_COMPOSER = "composer";
 
 	/** @var string */
 	private $tempDir;
 
 	/** @var string */
 	private $wwwDir;
+
+	/** @var string */
+	private $appDir;
 
 	/** @var string */
 	private $installDir;
@@ -42,14 +46,15 @@ class InstallPresenter extends BasePresenter
 	/** @var array */
 	private $installParams = [];
 
-	public function __construct($tempDir = NULL, $wwwDir = NULL, $params = [])
+	public function __construct($tempDir = NULL, $wwwDir = NULL, $appDir = NULL, $params = [])
 	{
 		parent::__construct();
-		$this->setPathes($tempDir, $wwwDir);
+		$this->setPathes($tempDir, $wwwDir, $appDir);
 		$allowedParams = [
 			self::PARAM_USERS,
 			self::PARAM_DOCTRINE,
 			self::PARAM_ADMINER,
+			self::PARAM_COMPOSER,
 		];
 		foreach ($allowedParams as $param) {
 			$value = NULL;
@@ -66,9 +71,10 @@ class InstallPresenter extends BasePresenter
 		if (!is_dir($this->installDir)) {
 			mkdir($this->installDir);
 		}
-		$this->setUsers($this->installParams[self::PARAM_USERS]);
-		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
-		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
+//		$this->setUsers($this->installParams[self::PARAM_USERS]);
+//		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
+//		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
+		$this->installComposer($this->installParams[self::PARAM_COMPOSER]);
 	}
 
 	public function actionDefault()
@@ -81,10 +87,11 @@ class InstallPresenter extends BasePresenter
 		$this->terminate();
 	}
 
-	private function setPathes($tempDir, $wwwDir)
+	private function setPathes($tempDir, $wwwDir, $appDir)
 	{
 		$this->tempDir = $tempDir;
 		$this->wwwDir = $wwwDir;
+		$this->appDir = $appDir;
 		$this->installDir = $this->tempDir . '/install';
 		return $this;
 	}
@@ -115,6 +122,13 @@ class InstallPresenter extends BasePresenter
 	{
 		if ($adminer) {
 			$this->toInstall['adminer'] = ['Adminer' => [$this->wwwDir]];
+		}
+	}
+	
+	private function installComposer($composer = FALSE)
+	{
+		if ($composer) {
+			$this->toInstall['composer'] = ['Composer' => [$this->appDir]];
 		}
 	}
 
