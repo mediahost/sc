@@ -9,11 +9,15 @@ class AuthFacade extends BaseFacade
 {
 
 	/** @var EntityDao */
-	private $auths;
+	private $authDao;
+	
+	/** @var EntityDao */
+	private $userDao;
 
 	protected function init()
 	{
-		$this->auths = $this->em->getDao(Entity\Auth::getClassName());
+		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
+		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 	}
 
 	/**
@@ -23,7 +27,7 @@ class AuthFacade extends BaseFacade
 	 */
 	public function findByEmail($email)
 	{
-		return $this->auths->findOneBy([
+		return $this->authDao->findOneBy([
 					'source' => Entity\Auth::SOURCE_APP,
 					'key' => $email,
 		]);
@@ -31,7 +35,7 @@ class AuthFacade extends BaseFacade
 
 	public function findByUser(Entity\User $user)
 	{
-		return $this->auths->findBy([
+		return $this->authDao->findBy([
 					'user' => $user,
 		]);
 	}
@@ -41,17 +45,36 @@ class AuthFacade extends BaseFacade
 		$auth->hash = \Nette\Security\Passwords::hash($password);
 		$user = $auth->user;
 		$user->recovery = NULL;
+		$user->recovery_expiration = NULL;
 		$this->em->persist($auth);
 		$this->em->persist($user);
 		$this->em->flush();
 		return $auth->user;
 	}
 	
-	public function findByRecovery($token)
+	public function findByValidToken($token)
 	{
-		return $this->auths->findOneBy([
+		$auth = $this->authDao->findOneBy([
 			'user.recovery' => $token
 		]);
+		
+		if ($auth) {
+			$user = $auth->user;
+			
+			if ($user->recovery_expiration > new \DateTime) {
+				return $auth;
+			} else {
+				$user->recovery = NULL;
+				$user->recovery_expiration = NULL;
+				$this->userDao->save($user);
+			}
+		}
+		
+		return NULL;
 	}
 
 }
+
+
+class AuthFacadeException extends \Exception
+{}

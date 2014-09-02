@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $surname
  * @property \Doctrine\Common\Collections\ArrayCollection $auths
  * @property \Doctrine\ORM\PersistentCollection $roles
+ * @property string $recovery
+ * @property \DateTime $recovery_expiration
  *
  * @method \Doctrine\ORM\PersistentCollection getRoles()
  */
@@ -55,6 +57,11 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
 	protected $recovery;
+	
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+	protected $recovery_expiration;
 	
 	
 	public function __construct()

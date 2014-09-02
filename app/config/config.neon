@@ -9,7 +9,7 @@ includes:
 	- extensions/webloader.neon
 	- extensions/doctrine.neon
 	- components/components.neon
-	- authorizator/authorizator.neon
+	- permission/permission.neon
 	- model/model.neon
 	- form/form.neon
 	- presenters/presenters.neon

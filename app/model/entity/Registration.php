@@ -15,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @property $source
  * @property $token
  * @property $hash
+ * @property $name
+ * @property $verification_token
+ * @property $verification_expiration
  */
 class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 {
@@ -54,6 +57,10 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=false)
 	 */
-	protected $verification_code;
-
+	protected $verification_token;
+	
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+	protected $verification_expiration;
 }
