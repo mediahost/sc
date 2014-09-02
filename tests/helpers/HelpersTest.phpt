@@ -9,15 +9,14 @@ use Nette,
 
 $container = require __DIR__ . '/../bootstrap.php';
 
+/**
+ * TEST: Helpers Testing
+ *
+ * @testCase
+ * @phpVersion 5.4
+ */
 class HelpersTest extends Tester\TestCase
 {
-
-	private $container;
-
-	function __construct(Nette\DI\Container $container)
-	{
-		$this->container = $container;
-	}
 
 	public function setUp()
 	{
@@ -73,5 +72,5 @@ class HelpersTest extends Tester\TestCase
 
 }
 
-$test = new HelpersTest($container);
+$test = new HelpersTest();
 $test->run();

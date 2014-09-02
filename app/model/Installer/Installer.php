@@ -48,12 +48,16 @@ class Installer
 	 * Update database
 	 * @return boolean
 	 */
-	public function installDoctrine()
+	public function installDoctrine(\Doctrine\ORM\EntityManager $em)
 	{
-		$print = @shell_exec('php index.php orm:schema-tool:update --force');
-		echo '-----------<br />';
-		echo '<pre>' . $print . '</pre>';
-		echo '-----------<br />';
+		$tool = new \Doctrine\ORM\Tools\SchemaTool($em);
+		$classes = [
+			$em->getClassMetadata('App\Model\Entity\User'),
+			$em->getClassMetadata('App\Model\Entity\Role'),
+			$em->getClassMetadata('App\Model\Entity\Auth'),
+			$em->getClassMetadata('App\Model\Entity\Registration'),
+		];
+		$tool->updateSchema($classes); // php index.php orm:schema-tool:update --force
 		return TRUE;
 	}
 

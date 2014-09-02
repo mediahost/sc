@@ -31,6 +31,9 @@ class InstallPresenter extends BasePresenter
 	/** @var array */
 	private $initUsers = [];
 
+	/** @var \Doctrine\ORM\EntityManager @inject */
+	public $em;
+
 	/** @var \App\Model\Facade\UserFacade @inject */
 	public $userFacade;
 
@@ -117,7 +120,7 @@ class InstallPresenter extends BasePresenter
 	private function installDb($doctrine = FALSE)
 	{
 		if ($doctrine) {
-			$this->toInstall['doctrine'] = ['Doctrine' => []];
+			$this->toInstall['doctrine'] = ['Doctrine' => [$this->em]];
 		}
 		$this->toInstall['roles'] = ['Roles' => [$this->permissions->getRoles(), $this->roleFacade]];
 		$this->toInstall['users'] = ['Users' => [$this->initUsers, $this->roleFacade, $this->userFacade]];
@@ -145,7 +148,7 @@ class InstallPresenter extends BasePresenter
 	 */
 	private function callService($function, $name, array $params)
 	{
-		$lockFile = $this->installDir . '/' . $function;
+		$lockFile = $this->installDir . '/' . $function . '.lock';
 		if (!file_exists($lockFile)) {
 			$installer = new \App\Model\Installer\Installer;
 			$method = 'install' . ucfirst($function);
