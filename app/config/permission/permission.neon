@@ -1,6 +1,5 @@
 services:
-	# Authorizator
-	authorizator:
+	Permission:
 		class: Nette\Security\Permission
 		setup:
 			# Roles

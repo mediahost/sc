@@ -121,9 +121,15 @@ class UserFacade extends BaseFacade
 		return $this->userDao->delete($user);
 	}
 	
+	/**
+	 * 
+	 * @param User $user
+	 * @return User
+	 */
 	public function forgotten(User $user)
 	{
 		$user->recovery = \Nette\Utils\Strings::random(32);
+		$user->recovery_expiration = (new \DateTime())->add(new \DateInterval('PT1H'));
 		return $this->userDao->save($user);
 	}
 }

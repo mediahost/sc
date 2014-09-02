@@ -101,24 +101,63 @@ class RegistrationFacade extends BaseFacade
 	}
 
 	/**
-	 *
+	 * Create new temporarily registration and delete old one with same e-mail
+	 * and source.
 	 * @param RegistrationFacade $registration
 	 * @return RegistrationFacade
 	 */
 	public function registerTemporarily(Entity\Registration $registration)
+	{		
+		$registration->verification_token = \Nette\Utils\Strings::random(32);
+		$registration->verification_expiration = (new \DateTime())->add(new \DateInterval('P1D')); // 1 day
+		$this->em->persist($registration);
+		
+		// Deleting registration entities with the same e-mail and source
+		$expired = $this->registrationDao->findBy([
+				'verification_token != ?0' => [$registration->verification_token],
+				'email = ?0' => [$registration->email],
+				'source = ?0' => [$registration->source]
+		]);
+		
+		foreach ($expired as $expire) {
+			$this->em->remove($expire);
+		}
+		
+		$this->em->flush();
+		
+		return $registration;
+	}
+	
+	/**
+	 * Find registration by valid verification tooken.
+	 * @param string $token
+	 * @return NULL
+	 */
+	public function findByValidToken($token)
 	{
-		$registration->verification_code = \Nette\Utils\Strings::random(32);
-		return $this->registrationDao->save($registration);
+		$registration = $this->registrationDao->findOneBy([
+			'verification_token' => $token
+		]);
+		
+		if ($registration) {
+			if ($registration->verification_expiration > new \DateTime) {
+				return $registration;
+			} else {
+				$this->registrationDao->delete($registration);
+			}
+		}
+		
+		return NULL;
 	}
 
 	/**
 	 * Creat new Auth and User (if doesn'e exist) by given code.
-	 * @param string $code
+	 * @param string $token
 	 * @return boolean
 	 */
-	public function verify($code)
+	public function verify($token) // ToDo: Předělat do transakcí, pokud je to možné.
 	{
-		$registration = $this->registrationDao->findOneBy(['verification_code' => $code]);
+		$registration = $this->findByValidToken($token);
 
 		if ($registration) {
 			$auth = new Entity\Auth();
@@ -137,6 +176,7 @@ class RegistrationFacade extends BaseFacade
 			}
 
 			$this->registrationDao->delete($registration);
+
 			return $return;
 		}
 
