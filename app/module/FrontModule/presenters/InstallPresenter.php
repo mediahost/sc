@@ -145,7 +145,7 @@ class InstallPresenter extends BasePresenter
 	 */
 	private function callService($function, $name, array $params)
 	{
-		$lockFile = $this->installDir . '/' . $function;
+		$lockFile = $this->installDir . '/' . $function . '.lock';
 		if (!file_exists($lockFile)) {
 			$installer = new \App\Model\Installer\Installer;
 			$method = 'install' . ucfirst($function);
