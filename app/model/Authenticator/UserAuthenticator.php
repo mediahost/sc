@@ -36,7 +36,6 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 		} elseif (\Nette\Security\Passwords::needsRehash($auth->hash)) {
 			$auth->hash = \Nette\Security\Passwords::hash($password);
 			$this->auths->save($auth);
-			dump('needsRehash');
 		}
 		
 		$user = $auth->user;

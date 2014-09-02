@@ -94,7 +94,7 @@ class SignPresenter extends BasePresenter
 	{
 		$this->isLoggedIn();
 		
-		$message = 'Token to recovery your password is no longer active. Please request new.';
+		$message = 'Token to recovery your password is no longer active. Please request new one.';
 		
 		if ($token !== NULL) {
 			$auth = $this->authFacade->findByValidToken($token);
@@ -130,13 +130,14 @@ class SignPresenter extends BasePresenter
 
 	/**
 	 * User account verification.
-	 * @param string $code
+	 * @param string $token
 	 */
-	public function actionVerify($code)
+	public function actionVerify($token)
 	{
 		$this->isLoggedIn();
 		
-		$user = $this->registrationFacade->verify($code);
+		$user = $this->registrationFacade->verify($token);
+		
 		if ($user) {
 			$this->presenter->user->login(new \Nette\Security\Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 			$this->presenter->flashMessage('You have been successfully logged in!', 'success');

@@ -264,7 +264,7 @@ class AuthControl extends Control
 
 		// Odeslat e-mail
 		$message = $this->messages->getRegistrationMail($this->createTemplate(), [
-			'code' => $registration->verification_code
+			'code' => $registration->verification_token
 		]);
 
 		$message->addTo($registration->email);
