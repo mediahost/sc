@@ -1,6 +1,6 @@
 includes:
 	- ../extensions/doctrine.neon
-	- ../authorizator/authorizator.neon
+	- ../permission/permission.neon
 	- ../model/model.neon
 
 php:
