@@ -10,7 +10,7 @@ use App\Components\Control,
  * Sign in form control
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class SignInControl extends Control
+class SignInControl extends \App\Components\BaseControl
 {
 
 	public function render()

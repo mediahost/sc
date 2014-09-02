@@ -4,6 +4,7 @@ namespace App\Components;
 
 use Nette\Application\UI;
 use GettextTranslator\Gettext as Translator;
+use Nette\Localization\ITranslator;
 
 
 /**
@@ -38,7 +39,7 @@ abstract class BaseControl extends UI\Control
 
 	public function render()
 	{
-		$template = $this->template;
+		$template = $this->getTemplate();
 		$template->setFile($this->dir() . '/default.latte');
 		$template->render();
 	}
