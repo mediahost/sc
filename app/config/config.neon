@@ -8,12 +8,12 @@ includes:
 	- extensions/authentication.neon
 	- extensions/webloader.neon
 	- extensions/doctrine.neon
-	- components/components.neon
-	- permission/permission.neon
-	- model/model.neon
-	- form/form.neon
-	- presenters/presenters.neon
-	- translator/translator.neon
+	- includes/components.neon
+	- includes/permission.neon
+	- includes/model.neon
+	- includes/form.neon
+	- includes/presenters.neon
+	- includes/translator.neon
 
 parameters:
 

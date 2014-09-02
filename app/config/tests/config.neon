@@ -1,7 +1,7 @@
 includes:
 	- ../extensions/doctrine.neon
-	- ../permission/permission.neon
-	- ../model/model.neon
+	- ../includes/permission.neon
+	- ../includes/model.neon
 
 php:
 	date.timezone: Europe/Prague
