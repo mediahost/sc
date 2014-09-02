@@ -9,6 +9,13 @@ use Nette,
 
 $container = require __DIR__ . '/../bootstrap.php';
 
+/**
+ * TEST: Helpers Testing
+ *
+ * @testCase
+ * @phpVersion 5.4
+ */
+
 class HelpersTest extends Tester\TestCase
 {
 
