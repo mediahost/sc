@@ -1,5 +1,4 @@
 includes:
-	- ../extensions/authentication.neon
 	- ../extensions/doctrine.neon
 	- ../authorizator/authorizator.neon
 	- ../model/model.neon
