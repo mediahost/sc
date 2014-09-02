@@ -3,8 +3,7 @@
 namespace App\FrontModule\Presenters;
 
 use Kdyby\Doctrine\EntityManager,
-	Kdyby\Doctrine\EntityDao,
-	App\Model\Facade\UserFacade;
+	Kdyby\Doctrine\EntityDao;
 
 /**
  * Sign in/out presenters.
@@ -17,9 +16,6 @@ class SignPresenter extends BasePresenter
 
 	/** @var EntityDao */
 	private $userDao;
-
-	/** @var UserFacade @inject */
-	public $userFacade;
 
 	/** @var \App\Components\Sign\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
@@ -58,7 +54,7 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * Default is SIGN IN
+	 * Default is SIGN IN.
 	 */
 	public function actionDefault()
 	{
@@ -66,7 +62,7 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * Sign IN
+	 * Sign IN.
 	 */
 	public function actionIn()
 	{
@@ -74,7 +70,7 @@ class SignPresenter extends BasePresenter
 	}
 	
 	/**
-	 * Sign OUT
+	 * Sign OUT.
 	 */
 	public function actionOut()
 	{
@@ -83,7 +79,7 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * Lost Password
+	 * Lost Password.
 	 */
 	public function actionLostPassword()
 	{
@@ -91,12 +87,14 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
+	 * Recovery password.
 	 * @param string $token
-	 * @throws Nette\Application\BadRequestException
 	 */
 	public function actionRecovery($token)
 	{
 		$this->isLoggedIn();
+		
+		$message = 'Token to recovery your password is no longer active. Please request new.';
 		
 		if ($token !== NULL) {
 			$auth = $this->authFacade->findByValidToken($token);
@@ -104,18 +102,20 @@ class SignPresenter extends BasePresenter
 			if ($auth !== NULL) {
 				$this['recovery']->setAuth($auth);
 			} else {
-				$this->flashMessage('Token to recovery your password is no longer active. Please request new.', 'info');
-				$this->redirect('forgotten');
+				$this->flashMessage($message, 'info');
+				$this->redirect('lostPassword');
 			}
 		} else {
-			throw new \Nette\Application\BadRequestException;
+			$this->flashMessage($message, 'info');
+			$this->redirect('lostPassword');
 		}
 	}
 
 	/**
-	 *
+	 * Registration.
+	 * @param string $source
 	 */
-	public function actionRegister($source = NULL)
+	public function actionRegistration($source = NULL)
 	{
 		$this->isLoggedIn();
 
@@ -126,15 +126,11 @@ class SignPresenter extends BasePresenter
 				$this->registration->wipe();
 			}
 		}
-
-		// Check if is user in registration process
-//		$this->checkInProcess();
-
-		$this->template->bool = $this->registration->isOAuth();
 	}
 
 	/**
-	 *
+	 * User account verification.
+	 * @param string $code
 	 */
 	public function actionVerify($code)
 	{
@@ -148,13 +144,6 @@ class SignPresenter extends BasePresenter
 		} else {
 			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
 			$this->redirect('in');
-		}
-	}
-
-	private function checkInProcess()
-	{
-		if (!$this->registration->isOAuth()) {
-			$this->redirect(':Front:Sign:in');
 		}
 	}
 
