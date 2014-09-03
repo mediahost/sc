@@ -21,9 +21,9 @@ class AuthFacade extends BaseFacade
 	}
 
 	/**
-	 * Find Auth by e-mail of application registration
-	 * @param type $email
-	 * @return type
+	 * Find Auth of application registration by e-mail.
+	 * @param string $email
+	 * @return Entity\Auth
 	 */
 	public function findByEmail($email)
 	{
@@ -33,6 +33,11 @@ class AuthFacade extends BaseFacade
 		]);
 	}
 
+	/**
+	 * Find Auth by User.
+	 * @param Entity\User $user
+	 * @return Entity\Auth
+	 */
 	public function findByUser(Entity\User $user)
 	{
 		return $this->authDao->findBy([
@@ -40,6 +45,12 @@ class AuthFacade extends BaseFacade
 		]);
 	}
 	
+	/**
+	 * Set new password to User by Auth.
+	 * @param Entity\Auth $auth
+	 * @param string $password
+	 * @return Entity\User
+	 */
 	public function recovery(Entity\Auth $auth, $password)
 	{
 		$auth->password = $password;
@@ -54,6 +65,11 @@ class AuthFacade extends BaseFacade
 		return $auth->user;
 	}
 	
+	/**
+	 * Find application Auth by valid token.
+	 * @param string $token
+	 * @return Entity\Auth
+	 */
 	public function findByValidToken($token)
 	{
 		$auth = $this->authDao->findOneBy([
@@ -77,7 +93,6 @@ class AuthFacade extends BaseFacade
 	}
 
 }
-
 
 class AuthFacadeException extends \Exception
 {}
