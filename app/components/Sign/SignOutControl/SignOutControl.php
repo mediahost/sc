@@ -2,8 +2,7 @@
 
 namespace App\Components\Sign;
 
-use App\Components\Control,
-	GettextTranslator\Gettext as Translator;
+use App\Components\Control;
 
 /**
  * SignOutControl
@@ -15,7 +14,7 @@ class SignOutControl extends \App\Components\BaseControl
 	{
 		$template = $this->getTemplate();
 		$template->icon = NULL;
-		$template->setFile(__DIR__ . '/SignOutControl.latte');
+		$template->setFile(__DIR__ . '/default.latte');
 		$template->render();
 	}
 
@@ -23,7 +22,7 @@ class SignOutControl extends \App\Components\BaseControl
 	{
 		$template = $this->getTemplate();
 		$template->icon = true;
-		$template->setFile(__DIR__ . '/SignOutControl.latte');
+		$template->setFile(__DIR__ . '/default.latte');
 		$template->render();
 	}
 
@@ -33,7 +32,6 @@ class SignOutControl extends \App\Components\BaseControl
 		$this->presenter->flashMessage('You have been signed out.');
 		$this->presenter->redirect(':Front:Sign:in');
 	}
-
 }
 
 interface ISignOutControlFactory

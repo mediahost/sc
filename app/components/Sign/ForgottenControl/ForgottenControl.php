@@ -2,47 +2,47 @@
 
 Namespace App\Components\Sign;
 
-use App\Components\Control,
-	Nette\Application\UI\Form,
-	App\Model\Facade\UserFacade,
-	App\Model\Facade\AuthFacade,
-	Nette\Mail\IMailer,
-	App\Model\Storage\MessageStorage as Messages,
-	Nette;
+/** Nette */
+use Nette\Application\UI;
+
+/** Application */
+use App\Components,
+	App\Model\Facade;
+
 
 /**
  * Forgotten control
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class ForgottenControl extends \App\Components\BaseControl
+class ForgottenControl extends Components\BaseControl
 {
 
-	/** @var UserFacade @inject */
-	private $userFacade;
+	/** @var Facade\UserFacade @inject */
+	public $userFacade;
 	
-	/** @var AuthFacade @inject */
-	private $authFacade;
+	/** @var Facade\AuthFacade @inject */
+	public $authFacade;
 
-	/** @var IMailer @inject */
-	private $mailer;
+	/** @var \Nette\Mail\IMailer @inject */
+	public $mailer;
 
-	/** @var Messages @inject */
-	private $messages;
+	/** @var \App\Model\Storage\MessageStorage @inject */
+	public $messages;
 
 
 	/**
 	 * Form factory.
-	 * @return Nette\Application\UI\Form
+	 * @return UI\Form
 	 */
 	protected function createComponentForgottenForm()
 	{
-		$form = new Form();
+		$form = new UI\Form();
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		$form->addText('email', 'E-mail')
 				->setRequired('Please enter your e-mail')
 				->setAttribute('placeholder', 'E-mail')
-				->addRule(Form::EMAIL, 'Fill right e-mail format');
+				->addRule(UI\Form::EMAIL, 'Fill right e-mail format');
 
 		$form->addSubmit('send', 'Send');
 		$form->addSubmit('cancel', 'Back')
@@ -58,7 +58,7 @@ class ForgottenControl extends \App\Components\BaseControl
 		$this->presenter->redirect("Sign:in");
 	}
 
-	public function forgottenFormSucceeded(Form $form, $values)
+	public function forgottenFormSucceeded(UI\Form $form, $values)
 	{
 		if ($form['send']->isSubmittedBy()) {
 			$auth = $this->authFacade->findByEmail($values->email);

@@ -1,40 +1,43 @@
 <?php
 
-namespace App\components\Sign;
+namespace App\Components\Sign;
 
-use App\Components\Control,
-	Nette\Application\UI\Form,
-	GettextTranslator\Gettext as Translator,
-	App\Model\Storage\RegistrationStorage as Storage,
-	App\Model\Facade\RegistrationFacade as Facade,
+/** Nette */
+use Nette\Application\UI,
 	Nette\Security\Identity,
-	Nette\Mail\IMailer,
-	App\Model\Storage\MessageStorage as Messages;
+	Nette\Utils;
+		
+/** Application */
+use App\Components,
+	App\Model\Storage,
+	App\Model\Facade,
+	App\Model\Entity;
+
+/** Facebook */
 use Kdyby\Facebook\Facebook,
 	Kdyby\Facebook\Dialog\LoginDialog,
 	Kdyby\Facebook\FacebookApiException;
+
+/** Twitter */
 use Netrium\Addons\Twitter\Authenticator as Twitter,
 	Netrium\Addons\Twitter\AuthenticationException as TwitterException;
-use App\Model\Entity,
-	App\Model\Entity\Auth,
-	App\Model\Entity\User,
-	App\Model\Entity\Registration;
+
 
 /**
- * AuthControl provides login or registration via AOuth
+ * AuthControl provides login or registration via AOuth and aplication.
  *
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class AuthControl extends \App\Components\BaseControl
+class AuthControl extends Components\BaseControl
 {
 
-	/** @var Storage @inject */
+	/** @var Storage\RegistrationStorage @inject */
 	public $storage;
 
-	/** @var Facade @inject */
+	/** @var Facade\RegistrationFacade @inject */
 	public $facade;
 
-	/** @var IMailer @inject */
+	/** @var \Nette\Mail\IMailer @inject */
 	public $mailer;
 
 	/** @var Facebook @inject */
@@ -43,7 +46,7 @@ class AuthControl extends \App\Components\BaseControl
 	/** @var Twitter @inject */
 	public $twitter;
 
-	/** @var Messages @inject */
+	/** @var Storage\MessageStorage @inject */
 	public $messages;
 
 
@@ -64,12 +67,12 @@ class AuthControl extends \App\Components\BaseControl
 
 	/**
 	 * Register form factory.
-	 * @return Nette\Application\UI\Form
+	 * @return UI\Form
 	 */
 	protected function createComponentRegisterForm()
 	{
 
-		$form = new Form();
+		$form = new UI\Form();
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		if ($this->storage->isRequired('name')) {
@@ -114,11 +117,11 @@ class AuthControl extends \App\Components\BaseControl
 	}
 
 	/**
-	 *
-	 * @param \Nette\Application\UI\Form $form
-	 * @param type $values
+	 * Callback for process reg. form data.
+	 * @param UI\Form $form
+	 * @param Utils\ArrayHash $values
 	 */
-	public function registerFormSucceeded(Form $form, $values)
+	public function registerFormSucceeded(UI\Form $form, $values)
 	{
 		// Namapování hodnot z formuláře
 		if ($this->storage->isRequired('name')) {
@@ -144,13 +147,16 @@ class AuthControl extends \App\Components\BaseControl
 			$reg = $this->storage->toRegistration();
 			$reg->setKey($values->reg_email)
 					->setSource('app')
-					->setHash(\Nette\Security\Passwords::hash($values->reg_password));
+					->setPassword($values->reg_password);
 
 			$this->registerTemporarily($reg);
 		}
 	}
 
-	/** @return LoginDialog */
+	/** 
+	 * Component that process AOuth via Facebook.
+	 * @return LoginDialog
+	 */
 	protected function createComponentFacebook()
 	{
 		$dialog = $this->facebook->createDialog('login');
@@ -182,7 +188,7 @@ class AuthControl extends \App\Components\BaseControl
 	}
 
 	/**
-	 *
+	 * Handle processing Twitter OAuth.
 	 * @throws NS\AuthenticationException
 	 */
 	public function handleTwitter()
@@ -232,10 +238,10 @@ class AuthControl extends \App\Components\BaseControl
 
 	/**
 	 * Login user and redirect.
-	 * @param User $user
+	 * @param Entity\User $user
 	 * @throws \Nette\Application\AbortException
 	 */
-	private function login(User $user)
+	private function login(Entity\User $user)
 	{
 		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$this->presenter->flashMessage('You have been successfully logged in!', 'success');
@@ -243,11 +249,11 @@ class AuthControl extends \App\Components\BaseControl
 	}
 
 	/**
-	 *
-	 * @param Registration $registration
+	 * Provide temorary registration.
+	 * @param Entity\Registration $registration
 	 * @throws \Nette\Application\AbortException
 	 */
-	private function registerTemporarily(Registration $registration)
+	private function registerTemporarily(Entity\Registration $registration)
 	{
 		// Ověření e-mailu
 		$registration = $this->facade->registerTemporarily($registration);
@@ -266,7 +272,7 @@ class AuthControl extends \App\Components\BaseControl
 
 	/**
 	 * Choose registration or merging facade methods.
-	 * @return User
+	 * @return Entity\User
 	 */
 	private function mergeOrRegister()
 	{

@@ -2,36 +2,32 @@
 
 Namespace App\Components\Sign;
 
-use App\Components\Control,
-	Nette\Application\UI\Form,
-	App\Model\Facade\AuthFacade,
-	Nette\Mail\IMailer,
-	App\Model\Storage\MessageStorage as Messages,
-	Nette;
+/** Nette */
+use Nette\Application\UI\Form,
+	Nette\Security\Identity;
+
+/** Application */
+use App\Components,
+	App\Model\Facade,
+	App\Model\Entity;
 
 /**
- * Recovery control
+ * Recovery control.
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class RecoveryControl extends \App\Components\BaseControl
+class RecoveryControl extends Components\BaseControl
 {
 	
-	/** @var AuthFacade @inject */
-	private $authFacade;
+	/** @var Facade\AuthFacade @inject */
+	public $authFacade;
 	
-	/** @var IMailer @inject */
-	private $mailer;
-	
-	/** @var Messages @inject */
-	private $messages;
-	
-	/** @var \App\Model\Entity\User @inject */
+	/** @var \App\Model\Entity\Auth */
 	private $auth;
 
 
 	/**
 	 * Form factory.
-	 * @return Nette\Application\UI\Form
+	 * @return Form
 	 */
 	protected function createComponentRecoveryForm()
 	{
@@ -65,16 +61,15 @@ class RecoveryControl extends \App\Components\BaseControl
 	{
 		$user = $this->authFacade->recovery($this->auth, $values->password);
 		
-		$this->presenter->user->login(new Nette\Security\Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
 		$this->presenter->redirect(':Admin:Dashboard:');
 	}
 	
-	public function setAuth($auth)
+	public function setAuth(Entity\Auth $auth)
 	{
 		$this->auth = $auth;
 	}
-
 }
 
 interface IRecoveryControlFactory

@@ -282,6 +282,10 @@ class RegistrationStorage extends \Nette\Object
 		return $this->section->defaults;
 	}
 
+	/**
+	 * 
+	 * @return \App\Model\Entity\Registration
+	 */
 	public function toRegistration()
 	{
 		$registration = new Entity\Registration();
