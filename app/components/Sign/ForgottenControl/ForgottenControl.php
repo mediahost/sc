@@ -11,7 +11,7 @@ use App\Components,
 
 
 /**
- * Forgotten control
+ * Forgotten control.
  * @author Martin Šifra <me@martinsifra.cz>
  */
 class ForgottenControl extends Components\BaseControl
@@ -37,6 +37,7 @@ class ForgottenControl extends Components\BaseControl
 	protected function createComponentForgottenForm()
 	{
 		$form = new UI\Form();
+		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		$form->addText('email', 'E-mail')

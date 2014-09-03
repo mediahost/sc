@@ -32,6 +32,7 @@ class RecoveryControl extends Components\BaseControl
 	protected function createComponentRecoveryForm()
 	{
 		$form = new Form();
+		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		$form->addPassword('password', 'Password')

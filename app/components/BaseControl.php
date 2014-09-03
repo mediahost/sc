@@ -2,20 +2,18 @@
 
 namespace App\Components;
 
-use Nette\Application\UI;
-use GettextTranslator\Gettext as Translator;
-use Nette\Localization\ITranslator;
+use Nette\Application\UI,
+	Nette\Localization\ITranslator;
 
 
 /**
- * BaseControl
- *
+ * BaseControl.
  * @author Martin Šifra <me@martinsifra.cz>
  */
 abstract class BaseControl extends UI\Control
 {
 
-	/** @var Translator @inject*/
+	/** @var ITranslator @inject*/
 	public $translator;
 	
 	
