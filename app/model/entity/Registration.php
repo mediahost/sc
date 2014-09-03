@@ -18,6 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @property $name
  * @property $verification_token
  * @property $verification_expiration
+ * 
+ * @method App\Model\Entity\Registration setKey(string $key)
+ * @method App\Model\Entity\Registration setSource(string $key)
  */
 class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 {
@@ -63,4 +66,19 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
      * @ORM\Column(type="datetime", nullable=true)
      */
 	protected $verification_expiration;
+	
+
+	/**
+	 * Computes salted password hash.
+	 * @param string Password to be hashed.
+	 * @param array with cost (4-31), salt (22 chars)
+	 * @return Registration
+	 */
+	public function setPassword($password, array $options = NULL)
+	{
+		if ($password !== '' && $password !== NULL) {
+			$this->hash = Passwords::hash($password, $options);
+		}
+		return $this;
+	}
 }

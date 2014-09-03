@@ -42,12 +42,14 @@ class AuthFacade extends BaseFacade
 	
 	public function recovery(Entity\Auth $auth, $password)
 	{
-		$auth->hash = \Nette\Security\Passwords::hash($password);
+		$auth->password = $password;
+		$this->em->persist($auth);
+		
 		$user = $auth->user;
 		$user->recovery = NULL;
 		$user->recovery_expiration = NULL;
-		$this->em->persist($auth);
 		$this->em->persist($user);
+		
 		$this->em->flush();
 		return $auth->user;
 	}
@@ -55,7 +57,8 @@ class AuthFacade extends BaseFacade
 	public function findByValidToken($token)
 	{
 		$auth = $this->authDao->findOneBy([
-			'user.recovery' => $token
+			'user.recovery' => $token,
+			'source' => Entity\Auth::SOURCE_APP
 		]);
 		
 		if ($auth) {
