@@ -77,7 +77,7 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	public function setPassword($password, array $options = NULL)
 	{
 		if ($password !== '' && $password !== NULL) {
-			$this->hash = Passwords::hash($password, $options);
+			$this->hash = \Nette\Security\Passwords::hash($password, $options);
 		}
 		return $this;
 	}

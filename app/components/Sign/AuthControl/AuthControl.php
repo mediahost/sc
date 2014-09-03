@@ -3,7 +3,7 @@
 namespace App\Components\Sign;
 
 /** Nette */
-use Nette\Application\UI,
+use Nette\Application\UI\Form,
 	Nette\Security\Identity,
 	Nette\Utils;
 		
@@ -67,12 +67,12 @@ class AuthControl extends Components\BaseControl
 
 	/**
 	 * Register form factory.
-	 * @return UI\Form
+	 * @return Form
 	 */
 	protected function createComponentRegisterForm()
 	{
 
-		$form = new UI\Form();
+		$form = new Form();
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		if ($this->storage->isRequired('name')) {
@@ -113,15 +113,15 @@ class AuthControl extends Components\BaseControl
 
 	public function registerFormCancel(\Nette\Forms\Controls\SubmitButton $button)
 	{
-		$this->presenter->redirect("Sign:in");
+		$this->presenter->redirect(':Front:Sign:in');
 	}
 
 	/**
 	 * Callback for process reg. form data.
-	 * @param UI\Form $form
+	 * @param Form $form
 	 * @param Utils\ArrayHash $values
 	 */
-	public function registerFormSucceeded(UI\Form $form, $values)
+	public function registerFormSucceeded(Form $form, $values)
 	{
 		// Namapování hodnot z formuláře
 		if ($this->storage->isRequired('name')) {
@@ -221,7 +221,7 @@ class AuthControl extends Components\BaseControl
 			$this->storage->store($source, $data, $token);
 
 			if ($this->storage->isRequired()) {
-				$this->presenter->redirect('Sign:Register', $source);
+				$this->presenter->redirect(':Front:Sign:Registration', $source);
 			} else {
 				$user = $this->mergeOrRegister();
 			}
