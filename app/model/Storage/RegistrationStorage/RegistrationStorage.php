@@ -152,16 +152,6 @@ class RegistrationStorage extends \Nette\Object
 	}
 
 	/**
-	 *
-	 */
-	public function registerFromGoogle($id)
-	{
-		$this->auth = new Entity\Auth();
-		$this->auth->key = $id;
-		$this->auth->source = 'google';
-	}
-
-	/**
 	 * Check if all requested indexes aren't undefined.
 	 * @param array $keys
 	 * @param ArrayHash $data
@@ -179,21 +169,6 @@ class RegistrationStorage extends \Nette\Object
 	}
 
 	/**
-	 *
-	 * @return boolean
-	 */
-	public function isComplete()
-	{
-		foreach ($this->required as $value) {
-			if ($this->user->$value === NULL) {
-				return FALSE;
-			}
-		}
-
-		return TRUE;
-	}
-
-	/**
 	 * Return whether registration or login process via OAuth have begun.
 	 * @return boolean
 	 */
@@ -208,7 +183,7 @@ class RegistrationStorage extends \Nette\Object
 	 */
 	public function isVerified()
 	{
-		return /*(bool)*/ $this->section->verified;
+		return $this->section->verified;
 	}
 
 	/**
@@ -283,7 +258,7 @@ class RegistrationStorage extends \Nette\Object
 	}
 
 	/**
-	 * 
+	 * Map data from session's Auth and User to Registration.
 	 * @return \App\Model\Entity\Registration
 	 */
 	public function toRegistration()
@@ -336,6 +311,4 @@ class RegistrationStorage extends \Nette\Object
 }
 
 class RegistrationStorageException extends \Exception
-{
-
-}
+{}

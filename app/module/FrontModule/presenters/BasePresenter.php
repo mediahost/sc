@@ -2,7 +2,6 @@
 
 namespace App\FrontModule\Presenters;
 
-use Nette;
 
 /**
  * BasePresenter

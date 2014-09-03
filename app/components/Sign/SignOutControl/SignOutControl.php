@@ -2,12 +2,12 @@
 
 namespace App\Components\Sign;
 
-use App\Components\Control;
+use App\Components;
 
 /**
  * SignOutControl
  */
-class SignOutControl extends \App\Components\BaseControl
+class SignOutControl extends Components\BaseControl
 {
 
 	public function render()
