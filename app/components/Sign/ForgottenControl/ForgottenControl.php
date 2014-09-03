@@ -14,36 +14,21 @@ use App\Components\Control,
  * Forgotten control
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class ForgottenControl extends Control
+class ForgottenControl extends \App\Components\BaseControl
 {
 
-	/** @var UserFacade */
+	/** @var UserFacade @inject */
 	private $userFacade;
 	
-	/** @var AuthFacade */
+	/** @var AuthFacade @inject */
 	private $authFacade;
 
-	/** @var IMailer */
+	/** @var IMailer @inject */
 	private $mailer;
 
-	/** @var Messages */
+	/** @var Messages @inject */
 	private $messages;
 
-	public function __construct(\GettextTranslator\Gettext $translator, UserFacade $userFacade, AuthFacade $authFacade, IMailer $mailer, Messages $messages)
-	{
-		parent::__construct($translator);
-		$this->userFacade = $userFacade;
-		$this->authFacade = $authFacade;
-		$this->mailer = $mailer;
-		$this->messages = $messages;
-	}
-
-	public function render()
-	{
-		$template = $this->getTemplate();
-		$template->setFile(__DIR__ . '/render.latte');
-		$template->render();
-	}
 
 	/**
 	 * Form factory.

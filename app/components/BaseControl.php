@@ -31,16 +31,12 @@ abstract class BaseControl extends UI\Control
 		return $template;
 	}
 	
-	public function dir()
-	{
-		return dirname($this->getReflection()->getFileName());
-	}
-
-
 	public function render()
 	{
+		$dir = dirname($this->getReflection()->getFileName());
+		
 		$template = $this->getTemplate();
-		$template->setFile($this->dir() . '/default.latte');
+		$template->setFile($dir . '/default.latte');
 		$template->render();
 	}
 

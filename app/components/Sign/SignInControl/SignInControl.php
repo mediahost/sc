@@ -13,13 +13,6 @@ use App\Components\Control,
 class SignInControl extends \App\Components\BaseControl
 {
 
-	public function render()
-	{
-		$template = $this->getTemplate();
-		$template->setFile(__DIR__ . '/SignInControl.latte');
-		$template->render();
-	}
-
 	/**
 	 * Sign in form factory.
 	 * @return Nette\Application\UI\Form

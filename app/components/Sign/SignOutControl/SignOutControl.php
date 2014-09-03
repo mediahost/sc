@@ -8,7 +8,7 @@ use App\Components\Control,
 /**
  * SignOutControl
  */
-class SignOutControl extends Control
+class SignOutControl extends \App\Components\BaseControl
 {
 
 	public function render()

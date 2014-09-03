@@ -13,35 +13,21 @@ use App\Components\Control,
  * Recovery control
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class RecoveryControl extends Control
+class RecoveryControl extends \App\Components\BaseControl
 {
 	
-	/** @var AuthFacade */
+	/** @var AuthFacade @inject */
 	private $authFacade;
 	
-	/** @var IMailer */
+	/** @var IMailer @inject */
 	private $mailer;
 	
-	/** @var Messages */
+	/** @var Messages @inject */
 	private $messages;
 	
-	/** @var \App\Model\Entity\User */
+	/** @var \App\Model\Entity\User @inject */
 	private $auth;
-	
-	public function __construct(\GettextTranslator\Gettext $translator, AuthFacade $authFacade, IMailer $mailer, Messages $messages)
-	{
-		parent::__construct($translator);
-		$this->authFacade = $authFacade;
-		$this->mailer = $mailer;
-		$this->messages = $messages;
-	}
 
-	public function render()
-	{
-		$template = $this->getTemplate();
-		$template->setFile(__DIR__ . '/render.latte');
-		$template->render();
-	}
 
 	/**
 	 * Form factory.
