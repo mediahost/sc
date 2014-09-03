@@ -3,6 +3,9 @@
 namespace App\Model\Authenticator;
 
 use Nette;
+use App\Model\Facade\AuthFacade;
+use Kdyby\Doctrine\EntityManager;
+use Kdyby\Doctrine\EntityDao;
 
 /**
  * Users Authenticator.
@@ -10,12 +13,21 @@ use Nette;
 class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenticator
 {
 
-	/** @var \App\Model\Facade\AuthFacade */
-	private $auths;
+	/** @var AuthFacade */
+	private $authFacade;
+	
+	/** @var EntityManager */
+	private $em;
+	
+	/** @var EntityDao */
+	private $userDao;
 
-	public function __construct(\App\Model\Facade\AuthFacade $auths)
+
+	public function __construct(AuthFacade $authFacade, EntityManager $em)
 	{
-		$this->auths = $auths;
+		$this->authFacade = $authFacade;
+		$this->em = $em;
+		$this->userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
 	}
 
 	/**
@@ -27,18 +39,25 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 	{
 		list($email, $password) = $credentials;
 
-		$auth = $this->auths->findByEmail($email);
-				
+		$auth = $this->authFacade->findByEmail($email);
+		
 		if (!$auth) {
 			throw new Nette\Security\AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		} elseif (!\Nette\Security\Passwords::verify($password, $auth->hash)) { // ToDo: Tohle by mělo být v uivateli, v auth nebo v Nette
 			throw new Nette\Security\AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
 		} elseif (\Nette\Security\Passwords::needsRehash($auth->hash)) {
 			$auth->hash = \Nette\Security\Passwords::hash($password);
-			$this->auths->save($auth);
+			$this->authFacade->save($auth);
 		}
 		
 		$user = $auth->user;
+		
+		// Remove recovery data if exists
+		if ($user->recovery !== NULL) {
+			$user->recovery = NULL;
+			$user->recovery_expiration = NULL;
+			$this->userDao->save($user);
+		}
 
 		$arr = $user->toArray();
 		return new Nette\Security\Identity($user->getId(), $user->getRolesPairs(), $arr);

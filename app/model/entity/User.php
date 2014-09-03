@@ -56,7 +56,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
-	protected $recovery;
+	protected $recovery; // ToDo: Přejmenovat na recovery_token
 	
     /**
      * @ORM\Column(type="datetime", nullable=true)
