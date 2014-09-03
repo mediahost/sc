@@ -18,16 +18,6 @@ $container = require __DIR__ . '/../bootstrap.php';
 class HelpersTest extends Tester\TestCase
 {
 
-	public function setUp()
-	{
-		# Příprava
-	}
-
-	public function tearDown()
-	{
-		# Úklid
-	}
-
 	public function testInit()
 	{
 		Assert::exception(function() {

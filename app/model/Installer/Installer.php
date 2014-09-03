@@ -21,7 +21,7 @@ class Installer
 	 * Create all nested roles
 	 * @return boolean
 	 */
-	public function installRoles(array $roles, $roleFacade)
+	public function installRoles(array $roles, \App\Model\Facade\RoleFacade $roleFacade)
 	{
 		foreach ($roles as $roleName) {
 			$roleFacade->create($roleName);
@@ -32,13 +32,20 @@ class Installer
 	/**
 	 * Create default users
 	 * @return boolean
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function installUsers(array $users, \App\Model\Facade\RoleFacade $roleFacade, \App\Model\Facade\UserFacade $userFacade)
 	{
 		foreach ($users as $initUserMail => $initUserData) {
+			if (!is_array($initUserData) || !array_key_exists(0, $initUserData) || !array_key_exists(1, $initUserData)) {
+				throw new \Nette\InvalidArgumentException('Invalid users array. Must be [user_mail => [password, role]].');
+			}
 			$pass = $initUserData[0];
 			$role = $initUserData[1];
 			$roleEntity = $roleFacade->findByName($role);
+			if (!$roleEntity) {
+				throw new \Nette\InvalidArgumentException('Invalid name of role. Check if exists role with name \'' . $role . '\'.');
+			}
 			$userFacade->create($initUserMail, $pass, $roleEntity);
 		}
 		return TRUE;
@@ -63,17 +70,27 @@ class Installer
 
 	/**
 	 * Set database as writable
+	 * @param type $wwwDir
+	 * @param string $file
 	 * @return boolean
+	 * @deprecated It FAILS on server (chmod has insufficient permissions), its required special settings for FTP deployment
 	 */
-	public function installAdminer($wwwDir)
+	public function installAdminer($wwwDir, $file = NULL)
 	{
-		@chmod($wwwDir . '/adminer/database.sql', 0777);
+		if (!$file) {
+			$file = $wwwDir . '/adminer/database.sql';
+		}
+		if (file_exists($file)) {
+			@chmod($file, 0777);
+		}
 		return TRUE;
 	}
 
 	/**
 	 * Install or update composer
+	 * NON TESTED - only for localhost use
 	 * @return boolean
+	 * @deprecated
 	 */
 	public function installComposer($appDir)
 	{

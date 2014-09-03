@@ -5,7 +5,3 @@ includes:
 
 php:
 	date.timezone: Europe/Prague
-
-nette:
-	session:
-		autoStart: true
