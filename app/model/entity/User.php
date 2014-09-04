@@ -186,7 +186,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	public function setRecovery($code = NULL, $expiration = NULL)
 	{
-		if (func_num_args() === 0) {
+		if ($code === NULL && $expiration === NULL) {
 			$this->recoveryToken = NULL;
 			$this->recoveryExpiration = NULL;
 		} else {
