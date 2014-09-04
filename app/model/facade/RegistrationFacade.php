@@ -108,13 +108,13 @@ class RegistrationFacade extends BaseFacade
 	 */
 	public function registerTemporarily(Entity\Registration $registration)
 	{		
-		$registration->verification_token = \Nette\Utils\Strings::random(32);
-		$registration->verification_expiration = (new \DateTime())->add(new \DateInterval('P1D')); // 1 day
+		$registration->verificationToken = \Nette\Utils\Strings::random(32);
+		$registration->verificationExpiration = (new \DateTime())->add(new \DateInterval('P1D')); // 1 day
 		$this->em->persist($registration);
 		
 		// Deleting registration entities with the same e-mail and source
 		$expired = $this->registrationDao->findBy([
-				'verification_token != ?0' => [$registration->verification_token],
+				'verificationToken != ?0' => [$registration->verificationToken],
 				'email = ?0' => [$registration->email],
 				'source = ?0' => [$registration->source]
 		]);
@@ -136,11 +136,11 @@ class RegistrationFacade extends BaseFacade
 	public function findByValidToken($token)
 	{
 		$registration = $this->registrationDao->findOneBy([
-			'verification_token' => $token
+			'verificationToken' => $token
 		]);
 		
 		if ($registration) {
-			if ($registration->verification_expiration > new \DateTime) {
+			if ($registration->verificationExpiration > new \DateTime) {
 				return $registration;
 			} else {
 				$this->registrationDao->delete($registration);

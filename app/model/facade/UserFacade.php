@@ -128,8 +128,7 @@ class UserFacade extends BaseFacade
 	 */
 	public function forgotten(User $user)
 	{
-		$user->recovery = \Nette\Utils\Strings::random(32);
-		$user->recovery_expiration = (new \DateTime())->add(new \DateInterval('PT1H'));
+		$user->setRecovery(\Nette\Utils\Strings::random(32), '1 hour');
 		return $this->userDao->save($user);
 	}
 }

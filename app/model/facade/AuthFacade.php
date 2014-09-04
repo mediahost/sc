@@ -57,8 +57,7 @@ class AuthFacade extends BaseFacade
 		$this->em->persist($auth);
 		
 		$user = $auth->user;
-		$user->recovery = NULL;
-		$user->recovery_expiration = NULL;
+		$user->setRecovery();
 		$this->em->persist($user);
 		
 		$this->em->flush();
@@ -73,18 +72,17 @@ class AuthFacade extends BaseFacade
 	public function findByValidToken($token)
 	{
 		$auth = $this->authDao->findOneBy([
-			'user.recovery' => $token,
+			'user.recoveryToken' => $token,
 			'source' => Entity\Auth::SOURCE_APP
 		]);
 		
 		if ($auth) {
 			$user = $auth->user;
 			
-			if ($user->recovery_expiration > new \DateTime) {
+			if ($user->recoveryExpiration > new \DateTime) {
 				return $auth;
 			} else {
-				$user->recovery = NULL;
-				$user->recovery_expiration = NULL;
+				$user->setRecovery();
 				$this->userDao->save($user);
 			}
 		}

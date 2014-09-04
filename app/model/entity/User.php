@@ -13,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @property string $surname
  * @property \Doctrine\Common\Collections\ArrayCollection $auths
  * @property \Doctrine\ORM\PersistentCollection $roles
- * @property string $recovery
- * @property \DateTime $recovery_expiration
+ * @property string $recoveryToken
+ * @property \DateTime $recoveryExpiration
  *
  * @method \Doctrine\ORM\PersistentCollection getRoles()
  */
@@ -56,12 +56,12 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
-	protected $recovery; // ToDo: Přejmenovat na recovery_token
+	protected $recoveryToken;
 	
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-	protected $recovery_expiration;
+	protected $recoveryExpiration;
 	
 	
 	public function __construct()
@@ -176,6 +176,30 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	public function __toString()
 	{
 		return $this->email;
+	}
+	
+	/**
+	 * Set or reset recovery code and expiration DateTime.
+	 * @param string $code
+	 * @param \DateTime|string $expiration
+	 * @return User
+	 */
+	public function setRecovery($code = NULL, $expiration = NULL)
+	{
+		if (func_num_args() === 0) {
+			$this->recoveryToken = NULL;
+			$this->recoveryExpiration = NULL;
+		} else {
+			$this->recoveryToken = $code;
+			
+			if ($expiration instanceof \DateTime) {
+				$this->recoveryExpiration = $expiration;
+			} else {
+				$this->recoveryExpiration = (new \DateTime())->add(\DateInterval::createFromDateString($expiration));
+			}
+		}
+		
+		return $this;
 	}
 
 }

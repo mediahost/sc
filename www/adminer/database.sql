@@ -48,7 +48,7 @@ CREATE TABLE `user` (
   `firstname` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   `surname` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `recovery` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `recovery_token` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

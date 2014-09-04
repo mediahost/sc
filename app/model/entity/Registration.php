@@ -16,8 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @property $token
  * @property $hash
  * @property $name
- * @property $verification_token
- * @property $verification_expiration
+ * @property $verificationToken
+ * @property $verificationExpiration
  * 
  * @method App\Model\Entity\Registration setKey(string $key)
  * @method App\Model\Entity\Registration setSource(string $key)
@@ -60,12 +60,12 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=false)
 	 */
-	protected $verification_token;
+	protected $verificationToken;
 	
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-	protected $verification_expiration;
+	protected $verificationExpiration;
 	
 
 	/**

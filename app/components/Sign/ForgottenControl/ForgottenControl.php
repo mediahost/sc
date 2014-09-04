@@ -72,7 +72,7 @@ class ForgottenControl extends Components\BaseControl
 
 				// Odeslat e-mail
 				$message = $this->messages->getForgottenMail($this->createTemplate(), [
-					'token' => $user->recovery
+					'token' => $user->recoveryToken
 				]);
 
 				$message->addTo($user->email);
