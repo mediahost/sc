@@ -48,6 +48,9 @@ class AuthControl extends Components\BaseControl
 
 	/** @var Storage\MessageStorage @inject */
 	public $messages;
+	
+	/** @var Facade\AuthFacade @inject */
+	public $authFacade;
 
 
 	public function renderRegistration()
@@ -85,9 +88,12 @@ class AuthControl extends Components\BaseControl
 					->setAttribute('placeholder', 'E-mail')
 					->setRequired('Please enter your e-mail')
 					->addRule(Form::EMAIL, 'Fill right e-mail format')
-					->addRule(function(\Nette\Forms\Controls\TextInput $item) { // Tohle pouze v případě registrace přes aplikaci
-						return TRUE; //$this->users->isUnique($item->value);
-					}, 'This e-mail is used yet!');
+					->addRule(function(\Nette\Forms\Controls\TextInput $item) {
+						if (!$this->storage->isOAuth()) { // Check just for application login
+							return $this->authFacade->isUnique($item->value, 'app');
+						}
+						return TRUE;
+					}, 'This e-mail is registered yet!');
 		}
 
 		if (!$this->storage->isOAuth()) {

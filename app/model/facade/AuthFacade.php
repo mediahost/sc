@@ -91,7 +91,20 @@ class AuthFacade extends BaseFacade
 		
 		return NULL;
 	}
-
+	
+	/**
+	 * Is Auth unique?
+	 * @param string $key
+	 * @param string $source
+	 * @return bool
+	 */
+	public function isUnique($key, $source)
+	{
+		return $this->authDao->findOneBy([
+					'source' => $source,
+					'key' => $key,
+		]) === NULL;
+	}
 }
 
 class AuthFacadeException extends \Exception
