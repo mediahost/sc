@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="user")
  *
- * @property string $email
+ * @property string $mail
  * @property string $firstname
  * @property string $surname
  * @property \Doctrine\Common\Collections\ArrayCollection $auths
@@ -26,7 +26,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", nullable=false)
 	 */
-	protected $email;
+	protected $mail;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Auth", mappedBy="user", cascade={"persist","remove"})
@@ -74,7 +74,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	{
 		return [
 			'id' => $this->id,
-			'email' => $this->email,
+			'mail' => $this->mail,
 			'role' => $this->roles->toArray()
 		];
 	}
@@ -85,7 +85,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	public function getUsername()
 	{
-		return $this->email;
+		return $this->mail;
 	}
 
 	/**
@@ -175,7 +175,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	public function __toString()
 	{
-		return $this->email;
+		return $this->mail;
 	}
 	
 	/**

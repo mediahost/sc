@@ -21,12 +21,12 @@
         </div>
     {/if}
 
-    {if $storage->isRequired('email')}
+    {if $storage->isRequired('mail')}
         <div class="form-group">
-            {label reg_email, class=>'control-label visible-ie8 visible-ie9' /}
+            {label reg_mail, class=>'control-label visible-ie8 visible-ie9' /}
             <div class="input-icon">
                 <i class="fa fa-envelope"></i>
-                {input reg_email, class=>'form-control placeholder-no-fix'}
+                {input reg_mail, class=>'form-control placeholder-no-fix'}
             </div>
         </div>
     {/if}

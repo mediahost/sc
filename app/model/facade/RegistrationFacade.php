@@ -64,12 +64,12 @@ class RegistrationFacade extends BaseFacade
 
 	/**
 	 * Find user by e-mail.
-	 * @param string $email
+	 * @param string $mail
 	 * @return User
 	 */
-	public function findByEmail($email)
+	public function findByMail($mail)
 	{
-		return $this->userDao->findOneBy(['email' => $email]);
+		return $this->userDao->findOneBy(['mail' => $mail]);
 	}
 
 	/**
@@ -115,7 +115,7 @@ class RegistrationFacade extends BaseFacade
 		// Deleting registration entities with the same e-mail and source
 		$expired = $this->registrationDao->findBy([
 				'verificationToken != ?0' => [$registration->verificationToken],
-				'email = ?0' => [$registration->email],
+				'mail = ?0' => [$registration->mail],
 				'source = ?0' => [$registration->source]
 		]);
 		
@@ -166,9 +166,9 @@ class RegistrationFacade extends BaseFacade
 			$auth->token = $registration->token;
 			$auth->hash = $registration->hash;
 
-			if (!$user = $this->userDao->findOneBy(['email' => $registration->email])) {
+			if (!$user = $this->userDao->findOneBy(['mail' => $registration->mail])) {
 				$user = new Entity\User();
-				$user->email = $registration->email;
+				$user->mail = $registration->mail;
 				$user->name = $registration->name;
 				$return = $this->register($user, $auth);
 			} else {

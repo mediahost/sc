@@ -37,9 +37,9 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 	 */
 	public function authenticate(array $credentials)
 	{
-		list($email, $password) = $credentials;
+		list($mail, $password) = $credentials;
 
-		$auth = $this->authFacade->findByEmail($email);
+		$auth = $this->authFacade->findByMail($mail);
 		
 		if (!$auth) {
 			throw new Nette\Security\AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * 
  * @ORM\Entity
  * 
- * @property $email
+ * @property $mail
  * @property $key
  * @property $source
  * @property $token
@@ -30,7 +30,7 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", nullable=false)
 	 */
-	protected $email;
+	protected $mail;
 
 	/**
 	 * @ORM\Column(name="`key`", type="string", length=256)

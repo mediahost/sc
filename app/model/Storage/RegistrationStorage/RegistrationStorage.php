@@ -44,7 +44,7 @@ class RegistrationStorage extends \Nette\Object
 	 * An array with required items in User entity for complete registration.
 	 * @var array
 	 */
-	private $required = ['email'];
+	private $required = ['mail'];
 
 	/**
 	 * List of expecting values from FB, which we can and want process.
@@ -102,14 +102,14 @@ class RegistrationStorage extends \Nette\Object
 		}
 
 		// If is set e-mail from OAuth, user is verified.
-		if ($this->user->email !== NULL) {
+		if ($this->user->mail !== NULL) {
 			$this->section->verified = TRUE;
 		}
 
 		// Default values for registration form
 		$this->defaults = [
 			'reg_name' => $this->user->name,
-			'reg_email' => $this->user->email
+			'reg_mail' => $this->user->mail
 		];		
 	}
 
@@ -128,7 +128,7 @@ class RegistrationStorage extends \Nette\Object
 				->setSource('facebook')
 				->setToken($token);
 
-		$this->user->setEmail($data->email)
+		$this->user->setMail($data->email)
 				->setName($data->first_name . ' ' . $data->last_name);
 	}
 
@@ -147,7 +147,7 @@ class RegistrationStorage extends \Nette\Object
 				->setSource('twitter')
 				->setToken($token);
 
-		$this->user->setEmail(NULL)
+		$this->user->setMail(NULL)
 				->setName($data->name);
 	}
 
@@ -264,7 +264,7 @@ class RegistrationStorage extends \Nette\Object
 	public function toRegistration()
 	{
 		$registration = new Entity\Registration();
-		$registration->setEmail($this->user->email)
+		$registration->setMail($this->user->mail)
 				->setName($this->user->name)
 				->setKey($this->auth->key)
 				->setSource($this->auth->source)

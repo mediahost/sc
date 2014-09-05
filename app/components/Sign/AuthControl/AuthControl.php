@@ -83,8 +83,8 @@ class AuthControl extends Components\BaseControl
 					->setAttribute('placeholder', 'Full name');
 		}
 
-		if ($this->storage->isRequired('email')) {
-			$form->addText('reg_email', 'E-mail')
+		if ($this->storage->isRequired('mail')) {
+			$form->addText('reg_mail', 'E-mail')
 					->setAttribute('placeholder', 'E-mail')
 					->setRequired('Please enter your e-mail')
 					->addRule(Form::EMAIL, 'Fill right e-mail format')
@@ -134,8 +134,8 @@ class AuthControl extends Components\BaseControl
 			$this->storage->user->name = $values->reg_name;
 		}
 
-		if ($this->storage->isRequired('email')) {
-			$this->storage->user->email = $values->reg_email;
+		if ($this->storage->isRequired('mail')) {
+			$this->storage->user->mail = $values->reg_mail;
 		}
 
 		// Data processing
@@ -151,7 +151,7 @@ class AuthControl extends Components\BaseControl
 		} else {
 			// Registration via aplication form
 			$reg = $this->storage->toRegistration();
-			$reg->setKey($values->reg_email)
+			$reg->setKey($values->reg_mail)
 					->setSource('app')
 					->setPassword($values->reg_password);
 
@@ -269,7 +269,7 @@ class AuthControl extends Components\BaseControl
 			'code' => $registration->verificationToken
 		]);
 
-		$message->addTo($registration->email);
+		$message->addTo($registration->mail);
 		$this->mailer->send($message);
 
 		$this->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
@@ -282,7 +282,7 @@ class AuthControl extends Components\BaseControl
 	 */
 	private function mergeOrRegister()
 	{
-		if (($user = $this->facade->findByEmail($this->storage->user->email))) {
+		if (($user = $this->facade->findByMail($this->storage->user->mail))) {
 			return $this->facade->merge($user, $this->storage->auth);
 		} else {
 			return $this->facade->register($this->storage->user, $this->storage->auth);

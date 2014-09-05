@@ -28,38 +28,38 @@ class UserFacade extends BaseFacade
 
 	/**
 	 * 
-	 * @param type $email
+	 * @param type $mail
 	 * @return User
 	 */
-	public function findByEmail($email)
+	public function findByMail($mail)
 	{
-		return $this->userDao->findOneBy(['email' => $email]);
+		return $this->userDao->findOneBy(['mail' => $mail]);
 	}
 
 	/**
-	 * Check if email is unique
-	 * @param type $email
+	 * Check if mail is unique
+	 * @param type $mail
 	 * @return bool
 	 */
-	public function isUnique($email)
+	public function isUnique($mail)
 	{
-		return $this->findByEmail($email) === NULL;
+		return $this->findByMail($mail) === NULL;
 	}
 
 	/**
 	 * Create user if isnt exists
-	 * @param type $email
+	 * @param type $mail
 	 * @param type $password
 	 * @return \App\Model\Entity\User|null
 	 */
-	public function create($email, $password, Entity\Role $role)
+	public function create($mail, $password, Entity\Role $role)
 	{
-		if ($this->findByEmail($email) === NULL) { // check unique
+		if ($this->findByMail($mail) === NULL) { // check unique
 			$user = new User;
-			$user->email = $email;
+			$user->mail = $mail;
 
 			$auth = new Entity\Auth();
-			$auth->key = $email;
+			$auth->key = $mail;
 			$auth->source = Entity\Auth::SOURCE_APP;
 			$auth->password = $password;
 
@@ -81,14 +81,14 @@ class UserFacade extends BaseFacade
 	{
 		$auth = $this->authDao->findOneBy([
 					'source' => Entity\Auth::SOURCE_APP,
-					'key' => $user->email,
+					'key' => $user->mail,
 					'user' => $user,
 		]);
 		if (!$auth) {
 			$auth = new Entity\Auth;
 			$auth->setUser($user);
 			$auth->setSource(Entity\Auth::SOURCE_APP);
-			$auth->setKey($user->email);
+			$auth->setKey($user->mail);
 		}
 		$auth->setPassword($password);
 		$this->authDao->save($auth);

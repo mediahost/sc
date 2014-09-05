@@ -40,7 +40,7 @@ class ForgottenControl extends Components\BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
-		$form->addText('email', 'E-mail')
+		$form->addText('mail', 'E-mail')
 				->setRequired('Please enter your e-mail')
 				->setAttribute('placeholder', 'E-mail')
 				->addRule(UI\Form::EMAIL, 'Fill right e-mail format');
@@ -62,10 +62,10 @@ class ForgottenControl extends Components\BaseControl
 	public function forgottenFormSucceeded(UI\Form $form, $values)
 	{
 		if ($form['send']->isSubmittedBy()) {
-			$auth = $this->authFacade->findByEmail($values->email);
+			$auth = $this->authFacade->findByMail($values->mail);
 
 			if (!$auth) {
-				$form['email']->addError('We do not register any user with this e-mail address!');
+				$form['mail']->addError('We do not register any user with this e-mail address!');
 			} else {		
 				$user = $auth->user;
 				$this->userFacade->forgotten($user);
@@ -75,7 +75,7 @@ class ForgottenControl extends Components\BaseControl
 					'token' => $user->recoveryToken
 				]);
 
-				$message->addTo($user->email);
+				$message->addTo($user->mail);
 				$this->mailer->send($message);
 
 				$this->presenter->flashMessage('Recovery link has been send to your mail.');

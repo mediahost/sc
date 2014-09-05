@@ -22,14 +22,14 @@ class AuthFacade extends BaseFacade
 
 	/**
 	 * Find Auth of application registration by e-mail.
-	 * @param string $email
+	 * @param string $mail
 	 * @return Entity\Auth
 	 */
-	public function findByEmail($email)
+	public function findByMail($mail)
 	{
 		return $this->authDao->findOneBy([
 					'source' => Entity\Auth::SOURCE_APP,
-					'key' => $email,
+					'key' => $mail,
 		]);
 	}
 
