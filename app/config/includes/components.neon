@@ -1,21 +1,7 @@
 services:
-
-	authControlFactory:
-		implement: App\Components\Sign\IAuthControlFactory
-		inject: yes
-
-	signInControlFactory:
-		implement: App\Components\Sign\ISignInControlFactory
-		inject: yes
-
-	signOutControlFactory:
-		implement: App\Components\Sign\ISignOutControlFactory
-		inject: yes
-
-	forgottenControlFactory:
-		implement: App\Components\Sign\IForgottenControlFactory
-		inject: yes
-
-	recoveryControlFactory:
-		implement: App\Components\Sign\IRecoveryControlFactory
-		inject: yes
+	# Components
+	- {implement: App\Components\Sign\IAuthControlFactory, inject: yes}
+	- {implement: App\Components\Sign\ISignInControlFactory, inject: yes}
+	- {implement: App\Components\Sign\ISignOutControlFactory, inject: yes}
+	- {implement: App\Components\Sign\IForgottenControlFactory, inject: yes}
+	- {implement: App\Components\Sign\IRecoveryControlFactory, inject: yes}

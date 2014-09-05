@@ -7,12 +7,19 @@ use Kdyby\Doctrine\EntityDao,
 
 class AuthFacade extends BaseFacade
 {
-
 	/** @var EntityDao */
 	private $authDao;
 	
 	/** @var EntityDao */
 	private $userDao;
+	
+	/** @var \Kdyby\Doctrine\EntityManager @inject */
+	public $entmgr;
+	
+	public function injectEntityManager(\Kdyby\Doctrine\EntityManager $em)
+	{
+		$this->em = $em;
+	}
 
 	protected function init()
 	{
