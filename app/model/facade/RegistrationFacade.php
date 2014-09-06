@@ -109,7 +109,7 @@ class RegistrationFacade extends BaseFacade
 	public function registerTemporarily(Entity\Registration $registration)
 	{		
 		$registration->verificationToken = \Nette\Utils\Strings::random(32);
-		$registration->verificationExpiration = (new \DateTime())->add(\DateInterval::createFromDateString('1 day')); // 1 day
+		$registration->verificationExpiration = new \DateTime('now + 1 day');
 		$this->em->persist($registration);
 		
 		// Deleting registration entities with the same e-mail and source
