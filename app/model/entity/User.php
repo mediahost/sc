@@ -170,26 +170,31 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	}
 	
 	/**
-	 * Set or reset recovery code and expiration DateTime.
-	 * @param string $code
+	 * Set token and expiration DateTime.
+	 * @param string $token
 	 * @param \DateTime|string $expiration
 	 * @return User
 	 */
-	public function setRecovery($code = NULL, $expiration = NULL)
+	public function setRecovery($token, $expiration)
 	{
-		if ($code === NULL && $expiration === NULL) {
-			$this->recoveryToken = NULL;
-			$this->recoveryExpiration = NULL;
-		} else {
-			$this->recoveryToken = $code;
-			
-			if ($expiration instanceof \DateTime) {
-				$this->recoveryExpiration = $expiration;
-			} else {
-				$this->recoveryExpiration = (new \DateTime())->add(\DateInterval::createFromDateString($expiration));
-			}
+		if (!($expiration instanceof \DateTime)) {
+			$this->recoveryExpiration = new \DateTime($expiration);
 		}
 		
+		$this->recoveryToken = $token;
+		$this->recoveryExpiration = $expiration;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set NULL to recovery token and expiration properties.
+	 * @return User
+	 */
+	public function unsetRecovery()
+	{
+		$this->recoveryToken = NULL;
+		$this->recoveryExpiration = NULL;
 		return $this;
 	}
 

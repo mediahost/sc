@@ -54,7 +54,7 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 		
 		// Remove recovery data if exists
 		if ($user->recoveryToken !== NULL) {
-			$user->setRecovery();
+			$user->unsetRecovery();
 			$this->userDao->save($user);
 		}
 

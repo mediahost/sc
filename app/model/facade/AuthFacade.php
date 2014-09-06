@@ -57,7 +57,7 @@ class AuthFacade extends BaseFacade
 		$this->em->persist($auth);
 		
 		$user = $auth->user;
-		$user->setRecovery();
+		$user->unsetRecovery();
 		$this->em->persist($user);
 		
 		$this->em->flush();
@@ -82,7 +82,7 @@ class AuthFacade extends BaseFacade
 			if ($user->recoveryExpiration > new \DateTime) {
 				return $auth;
 			} else {
-				$user->setRecovery();
+				$user->unsetRecovery();
 				$this->userDao->save($user);
 			}
 		}
