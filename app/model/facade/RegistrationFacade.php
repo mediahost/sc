@@ -27,7 +27,14 @@ class RegistrationFacade extends BaseFacade
 
 	/** @var EntityDao */
 	private $userDao;
-
+	
+	/** @var UserFacade @inject */
+	private $userFacade;
+	
+	/** @var RoleFacade @inject */
+	private $roleFacade;
+	
+	
 	protected function init()
 	{
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
@@ -167,17 +174,35 @@ class RegistrationFacade extends BaseFacade
 				$user = new Entity\User();
 				$user->mail = $registration->mail;
 				$user->name = $registration->name;
-				$return = $this->register($user, $auth);
+				$return = $this->register($user, $auth); // ToDo: Tohle by nemělo volat save() ale pouze persist()
 			} else {
-				$return = $this->merge($user, $auth);
+				$return = $this->merge($user, $auth); // ToDo: Tohle by nemělo volat save() ale pouze persist()
 			}
 
-			$this->registrationDao->delete($registration);
-
+			$this->registrationDao->delete($registration);  // ToDo: Tohle by nemělo volat save() ale pouze persist()
+//			$this->em->remove($registration); // Transakce
+			
 			return $return;
 		}
 
 		return NULL;
 	}
-
+	
+	/**
+	 * 
+	 * @param type $user
+	 * @param type $auth
+	 * @return type
+	 */
+	public function mergeOrRegister($user, $auth)
+	{
+		if (!$user = $this->userFacade->findByMail($user->mail)) {
+			// Registrace
+			$role = $this->roleFacade->findByName(Role::ROLE_CANDIDATE);
+			$user->addRole($role);
+		}
+		
+		$user->addAuth($auth);
+		$this->em->persist($user);
+	}
 }

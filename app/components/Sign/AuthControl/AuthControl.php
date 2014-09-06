@@ -280,7 +280,7 @@ class AuthControl extends Components\BaseControl
 	 * Choose registration or merging facade methods.
 	 * @return Entity\User
 	 */
-	private function mergeOrRegister()
+	private function mergeOrRegister() // ToDo: Tohle celé může být ve facade
 	{
 		if (($user = $this->facade->findByMail($this->storage->user->mail))) {
 			return $this->facade->merge($user, $this->storage->auth);

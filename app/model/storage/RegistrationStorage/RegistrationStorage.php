@@ -4,11 +4,9 @@ namespace App\Model\Storage;
 
 use Nette\Http\Session,
 	Nette\Http\SessionSection,
-	App\Model\Facade\UserFacade as UserFacade,
 	Nette\Utils\ArrayHash;
 use App\Model\Entity;
 
-use \Kdyby\Doctrine\EntityManager;
 
 /**
  * Description of RegistrationStorage
@@ -22,18 +20,12 @@ use \Kdyby\Doctrine\EntityManager;
 class RegistrationStorage extends \Nette\Object
 {
 
+	/** @var Session */
+	public $session;
+	
 	/** @var SessionSection */
 	public $section;
 
-	/** @var EntityManager */
-	private $em;
-
-	/** @var Session */
-	public $session;
-
-	/** @var UserFacade */
-	private $facade;
-	
 	/**
 	 * List of valid sources names.
 	 * @var array
@@ -59,12 +51,10 @@ class RegistrationStorage extends \Nette\Object
 	private $twitterKeys = ['id', 'name'];
 
 
-	public function __construct(Session $session, EntityManager $em, UserFacade $facade)
+	public function __construct(Session $session)
 	{
 		$this->section = $session->getSection('registration');
 		$this->session = $session;
-		$this->em = $em;
-		$this->facade = $facade;
 
 		$this->section->warnOnUndefined = TRUE;
 

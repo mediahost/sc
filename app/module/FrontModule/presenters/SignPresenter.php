@@ -5,27 +5,17 @@ namespace App\FrontModule\Presenters;
 /** Nette */
 use Nette\Security\Identity;
 
-/** Kdyby/Doctrine */
-use Kdyby\Doctrine;
-
 /** Application */
 use App\Components\Sign,
 	App\Model\Storage,
-	App\Model\Facade,
-	App\Model\Entity;
+	App\Model\Facade;
 
 
 /**
- * Sign in/out presenters.
+ * Sign in, sign out and registration presenters.
  */
 class SignPresenter extends BasePresenter
 {
-
-	/** @var Doctrine\EntityManager @inject */
-	public $em;
-
-	/** @var Doctrine\EntityDao */
-	private $userDao;
 
 	/** @var Sign\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
@@ -48,12 +38,6 @@ class SignPresenter extends BasePresenter
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
 	
-
-	protected function startup()
-	{
-		parent::startup();
-		$this->userDao = $this->em->getDao(Entity\User::getClassName());
-	}
 
 	/**
 	 * Default is SIGN IN.
