@@ -10,15 +10,8 @@ use App\Components\Control,
  * Sign in form control
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class SignInControl extends Control
+class SignInControl extends \App\Components\BaseControl
 {
-
-	public function render()
-	{
-		$template = $this->getTemplate();
-		$template->setFile(__DIR__ . '/SignInControl.latte');
-		$template->render();
-	}
 
 	/**
 	 * Sign in form factory.

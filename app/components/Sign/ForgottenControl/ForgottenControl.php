@@ -2,62 +2,48 @@
 
 Namespace App\Components\Sign;
 
-use App\Components\Control,
-	Nette\Application\UI\Form,
-	App\Model\Facade\UserFacade,
-	App\Model\Facade\AuthFacade,
-	Nette\Mail\IMailer,
-	App\Model\Storage\MessageStorage as Messages,
-	Nette;
+/** Nette */
+use Nette\Application\UI;
+
+/** Application */
+use App\Components,
+	App\Model\Facade;
+
 
 /**
- * Forgotten control
+ * Forgotten control.
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class ForgottenControl extends Control
+class ForgottenControl extends Components\BaseControl
 {
 
-	/** @var UserFacade */
-	private $userFacade;
+	/** @var Facade\UserFacade @inject */
+	public $userFacade;
 	
-	/** @var AuthFacade */
-	private $authFacade;
+	/** @var Facade\AuthFacade @inject */
+	public $authFacade;
 
-	/** @var IMailer */
-	private $mailer;
+	/** @var \Nette\Mail\IMailer @inject */
+	public $mailer;
 
-	/** @var Messages */
-	private $messages;
+	/** @var \App\Model\Storage\MessageStorage @inject */
+	public $messages;
 
-	public function __construct(\GettextTranslator\Gettext $translator, UserFacade $userFacade, AuthFacade $authFacade, IMailer $mailer, Messages $messages)
-	{
-		parent::__construct($translator);
-		$this->userFacade = $userFacade;
-		$this->authFacade = $authFacade;
-		$this->mailer = $mailer;
-		$this->messages = $messages;
-	}
-
-	public function render()
-	{
-		$template = $this->getTemplate();
-		$template->setFile(__DIR__ . '/render.latte');
-		$template->render();
-	}
 
 	/**
 	 * Form factory.
-	 * @return Nette\Application\UI\Form
+	 * @return UI\Form
 	 */
 	protected function createComponentForgottenForm()
 	{
-		$form = new Form();
+		$form = new UI\Form();
+		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
-		$form->addText('email', 'E-mail')
+		$form->addText('mail', 'E-mail')
 				->setRequired('Please enter your e-mail')
 				->setAttribute('placeholder', 'E-mail')
-				->addRule(Form::EMAIL, 'Fill right e-mail format');
+				->addRule(UI\Form::EMAIL, 'Fill right e-mail format');
 
 		$form->addSubmit('send', 'Send');
 		$form->addSubmit('cancel', 'Back')
@@ -73,23 +59,23 @@ class ForgottenControl extends Control
 		$this->presenter->redirect("Sign:in");
 	}
 
-	public function forgottenFormSucceeded(Form $form, $values)
+	public function forgottenFormSucceeded(UI\Form $form, $values)
 	{
 		if ($form['send']->isSubmittedBy()) {
-			$auth = $this->authFacade->findByEmail($values->email);
+			$auth = $this->authFacade->findByMail($values->mail);
 
 			if (!$auth) {
-				$form['email']->addError('We do not register any user with this e-mail address!');
+				$form['mail']->addError('We do not register any user with this e-mail address!');
 			} else {		
 				$user = $auth->user;
 				$this->userFacade->forgotten($user);
 
 				// Odeslat e-mail
 				$message = $this->messages->getForgottenMail($this->createTemplate(), [
-					'token' => $user->recovery
+					'token' => $user->recoveryToken
 				]);
 
-				$message->addTo($user->email);
+				$message->addTo($user->mail);
 				$this->mailer->send($message);
 
 				$this->presenter->flashMessage('Recovery link has been send to your mail.');

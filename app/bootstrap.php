@@ -28,12 +28,4 @@ $configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
 $container = $configurator->createContainer();
 
-//ob_start(function($s, $flag) {
-//    if ($flag & PHP_OUTPUT_HANDLER_START) {
-//    	$e = new \Exception;
-//		$s = nl2br("Output started here:\n{$e->getTraceAsString()}\n\n") . $s;
-//	}
-//	return $s;
-//}, 2); 
-
 return $container;

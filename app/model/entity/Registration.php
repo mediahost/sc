@@ -10,14 +10,17 @@ use Doctrine\ORM\Mapping as ORM;
  * 
  * @ORM\Entity
  * 
- * @property $email
+ * @property $mail
  * @property $key
  * @property $source
  * @property $token
  * @property $hash
  * @property $name
- * @property $verification_token
- * @property $verification_expiration
+ * @property $verificationToken
+ * @property $verificationExpiration
+ * 
+ * @method App\Model\Entity\Registration setKey(string $key)
+ * @method App\Model\Entity\Registration setSource(string $key)
  */
 class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 {
@@ -27,7 +30,7 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", nullable=false)
 	 */
-	protected $email;
+	protected $mail;
 
 	/**
 	 * @ORM\Column(name="`key`", type="string", length=256)
@@ -57,10 +60,25 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=false)
 	 */
-	protected $verification_token;
+	protected $verificationToken;
 	
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-	protected $verification_expiration;
+	protected $verificationExpiration;
+	
+
+	/**
+	 * Computes salted password hash.
+	 * @param string Password to be hashed.
+	 * @param array with cost (4-31), salt (22 chars)
+	 * @return Registration
+	 */
+	public function setPassword($password, array $options = NULL)
+	{
+		if ($password !== '' && $password !== NULL) {
+			$this->hash = \Nette\Security\Passwords::hash($password, $options);
+		}
+		return $this;
+	}
 }

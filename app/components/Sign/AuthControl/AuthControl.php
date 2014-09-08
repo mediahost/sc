@@ -1,65 +1,61 @@
 <?php
 
-namespace App\components\Sign;
+namespace App\Components\Sign;
 
-use App\Components\Control,
-	Nette\Application\UI\Form,
-	GettextTranslator\Gettext as Translator,
-	App\Model\Storage\RegistrationStorage as Storage,
-	App\Model\Facade\RegistrationFacade as Facade,
+/** Nette */
+use Nette\Application\UI\Form,
 	Nette\Security\Identity,
-	Nette\Mail\IMailer,
-	App\Model\Storage\MessageStorage as Messages;
+	Nette\Utils;
+		
+/** Application */
+use App\Components,
+	App\Model\Storage,
+	App\Model\Facade,
+	App\Model\Entity;
+
+/** Facebook */
 use Kdyby\Facebook\Facebook,
 	Kdyby\Facebook\Dialog\LoginDialog,
 	Kdyby\Facebook\FacebookApiException;
+
+/** Twitter */
 use Netrium\Addons\Twitter\Authenticator as Twitter,
 	Netrium\Addons\Twitter\AuthenticationException as TwitterException;
-use App\Model\Entity,
-	App\Model\Entity\Auth,
-	App\Model\Entity\User,
-	App\Model\Entity\Registration;
+
 
 /**
- * AuthControl provides login or registration via AOuth
+ * AuthControl provides login or registration via AOuth and aplication.
  *
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class AuthControl extends Control
+class AuthControl extends Components\BaseControl
 {
 
-	/** @var Storage */
-	private $storage;
+	/** @var Storage\RegistrationStorage @inject */
+	public $storage;
 
-	/** @var Facade */
-	private $facade;
+	/** @var Facade\RegistrationFacade @inject */
+	public $facade;
 
-	/** @var IMailer */
-	private $mailer;
+	/** @var \Nette\Mail\IMailer @inject */
+	public $mailer;
 
-	/** @var Facebook */
-	private $facebook;
+	/** @var Facebook @inject */
+	public $facebook;
 
-	/** @var Twitter */
-	private $twitter;
+	/** @var Twitter @inject */
+	public $twitter;
 
-	/** @var Messages */
-	private $messages;
+	/** @var Storage\MessageStorage @inject */
+	public $messages;
+	
+	/** @var Facade\AuthFacade @inject */
+	public $authFacade;
 
-	public function __construct(Translator $translator, Facade $facade, Storage $storage, IMailer $mailer, Messages $messages, Facebook $facebook, Twitter $twitter)
-	{
-		parent::__construct($translator);
-		$this->storage = $storage;
-		$this->facade = $facade;
-		$this->mailer = $mailer;
-		$this->messages = $messages;
-		$this->facebook = $facebook;
-		$this->twitter = $twitter;
-	}
 
 	public function renderRegistration()
 	{
-		$template = $this->getTemplate();
+		$template = $this->template;
 		$template->storage = $this->storage;
 		$template->setFile(__DIR__ . '/registration.latte');
 		$template->render();
@@ -67,14 +63,14 @@ class AuthControl extends Control
 
 	public function renderIcons()
 	{
-		$template = $this->getTemplate();
+		$template = $this->template;
 		$template->setFile(__DIR__ . '/icons.latte');
 		$template->render();
 	}
 
 	/**
 	 * Register form factory.
-	 * @return Nette\Application\UI\Form
+	 * @return Form
 	 */
 	protected function createComponentRegisterForm()
 	{
@@ -87,14 +83,17 @@ class AuthControl extends Control
 					->setAttribute('placeholder', 'Full name');
 		}
 
-		if ($this->storage->isRequired('email')) {
-			$form->addText('reg_email', 'E-mail')
+		if ($this->storage->isRequired('mail')) {
+			$form->addText('reg_mail', 'E-mail')
 					->setAttribute('placeholder', 'E-mail')
 					->setRequired('Please enter your e-mail')
 					->addRule(Form::EMAIL, 'Fill right e-mail format')
-					->addRule(function(\Nette\Forms\Controls\TextInput $item) { // Tohle pouze v případě registrace přes aplikaci
-						return TRUE; //$this->users->isUnique($item->value);
-					}, 'This e-mail is used yet!');
+					->addRule(function(\Nette\Forms\Controls\TextInput $item) {
+						if (!$this->storage->isOAuth()) { // Check just for application login
+							return $this->authFacade->isUnique($item->value, 'app');
+						}
+						return TRUE;
+					}, 'This e-mail is registered yet!');
 		}
 
 		if (!$this->storage->isOAuth()) {
@@ -120,13 +119,13 @@ class AuthControl extends Control
 
 	public function registerFormCancel(\Nette\Forms\Controls\SubmitButton $button)
 	{
-		$this->presenter->redirect("Sign:in");
+		$this->presenter->redirect(':Front:Sign:in');
 	}
 
 	/**
-	 *
-	 * @param \Nette\Application\UI\Form $form
-	 * @param type $values
+	 * Callback for process reg. form data.
+	 * @param Form $form
+	 * @param Utils\ArrayHash $values
 	 */
 	public function registerFormSucceeded(Form $form, $values)
 	{
@@ -135,8 +134,8 @@ class AuthControl extends Control
 			$this->storage->user->name = $values->reg_name;
 		}
 
-		if ($this->storage->isRequired('email')) {
-			$this->storage->user->email = $values->reg_email;
+		if ($this->storage->isRequired('mail')) {
+			$this->storage->user->mail = $values->reg_mail;
 		}
 
 		// Data processing
@@ -152,15 +151,18 @@ class AuthControl extends Control
 		} else {
 			// Registration via aplication form
 			$reg = $this->storage->toRegistration();
-			$reg->setKey($values->reg_email)
+			$reg->setKey($values->reg_mail)
 					->setSource('app')
-					->setHash(\Nette\Security\Passwords::hash($values->reg_password));
+					->setPassword($values->reg_password);
 
 			$this->registerTemporarily($reg);
 		}
 	}
 
-	/** @return LoginDialog */
+	/** 
+	 * Component that process AOuth via Facebook.
+	 * @return LoginDialog
+	 */
 	protected function createComponentFacebook()
 	{
 		$dialog = $this->facebook->createDialog('login');
@@ -192,7 +194,7 @@ class AuthControl extends Control
 	}
 
 	/**
-	 *
+	 * Handle processing Twitter OAuth.
 	 * @throws NS\AuthenticationException
 	 */
 	public function handleTwitter()
@@ -225,7 +227,7 @@ class AuthControl extends Control
 			$this->storage->store($source, $data, $token);
 
 			if ($this->storage->isRequired()) {
-				$this->presenter->redirect('Sign:Register', $source);
+				$this->presenter->redirect(':Front:Sign:Registration', $source);
 			} else {
 				$user = $this->mergeOrRegister();
 			}
@@ -242,10 +244,10 @@ class AuthControl extends Control
 
 	/**
 	 * Login user and redirect.
-	 * @param User $user
+	 * @param Entity\User $user
 	 * @throws \Nette\Application\AbortException
 	 */
-	private function login(User $user)
+	private function login(Entity\User $user)
 	{
 		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$this->presenter->flashMessage('You have been successfully logged in!', 'success');
@@ -253,21 +255,21 @@ class AuthControl extends Control
 	}
 
 	/**
-	 *
-	 * @param Registration $registration
+	 * Provide temorary registration.
+	 * @param Entity\Registration $registration
 	 * @throws \Nette\Application\AbortException
 	 */
-	private function registerTemporarily(Registration $registration)
+	private function registerTemporarily(Entity\Registration $registration)
 	{
 		// Ověření e-mailu
 		$registration = $this->facade->registerTemporarily($registration);
 
 		// Odeslat e-mail
 		$message = $this->messages->getRegistrationMail($this->createTemplate(), [
-			'code' => $registration->verification_token
+			'code' => $registration->verificationToken
 		]);
 
-		$message->addTo($registration->email);
+		$message->addTo($registration->mail);
 		$this->mailer->send($message);
 
 		$this->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
@@ -276,11 +278,11 @@ class AuthControl extends Control
 
 	/**
 	 * Choose registration or merging facade methods.
-	 * @return User
+	 * @return Entity\User
 	 */
 	private function mergeOrRegister()
 	{
-		if (($user = $this->facade->findByEmail($this->storage->user->email))) {
+		if (($user = $this->facade->findByMail($this->storage->user->mail))) {
 			return $this->facade->merge($user, $this->storage->auth);
 		} else {
 			return $this->facade->register($this->storage->user, $this->storage->auth);

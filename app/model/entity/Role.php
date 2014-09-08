@@ -22,10 +22,4 @@ class Role extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\Column(type="string", length=128)
 	 */
 	protected $name;
-
-	public function setRole()
-	{
-		
-	}
-
 }

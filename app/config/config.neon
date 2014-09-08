@@ -34,8 +34,6 @@ nette:
 
 	debugger:
 		email: 'pupe.dupe@gmail.com'
-		bar:
-#			- JanDrabek\MailPanel\MailPanel
 
 services:
 	authenticator: App\Model\Authenticator\UserAuthenticator

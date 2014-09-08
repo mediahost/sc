@@ -21,18 +21,23 @@ class AuthFacade extends BaseFacade
 	}
 
 	/**
-	 * Find Auth by e-mail of application registration
-	 * @param type $email
-	 * @return type
+	 * Find Auth of application registration by e-mail.
+	 * @param string $mail
+	 * @return Entity\Auth
 	 */
-	public function findByEmail($email)
+	public function findByMail($mail)
 	{
 		return $this->authDao->findOneBy([
 					'source' => Entity\Auth::SOURCE_APP,
-					'key' => $email,
+					'key' => $mail,
 		]);
 	}
 
+	/**
+	 * Find Auth by User.
+	 * @param Entity\User $user
+	 * @return Entity\Auth
+	 */
 	public function findByUser(Entity\User $user)
 	{
 		return $this->authDao->findBy([
@@ -40,41 +45,65 @@ class AuthFacade extends BaseFacade
 		]);
 	}
 	
+	/**
+	 * Set new password to User by Auth.
+	 * @param Entity\Auth $auth
+	 * @param string $password
+	 * @return Entity\User
+	 */
 	public function recovery(Entity\Auth $auth, $password)
 	{
-		$auth->hash = \Nette\Security\Passwords::hash($password);
-		$user = $auth->user;
-		$user->recovery = NULL;
-		$user->recovery_expiration = NULL;
+		$auth->password = $password;
 		$this->em->persist($auth);
+		
+		$user = $auth->user;
+		$user->unsetRecovery();
 		$this->em->persist($user);
+		
 		$this->em->flush();
 		return $auth->user;
 	}
 	
+	/**
+	 * Find application Auth by valid token.
+	 * @param string $token
+	 * @return Entity\Auth
+	 */
 	public function findByValidToken($token)
 	{
 		$auth = $this->authDao->findOneBy([
-			'user.recovery' => $token
+			'user.recoveryToken' => $token,
+			'source' => Entity\Auth::SOURCE_APP
 		]);
 		
 		if ($auth) {
 			$user = $auth->user;
 			
-			if ($user->recovery_expiration > new \DateTime) {
+			if ($user->recoveryExpiration > new \DateTime) {
 				return $auth;
 			} else {
-				$user->recovery = NULL;
-				$user->recovery_expiration = NULL;
+				$user->unsetRecovery();
 				$this->userDao->save($user);
 			}
 		}
 		
 		return NULL;
 	}
-
+	
+	/**
+	 * Is Auth unique?
+	 * @param string $key
+	 * @param string $source
+	 * @return bool
+	 */
+	public function isUnique($key, $source)
+	{
+		return $this->authDao->findOneBy([
+					'source' => $source,
+					'key' => $key,
+		]) === NULL;
+	}
 }
-
 
 class AuthFacadeException extends \Exception
 {}

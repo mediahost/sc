@@ -8,13 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="user")
  *
- * @property string $email
+ * @property string $mail
  * @property string $firstname
  * @property string $surname
  * @property \Doctrine\Common\Collections\ArrayCollection $auths
  * @property \Doctrine\ORM\PersistentCollection $roles
- * @property string $recovery
- * @property \DateTime $recovery_expiration
+ * @property string $recoveryToken
+ * @property \DateTime $recoveryExpiration
  *
  * @method \Doctrine\ORM\PersistentCollection getRoles()
  */
@@ -26,7 +26,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", nullable=false)
 	 */
-	protected $email;
+	protected $mail;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Auth", mappedBy="user", cascade={"persist","remove"})
@@ -56,12 +56,12 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
-	protected $recovery; // ToDo: Přejmenovat na recovery_token
+	protected $recoveryToken;
 	
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-	protected $recovery_expiration;
+	protected $recoveryExpiration;
 	
 	
 	public function __construct()
@@ -74,18 +74,9 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	{
 		return [
 			'id' => $this->id,
-			'email' => $this->email,
+			'mail' => $this->mail,
 			'role' => $this->roles->toArray()
 		];
-	}
-
-	/**
-	 *
-	 * @return int
-	 */
-	public function getUsername()
-	{
-		return $this->email;
 	}
 
 	/**
@@ -175,7 +166,36 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	public function __toString()
 	{
-		return $this->email;
+		return $this->mail;
+	}
+	
+	/**
+	 * Set token and expiration DateTime.
+	 * @param string $token
+	 * @param \DateTime|string $expiration
+	 * @return User
+	 */
+	public function setRecovery($token, $expiration)
+	{
+		if (!($expiration instanceof \DateTime)) {
+			$this->recoveryExpiration = new \DateTime($expiration);
+		}
+		
+		$this->recoveryToken = $token;
+		$this->recoveryExpiration = $expiration;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set NULL to recovery token and expiration properties.
+	 * @return User
+	 */
+	public function unsetRecovery()
+	{
+		$this->recoveryToken = NULL;
+		$this->recoveryExpiration = NULL;
+		return $this;
 	}
 
 }

@@ -26,9 +26,9 @@ class RoleFacade extends BaseFacade
 	}
 
 	/**
-	 * 
+	 * Find role by name.
 	 * @param type $name
-	 * @return \App\Model\Entity\User
+	 * @return Entity\User
 	 */
 	public function findByName($name)
 	{
@@ -36,7 +36,7 @@ class RoleFacade extends BaseFacade
 	}
 
 	/**
-	 * Check if name is unique
+	 * Check if name is unique.
 	 * @param type $name
 	 * @return bool
 	 */
@@ -46,7 +46,7 @@ class RoleFacade extends BaseFacade
 	}
 
 	/**
-	 * Create role if isnt exists
+	 * Create role if is not exists.
 	 * @param type $name
 	 * @return Entity\Role|null
 	 */

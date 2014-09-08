@@ -2,8 +2,18 @@
 
 namespace App\FrontModule\Presenters;
 
-use Kdyby\Doctrine\EntityManager,
-	Kdyby\Doctrine\EntityDao;
+/** Nette */
+use Nette\Security\Identity;
+
+/** Kdyby/Doctrine */
+use Kdyby\Doctrine;
+
+/** Application */
+use App\Components\Sign,
+	App\Model\Storage,
+	App\Model\Facade,
+	App\Model\Entity;
+
 
 /**
  * Sign in/out presenters.
@@ -11,46 +21,38 @@ use Kdyby\Doctrine\EntityManager,
 class SignPresenter extends BasePresenter
 {
 
-	/** @var EntityManager @inject */
+	/** @var Doctrine\EntityManager @inject */
 	public $em;
 
-	/** @var EntityDao */
+	/** @var Doctrine\EntityDao */
 	private $userDao;
 
-	/** @var \App\Components\Sign\ISignInControlFactory @inject */
+	/** @var Sign\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
 
-	/** @var \App\Components\Sign\IForgottenControlFactory @inject */
+	/** @var Sign\IForgottenControlFactory @inject */
 	public $iForgottenControlFactory;
 
-	/** @var \App\Components\Sign\IRecoveryControlFactory @inject */
+	/** @var Sign\IRecoveryControlFactory @inject */
 	public $iRecoveryControlFactory;
 
-	/** @var \App\Components\Sign\IAuthControlFactory @inject */
+	/** @var Sign\IAuthControlFactory @inject */
 	public $iAuthControlFactory;
 
-	/** @var \App\Model\Storage\RegistrationStorage @inject */
-	public $registration;
+	/** @var Storage\RegistrationStorage @inject */
+	public $registrationStorage;
 
-	/** @var \App\Model\Facade\RegistrationFacade @inject */
+	/** @var Facade\RegistrationFacade @inject */
 	public $registrationFacade;
 
-	/** @var \App\Model\Facade\AuthFacade @inject */
+	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
+	
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
-	}
-	
-	private function isLoggedIn($redirect = TRUE)
-	{
-		$isLogged = $this->user->isLoggedIn();
-		if ($isLogged && $redirect) {
-			$this->redirect(':Admin:Dashboard:');
-		}
-		return $isLogged;
+		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 	}
 
 	/**
@@ -119,11 +121,11 @@ class SignPresenter extends BasePresenter
 	{
 		$this->isLoggedIn();
 
-		if (!$this->registration->isSource($source)) {
+		if (!$this->registrationStorage->isSource($source)) {
 			$this->redirect('in');
 		} else {
 			if ($source === NULL) {
-				$this->registration->wipe();
+				$this->registrationStorage->wipe();
 			}
 		}
 	}
@@ -139,7 +141,7 @@ class SignPresenter extends BasePresenter
 		$user = $this->registrationFacade->verify($token);
 		
 		if ($user) {
-			$this->presenter->user->login(new \Nette\Security\Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+			$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 			$this->presenter->flashMessage('You have been successfully logged in!', 'success');
 			$this->presenter->redirect(':Admin:Dashboard:');
 		} else {
@@ -147,28 +149,42 @@ class SignPresenter extends BasePresenter
 			$this->redirect('in');
 		}
 	}
+	
+	/**
+	 * Redirect logged to certain destination.
+	 * @param type $redirect
+	 * @return bool
+	 */
+	private function isLoggedIn($redirect = TRUE)
+	{
+		$isLogged = $this->user->isLoggedIn();
+		if ($isLogged && $redirect) {
+			$this->redirect(':Admin:Dashboard:');
+		}
+		return $isLogged;
+	}
 
 // <editor-fold defaultstate="collapsed" desc="Components">
 
-	/** @return \App\Components\SignInControl */
+	/** @return Sign\SignInControl */
 	protected function createComponentSignIn()
 	{
 		return $this->iSignInControlFactory->create();
 	}
 
-	/** @return \App\components\Sign\AuthControl */
+	/** @return Sign\AuthControl */
 	protected function createComponentAuth()
 	{
 		return $this->iAuthControlFactory->create();
 	}
 
-	/** @return \App\components\Sign\ForgottenControl */
+	/** @return Sign\ForgottenControl */
 	protected function createComponentForgotten()
 	{
 		return $this->iForgottenControlFactory->create();
 	}
 
-	/** @return \App\components\Sign\RecoveryControl */
+	/** @return Sign\RecoveryControl */
 	protected function createComponentRecovery()
 	{
 		return $this->iRecoveryControlFactory->create();

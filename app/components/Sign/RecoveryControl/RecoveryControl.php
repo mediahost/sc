@@ -2,54 +2,37 @@
 
 Namespace App\Components\Sign;
 
-use App\Components\Control,
-	Nette\Application\UI\Form,
-	App\Model\Facade\AuthFacade,
-	Nette\Mail\IMailer,
-	App\Model\Storage\MessageStorage as Messages,
-	Nette;
+/** Nette */
+use Nette\Application\UI\Form,
+	Nette\Security\Identity;
+
+/** Application */
+use App\Components,
+	App\Model\Facade,
+	App\Model\Entity;
 
 /**
- * Recovery control
+ * Recovery control.
  * @author Martin Šifra <me@martinsifra.cz>
  */
-class RecoveryControl extends Control
+class RecoveryControl extends Components\BaseControl
 {
 	
-	/** @var AuthFacade */
-	private $authFacade;
+	/** @var Facade\AuthFacade @inject */
+	public $authFacade;
 	
-	/** @var IMailer */
-	private $mailer;
-	
-	/** @var Messages */
-	private $messages;
-	
-	/** @var \App\Model\Entity\User */
+	/** @var \App\Model\Entity\Auth */
 	private $auth;
-	
-	public function __construct(\GettextTranslator\Gettext $translator, AuthFacade $authFacade, IMailer $mailer, Messages $messages)
-	{
-		parent::__construct($translator);
-		$this->authFacade = $authFacade;
-		$this->mailer = $mailer;
-		$this->messages = $messages;
-	}
 
-	public function render()
-	{
-		$template = $this->getTemplate();
-		$template->setFile(__DIR__ . '/render.latte');
-		$template->render();
-	}
 
 	/**
 	 * Form factory.
-	 * @return Nette\Application\UI\Form
+	 * @return Form
 	 */
 	protected function createComponentRecoveryForm()
 	{
 		$form = new Form();
+		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		$form->addPassword('password', 'Password')
@@ -79,16 +62,15 @@ class RecoveryControl extends Control
 	{
 		$user = $this->authFacade->recovery($this->auth, $values->password);
 		
-		$this->presenter->user->login(new Nette\Security\Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
 		$this->presenter->redirect(':Admin:Dashboard:');
 	}
 	
-	public function setAuth($auth)
+	public function setAuth(Entity\Auth $auth)
 	{
 		$this->auth = $auth;
 	}
-
 }
 
 interface IRecoveryControlFactory
