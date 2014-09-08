@@ -178,7 +178,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	public function setRecovery($token, $expiration)
 	{
 		if (!($expiration instanceof \DateTime)) {
-			$this->recoveryExpiration = new \DateTime($expiration);
+			$expiration = new \DateTime($expiration);
 		}
 		
 		$this->recoveryToken = $token;
