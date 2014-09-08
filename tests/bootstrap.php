@@ -7,6 +7,8 @@ if (!class_exists('Tester\Assert')) {
 	exit(1);
 }
 
+$_SERVER['SCRIPT_FILENAME'] = __DIR__ . 'D:\Projekty\sourcecode\www\index.php';
+
 Tester\Environment::setup();
 
 $configurator = new Nette\Configurator;
@@ -18,6 +20,6 @@ $configurator->createRobotLoader()
 		->addDirectory(__DIR__ . '/../vendor/others')
 		->register();
 
-$configurator->addConfig(__DIR__ . '/../app/config/tests/config.neon');
+$configurator->addConfig(__DIR__ . '/../app/config/config.neon');
 $configurator->addConfig(__DIR__ . '/../app/config/tests/config.local.neon');
 return $configurator->createContainer();
