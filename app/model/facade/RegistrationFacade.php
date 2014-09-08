@@ -135,15 +135,16 @@ class RegistrationFacade extends BaseFacade
 	/**
 	 * Find registration by valid verification tooken.
 	 * @param string $token
-	 * @return NULL
+	 * @return Entity\Registration
 	 */
-	public function findByValidToken($token) // ToDo: Přejmenovat na findByVerificationToken()
+	public function findByVerificationToken($token)
 	{
 		$registration = $this->registrationDao->findOneBy([
 			'verificationToken' => $token
 		]);
 
 		if ($registration) {
+			// Expired registrations requests are deleted
 			if ($registration->verificationExpiration > new \DateTime()) {
 				return $registration;
 			} else {
@@ -161,7 +162,7 @@ class RegistrationFacade extends BaseFacade
 	 */
 	public function verify($token) // ToDo: Předělat do transakcí, pokud je to možné.
 	{
-		$registration = $this->findByValidToken($token);
+		$registration = $this->findByVerificationToken($token);
 
 		if ($registration) {
 			$auth = new Entity\Auth();
