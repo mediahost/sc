@@ -34,6 +34,7 @@ composer.lock
 ## Tests
 #################
 /tests/test.log
+/tests/temp/*
 
 #################
 ## Bin
