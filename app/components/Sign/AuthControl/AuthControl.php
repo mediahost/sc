@@ -35,7 +35,13 @@ class AuthControl extends Components\BaseControl
 	public $storage;
 
 	/** @var Facade\RegistrationFacade @inject */
-	public $facade;
+	public $registrationFacade;
+	
+	/** @var Facade\UserFacade @inject */
+	public $userFacade;
+	
+	/** @var Facade\AuthFacade @inject */
+	public $authFacade;
 
 	/** @var \Nette\Mail\IMailer @inject */
 	public $mailer;
@@ -222,7 +228,7 @@ class AuthControl extends Components\BaseControl
 	 */
 	private function process($source, $id, $data, $token = NULL)
 	{
-		if (!$auth = $this->facade->findByKey($source, $id)) {
+		if (!$auth = $this->authFacade->findByKey($source, $id)) {
 
 			$this->storage->store($source, $data, $token);
 
@@ -235,7 +241,7 @@ class AuthControl extends Components\BaseControl
 			$this->storage->wipe();
 		} else {
 			$user = $auth->user;
-			$this->facade->updateAccessToken($auth, $token);
+			$this->authFacade->updateAccessToken($auth, $token);
 		}
 
 		// Login
@@ -262,7 +268,7 @@ class AuthControl extends Components\BaseControl
 	private function registerTemporarily(Entity\Registration $registration)
 	{
 		// Ověření e-mailu
-		$registration = $this->facade->registerTemporarily($registration);
+		$registration = $this->registrationFacade->registerTemporarily($registration);
 
 		// Odeslat e-mail
 		$message = $this->messages->getRegistrationMail($this->createTemplate(), [
@@ -282,10 +288,10 @@ class AuthControl extends Components\BaseControl
 	 */
 	private function mergeOrRegister() // ToDo: Tohle celé může být ve facade
 	{
-		if (($user = $this->facade->findByMail($this->storage->user->mail))) {
-			return $this->facade->merge($user, $this->storage->auth);
+		if (($user = $this->userFacade->findByMail($this->storage->user->mail))) {
+			return $this->registrationFacade->merge($user, $this->storage->auth);
 		} else {
-			return $this->facade->register($this->storage->user, $this->storage->auth);
+			return $this->registrationFacade->register($this->storage->user, $this->storage->auth);
 		}
 	}
 

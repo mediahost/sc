@@ -27,8 +27,8 @@ class UserFacade extends BaseFacade
 	}
 
 	/**
-	 * 
-	 * @param type $mail
+	 * Find user by e-mail.
+	 * @param string $mail
 	 * @return User
 	 */
 	public function findByMail($mail)
@@ -37,8 +37,8 @@ class UserFacade extends BaseFacade
 	}
 
 	/**
-	 * Check if mail is unique
-	 * @param type $mail
+	 * Is User unique by e-mail?
+	 * @param string $mail
 	 * @return bool
 	 */
 	public function isUnique($mail)
@@ -47,14 +47,14 @@ class UserFacade extends BaseFacade
 	}
 
 	/**
-	 * Create user if isnt exists
-	 * @param type $mail
-	 * @param type $password
-	 * @return \App\Model\Entity\User|null
+	 * Create User if isn't exists.
+	 * @param string $mail
+	 * @param string $password
+	 * @return User
 	 */
 	public function create($mail, $password, Entity\Role $role)
 	{
-		if ($this->findByMail($mail) === NULL) { // check unique
+		if ($this->isUnique($mail)) { // check unique
 			$user = new User;
 			$user->mail = $mail;
 
@@ -68,14 +68,16 @@ class UserFacade extends BaseFacade
 
 			return $this->userDao->save($user);
 		}
+
 		return NULL;
 	}
 	
 	/**
-	 * Hledá aplikační autorizaci odpovídající mailu.
-	 * V případě její absence tuto autorizaci vytvoří se zadaným heslem
+	 * Finds application Auth corresponding to e-mail.
+	 * If missing creates new Auth with set password.
 	 * @param User $user
-	 * @param type $password
+	 * @param string $password
+	 * @return Entity\Auth
 	 */
 	public function setAppPassword(User $user, $password)
 	{
@@ -84,13 +86,16 @@ class UserFacade extends BaseFacade
 					'key' => $user->mail,
 					'user' => $user,
 		]);
+		
 		if (!$auth) {
 			$auth = new Entity\Auth;
 			$auth->setUser($user);
 			$auth->setSource(Entity\Auth::SOURCE_APP);
 			$auth->setKey($user->mail);
 		}
+		
 		$auth->setPassword($password);
+		
 		$this->authDao->save($auth);
 	}
 
@@ -122,11 +127,11 @@ class UserFacade extends BaseFacade
 	}
 	
 	/**
-	 * 
+	 * Sets recovery token and expiration datetime to User.
 	 * @param User $user
 	 * @return User
 	 */
-	public function forgotten(User $user)
+	public function setRecovery(User $user)
 	{
 		$user->setRecovery(\Nette\Utils\Strings::random(32), 'now + 1 hour');
 		return $this->userDao->save($user);

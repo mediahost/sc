@@ -68,7 +68,7 @@ class ForgottenControl extends Components\BaseControl
 				$form['mail']->addError('We do not register any user with this e-mail address!');
 			} else {		
 				$user = $auth->user;
-				$this->userFacade->forgotten($user);
+				$this->userFacade->setRecovery($user);
 
 				// Odeslat e-mail
 				$message = $this->messages->getForgottenMail($this->createTemplate(), [

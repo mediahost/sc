@@ -21,8 +21,8 @@ class AuthFacade extends BaseFacade
 	}
 
 	/**
-	 * Find Auth of application registration by e-mail.
-	 * @param string $mail
+	 * Find Auth of application account by e-mail.
+	 * @param string $mail E-mail address in Auth (not in User).
 	 * @return Entity\Auth
 	 */
 	public function findByMail($mail)
@@ -32,17 +32,75 @@ class AuthFacade extends BaseFacade
 					'key' => $mail,
 		]);
 	}
+	
+	/**
+	 * Find Auth by key and source type.
+	 * @param string $source Source name.
+	 * @param string $key User's external identification key.
+	 * @return Entity\Auth
+	 */
+	public function findByKey($source, $key)
+	{
+		return $this->authDao->findOneBy([
+					'source' => $source,
+					'key' => $key
+		]);
+	}
+	
 
+	
+	/**
+	 * Find application Auth by valid token.
+	 * @param string $token
+	 * @return Entity\Auth
+	 */
+	public function findByRecoveryToken($token)
+	{
+		$auth = $this->authDao->findOneBy([
+			'user.recoveryToken' => $token,
+			'source' => Entity\Auth::SOURCE_APP
+		]);
+		
+		if ($auth) {
+			$user = $auth->user;
+			
+			if ($user->recoveryExpiration > new \DateTime) {
+				return $auth;
+			} else {
+				$user->unsetRecovery();
+				$this->userDao->save($user);
+			}
+		}
+		
+		return NULL;
+	}
+	
 	/**
 	 * Find Auth by User.
+	 * 
 	 * @param Entity\User $user
 	 * @return Entity\Auth
+	 * @deprecated
 	 */
 	public function findByUser(Entity\User $user)
 	{
 		return $this->authDao->findBy([
 					'user' => $user,
 		]);
+	}
+	
+	/**
+	 * Is Auth unique?
+	 * @param string $key
+	 * @param string $source
+	 * @return bool
+	 */
+	public function isUnique($key, $source)
+	{
+		return $this->authDao->findOneBy([
+					'source' => $source,
+					'key' => $key,
+		]) === NULL;
 	}
 	
 	/**
@@ -65,43 +123,15 @@ class AuthFacade extends BaseFacade
 	}
 	
 	/**
-	 * Find application Auth by valid token.
+	 * Update OAuth access token.
+	 * @param Auth $auth
 	 * @param string $token
 	 * @return Entity\Auth
 	 */
-	public function findByValidToken($token)
+	public function updateAccessToken(Auth $auth, $token)
 	{
-		$auth = $this->authDao->findOneBy([
-			'user.recoveryToken' => $token,
-			'source' => Entity\Auth::SOURCE_APP
-		]);
-		
-		if ($auth) {
-			$user = $auth->user;
-			
-			if ($user->recoveryExpiration > new \DateTime) {
-				return $auth;
-			} else {
-				$user->unsetRecovery();
-				$this->userDao->save($user);
-			}
-		}
-		
-		return NULL;
-	}
-	
-	/**
-	 * Is Auth unique?
-	 * @param string $key
-	 * @param string $source
-	 * @return bool
-	 */
-	public function isUnique($key, $source)
-	{
-		return $this->authDao->findOneBy([
-					'source' => $source,
-					'key' => $key,
-		]) === NULL;
+		$auth->token = $token;
+		return $this->authDao->save($auth);
 	}
 }
 

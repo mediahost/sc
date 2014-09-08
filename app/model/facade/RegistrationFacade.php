@@ -44,42 +44,6 @@ class RegistrationFacade extends BaseFacade
 	}
 
 	/**
-	 * Find Uuth by key and source type.
-	 * @param string $source Source name.
-	 * @param string $key User's external identification key.
-	 * @return Entity\Auth
-	 */
-	public function findByKey($source, $key)
-	{
-		return $this->authDao->findOneBy([
-					'source' => $source,
-					'key' => $key
-		]);
-	}
-
-	/**
-	 * Update OAuth access token.
-	 * @param Auth $auth
-	 * @param string $token
-	 * @return Auth
-	 */
-	public function updateAccessToken(Auth $auth, $token)
-	{
-		$auth->token = $token;
-		return $this->authDao->save($auth);
-	}
-
-	/**
-	 * Find user by e-mail.
-	 * @param string $mail
-	 * @return User
-	 */
-	public function findByMail($mail)
-	{
-		return $this->userDao->findOneBy(['mail' => $mail]);
-	}
-
-	/**
 	 * Add new Auth to existing User and save.
 	 * @param User $user
 	 * @param Auth $auth
@@ -133,7 +97,7 @@ class RegistrationFacade extends BaseFacade
 	}
 
 	/**
-	 * Find registration by valid verification tooken.
+	 * Find registration request by valid verification tooken.
 	 * @param string $token
 	 * @return Entity\Registration
 	 */
@@ -144,7 +108,7 @@ class RegistrationFacade extends BaseFacade
 		]);
 
 		if ($registration) {
-			// Expired registrations requests are deleted
+			// Expired registrations' requests are deleted
 			if ($registration->verificationExpiration > new \DateTime()) {
 				return $registration;
 			} else {
@@ -195,7 +159,7 @@ class RegistrationFacade extends BaseFacade
 	 * @param type $auth
 	 * @return type
 	 */
-	public function mergeOrRegister($user, $auth)
+	public function mergeOrRegister($user, $auth) // ToDo: Není hotové!!!!
 	{
 		if (!$user = $this->userFacade->findByMail($user->mail)) {
 			// Registrace

@@ -83,7 +83,7 @@ class SignPresenter extends BasePresenter
 		$message = 'Token to recovery your password is no longer active. Please request new one.';
 		
 		if ($token !== NULL) {
-			$auth = $this->authFacade->findByValidToken($token);
+			$auth = $this->authFacade->findByRecoveryToken($token);
 
 			if ($auth !== NULL) {
 				$this['recovery']->setAuth($auth);

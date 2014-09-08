@@ -23,6 +23,9 @@ class RegistrationFacadeTest extends Tester\TestCase
 	/** @var \App\Model\Facade\UserFacade @inject*/
 	public $userFacade;
 	
+	/** @var \App\Model\Facade\AuthFacade @inject*/
+	public $authFacade;
+	
 	/** @var \App\Model\Facade\RoleFacade @inject*/
 	public $roleFacade;
 
@@ -56,11 +59,11 @@ class RegistrationFacadeTest extends Tester\TestCase
 		# Úklid
 	}
 	
-	public function testFindByKey()
+	public function testFindByKey() // ToDo: Přesunout do testů AuthFacade
 	{
 		$role = $this->roleFacade->findByName('candidate');
 		$this->userFacade->create('joe.doe@gmail.com', 'heslo', $role);
-		$auth = $this->registrationFacade->findByKey(\App\Model\Entity\Auth::SOURCE_APP, 'joe.doe@gmail.com');
+		$auth = $this->authFacade->findByKey(\App\Model\Entity\Auth::SOURCE_APP, 'joe.doe@gmail.com');
 		
 		Assert::same('joe.doe@gmail.com', $auth->mail);
 		Assert::same('joe.doe@gmail.com', $auth->key);
@@ -81,7 +84,7 @@ class RegistrationFacadeTest extends Tester\TestCase
 		
 		Assert::type('\App\Model\Entity\User', $this->registrationFacade->verify($this->registration->verificationToken));
 		
-		$auth = $this->registrationFacade->findByKey(\App\Model\Entity\Auth::SOURCE_APP, $this->registration->key);
+		$auth = $this->authFacade->findByKey(\App\Model\Entity\Auth::SOURCE_APP, $this->registration->key);
 		$user = $auth->user;
 		
 		Assert::same('John Doe', $user->name);
