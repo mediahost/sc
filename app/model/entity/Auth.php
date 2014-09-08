@@ -8,9 +8,9 @@ use Doctrine\ORM\Mapping as ORM,
 /**
  * Auth entity
  * @author Martin Šifra <me@martinsifra.cz>
- * 
+ *
  * @ORM\Entity
- * 
+ *
  * @property User $user
  * @property $key
  * @property $source
@@ -21,7 +21,7 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
-	
+
 	const SOURCE_APP = "app";
 	const SOURCE_FACEBOOK = "facebook";
 	const SOURCE_TWITTER = "twitter";

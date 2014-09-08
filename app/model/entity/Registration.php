@@ -80,5 +80,5 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 			$this->hash = \Nette\Security\Passwords::hash($password, $options);
 		}
 		return $this;
-	}
+	}	
 }

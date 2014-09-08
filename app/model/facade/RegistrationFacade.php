@@ -37,10 +37,10 @@ class RegistrationFacade extends BaseFacade
 	}
 
 	/**
-	 * Find user by Auth key and source type.
-	 * @param string $source Source name
-	 * @param string $key Users's external identification
-	 * @return Entity\User
+	 * Find Uuth by key and source type.
+	 * @param string $source Source name.
+	 * @param string $key User's external identification key.
+	 * @return Entity\Auth
 	 */
 	public function findByKey($source, $key)
 	{
@@ -104,56 +104,53 @@ class RegistrationFacade extends BaseFacade
 	 * Create new temporarily registration and delete old one with same e-mail
 	 * and source.
 	 * @param RegistrationFacade $registration
-	 * @return RegistrationFacade
+	 * @return Entity\Registration
 	 */
 	public function registerTemporarily(Entity\Registration $registration)
-	{		
+	{
+		$previous = $this->registrationDao->findBy([
+				'mail' => $registration->mail,
+				'source' => $registration->source
+		]);
+
+		foreach ($previous as $entity) {
+			$this->em->remove($entity);
+		}
+		
 		$registration->verificationToken = \Nette\Utils\Strings::random(32);
 		$registration->verificationExpiration = new \DateTime('now + 1 day');
 		$this->em->persist($registration);
-		
-		// Deleting registration entities with the same e-mail and source
-		$expired = $this->registrationDao->findBy([
-				'verificationToken != ?0' => [$registration->verificationToken],
-				'mail = ?0' => [$registration->mail],
-				'source = ?0' => [$registration->source]
-		]);
-		
-		foreach ($expired as $expire) {
-			$this->em->remove($expire);
-		}
-		
+
 		$this->em->flush();
-		
 		return $registration;
 	}
-	
+
 	/**
 	 * Find registration by valid verification tooken.
 	 * @param string $token
 	 * @return NULL
 	 */
-	public function findByValidToken($token)
+	public function findByValidToken($token) // ToDo: Přejmenovat na findByVerificationToken()
 	{
 		$registration = $this->registrationDao->findOneBy([
 			'verificationToken' => $token
 		]);
-		
+
 		if ($registration) {
-			if ($registration->verificationExpiration > new \DateTime) {
+			if ($registration->verificationExpiration > new \DateTime()) {
 				return $registration;
 			} else {
 				$this->registrationDao->delete($registration);
 			}
 		}
-		
+
 		return NULL;
 	}
 
 	/**
 	 * Creat new Auth and User (if doesn'e exist) by given code.
 	 * @param string $token
-	 * @return boolean
+	 * @return User
 	 */
 	public function verify($token) // ToDo: Předělat do transakcí, pokud je to možné.
 	{
