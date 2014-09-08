@@ -128,7 +128,7 @@ class AuthFacade extends BaseFacade
 	 * @param string $token
 	 * @return Entity\Auth
 	 */
-	public function updateAccessToken(Auth $auth, $token)
+	public function updateAccessToken(Entity\Auth $auth, $token)
 	{
 		$auth->token = $token;
 		return $this->authDao->save($auth);

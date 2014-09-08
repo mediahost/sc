@@ -54,9 +54,6 @@ class AuthControl extends Components\BaseControl
 
 	/** @var Storage\MessageStorage @inject */
 	public $messages;
-	
-	/** @var Facade\AuthFacade @inject */
-	public $authFacade;
 
 
 	public function renderRegistration()
