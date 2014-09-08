@@ -17,20 +17,26 @@ $container = require __DIR__ . '/../../bootstrap.php';
 
 class RegistrationFacadeTest extends Tester\TestCase
 {
-	/** @var \App\Model\Facade\RegistrationFacade*/
-	private $registrationFacade;
+	/** @var \App\Model\Facade\RegistrationFacade @inject*/
+	public $registrationFacade;
 
-	/** @var App\Model\Entity\Registration */
+	/** @var \App\Model\Facade\UserFacade @inject*/
+	public $userFacade;
+	
+	/** @var \App\Model\Facade\RoleFacade @inject*/
+	public $roleFacade;
+
+	/** @var \App\Model\Entity\Registration */
 	private $registration;
 	
-	/** @var Kdyby\Doctrine\EntityManager */
-	private $em;
+	/** @var \Kdyby\Doctrine\EntityManager @inject */
+	public $em;
 
-
-	public function __construct(\App\Model\Facade\RegistrationFacade $registrationFacade, \Kdyby\Doctrine\EntityManager $em)
+	
+	function __construct(Nette\DI\Container $container)
 	{
-		$this->registrationFacade = $registrationFacade;
-		$this->em = $em;
+		$this->container = $container;
+		$this->container->callInjects($this);
 		
 		$this->registration = new \App\Model\Entity\Registration();
 		$this->registration->setMail('john.doe@domain.com')
@@ -52,6 +58,12 @@ class RegistrationFacadeTest extends Tester\TestCase
 	
 	public function testFindByKey()
 	{
+		$role = $this->roleFacade->findByName('candidate');
+		$this->userFacade->create('joe.doe@gmail.com', 'heslo', $role);
+		$auth = $this->registrationFacade->findByKey(\App\Model\Entity\Auth::SOURCE_APP, 'joe.doe@gmail.com');
+		
+		Assert::same('joe.doe@gmail.com', $auth->mail);
+		Assert::same('joe.doe@gmail.com', $auth->key);
 		
 	}
 
@@ -79,7 +91,5 @@ class RegistrationFacadeTest extends Tester\TestCase
 	}	
 }
 
-$test = new RegistrationFacadeTest(
-		$container->getByType('App\Model\Facade\RegistrationFacade'),
-		$container->getByType('Kdyby\Doctrine\EntityManager'));
+$test = new RegistrationFacadeTest($container);
 $test->run();

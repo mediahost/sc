@@ -11,6 +11,7 @@ $container = require __DIR__ . '/../bootstrap.php';
 /**
  * TEST: Installer Testing
  *
+ * @skip
  * @testCase
  * @phpVersion 5.4
  */
@@ -120,7 +121,7 @@ class InstallerTest extends Tester\TestCase
 		];
 
 		Assert::true($installer->installUsers([], $this->roleFacade, $this->userFacade));
-		Assert::same([], $this->userFacade->findPairs('email'));
+		Assert::same([], $this->userFacade->findPairs('mail'));
 
 		Assert::exception(function() use ($installer, $wrongUsers1) {
 			$installer->installUsers($wrongUsers1, $this->roleFacade, $this->userFacade);
@@ -139,10 +140,10 @@ class InstallerTest extends Tester\TestCase
 		}, 'Nette\InvalidArgumentException');
 
 		Assert::true($installer->installUsers($rightUsers1, $this->roleFacade, $this->userFacade));
-		Assert::equal(array_keys($rightUsers1), array_values($this->userFacade->findPairs('email')));
+		Assert::equal(array_keys($rightUsers1), array_values($this->userFacade->findPairs('mail')));
 
-		$user0 = $this->userFacade->findByEmail('username0');
-		Assert::same('username0', $user0->email);
+		$user0 = $this->userFacade->findByMail('username0');
+		Assert::same('username0', $user0->mail);
 		Assert::same([1 => 'guest'], $user0->rolesPairs);
 
 		Assert::count(count($rightUsers1), $this->userFacade->findAll());
