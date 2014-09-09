@@ -11,6 +11,7 @@ $configurator->setDebugMode(array(
 	'37.221.251.255', // pto - Svetla5
 	'89.176.186.77', // pto - Brno
 	'147.229.204.31', // Kapco
+	'188.121.172.183', // Samo
 ));
 
 //$configurator->setDebugMode(TRUE);  // debug mode MUST NOT be enabled on production server
