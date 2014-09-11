@@ -7,7 +7,7 @@ if (!class_exists('Tester\Assert')) {
 	exit(1);
 }
 
-// Create temporary directory - Very slow, use only when needed!
+// Create temporary directory - Very slow when testing, use only when needed!
 //define('TEMP_DIR', __DIR__ . '/temp/' . getmypid());
 //@mkdir(dirname(TEMP_DIR)); // @ - directory may already exist
 //@mkdir(dirname(TEMP_DIR . '/cache/'));
@@ -31,6 +31,6 @@ $configurator->createRobotLoader()
 		->register();
 
 $configurator->addConfig(__DIR__ . '/../app/config/config.neon');
-$configurator->addConfig(__DIR__ . '/../app/config/tests/config.local.neon');
+$configurator->addConfig(__DIR__ . '/../app/config/config.test.local.neon');
 
 return $configurator->createContainer();

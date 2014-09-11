@@ -11,7 +11,6 @@ $container = require __DIR__ . '/../bootstrap.php';
 /**
  * TEST: Installer Testing
  *
- * @skip
  * @testCase
  * @phpVersion 5.4
  */
@@ -58,9 +57,9 @@ class InstallerTest extends Tester\TestCase
 	{
 		$installer = new \App\Model\Installer\Installer();
 		$dir = $this->container->getParameters()['tempDir'];
-		
+
 		Assert::true($installer->installAdminer($dir));
-		
+
 		$file = Tester\FileMock::create('');
 		$installer->installAdminer(NULL, $file);
 		file_put_contents($file, 'test');
@@ -147,7 +146,7 @@ class InstallerTest extends Tester\TestCase
 		Assert::same([1 => 'guest'], $user0->rolesPairs);
 
 		Assert::count(count($rightUsers1), $this->userFacade->findAll());
-		
+
 		$this->schemaTool->dropSchema($this->getClasses());
 	}
 
