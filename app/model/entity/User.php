@@ -125,6 +125,12 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		$this->roles->clear();
 		return $this;
 	}
+	
+	public function clearAuths()
+	{
+		$this->auths->clear();
+		return $this;
+	}
 
 	/**
 	 *

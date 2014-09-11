@@ -51,22 +51,21 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
 	protected $hash;
-	
-    /**
-     * @ORM\Column(type="string", length=512, nullable=true)
-     */
-    protected $name;
+
+	/**
+	 * @ORM\Column(type="string", length=512, nullable=true)
+	 */
+	protected $name;
 
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=false)
 	 */
 	protected $verificationToken;
-	
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+
+	/**
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
 	protected $verificationExpiration;
-	
 
 	/**
 	 * Computes salted password hash.
@@ -80,5 +79,6 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 			$this->hash = \Nette\Security\Passwords::hash($password, $options);
 		}
 		return $this;
-	}	
+	}
+
 }

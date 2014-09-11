@@ -7,17 +7,31 @@ use Kdyby\Doctrine\EntityDao,
 
 class AuthFacade extends BaseFacade
 {
+
 	/** @var EntityDao */
 	private $authDao;
-	
+
 	/** @var EntityDao */
 	private $userDao;
-
 
 	protected function init()
 	{
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
+	}
+
+	/**
+	 * Find Auth by key and source type.
+	 * @param string $source Source name.
+	 * @param string $key User's external identification key.
+	 * @return Entity\Auth
+	 */
+	public function findByKey($source, $key)
+	{
+		return $this->authDao->findOneBy([
+					'source' => $source,
+					'key' => $key
+		]);
 	}
 
 	/**
@@ -32,23 +46,7 @@ class AuthFacade extends BaseFacade
 					'key' => $mail,
 		]);
 	}
-	
-	/**
-	 * Find Auth by key and source type.
-	 * @param string $source Source name.
-	 * @param string $key User's external identification key.
-	 * @return Entity\Auth
-	 */
-	public function findByKey($source, $key)
-	{
-		return $this->authDao->findOneBy([
-					'source' => $source,
-					'key' => $key
-		]);
-	}
-	
 
-	
 	/**
 	 * Find application Auth by valid token.
 	 * @param string $token
@@ -60,10 +58,10 @@ class AuthFacade extends BaseFacade
 			'user.recoveryToken' => $token,
 			'source' => Entity\Auth::SOURCE_APP
 		]);
-		
+
 		if ($auth) {
 			$user = $auth->user;
-			
+
 			if ($user->recoveryExpiration > new \DateTime) {
 				return $auth;
 			} else {
@@ -71,16 +69,15 @@ class AuthFacade extends BaseFacade
 				$this->userDao->save($user);
 			}
 		}
-		
+
 		return NULL;
 	}
-	
+
 	/**
 	 * Find Auth by User.
-	 * 
+	 *
 	 * @param Entity\User $user
 	 * @return Entity\Auth
-	 * @deprecated
 	 */
 	public function findByUser(Entity\User $user)
 	{
@@ -88,7 +85,7 @@ class AuthFacade extends BaseFacade
 					'user' => $user,
 		]);
 	}
-	
+
 	/**
 	 * Is Auth unique?
 	 * @param string $key
@@ -100,28 +97,28 @@ class AuthFacade extends BaseFacade
 		return $this->authDao->findOneBy([
 					'source' => $source,
 					'key' => $key,
-		]) === NULL;
+				]) === NULL;
 	}
-	
+
 	/**
 	 * Set new password to User by Auth.
 	 * @param Entity\Auth $auth
 	 * @param string $password
 	 * @return Entity\User
 	 */
-	public function recovery(Entity\Auth $auth, $password)
+	public function recoveryPassword(Entity\Auth $auth, $password)
 	{
 		$auth->password = $password;
 		$this->em->persist($auth);
-		
+
 		$user = $auth->user;
 		$user->unsetRecovery();
 		$this->em->persist($user);
-		
+
 		$this->em->flush();
-		return $auth->user;
+		return $auth;
 	}
-	
+
 	/**
 	 * Update OAuth access token.
 	 * @param Auth $auth
@@ -133,7 +130,10 @@ class AuthFacade extends BaseFacade
 		$auth->token = $token;
 		return $this->authDao->save($auth);
 	}
+
 }
 
 class AuthFacadeException extends \Exception
-{}
+{
+	
+}

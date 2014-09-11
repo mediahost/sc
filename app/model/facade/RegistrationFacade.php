@@ -27,14 +27,13 @@ class RegistrationFacade extends BaseFacade
 
 	/** @var EntityDao */
 	private $userDao;
-	
+
 	/** @var UserFacade @inject */
 	private $userFacade;
-	
+
 	/** @var RoleFacade @inject */
 	private $roleFacade;
-	
-	
+
 	protected function init()
 	{
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
@@ -80,14 +79,14 @@ class RegistrationFacade extends BaseFacade
 	public function registerTemporarily(Entity\Registration $registration)
 	{
 		$previous = $this->registrationDao->findBy([
-				'mail' => $registration->mail,
-				'source' => $registration->source
+			'mail' => $registration->mail,
+			'source' => $registration->source
 		]);
 
 		foreach ($previous as $entity) {
 			$this->em->remove($entity);
 		}
-		
+
 		$registration->verificationToken = \Nette\Utils\Strings::random(32);
 		$registration->verificationExpiration = new \DateTime('now + 1 day');
 		$this->em->persist($registration);
@@ -108,7 +107,7 @@ class RegistrationFacade extends BaseFacade
 		]);
 
 		if ($registration) {
-			// Expired registrations' requests are deleted
+			// Expired registration request is deleted
 			if ($registration->verificationExpiration > new \DateTime()) {
 				return $registration;
 			} else {
@@ -146,13 +145,13 @@ class RegistrationFacade extends BaseFacade
 
 			$this->registrationDao->delete($registration);  // ToDo: Tohle by nemělo volat save() ale pouze persist()
 //			$this->em->remove($registration); // Transakce
-			
+
 			return $return;
 		}
 
 		return NULL;
 	}
-	
+
 	/**
 	 * 
 	 * @param type $user
@@ -166,8 +165,9 @@ class RegistrationFacade extends BaseFacade
 			$role = $this->roleFacade->findByName(Role::ROLE_CANDIDATE);
 			$user->addRole($role);
 		}
-		
+
 		$user->addAuth($auth);
 		$this->em->persist($user);
 	}
+
 }

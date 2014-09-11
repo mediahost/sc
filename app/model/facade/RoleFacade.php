@@ -52,7 +52,7 @@ class RoleFacade extends BaseFacade
 	 */
 	public function create($name)
 	{
-		if ($this->isUnique($name)) { // check unique
+		if ($this->isUnique($name)) {
 			$entity = new Entity\Role;
 			$entity->setName($name);
 			return $this->roles->save($entity);
