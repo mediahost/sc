@@ -6,21 +6,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Registration entity
- * @author Martin Šifra <me@martinsifra.cz>
- * 
  * @ORM\Entity
  * 
- * @property $mail
- * @property $key
- * @property $source
- * @property $token
- * @property $hash
- * @property $name
- * @property $verificationToken
- * @property $verificationExpiration
- * 
- * @method App\Model\Entity\Registration setKey(string $key)
- * @method App\Model\Entity\Registration setSource(string $key)
+ * @property string $mail
+ * @property string $key
+ * @property string $source
+ * @property string $token
+ * @property string $hash
+ * @property string $name
+ * @property string $verificationToken
+ * @property \DateTime $verificationExpiration
+ * @property-write string $password
  */
 class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 {
@@ -75,9 +71,7 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	public function setPassword($password, array $options = NULL)
 	{
-		if ($password !== '' && $password !== NULL) {
-			$this->hash = \Nette\Security\Passwords::hash($password, $options);
-		}
+		$this->hash = \Nette\Security\Passwords::hash($password, $options);
 		return $this;
 	}
 
