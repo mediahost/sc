@@ -1,5 +1,0 @@
-doctrine:
-	host: localhost
-	user: user
-	password: pasword
-	dbname: dbname
