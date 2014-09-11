@@ -5,9 +5,10 @@ namespace App\Model\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Role entity
  * @ORM\Entity
- * @ORM\Table(name="role")
- * @method self setName(string $value)
+ * 
+ * @property string $name
  */
 class Role extends \Kdyby\Doctrine\Entities\BaseEntity
 {
@@ -22,4 +23,5 @@ class Role extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\Column(type="string", length=128)
 	 */
 	protected $name;
+
 }
