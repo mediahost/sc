@@ -2,13 +2,12 @@
 
 Namespace App\Components\Sign;
 
-/** Nette */
+/* Nette */
 use Nette\Application\UI;
 
-/** Application */
+/* Application */
 use App\Components,
 	App\Model\Facade;
-
 
 /**
  * Forgotten control.
@@ -19,7 +18,7 @@ class ForgottenControl extends Components\BaseControl
 
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
 
@@ -28,7 +27,6 @@ class ForgottenControl extends Components\BaseControl
 
 	/** @var \App\Model\Storage\MessageStorage @inject */
 	public $messages;
-
 
 	/**
 	 * Form factory.
@@ -66,7 +64,7 @@ class ForgottenControl extends Components\BaseControl
 
 			if (!$auth) {
 				$form['mail']->addError('We do not register any user with this e-mail address!');
-			} else {		
+			} else {
 				$user = $auth->user;
 				$this->userFacade->setRecovery($user);
 
