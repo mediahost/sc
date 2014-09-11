@@ -47,6 +47,9 @@ class AuthTest extends Tester\TestCase
 
 		$auth->password = self::A_PASSWORD;
 		Assert::true(Passwords::verify(self::A_PASSWORD, $auth->hash));
+
+		$auth->password = self::A_PASSWORD;
+		Assert::true(Passwords::verify(self::A_PASSWORD, $auth->hash));
 	}
 
 	public function testVerifyPassword()

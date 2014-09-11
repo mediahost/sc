@@ -3,19 +3,18 @@
 namespace App\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
-	\Nette\Security\Passwords;
+	Nette\Security\Passwords;
 
 /**
  * Auth entity
- * @author Martin Šifra <me@martinsifra.cz>
- *
  * @ORM\Entity
  *
  * @property User $user
- * @property $key
- * @property $source
- * @property $token
- * @property $hash
+ * @property string $key
+ * @property string $source
+ * @property string $token
+ * @property string $hash
+ * @property-write string $password
  */
 class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 {
@@ -60,9 +59,7 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	public function setPassword($password, array $options = NULL)
 	{
-		if ($password !== '' && $password !== NULL) {
-			$this->hash = Passwords::hash($password, $options);
-		}
+		$this->hash = Passwords::hash($password, $options);
 		return $this;
 	}
 
@@ -84,16 +81,6 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 	public function needsRehash(array $options = NULL)
 	{
 		return Passwords::needsRehash($this->hash, $options);
-	}
-
-	/**
-	 * Verify that are hashes equal.
-	 * @param string $hash Hashed password
-	 * @return bool
-	 */
-	public function verifyHash($hash)
-	{
-		return $this->hash === $hash;
 	}
 
 }
