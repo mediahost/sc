@@ -60,7 +60,8 @@ class RecoveryControl extends Components\BaseControl
 
 	public function recoveryFormSucceeded(Form $form, $values)
 	{
-		$user = $this->authFacade->recovery($this->auth, $values->password);
+		$auth = $this->authFacade->recoveryPassword($this->auth, $values->password);
+		$user = $auth->user;
 		
 		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
