@@ -1,0 +1,68 @@
+<?php
+
+namespace Test\Model\Facade;
+
+use Nette,
+	Tester;
+
+use Doctrine\ORM\Tools\SchemaTool,
+	App\Model\Facade;
+
+/**
+ * 
+ */
+class BaseFacade extends Tester\TestCase
+{
+
+	/** @var Nette\DI\Container */
+	private $container;
+
+	/** @var \Doctrine\ORM\EntityManager @inject */
+	public $em;
+
+	/** @var SchemaTool */
+	public $schemaTool;
+
+	/** @var Facade\AuthFacade @inject */
+	public $authFacade;
+	
+	/** @var Facade\RegistrationFacade @inject */
+	public $registrationFacade;
+
+	/** @var Facade\RoleFacade @inject */
+	public $roleFacade;
+	
+	/** @var Facade\UserFacade @inject */
+	public $userFacade;
+
+	function __construct(Nette\DI\Container $container)
+	{
+		$this->container = $container;
+		$this->container->callInjects($this);
+
+		$this->schemaTool = new SchemaTool($this->em);
+		
+		\Tester\Environment::lock('db', TEMP_DIR);
+	}
+	
+	public function setUp()
+	{
+		$this->schemaTool->updateSchema($this->getClasses());
+	}
+	
+	public function tearDown()
+	{
+		$this->schemaTool->dropSchema($this->getClasses());
+	}
+
+
+	private function getClasses()
+	{
+		return [
+			$this->em->getClassMetadata('App\Model\Entity\User'),
+			$this->em->getClassMetadata('App\Model\Entity\Role'),
+			$this->em->getClassMetadata('App\Model\Entity\Auth'),
+			$this->em->getClassMetadata('App\Model\Entity\Registration'),
+		];
+	}
+}

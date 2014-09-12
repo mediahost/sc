@@ -102,7 +102,7 @@ class AuthFacade extends BaseFacade
 	 * Set new password to User by Auth.
 	 * @param Entity\Auth $auth
 	 * @param string $password
-	 * @return Entity\User
+	 * @return Entity\Auth
 	 */
 	public function recoveryPassword(Entity\Auth $auth, $password)
 	{
