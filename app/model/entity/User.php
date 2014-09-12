@@ -2,21 +2,19 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+	Doctrine\Common\Collections\ArrayCollection;
 
 /**
+ * User entity
  * @ORM\Entity
- * @ORM\Table(name="user")
  *
  * @property string $mail
- * @property string $firstname
- * @property string $surname
- * @property \Doctrine\Common\Collections\ArrayCollection $auths
- * @property \Doctrine\ORM\PersistentCollection $roles
+ * @property string $name
+ * @property ArrayCollection $auths
+ * @property ArrayCollection $roles
  * @property string $recoveryToken
  * @property \DateTime $recoveryExpiration
- *
- * @method \Doctrine\ORM\PersistentCollection getRoles()
  */
 class User extends \Kdyby\Doctrine\Entities\BaseEntity
 {
@@ -66,84 +64,77 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	
 	public function __construct()
 	{
-		$this->auths = new \Doctrine\Common\Collections\ArrayCollection;
-		$this->roles = new \Doctrine\Common\Collections\ArrayCollection;
+		$this->auths = new ArrayCollection();
+		$this->roles = new ArrayCollection();
 	}
-
-	public function toArray()
+	
+	/**
+	 * @return string
+	 */
+	public function __toString()
 	{
-		return [
-			'id' => $this->id,
-			'mail' => $this->mail,
-			'role' => $this->roles->toArray()
-		];
+		return (string) $this->mail;
+	}
+	
+	/**
+	 * @param Auth $auth
+	 * @return User
+	 */
+	public function addAuth(Auth $auth)
+	{
+		$this->auths->add($auth);
+		$auth->user = $this;
+		return $this;
 	}
 
 	/**
-	 *
-	 * @param Role|array $element
-	 * @param bool $clear
-	 * @return self
+	 * @param Role|array $role
+	 * @param bool $clear Clear all previous roles.
+	 * @return User
 	 */
-	public function addRole($element, $clear = FALSE)
+	public function addRole($role, $clear = FALSE)
 	{
 		if ($clear) {
 			$this->clearRoles();
 		}
 
-		if (is_array($element)) {
-			foreach ($element as $item) {
-				$this->roles->add($item);
+		if (is_array($role)) {
+			foreach ($role as $entity) {
+				if (!$this->roles->contains($entity)) {
+					$this->roles->add($entity);
+				}
 			}
 		} else {
-			if (!$this->roles->contains($element)) {
-				$this->roles->add($element);
+			if (!$this->roles->contains($role)) {
+				$this->roles->add($role);
 			}
 		}
+		
 		return $this;
 	}
 
 	/**
-	 *
-	 * @param Role $element
-	 * @return self
-	 */
-	public function removeRole(Role $element)
-	{
-		if ($this->roles->contains($element)) {
-			$this->roles->removeElement($element);
-		}
-		return $this;
-	}
-
-	/**
-	 *
-	 * @return self
+	 * @return User
 	 */
 	public function clearRoles()
 	{
 		$this->roles->clear();
 		return $this;
 	}
-	
-	public function clearAuths()
-	{
-		$this->auths->clear();
-		return $this;
-	}
 
 	/**
-	 *
-	 * @return int
+	 * @return array
 	 */
-	public function getRolesCount()
+	public function getRolesKeys()
 	{
-		return $this->roles->count();
+		$array = [];
+		foreach ($this->roles as $role) {
+			$array[] = $role->id;
+		}
+		return $array;
 	}
-
+	
 	/**
-	 *
-	 * @param bool $keysOnly if TRUE than return only keys
 	 * @return array
 	 */
 	public function getRolesPairs()
@@ -154,25 +145,15 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		}
 		return $array;
 	}
-	
-	public function getRolesKeys()
-	{
-		$array = [];
-		foreach ($this->roles as $role) {
-			$array[] = $role->id;
-		}
-		return $array;
-	}
 
-	public function addAuth($auth)
+	/**
+	 * @param Role $role
+	 * @return User
+	 */
+	public function removeRole(Role $role)
 	{
-		$this->auths->add($auth);
-		$auth->user = $this;
-	}
-
-	public function __toString()
-	{
-		return $this->mail;
+		$this->roles->removeElement($role);
+		return $this;
 	}
 	
 	/**
@@ -191,6 +172,19 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		$this->recoveryExpiration = $expiration;
 		
 		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function toArray()
+	{
+		return [
+			'id' => $this->id,
+			'mail' => $this->mail,
+			'name' => $this->name,
+			'role' => $this->roles->toArray()
+		];
 	}
 	
 	/**
