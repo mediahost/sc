@@ -84,8 +84,9 @@ class RegistrationFacade extends BaseFacade
 		]);
 
 		foreach ($previous as $entity) {
-			$this->em->remove($entity);
+			$this->em->remove($entity); // ToDo: This could be done in DB only.
 		}
+		$this->em->flush();
 
 		$registration->verificationToken = \Nette\Utils\Strings::random(32);
 		$registration->verificationExpiration = new \DateTime('now + 1 day');
@@ -153,12 +154,13 @@ class RegistrationFacade extends BaseFacade
 	}
 
 	/**
-	 * 
+	 * ToDo: Není hotové, pouze koncept
 	 * @param type $user
 	 * @param type $auth
 	 * @return type
+	 * @deprecated
 	 */
-	public function mergeOrRegister($user, $auth) // ToDo: Není hotové!!!!
+	public function mergeOrRegister($user, $auth) 
 	{
 		if (!$user = $this->userFacade->findByMail($user->mail)) {
 			// Registrace
