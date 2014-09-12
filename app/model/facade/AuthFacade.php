@@ -74,10 +74,8 @@ class AuthFacade extends BaseFacade
 	}
 
 	/**
-	 * Find Auth by User.
-	 *
 	 * @param Entity\User $user
-	 * @return Entity\Auth
+	 * @return array
 	 */
 	public function findByUser(Entity\User $user)
 	{
@@ -131,9 +129,4 @@ class AuthFacade extends BaseFacade
 		return $this->authDao->save($auth);
 	}
 
-}
-
-class AuthFacadeException extends \Exception
-{
-	
 }
