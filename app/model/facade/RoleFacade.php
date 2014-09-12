@@ -22,7 +22,7 @@ class RoleFacade extends BaseFacade
 	 */
 	public function getRoles()
 	{
-		return $this->roles->fetchPairs();
+		return $this->roles->findPairs([], 'name', [], 'id');
 	}
 
 	/**
