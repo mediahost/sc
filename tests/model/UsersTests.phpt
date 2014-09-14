@@ -31,7 +31,7 @@ class UsersTest extends Tester\TestCase
 		$this->container = $container;
 		$this->container->callInjects($this);
 		$this->schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
-		\Tester\Environment::lock('db', $container->getParameters()['tempDir']);
+		\Tester\Environment::lock('db', TEMP_DIR);
 	}
 
 	private function getClasses()

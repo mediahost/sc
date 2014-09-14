@@ -11,7 +11,7 @@ use Doctrine\ORM\Tools\SchemaTool,
 /**
  * 
  */
-class BaseFacade extends Tester\TestCase
+abstract class BaseFacade extends Tester\TestCase
 {
 
 	/** @var Nette\DI\Container */
