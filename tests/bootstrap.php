@@ -7,14 +7,11 @@ if (!class_exists('Tester\Assert')) {
 	exit(1);
 }
 
-// Create temporary directory - Very slow when testing, use only when needed!
-//define('TEMP_DIR', __DIR__ . '/temp/' . getmypid());
-//@mkdir(dirname(TEMP_DIR)); // @ - directory may already exist
-//@mkdir(dirname(TEMP_DIR . '/cache/'));
-//Tester\Helpers::purge(TEMP_DIR);
-
 // Using app temporary directory
-define('TEMP_DIR', __DIR__ . '/../temp');
+define('TEMP_DIR', __DIR__ . '/../temp/');
+
+// Directory for lock files
+define('LOCK_DIR', TEMP_DIR);
 
 // Global from is %wwwDir% taken and is not set when php-cgi (run from cmd)
 $_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/../www/index.php';
@@ -22,11 +19,12 @@ $_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/../www/index.php';
 Tester\Environment::setup();
 
 $configurator = new Nette\Configurator;
-$configurator->setDebugMode(TRUE);
-//$configurator->enableDebugger(__DIR__ . '/../log');
+//$configurator->setDebugMode(TRUE);
+$configurator->enableDebugger(__DIR__ . '/../log');
 $configurator->setTempDirectory(TEMP_DIR);
 $configurator->createRobotLoader()
 		->addDirectory(__DIR__ . '/../app')
+		->addDirectory(__DIR__ . '/../tests')
 		->addDirectory(__DIR__ . '/../vendor/others')
 		->register();
 

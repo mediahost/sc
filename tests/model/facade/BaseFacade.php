@@ -42,7 +42,7 @@ abstract class BaseFacade extends Tester\TestCase
 
 		$this->schemaTool = new SchemaTool($this->em);
 		
-		\Tester\Environment::lock('db', TEMP_DIR);
+		\Tester\Environment::lock('db', LOCK_DIR);
 	}
 	
 	public function setUp()

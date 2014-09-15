@@ -40,7 +40,7 @@ class InstallerTest extends Tester\TestCase
 		$this->container = $container;
 		$this->container->callInjects($this);
 		$this->schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
-		\Tester\Environment::lock('db', $this->container->getParameters()['tempDir']);
+		\Tester\Environment::lock('db', LOCK_DIR);
 	}
 
 	private function getClasses()

@@ -52,7 +52,7 @@ class AuthenticatorTest extends Tester\TestCase
 		$this->container->callInjects($this);
 		$this->schemaTool = new SchemaTool($this->em);
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
-		\Tester\Environment::lock('db', TEMP_DIR);
+		\Tester\Environment::lock('db', LOCK_DIR);
 	}
 	
 	public function setUp()
