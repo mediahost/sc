@@ -19,8 +19,8 @@ $_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/../www/index.php';
 Tester\Environment::setup();
 
 $configurator = new Nette\Configurator;
-//$configurator->setDebugMode(TRUE);
-$configurator->enableDebugger(__DIR__ . '/../log');
+$configurator->setDebugMode(TRUE);
+//$configurator->enableDebugger(__DIR__ . '/../log');
 $configurator->setTempDirectory(TEMP_DIR);
 $configurator->createRobotLoader()
 		->addDirectory(__DIR__ . '/../app')
