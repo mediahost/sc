@@ -32,6 +32,7 @@ services:
 			- allow('guest', 'front')
 			- allow('signed', 'dashboard', 'view')
 			- allow('signed', 'user_settings', 'view')
+			- allow('signed', 'user_settings', 'authorization')
 
 			- allow('candidate', 'candidate', 'view')
 			- allow('company', 'company', 'view')

@@ -8,6 +8,7 @@ use Nette\Security\Identity;
 /** Application */
 use App\Components\Sign,
 	App\Model\Storage,
+	App\Model\Storage\RegistrationStorage,
 	App\Model\Facade;
 
 
@@ -104,11 +105,15 @@ class SignPresenter extends BasePresenter
 	public function actionRegistration($source = NULL)
 	{
 		$this->isLoggedIn();
+		
+		if ($source === NULL) {
+			$source = RegistrationStorage::SOURCE_APP;
+		}
 
 		if (!$this->registrationStorage->isSource($source)) {
 			$this->redirect('in');
 		} else {
-			if ($source === NULL) {
+			if ($source === RegistrationStorage::SOURCE_APP) {
 				$this->registrationStorage->wipe();
 			}
 		}

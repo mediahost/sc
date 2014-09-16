@@ -1,0 +1,38 @@
+
+{block content}
+		
+<table class="table table-striped table-bordered table-advance table-hover">
+	<thead>
+		<tr>
+			<th>Method</th>
+			<th>Status \ Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		{foreach $sources as $source}
+			<tr>
+			<div>
+				<td>{$source['name']}</td>
+				<td>
+					{$source['status']}
+					
+					{if $source['action']}
+					\
+					{if isset($source['plink'])}
+						<a href="{plink $source['plink']}">
+					{else}
+						{if isset($source['arg'])}
+							<a n:href="$source['link'] $source['arg']">
+						{else}
+							<a n:href="$source['link']">
+						{/if}
+					{/if}
+					{$source['action']}
+					{/if}
+					</a>
+				</td>
+			</div>
+			</tr>
+		{/foreach}
+	</tbody>
+</table>

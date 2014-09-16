@@ -19,7 +19,11 @@ use App\Model\Entity;
  */
 class RegistrationStorage extends \Nette\Object
 {
-
+	
+	const SOURCE_APP = 'app';
+	const SOURCE_FACEBOOK = 'facebook';
+	const SOURCE_TWITTER = 'twitter';
+	
 	/** @var Session */
 	public $session;
 	
@@ -30,7 +34,7 @@ class RegistrationStorage extends \Nette\Object
 	 * List of valid sources names.
 	 * @var array
 	 */
-	private $sources = [NULL, 'facebook', 'twitter'];
+	private $sources = [self::SOURCE_APP, self::SOURCE_FACEBOOK, self::SOURCE_TWITTER];
 
 	/**
 	 * An array with required items in User entity for complete registration.
@@ -79,11 +83,11 @@ class RegistrationStorage extends \Nette\Object
 
 		// Recognize source type
 		switch ($source) {
-			case 'facebook':
+			case self::SOURCE_FACEBOOK:
 				$this->storeFromFacebook($data, $token);
 				break;
 
-			case 'twitter':
+			case self::SOURCE_TWITTER:
 				$this->storeFromTwitter($data, $token);
 				break;
 
@@ -115,7 +119,7 @@ class RegistrationStorage extends \Nette\Object
 		$data = $this->checkKeys($this->facebookKeys, $data);
 
 		$this->auth->setKey($data->id)
-				->setSource('facebook')
+				->setSource(self::SOURCE_FACEBOOK)
 				->setToken($token);
 
 		$this->user->setMail($data->email)
@@ -134,7 +138,7 @@ class RegistrationStorage extends \Nette\Object
 		$data = $this->checkKeys($this->twitterKeys, $data);
 
 		$this->auth->setKey($data->id)
-				->setSource('twitter')
+				->setSource(self::SOURCE_TWITTER)
 				->setToken($token);
 
 		$this->user->setMail(NULL)
@@ -292,12 +296,21 @@ class RegistrationStorage extends \Nette\Object
 
 	/**
 	 * Check if is the source name valid.
-	 * @param type $source
+	 * @param string $source
 	 */
 	public function isSource($source)
 	{
 		return in_array($source, $this->sources);
 	}
+
+	/**
+	 * @param array
+	 */
+	public function getSources()
+	{
+		return $this->sources;
+	}
+	
 }
 
 class RegistrationStorageException extends \Exception

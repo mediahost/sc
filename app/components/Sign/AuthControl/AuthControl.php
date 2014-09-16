@@ -2,44 +2,43 @@
 
 namespace App\Components\Sign;
 
-/** Nette */
+/* Nette */
+
 use Nette\Application\UI\Form,
 	Nette\Security\Identity,
 	Nette\Utils;
-		
-/** Application */
+
+/* Application */
 use App\Components,
 	App\Model\Storage,
+	App\Model\Storage\RegistrationStorage,
 	App\Model\Facade,
 	App\Model\Entity;
 
-/** Facebook */
+/* Facebook */
 use Kdyby\Facebook\Facebook,
 	Kdyby\Facebook\Dialog\LoginDialog,
 	Kdyby\Facebook\FacebookApiException;
 
-/** Twitter */
+/* Twitter */
 use Netrium\Addons\Twitter\Authenticator as Twitter,
 	Netrium\Addons\Twitter\AuthenticationException as TwitterException;
 
-
 /**
  * AuthControl provides login or registration via AOuth and aplication.
- *
- * @author Martin Šifra <me@martinsifra.cz>
  */
 class AuthControl extends Components\BaseControl
 {
 
-	/** @var Storage\RegistrationStorage @inject */
+	/** @var RegistrationStorage @inject */
 	public $storage;
 
 	/** @var Facade\RegistrationFacade @inject */
 	public $registrationFacade;
-	
+
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
 
@@ -55,7 +54,15 @@ class AuthControl extends Components\BaseControl
 	/** @var Storage\MessageStorage @inject */
 	public $messages;
 
+	/** @var \Kdyby\Doctrine\EntityDao */
+	private $authDao;
 
+	/** @var bool Force registration without required data. */
+	private $force = FALSE;
+
+	/**
+	 * Registration form.
+	 */
 	public function renderRegistration()
 	{
 		$template = $this->template;
@@ -64,6 +71,9 @@ class AuthControl extends Components\BaseControl
 		$template->render();
 	}
 
+	/**
+	 * Icons provides login.
+	 */
 	public function renderIcons()
 	{
 		$template = $this->template;
@@ -72,13 +82,94 @@ class AuthControl extends Components\BaseControl
 	}
 
 	/**
-	 * Register form factory.
+	 * Activation and deactivation.
+	 */
+	public function renderConnect()
+	{
+		$template = $this->template;
+
+		$sources = [
+			RegistrationStorage::SOURCE_APP => [
+				'name' => 'SourceCode',
+				'status' => 'deactivated',
+				'action' => 'activate',
+				'plink' => ':Admin:UserSettings:SetPassword'
+			],
+			RegistrationStorage::SOURCE_FACEBOOK => [
+				'name' => 'Facebook',
+				'status' => 'deactivated',
+				'action' => 'activate',
+				'link' => 'facebook-open!'
+			],
+			RegistrationStorage::SOURCE_TWITTER => [
+				'name' => 'Twitter',
+				'status' => 'deactivated',
+				'action' => 'activate',
+				'link' => 'twitter!'
+			]
+		];
+
+		$user = $this->userFacade->find($this->presenter->user->id);
+		$auths = $this->authFacade->findByUser($user);
+		
+		$count = count($auths);
+		$lastAuth = $auths[0]->source;
+		
+		$template->auths = $auths;
+		
+		foreach ($auths as $auth) {
+			switch ($auth->source) {
+				case RegistrationStorage::SOURCE_APP:
+					$sources[RegistrationStorage::SOURCE_APP]['status'] = 'active';
+					$sources[RegistrationStorage::SOURCE_APP]['action'] = 'deactivate';
+					unset($sources[RegistrationStorage::SOURCE_APP]['plink']);
+					$sources[RegistrationStorage::SOURCE_APP]['link'] = 'deactivate!';
+					$sources[RegistrationStorage::SOURCE_APP]['arg'] = $auth->id;
+					break;
+				case RegistrationStorage::SOURCE_FACEBOOK:
+					$sources[RegistrationStorage::SOURCE_FACEBOOK]['status'] = 'active';
+					$sources[RegistrationStorage::SOURCE_FACEBOOK]['action'] = 'deactivate';
+					$sources[RegistrationStorage::SOURCE_FACEBOOK]['link'] = 'deactivate!';
+					$sources[RegistrationStorage::SOURCE_FACEBOOK]['arg'] = $auth->id;
+					break;
+				case RegistrationStorage::SOURCE_TWITTER:
+					$sources[RegistrationStorage::SOURCE_TWITTER]['status'] = 'active';
+					$sources[RegistrationStorage::SOURCE_TWITTER]['action'] = 'deactivate';
+					$sources[RegistrationStorage::SOURCE_TWITTER]['link'] = 'deactivate!';
+					$sources[RegistrationStorage::SOURCE_TWITTER]['arg'] = $auth->id;
+					break;
+				default:
+					break;
+			}
+		}
+		
+		if ($count < 2) {
+			$sources[$lastAuth]['action'] = NULL;
+		}
+		
+		$template->sources = $sources;
+
+		$template->setFile(__DIR__ . '/connect.latte');
+		$template->render();
+	}
+	
+	/**
+	 * Activation and deactivation.
+	 */
+	public function renderSetPassword()
+	{
+		$template = $this->template;
+		$template->setFile(__DIR__ . '/setPassword.latte');
+		$template->render();
+	}
+
+	/**
 	 * @return Form
 	 */
 	protected function createComponentRegisterForm()
 	{
-
 		$form = new Form();
+		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		if ($this->storage->isRequired('name')) {
@@ -93,7 +184,7 @@ class AuthControl extends Components\BaseControl
 					->addRule(Form::EMAIL, 'Fill right e-mail format')
 					->addRule(function(\Nette\Forms\Controls\TextInput $item) {
 						if (!$this->storage->isOAuth()) { // Check just for application login
-							return $this->authFacade->isUnique($item->value, 'app');
+							return $this->authFacade->isUnique($item->value, RegistrationStorage::SOURCE_APP);
 						}
 						return TRUE;
 					}, 'This e-mail is registered yet!');
@@ -155,14 +246,14 @@ class AuthControl extends Components\BaseControl
 			// Registration via aplication form
 			$reg = $this->storage->toRegistration();
 			$reg->setKey($values->reg_mail)
-					->setSource('app')
+					->setSource(RegistrationStorage::SOURCE_APP)
 					->setPassword($values->reg_password);
 
 			$this->registerTemporarily($reg);
 		}
 	}
 
-	/** 
+	/**
 	 * Component that process AOuth via Facebook.
 	 * @return LoginDialog
 	 */
@@ -183,7 +274,7 @@ class AuthControl extends Components\BaseControl
 
 			try {
 				$data = $fb->api('/me');
-				$source = 'facebook';
+				$source = RegistrationStorage::SOURCE_FACEBOOK;
 
 				$this->process($source, $fb->getUser(), $data, $fb->getAccessToken());
 			} catch (FacebookApiException $e) {
@@ -195,10 +286,64 @@ class AuthControl extends Components\BaseControl
 
 		return $dialog;
 	}
+	
+	/**
+	 * @return Form
+	 */
+	protected function createComponentSetPasswordForm()
+	{
+		$form = new Form();
+		$form->setTranslator($this->translator);
+		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
+		
+		$form->addText('reg_mail', 'E-mail')
+				->setEmptyValue($this->presenter->user->getIdentity()->mail)
+				->setDisabled();
+
+		$form->addPassword('reg_password', 'Password')
+				->setRequired('Please enter your password')
+				->setAttribute('placeholder', 'Password');
+
+		$form->addPassword('reg_password_verify', 'Re-type Your Password')
+				->setAttribute('placeholder', 'Re-type Your Password')
+				->addConditionOn($form['reg_password_verify'], Form::FILLED)
+				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['reg_password']);
+
+		$form->addSubmit('save', 'Save');
+		$form->addSubmit('cancel', 'Back')
+				->setValidationScope(FALSE)
+				->onClick = $this->setPasswordFormCanceled;
+
+		$form->onSuccess[] = $this->setPasswordFormSucceeded;
+		return $form;
+	}
+	
+	public function setPasswordFormCanceled(\Nette\Forms\Controls\SubmitButton $button)
+	{
+		$this->presenter->redirect(':Admin:UserSettings:Authorization');
+	}
+
+	/**
+	 * @param Form $form
+	 * @param Utils\ArrayHash $values
+	 */
+	public function setPasswordFormSucceeded(Form $form, $values)
+	{
+		$mail = $this->presenter->user->getIdentity()->mail;
+
+		$auth = new Entity\Auth();
+		$auth->source = RegistrationStorage::SOURCE_APP;
+		$auth->key = $mail;
+		$auth->user = $this->userFacade->findByMail($mail);
+		$auth->password = $values->reg_password;
+		$this->authDao->save($auth);
+		
+		$this->presenter->redirect(':Admin:UserSettings:Authorization');
+	}
 
 	/**
 	 * Handle processing Twitter OAuth.
-	 * @throws NS\AuthenticationException
+	 * @throws \Nette\Security\AuthenticationException
 	 */
 	public function handleTwitter()
 	{
@@ -206,13 +351,30 @@ class AuthControl extends Components\BaseControl
 
 		try {
 			$data = $this->twitter->tryAuthenticate();
-			$source = 'twitter';
+			$source = RegistrationStorage::SOURCE_TWITTER;
 
 			$this->process($source, $data['user']->id, $data['user'], $data['accessToken']['key']);
 		} catch (TwitterException $e) {
 			\Tracy\Debugger::log($e->getMessage(), 'twitter');
 
-			throw new \Nette\Security\AuthenticationException('Twitter authentication did not approve');
+			throw new \Nette\Security\AuthenticationException('Twitter authentication did not approve.');
+		}
+	}
+
+	public function handleDeactivate($id)
+	{
+		$auth = $this->authDao->findOneBy(['id' => $id]);
+		
+
+		if ($auth && count($this->authFacade->findByUser($auth->user)) > 1) {
+			$this->authDao->delete($auth);
+			$this->presenter->flashMessage('Connection has been deactivated.');
+		}
+
+		if ($this->presenter->isAjax()) {
+			$this->redrawControl();
+		} else {
+			$this->redirect('this');
 		}
 	}
 
@@ -228,17 +390,34 @@ class AuthControl extends Components\BaseControl
 		if (!$auth = $this->authFacade->findByKey($source, $id)) {
 
 			$this->storage->store($source, $data, $token);
-
-			if ($this->storage->isRequired()) {
-				$this->presenter->redirect(':Front:Sign:Registration', $source);
+			
+			if ($this->force === TRUE) {
+				$this->storage->user->mail = $this->presenter->user->getIdentity()->mail;
+				
+				if ($source === RegistrationStorage::SOURCE_APP) {
+					$this->presenter->redirect(':Admin:UserSetings:SetPassword');
+				} else {
+					$user = $this->mergeOrRegister();
+				}
+				
+				$this->presenter->redirect(':Admin:UserSettings:Authorization');
 			} else {
-				$user = $this->mergeOrRegister();
+				if ($this->storage->isRequired()) {
+					$this->presenter->redirect(':Front:Sign:Registration', $source);
+				} else {
+					$user = $this->mergeOrRegister();
+				}
 			}
 
 			$this->storage->wipe();
 		} else {
-			$user = $auth->user;
-			$this->authFacade->updateAccessToken($auth, $token);
+			if ($this->force === TRUE) {
+				$this->presenter->flashMessage('This account is connected to another user!', 'warning');
+				$this->presenter->redirect(':Admin:UserSettings:Authorization');
+			} else {
+				$user = $auth->user;
+				$this->authFacade->updateAccessToken($auth, $token);
+			}
 		}
 
 		// Login
@@ -290,6 +469,19 @@ class AuthControl extends Components\BaseControl
 		} else {
 			return $this->registrationFacade->register($this->storage->user, $this->storage->auth);
 		}
+	}
+
+	/**
+	 * @param bool $force
+	 */
+	public function setForce($force = TRUE)
+	{
+		$this->force = $force;
+	}
+
+	public function injectEntityManager(\Kdyby\Doctrine\EntityManager $em)
+	{
+		$this->authDao = $em->getDao(Entity\Auth::getClassName());
 	}
 
 }
