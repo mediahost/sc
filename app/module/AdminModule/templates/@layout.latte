@@ -65,7 +65,7 @@
                             <!-- BEGIN BREADCRUMB-->
                             <ul class="page-breadcrumb breadcrumb" n:block="breadcrumb">
                                 {block breadcrumbActions}
-                                <li class="btn-group">
+                                <li class="btn-group" n:if="$user->isAllowed('admin', 'add')">
                                     <button type="button" 
                                             class="btn blue dropdown-toggle" 
                                             data-toggle="dropdown" 

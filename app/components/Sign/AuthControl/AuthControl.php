@@ -306,7 +306,7 @@ class AuthControl extends Components\BaseControl
 
 		$form->addPassword('reg_password_verify', 'Re-type Your Password')
 				->setAttribute('placeholder', 'Re-type Your Password')
-				->addConditionOn($form['reg_password_verify'], Form::FILLED)
+				->addConditionOn($form['reg_password'], Form::FILLED)
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['reg_password']);
 
 		$form->addSubmit('save', 'Save');

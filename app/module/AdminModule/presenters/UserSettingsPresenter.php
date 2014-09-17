@@ -43,13 +43,8 @@ class UserSettingsPresenter extends BasePresenter
 	 */
 	public function actionSetPassword()
 	{
-		$mail = $this->user->getIdentity()->mail;
 		
-		if ($this->authFacade->findByMail($mail)) {
-			$this->redirect('authorization');
-		}
 	}
-	
 
 // <editor-fold defaultstate="collapsed" desc="Components">
 
