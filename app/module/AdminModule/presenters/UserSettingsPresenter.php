@@ -16,6 +16,15 @@ class UserSettingsPresenter extends BasePresenter
 	/** @var Sign\IAuthControlFactory @inject */
 	public $iAuthControlFactory;
 
+	/** @var Sign\IDeleteControlFactory @inject */
+	public $iDeleteControlFactory;
+	
+	/** @var \Kdyby\Doctrine\EntityDao */
+	private $userDao;
+	
+	/** @var \App\Model\Facade\UserFacade @inject */
+	private $userFacade;
+	
 	/**
 	 * @secured
 	 * @resource('user_settings')
@@ -50,13 +59,33 @@ class UserSettingsPresenter extends BasePresenter
 		}
 	}
 	
+	/**
+	 * @secured
+	 * @resource('user_settings')
+	 * @privilege('delete')
+	 */
+	public function actionDelete()
+	{
 
+	}
+	
+	public function injectEntityManager(\Kdyby\Doctrine\EntityManager $em)
+	{
+		$this->userDao = $em->getDao(\App\Model\Entity\User::getClassName());
+	}
+	
 // <editor-fold defaultstate="collapsed" desc="Components">
 
 	/** @return Sign\AuthControl */
 	protected function createComponentAuth()
 	{
 		return $this->iAuthControlFactory->create();
+	}
+	
+	/** @return Sign\DeleteControl */
+	protected function createComponentDelete()
+	{
+		return $this->iDeleteControlFactory->create();
 	}
 
 // </editor-fold>

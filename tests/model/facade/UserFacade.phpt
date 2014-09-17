@@ -139,6 +139,16 @@ class UserFacadeTest extends BaseFacade
 		Assert::same($this->user->recoveryToken, $user->recoveryToken);
 		Assert::equal($this->user->recoveryExpiration, $user->recoveryExpiration);
 	}
+	
+	public function testHardDelete()
+	{
+		$id = $this->user->id;
+		
+		$this->userFacade->hardDelete($id);
+		
+		Assert::count(0, $this->authFacade->findByUser($this->user));
+		Assert::null($this->userDao->find($id));
+	}
 
 }
 
