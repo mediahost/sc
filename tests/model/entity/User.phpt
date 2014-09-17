@@ -100,7 +100,12 @@ class UserTest extends Tester\TestCase
 		$roleB = (new Entity\Role())->setName('Role B');
 		
 		$this->user->addRole($roleA);
+		Assert::count(1, $this->user->roles);
+		$this->user->addRole($roleB);
+		Assert::count(2, $this->user->roles);
 		$this->user->removeRole($roleA);
+		Assert::count(1, $this->user->roles);
+		$this->user->removeRole($roleB);
 		Assert::count(0, $this->user->roles);
 	}
 	
