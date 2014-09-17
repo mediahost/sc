@@ -6,7 +6,8 @@ use Nette,
 	Tester,
 	Tester\Assert;
 
-use App\Model\Entity;
+use App\Model\Entity,
+	Doctrine\ORM\Tools\SchemaTool;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -24,6 +25,33 @@ class UserTest extends Tester\TestCase
 
 	/** @var \App\Model\Entity\User */
 	private $user;
+
+	/** @var Nette\DI\Container */
+	private $container;
+
+	/** @var \Doctrine\ORM\EntityManager @inject */
+	public $em;
+
+	/** @var SchemaTool */
+	private $schemaTool;
+	
+	/** @var Kdyby\Doctrine\EntityDao */
+	private $roleDao;
+	
+	/** @var Kdyby\Doctrine\EntityDao */
+	private $userDao;
+	
+	public function __construct(Nette\DI\Container $container)
+	{
+		$this->container = $container;
+		$this->container->callInjects($this);
+		$this->schemaTool = new SchemaTool($this->em);
+		
+		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
+		$this->userDao = $this->em->getDao(Entity\User::getClassName());
+		
+		\Tester\Environment::lock('db', LOCK_DIR);
+	}
 
 	public function setUp()
 	{
@@ -76,12 +104,16 @@ class UserTest extends Tester\TestCase
 	
 	public function testGetRolesKeys()
 	{
-		$roleA = (new Entity\Role())->setName('Role A');
-		$roleB = (new Entity\Role())->setName('Role B');
-		$roleC = (new Entity\Role())->setName('Role C');
+		$this->schemaTool->updateSchema($this->getClasses());
 		
-		$this->user->addRole([$roleB, $roleA, $roleC]);
-		Assert::same([NULL, NULL, NULL], $this->user->getRolesKeys());
+		$roleA = $this->roleDao->save((new Entity\Role())->setName('Role A'));
+		$roleB = $this->roleDao->save((new Entity\Role())->setName('Role B'));
+		$roleC = $this->roleDao->save((new Entity\Role())->setName('Role C'));
+		
+		$this->user->addRole([$roleB, $roleC, $roleA, $roleA, $roleC]);
+		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->getRolesKeys());
+		
+		$this->schemaTool->dropSchema($this->getClasses());
 	}
 	
 	public function testGetRolesPairs()
@@ -106,9 +138,28 @@ class UserTest extends Tester\TestCase
 	
 	public function testToArray()
 	{
+		$this->schemaTool->updateSchema($this->getClasses());
+		
+		$roleA = $this->roleDao->save((new Entity\Role())->setName('Role A'));
+		$roleB = $this->roleDao->save((new Entity\Role())->setName('Role B'));
+
 		$this->user->mail = self::U_MAIL;	
-		$this->user->name = self::U_NAME;		
-		Assert::true(TRUE);
+		$this->user->name = self::U_NAME;
+		$this->user->addRole([$roleB, $roleA]);
+		
+		$user = $this->userDao->save($this->user);
+		$array = $user->toArray();
+		
+		Assert::same($user->id, $array['id']);
+		Assert::same(self::U_MAIL, $array['mail']);
+		Assert::same(self::U_NAME, $array['name']);
+		Assert::type('array', $array['role']);
+		Assert::type(Entity\Role::getClassName(), $array['role'][0]);
+		Assert::same('Role B', $array['role'][0]->name);
+		Assert::type(Entity\Role::getClassName(), $array['role'][1]);
+		Assert::same('Role A', $array['role'][1]->name);
+
+		$this->schemaTool->dropSchema($this->getClasses());
 	}
 
 	public function testSetAndGet()
@@ -156,8 +207,16 @@ class UserTest extends Tester\TestCase
 		Assert::null($this->user->recoveryToken);
 		Assert::null($this->user->recoveryExpiration);
 	}
+	
+	private function getClasses()
+	{
+		return [
+			$this->em->getClassMetadata('App\Model\Entity\User'),
+			$this->em->getClassMetadata('App\Model\Entity\Role')
+		];
+	}
 
 }
 
-$test = new UserTest();
+$test = new UserTest($container);
 $test->run();

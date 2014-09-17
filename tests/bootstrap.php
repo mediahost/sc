@@ -1,5 +1,8 @@
 <?php
 
+// Increase default timeot limit because of locks on DB.
+set_time_limit(90);
+
 require __DIR__ . '/../vendor/autoload.php';
 
 if (!class_exists('Tester\Assert')) {
@@ -19,7 +22,7 @@ $_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/../www/index.php';
 Tester\Environment::setup();
 
 $configurator = new Nette\Configurator;
-$configurator->setDebugMode(TRUE);
+//$configurator->setDebugMode(TRUE);
 //$configurator->enableDebugger(__DIR__ . '/../log');
 $configurator->setTempDirectory(TEMP_DIR);
 $configurator->createRobotLoader()
