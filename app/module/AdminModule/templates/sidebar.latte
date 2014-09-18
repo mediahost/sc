@@ -44,8 +44,8 @@
                 </a>
             </li>
 
-            <li  n:if="$user->isAllowed('admin', 'view')"
-                 class="{ifCurrent Users:*} active{/ifCurrent} last">
+            <li n:if="$user->isAllowed('admin', 'view')"
+                class="{ifCurrent Users:*} active{/ifCurrent}">
                 <a n:href="Users:">
                     <i class="fa fa-users"></i>
                     <span class="title">
@@ -54,6 +54,39 @@
                     <span class="selected">
                     </span>
                 </a>
+            </li>
+
+            <li class="{ifCurrent UserSettings:*} active{/ifCurrent} last">
+                <a n:href="UserSettings:">
+                    <i class="icon-user"></i>
+                    <span class="title">
+                        {_'My Profile'}
+                    </span>
+                    <span class="selected"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="{ifCurrent UserSettings:} active{/ifCurrent}">
+                        <a n:href="UserSettings:">
+                            <i class="icon-eye"></i>
+                            <span class="badge badge-info badge-roundless">{_'demo'}</span>
+                            {_'Overview'}
+                        </a>
+                    </li>
+                    <li class="{ifCurrent UserSettings:setPassword} active{/ifCurrent}">
+                        <a n:href="UserSettings:setPassword">
+                            <i class="icon-key"></i>
+                            <span class="badge badge-warning badge-roundless">{_'new'}</span>
+                            {_'Set Password'}
+                        </a>
+                    </li>
+                    <li class="{ifCurrent UserSettings:authorization} active{/ifCurrent}">
+                        <a n:href="UserSettings:authorization">
+                            <i class="icon-feed"></i>
+                            <span class="badge badge-warning badge-roundless">{_'new'}</span>
+                            {_'Connect Manager'}
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
         <!-- END SIDEBAR MENU -->
