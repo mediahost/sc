@@ -1,6 +1,7 @@
 services:
 	# Components
 	- {implement: App\Components\Sign\IAuthControlFactory, inject: yes}
+	- {implement: App\Components\Sign\IDeleteControlFactory, inject: yes}
 	- {implement: App\Components\Sign\ISignInControlFactory, inject: yes}
 	- {implement: App\Components\Sign\ISignOutControlFactory, inject: yes}
 	- {implement: App\Components\Sign\IForgottenControlFactory, inject: yes}

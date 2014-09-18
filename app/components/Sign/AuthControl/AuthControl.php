@@ -366,9 +366,13 @@ class AuthControl extends Components\BaseControl
 		$auth = $this->authDao->findOneBy(['id' => $id]);
 		
 
-		if ($auth && count($this->authFacade->findByUser($auth->user)) > 1) {
-			$this->authDao->delete($auth);
-			$this->presenter->flashMessage('Connection has been deactivated.');
+		if ($auth) {
+			if (count($this->authFacade->findByUser($auth->user)) > 1) {
+				$this->authDao->delete($auth);
+				$this->presenter->flashMessage('Connection has been deactivated.');
+			} else {
+				$this->presenter->flashMessage('Last login method is not possible deactivate.');
+			}
 		}
 
 		if ($this->presenter->isAjax()) {

@@ -35,16 +35,6 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\ManyToMany(targetEntity="Role", fetch="EAGER")
 	 */
 	protected $roles;
-
-    /**
-     * @ORM\Column(type="string", length=256, nullable=true)
-     */
-    protected $firstname;
-    
-    /**
-     * @ORM\Column(type="string", length=256, nullable=true)
-     */
-    protected $surname;
 	
     /**
      * @ORM\Column(type="string", length=256, nullable=true)

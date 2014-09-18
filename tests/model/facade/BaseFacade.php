@@ -15,13 +15,13 @@ abstract class BaseFacade extends Tester\TestCase
 {
 
 	/** @var Nette\DI\Container */
-	private $container;
+	protected $container;
 
 	/** @var \Doctrine\ORM\EntityManager @inject */
 	public $em;
 
 	/** @var SchemaTool */
-	public $schemaTool;
+	protected $schemaTool;
 
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
