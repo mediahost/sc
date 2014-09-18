@@ -46,6 +46,16 @@ class UserSettingsPresenter extends BasePresenter
 		
 	}
 
+	/**
+	 * @secured
+	 * @resource('user_settings')
+	 * @privilege('authorization')
+	 */
+	public function actionSettings()
+	{
+		
+	}
+
 // <editor-fold defaultstate="collapsed" desc="Components">
 
 	/** @return Sign\AuthControl */
