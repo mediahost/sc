@@ -19,17 +19,6 @@ class UserSettingsPresenter extends BasePresenter
 	/** @var Sign\IDeleteControlFactory @inject */
 	public $iDeleteControlFactory;
 
-	/** @var \Kdyby\Doctrine\EntityDao */
-	private $userDao;
-
-	/** @var \App\Model\Facade\UserFacade @inject */
-	private $userFacade;
-
-	public function injectEntityManager(\Kdyby\Doctrine\EntityManager $em)
-	{
-		$this->userDao = $em->getDao(\App\Model\Entity\User::getClassName());
-	}
-
 	/**
 	 * @secured
 	 * @resource('user_settings')
