@@ -16,7 +16,7 @@ class UserSettingsPresenter extends BasePresenter
 	/** @var Sign\IAuthControlFactory @inject */
 	public $iAuthControlFactory;
 
-	/** @var Sign\IDeleteControlFactory @inject */
+	/** @var \App\Components\IDeleteControlFactory @inject */
 	public $iDeleteControlFactory;
 
 	/**
@@ -32,41 +32,11 @@ class UserSettingsPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('user_settings')
-	 * @privilege('authorization')
-	 */
-	public function actionAuthorization()
-	{
-		$this['auth']->setForce();
-	}
-
-	/**
-	 * @secured
-	 * @resource('user_settings')
-	 * @privilege('authorization')
-	 */
-	public function actionSetPassword()
-	{
-		
-	}
-
-	/**
-	 * @secured
-	 * @resource('user_settings')
-	 * @privilege('delete')
-	 */
-	public function actionDelete()
-	{
-		
-	}
-
-	/**
-	 * @secured
-	 * @resource('user_settings')
-	 * @privilege('authorization')
+	 * @privilege('settings')
 	 */
 	public function actionSettings()
 	{
-		
+		$this['auth']->setForce();
 	}
 
 // <editor-fold defaultstate="collapsed" desc="Components">
@@ -77,7 +47,7 @@ class UserSettingsPresenter extends BasePresenter
 		return $this->iAuthControlFactory->create();
 	}
 
-	/** @return Sign\DeleteControl */
+	/** @return DeleteControl */
 	protected function createComponentDelete()
 	{
 		return $this->iDeleteControlFactory->create();

@@ -31,7 +31,7 @@ services:
 
 			- allow('guest', 'front')
 			- allow('signed', 'dashboard', 'view')
-			- allow('signed', 'user_settings', ['view', 'authorization', 'delete'])
+			- allow('signed', 'user_settings', ['view', 'settings', 'delete'])
 
 			- allow('candidate', 'candidate', 'view')
 			- allow('company', 'company', 'view')

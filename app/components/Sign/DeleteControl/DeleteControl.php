@@ -1,6 +1,6 @@
 <?php
 
-Namespace App\Components\Sign;
+Namespace App\Components;
 
 /* Nette */
 use Nette\Application\UI;
@@ -18,15 +18,6 @@ class DeleteControl extends Components\BaseControl
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
 
-	/** @var Facade\AuthFacade @inject */
-	public $authFacade;
-
-	/** @var \Nette\Mail\IMailer @inject */
-	public $mailer;
-
-	/** @var \App\Model\Storage\MessageStorage @inject */
-	public $messages;
-
 	/**
 	 * @return UI\Form
 	 */
@@ -36,27 +27,17 @@ class DeleteControl extends Components\BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
-		$form->addSubmit('confirm', 'Yes');
-		$form->addSubmit('cancel', 'No')
-				->setValidationScope(FALSE)
-				->onClick[] = $this->deleteFormCanceled;
+		$form->addSubmit('delete', 'Delete');
 
 		$form->onSuccess[] = $this->deleteFormSucceeded;
 		return $form;
 	}
 
-	public function deleteFormCanceled(\Nette\Forms\Controls\SubmitButton $button)
-	{
-		$this->presenter->redirect(":Admin:UserSettings:");
-	}
-
 	public function deleteFormSucceeded(UI\Form $form, $values)
 	{
-		if ($form['confirm']->isSubmittedBy()) {
-			$this->userFacade->hardDelete($this->presenter->user->id);
-			$this->presenter->user->logout();
-			$this->presenter->redirect(":Front:Sign:In");
-		}
+		$this->userFacade->hardDelete($this->presenter->user->id);
+		$this->presenter->user->logout();
+		$this->presenter->redirect(":Front:Sign:In");
 	}
 
 }

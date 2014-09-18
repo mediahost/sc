@@ -93,7 +93,7 @@ class AuthControl extends Components\BaseControl
 				'name' => 'SourceCode',
 				'status' => 'deactivated',
 				'action' => 'activate',
-				'plink' => ':Admin:UserSettings:SetPassword'
+				'plink' => ':Admin:UserSettings:settings#set-password'
 			],
 			RegistrationStorage::SOURCE_FACEBOOK => [
 				'name' => 'Facebook',
@@ -310,17 +310,9 @@ class AuthControl extends Components\BaseControl
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['reg_password']);
 
 		$form->addSubmit('save', 'Save');
-		$form->addSubmit('cancel', 'Back')
-				->setValidationScope(FALSE)
-				->onClick = $this->setPasswordFormCanceled;
 
 		$form->onSuccess[] = $this->setPasswordFormSucceeded;
 		return $form;
-	}
-	
-	public function setPasswordFormCanceled(\Nette\Forms\Controls\SubmitButton $button)
-	{
-		$this->presenter->redirect(':Admin:UserSettings:Authorization');
 	}
 
 	/**
@@ -338,7 +330,8 @@ class AuthControl extends Components\BaseControl
 		$auth->password = $values->reg_password;
 		$this->authDao->save($auth);
 		
-		$this->presenter->redirect(':Admin:UserSettings:Authorization');
+		$this->presenter->flashMessage('Password has been successfuly set!', 'success');
+		$this->presenter->redirect(':Admin:UserSettings:settings#connect-manager');
 	}
 
 	/**
@@ -378,7 +371,7 @@ class AuthControl extends Components\BaseControl
 		if ($this->presenter->isAjax()) {
 			$this->redrawControl();
 		} else {
-			$this->redirect('this');
+			$this->redirect('this#connect-manager');
 		}
 	}
 
@@ -399,12 +392,12 @@ class AuthControl extends Components\BaseControl
 				$this->storage->user->mail = $this->presenter->user->getIdentity()->mail;
 				
 				if ($source === RegistrationStorage::SOURCE_APP) {
-					$this->presenter->redirect(':Admin:UserSetings:SetPassword');
+					$this->presenter->redirect(':Admin:UserSetings:settings#set-password');
 				} else {
 					$user = $this->mergeOrRegister();
 				}
 				
-				$this->presenter->redirect(':Admin:UserSettings:Authorization');
+				$this->presenter->redirect(':Admin:UserSettings:settings#connect-manager');
 			} else {
 				if ($this->storage->isRequired()) {
 					$this->presenter->redirect(':Front:Sign:Registration', $source);
@@ -417,7 +410,7 @@ class AuthControl extends Components\BaseControl
 		} else {
 			if ($this->force === TRUE) {
 				$this->presenter->flashMessage('This account is connected to another user!', 'warning');
-				$this->presenter->redirect(':Admin:UserSettings:Authorization');
+				$this->presenter->redirect(':Admin:UserSettings:settings#connect-manager');
 			} else {
 				$user = $auth->user;
 				$this->authFacade->updateAccessToken($auth, $token);
