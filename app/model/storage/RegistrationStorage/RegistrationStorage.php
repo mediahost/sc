@@ -11,8 +11,6 @@ use App\Model\Entity;
 /**
  * Description of RegistrationStorage
  *
- * @author Martin Šifra <me@martinsifra.cz>
- *
  * @property Entity\Auth $auth
  * @property Entity\User $user
  * @property array $defaults
