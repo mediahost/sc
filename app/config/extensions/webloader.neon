@@ -101,6 +101,7 @@ webloader:
 				- ../assets/scripts/custom/login.js
 				- ../assets/scripts/custom/background.js
 				- ../assets/scripts/custom/components-dropdowns.js
+				- ../assets/scripts/custom/content.js
 				- ../assets/scripts/init.js
 			filters:
 				- @varFilter
