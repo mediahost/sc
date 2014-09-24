@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Model\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * User's personal settings
+ * @ORM\Entity
+ */
+class UserSettings extends \Kdyby\Doctrine\Entities\BaseEntity
+{
+
+    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+
+	/**
+	 * @ORM\Column(type="string", length=2, nullable=false)
+	 */
+	protected $language;
+}

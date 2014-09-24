@@ -41,6 +41,11 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
      */
     protected $name;
 	
+    /**
+	 * @ORM\OneToOne(targetEntity="UserSettings", orphanRemoval=true)
+	 */
+    protected $settings = NULL;
+	
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */

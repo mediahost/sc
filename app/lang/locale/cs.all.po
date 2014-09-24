@@ -1,8 +1,8 @@
 # Gettext keys exported by GettextTranslator and Translation Panel
-# Created: 2014-08-24 13:06:41
+# Created: 2014-09-23 23:08:34
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2014-08-28 15:58+0100\n"
+"PO-Revision-Date: 2014-09-23 23:08+0200\n"
 "Project-Id-Version: Sourcecode\n"
 "POT-Creation-Date: 2014-08-24 12:34+0100\n"
 "Last-Translator: Petr Poupě <pupe.dupe@gmail.com>\n"
@@ -11,11 +11,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"Language: cs_CZ\n"
-"X-Generator: Poedit 1.6.8\n"
+
 
 msgid "Login"
 msgstr "Přihlásit se"
+
+msgid "Logout"
+msgstr "Odhlásit se"
 
 msgid "Registration"
 msgstr "Registrace"
@@ -23,8 +25,45 @@ msgstr "Registrace"
 msgid "Remember me"
 msgstr "Neodhlašovat"
 
-msgid "Username"
+msgid "My Profile"
+msgstr "Můj profil"
+
+msgid "Source-Code"
 msgstr ""
 
-msgid "Password"
+msgid "Settings"
 msgstr ""
+
+msgid "Full Screen"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "demo"
+msgstr ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "new"
+msgstr ""
+
+msgid "ver 2"
+msgstr ""
+
+msgid "New"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Source-Code by Mediahost"
+msgstr ""
+
