@@ -33,7 +33,7 @@ nette:
 		expiration: 14 days
 
 	debugger:
-		email: 'pupe.dupe@gmail.com,g.vvoody@gmail.com'
+		email: 'pupe.dupe@gmail.com,g.vvoody@gmail.com,me@martinsifra.cz'
 
 services:
 	authenticator: App\Model\Authenticator\UserAuthenticator
