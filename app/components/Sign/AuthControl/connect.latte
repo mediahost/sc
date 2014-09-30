@@ -17,10 +17,10 @@
                     {$source['name']}
                 </td>
                 <td class="buttons">
-                    <a n:class="btn, btn-sm, !$isActive ? green" 
-                       {if isset($source['plink'])}href="{plink $source['plink']}"
-                       {elseif isset($source['arg'])}href="{link $source['link'] $source['arg']}"
-                       {else}href="{link $source['link']}"
+                    <a n:class="btn, btn-sm, !$isActive ? green, isset($source['plink']) ? toggleSetPassword" 
+                       {if isset($source['plink'])}href="{plink $source['plink']}"{* set password *}
+                       {elseif isset($source['arg'])}href="{link $source['link'] $source['arg']}"{* deaktivace *}
+                       {else}href="{link $source['link']}"{* aktivace *}
                        {/if}>
                         <i n:class="fa, $isActive ? fa-times : fa-check"></i>
                         {if $isActive}{_'Deactivate'}{else}{_'Activate'}{/if}
