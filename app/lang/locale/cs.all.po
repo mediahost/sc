@@ -1,8 +1,8 @@
 # Gettext keys exported by GettextTranslator and Translation Panel
-# Created: 2014-09-23 23:08:34
+# Created: 2014-09-26 18:19:26
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2014-09-23 23:08+0200\n"
+"PO-Revision-Date: 2014-09-26 18:19+0200\n"
 "Project-Id-Version: Sourcecode\n"
 "POT-Creation-Date: 2014-08-24 12:34+0100\n"
 "Last-Translator: Petr Poupě <pupe.dupe@gmail.com>\n"
@@ -19,19 +19,19 @@ msgstr "Přihlásit se"
 msgid "Logout"
 msgstr "Odhlásit se"
 
+msgid "My Profile"
+msgstr "Můj profil"
+
 msgid "Registration"
 msgstr "Registrace"
 
 msgid "Remember me"
 msgstr "Neodhlašovat"
 
-msgid "My Profile"
-msgstr "Můj profil"
+msgid "Settings"
+msgstr "Nastavení"
 
 msgid "Source-Code"
-msgstr ""
-
-msgid "Settings"
 msgstr ""
 
 msgid "Full Screen"
@@ -65,5 +65,77 @@ msgid "Home"
 msgstr ""
 
 msgid "Source-Code by Mediahost"
+msgstr ""
+
+msgid "Add User"
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Role"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Personal info"
+msgstr ""
+
+msgid "Personal settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Connect manager"
+msgstr ""
+
+msgid "Delete account"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Čeština"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "E-mail"
+msgstr ""
+
+msgid "me@martinsifra.cz"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Please enter your password"
+msgstr ""
+
+msgid "Re-type Your Password"
+msgstr ""
+
+msgid "Passwords must be equal."
+msgstr ""
+
+msgid "Deactivate"
+msgstr ""
+
+msgid "Activate"
+msgstr ""
+
+msgid "Your settings has been saved."
 msgstr ""
 

@@ -13,7 +13,8 @@ class UserListener extends \Nette\Object implements \Kdyby\Events\Subscriber
 		
         return array(
             'Nette\Security\User::onLoggedIn'  => 'userLoggedIn',
-            'Nette\Security\User::onLoggedOut' => 'userLoggedOut'
+            'Nette\Security\User::onLoggedOut' => 'userLoggedOut',
+			'App\Components\User\SettingsControl::onSave' => 'settingsSave'
         );
 	}
 	
@@ -24,7 +25,13 @@ class UserListener extends \Nette\Object implements \Kdyby\Events\Subscriber
 
     public function userLoggedOut(\Nette\Security\User $user)
     {
+		$this->settingsStorage->wipe();
         \Tracy\Debugger::barDump('Uživatel ' . $user->getIdentity()->name . 'byl odhlášen.');
     }
 
+	public function settingsSave($userId, \App\Model\Entity\UserSettings $settings)
+	{
+		\Tracy\Debugger::barDump('Uživatel ' . $user->getIdentity()->name . 'změnil svá osobní nastavení.');
+		$this->settingsStorage->save($userId, $settings);
+	}
 }

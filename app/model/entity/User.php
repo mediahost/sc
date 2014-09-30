@@ -42,7 +42,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
     protected $name;
 	
     /**
-	 * @ORM\OneToOne(targetEntity="UserSettings", orphanRemoval=true)
+	 * @ORM\OneToOne(targetEntity="UserSettings", orphanRemoval=true, fetch="LAZY", cascade={"persist","remove"})
 	 */
     protected $settings = NULL;
 	

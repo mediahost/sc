@@ -33,6 +33,9 @@ class RegistrationFacade extends BaseFacade
 
 	/** @var RoleFacade @inject */
 	private $roleFacade;
+	
+	/** @var \App\Model\Storage\UserSettingsStorage @inject */
+	private $userSettingsStorage;
 
 	protected function init()
 	{
@@ -63,6 +66,7 @@ class RegistrationFacade extends BaseFacade
 	public function register(User $user, Auth $auth)
 	{
 		$user->addAuth($auth);
+		$user->settings = $this->userSettingsStorage->getDefaults();
 
 		$role = $this->roleDao->findOneBy(['name' => Role::ROLE_CANDIDATE]);
 		$user->addRole($role);

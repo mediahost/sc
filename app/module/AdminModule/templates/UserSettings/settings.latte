@@ -20,14 +20,21 @@
 				<span class="after">
 				</span>
 			</li>
-		   <li>
+			<li>
+				<a data-toggle="tab" href="#personal-settings">
+					<i class="icon-shield"></i>
+					{_'Personal settings'}
+					<span class="badge badge-warning badge-roundless">{_'new'}</span>
+				</a>
+			</li>
+			<li>
 				<a data-toggle="tab" href="#set-password">
 					<i class="icon-key"></i>
 					{_'Set password'}
 					<span class="badge badge-warning badge-roundless">{_'new'}</span>
 				</a>
 			</li>
-		   <li>
+			<li>
 				<a data-toggle="tab" href="#connect-manager">
 					<i class="icon-feed"></i>
 					{_'Connect manager'}
@@ -82,6 +89,9 @@
 							Cancel </a>
 					</div>
 				</form>
+			</div>
+			<div id="personal-settings" class="tab-pane">
+				{control settings}
 			</div>
 			<div id="set-password" class="tab-pane">
 				{control auth:setPassword}

@@ -7,3 +7,5 @@ services:
 	- {implement: App\Components\Sign\IRecoveryControlFactory, inject: yes}
 
 	- {implement: App\Components\IDeleteControlFactory, inject: yes}
+
+	- {implement: App\Components\User\ISettingsControlFactory, inject: yes}

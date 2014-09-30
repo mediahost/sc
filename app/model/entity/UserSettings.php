@@ -14,7 +14,7 @@ class UserSettings extends \Kdyby\Doctrine\Entities\BaseEntity
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 	/**
-	 * @ORM\Column(type="string", length=2, nullable=false)
+	 * @ORM\Column(type="string", length=2)
 	 */
 	protected $language;
 }
