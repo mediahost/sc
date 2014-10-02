@@ -1,12 +1,13 @@
 <?php
 
+$name = "site name";
 $username = "name";
 $password = "password";
 $server = "server";
 $domain = "http://example.com";
 
 return array(
-	'my site' => array(
+	$name => array(
 		'remote' => 'ftp://' . $username . ':' . $password . '@' . $server,
 		'local' => '..',
 		'test' => FALSE,
@@ -25,6 +26,8 @@ return array(
 			!www/webtemp/.htaccess
 			*.local.neon
 			*.server.neon
+			*.server_dev.neon
+			*.server_test.neon
 			*.local.example.neon
 		',
 		'allowdelete' => TRUE,
