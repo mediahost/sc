@@ -42,9 +42,9 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
     protected $name;
 	
     /**
-	 * @ORM\OneToOne(targetEntity="UserSettings", orphanRemoval=true, fetch="LAZY", cascade={"persist","remove"})
+	 * @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", orphanRemoval=true, fetch="LAZY", cascade={"persist","remove"})
 	 */
-    protected $settings = NULL;
+    protected $settings;
 	
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)

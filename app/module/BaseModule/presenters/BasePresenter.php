@@ -34,24 +34,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	protected function startup()
 	{
 		parent::startup();
-
 		$this->setLang();
-		
-
-//		$userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
-//		$users = $userDao->findAll();
-//		
-//		foreach ($users as $user) {
-//			if ($user->settings === NULL) {
-//				$settings = new \App\Model\Entity\UserSettings();
-//				$settings->language = NULL;
-//				$user->settings = $settings;
-//				$this->em->persist($user);
-//			}
-//		}
-		
-		$this->em->flush();
-		
 	}
 	
 	public function flashMessage($message, $type = 'info')
@@ -96,11 +79,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 // <editor-fold defaultstate="collapsed" desc="lang">
 	private function setLang()
 	{		
-		// Musím zjistit jesstli došlo ke změně oproti session.
-		if ($this->userSettingsStorage->settings) {
-			$this->lang = $this->userSettingsStorage->language;
-		}
-		
+		$this->userSettingsStorage->language = $this->lang;
 		$this->translator->setLang($this->lang);
 	}
 

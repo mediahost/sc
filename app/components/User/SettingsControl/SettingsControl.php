@@ -57,25 +57,22 @@ class SettingsControl extends Components\BaseControl
 
 		$form->addSubmit('save', 'Save');
 
+		$form->setDefaults([
+			'language' => $this->settingsStorage->language,
+		]);
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
 	public function formSucceeded(UI\Form $form, $values)
 	{
-		$settings = new Entity\UserSettings();
+		$settings = $this->settingsStorage->settings;
 		$settings->language = $values->language;
 		
 		$this->settingsStorage->save($this->presenter->user->id, $settings);
 		
 		$this->presenter->flashMessage('Your settings has been saved.', 'success');
-		$this->presenter->redirect('this');
-	}
-	
-	public function injectEntityManager(EntityManager $em)
-	{
-		$this->em = $em;
-		$this->userDao = $this->em->getDao(Entity\User::getClassName());
+		$this->presenter->redirect('this#personal-settings',['lang' => $settings->language]);
 	}
 
 }

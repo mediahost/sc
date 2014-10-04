@@ -41,9 +41,8 @@ class UserSettingsStorage extends \Nette\Object
 	public function save($userId, $settings)
 	{
 		$user = $this->userDao->find($userId);
-		$user->settings = $settings;
-		$this->em->persist($settings);
-		$this->em->persist($user);
+		$settings->user = $user;
+		$this->em->merge($settings);
 		$this->em->flush();
 		
 		$this->loadSettings($userId);
@@ -52,23 +51,14 @@ class UserSettingsStorage extends \Nette\Object
 	public function loadSettings($userId)
 	{
 		/* @var $settings \App\Model\Entity\UserSettings */
-		$settings = $this->em->createQueryBuilder()
-				->select('us')
-				->from('\App\Model\Entity\UserSettings', 'us')
-				->join('App\Model\Entity\User', 'u')
-				->where('u.id = ?1')
-				->setParameter(1, $userId)
-				->getQuery()
-				->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-		
-		\Tracy\Debugger::barDump($settings);
+		$settings = $this->userDao->find($userId)->settings;
 		
 		if ($settings === NULL) {
 			$this->setDefaults();
 		} else {
-			$entity = new UserSettings();
-			$entity->language = $settings['language'];
-			$this->settings = $entity;
+			$this->em->detach($settings);
+			$settings->user = NULL;
+			$this->settings = $settings;
 		}
 		
 		return $this;
@@ -76,7 +66,6 @@ class UserSettingsStorage extends \Nette\Object
 	
 	public function wipe()
 	{
-//		$this->section->remove();
 		unset($this->section->settings);
 	}
 
@@ -112,7 +101,7 @@ class UserSettingsStorage extends \Nette\Object
 	{
 		$this->section = $session->getSection('userSettings');
 		$this->section->warnOnUndefined = TRUE;
-//		$this->setDefaults();
+
 		if (!isset($this->section->settings)) {
 			$this->setDefaults();
 		}
