@@ -18,6 +18,8 @@
 #################
 *.local.neon
 *.server.neon
+*.server_dev.neon
+*.server_test.neon
 
 #################
 ## Composer
