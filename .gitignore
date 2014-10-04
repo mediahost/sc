@@ -53,7 +53,14 @@ composer.lock
 
 /tmp/*
 /purge/*
+!/www/webtemp/.htaccess
+
+#################
+## PhpStorm
+################
 /deployment/*
 !/deployment/deployment.bat
+!/deployment/deployment_dev.bat
+!/deployment/deployment_test.bat
 !/deployment/deployment.example.php
-!/www/webtemp/.htaccess
+!/deployment/deployment.config.php
