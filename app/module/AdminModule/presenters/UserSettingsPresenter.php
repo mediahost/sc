@@ -13,6 +13,9 @@ class UserSettingsPresenter extends BasePresenter
 	/** @var \App\Model\Facade\AuthFacade @inject */
 	public $authFacade;
 
+	/** @var \App\Model\Facade\UserFacade @inject */
+	public $userFacade;
+
 	/** @var Sign\IAuthControlFactory @inject */
 	public $iAuthControlFactory;
 
@@ -30,6 +33,18 @@ class UserSettingsPresenter extends BasePresenter
 	public function actionDefault()
 	{
 		
+	}
+
+	/**
+	 * @secured
+	 * @resource('user_settings')
+	 * @privilege('delete')
+	 */
+	public function actionDelete()
+	{
+		$this->userFacade->hardDelete($this->user->id);
+		$this->user->logout();
+		$this->redirect(":Front:Sign:In");
 	}
 
 	/**
