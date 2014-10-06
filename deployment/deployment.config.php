@@ -11,31 +11,33 @@ return array(
 			.composer*
 			project.pp[jx]
 			/nbproject
-			deployment
+			/deployment
 			log/*
 			!log/.htaccess
 			temp/*
 			!temp/.htaccess
 			/tests
+			tests/
+			/bin
+			bin/
 			www/webtemp/*
 			!www/webtemp/.htaccess
 			*.local.neon
 			*.server.neon
+			*.server_dev.neon
+			*.server_test.neon
 			*.local.example.neon
 			composer.lock
 			composer.json
 			*.md
 			.bowerrc
 			/app/config/deployment.*
-			/bin
 			/vendor/dg/ftp-deployment
 			*.rst
-			tests/
-			bin/
 		',
 		'allowdelete' => TRUE,
 		'after' => array(
-			
+			$domain . 'install?printHtml=0'
 		),
 		'purge' => array(
 			'temp/cache',
