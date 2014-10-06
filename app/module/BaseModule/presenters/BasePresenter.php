@@ -76,7 +76,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	}
 
 // </editor-fold>
-// <editor-fold defaultstate="collapsed" desc="lang">
+// <editor-fold defaultstate="collapsed" desc="Language">
 	private function setLang()
 	{		
 		$this->userSettingsStorage->language = $this->lang;
