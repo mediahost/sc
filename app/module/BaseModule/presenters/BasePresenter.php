@@ -10,6 +10,12 @@ use Nette;
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
 
+	/** @persistent string */
+	public $lang = 'en';
+	
+	/** @persistent */
+    public $backlink = '';
+	
 	/** @var \Venne\Bridges\Kdyby\DoctrineForms\FormFactoryFactory @inject */
 	public $formFactoryFactory;
 
@@ -21,9 +27,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	/** @var \GettextTranslator\Gettext @inject */
 	public $translator;
-
-	/** @persistent string */
-	public $lang = 'en';
 
 	protected function startup()
 	{

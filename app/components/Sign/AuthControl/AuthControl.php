@@ -429,6 +429,8 @@ class AuthControl extends Components\BaseControl
 	private function login(Entity\User $user)
 	{
 		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+		$this->presenter->restoreRequest($this->presenter->backlink);
+
 		$this->presenter->flashMessage('You have been successfully logged in!', 'success');
 		$this->presenter->redirect(':Admin:Dashboard:');
 	}
