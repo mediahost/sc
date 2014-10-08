@@ -16,9 +16,7 @@ return array(
 			!log/.htaccess
 			temp/*
 			!temp/.htaccess
-			/tests
 			tests/
-			/bin
 			bin/
 			www/webtemp/*
 			!www/webtemp/.htaccess
@@ -37,7 +35,7 @@ return array(
 		',
 		'allowdelete' => TRUE,
 		'after' => array(
-			$domain . 'install?printHtml=0'
+			$domain . '/install?printHtml=0'
 		),
 		'purge' => array(
 			'temp/cache',
