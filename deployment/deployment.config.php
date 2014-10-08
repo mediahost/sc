@@ -41,6 +41,7 @@ return array(
 			'temp/cache',
 			'temp/install',
 			'temp/deployment',
+			'tmp/'
 		),
 		'preprocess' => FALSE,
 		'tempdir' => 'temp/deployment',
