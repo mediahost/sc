@@ -12,5 +12,5 @@ use Nette,
  */
 abstract class BasePresenter extends BaseBasePresenter
 {
-	
+
 }

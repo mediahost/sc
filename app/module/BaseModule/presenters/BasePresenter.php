@@ -27,11 +27,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	/** @var \GettextTranslator\Gettext @inject */
 	public $translator;
+	
+	/** @var \App\Model\Storage\UserSettingsStorage @inject */
+	public $settingsStorage;
+	
+	/** @var \Kdyby\Doctrine\EntityManager @inject */
+	public $em;
 
 	protected function startup()
 	{
 		parent::startup();
-
 		$this->setLang();
 	}
 	
@@ -74,13 +79,21 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	}
 
 // </editor-fold>
-// <editor-fold defaultstate="collapsed" desc="lang">
+
+// <editor-fold defaultstate="collapsed" desc="Language">
 	private function setLang()
 	{
+		// Update settings when changes
+		if ($this->lang !== $this->settingsStorage->language) {
+			$this->settingsStorage
+					->setLanguage($this->lang)
+					->save();
+		}
+		
 		$this->translator->setLang($this->lang);
 	}
-
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="css webloader">
 
 	/** @return CssLoader */
@@ -132,6 +145,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	}
 
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="js webloader">
 
 	/** @return JavaScriptLoader */

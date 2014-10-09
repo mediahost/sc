@@ -1,8 +1,8 @@
 # Gettext keys exported by GettextTranslator and Translation Panel
-# Created: 2014-08-24 13:06:41
+# Created: 2014-09-26 18:19:26
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2014-08-28 15:58+0100\n"
+"PO-Revision-Date: 2014-09-26 18:19+0200\n"
 "Project-Id-Version: Sourcecode\n"
 "POT-Creation-Date: 2014-08-24 12:34+0100\n"
 "Last-Translator: Petr Poupě <pupe.dupe@gmail.com>\n"
@@ -11,11 +11,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"Language: cs_CZ\n"
-"X-Generator: Poedit 1.6.8\n"
+
 
 msgid "Login"
 msgstr "Přihlásit se"
+
+msgid "Logout"
+msgstr "Odhlásit se"
+
+msgid "My Profile"
+msgstr "Můj profil"
 
 msgid "Registration"
 msgstr "Registrace"
@@ -23,8 +28,114 @@ msgstr "Registrace"
 msgid "Remember me"
 msgstr "Neodhlašovat"
 
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Source-Code"
+msgstr ""
+
+msgid "Full Screen"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "demo"
+msgstr ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "new"
+msgstr ""
+
+msgid "ver 2"
+msgstr ""
+
+msgid "New"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid "Source-Code by Mediahost"
+msgstr ""
+
+msgid "Add User"
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
 msgid "Username"
+msgstr ""
+
+msgid "Role"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Personal info"
+msgstr ""
+
+msgid "Personal settings"
+msgstr ""
+
+msgid "Set password"
+msgstr ""
+
+msgid "Connect manager"
+msgstr ""
+
+msgid "Delete account"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "Čeština"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "E-mail"
+msgstr ""
+
+msgid "me@martinsifra.cz"
 msgstr ""
 
 msgid "Password"
 msgstr ""
+
+msgid "Please enter your password"
+msgstr ""
+
+msgid "Re-type Your Password"
+msgstr ""
+
+msgid "Passwords must be equal."
+msgstr ""
+
+msgid "Deactivate"
+msgstr ""
+
+msgid "Activate"
+msgstr ""
+
+msgid "Your settings has been saved."
+msgstr ""
+

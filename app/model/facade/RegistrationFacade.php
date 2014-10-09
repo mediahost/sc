@@ -33,6 +33,9 @@ class RegistrationFacade extends BaseFacade
 
 	/** @var RoleFacade @inject */
 	private $roleFacade;
+	
+	/** @var \App\Model\Storage\UserSettingsStorage @inject */
+	private $userSettingsStorage;
 
 	protected function init()
 	{
@@ -66,6 +69,8 @@ class RegistrationFacade extends BaseFacade
 
 		$role = $this->roleDao->findOneBy(['name' => Role::ROLE_CANDIDATE]);
 		$user->addRole($role);
+		
+		$user->settings = new Entity\UserSettings();
 
 		return $this->userDao->save($user);
 	}

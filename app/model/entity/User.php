@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM,
  * @property string $name
  * @property ArrayCollection $auths
  * @property ArrayCollection $roles
+ * @property UserSettings $settings
  * @property string $recoveryToken
  * @property \DateTime $recoveryExpiration
  */
@@ -40,6 +41,11 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
      * @ORM\Column(type="string", length=256, nullable=true)
      */
     protected $name;
+	
+    /**
+	 * @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", orphanRemoval=true, fetch="LAZY", cascade={"all"})
+	 */
+    protected $settings;
 	
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
@@ -161,6 +167,16 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		$this->recoveryToken = $token;
 		$this->recoveryExpiration = $expiration;
 		
+		return $this;
+	}
+	
+	/**
+	 * @param UserSettings $settings
+	 */
+	public function setSettings(UserSettings $settings)
+	{
+		$settings->user = $this;
+		$this->settings = $settings;
 		return $this;
 	}
 

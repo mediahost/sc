@@ -18,6 +18,8 @@ class UserFacade extends BaseFacade
 
 	/** @var EntityDao */
 	private $authDao;
+	
+	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 
 	protected function init()
 	{
@@ -65,6 +67,7 @@ class UserFacade extends BaseFacade
 
 			$user->addRole($role);
 			$user->addAuth($auth);
+			$user->settings = new Entity\UserSettings();
 
 			return $this->userDao->save($user);
 		}
