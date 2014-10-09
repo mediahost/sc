@@ -67,7 +67,7 @@ class UserFacade extends BaseFacade
 
 			$user->addRole($role);
 			$user->addAuth($auth);
-			$user->settings = $this->userSettingsStorage->getDefaults();
+			$user->settings = new Entity\UserSettings();
 
 			return $this->userDao->save($user);
 		}

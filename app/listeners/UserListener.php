@@ -19,7 +19,7 @@ class UserListener extends \Nette\Object implements \Kdyby\Events\Subscriber
 
 	public function userLoggedIn(\Nette\Security\User $user)
 	{
-		$this->settingsStorage->loadSettings($user->id);
+		$this->settingsStorage->load($user->id);
 	}
 
 	public function userLoggedOut(\Nette\Security\User $user)

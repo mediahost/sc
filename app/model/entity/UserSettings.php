@@ -15,12 +15,12 @@ class UserSettings extends \Kdyby\Doctrine\Entities\BaseEntity
 
     /**
      * @ORM\OneToOne(targetEntity="User", inversedBy="settings", fetch="LAZY")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      **/
     protected $user;
 	
 	/**
-	 * @ORM\Column(type="string", length=2)
+	 * @ORM\Column(type="string", length=2, nullable=true)
 	 */
 	protected $language;
 }

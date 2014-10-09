@@ -66,13 +66,14 @@ class SettingsControl extends Components\BaseControl
 
 	public function formSucceeded(UI\Form $form, $values)
 	{
-		$settings = $this->settingsStorage->settings;
-		$settings->language = $values->language;
-		
-		$this->settingsStorage->save($this->presenter->user->id, $settings);
+		$this->settingsStorage
+				->setLanguage($values->language)
+				->save();
 		
 		$this->presenter->flashMessage('Your settings has been saved.', 'success');
-		$this->presenter->redirect('this#personal-settings',['lang' => $settings->language]);
+		$this->presenter->redirect('this#personal-settings', [
+			'lang' => $this->settingsStorage->language,
+		]);
 	}
 
 }

@@ -81,6 +81,7 @@ class InstallPresenter extends BasePresenter
 		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
 		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
 		$this->installComposer($this->installParams[self::PARAM_COMPOSER]);
+		$this->setUserSettings();
 	}
 
 	public function actionDefault($printHtml = TRUE)
@@ -138,6 +139,22 @@ class InstallPresenter extends BasePresenter
 		if ($composer) {
 			$this->toInstall['composer'] = ['Composer' => [$this->appDir]];
 		}
+	}
+	
+	private function setUserSettings()
+	{
+		$userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
+		$users = $userDao->findAll();
+		
+		/* @var $user \App\Model\Entity\User */
+		foreach ($users as $user) {
+			if ($user->settings === NULL) {
+				$user->settings = new \App\Model\Entity\UserSettings();
+				$this->em->persist($user);
+			}
+		}
+		
+		$this->em->flush();
 	}
 
 	/**

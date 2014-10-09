@@ -60,6 +60,7 @@ class Installer
 		$tool = new \Doctrine\ORM\Tools\SchemaTool($em);
 		$classes = [
 			$em->getClassMetadata('App\Model\Entity\User'),
+			$em->getClassMetadata('App\Model\Entity\UserSettings'),
 			$em->getClassMetadata('App\Model\Entity\Role'),
 			$em->getClassMetadata('App\Model\Entity\Auth'),
 			$em->getClassMetadata('App\Model\Entity\Registration'),

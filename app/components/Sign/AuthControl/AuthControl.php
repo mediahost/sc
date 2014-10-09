@@ -59,6 +59,9 @@ class AuthControl extends Components\BaseControl
 
 	/** @var bool Force registration without required data. */
 	private $force = FALSE;
+	
+	/** @var Storage\UserSettingsStorage @inject */
+	public $settingsStorage;
 
 	/**
 	 * Registration form.
@@ -430,7 +433,9 @@ class AuthControl extends Components\BaseControl
 	{
 		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$this->presenter->flashMessage('You have been successfully logged in!', 'success');
-		$this->presenter->redirect(':Admin:Dashboard:');
+		$this->presenter->redirect(':Admin:Dashboard:', [
+			'lang' => $this->settingsStorage->language
+		]);
 	}
 
 	/**
