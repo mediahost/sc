@@ -36,34 +36,34 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\ManyToMany(targetEntity="Role", fetch="EAGER")
 	 */
 	protected $roles;
-	
+
     /**
      * @ORM\Column(type="string", length=256, nullable=true)
      */
     protected $name;
-	
+
     /**
 	 * @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", orphanRemoval=true, fetch="LAZY", cascade={"all"})
 	 */
     protected $settings;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
 	protected $recoveryToken;
-	
+
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
 	protected $recoveryExpiration;
-	
-	
+
+
 	public function __construct()
 	{
 		$this->auths = new ArrayCollection();
 		$this->roles = new ArrayCollection();
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -71,7 +71,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	{
 		return (string) $this->mail;
 	}
-	
+
 	/**
 	 * @param Auth $auth
 	 * @return User
@@ -105,7 +105,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 				$this->roles->add($role);
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -129,7 +129,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		}
 		return $array;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -151,7 +151,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		$this->roles->removeElement($role);
 		return $this;
 	}
-	
+
 	/**
 	 * Set token and expiration DateTime.
 	 * @param string $token
@@ -163,13 +163,13 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		if (!($expiration instanceof \DateTime)) {
 			$expiration = new \DateTime($expiration);
 		}
-		
+
 		$this->recoveryToken = $token;
 		$this->recoveryExpiration = $expiration;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * @param UserSettings $settings
 	 */
@@ -192,7 +192,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 			'role' => $this->roles->toArray()
 		];
 	}
-	
+
 	/**
 	 * Set NULL to recovery token and expiration properties.
 	 * @return User

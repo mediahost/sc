@@ -38,7 +38,9 @@ class SignPresenter extends BasePresenter
 
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
-	
+
+	/** @var Facade\RoleFacade @inject */
+	public $roleFacade;
 
 	/**
 	 * Default is SIGN IN.
@@ -55,7 +57,7 @@ class SignPresenter extends BasePresenter
 	{
 		$this->isLoggedIn();
 	}
-	
+
 	/**
 	 * Sign OUT.
 	 */
@@ -80,9 +82,9 @@ class SignPresenter extends BasePresenter
 	public function actionRecovery($token)
 	{
 		$this->isLoggedIn();
-		
+
 		$message = 'Token to recovery your password is no longer active. Please request new one.';
-		
+
 		if ($token !== NULL) {
 			$auth = $this->authFacade->findByRecoveryToken($token);
 
@@ -102,20 +104,18 @@ class SignPresenter extends BasePresenter
 	 * Registration.
 	 * @param string $source
 	 */
-	public function actionRegistration($source = NULL)
+	public function actionRegistration($role = \App\Model\Entity\Role::ROLE_CANDIDATE, $source = RegistrationStorage::SOURCE_APP)
 	{
 		$this->isLoggedIn();
-		
-		if ($source === NULL) {
-			$source = RegistrationStorage::SOURCE_APP;
-		}
 
-		if (!$this->registrationStorage->isSource($source)) {
+		if (!$this->registrationStorage->isSource($source) || !($role = $this->roleFacade->isRegistratable($role))) {
 			$this->redirect('in');
 		} else {
 			if ($source === RegistrationStorage::SOURCE_APP) {
 				$this->registrationStorage->wipe();
 			}
+
+			$this['auth']->setRole($role);
 		}
 	}
 
@@ -126,9 +126,9 @@ class SignPresenter extends BasePresenter
 	public function actionVerify($token)
 	{
 		$this->isLoggedIn();
-		
+
 		$user = $this->registrationFacade->verify($token);
-		
+	
 		if ($user) {
 			$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 			$this->presenter->flashMessage('You have been successfully logged in!', 'success');
@@ -138,7 +138,7 @@ class SignPresenter extends BasePresenter
 			$this->redirect('in');
 		}
 	}
-	
+
 	/**
 	 * Redirect logged to certain destination.
 	 * @param type $redirect

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Registration entity
  * @ORM\Entity
- * 
+ *
  * @property string $mail
  * @property string $key
  * @property string $source
@@ -52,6 +52,12 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\Column(type="string", length=512, nullable=true)
 	 */
 	protected $name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
+     **/
+	protected $role;
 
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=false)

@@ -33,7 +33,7 @@ class RegistrationFacade extends BaseFacade
 
 	/** @var RoleFacade @inject */
 	private $roleFacade;
-	
+
 	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 	private $userSettingsStorage;
 
@@ -67,12 +67,17 @@ class RegistrationFacade extends BaseFacade
 	{
 		$user->addAuth($auth);
 
-		$role = $this->roleDao->findOneBy(['name' => Role::ROLE_CANDIDATE]);
-		$user->addRole($role);
-		
+		if (empty($user->roles)) {
+			$role = $this->roleDao->findOneBy(['name' => Role::ROLE_COMPANY_ADMIN]);
+			$user->addRole($role);
+		}
+
 		$user->settings = new Entity\UserSettings();
 
-		return $this->userDao->save($user);
+		$this->em->persist($user);
+		$this->em->flush();
+
+		return $user;
 	}
 
 	/**
@@ -89,7 +94,7 @@ class RegistrationFacade extends BaseFacade
 		]);
 
 		foreach ($previous as $entity) {
-			$this->em->remove($entity); // ToDo: This could be done in DB only.
+			$this->em->remove($entity); // ToDo: This could be done in DB scope only.
 		}
 		$this->em->flush();
 
@@ -144,6 +149,7 @@ class RegistrationFacade extends BaseFacade
 				$user = new Entity\User();
 				$user->mail = $registration->mail;
 				$user->name = $registration->name;
+				$user->addRole($registration->role);
 				$return = $this->register($user, $auth); // ToDo: Tohle by nemělo volat save() ale pouze persist()
 			} else {
 				$return = $this->merge($user, $auth); // ToDo: Tohle by nemělo volat save() ale pouze persist()
@@ -165,7 +171,7 @@ class RegistrationFacade extends BaseFacade
 	 * @return type
 	 * @deprecated
 	 */
-	public function mergeOrRegister($user, $auth) 
+	public function mergeOrRegister($user, $auth)
 	{
 		if (!$user = $this->userFacade->findByMail($user->mail)) {
 			// Registrace

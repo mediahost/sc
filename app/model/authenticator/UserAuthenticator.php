@@ -15,10 +15,10 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 
 	/** @var AuthFacade */
 	private $authFacade;
-	
+
 	/** @var EntityManager */
 	private $em;
-	
+
 	/** @var EntityDao */
 	private $userDao;
 
@@ -40,7 +40,7 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 		list($mail, $password) = $credentials;
 
 		$auth = $this->authFacade->findByMail($mail);
-		
+
 		if (!$auth) {
 			throw new Nette\Security\AuthenticationException('The username is incorrect.', self::IDENTITY_NOT_FOUND);
 		} elseif (!\Nette\Security\Passwords::verify($password, $auth->hash)) { // ToDo: Tohle by mělo být v uivateli, v auth nebo v Nette
@@ -49,9 +49,9 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 			$auth->hash = \Nette\Security\Passwords::hash($password);
 			$this->authFacade->save($auth);
 		}
-		
+
 		$user = $auth->user;
-		
+
 		// Remove recovery data if exists
 		if ($user->recoveryToken !== NULL) {
 			$user->unsetRecovery();

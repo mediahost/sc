@@ -59,7 +59,10 @@ class AuthControl extends Components\BaseControl
 
 	/** @var bool Force registration without required data. */
 	private $force = FALSE;
-	
+
+	/** @var Entity\Role */
+	private $role;
+
 	/** @var Storage\UserSettingsStorage @inject */
 	public $settingsStorage;
 
@@ -114,12 +117,12 @@ class AuthControl extends Components\BaseControl
 
 		$user = $this->userFacade->find($this->presenter->user->id);
 		$auths = $this->authFacade->findByUser($user);
-		
+
 		$count = count($auths);
 		$lastAuth = $auths[0]->source;
-		
+
 		$template->auths = $auths;
-		
+
 		foreach ($auths as $auth) {
 			switch ($auth->source) {
 				case RegistrationStorage::SOURCE_APP:
@@ -145,17 +148,17 @@ class AuthControl extends Components\BaseControl
 					break;
 			}
 		}
-		
+
 		if ($count < 2) {
 			$sources[$lastAuth]['action'] = NULL;
 		}
-		
+
 		$template->sources = $sources;
 
 		$template->setFile(__DIR__ . '/connect.latte');
 		$template->render();
 	}
-	
+
 	/**
 	 * Activation and deactivation.
 	 */
@@ -250,7 +253,8 @@ class AuthControl extends Components\BaseControl
 			$reg = $this->storage->toRegistration();
 			$reg->setKey($values->reg_mail)
 					->setSource(RegistrationStorage::SOURCE_APP)
-					->setPassword($values->reg_password);
+					->setPassword($values->reg_password)
+					->setRole($this->role);
 
 			$this->registerTemporarily($reg);
 		}
@@ -289,7 +293,7 @@ class AuthControl extends Components\BaseControl
 
 		return $dialog;
 	}
-	
+
 	/**
 	 * @return Form
 	 */
@@ -298,7 +302,7 @@ class AuthControl extends Components\BaseControl
 		$form = new Form();
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
-		
+
 		$form->addText('reg_mail', 'E-mail')
 				->setEmptyValue($this->presenter->user->getIdentity()->mail)
 				->setDisabled();
@@ -332,7 +336,7 @@ class AuthControl extends Components\BaseControl
 		$auth->user = $this->userFacade->findByMail($mail);
 		$auth->password = $values->reg_password;
 		$this->authDao->save($auth);
-		
+
 		$this->presenter->flashMessage('Password has been successfuly set!', 'success');
 		$this->presenter->redirect(':Admin:UserSettings:settings#connect-manager');
 	}
@@ -360,7 +364,7 @@ class AuthControl extends Components\BaseControl
 	public function handleDeactivate($id)
 	{
 		$auth = $this->authDao->findOneBy(['id' => $id]);
-		
+
 
 		if ($auth) {
 			if (count($this->authFacade->findByUser($auth->user)) > 1) {
@@ -390,16 +394,16 @@ class AuthControl extends Components\BaseControl
 		if (!$auth = $this->authFacade->findByKey($source, $id)) {
 
 			$this->storage->store($source, $data, $token);
-			
+
 			if ($this->force === TRUE) {
 				$this->storage->user->mail = $this->presenter->user->getIdentity()->mail;
-				
+
 				if ($source === RegistrationStorage::SOURCE_APP) {
 					$this->presenter->redirect(':Admin:UserSetings:settings#set-password');
 				} else {
 					$user = $this->mergeOrRegister();
 				}
-				
+
 				$this->presenter->redirect(':Admin:UserSettings:settings#connect-manager');
 			} else {
 				if ($this->storage->isRequired()) {
@@ -447,10 +451,11 @@ class AuthControl extends Components\BaseControl
 	 */
 	private function registerTemporarily(Entity\Registration $registration)
 	{
-		// Ověření e-mailu
+		// E-mailu verification
 		$registration = $this->registrationFacade->registerTemporarily($registration);
 
-		// Odeslat e-mail
+		// Send e-mail
+		// ToDo: Refactor to events
 		$message = $this->messages->getRegistrationMail($this->createTemplate(), [
 			'code' => $registration->verificationToken
 		]);
@@ -483,6 +488,17 @@ class AuthControl extends Components\BaseControl
 		$this->force = $force;
 	}
 
+	/**
+	 * @param Entity\Role $role
+	 */
+	public function setRole($role)
+	{
+		$this->role = $role;
+	}
+
+	/**
+	 * @param \Kdyby\Doctrine\EntityManager $em
+	 */
 	public function injectEntityManager(\Kdyby\Doctrine\EntityManager $em)
 	{
 		$this->authDao = $em->getDao(Entity\Auth::getClassName());

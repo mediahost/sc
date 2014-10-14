@@ -11,6 +11,9 @@ class RoleFacade extends BaseFacade
 	/** @var EntityDao */
 	private $roles;
 
+	/** @var array */
+	private $registratable = [Entity\Role::ROLE_CANDIDATE, Entity\Role::ROLE_COMPANY_ADMIN]; // ToDo: Move to configuration.
+
 	protected function init()
 	{
 		$this->roles = $this->em->getDao(Entity\Role::getClassName());
@@ -43,6 +46,21 @@ class RoleFacade extends BaseFacade
 	public function isUnique($name)
 	{
 		return $this->findByName($name) === NULL;
+	}
+
+	/**
+	 * Check if role is allowed to register.
+	 * @param string $roleName
+	 */
+	public function isRegistratable($roleName)
+	{
+		$role = $this->findByName($roleName);
+
+		if ($role !== NULL && in_array($role->name, $this->registratable)) {
+			return $role;
+		}
+
+		return FALSE;
 	}
 
 	/**
