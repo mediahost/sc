@@ -13,7 +13,7 @@ class HomepagePresenter extends BasePresenter
 
 	public function actionDefault()
 	{
-		
+
 	}
 
 }

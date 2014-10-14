@@ -14,15 +14,15 @@
         <meta content="" name="description" />
         <meta content="" name="author" />
 
-        <!-- BEGIN GLOBAL MANDATORY STYLES -->         
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->
         {control cssMetronicCore}
         <!-- END GLOBAL MANDATORY STYLES -->
 
-        <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->        
+        <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
         {control cssMetronicPlugin}
         <!-- END PAGE LEVEL PLUGIN STYLES -->
 
-        <!-- BEGIN THEME STYLES -->       
+        <!-- BEGIN THEME STYLES -->
         {control cssMetronicTheme}
         <!-- END THEME STYLES -->
 
@@ -60,17 +60,17 @@
                                 <small>{_'ver 2'}</small>
                                 {/block}
                             </h3>
-                            <!-- END PAGE TITLE--> 
+                            <!-- END PAGE TITLE-->
 
                             <!-- BEGIN BREADCRUMB-->
                             <ul class="page-breadcrumb breadcrumb" n:block="breadcrumb">
                                 {block breadcrumbActions}
                                 <li class="btn-group" n:if="$user->isAllowed('admin', 'add')">
-                                    <button type="button" 
-                                            class="btn blue dropdown-toggle" 
-                                            data-toggle="dropdown" 
-                                            data-hover="dropdown" 
-                                            data-delay="1000" 
+                                    <button type="button"
+                                            class="btn blue dropdown-toggle"
+                                            data-toggle="dropdown"
+                                            data-hover="dropdown"
+                                            data-delay="1000"
                                             data-close-others="true">
                                         <span>
                                             {block breadcrumbActionsName}{_'New'}{/block}
@@ -93,7 +93,7 @@
                                 {block breadcrumbItems}
                                 <li>
                                     <i class="fa fa-home"></i>
-                                    <a n:href="Dashboard:">{_'Home'}</a> 
+                                    <a n:href="Dashboard:">{_'Home'}</a>
                                     <span class="fa fa-angle-right"></span>
                                 </li>
                                 {block breadcrumbLast}
@@ -118,7 +118,7 @@
                     {include content}
                     <!-- END CONTENT BODY-->
 
-                </div>      
+                </div>
                 <!-- END PAGE -->
             </div>
             <!-- END CONTENT -->

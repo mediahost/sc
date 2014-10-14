@@ -6,11 +6,11 @@
  * http://revaxarts.com
  *
  */
- 
+
 
 !function ($) {
   $(function(){
-			 
+
 	var hash = location.hash || null,
 		win = $(window),
 		scrolloffset = $('div.navbar').height()+40,
@@ -18,13 +18,13 @@
 		badIE = $('html').prop('class').match(/ie(6|7|8)/)|| false;
 
 	duration = parseInt(duration,10);
-	
+
 	$('.dropdown-toggle').dropdown();
-	
+
 	$('.navbar').scrollspy();
-	
+
 	$(".collapse").collapse();
-	
+
 	//handle external links (new window)
 	$('a[href^=http]').bind('click',function(){
 		window.open($(this).attr('href'));
@@ -34,14 +34,14 @@
 	//IE 8 and lower doesn't like the smooth pagescroll
 	if(!badIE){
 		window.scroll(0,0);
-		
+
 		$('a[href^=#]').bind('click touchstart',function(){
 			hash = $(this).attr('href');
 			$.scrollTo.window().queue([]).stop();
 			goTo(hash, true);
 			return false;
 		});
-		
+
 		//if a hash is set => go to it
 		if(hash){
 			setTimeout(function(){
@@ -49,16 +49,16 @@
 			},500);
 		}
 	}
-	
+
 	$('.brand').on('click', function(){
 		goTo('#container', false);
 	});
-	 
+
 	//the function is called when the hash changes
 	function hashchange(){
 		goTo(location.hash, false);
 	}
-	
+
 	//scroll to a section and set the hash
 	function goTo(hash,changehash){
 		win.unbind('hashchange', hashchange);
@@ -66,7 +66,7 @@
 		win.stop().scrollTo(hash,duration,{
 			offset:-scrolloffset,
 			easing:easing,
-			axis:'y'			
+			axis:'y'
 		});
 		if(changehash !== false){
 			var l = location;
@@ -75,7 +75,7 @@
 		}
 		win.bind('hashchange', hashchange);
 	}
-	
+
     // make code pretty
     window.prettyPrint && prettyPrint();
 })

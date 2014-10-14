@@ -13,7 +13,7 @@ Touch enabled jQuery plugin that lets you create beautiful responsive carousel s
 * Multiple Sliders
 * CSS3 3d Transitions
 * Custimizable controls
-* JSON 
+* JSON
 * Custom events
 * Helpful callbacks
 
@@ -34,10 +34,10 @@ Load jQuery(1.7+) and include Owl Carousel plugin files
 ```html
 <!-- Basic stylesheet -->
 <link rel="stylesheet" href="owl-carousel/owl.carousel.css">
- 
+
  <!-- Default Theme -->
 <link rel="stylesheet" href="owl-carousel/owl.theme.css">
- 
+
 <!-- Include js plugin -->
 <script src="owl-carousel/owl.carousel.js"></script>
 ```

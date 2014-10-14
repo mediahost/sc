@@ -13,7 +13,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 
 /**
  * TEST: Auth entity
- * 
+ *
  * @testCase
  * @phpVersion 5.4
  */

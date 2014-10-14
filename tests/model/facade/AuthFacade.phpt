@@ -83,14 +83,14 @@ class AuthFacadeTest extends BaseFacade
 		Assert::type(Entity\Auth::getClassName(), $auth);
 		Assert::same(self::VALID_TOKEN, $auth->user->recoveryToken);
 	}
-	
+
 	public function testFindByUser()
 	{
 		$auths = $this->authFacade->findByUser($this->user);
 		Assert::type(Entity\Auth::getClassName(), $auths[0]);
 		Assert::same($auths[0]->key, self::MAIL);
 	}
-	
+
 	public function testIsUnique()
 	{
 		Assert::false($this->authFacade->isUnique(self::MAIL, self::SOURCE));

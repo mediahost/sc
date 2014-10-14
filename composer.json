@@ -54,7 +54,8 @@
 		"sodae/netrium-addons-twitter": "dev-nette-compatibility-22-dev"
 	},
 	"require-dev": {
-		"nette/tester": "~1.2.0"
+		"nette/tester": "~1.2.0",
+		"nette/code-checker": "dev-master"
 	},
 	"minimum-stability": "stable"
 }

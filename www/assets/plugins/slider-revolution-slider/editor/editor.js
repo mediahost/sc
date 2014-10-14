@@ -731,4 +731,3 @@ jQuery(document).ready(function() {
 		if (nextcaption.data("timer")) clearTimeout(nextcaption.data('timer'));
 		if (nextcaption.data("timera")) clearTimeout(nextcaption.data('timera'));
 	}
-

@@ -25,7 +25,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $text
 	 * @return self
 	 */
@@ -37,7 +37,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $text
 	 * @return self
 	 */
@@ -49,7 +49,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $color
 	 * @return self
 	 */
@@ -61,7 +61,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $color
 	 * @return self
 	 */
@@ -73,7 +73,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $icon
 	 * @return self
 	 */

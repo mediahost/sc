@@ -23,7 +23,7 @@ class DateInput extends BaseControl
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $value
 	 * @return self
 	 */

@@ -12,7 +12,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 
 /**
  * TEST: Role entity
- * 
+ *
  * @testCase
  * @phpVersion 5.4
  */

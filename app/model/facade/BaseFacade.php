@@ -40,7 +40,7 @@ abstract class BaseFacade extends \Nette\Object
 	{
 		return $this->dao->save($entity);
 	}
-	
+
 	/**
 	 * @param BaseEntity $entity
 	 * @return void

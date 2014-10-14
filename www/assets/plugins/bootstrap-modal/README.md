@@ -3,7 +3,7 @@ Bootstrap Modal v2.2.4
 
 See live demo [here](http://jschr.github.com/bootstrap-modal/).
 
-Extends Bootstrap's native modals to provide additional functionality. Introduces a **ModalManager** class that operates behind the scenes to handle multiple modals by listening on their events. 
+Extends Bootstrap's native modals to provide additional functionality. Introduces a **ModalManager** class that operates behind the scenes to handle multiple modals by listening on their events.
 
 A single ModalManager is created by default on body and can be accessed through the jQuery plugin interface.
 
@@ -19,7 +19,7 @@ If you're using BS3, I've provided a compatible css patch. Include `bootstrap-mo
 
 If you're using the loading spinner functionality you may also need to change the default template to be compatible in js:
 
-    $.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+    $.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner =
         '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
             '<div class="progress progress-striped active">' +
                 '<div class="progress-bar" style="width: 100%;"></div>' +
@@ -40,7 +40,7 @@ Overview
 + Load content via AJAX
 + Disable background scrolling
 
-Installation 
+Installation
 -----------
 + Include `css/bootstrap-modal.css` after the main bootstrap css files.
 + Include `js/bootstrap-modalmanager.js` and `js/bootstrap-modal.js` after the main bootstrap js files.
@@ -126,16 +126,16 @@ The reason for doing this instead of just simply setting `overflow: hidden` when
 
 Constrain Modal to Window Size
 -----------
-	
+
 You can bind the the height of the modal body to the window with something like this:
-	
+
     $.fn.modal.defaults.maxHeight = function(){
         // subtract the height of the modal header and footer
-        return $(window).height() - 165; 
+        return $(window).height() - 165;
     }
-	
+
 **Note:** This will be overwritten by the responsiveness and is only set when the modal is displayed, not when the window is resized.
-	
+
 Tab Index for Modal Forms
 -----------
 You can use `data-tabindex` instead of the default `tabindex` to specify the tabindex within a modal.
@@ -146,11 +146,10 @@ You can use `data-tabindex` instead of the default `tabindex` to specify the tab
 See the stackable example on the [demo](http://jschr.github.com/bootstrap-modal/) page for an example.
 
 
-	
+
 
 
 
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jschr/bootstrap-modal/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-

@@ -17,7 +17,7 @@ class TagInput extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param array $tags
 	 * @return TagInput
 	 */

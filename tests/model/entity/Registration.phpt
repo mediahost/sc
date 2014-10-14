@@ -36,25 +36,25 @@ class RegistrationTest extends Tester\TestCase
 
 		$reg->mail = self::R_MAIL;
 		Assert::same(self::R_MAIL, $reg->mail);
-		
+
 		$reg->key = self::R_KEY;
 		Assert::same(self::R_KEY, $reg->key);
-		
+
 		$reg->source = self::R_SOURCE;
 		Assert::same(self::R_SOURCE, $reg->source);
-		
+
 		$reg->token = self::R_TOKEN;
 		Assert::same(self::R_TOKEN, $reg->token);
-		
+
 		$reg->hash = self::R_HASH;
 		Assert::same(self::R_HASH, $reg->hash);
-		
+
 		$reg->name = self::R_NAME;
 		Assert::same(self::R_NAME, $reg->name);
-		
+
 		$reg->verificationToken = self::R_VERIFICATION_TOKEN;
 		Assert::same(self::R_VERIFICATION_TOKEN, $reg->verificationToken);
-		
+
 		$tomorrow = new \DateTime('now + 1 day');
 		$reg->verificationExpiration = $tomorrow;
 		Assert::equal($tomorrow, $reg->verificationExpiration);

@@ -404,7 +404,7 @@
 
                   // trigger hide when scroll is stopped
                   hideBar();
-          
+
         }
 
         function attachWheel()

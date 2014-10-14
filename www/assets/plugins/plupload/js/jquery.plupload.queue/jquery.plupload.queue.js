@@ -39,7 +39,7 @@ used as it is.
 	var uploader = $('#uploader').pluploadQueue();
 
 	uploader.bind('FilesAdded', function() {
-		
+
 		// Autostart
 		setTimeout(uploader.start, 1); // "detach" from the main thread
 	});
@@ -190,7 +190,7 @@ used as it is.
 
 					var icon = $('#' + file.id).attr('class', actionClass).find('a').css('display', 'block');
 					if (file.hint) {
-						icon.attr('title', file.hint);	
+						icon.attr('title', file.hint);
 					}
 				}
 
@@ -215,7 +215,7 @@ used as it is.
 
 							inputHTML += '<input type="hidden" name="' + id + '_' + inputCount + '_name" value="' + plupload.xmlEncode(file.name) + '" />';
 							inputHTML += '<input type="hidden" name="' + id + '_' + inputCount + '_status" value="' + (file.status == plupload.DONE ? 'done' : 'failed') + '" />';
-	
+
 							inputCount++;
 
 							$('#' + id + '_count').val(inputCount);
@@ -343,7 +343,7 @@ used as it is.
 						if (err.code == plupload.FILE_EXTENSION_ERROR) {
 							alert(_("Error: Invalid file extension:") + " " + file.name);
 						}
-						
+
 						file.hint = message;
 						$('#' + file.id).attr('class', 'plupload_failed').find('a').css('display', 'block').attr('title', message);
 					}

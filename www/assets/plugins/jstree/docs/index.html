@@ -9,13 +9,13 @@
 	<title>jsTree</title>
 	<meta name="viewport" content="width=device-width" />
 	<!--[if lt IE 9]><script src="./assets/html5.js"></script><![endif]-->
-	
+
 	<meta name="robots" content="index,follow" />
 	<link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="./assets/dist/themes/default/style.min.css" />
 	<link rel="stylesheet" href="./assets/docs.css" />
 	<!--[if lt IE 9]><script src="./assets/respond.js"></script><![endif]-->
-	
+
 	<link rel="icon" href="./assets/favicon.ico" type="image/x-icon" />
 	<link rel="apple-touch-icon-precomposed" href="./assets/apple-touch-icon-precomposed.png" />
 	<script>window.$q=[];window.$=window.jQuery=function(a){window.$q.push(a);};</script>
@@ -611,8 +611,8 @@ $('#tree').jstree({
 'core' : {
   'data' : {
     'url' : function (node) {
-      return node.id === '#' ? 
-        'ajax_roots.json' : 
+      return node.id === '#' ?
+        'ajax_roots.json' :
         'ajax_children.json';
     },
     'data' : function (node) {
@@ -767,9 +767,9 @@ $.jstree.reference('#jstree')
 					</div>
 					<div class="col-md-4">
 						<div style="text-align:center; margin-bottom:1em;">
-							<button class="btn btn-info" onclick="$('#using_methods').jstree(true).select_node('mn1');">select 1</button> 
-							<button class="btn btn-info" onclick="$('#using_methods').jstree('select_node', 'mn2');">select 2</button> 
-							<button class="btn btn-info" onclick="$.jstree.reference('#using_methods').select_node('mn3');">select 3</button> 
+							<button class="btn btn-info" onclick="$('#using_methods').jstree(true).select_node('mn1');">select 1</button>
+							<button class="btn btn-info" onclick="$('#using_methods').jstree('select_node', 'mn2');">select 2</button>
+							<button class="btn btn-info" onclick="$.jstree.reference('#using_methods').select_node('mn3');">select 3</button>
 						</div>
 						<div id="using_methods" class="demo">
 							<ul>
@@ -888,8 +888,8 @@ $.jstree.reference('#jstree')
   },
   "types" : {
     "#" : {
-      "max_children" : 1, 
-      "max_depth" : 4, 
+      "max_children" : 1,
+      "max_depth" : 4,
       "valid_children" : ["root"]
     },
     "root" : {
@@ -1251,7 +1251,7 @@ $.jstree.reference('#jstree')
 						</script>
 					</div>
 				</div>
-				
+
 				<h3><i class="glyphicon glyphicon-leaf"></i>&nbsp;Unique plugin</h3>
 				<div class="row">
 					<div class="col-md-4">
@@ -1294,7 +1294,7 @@ $.jstree.reference('#jstree')
 						</script>
 					</div>
 				</div>
-				
+
 				<h3><i class="glyphicon glyphicon-leaf"></i>&nbsp;Wholerow plugin</h3>
 				<div class="row">
 					<div class="col-md-4">

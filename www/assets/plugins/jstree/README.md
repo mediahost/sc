@@ -1,7 +1,7 @@
 # jstree
 
-[jsTree][jstree] is a tree view for jQuery (depends on 1.9.1 or later). 
-It is absolutely free (MIT licence) and supports all modern browsers and IE from version 8 up. 
+[jsTree][jstree] is a tree view for jQuery (depends on 1.9.1 or later).
+It is absolutely free (MIT licence) and supports all modern browsers and IE from version 8 up.
 jsTree can display trees by parsing HTML or JSON and supports AJAX, it is themeable and easy to configure and customize. Events are fired when the user interacts with the tree. Other notable features are inline editing, drag'n'drop support, fuzzy searching (with optional server side calls), tri-state checkbox support, configurable node types, AMD compatibility, easily extendable via plugins.
 [jstree]: http://www.jstree.com/
 
@@ -64,7 +64,7 @@ If you want to you can always [donate a small amount][paypal] to help the develo
 [paypal]: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=paypal@vakata.com&currency_code=USD&amount=&return=http://jstree.com/donation&item_name=Buy+me+a+coffee+for+jsTree
 
 ## License
-Copyright (c) 2014 Ivan Bozhanov (http://vakata.com) 
+Copyright (c) 2014 Ivan Bozhanov (http://vakata.com)
 
 Licensed under the [MIT license][mit].
 [mit]: http://www.opensource.org/licenses/mit-license.php

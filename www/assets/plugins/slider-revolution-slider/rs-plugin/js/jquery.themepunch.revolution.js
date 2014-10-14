@@ -2061,19 +2061,19 @@
 
 			var comingtransition = transtext[curtransid];
 			var specials = 0;
-			
+
 			if (opt.parallax=="scroll" && opt.parallaxFirstGo==undefined) {
 				opt.parallaxFirstGo = true;
 				scrollParallax(container,opt);
-				setTimeout(function() { 
+				setTimeout(function() {
 					scrollParallax(container,opt);
 				},210);
-				setTimeout(function() { 
+				setTimeout(function() {
 					scrollParallax(container,opt);
 				},420);
-				
+
 			}
-			
+
 			/*if (opt.ffnn == undefined) opt.ffnn=0;
 			comingtransition=opt.ffnn;
 			opt.ffnn=opt.ffnn+1;
@@ -3359,9 +3359,9 @@
 
 
 			if (opt.parallax=="mouse" || opt.parallax=="scroll+mouse" || opt.parallax=="mouse+scroll") {
-				
+
 						container.on('mousemove.hoverdir, mouseleave.hoverdir',function(event) {
-		
+
 							switch (event.type) {
 								case "mousemove":
 										var t = container.offset().top,
@@ -3370,16 +3370,16 @@
 											mh = l + container.width() / 2,
 											diffh = (mh - event.pageX),
 											diffv =  (mv - event.pageY);
-		
+
 										jQuery(".tp-parallax-container").each(function() {
 											var pc = jQuery(this),
 												pl = parseInt(pc.data('parallaxlevel'),0)/100,
 												offsh =	diffh * pl,
 												offsv =	diffv * pl;
-		
+
 											TweenLite.to(pc,0.2,{x:offsh,y:offsv,ease:Power3.easeOut});
 										})
-		
+
 								break;
 								case "mouseleave":
 										jQuery(".tp-parallax-container").each(function() {
@@ -3389,14 +3389,14 @@
 								break;
 							}
 						});
-		
+
 						if (is_mobile())
 							window.ondeviceorientation = function(event) {
 							  var 	y = Math.round(event.beta  || 0),
 							  		x = Math.round(event.gamma || 0),
 							  		curh = 360/container.width() * x,
 							  		curv = 180/container.height() * y;
-		
+
 							  jQuery(".tp-parallax-container").each(function() {
 												var pc = jQuery(this),
 													pl = parseInt(pc.data('parallaxlevel'),0)/100,
@@ -3404,33 +3404,33 @@
 													offsv =	curv * pl;
 												TweenLite.to(pc,0.2,{x:offsh,y:offsv,ease:Power3.easeOut});
 											})
-		
+
 							  // y: -90 -> +90,  x:-180 -> +180
-		
+
 							  //jQuery('.logo-container').html("h:"+curh+"  v:"+curv);
 							  }
-			} 
+			}
 			if (opt.parallax=="scroll" || opt.parallax=="scroll+mouse" || opt.parallax=="mouse+scroll") {
 
 						jQuery(window).on('scroll',function(event) {
 							scrollParallax(container,opt);
 						});
-			} 
+			}
 		}
-		
+
 		/***************************************
 			-	SET POST OF SCROLL PARALLAX	-
 		***************************************/
 		function scrollParallax(container,opt) {
 			var t = container.offset().top,
-					st = jQuery(window).scrollTop(),							
+					st = jQuery(window).scrollTop(),
 					dist = t+container.height()/2,
 					mv = t+container.height()/2 - st,
 					wh = jQuery(window).height()/2,
-					diffv= wh - mv;						
+					diffv= wh - mv;
 
 			if (dist<wh) diffv = diffv - (wh-dist);
-			
+
 			jQuery(".tp-parallax-container").each(function() {
 				var pc = jQuery(this),
 					pl = parseInt(pc.data('parallaxlevel'),0)/100,
@@ -3438,7 +3438,7 @@
 
 				TweenLite.to(pc,0.2,{y:offsv,ease:Power3.easeOut});
 			})
-			
+
 			if (opt.parallaxBgFreeze!="on") {
 				var pl = opt.parallaxLevels[0]/100,
 					offsv =	diffv * pl;
@@ -4932,7 +4932,7 @@
 												ys = el.data('ys')==undefined ? 0 : el.data('ys');
 												xe = el.data('xe')==undefined ? 0 : el.data('xe'),
 												ye = el.data('ye')==undefined ? 0 : el.data('ye'),
-												speed = el.data('speed')==undefined ? 2 : el.data('speed'),												
+												speed = el.data('speed')==undefined ? 2 : el.data('speed'),
 												easing = el.data('ease')==undefined ? Power2.easeInOut : el.data('ease');
 											el.data('timeline').append(new TweenLite.fromTo(el,speed,{x:xs,y:ys},{x:xe,y:ye,ease:easing}));
 											el.data('timeline').append(new TweenLite.fromTo(el,speed,{x:xe,y:ye},{x:xs,y:ys,onComplete:function() {
@@ -4941,7 +4941,7 @@
 										}
 
 									})
-									
+
 									// SOME LOOPING ANIMATION ON INTERNAL ELEMENTS
 									nextcaption.find('.rs-pulse').each(function() {
 										var el = jQuery(this);
@@ -4949,7 +4949,7 @@
 											el.data('timeline',new TimelineLite);
 											var zoomstart = el.data('zoomstart')==undefined ? 0 : el.data('zoomstart'),
 												zoomend = el.data('zoomend')==undefined ? 0 : el.data('zoomend');
-												speed = el.data('speed')==undefined ? 2 : el.data('speed'),												
+												speed = el.data('speed')==undefined ? 2 : el.data('speed'),
 												easing = el.data('ease')==undefined ? Power2.easeInOut : el.data('ease');
 											el.data('timeline').append(new TweenLite.fromTo(el,speed,{scale:zoomstart},{scale:zoomend,ease:easing}));
 											el.data('timeline').append(new TweenLite.fromTo(el,speed,{scale:zoomend},{scale:zoomstart,onComplete:function() {
@@ -4958,30 +4958,30 @@
 										}
 
 									})
-									
+
 									nextcaption.find('.rs-wave').each(function() {
 										var el = jQuery(this);
 										if (el.data('timeline')==undefined) {
 											el.data('timeline',new TimelineLite);
-												
+
 											var angle= el.data('angle')==undefined ? 10 : el.data('angle'),
 												radius = el.data('radius')==undefined ? 10 : el.data('radius'),
 												speed = el.data('speed')==undefined ? -20 : el.data('speed'),
 												origin = el.data('origin')==undefined ? -20 : el.data('origin'),
-												angobj = {a:0, ang : angle, element:el, unit:radius}; 
-												
+												angobj = {a:0, ang : angle, element:el, unit:radius};
+
 												el.data('timeline').append(new TweenLite.fromTo(angobj,speed,
 																			{	a:360	},
 																			{	a:0,
 																				ease:Linear.easeNone,
 																				onUpdate:function() {
-																					
+
 																					var rad = angobj.a * (Math.PI / 180);
 																		            TweenLite.to(angobj.element,0.1,{x:Math.cos(rad) * angobj.unit, y:angobj.unit * (1 - Math.sin(rad))});
 
 																				},
 																				onComplete:function() {
-																					el.data('timeline').restart();																				
+																					el.data('timeline').restart();
 																				}
 																			}
 																			));

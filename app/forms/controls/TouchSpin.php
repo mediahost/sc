@@ -17,7 +17,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -29,7 +29,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -41,7 +41,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -53,7 +53,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -65,7 +65,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -77,7 +77,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -89,7 +89,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -101,7 +101,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -113,7 +113,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -125,7 +125,7 @@ class TouchSpin extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */

@@ -17,14 +17,14 @@ use App\Model\Entity;
  */
 class RegistrationStorage extends \Nette\Object
 {
-	
+
 	const SOURCE_APP = 'app';
 	const SOURCE_FACEBOOK = 'facebook';
 	const SOURCE_TWITTER = 'twitter';
-	
+
 	/** @var Session */
 	public $session;
-	
+
 	/** @var SessionSection */
 	public $section;
 
@@ -102,7 +102,7 @@ class RegistrationStorage extends \Nette\Object
 		$this->defaults = [
 			'reg_name' => $this->user->name,
 			'reg_mail' => $this->user->mail
-		];		
+		];
 	}
 
 	/**
@@ -201,12 +201,12 @@ class RegistrationStorage extends \Nette\Object
 				return TRUE;
 			}
 		}
-		
+
 		return FALSE;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function wipe()
 	{
@@ -278,7 +278,7 @@ class RegistrationStorage extends \Nette\Object
 			'user' => new Entity\User(),
 			'defaults' => []
 		];
-		
+
 		if ($force === FALSE) {
 			foreach ($defaults as $property => $value) {
 				if (!isset($this->section->{$property})) {
@@ -288,7 +288,7 @@ class RegistrationStorage extends \Nette\Object
 		} else {
 			foreach ($defaults as $property => $value) {
 				$this->section->{$property} = $value;
-			}			
+			}
 		}
 	}
 
@@ -308,7 +308,7 @@ class RegistrationStorage extends \Nette\Object
 	{
 		return $this->sources;
 	}
-	
+
 }
 
 class RegistrationStorageException extends \Exception

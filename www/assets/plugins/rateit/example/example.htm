@@ -173,7 +173,7 @@
                 $("#rateit5").bind('rated', function (event, value) { $('#value5').text('You\'ve rated it: ' + value); });
                 $("#rateit5").bind('reset', function () { $('#value5').text('Rating reset'); });
                 $("#rateit5").bind('over', function (event, value) { $('#hover5').text('Hovering over: ' + value); });
-            &lt;/script>            
+            &lt;/script>
             </pre>
         </li>
         <li id="ex_6">
@@ -260,7 +260,7 @@
             <h4>
                 Inline code</h4>
             <pre class="brush: xml">
-&lt;div class="rateit antenna" data-rateit-starwidth="11" data-rateit-starheight="25">&lt;/div>            
+&lt;div class="rateit antenna" data-rateit-starwidth="11" data-rateit-starheight="25">&lt;/div>
             </pre>
             <h4>
                 Style sheet</h4>
@@ -279,7 +279,7 @@ div.antenna div.rateit-hover
 div.antenna div.rateit-selected
 {
     background: url(antenna-red.png) no-repeat;
-}            
+}
             </pre>
         </li>
         <li id="ex_8">
@@ -359,14 +359,14 @@ div.antenna div.rateit-selected
                 &lt;div>
                     &lt;button onclick="alert($('#rateit9').rateit('readonly'))">Get readonly value&lt;/button>
                     &lt;button onclick="$('#rateit9').rateit('readonly',!$('#rateit9').rateit('readonly'))">Toggle readonly&lt;/button>
-                &lt;/div>   
+                &lt;/div>
                 &lt;div>
                     &lt;button onclick="alert($('#rateit9').rateit('ispreset'))">Get ispreset value&lt;/button>
                     &lt;button onclick="$('#rateit9').rateit('ispreset',!$('#rateit9').rateit('ispreset'))">Toggle ispreset&lt;/button>
-                &lt;/div>   
+                &lt;/div>
                 &lt;div>
                     &lt;button onclick="$('#rateit9').rateit('reset')">Reset&lt;/button>
-                &lt;/div>                           
+                &lt;/div>
             </pre>
         </li>
         <li id="ex_10">
@@ -390,7 +390,7 @@ div.antenna div.rateit-selected
 
             &lt;script type="text/javascript">
                 $("#rateit10").bind('over', function (event,value) { $(this).attr('title', value); });
-            &lt;/script>       
+            &lt;/script>
             </pre>
             <h4>
                 Custom text</h4>
@@ -483,7 +483,7 @@ div.antenna div.rateit-selected
               &lt;div style="float:right; width:350px; border:1px solid #ccc; padding:1em;">
                 &lt;strong>Server response:&lt;/strong>
                 &lt;ul id="response">
-                
+
                 &lt;/ul>
                 &lt;/div>
                 &lt;ul>
@@ -496,7 +496,7 @@ div.antenna div.rateit-selected
                     RateIt: &lt;div data-productid="653" class="rateit">&lt;/div>
                     &lt;/li>
                 &lt;/ul>
-              
+
             &lt;/div>
 
             &lt;script type ="text/javascript">
@@ -571,10 +571,10 @@ div.antenna div.rateit-selected
                           .rateit('starheight', option.data('size'));
 
           });
-        </script>  
+        </script>
         <pre class="brush: xml">
           &lt;div class=&quot;rateit&quot; id=&quot;rateit12&quot;&gt;&lt;/div&gt;
-          &lt;p&gt;Pick a size: 
+          &lt;p&gt;Pick a size:
             &lt;select id=&quot;size_12&quot;&gt;
                 &lt;option data-class=&quot;&quot; data-size=&quot;16&quot; selected&gt;normal&lt;/option&gt;
                 &lt;option data-class=&quot;bigstars&quot; data-size=&quot;32&quot;&gt;big&lt;/option&gt;
@@ -590,7 +590,7 @@ div.antenna div.rateit-selected
                             .rateit(&#39;starheight&#39;, option.data(&#39;size&#39;)); //change height
 
             });
-        &lt;/script&gt;  
+        &lt;/script&gt;
 </pre>
       </li>
     </ul>

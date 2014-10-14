@@ -34,22 +34,22 @@ class UserTest extends Tester\TestCase
 
 	/** @var SchemaTool */
 	private $schemaTool;
-	
+
 	/** @var Kdyby\Doctrine\EntityDao */
 	private $roleDao;
-	
+
 	/** @var Kdyby\Doctrine\EntityDao */
 	private $userDao;
-	
+
 	public function __construct(Nette\DI\Container $container)
 	{
 		$this->container = $container;
 		$this->container->callInjects($this);
 		$this->schemaTool = new SchemaTool($this->em);
-		
+
 		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
-		
+
 		\Tester\Environment::lock('db', LOCK_DIR);
 	}
 
@@ -62,66 +62,66 @@ class UserTest extends Tester\TestCase
 	{
 		unset($this->user);
 	}
-	
+
 	public function testAddAuth()
 	{
 		Assert::count(0, $this->user->auths);
-		
+
 		$auth = new Entity\Auth();
 		$this->user->addAuth($auth);
-		
+
 		Assert::type(Entity\Auth::getClassName(), $this->user->auths[0]);
 	}
-	
+
 	public function testAddRole()
 	{
 		$roleA = (new Entity\Role())->setName('Role A');
 		$roleB = (new Entity\Role())->setName('Role B');
 		$roleC = (new Entity\Role())->setName('Role C');
-		
+
 		Assert::count(0, $this->user->roles); // No roles
-		
+
 		$this->user->addRole($roleA); // Add first role
 		Assert::count(1, $this->user->roles);
-		
+
 		$this->user->addRole($roleA); // Add the same role
 		Assert::count(1, $this->user->roles);
-		
+
 		$this->user->addRole($roleB); // Add another role
 		Assert::count(2, $this->user->roles);
-		
+
 		$this->user->addRole($roleC, TRUE); // Clear roles and add new one
 		Assert::count(1, $this->user->roles);
 		Assert::same('Role C', $this->user->roles[0]->name);
-		
+
 		$this->user->addRole([$roleA, $roleC]); // Add array with duplicit roles
 		Assert::count(2, $this->user->roles);
-		
+
 		$this->user->clearRoles();
 		Assert::count(0, $this->user->roles);
-		
+
 	}
-	
+
 	public function testGetRolesKeys()
 	{
 		$this->schemaTool->updateSchema($this->getClasses());
-		
+
 		$roleA = $this->roleDao->save((new Entity\Role())->setName('Role A'));
 		$roleB = $this->roleDao->save((new Entity\Role())->setName('Role B'));
 		$roleC = $this->roleDao->save((new Entity\Role())->setName('Role C'));
-		
+
 		$this->user->addRole([$roleB, $roleC, $roleA, $roleA, $roleC]);
 		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->getRolesKeys());
-		
+
 		$this->schemaTool->dropSchema($this->getClasses());
 	}
-	
+
 	public function testGetRolesPairs()
 	{
 		$roleA = (new Entity\Role())->setName('Role A');
 		$roleB = (new Entity\Role())->setName('Role B');
 		$roleC = (new Entity\Role())->setName('Role C');
-		
+
 		$this->user->addRole([$roleB, $roleA, $roleC]);
 		Assert::same([NULL => 'Role C'], $this->user->getRolesPairs());
 	}
@@ -130,7 +130,7 @@ class UserTest extends Tester\TestCase
 	{
 		$roleA = (new Entity\Role())->setName('Role A');
 		$roleB = (new Entity\Role())->setName('Role B');
-		
+
 		$this->user->addRole($roleA);
 		Assert::count(1, $this->user->roles);
 		$this->user->addRole($roleB);
@@ -140,21 +140,21 @@ class UserTest extends Tester\TestCase
 		$this->user->removeRole($roleB);
 		Assert::count(0, $this->user->roles);
 	}
-	
+
 	public function testToArray()
 	{
 		$this->schemaTool->updateSchema($this->getClasses());
-		
+
 		$roleA = $this->roleDao->save((new Entity\Role())->setName('Role A'));
 		$roleB = $this->roleDao->save((new Entity\Role())->setName('Role B'));
 
-		$this->user->mail = self::U_MAIL;	
+		$this->user->mail = self::U_MAIL;
 		$this->user->name = self::U_NAME;
 		$this->user->addRole([$roleB, $roleA]);
-		
+
 		$user = $this->userDao->save($this->user);
 		$array = $user->toArray();
-		
+
 		Assert::same($user->id, $array['id']);
 		Assert::same(self::U_MAIL, $array['mail']);
 		Assert::same(self::U_NAME, $array['name']);
@@ -174,10 +174,10 @@ class UserTest extends Tester\TestCase
 
 		$this->user->mail = self::U_MAIL;
 		Assert::same(self::U_MAIL, $this->user->mail);
-		
+
 		$this->user->name = self::U_NAME;
 		Assert::same(self::U_NAME, $this->user->name);
-		
+
 		$this->user->recoveryToken = self::U_RECOVERY_TOKEN;
 		Assert::same(self::U_RECOVERY_TOKEN, $this->user->recoveryToken);
 
@@ -185,7 +185,7 @@ class UserTest extends Tester\TestCase
 		$this->user->recoveryExpiration = $tomorrow;
 		Assert::equal($tomorrow, $this->user->recoveryExpiration);
 	}
-	
+
 	public function testToString()
 	{
 		$this->user->mail = self::U_MAIL;
@@ -212,7 +212,7 @@ class UserTest extends Tester\TestCase
 		Assert::null($this->user->recoveryToken);
 		Assert::null($this->user->recoveryExpiration);
 	}
-	
+
 	private function getClasses()
 	{
 		return [

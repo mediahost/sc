@@ -33,16 +33,16 @@ class AuthenticatorTest extends Tester\TestCase
 
 	/** @var SchemaTool */
 	public $schemaTool;
-	
+
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var Facade\RoleFacade @inject */
 	public $roleFacade;
 
 	/** @var \Kdyby\Doctrine\EntityDao */
 	public $userDao;
-	
+
 	/** @var \Nette\Security\IAuthenticator @inject */
 	public $authenticator;
 
@@ -54,44 +54,44 @@ class AuthenticatorTest extends Tester\TestCase
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 		\Tester\Environment::lock('db', LOCK_DIR);
 	}
-	
+
 	public function setUp()
 	{
 		$this->schemaTool->updateSchema($this->getClasses());
 	}
-	
+
 	public function tearDown()
 	{
 		$this->schemaTool->dropSchema($this->getClasses());
 	}
-	
+
 	public function testAuthenticate()
 	{
 		$role = $this->roleFacade->create(self::R_NAME);
 		$user = $this->userFacade->create(self::U_MAIL, self::U_PASSWORD, $role);
-		
+
 		Assert::exception(function() {
 					$this->authenticator->authenticate(['unknown@email.com', self::U_PASSWORD]);
 				},
 				'\Nette\Security\AuthenticationException',
 				NULL,
 				IAuthenticator::IDENTITY_NOT_FOUND);
-				
+
 		Assert::exception(function() {
 					$this->authenticator->authenticate([self::U_MAIL, 'incorrectPassword']);
 				},
 				'\Nette\Security\AuthenticationException',
 				NULL,
 				IAuthenticator::INVALID_CREDENTIAL);
-				
+
 		$this->userFacade->setRecovery($user);
-				
+
 		$identity = $this->authenticator->authenticate([self::U_MAIL, self::U_PASSWORD]);
 		Assert::type('\Nette\Security\Identity', $identity);
 		Assert::same($user->id, $identity->id);
 		Assert::type('array', $identity->roles);
 		Assert::type('array', $identity->data);
-		
+
 		/* @var $user Entity\User */
 		$user = $this->userDao->find($identity->id);
 		Assert::null($user->recoveryExpiration);

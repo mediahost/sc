@@ -15,7 +15,7 @@ class DashboardPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		
+
 	}
 
 }

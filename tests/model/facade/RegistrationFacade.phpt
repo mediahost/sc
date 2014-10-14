@@ -13,7 +13,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 
 /**
  * TEST: RegistrationFacade
- * 
+ *
  * @testCase
  * @phpVersion 5.4
  */
@@ -58,7 +58,7 @@ class RegistrationFacadeTest extends BaseFacade
 	public function testRegisterAndMerge()
 	{
 		$this->roleFacade->create(Entity\Role::ROLE_CANDIDATE);
-		
+
 		$user = (new Entity\User())
 				->setMail(self::U_MAIL)
 				->setName(self::U_NAME);
@@ -112,9 +112,9 @@ class RegistrationFacadeTest extends BaseFacade
 		$this->registrationFacade->registerTemporarily($this->registration);
 		$old = $this->registrationFacade->registerTemporarily($this->registration);
 		Assert::count(1, $this->registrationDao->findAll());
-		
+
 		$reg = $this->registrationFacade->findByVerificationToken($old->verificationToken);
-		
+
 		Assert::type(Entity\Registration::getClassName(), $reg);
 		Assert::type('string', $reg->verificationToken);
 		Assert::type('\DateTime', $reg->verificationExpiration);
@@ -124,21 +124,21 @@ class RegistrationFacadeTest extends BaseFacade
 	{
 		$this->roleFacade->create(Entity\Role::ROLE_CANDIDATE);
 		$reg = $this->registrationFacade->registerTemporarily($this->registration);
-		
+
 		Assert::null($this->registrationFacade->verify('invalidToken'));
-		
+
 		$user = $this->registrationFacade->verify($reg->verificationToken);
 		Assert::type(Entity\User::getClassName(), $user);
 		Assert::same(self::U_MAIL, $user->mail);
 		Assert::same(self::U_NAME, $user->name);
-		
+
 		$auth = $this->authFacade->findByKey(self::A_SOURCE, self::A_KEY);
 		Assert::same(self::A_KEY, $auth->key);
 		Assert::same(self::A_SOURCE, $auth->source);
 		Assert::same(self::A_TOKEN, $auth->token);
 		Assert::true(Passwords::verify(self::A_PASSWORD, $auth->hash));
-		
-		
+
+
 	}
 }
 

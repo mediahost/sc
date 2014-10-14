@@ -29,7 +29,7 @@ class UserFacadeTest extends BaseFacade
 
 	/** @var EntityDao */
 	public $userDao;
-	
+
 	/** @var EntityDao */
 	public $authDao;
 
@@ -46,7 +46,7 @@ class UserFacadeTest extends BaseFacade
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
 	}
-	
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -75,11 +75,11 @@ class UserFacadeTest extends BaseFacade
 
 		$this->userFacade->delete($user);
 	}
-	
+
 	public function testDelete()
 	{
 		$this->userFacade->delete($this->user);
-		
+
 		Assert::count(1, $this->roleDao->findAll());
 		Assert::count(0, $this->authDao->findAll());
 		Assert::count(0, $this->userDao->findAll());
@@ -139,13 +139,13 @@ class UserFacadeTest extends BaseFacade
 		Assert::same($this->user->recoveryToken, $user->recoveryToken);
 		Assert::equal($this->user->recoveryExpiration, $user->recoveryExpiration);
 	}
-	
+
 	public function testHardDelete()
 	{
 		$id = $this->user->id;
-		
+
 		$this->userFacade->hardDelete($id);
-		
+
 		Assert::count(0, $this->authFacade->findByUser($this->user));
 		Assert::null($this->userDao->find($id));
 	}

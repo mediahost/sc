@@ -133,7 +133,7 @@ if ($.fn.DataTable.TableTools) {
             }
         },
         "print": {
-            "info": "DTTT_Print_Info"  
+            "info": "DTTT_Print_Info"
         },
         "select": {
             "row": "active"

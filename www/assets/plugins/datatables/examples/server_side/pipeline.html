@@ -43,7 +43,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 		var requestStart  = request.start;
 		var requestLength = request.length;
 		var requestEnd    = requestStart + requestLength;
-		
+
 		if ( settings.clearCache ) {
 			// API requested that the cache be cleared
 			ajax = true;
@@ -60,7 +60,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 			// properties changed (ordering, columns, searching)
 			ajax = true;
 		}
-		
+
 		// Store the request for checking next time around
 		cacheLastRequest = $.extend( true, {}, request );
 
@@ -73,7 +73,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 					requestStart = 0;
 				}
 			}
-			
+
 			cacheLower = requestStart;
 			cacheUpper = requestStart + (requestLength * conf.pages);
 
@@ -108,7 +108,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 						json.data.splice( 0, requestStart-cacheLower );
 					}
 					json.data.splice( requestLength, json.data.length );
-					
+
 					drawCallback( json );
 				}
 			} );
@@ -234,7 +234,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 		var requestStart  = request.start;
 		var requestLength = request.length;
 		var requestEnd    = requestStart + requestLength;
-		
+
 		if ( settings.clearCache ) {
 			// API requested that the cache be cleared
 			ajax = true;
@@ -251,7 +251,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 			// properties changed (ordering, columns, searching)
 			ajax = true;
 		}
-		
+
 		// Store the request for checking next time around
 		cacheLastRequest = $.extend( true, {}, request );
 
@@ -264,7 +264,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 					requestStart = 0;
 				}
 			}
-			
+
 			cacheLower = requestStart;
 			cacheUpper = requestStart + (requestLength * conf.pages);
 
@@ -299,7 +299,7 @@ $.fn.dataTable.pipeline = function ( opts ) {
 						json.data.splice( 0, requestStart-cacheLower );
 					}
 					json.data.splice( requestLength, json.data.length );
-					
+
 					drawCallback( json );
 				}
 			} );

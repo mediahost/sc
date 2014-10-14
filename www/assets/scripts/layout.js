@@ -51,7 +51,7 @@ var Layout = function () {
         jQuery('.page-sidebar').on('click', 'li > a', function (e) {
 
             if ($(this).next().hasClass('sub-menu') === false) {
-                if (Metronic.getViewPort().width < 992) { // close the menu on mobile view while laoding a page 
+                if (Metronic.getViewPort().width < 992) { // close the menu on mobile view while laoding a page
                     $('.page-header .responsive-toggler').click();
                 }
                 return;
@@ -129,7 +129,7 @@ var Layout = function () {
             });
             $(this).parents('li').addClass('active');
 
-            if (Metronic.getViewPort().width < 992 && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
+            if (Metronic.getViewPort().width < 992 && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page
                 $('.page-header .responsive-toggler').click();
             }
 
@@ -171,7 +171,7 @@ var Layout = function () {
 
             Metronic.startPageLoading();
 
-            if (Metronic.getViewPort().width < 992 && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page 
+            if (Metronic.getViewPort().width < 992 && $('.page-sidebar').hasClass("in")) { // close the menu on mobile view while laoding a page
                 $('.page-header .responsive-toggler').click();
             }
 
@@ -320,7 +320,7 @@ var Layout = function () {
             new_link.find("a:first").append('<span class="selected"></span>');
         });
 
-        // handle search box expand/collapse        
+        // handle search box expand/collapse
         $('.page-header').on('click', '.search-form', function (e) {
             $(this).addClass("open");
             $(this).find('.form-control').focus();
@@ -382,9 +382,9 @@ var Layout = function () {
 
         if (target.hasClass('portlet')) {
             var portletBody = target.find('.portlet-body');
-            
+
             if (Metronic.getViewPort().width < 992) {
-                Metronic.destroySlimScroll(portletBody.find('.full-height-content-body')); // destroy slimscroll 
+                Metronic.destroySlimScroll(portletBody.find('.full-height-content-body')); // destroy slimscroll
                 return;
             }
 
@@ -402,7 +402,7 @@ var Layout = function () {
             }
         } else {
             if (Metronic.getViewPort().width < 992) {
-                Metronic.destroySlimScroll(target.find('.full-height-content-body')); // destroy slimscroll 
+                Metronic.destroySlimScroll(target.find('.full-height-content-body')); // destroy slimscroll
                 return;
             }
 
@@ -524,7 +524,7 @@ var Layout = function () {
                 }
             }
 
-            //footer 
+            //footer
             if (footerOption === 'fixed') {
                 $("body").addClass("page-footer-fixed");
             } else {
@@ -558,7 +558,7 @@ var Layout = function () {
                 }
             }
 
-            handleSidebarAndContentHeight(); // fix content height            
+            handleSidebarAndContentHeight(); // fix content height
             handleFixedSidebar(); // reinitialize fixed sidebar
         }
 
@@ -615,7 +615,7 @@ var Layout = function () {
             handleSidebarMenu(); // handles main menu
             handleHorizontalMenu(); // handles horizontal menu
             handleSidebarToggler(); // handles sidebar hide/show
-            handle100HeightContent(); // handles 100% height elements(block, portlet, etc)            
+            handle100HeightContent(); // handles 100% height elements(block, portlet, etc)
             handleGoTop(); //handles scroll to top functionality in the footer
             handleTabs(); // handle bootstrah tabs
             handleTheme(); // handles style customer tool
@@ -623,7 +623,7 @@ var Layout = function () {
             // reinitialize the layout on window resize
             Metronic.addResizeHandler(handleSidebarAndContentHeight); // recalculate sidebar & content height on window resize
             Metronic.addResizeHandler(handleFixedSidebar); // reinitialize fixed sidebar on window resize
-            Metronic.addResizeHandler(handle100HeightContent); // reinitialize content height on window resize 
+            Metronic.addResizeHandler(handle100HeightContent); // reinitialize content height on window resize
         },
 
         //public function to fix the sidebar and content height accordingly

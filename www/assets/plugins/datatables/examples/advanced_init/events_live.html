@@ -21,7 +21,7 @@
 
 $(document).ready(function() {
 	$('#example').dataTable();
-	
+
 	$('#example tbody').on('click', 'tr', function () {
 		var name = $('td', this).eq(0).text();
 		alert( 'You clicked on '+name+'\'s row' );
@@ -543,7 +543,7 @@ $(document).ready(function() {
 					<p>The Javascript shown below is used to initialise the table shown in this
 					example:</p><code class="multiline brush: js;">$(document).ready(function() {
 	$('#example').dataTable();
-	
+
 	$('#example tbody').on('click', 'tr', function () {
 		var name = $('td', this).eq(0).text();
 		alert( 'You clicked on '+name+'\'s row' );

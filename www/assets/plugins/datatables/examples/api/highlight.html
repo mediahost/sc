@@ -28,7 +28,7 @@ td.highlight {
 $(document).ready(function() {
 	var lastIdx = null;
 	var table = $('#example').DataTable();
-	
+
 	$('#example tbody')
 		.on( 'mouseover', 'td', function () {
 			var colIdx = table.cell(this).index().column;
@@ -565,7 +565,7 @@ $(document).ready(function() {
 					example:</p><code class="multiline brush: js;">$(document).ready(function() {
 	var lastIdx = null;
 	var table = $('#example').DataTable();
-	
+
 	$('#example tbody')
 		.on( 'mouseover', 'td', function () {
 			var colIdx = table.cell(this).index().column;

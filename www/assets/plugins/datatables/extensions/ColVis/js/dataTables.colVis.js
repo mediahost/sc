@@ -321,7 +321,7 @@ ColVis.prototype = {
 			this.s.restore = this.s.sRestore;
 		}
 
-		// CamelCase to Hungarian for the column groups 
+		// CamelCase to Hungarian for the column groups
 		var groups = this.s.groups;
 		var hungarianGroups = this.s.aoGroups;
 		if ( groups ) {
@@ -1093,4 +1093,3 @@ else if ( jQuery && !jQuery.fn.dataTable.ColVis ) {
 
 
 })(window, document);
-

@@ -5,7 +5,7 @@ body {
   background-color: #858f9b;
 }
 
-/*********** 
+/***********
 Page Header
 ***********/
 /* Header search bar, toggler button & top menu */
@@ -410,8 +410,8 @@ Quick Sidebar Layout
   background: #9199a5;
 }
 
-/*** 
-Quick Sidebar Toggler 
+/***
+Quick Sidebar Toggler
 ***/
 .page-quick-sidebar-toggler {
   background: #adb3bc;
@@ -532,7 +532,7 @@ Quick Sidebar Content
 }
 
 /******
-Page Footer 
+Page Footer
 ******/
 .page-footer .page-footer-inner {
   color: #f5f6f7;

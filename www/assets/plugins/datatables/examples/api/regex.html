@@ -20,17 +20,17 @@
 
 
 function filterGlobal () {
-	$('#example').DataTable().search( 
+	$('#example').DataTable().search(
 		$('#global_filter').val(),
-		$('#global_regex').prop('checked'), 
+		$('#global_regex').prop('checked'),
 		$('#global_smart').prop('checked')
 	).draw();
 }
 
 function filterColumn ( i ) {
-	$('#example').DataTable().column( i ).search( 
+	$('#example').DataTable().column( i ).search(
 		$('#col'+i+'_filter').val(),
-		$('#col'+i+'_regex').prop('checked'), 
+		$('#col'+i+'_regex').prop('checked'),
 		$('#col'+i+'_smart').prop('checked')
 	).draw();
 }
@@ -634,17 +634,17 @@ $(document).ready(function() {
 				<div class="js">
 					<p>The Javascript shown below is used to initialise the table shown in this
 					example:</p><code class="multiline brush: js;">function filterGlobal () {
-	$('#example').DataTable().search( 
+	$('#example').DataTable().search(
 		$('#global_filter').val(),
-		$('#global_regex').prop('checked'), 
+		$('#global_regex').prop('checked'),
 		$('#global_smart').prop('checked')
 	).draw();
 }
 
 function filterColumn ( i ) {
-	$('#example').DataTable().column( i ).search( 
+	$('#example').DataTable().column( i ).search(
 		$('#col'+i+'_filter').val(),
-		$('#col'+i+'_regex').prop('checked'), 
+		$('#col'+i+'_regex').prop('checked'),
 		$('#col'+i+'_smart').prop('checked')
 	).draw();
 }

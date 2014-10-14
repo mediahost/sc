@@ -30,4 +30,3 @@
         maxOptions: false
     };
 }(jQuery));
-        

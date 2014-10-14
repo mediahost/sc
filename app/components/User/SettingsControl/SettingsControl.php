@@ -17,12 +17,12 @@ use App\Components,
  */
 class SettingsControl extends Components\BaseControl
 {
-	
+
 	public $onSave = [];
-	
+
 	/** @var EntityManager */
 	private $em;
-	
+
 	/** @var EntityDao */
 	private $userDao;
 
@@ -37,7 +37,7 @@ class SettingsControl extends Components\BaseControl
 
 	/** @var \App\Model\Storage\MessageStorage @inject */
 	public $messages;
-	
+
 	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 	public $settingsStorage;
 
@@ -69,7 +69,7 @@ class SettingsControl extends Components\BaseControl
 		$this->settingsStorage
 				->setLanguage($values->language)
 				->save();
-		
+
 		$this->presenter->flashMessage('Your settings has been saved.', 'success');
 		$this->presenter->redirect('this#personal-settings', [
 			'lang' => $this->settingsStorage->language,

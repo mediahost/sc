@@ -9,25 +9,25 @@
 <script>
 
 	$(document).ready(function() {
-	
+
 		$('#calendar').fullCalendar({
-		
+
 			editable: true,
-			
+
 			events: "json-events.php",
-			
+
 			eventDrop: function(event, delta) {
 				alert(event.title + ' was moved ' + delta + ' days\n' +
 					'(should probably update your database)');
 			},
-			
+
 			loading: function(bool) {
 				if (bool) $('#loading').show();
 				else $('#loading').hide();
 			}
-			
+
 		});
-		
+
 	});
 
 </script>
@@ -39,7 +39,7 @@
 		font-size: 14px;
 		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
 		}
-		
+
 	#loading {
 		position: absolute;
 		top: 5px;

@@ -479,7 +479,7 @@
             }
 
             function isValid(pos, c, strict, fromSetValid) { //strict true ~ no correction or autofill
-                strict = strict === true; //always set a value to strict to prevent possible strange behavior in the extensions 
+                strict = strict === true; //always set a value to strict to prevent possible strange behavior in the extensions
 
                 function _isValid(position, c, strict, fromSetValid) {
 
@@ -1124,7 +1124,7 @@
                     && !isMask(caretPos.begin)) {
                     e.keyCode = opts.keyCode.BACKSPACE;
                     keydownEvent.call(input, e);
-                } else { //nonnumerics don't fire keypress 
+                } else { //nonnumerics don't fire keypress
                     checkVal(input, false, false, currentValue.split(''));
                     writeBuffer(input, getBuffer());
                     if (isComplete(getBuffer()) === true)
@@ -1746,7 +1746,7 @@
                             return maskset['_buffer'].join('');
                         }
                         else return "";
-                    case "hasMaskedValue": //check wheter the returned value is masked or not; currently only works reliable when using jquery.val fn to retrieve the value 
+                    case "hasMaskedValue": //check wheter the returned value is masked or not; currently only works reliable when using jquery.val fn to retrieve the value
                         return this.data('_inputmask') ? !this.data('_inputmask')['opts'].autoUnmask : false;
                     case "isComplete":
                         if (this.data('_inputmask')) {
@@ -2449,7 +2449,7 @@ Optional extensions on the jquery.inputmask base
                     var escapedRadixPoint = $.inputmask.escapeRegex.call(this, opts.radixPoint);
                     var digitExpression = isNaN(opts.digits) ? opts.digits : '{0,' + opts.digits + '}';
                     var integerExpression = isNaN(opts.integerDigits) ? opts.integerDigits : '{1,' + opts.integerDigits + '}';
-                    var signedExpression = opts.allowPlus || opts.allowMinus ? "[" + (opts.allowPlus ? "\+" : "") + (opts.allowMinus ? "-" : "") + "]?" : "";                   
+                    var signedExpression = opts.allowPlus || opts.allowMinus ? "[" + (opts.allowPlus ? "\+" : "") + (opts.allowMinus ? "-" : "") + "]?" : "";
 
                     var currentRegExp = "^" + signedExpression + "\\d" + integerExpression + "(" + escapedRadixPoint + "\\d" + digitExpression + ")?$";
                     return new RegExp(currentRegExp);
@@ -2748,10 +2748,10 @@ Phone extension.
 When using this extension make sure you specify the correct url to get the masks
 
  $(selector).inputmask("phone", {
-                url: "Scripts/jquery.inputmask/phone-codes/phone-codes.json", 
+                url: "Scripts/jquery.inputmask/phone-codes/phone-codes.json",
                 onKeyValidation: function () { //show some metadata in the console
                     console.log($(this).inputmask("getmetadata")["name_en"]);
-                } 
+                }
   });
 
 

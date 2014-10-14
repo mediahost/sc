@@ -10,7 +10,7 @@ use Tracy\Debugger as Debug;
  */
 class InstallPresenter extends BasePresenter
 {
-	
+
 	const PARAM_USERS = "startUsers";
 	const PARAM_DOCTRINE = "doctrine";
 	const PARAM_ADMINER = "adminer";
@@ -87,7 +87,7 @@ class InstallPresenter extends BasePresenter
 	public function actionDefault($printHtml = TRUE)
 	{
 		$this->printHtml = $printHtml;
-		
+
 		foreach ($this->toInstall as $function => $serviceArr) {
 			list($name, $params) = each($serviceArr);
 			$this->callService($function, $name, $params);
@@ -117,7 +117,7 @@ class InstallPresenter extends BasePresenter
 		}
 		return $this;
 	}
-	
+
 	private function installDb($doctrine = FALSE)
 	{
 		if ($doctrine) {
@@ -126,26 +126,26 @@ class InstallPresenter extends BasePresenter
 		$this->toInstall['roles'] = ['Roles' => [$this->permissions->getRoles(), $this->roleFacade]];
 		$this->toInstall['users'] = ['Users' => [$this->initUsers, $this->roleFacade, $this->userFacade]];
 	}
-	
+
 	private function installAdminer($adminer = FALSE)
 	{
 		if ($adminer) {
 			$this->toInstall['adminer'] = ['Adminer' => [$this->wwwDir]];
 		}
 	}
-	
+
 	private function installComposer($composer = FALSE)
 	{
 		if ($composer) {
 			$this->toInstall['composer'] = ['Composer' => [$this->appDir]];
 		}
 	}
-	
+
 	private function setUserSettings()
 	{
 		$userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
 		$users = $userDao->findAll();
-		
+
 		/* @var $user \App\Model\Entity\User */
 		foreach ($users as $user) {
 			if ($user->settings === NULL) {
@@ -153,7 +153,7 @@ class InstallPresenter extends BasePresenter
 				$this->em->persist($user);
 			}
 		}
-		
+
 		$this->em->flush();
 	}
 

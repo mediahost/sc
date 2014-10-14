@@ -33,7 +33,7 @@
 
         return this.each(function () {
             var item = $(this);
-         
+
 
             //shorten all the item.data('rateit-XXX'), will save space in closure compiler, will be like item.data('XXX') will become x('XXX')
             var itemdata = function (key, value) {
@@ -88,7 +88,7 @@
                 if (p1 == 'value')
                     p2 = (p2 == null) ? itemdata('min') : Math.max(itemdata('min'), Math.min(itemdata('max'), p2));
                 if (itemdata('backingfld')) {
-                    //if we have a backing field, check which fields we should update. 
+                    //if we have a backing field, check which fields we should update.
                     //In case of input[type=range], although we did read its attributes even in browsers that don't support it (using fld.attr())
                     //we only update it in browser that support it (&& fld[0].min only works in supporting browsers), not only does it save us from checking if it is range input type, it also is unnecessary.
                     var fld = $(itemdata('backingfld'));
@@ -122,7 +122,7 @@
                     var fld = $(itemdata('backingfld'));
                     itemdata('value', fld.hide().val());
 
-                    if (fld.attr('disabled') || fld.attr('readonly')) 
+                    if (fld.attr('disabled') || fld.attr('readonly'))
                         itemdata('readonly', true); //http://rateit.codeplex.com/discussions/362055 , if a backing field is disabled or readonly at instantiation, make rateit readonly.
 
 
@@ -153,16 +153,16 @@
                     item.find('.rateit-selected').addClass('rateit-selected-rtl');
                     item.find('.rateit-hover').addClass('rateit-hover-rtl');
                 }
-                
+
                 itemdata('init', JSON.parse(JSON.stringify(item.data()))); //cheap way to create a clone
             }
-            //resize the height of all elements, 
+            //resize the height of all elements,
             item.find('.rateit-selected, .rateit-hover').height(itemdata('starheight'));
 
             //set the range element to fit all the stars.
             var range = item.find('.rateit-range');
             range.width(itemdata('starwidth') * (itemdata('max') - itemdata('min'))).height(itemdata('starheight'));
-             
+
 
             //add/remove the preset class
             var presetclass = 'rateit-preset' + ((ltr) ? '' : '-rtl');
@@ -186,9 +186,9 @@
                     item.rateit('value', null);
                     item.trigger('reset');
                 }).data('wired', true);
-                
+
             }
-            
+
             //this function calculates the score based on the current position of the mouse.
             var calcRawScore = function (element, event) {
                 var pageX = (event.changedTouches) ? event.changedTouches[0].pageX : event.pageX;
@@ -231,7 +231,7 @@
                 //if we are not read only, add all the events
 
                 //if we have a reset button, set the event handler.
-                if (!itemdata('resetable')) 
+                if (!itemdata('resetable'))
                     resetbtn.hide();
 
                 //when the mouse goes over the range element, we set the "hover" stars.
@@ -264,7 +264,7 @@
                             setSelection(Math.max(itemdata('value') - itemdata('step'), itemdata('min')));
                         }
                     });
-                  
+
                     itemdata('wired', true);
                 }
                 if (itemdata('resetable')) {

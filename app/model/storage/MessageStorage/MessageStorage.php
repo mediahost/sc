@@ -14,7 +14,7 @@ use Nette\Bridges\ApplicationLatte\Template,
 class MessageStorage extends \Nette\Object
 {
 	/**
-	 * 
+	 *
 	 * @param Template $template
 	 * @param type $filename
 	 * @param type $parameters
@@ -27,16 +27,16 @@ class MessageStorage extends \Nette\Object
 
 		$message = new Message();
 		$message->setHtmlBody($template);
-		
+
 		return $message;
 	}
-	
+
 	public function getRegistrationMail(Template $template, $parameters)
 	{
 		$message = $this->getMessage($template, 'registration', $parameters);
 		return $message->setFrom('noreply@sc.com');
 	}
-	
+
 	public function getForgottenMail(Template $template, $parameters)
 	{
 		$message = $this->getMessage($template, 'forgotten', $parameters);

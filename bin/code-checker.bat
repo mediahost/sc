@@ -1,0 +1,1 @@
+php code-checker.php %*

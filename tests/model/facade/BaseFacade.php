@@ -9,7 +9,7 @@ use Doctrine\ORM\Tools\SchemaTool,
 	App\Model\Facade;
 
 /**
- * 
+ *
  */
 abstract class BaseFacade extends Tester\TestCase
 {
@@ -25,13 +25,13 @@ abstract class BaseFacade extends Tester\TestCase
 
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
-	
+
 	/** @var Facade\RegistrationFacade @inject */
 	public $registrationFacade;
 
 	/** @var Facade\RoleFacade @inject */
 	public $roleFacade;
-	
+
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
 
@@ -41,15 +41,15 @@ abstract class BaseFacade extends Tester\TestCase
 		$this->container->callInjects($this);
 
 		$this->schemaTool = new SchemaTool($this->em);
-		
+
 		\Tester\Environment::lock('db', LOCK_DIR);
 	}
-	
+
 	public function setUp()
 	{
 		$this->schemaTool->updateSchema($this->getClasses());
 	}
-	
+
 	public function tearDown()
 	{
 		$this->schemaTool->dropSchema($this->getClasses());

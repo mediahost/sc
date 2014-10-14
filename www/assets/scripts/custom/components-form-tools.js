@@ -414,7 +414,7 @@ var ComponentsFormTools = function() {
                     return word.match(/[a-z].[0-9]/) && score;
                 }, 10, true);
 
-                // set as initialized 
+                // set as initialized
                 initialized = true;
             }
         });

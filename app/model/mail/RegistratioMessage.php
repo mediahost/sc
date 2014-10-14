@@ -11,5 +11,5 @@ use Nette\Mail\Message;
  */
 class RegistratioMessage extends Message
 {
-	
+
 }

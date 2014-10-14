@@ -19,16 +19,16 @@ class UserFormFactory extends FormFactory
 
 	/** @var \App\Model\Facade\RoleFacade */
 	private $roleFacade;
-	
+
 	/** @var EntityManager */
 	private $em;
-	
+
 	/** @var EntityDao */
 	private $roleDao;
-	
+
 	/** @var UserFacade */
 	private $userFacade;
-	
+
 	/** @var array */
 	private $roles;
 
@@ -59,12 +59,12 @@ class UserFormFactory extends FormFactory
 		if (!$this->isAdding()) {
 			$mail->setDisabled();
 		}
-				
+
 		$password = $form->addText('password', 'Password');
 		if ($this->isAdding()) {
 			$password->addRule(Form::FILLED, 'Password must be filled');
 		}
-		
+
 		$role = $form->addMultiSelect2('roles', 'Roles', $this->getRoles())
 				->setRequired('Select any role');
 

@@ -183,4 +183,3 @@ if ( $.fn.DataTable.TableTools ) {
 		}
 	} );
 }
-

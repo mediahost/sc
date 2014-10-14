@@ -1,4 +1,4 @@
-bootpag - dynamic pagination 
+bootpag - dynamic pagination
 ============================
 
 This jQuery plugin helps you create dynamic pagination with [Bootstrap](http://getbootstrap.com/) or in any other html pages.
@@ -23,7 +23,7 @@ $('#pagination-here').bootpag({
     $("#content").html("Page " + num); // or some ajax content loading...
     // ... after content load -> change total to 10
     $(this).bootpag({total: 10, maxVisible: 10});
-}); 
+});
 
 ```
 #License

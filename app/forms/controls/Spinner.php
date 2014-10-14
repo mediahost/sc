@@ -82,7 +82,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -93,7 +93,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -105,7 +105,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -116,7 +116,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -127,7 +127,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -138,7 +138,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -149,7 +149,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -165,7 +165,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */
@@ -181,7 +181,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $value
 	 * @return self
 	 */

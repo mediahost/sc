@@ -26,7 +26,7 @@
 .ls-borderlessdark .ls-nav-stop,
 .ls-borderlessdark .ls-fullscreen,
 .ls-borderlessdark .ls-loading-container {
-	background-image: url(skin.png);	
+	background-image: url(skin.png);
 }
 
 .ls-borderlessdark .ls-playvideo {
@@ -82,11 +82,11 @@
 }
 
 .ls-borderlessdark .ls-nav-sideleft {
-	background-position: -150px -150px;	
+	background-position: -150px -150px;
 }
 
 .ls-borderlessdark .ls-nav-sideright {
-	background-position: -225px -150px;	
+	background-position: -225px -150px;
 }
 
 
@@ -97,16 +97,16 @@
 	height: 50px;
 	z-index: 10000;
 	top: 50%;
-	margin-top: -22px;	
+	margin-top: -22px;
 	position: absolute;
 }
 
 .ls-borderlessdark .ls-nav-prev {
-	left: 10px;	
+	left: 10px;
 }
 
 .ls-borderlessdark .ls-nav-next {
-	right: 10px;	
+	right: 10px;
 }
 
 
@@ -144,7 +144,7 @@
 }
 
 .ls-borderlessdark .ls-nav-sides {
-	width: 13px;	
+	width: 13px;
 }
 
 
@@ -200,14 +200,14 @@
 	height: 50px;
 	margin-left: -25px;
 	margin-top: -22px;
-	background-position: -450px -150px;	
+	background-position: -450px -150px;
 }
 
 .ls-borderlessdark .ls-loading-indicator {
 	width: 22px;
 	height: 22px;
 	margin-top: 11px;
-	background-image: url(loading.gif);	
+	background-image: url(loading.gif);
 }
 
 

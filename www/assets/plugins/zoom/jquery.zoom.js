@@ -191,7 +191,7 @@
 				// Touch fallback
 				if (settings.touch) {
 					$(source)
-						.on('touchstart.zoom', function (e) { 
+						.on('touchstart.zoom', function (e) {
 							e.preventDefault();
 							if (touched) {
 								touched = false;
@@ -201,12 +201,12 @@
 								start( e.originalEvent.touches[0] || e.originalEvent.changedTouches[0] );
 							}
 						})
-						.on('touchmove.zoom', function (e) { 
+						.on('touchmove.zoom', function (e) {
 							e.preventDefault();
 							zoom.move( e.originalEvent.touches[0] || e.originalEvent.changedTouches[0] );
 						});
 				}
-				
+
 				if ($.isFunction(settings.callback)) {
 					settings.callback.call(img);
 				}

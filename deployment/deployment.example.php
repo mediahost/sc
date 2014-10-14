@@ -8,4 +8,3 @@ $domain = 'http://example.com';
 $array = include 'deployment.config.php';
 
 return $array;
-

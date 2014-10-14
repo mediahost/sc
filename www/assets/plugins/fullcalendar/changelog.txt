@@ -194,7 +194,7 @@ version 1.4.4 (2/3/10)
 version 1.4.3 (12/22/09)
 	- added destroy method
 	- Google Calendar event pages respect currentTimezone
-	- caching now handled by jQuery's ajax	
+	- caching now handled by jQuery's ajax
 	- protection from setting aspectRatio to zero
 	- bugfixes
 		- parseISO8601 and DST caused certain events to display day before
@@ -379,4 +379,3 @@ version 1.1 (5/10/09)
 		- for THEAD and TBODY (in 1.0, just used TBODY, restructured in 1.1)
 		- IF UPGRADING FROM FULLCALENDAR 1.0, YOU MUST UPGRADE FULLCALENDAR.CSS
 		  !!!!!!!!!!!
-		  

@@ -11,7 +11,7 @@ class Form extends \Nette\Application\UI\Form
 {
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $caption
 	 * @return Controls\DateInput
@@ -22,7 +22,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $caption
 	 * @return Controls\TagInput
@@ -33,7 +33,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $caption
 	 * @return Controls\DatePicker
@@ -44,7 +44,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $caption
 	 * @param type $rows
@@ -56,7 +56,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $caption
 	 * @param type $onText
@@ -69,7 +69,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $caption
 	 * @return Controls\TouchSpin
@@ -80,7 +80,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $caption
 	 * @return Controls\Spinner
@@ -91,7 +91,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $label
 	 * @return Controls\Select2
@@ -102,7 +102,7 @@ class Form extends \Nette\Application\UI\Form
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $name
 	 * @param type $label
 	 * @return Controls\MultiSelect2

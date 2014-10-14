@@ -18,7 +18,7 @@ CREATE TABLE datatables_demo (
 );
 
 INSERT INTO datatables_demo
-		( id, first_name, last_name, age, position, salary, start_date, extn, email, office ) 
+		( id, first_name, last_name, age, position, salary, start_date, extn, email, office )
 	VALUES
 		( 1, 'Tiger', 'Nixon', 61, 'System Architect', 320800, '2011/04/25', 5421, 't.nixon@datatables.net', 'Edinburgh' ),
 		( 2, 'Garrett', 'Winters', 63, 'Accountant', 170750, '2011/07/25', 8422, 'g.winters@datatables.net', 'Tokyo' ),

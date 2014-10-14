@@ -23,7 +23,7 @@
 	function cancelTap() {
 		tapValid = false;
 	}
-	
+
 	function cancelHold() {
 		if (rightClickPending) {
 			window.clearTimeout(holdTimeout);
@@ -31,7 +31,7 @@
 			rightClickEvent = null;
 		}
 	}
-	
+
 	function startHold(event) {
 		if (rightClickPending) {
 			return;
@@ -172,7 +172,7 @@
 			currentDOMElement.dispatchEvent(simulatedEvent);
 		}
 	}
-	
+
 	$.extend($.support, {
 		touch: "ontouchend" in document
 	});

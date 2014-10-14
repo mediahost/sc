@@ -1,5 +1,5 @@
 var Fullscreen = function() {
-    
+
     // Handle full screen mode toggle
     var handleFullScreenMode = function() {
         // mozfullscreenerror event handler

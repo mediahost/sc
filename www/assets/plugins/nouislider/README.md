@@ -35,18 +35,18 @@ Unit tests where added with noUiSlider 6. The event testing coverage isn't 100% 
 
 Version numbering
 ------------------------------
-Version numbering follows the 'Semantic versioning' style.  
+Version numbering follows the 'Semantic versioning' style.
 You'll find an excellent documentation at [Semver.org](http://semver.org/).
 
 Compression and Error checking
 ------------------------------
-**CSS** ([CSSMinifier](http://cssminifier.com/))  
+**CSS** ([CSSMinifier](http://cssminifier.com/))
 The stylesheet is trimmed to remove whitespace and comments to provide a `min` version.
 
-**JS** ([Google Closure Compiler](http://closure-compiler.appspot.com/home))  
+**JS** ([Google Closure Compiler](http://closure-compiler.appspot.com/home))
 The plugin is compressed using the Google Closure compiler. The source was adapted to facilitate the `ADVANCED_OPTIMIZATIONS` level.
 
-**Code** ([JsLint](http://jslint.com/))  
+**Code** ([JsLint](http://jslint.com/))
 The plugin code is checked using JsLint. Any remaining errors and warnings are intentional.
 
 Known issues

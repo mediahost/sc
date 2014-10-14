@@ -17,7 +17,7 @@ class Select2 extends \Nette\Forms\Controls\SelectBox
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $prompt
 	 * @return self
 	 */

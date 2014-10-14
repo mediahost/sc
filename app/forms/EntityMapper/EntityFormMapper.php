@@ -17,16 +17,16 @@ use Tracy\Debugger as Debug;
  */
 class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 {
-	
+
 	/** @var EntityManager */
 	private $em;
-	
+
 	/** @var EntityDao */
 	private $roleDao;
-	
+
 	/** @var EntityDao */
 	private $authDao;
-	
+
 	/** @var UserFacade */
 	private $userFacade;
 
@@ -62,9 +62,9 @@ class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 			if ($form->values->password !== NULL && $form->values->password !== "") {
 				$this->userFacade->setAppPassword($entity, $form->values->password);
 			}
-			
+
 			$entity->clearRoles();
-			
+
 			foreach ($form->values->roles as $id) {
 				$item = $this->roleDao->find($id);
 				if ($item) {

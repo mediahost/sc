@@ -12,10 +12,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	/** @persistent string */
 	public $lang = 'en';
-	
+
 	/** @persistent */
     public $backlink = '';
-	
+
 	/** @var \Venne\Bridges\Kdyby\DoctrineForms\FormFactoryFactory @inject */
 	public $formFactoryFactory;
 
@@ -27,10 +27,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	/** @var \GettextTranslator\Gettext @inject */
 	public $translator;
-	
+
 	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 	public $settingsStorage;
-	
+
 	/** @var \Kdyby\Doctrine\EntityManager @inject */
 	public $em;
 
@@ -39,7 +39,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		parent::startup();
 		$this->setLang();
 	}
-	
+
 	public function flashMessage($message, $type = 'info')
 	{
 		if (!$message instanceof \Nette\Utils\Html) {
@@ -89,7 +89,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 					->setLanguage($this->lang)
 					->save();
 		}
-		
+
 		$this->translator->setLang($this->lang);
 	}
 // </editor-fold>

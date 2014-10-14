@@ -7,7 +7,7 @@ var QuickSidebar = function () {
     var handleQuickSidebarToggler = function () {
         // quick sidebar toggler
         $('.top-menu .dropdown-quick-sidebar-toggler a, .page-quick-sidebar-toggler').click(function (e) {
-            $('body').toggleClass('page-quick-sidebar-open'); 
+            $('body').toggleClass('page-quick-sidebar-open');
         });
     }
 
@@ -22,7 +22,7 @@ var QuickSidebar = function () {
 
             chatUsersHeight = wrapper.height() - wrapper.find('.nav-justified > .nav-tabs').outerHeight();
 
-            // chat user list 
+            // chat user list
             Metronic.destroySlimScroll(chatUsers);
             chatUsers.attr("data-height", chatUsersHeight);
             Metronic.initSlimScroll(chatUsers);
@@ -30,7 +30,7 @@ var QuickSidebar = function () {
             var chatMessages = wrapperChat.find('.page-quick-sidebar-chat-user-messages');
             var chatMessagesHeight = chatUsersHeight - wrapperChat.find('.page-quick-sidebar-chat-user-form').outerHeight() - wrapperChat.find('.page-quick-sidebar-nav').outerHeight();
 
-            // user chat messages 
+            // user chat messages
             Metronic.destroySlimScroll(chatMessages);
             chatMessages.attr("data-height", chatMessagesHeight);
             Metronic.initSlimScroll(chatMessages);
@@ -88,7 +88,7 @@ var QuickSidebar = function () {
                 });
 
                 return height;
-            }           
+            }
 
             chatContainer.slimScroll({
                 scrollTo: getLastPostPos()
@@ -129,7 +129,7 @@ var QuickSidebar = function () {
 
             alertListHeight = wrapper.height() - wrapper.find('.nav-justified > .nav-tabs').outerHeight();
 
-            // alerts list 
+            // alerts list
             Metronic.destroySlimScroll(alertList);
             alertList.attr("data-height", alertListHeight);
             Metronic.initSlimScroll(alertList);
@@ -150,7 +150,7 @@ var QuickSidebar = function () {
 
             settingsListHeight = wrapper.height() - wrapper.find('.nav-justified > .nav-tabs').outerHeight();
 
-            // alerts list 
+            // alerts list
             Metronic.destroySlimScroll(settingsList);
             settingsList.attr("data-height", settingsListHeight);
             Metronic.initSlimScroll(settingsList);

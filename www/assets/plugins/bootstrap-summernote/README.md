@@ -22,7 +22,7 @@ Summernote has something specials no like others.
 
 ### Easy to install
 
-Summernote uses opensouce libraries(jQuery, bootstrap, fontAwesome) 
+Summernote uses opensouce libraries(jQuery, bootstrap, fontAwesome)
 
 #### 01. include js/css
 
@@ -30,7 +30,7 @@ Include Following code into `<head>` tag of your HTML:
 
 ```html
 <!-- include libries(jQuery, bootstrap, fontawesome) -->
-<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.min.js"></script> 
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.min.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
 <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />

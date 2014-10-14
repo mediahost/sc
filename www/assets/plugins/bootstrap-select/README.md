@@ -24,7 +24,7 @@ Create your `<select>` with the `.selectpicker` class.
       <option>Ketchup</option>
       <option>Barbecue</option>
     </select>
-    
+
 Enable Bootstrap-Select via JavaScript:
 
     $('.selectpicker').selectpicker();

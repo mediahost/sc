@@ -21,7 +21,7 @@ class UserSettingsStorage extends \Nette\Object
 
 	/** @var \Kdyby\Doctrine\EntityDao */
 	private $userDao;
-	
+
 	/** @var array */
 	private $defaults = [
 		'language' => 'en',
@@ -43,7 +43,7 @@ class UserSettingsStorage extends \Nette\Object
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return UserSettingsStorage
 	 */
@@ -71,7 +71,7 @@ class UserSettingsStorage extends \Nette\Object
 		unset($this->section->settings);
 		return $this;
 	}
-	
+
 	/**
 	 * @return UserSettings
 	 */
@@ -98,7 +98,7 @@ class UserSettingsStorage extends \Nette\Object
 		$settings = new UserSettings();
 		$settings->language = $this->defaults['language'];
 		$this->settings = $settings;
-		
+
 		return $this;
 	}
 
@@ -115,10 +115,10 @@ class UserSettingsStorage extends \Nette\Object
 	 * @return sting
 	 */
 	public function getLanguage()
-	{	
+	{
 		return $this->getProperty('language');
 	}
-	
+
 	/**
 	 * @param string $property
 	 * @param mixed $value
@@ -134,7 +134,7 @@ class UserSettingsStorage extends \Nette\Object
 
 		return $this;
 	}
-	
+
 	/**
 	 * @param string $property
 	 * @return mixed
@@ -144,7 +144,7 @@ class UserSettingsStorage extends \Nette\Object
 		if ($this->settings->$property === NULL) {
 			return $this->defaults[$property];
 		}
-		
+
 		return $this->settings->$property;
 	}
 

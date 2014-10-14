@@ -26,7 +26,7 @@ class RoleFacadeTest extends BaseFacade
 		// DAOs
 		$this->roleDao = $this->em->getDao(\App\Model\Entity\Role::getClassName());
 	}
-	
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -37,7 +37,7 @@ class RoleFacadeTest extends BaseFacade
 	{
 		$this->roleFacade->create('role1');
 		$this->roleFacade->create('role2');
-		
+
 		$roles = $this->roleFacade->getRoles();
 		Assert::type('array', $roles);
 		Assert::same($roles[1], Entity\Role::ROLE_CANDIDATE);
@@ -52,7 +52,7 @@ class RoleFacadeTest extends BaseFacade
 	}
 
 	public function testIsUnique()
-	{			
+	{
 		Assert::false($this->roleFacade->isUnique(Entity\Role::ROLE_CANDIDATE));
 		Assert::true($this->roleFacade->isUnique('galactic_emperor'));
 	}

@@ -17,7 +17,7 @@ Highlights:
 - non-greedy masks
 - many features can be enabled/disabled/configured by options
 - supports readonly/disabled/dir="rtl" attributes
-- support data-inputmask attribute  
+- support data-inputmask attribute
 - multi-mask support
 - regex-mask support
 - value formatting / validating without input element
@@ -45,7 +45,7 @@ $(document).ready(function(){
    $(selector).inputmask("99-9999999");  //direct mask
    $(selector).inputmask("mask", {"mask": "(999) 999-9999"}); //specifying fn & options
    $(selector).inputmask({"mask": "99-9999999"}); //specifying options only
-   $(selector).inputmask("9-a{1,3}9{1,3}"); //direct mask with dynamic syntax 
+   $(selector).inputmask("9-a{1,3}9{1,3}"); //direct mask with dynamic syntax
 });
 ```
 
@@ -80,9 +80,9 @@ $(document).ready(function(){
 
   - 9 : numeric
   - a : alphabetical
-  - * : alphanumeric 
+  - * : alphanumeric
 
-There are more definitions defined within the extensions.  
+There are more definitions defined within the extensions.
 You can find info within the js-files or by further exploring the options.
 
 ## Masking types
@@ -104,8 +104,8 @@ TODO
 
 ## Define custom definitions
 
-You can define your own definitions to use in your mask.  
-Start by choosing a masksymbol. 
+You can define your own definitions to use in your mask.
+Start by choosing a masksymbol.
 
 ##### validator
 Next define your validator.  The validator can be a regular expression or a function.
@@ -114,7 +114,7 @@ Next define your validator.  The validator can be a regular expression or a func
 Cardinality specifies how many characters are represented and validated for the definition.
 
 ##### prevalidator
-The prevalidator option is 
+The prevalidator option is
 used to validate the characters before the definition cardinality is reached. (see 'j' example)
 
 ##### definitionSymbol
@@ -129,9 +129,9 @@ $.extend($.inputmask.defaults.definitions, {
         'prevalidator': null
     },
 	'g': {
-        "validator": function (chrs, buffer, pos, strict, opts) { 
+        "validator": function (chrs, buffer, pos, strict, opts) {
 			//do some logic and return true, false, or { "pos": new position, "c": character to place }
-		}		
+		}
         "cardinality": 1,
         'prevalidator': null
     },
@@ -143,7 +143,7 @@ $.extend($.inputmask.defaults.definitions, {
                         { validator: "(19|20)", cardinality: 2 },
                         { validator: "(19|20)\\d", cardinality: 3 }
             ]
-     }, 
+     },
 	 'x': {
         validator: "[0-2]",
         cardinality: 1,
@@ -287,7 +287,7 @@ $(document).ready(function(){
 
 #### skipRadixDance
 
-If you define a radixPoint the caret will always jump to the integer part, until you type the radixpoint.  
+If you define a radixPoint the caret will always jump to the integer part, until you type the radixpoint.
 
 ```javascript
 $(document).ready(function(){
@@ -299,7 +299,7 @@ This behavior can be skipped by setting the skipRadixDance to true.
 
 #### align the numerics to the right
 
-By setting the rightAlignNumerics you can specify to right align a numeric inputmask.  Default is true.  
+By setting the rightAlignNumerics you can specify to right align a numeric inputmask.  Default is true.
 
 ```javascript
 $(document).ready(function(){
@@ -343,18 +343,18 @@ Example:
 ```javascript
 $('#test').inputmask('(99) 9999[9]-9999');
 ```
-This mask wil allow input like (99) 99999-9999 or (99) 9999-9999.  
-Input => 12123451234      mask => (12) 12345-1234    (trigger complete)  
-Input => 121234-1234      mask => (12) 1234-1234     (trigger complete)  
-Input => 1212341234       mask => (12) 12341-234_    (trigger incomplete)  
+This mask wil allow input like (99) 99999-9999 or (99) 9999-9999.
+Input => 12123451234      mask => (12) 12345-1234    (trigger complete)
+Input => 121234-1234      mask => (12) 1234-1234     (trigger complete)
+Input => 1212341234       mask => (12) 12341-234_    (trigger incomplete)
 
 #### skipOptionalPartCharacter
-As an extra there is another configurable character which is used to skip an optional part in the mask.  
+As an extra there is another configurable character which is used to skip an optional part in the mask.
 
 ```javascript
 skipOptionalPartCharacter: " ",
 ```
-Input => 121234 1234      mask => (12) 1234-1234     (trigger complete)  
+Input => 121234 1234      mask => (12) 1234-1234     (trigger complete)
 
 When `clearMaskOnLostFocus: true` is set in the options (default), the mask will clear out the optional part when it is not filled in and this only in case the optional part is at the end of the mask.
 
@@ -375,11 +375,11 @@ When defining an optional mask together with the greedy: false option, the input
 $(selector).inputmask({ mask: "99999[-9999]", greedy: false });
 ```
 
-The initial mask shown will be "_____" instead of "_____-____". 
+The initial mask shown will be "_____" instead of "_____-____".
 
 ### Multiple masks
 
-You can define multiple mask for your input.  Depending on the input the masking will switch between the defined masks.  
+You can define multiple mask for your input.  Depending on the input the masking will switch between the defined masks.
 This can be useful when the masks are too different to solve it with optional parts.
 
 ```javascript
@@ -448,11 +448,11 @@ $(document).ready(function(){
 
 ### auto upper/lower- casing inputmask
 
-You can define within a definition to automatically lowercase or uppercase the entry in an input by giving the casing.  
+You can define within a definition to automatically lowercase or uppercase the entry in an input by giving the casing.
 Casing can be null, "upper" or "lower"
 ```javascript
     $.extend($.inputmask.defaults.definitions, {
-        'A': { 
+        'A': {
             validator: "[A-Za-z]",
             cardinality: 1,
             casing: "upper" //auto uppercasing
@@ -525,7 +525,7 @@ $(document).ready(function(){
 
 ### hasMaskedValue
 
-Check whether the returned value is masked or not; currently only works reliably when using jquery.val fn to retrieve the value 
+Check whether the returned value is masked or not; currently only works reliably when using jquery.val fn to retrieve the value
 
 ```javascript
 $(document).ready(function(){
@@ -534,8 +534,8 @@ $(document).ready(function(){
 
 	var val = $("#test").val();
     if($("#test").inputmask("hasMaskedValue"))
-	  validateMaskedValue(val); 
-   else validateValue(val); 
+	  validateMaskedValue(val);
+   else validateValue(val);
 });
 ```
 ### showMaskOnFocus
@@ -593,11 +593,11 @@ Show the current mask definition as a tooltip.
 
 ## Function overrides
 ### isComplete
-With this call-in you can override the default implementation of the isComplete function.  
+With this call-in you can override the default implementation of the isComplete function.
 
 ```javascript
-$("selector).inputmask("Regex", { 
-	regex: "[0-9]*", 
+$("selector).inputmask("Regex", {
+	regex: "[0-9]*",
 	isComplete: function(buffer, opts) {
 		return new RegExp(opts.regex).test(buffer.join(''));
 	}
@@ -699,10 +699,10 @@ $(document).ready(function(){
 The date aliases take leap years into account.  There is also autocompletion on day, month, year.
 For example:
 
-input:	2/2/2012 		result: 02/02/2012  
-input:  352012			result: 03/05/2012  
-input:  3/530			result: 03/05/2030  
-input:  ctrl rightarrow	        result: the date from today  
+input:	2/2/2012 		result: 02/02/2012
+input:  352012			result: 03/05/2012
+input:  3/530			result: 03/05/2030
+input:  ctrl rightarrow	        result: the date from today
 
 ```javascript
 $(document).ready(function(){
@@ -723,7 +723,7 @@ $(document).ready(function(){
 
 RadixDance
 
-With the decimal mask the caret will always jump to the integer part, until you type the radixpoint.  
+With the decimal mask the caret will always jump to the integer part, until you type the radixpoint.
 There is autocompletion on tab with decimal numbers.  You can disable this behaviour by setting the skipRadixDance to true.
 
 Define the radixpoint
@@ -759,7 +759,7 @@ $(document).ready(function(){
 
 ## regex extensions
 
-With the regex extension you can use any regular expression as a mask.  Currently this does only input restriction.  
+With the regex extension you can use any regular expression as a mask.  Currently this does only input restriction.
 There is no further masking visualization.
 
 Example simple email regex:
@@ -774,10 +774,10 @@ Uses the phone mask definitions from https://github.com/andr-04/inputmask-multi
 
 ```javascript
  $(selector).inputmask("phone", {
-                url: "Scripts/jquery.inputmask/phone-codes/phone-codes.json", 
+                url: "Scripts/jquery.inputmask/phone-codes/phone-codes.json",
                 onKeyValidation: function () { //show some metadata in the console
                     console.log($(this).inputmask("getmetadata")["name_en"]);
-                } 
+                }
   });
 ```
 
@@ -795,5 +795,5 @@ You can find/modify/extend this alias in the jquery.inputmask.extensions.js
 
 ##External links
 
-https://github.com/andr-04/inputmask-multi  
+https://github.com/andr-04/inputmask-multi
 https://github.com/greengerong/green.inputmask4angular

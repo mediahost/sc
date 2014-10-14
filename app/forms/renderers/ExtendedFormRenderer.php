@@ -35,7 +35,7 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 
 	protected function customizeControl(&$control, &$usedPrimary)
 	{
-		
+
 	}
 
 	/**

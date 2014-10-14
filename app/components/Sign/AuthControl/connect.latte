@@ -17,7 +17,7 @@
                     {$source['name']}
                 </td>
                 <td class="buttons">
-                    <a n:class="btn, btn-sm, !$isActive ? green, isset($source['plink']) ? toggleSetPassword" 
+                    <a n:class="btn, btn-sm, !$isActive ? green, isset($source['plink']) ? toggleSetPassword"
                        {if isset($source['plink'])}href="{plink $source['plink']}"{* set password *}
                        {elseif isset($source['arg'])}href="{link $source['link'] $source['arg']}"{* deaktivace *}
                        {else}href="{link $source['link']}"{* aktivace *}

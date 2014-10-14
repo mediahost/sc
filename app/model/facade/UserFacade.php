@@ -18,7 +18,7 @@ class UserFacade extends BaseFacade
 
 	/** @var EntityDao */
 	private $authDao;
-	
+
 	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 
 	protected function init()
@@ -139,7 +139,7 @@ class UserFacade extends BaseFacade
 		$user->setRecovery(\Nette\Utils\Strings::random(32), 'now + 1 hour');
 		return $this->userDao->save($user);
 	}
-	
+
 	/**
 	 * Delete all user data (Auth, User)
 	 * @param int $id User ID.
@@ -148,12 +148,12 @@ class UserFacade extends BaseFacade
 	public function hardDelete($id)
 	{
 		$user = $this->userDao->find($id);
-		
+
 		if ($user !== NULL) {
 			$this->em->remove($user);
 			$this->em->flush();
 		}
-		
+
 		return $user;
 	}
 

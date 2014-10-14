@@ -99,4 +99,3 @@ if ( DataTable.TableTools ) {
 
 
 }());
-

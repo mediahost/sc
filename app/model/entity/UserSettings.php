@@ -18,7 +18,7 @@ class UserSettings extends \Kdyby\Doctrine\Entities\BaseEntity
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      **/
     protected $user;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=2, nullable=true)
 	 */

@@ -17,10 +17,10 @@ use App\Components,
  */
 class RecoveryControl extends Components\BaseControl
 {
-	
+
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
-	
+
 	/** @var \App\Model\Entity\Auth */
 	private $auth;
 
@@ -48,7 +48,7 @@ class RecoveryControl extends Components\BaseControl
 		$form->addSubmit('cancel', 'Back')
 				->setValidationScope(FALSE)
 				->onClick[] = $this->recoveryFormCancel;
-		
+
 		$form->onSuccess[] = $this->recoveryFormSucceeded;
 		return $form;
 	}
@@ -62,12 +62,12 @@ class RecoveryControl extends Components\BaseControl
 	{
 		$auth = $this->authFacade->recoveryPassword($this->auth, $values->password);
 		$user = $auth->user;
-		
+
 		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
 		$this->presenter->redirect(':Admin:Dashboard:');
 	}
-	
+
 	public function setAuth(Entity\Auth $auth)
 	{
 		$this->auth = $auth;

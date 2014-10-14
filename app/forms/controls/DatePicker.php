@@ -99,7 +99,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type $size
 	 * @return self
 	 */
@@ -155,7 +155,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 * 
+	 *
 	 * @param DateTime $value
 	 * @return self
 	 */
@@ -166,7 +166,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 * 
+	 *
 	 * @param DateTime $value
 	 * @return self
 	 */
@@ -177,9 +177,9 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 * Set a limit for the view mode. 
-	 * Accepts: “days” or 0, “months” or 1, and “years” or 2. 
-	 * Gives the ability to pick only a month or an year. 
+	 * Set a limit for the view mode.
+	 * Accepts: “days” or 0, “months” or 1, and “years” or 2.
+	 * Gives the ability to pick only a month or an year.
 	 * The day is set to the 1st for “months”, and the month is set to January for “years”.
 	 * @param type $value
 	 * @return self
@@ -191,7 +191,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 * 
+	 *
 	 * @param bool $value
 	 * @return self
 	 */
@@ -202,7 +202,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 * 
+	 *
 	 * @param string $value
 	 * @return self
 	 */

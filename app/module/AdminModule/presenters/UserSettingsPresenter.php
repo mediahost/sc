@@ -24,7 +24,7 @@ class UserSettingsPresenter extends BasePresenter
 
 	/** @var \App\Components\User\ISettingsControlFactory @inject */
 	public $iSettingsControlFactory;
-	
+
 	/**
 	 * @secured
 	 * @resource('user_settings')
@@ -32,7 +32,7 @@ class UserSettingsPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		
+
 	}
 
 	/**
@@ -70,7 +70,7 @@ class UserSettingsPresenter extends BasePresenter
 	{
 		return $this->iDeleteControlFactory->create();
 	}
-	
+
 	/** @return \App\Components\User\SettingsControl */
 	protected function createComponentSettings()
 	{

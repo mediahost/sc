@@ -22,7 +22,7 @@ webloader:
 				- @cssMinFilter
 			fileFilters:
 				- @lessFilter
-		
+
 		admin:
 			files:
 				- {files: ["*.less"], from: %wwwDir%/less/admin/includes}
@@ -31,7 +31,7 @@ webloader:
 				- @cssMinFilter
 			fileFilters:
 				- @lessFilter
-		
+
 		metronicCore:
 			remoteFiles:
 				- "http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all"
@@ -46,7 +46,7 @@ webloader:
 				- @cssUrlReplacerUniform
 			fileFilters:
 				- @lessFilter
-		
+
 		metronicPlugin:
 			files:
 				- ../assets/plugins/bootstrap-datepicker/build/build.less
@@ -64,7 +64,7 @@ webloader:
 				- @cssUrlReplacerMultiselect
 			fileFilters:
 				- @lessFilter
-		
+
 		metronicTheme:
 			files:
 				- {files: ["components.css"], from: %wwwDir%/assets/css}
@@ -76,7 +76,7 @@ webloader:
 				- @cssUrlFilter
 				- @cssUrlReplacerAssets
 				- @cssMinFilter
-		
+
 		print:
 			files:
 				- {files: ["*.less"], from: %wwwDir%/less/print/includes}
@@ -85,7 +85,7 @@ webloader:
 				- @cssMinFilter
 			fileFilters:
 				- @lessFilter
-	
+
 	js:
 		app:
 			files:
