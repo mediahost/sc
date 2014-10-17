@@ -15,9 +15,9 @@ twitter:
 parameters:
 	install:
 		lockInstaller: TRUE # při TRUE zamyká instalaci po spuštění, pak je potřeba odmazat temp/install pro novou instalaci
-		doctrine: FALSE
-		adminer: FALSE
-		composer: FALSE
+		doctrine: FALSE # aktualizuje DB podle entit
+		adminer: FALSE # instaluje potřebná nastavení pro adminer
+		composer: FALSE # spouští composer
 		startUsers: ['user_mail' = ['password', 'name_of_role']]
 
 nette:
