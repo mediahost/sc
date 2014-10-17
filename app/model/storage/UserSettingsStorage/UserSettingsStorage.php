@@ -12,6 +12,7 @@ use Nette\Http\Session,
  */
 class UserSettingsStorage extends \Nette\Object
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var SessionSection */
 	private $section;
@@ -26,6 +27,90 @@ class UserSettingsStorage extends \Nette\Object
 	private $defaults = [
 		'language' => 'en',
 	];
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
+
+	/**
+	 * @param UserSettings $userSettings
+	 * @return UserSettingsStorage
+	 */
+	public function setSettings(UserSettings $userSettings)
+	{
+		$this->section->settings = $userSettings;
+		return $this;
+	}
+
+	/**
+	 * @return UserSettingsStorage
+	 */
+	private function setDefaults()
+	{
+		$settings = new UserSettings();
+		$settings->language = $this->defaults['language'];
+		$this->settings = $settings;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $language
+	 * @return UserSettingsStorage
+	 */
+	public function setLanguage($language)
+	{
+		return $this->setProperty('language', $language);
+	}
+
+	/**
+	 * @param string $property
+	 * @param mixed $value
+	 * @return UserSettings
+	 */
+	private function setProperty($property, $value)
+	{
+		if ($value === $this->defaults[$property]) {
+			$this->settings->$property = NULL;
+		} else {
+			$this->settings->$property = $value;
+		}
+
+		return $this;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
+	/**
+	 * @return UserSettings
+	 */
+	public function getSettings()
+	{
+		return $this->section->settings;
+	}
+
+	/**
+	 * @return sting
+	 */
+	public function getLanguage()
+	{
+		return $this->getProperty('language');
+	}
+
+	/**
+	 * @param string $property
+	 * @return mixed
+	 */
+	private function getProperty($property)
+	{
+		if ($this->settings->$property === NULL) {
+			return $this->defaults[$property];
+		}
+
+		return $this->settings->$property;
+	}
+
+	// </editor-fold>
 
 	/**
 	 * @param int $userId
@@ -70,82 +155,6 @@ class UserSettingsStorage extends \Nette\Object
 	{
 		unset($this->section->settings);
 		return $this;
-	}
-
-	/**
-	 * @return UserSettings
-	 */
-	public function getSettings()
-	{
-		return $this->section->settings;
-	}
-
-	/**
-	 * @param UserSettings $userSettings
-	 * @return UserSettingsStorage
-	 */
-	public function setSettings(UserSettings $userSettings)
-	{
-		$this->section->settings = $userSettings;
-		return $this;
-	}
-
-	/**
-	 * @return UserSettingsStorage
-	 */
-	private function setDefaults()
-	{
-		$settings = new UserSettings();
-		$settings->language = $this->defaults['language'];
-		$this->settings = $settings;
-
-		return $this;
-	}
-
-	/**
-	 * @param string $language
-	 * @return UserSettingsStorage
-	 */
-	public function setLanguage($language)
-	{
-		return $this->setProperty('language', $language);
-	}
-
-	/**
-	 * @return sting
-	 */
-	public function getLanguage()
-	{
-		return $this->getProperty('language');
-	}
-
-	/**
-	 * @param string $property
-	 * @param mixed $value
-	 * @return UserSettings
-	 */
-	private function setProperty($property, $value)
-	{
-		if ($value === $this->defaults[$property]) {
-			$this->settings->$property = NULL;
-		} else {
-			$this->settings->$property = $value;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param string $property
-	 * @return mixed
-	 */
-	private function getProperty($property)
-	{
-		if ($this->settings->$property === NULL) {
-			return $this->defaults[$property];
-		}
-
-		return $this->settings->$property;
 	}
 
 	/**

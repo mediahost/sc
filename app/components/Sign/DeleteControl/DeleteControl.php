@@ -3,6 +3,7 @@
 Namespace App\Components;
 
 /* Nette */
+
 use Nette\Application\UI;
 
 /* Application */
@@ -14,9 +15,12 @@ use App\Components,
  */
 class DeleteControl extends Components\BaseControl
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
+
+	// </editor-fold>
 
 	/**
 	 * @return UI\Form
@@ -40,6 +44,14 @@ class DeleteControl extends Components\BaseControl
 		$this->presenter->redirect(":Front:Sign:In");
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="setters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="renderers">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="handlers">
+	// </editor-fold>
 }
 
 interface IDeleteControlFactory

@@ -12,6 +12,8 @@ use Nette\Utils\Html;
 class Spinner extends \Nette\Forms\Controls\TextInput
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+
 	private $attributes = array();
 	private $readonly = TRUE;
 	private $leftButtUp = FALSE;
@@ -21,65 +23,14 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	private $rightButtIcon = "plus";
 	private $rightButtColor = "green";
 
+	// </editor-fold>
+
 	public function __construct($label = NULL, $rows = NULL)
 	{
 		parent::__construct($label);
 	}
 
-	/**
-	 * Generates control's HTML element.
-	 */
-	public function getControl()
-	{
-		$block = Html::el('div')
-				->class("input-group", TRUE)
-				->add($this->getLeftButton())
-				->add($this->getInput())
-				->add($this->getRightButton());
-		return Html::el('div class="form-spinner"')
-						->add($block)
-						->addAttributes($this->attributes);
-	}
-
-	private function getInput()
-	{
-		$input = Html::el('input class="spinner-input form-control"')
-				->name($this->getHtmlName())
-				->id($this->getHtmlId())
-				->value($this->getValue());
-		if ($this->readonly) {
-			$input->readonly("readonly");
-		}
-		return $input;
-	}
-
-	private function getLeftButton()
-	{
-		$icon = Html::el("i")->class("fa");
-		if ($this->leftButtIcon) {
-			$icon->class("fa-" . $this->leftButtIcon, TRUE);
-		}
-		$button = Html::el('button type="button"')
-				->class("btn {$this->leftButtColor}")
-				->class("spinner-" . ($this->leftButtUp ? "up" : "down"), TRUE)
-				->add($icon);
-		return Html::el('div class="spinner-buttons input-group-btn"')
-						->add($button);
-	}
-
-	private function getRightButton()
-	{
-		$icon = Html::el("i")->class("fa");
-		if ($this->rightButtIcon) {
-			$icon->class("fa-" . $this->rightButtIcon, TRUE);
-		}
-		$button = Html::el('button type="button"')
-				->class("btn {$this->rightButtColor}")
-				->class("spinner-" . ($this->rightButtUp ? "up" : "down"), TRUE)
-				->add($icon);
-		return Html::el('div class="spinner-buttons input-group-btn"')
-						->add($button);
-	}
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 *
@@ -196,4 +147,66 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 		return $this;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
+	/**
+	 * Generates control's HTML element.
+	 */
+	public function getControl()
+	{
+		$block = Html::el('div')
+				->class("input-group", TRUE)
+				->add($this->getLeftButton())
+				->add($this->getInput())
+				->add($this->getRightButton());
+		return Html::el('div class="form-spinner"')
+						->add($block)
+						->addAttributes($this->attributes);
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="private getters">
+
+	private function getInput()
+	{
+		$input = Html::el('input class="spinner-input form-control"')
+				->name($this->getHtmlName())
+				->id($this->getHtmlId())
+				->value($this->getValue());
+		if ($this->readonly) {
+			$input->readonly("readonly");
+		}
+		return $input;
+	}
+
+	private function getLeftButton()
+	{
+		$icon = Html::el("i")->class("fa");
+		if ($this->leftButtIcon) {
+			$icon->class("fa-" . $this->leftButtIcon, TRUE);
+		}
+		$button = Html::el('button type="button"')
+				->class("btn {$this->leftButtColor}")
+				->class("spinner-" . ($this->leftButtUp ? "up" : "down"), TRUE)
+				->add($icon);
+		return Html::el('div class="spinner-buttons input-group-btn"')
+						->add($button);
+	}
+
+	private function getRightButton()
+	{
+		$icon = Html::el("i")->class("fa");
+		if ($this->rightButtIcon) {
+			$icon->class("fa-" . $this->rightButtIcon, TRUE);
+		}
+		$button = Html::el('button type="button"')
+				->class("btn {$this->rightButtColor}")
+				->class("spinner-" . ($this->rightButtUp ? "up" : "down"), TRUE)
+				->add($icon);
+		return Html::el('div class="spinner-buttons input-group-btn"')
+						->add($button);
+	}
+
+	// </editor-fold>
 }

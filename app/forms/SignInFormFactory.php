@@ -10,6 +10,9 @@ namespace App\Forms;
 class SignInFormFactory extends FormFactory
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="create">
 	public function create()
 	{
 		$form = $this->formFactory->create();
@@ -28,4 +31,9 @@ class SignInFormFactory extends FormFactory
 		return $form;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="public">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="private">
+	// </editor-fold>
 }

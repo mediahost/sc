@@ -1,11 +1,11 @@
-<?php
+s<?php
 
 namespace App;
 
 /**
  * Helpers.
  *
- * @author     Petr Poupě
+ * @author Petr Poupě
  */
 class Helpers
 {
@@ -17,6 +17,8 @@ class Helpers
 	{
 		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="strings">
 
 	/**
 	 * Short for concatStrings()
@@ -59,6 +61,9 @@ class Helpers
 			return NULL;
 		}
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="date">
 
 	/**
 	 * Matches each symbol of PHP date format standard
@@ -130,6 +135,9 @@ class Helpers
 		return $jsDate;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="transformation">
+
 	/**
 	 * Function to translate link in text to HTML format of link
 	 * @param type $text
@@ -144,4 +152,5 @@ class Helpers
 				, $text);
 	}
 
+	// </editor-fold>
 }

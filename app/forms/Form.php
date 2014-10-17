@@ -9,6 +9,7 @@ namespace App\Forms;
  */
 class Form extends \Nette\Application\UI\Form
 {
+	// <editor-fold defaultstate="collapsed" desc="special items">
 
 	/**
 	 *
@@ -112,4 +113,5 @@ class Form extends \Nette\Application\UI\Form
 		return $this[$name] = new Controls\MultiSelect2($label, $items);
 	}
 
+	// </editor-fold>
 }

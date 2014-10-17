@@ -7,6 +7,7 @@ use Kdyby\Doctrine\EntityDao,
 
 class AuthFacade extends BaseFacade
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var EntityDao */
 	private $authDao;
@@ -14,11 +15,15 @@ class AuthFacade extends BaseFacade
 	/** @var EntityDao */
 	private $userDao;
 
+	// </editor-fold>
+
 	protected function init()
 	{
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="finders">
 
 	/**
 	 * Find Auth by key and source type.
@@ -84,6 +89,9 @@ class AuthFacade extends BaseFacade
 		]);
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="checkers">
+
 	/**
 	 * Is Auth unique?
 	 * @param string $key
@@ -97,6 +105,9 @@ class AuthFacade extends BaseFacade
 					'key' => $key,
 				]) === NULL;
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 * Set new password to User by Auth.
@@ -129,4 +140,5 @@ class AuthFacade extends BaseFacade
 		return $this->authDao->save($auth);
 	}
 
+	// </editor-fold>
 }

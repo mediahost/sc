@@ -10,6 +10,9 @@ namespace App\Forms\Controls;
 class WysiHtml extends \Nette\Forms\Controls\TextArea
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
+
 	public function __construct($label = NULL, $rows = NULL)
 	{
 		parent::__construct($label);
@@ -19,4 +22,8 @@ class WysiHtml extends \Nette\Forms\Controls\TextArea
 		}
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="setters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
 }

@@ -3,6 +3,7 @@
 Namespace App\Components\Sign;
 
 /* Nette */
+
 use Nette\Application\UI;
 
 /* Application */
@@ -15,6 +16,7 @@ use App\Components,
  */
 class ForgottenControl extends Components\BaseControl
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
@@ -27,6 +29,8 @@ class ForgottenControl extends Components\BaseControl
 
 	/** @var \App\Model\Storage\MessageStorage @inject */
 	public $messages;
+
+	// </editor-fold>
 
 	/**
 	 * Form factory.
@@ -82,6 +86,14 @@ class ForgottenControl extends Components\BaseControl
 		}
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="setters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="renderers">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="handlers">
+	// </editor-fold>
 }
 
 interface IForgottenControlFactory

@@ -13,6 +13,9 @@ use Nette\Bridges\ApplicationLatte\Template,
  */
 class MessageStorage extends \Nette\Object
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
+
 	/**
 	 *
 	 * @param Template $template

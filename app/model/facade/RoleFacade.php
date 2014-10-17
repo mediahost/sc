@@ -7,6 +7,7 @@ use Kdyby\Doctrine\EntityDao,
 
 class RoleFacade extends BaseFacade
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var EntityDao */
 	private $roles;
@@ -14,10 +15,32 @@ class RoleFacade extends BaseFacade
 	/** @var array */
 	private $registratable = [Entity\Role::ROLE_CANDIDATE, Entity\Role::ROLE_COMPANY_ADMIN]; // ToDo: Move to configuration.
 
+	// </editor-fold>
+
 	protected function init()
 	{
 		$this->roles = $this->em->getDao(Entity\Role::getClassName());
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="create">
+
+	/**
+	 * Create role if is not exists.
+	 * @param type $name
+	 * @return Entity\Role|null
+	 */
+	public function create($name)
+	{
+		if ($this->isUnique($name)) {
+			$entity = new Entity\Role;
+			$entity->setName($name);
+			return $this->roles->save($entity);
+		}
+		return NULL;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
 
 	/**
 	 * Get all roles
@@ -28,6 +51,9 @@ class RoleFacade extends BaseFacade
 		return $this->roles->findPairs([], 'name', [], 'id');
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="finders">
+
 	/**
 	 * Find role by name.
 	 * @param type $name
@@ -37,6 +63,9 @@ class RoleFacade extends BaseFacade
 	{
 		return $this->roles->findOneBy(['name' => $name]);
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="checkers">
 
 	/**
 	 * Check if name is unique.
@@ -63,19 +92,5 @@ class RoleFacade extends BaseFacade
 		return FALSE;
 	}
 
-	/**
-	 * Create role if is not exists.
-	 * @param type $name
-	 * @return Entity\Role|null
-	 */
-	public function create($name)
-	{
-		if ($this->isUnique($name)) {
-			$entity = new Entity\Role;
-			$entity->setName($name);
-			return $this->roles->save($entity);
-		}
-		return NULL;
-	}
-
+	// </editor-fold>
 }

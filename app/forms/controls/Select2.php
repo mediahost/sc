@@ -10,11 +10,16 @@ namespace App\Forms\Controls;
 class Select2 extends \Nette\Forms\Controls\SelectBox
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
+
 	public function __construct($label = NULL, array $items = NULL)
 	{
 		parent::__construct($label, $items);
 		$this->control->class = "select2";
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 *
@@ -41,4 +46,7 @@ class Select2 extends \Nette\Forms\Controls\SelectBox
 		return $this;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
 }

@@ -14,13 +14,20 @@ use Nette\Utils\Html;
 class DateInput extends BaseControl
 {
 
-	private $day, $month, $year;
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	private $day;
+	private $month;
+	private $year;
+
+	// </editor-fold>
 
 	public function __construct($label = NULL)
 	{
 		parent::__construct($label);
 		$this->addRule(__CLASS__ . '::validateDate', 'Date is invalid.');
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 *
@@ -40,19 +47,15 @@ class DateInput extends BaseControl
 		return $this;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
 	/**
 	 * @return DateTime|NULL
 	 */
 	public function getValue()
 	{
 		return self::validateDate($this) ? date_create()->setDate($this->year, $this->month, $this->day) : NULL;
-	}
-
-	public function loadHttpData()
-	{
-		$this->day = $this->getHttpData(Form::DATA_LINE, '[day]');
-		$this->month = $this->getHttpData(Form::DATA_LINE, '[month]');
-		$this->year = $this->getHttpData(Form::DATA_LINE, '[year]');
 	}
 
 	/**
@@ -67,6 +70,15 @@ class DateInput extends BaseControl
 										array("zimní měsíce" => array(1 => "leden", 2), "jarní měsíce" => array(3 => 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)), array('selected?' => $this->month)
 								)->name($name . '[month]'))
 						->add(Html::el('input')->name($name . '[year]')->value($this->year));
+	}
+
+	// </editor-fold>
+
+	public function loadHttpData()
+	{
+		$this->day = $this->getHttpData(Form::DATA_LINE, '[day]');
+		$this->month = $this->getHttpData(Form::DATA_LINE, '[month]');
+		$this->year = $this->getHttpData(Form::DATA_LINE, '[year]');
 	}
 
 	/**

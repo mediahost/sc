@@ -15,6 +15,8 @@ class Role extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+
 	const ROLE_GUEST = 'guest';
 	const ROLE_SIGNED = 'signed';
 	const ROLE_CANDIDATE = 'candidate';
@@ -25,4 +27,9 @@ class Role extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	protected $name;
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
 }

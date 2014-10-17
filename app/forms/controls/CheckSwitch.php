@@ -12,6 +12,9 @@ use Nette;
 class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
+
 	public function __construct($label = NULL, $onText = NULL, $offText = NULL)
 	{
 		parent::__construct($label);
@@ -23,6 +26,8 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 			$this->setOffText($offText);
 		}
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 *
@@ -84,6 +89,9 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 		return $this;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
 	/**
 	 * Generates control's HTML element.
 	 * @return Nette\Utils\Html
@@ -103,4 +111,5 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 		return \Nette\Forms\Controls\BaseControl::getLabel($caption);
 	}
 
+	// </editor-fold>
 }

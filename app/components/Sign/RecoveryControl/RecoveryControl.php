@@ -5,7 +5,6 @@ Namespace App\Components\Sign;
 /** Nette */
 use Nette\Application\UI\Form,
 	Nette\Security\Identity;
-
 /** Application */
 use App\Components,
 	App\Model\Facade,
@@ -17,6 +16,7 @@ use App\Components,
  */
 class RecoveryControl extends Components\BaseControl
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
@@ -24,6 +24,7 @@ class RecoveryControl extends Components\BaseControl
 	/** @var \App\Model\Entity\Auth */
 	private $auth;
 
+	// </editor-fold>
 
 	/**
 	 * Form factory.
@@ -46,7 +47,7 @@ class RecoveryControl extends Components\BaseControl
 
 		$form->addSubmit('recovery', 'Set new password');
 		$form->addSubmit('cancel', 'Back')
-				->setValidationScope(FALSE)
+						->setValidationScope(FALSE)
 				->onClick[] = $this->recoveryFormCancel;
 
 		$form->onSuccess[] = $this->recoveryFormSucceeded;
@@ -68,10 +69,20 @@ class RecoveryControl extends Components\BaseControl
 		$this->presenter->redirect(':Admin:Dashboard:');
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="setters">
+
 	public function setAuth(Entity\Auth $auth)
 	{
 		$this->auth = $auth;
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="renderers">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="handlers">
+	// </editor-fold>
 }
 
 interface IRecoveryControlFactory

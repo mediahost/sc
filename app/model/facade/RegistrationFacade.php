@@ -15,6 +15,7 @@ use Kdyby\Doctrine\EntityDao,
  */
 class RegistrationFacade extends BaseFacade
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var EntityDao */
 	private $authDao;
@@ -37,6 +38,8 @@ class RegistrationFacade extends BaseFacade
 	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 	private $userSettingsStorage;
 
+	// </editor-fold>
+
 	protected function init()
 	{
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
@@ -44,6 +47,32 @@ class RegistrationFacade extends BaseFacade
 		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="finders">
+
+	/**
+	 * Find registration request by valid verification tooken.
+	 * @param string $token
+	 * @return Entity\Registration
+	 */
+	public function findByVerificationToken($token)
+	{
+		$registration = $this->registrationDao->findOneBy([
+			'verificationToken' => $token
+		]);
+
+		if ($registration) {
+			// Expired registration request is deleted
+			if ($registration->verificationExpiration > new \DateTime()) {
+				return $registration;
+			} else {
+				$this->registrationDao->delete($registration);
+			}
+		}
+
+		return NULL;
+	}
+	// </editor-fold>
 
 	/**
 	 * Add new Auth to existing User and save.
@@ -104,29 +133,6 @@ class RegistrationFacade extends BaseFacade
 
 		$this->em->flush();
 		return $registration;
-	}
-
-	/**
-	 * Find registration request by valid verification tooken.
-	 * @param string $token
-	 * @return Entity\Registration
-	 */
-	public function findByVerificationToken($token)
-	{
-		$registration = $this->registrationDao->findOneBy([
-			'verificationToken' => $token
-		]);
-
-		if ($registration) {
-			// Expired registration request is deleted
-			if ($registration->verificationExpiration > new \DateTime()) {
-				return $registration;
-			} else {
-				$this->registrationDao->delete($registration);
-			}
-		}
-
-		return NULL;
 	}
 
 	/**

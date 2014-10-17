@@ -9,6 +9,7 @@ use App\Model\Entity\User,
 
 class UserFacade extends BaseFacade
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var EntityDao */
 	private $userDao;
@@ -19,8 +20,9 @@ class UserFacade extends BaseFacade
 	/** @var EntityDao */
 	private $authDao;
 
-	/** @var \App\Model\Storage\UserSettingsStorage @inject */
+	// </editor-fold>
 
+	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 	protected function init()
 	{
 		$this->userDao = $this->em->getDao(User::getClassName());
@@ -28,25 +30,7 @@ class UserFacade extends BaseFacade
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
 	}
 
-	/**
-	 * Add role as Role entity, string or array of entites to user.
-	 * @param User $user
-	 * @param Entity\Role|string $role
-	 */
-	public function addRole(User $user, $role)
-	{
-		if (!($user instanceof Entity\Role)) {
-			if (is_string($role)) {
-				$role = $this->roleDao->findOneBy(['name' => $role]);
-			} elseif (is_array($role)) {
-				$role = $this->roleDao->findBy(['name' => $role]);
-			} else {
-				throw new \InvalidArgumentException;
-			}
-		}
-
-		return $user->addRole($role);
-	}
+	// <editor-fold defaultstate="collapsed" desc="create">
 
 	/**
 	 * Create User if isn't exists.
@@ -75,12 +59,8 @@ class UserFacade extends BaseFacade
 		return NULL;
 	}
 
-	public function delete(\Kdyby\Doctrine\Entities\BaseEntity $user)
-	{
-		$user->clearRoles();
-		$this->userDao->save($user); // ToDo: Do all in one row.
-		return $this->userDao->delete($user);
-	}
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="finders">
 
 	/**
 	 * Find user by e-mail.
@@ -92,15 +72,8 @@ class UserFacade extends BaseFacade
 		return $this->userDao->findOneBy(['mail' => $mail]);
 	}
 
-	/**
-	 * Is User unique by e-mail?
-	 * @param string $mail
-	 * @return bool
-	 */
-	public function isUnique($mail)
-	{
-		return $this->findByMail($mail) === NULL;
-	}
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 * Finds application Auth corresponding to e-mail.
@@ -140,6 +113,16 @@ class UserFacade extends BaseFacade
 		return $this->userDao->save($user);
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="delete">
+
+	public function delete(\Kdyby\Doctrine\Entities\BaseEntity $user)
+	{
+		$user->clearRoles();
+		$this->userDao->save($user); // ToDo: Do all in one row.
+		return $this->userDao->delete($user);
+	}
+
 	/**
 	 * Delete all user data (Auth, User)
 	 * @param int $id User ID.
@@ -155,6 +138,38 @@ class UserFacade extends BaseFacade
 		}
 
 		return $user;
+	}
+
+	// </editor-fold>
+
+	/**
+	 * Add role as Role entity, string or array of entites to user.
+	 * @param User $user
+	 * @param Entity\Role|string $role
+	 */
+	public function addRole(User $user, $role)
+	{
+		if (!($user instanceof Entity\Role)) {
+			if (is_string($role)) {
+				$role = $this->roleDao->findOneBy(['name' => $role]);
+			} elseif (is_array($role)) {
+				$role = $this->roleDao->findBy(['name' => $role]);
+			} else {
+				throw new \InvalidArgumentException;
+			}
+		}
+
+		return $user->addRole($role);
+	}
+
+	/**
+	 * Is User unique by e-mail?
+	 * @param string $mail
+	 * @return bool
+	 */
+	public function isUnique($mail)
+	{
+		return $this->findByMail($mail) === NULL;
 	}
 
 }

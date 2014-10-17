@@ -21,6 +21,8 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+
 	const SOURCE_APP = "app";
 	const SOURCE_FACEBOOK = "facebook";
 	const SOURCE_TWITTER = "twitter";
@@ -51,6 +53,9 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	protected $hash;
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
+
 	/**
 	 * Computes salted password hash.
 	 * @param string Password to be hashed.
@@ -62,6 +67,9 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 		$this->hash = Passwords::hash($password, $options);
 		return $this;
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
 
 	/**
 	 * Verifies that a password matches a hash.
@@ -83,4 +91,5 @@ class Auth extends \Kdyby\Doctrine\Entities\BaseEntity
 		return Passwords::needsRehash($this->hash, $options);
 	}
 
+	// </editor-fold>
 }

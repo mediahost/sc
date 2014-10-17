@@ -22,6 +22,8 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+
 	/**
 	 * @ORM\Column(type="string", nullable=false)
 	 */
@@ -37,26 +39,27 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	protected $roles;
 
-    /**
-     * @ORM\Column(type="string", length=256, nullable=true)
-     */
-    protected $name;
+	/**
+	 * @ORM\Column(type="string", length=256, nullable=true)
+	 */
+	protected $name;
 
-    /**
+	/**
 	 * @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", orphanRemoval=true, fetch="LAZY", cascade={"all"})
 	 */
-    protected $settings;
+	protected $settings;
 
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
 	protected $recoveryToken;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+	/**
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
 	protected $recoveryExpiration;
 
+	// </editor-fold>
 
 	public function __construct()
 	{
@@ -64,13 +67,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		$this->roles = new ArrayCollection();
 	}
 
-	/**
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return (string) $this->mail;
-	}
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 * @param Auth $auth
@@ -119,30 +116,6 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	}
 
 	/**
-	 * @return array
-	 */
-	public function getRolesKeys()
-	{
-		$array = [];
-		foreach ($this->roles as $role) {
-			$array[] = $role->id;
-		}
-		return $array;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getRolesPairs()
-	{
-		$array = [];
-		foreach ($this->roles as $role) {
-			$array[$role->id] = $role->name;
-		}
-		return $array;
-	}
-
-	/**
 	 * @param Role $role
 	 * @return User
 	 */
@@ -181,6 +154,54 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	}
 
 	/**
+	 * Set NULL to recovery token and expiration properties.
+	 * @return User
+	 */
+	public function unsetRecovery()
+	{
+		$this->recoveryToken = NULL;
+		$this->recoveryExpiration = NULL;
+		return $this;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
+	/**
+	 * @return array
+	 */
+	public function getRolesKeys()
+	{
+		$array = [];
+		foreach ($this->roles as $role) {
+			$array[] = $role->id;
+		}
+		return $array;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRolesPairs()
+	{
+		$array = [];
+		foreach ($this->roles as $role) {
+			$array[$role->id] = $role->name;
+		}
+		return $array;
+	}
+
+	// </editor-fold>
+
+	/**
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return (string) $this->mail;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function toArray()
@@ -191,17 +212,6 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 			'name' => $this->name,
 			'role' => $this->roles->toArray()
 		];
-	}
-
-	/**
-	 * Set NULL to recovery token and expiration properties.
-	 * @return User
-	 */
-	public function unsetRecovery()
-	{
-		$this->recoveryToken = NULL;
-		$this->recoveryExpiration = NULL;
-		return $this;
 	}
 
 }

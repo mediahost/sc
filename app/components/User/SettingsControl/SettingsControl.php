@@ -3,6 +3,7 @@
 Namespace App\Components\User;
 
 /* Nette */
+
 use Nette\Application\UI,
 	Kdyby\Doctrine\EntityManager,
 	Kdyby\Doctrine\EntityDao;
@@ -18,6 +19,8 @@ use App\Components,
 class SettingsControl extends Components\BaseControl
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	
 	public $onSave = [];
 
 	/** @var EntityManager */
@@ -41,6 +44,8 @@ class SettingsControl extends Components\BaseControl
 	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 	public $settingsStorage;
 
+	// </editor-fold>
+
 	/**
 	 * @return UI\Form
 	 */
@@ -51,9 +56,9 @@ class SettingsControl extends Components\BaseControl
 		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer());
 
 		$form->addSelect('language', 'Language', [
-				'en' => 'English',
-				'cs' => 'Čeština'
-			]);
+			'en' => 'English',
+			'cs' => 'Čeština'
+		]);
 
 		$form->addSubmit('save', 'Save');
 
@@ -76,6 +81,12 @@ class SettingsControl extends Components\BaseControl
 		]);
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="setters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="renderers">
+	// </editor-fold>
 }
 
 interface ISettingsControlFactory

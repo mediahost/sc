@@ -5,7 +5,6 @@ namespace App\Forms;
 use Tracy\Debugger as Debug;
 use Kdyby\Doctrine\EntityManager,
 	Kdyby\Doctrine\EntityDao;
-
 use App\Model\Entity\Role,
 	App\Model\Facade\UserFacade as UserFacade;
 
@@ -17,6 +16,7 @@ use App\Model\Entity\Role,
 class UserFormFactory extends FormFactory
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 	/** @var \App\Model\Facade\RoleFacade */
 	private $roleFacade;
 
@@ -32,6 +32,7 @@ class UserFormFactory extends FormFactory
 	/** @var array */
 	private $roles;
 
+	// </editor-fold>
 
 	public function __construct(IFormFactory $formFactory, \App\Model\Facade\RoleFacade $roleFacade, EntityManager $em, UserFacade $userFacade)
 	{
@@ -42,13 +43,7 @@ class UserFormFactory extends FormFactory
 		$this->userFacade = $userFacade;
 	}
 
-	private function getRoles()
-	{
-		if ($this->roles === NULL) {
-			$this->roles = $this->roleDao->findPairs('name', 'id');
-		}
-		return $this->roles;
-	}
+	// <editor-fold defaultstate="collapsed" desc="create">
 
 	public function create()
 	{
@@ -78,4 +73,18 @@ class UserFormFactory extends FormFactory
 		return $form;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="public">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="private">
+
+	private function getRoles()
+	{
+		if ($this->roles === NULL) {
+			$this->roles = $this->roleDao->findPairs('name', 'id');
+		}
+		return $this->roles;
+	}
+
+	// </editor-fold>
 }

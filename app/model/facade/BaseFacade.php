@@ -8,12 +8,15 @@ use Kdyby\Doctrine\EntityDao,
 
 abstract class BaseFacade extends \Nette\Object
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var EntityDao */
 	protected $dao;
 
 	/** @var EntityManager */
 	protected $em;
+
+	// </editor-fold>
 
 	public function __construct(EntityDao $dao, EntityManager $em)
 	{
@@ -24,13 +27,14 @@ abstract class BaseFacade extends \Nette\Object
 	}
 
 	/**
-	 * @param int $id
-	 * @return BaseEntity
+	 * Method for initialization of other DAOs in extended facades.
 	 */
-	public function find($id)
+	protected function init()
 	{
-		return $this->dao->findOneBy(array('id' => $id));
+		
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="save">
 
 	/**
 	 * @param BaseEntity $entity
@@ -41,13 +45,16 @@ abstract class BaseFacade extends \Nette\Object
 		return $this->dao->save($entity);
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="finders">
+
 	/**
-	 * @param BaseEntity $entity
-	 * @return void
+	 * @param int $id
+	 * @return BaseEntity
 	 */
-	public function delete(BaseEntity $entity)
+	public function find($id)
 	{
-		$this->dao->delete($entity);
+		return $this->dao->findOneBy(array('id' => $id));
 	}
 
 	/**
@@ -69,10 +76,17 @@ abstract class BaseFacade extends \Nette\Object
 		return $this->dao->findAll();
 	}
 
-	/**
-	 * Method for initialization of other DAOs in extended facades.
-	 */
-	protected function init()
-	{}
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="delete">
 
+	/**
+	 * @param BaseEntity $entity
+	 * @return void
+	 */
+	public function delete(BaseEntity $entity)
+	{
+		$this->dao->delete($entity);
+	}
+
+	// </editor-fold>
 }

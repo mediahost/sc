@@ -23,6 +23,8 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+
 	/**
 	 * @ORM\Column(type="string", nullable=false)
 	 */
@@ -53,10 +55,10 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	protected $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
-     **/
+	/**
+	 * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
+	 * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
+	 * */
 	protected $role;
 
 	/**
@@ -68,6 +70,9 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $verificationExpiration;
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 * Computes salted password hash.
@@ -81,4 +86,7 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $this;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
 }

@@ -29,6 +29,7 @@ use Netrium\Addons\Twitter\Authenticator as Twitter,
  */
 class AuthControl extends Components\BaseControl
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var RegistrationStorage @inject */
 	public $storage;
@@ -65,6 +66,30 @@ class AuthControl extends Components\BaseControl
 
 	/** @var Storage\UserSettingsStorage @inject */
 	public $settingsStorage;
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
+
+	/**
+	 * @param bool $force
+	 */
+	public function setForce($force = TRUE)
+	{
+		$this->force = $force;
+	}
+
+	/**
+	 * @param Entity\Role $role
+	 */
+	public function setRole($role)
+	{
+		$this->role = $role;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="renderers">
 
 	/**
 	 * Registration form.
@@ -168,6 +193,52 @@ class AuthControl extends Components\BaseControl
 		$template->setFile(__DIR__ . '/setPassword.latte');
 		$template->render();
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="handlers">
+
+	/**
+	 * Handle processing Twitter OAuth.
+	 * @throws \Nette\Security\AuthenticationException
+	 */
+	public function handleTwitter()
+	{
+		$this->storage->wipe();
+
+		try {
+			$data = $this->twitter->tryAuthenticate();
+			$source = RegistrationStorage::SOURCE_TWITTER;
+
+			$this->process($source, $data['user']->id, $data['user'], $data['accessToken']['key']);
+		} catch (TwitterException $e) {
+			\Tracy\Debugger::log($e->getMessage(), 'twitter');
+
+			throw new \Nette\Security\AuthenticationException('Twitter authentication did not approve.');
+		}
+	}
+
+	public function handleDeactivate($id)
+	{
+		$auth = $this->authDao->findOneBy(['id' => $id]);
+
+
+		if ($auth) {
+			if (count($this->authFacade->findByUser($auth->user)) > 1) {
+				$this->authDao->delete($auth);
+				$this->presenter->flashMessage('Connection has been deactivated.');
+			} else {
+				$this->presenter->flashMessage('Last login method is not possible deactivate.');
+			}
+		}
+
+		if ($this->presenter->isAjax()) {
+			$this->redrawControl();
+		} else {
+			$this->redirect('this#connect-manager');
+		}
+	}
+
+	// </editor-fold>
 
 	/**
 	 * @return Form
@@ -342,47 +413,6 @@ class AuthControl extends Components\BaseControl
 	}
 
 	/**
-	 * Handle processing Twitter OAuth.
-	 * @throws \Nette\Security\AuthenticationException
-	 */
-	public function handleTwitter()
-	{
-		$this->storage->wipe();
-
-		try {
-			$data = $this->twitter->tryAuthenticate();
-			$source = RegistrationStorage::SOURCE_TWITTER;
-
-			$this->process($source, $data['user']->id, $data['user'], $data['accessToken']['key']);
-		} catch (TwitterException $e) {
-			\Tracy\Debugger::log($e->getMessage(), 'twitter');
-
-			throw new \Nette\Security\AuthenticationException('Twitter authentication did not approve.');
-		}
-	}
-
-	public function handleDeactivate($id)
-	{
-		$auth = $this->authDao->findOneBy(['id' => $id]);
-
-
-		if ($auth) {
-			if (count($this->authFacade->findByUser($auth->user)) > 1) {
-				$this->authDao->delete($auth);
-				$this->presenter->flashMessage('Connection has been deactivated.');
-			} else {
-				$this->presenter->flashMessage('Last login method is not possible deactivate.');
-			}
-		}
-
-		if ($this->presenter->isAjax()) {
-			$this->redrawControl();
-		} else {
-			$this->redirect('this#connect-manager');
-		}
-	}
-
-	/**
 	 * Provides login, registration or merge.
 	 * @param string $source Source type
 	 * @param string $id User external identification
@@ -478,22 +508,6 @@ class AuthControl extends Components\BaseControl
 		} else {
 			return $this->registrationFacade->register($this->storage->user, $this->storage->auth);
 		}
-	}
-
-	/**
-	 * @param bool $force
-	 */
-	public function setForce($force = TRUE)
-	{
-		$this->force = $force;
-	}
-
-	/**
-	 * @param Entity\Role $role
-	 */
-	public function setRole($role)
-	{
-		$this->role = $role;
 	}
 
 	/**

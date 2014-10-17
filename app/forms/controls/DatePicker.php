@@ -15,6 +15,8 @@ use Tracy\Debugger as Debug;
 class DatePicker extends BaseControl
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+
 	const SIZE_FLUID = NULL;
 	const SIZE_XL = "input-xlarge";
 	const SIZE_L = "input-large";
@@ -28,6 +30,8 @@ class DatePicker extends BaseControl
 	private $readOnly = FALSE;
 	private $attributes = array();
 
+	// </editor-fold>
+
 	public function __construct($label = NULL, $format = "d.m.Y")
 	{
 		parent::__construct($label);
@@ -36,19 +40,7 @@ class DatePicker extends BaseControl
 		$this->addRule(__CLASS__ . '::validateDate', 'Date is invalid.');
 	}
 
-	/**
-	 * @return bool
-	 */
-	public static function validateDate(\Nette\Forms\IControl $control)
-	{
-		if (!$control->isRequired() && empty($control->date)) {
-			return TRUE;
-		} else {
-			$d = $control->date instanceof \DateTime ?
-					$control->date : DateTime::createFromFormat($control->format, $control->date);
-			return $d && $d->format($control->format) == DateTime::from($control->date)->format($control->format);
-		}
-	}
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	public function setValue($value)
 	{
@@ -57,45 +49,6 @@ class DatePicker extends BaseControl
 		} else {
 			$this->date = NULL;
 		}
-	}
-
-	/**
-	 * @return DateTime|string|NULL
-	 */
-	public function getValue($formated = FALSE)
-	{
-		$date = $this->date instanceof \DateTime ?
-				$this->date : DateTime::createFromFormat($this->format, $this->date);
-		return self::validateDate($this) ? ($formated ? $date->format($this->format) : $date) : NULL;
-	}
-
-	public function loadHttpData()
-	{
-		$this->date = $this->getHttpData(\Nette\Forms\Form::DATA_LINE, '[date]');
-	}
-
-	/**
-	 * Generates control's HTML element.
-	 */
-	public function getControl()
-	{
-		$input = $this->getInput(!$this->readOnly);
-		$icon = $this->getIcon();
-		$button = $this->getButton();
-
-		$block = Html::el('div');
-		$block->class($this->size, TRUE);
-		if ($this->readOnly) {
-			$block->class('input-group date date-picker', TRUE)
-					->addAttributes($this->attributes)
-					->add($input)
-					->add($button);
-		} else {
-			$block->class('input-icon right', TRUE)
-					->add($icon)
-					->add($input->addAttributes($this->attributes));
-		}
-		return $block;
 	}
 
 	/**
@@ -125,33 +78,6 @@ class DatePicker extends BaseControl
 	{
 		$this->readOnly = $value;
 		return $this;
-	}
-
-	private function getInput($picker = TRUE)
-	{
-		$input = Html::el('input class="form-control"')
-				->name($this->getHtmlName() . '[date]')
-				->id($this->getHtmlId())
-				->value($this->getValue(TRUE));
-		if ($picker) {
-			$input->class("date-picker", TRUE);
-		}
-		if ($this->readOnly) {
-			$input->readonly("readonly");
-		}
-		return $input;
-	}
-
-	private function getIcon()
-	{
-		return Html::el('i class="fa fa-calendar"');
-	}
-
-	private function getButton()
-	{
-		return Html::el('span class="input-group-btn"')
-						->add(Html::el('button class="btn default" type="button"')
-								->add($this->getIcon()));
 	}
 
 	/**
@@ -210,6 +136,94 @@ class DatePicker extends BaseControl
 	{
 		$this->attributes["placeholder"] = $value;
 		return $this;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
+	/**
+	 * @return DateTime|string|NULL
+	 */
+	public function getValue($formated = FALSE)
+	{
+		$date = $this->date instanceof \DateTime ?
+				$this->date : DateTime::createFromFormat($this->format, $this->date);
+		return self::validateDate($this) ? ($formated ? $date->format($this->format) : $date) : NULL;
+	}
+
+	/**
+	 * Generates control's HTML element.
+	 */
+	public function getControl()
+	{
+		$input = $this->getInput(!$this->readOnly);
+		$icon = $this->getIcon();
+		$button = $this->getButton();
+
+		$block = Html::el('div');
+		$block->class($this->size, TRUE);
+		if ($this->readOnly) {
+			$block->class('input-group date date-picker', TRUE)
+					->addAttributes($this->attributes)
+					->add($input)
+					->add($button);
+		} else {
+			$block->class('input-icon right', TRUE)
+					->add($icon)
+					->add($input->addAttributes($this->attributes));
+		}
+		return $block;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="private getters">
+
+	private function getInput($picker = TRUE)
+	{
+		$input = Html::el('input class="form-control"')
+				->name($this->getHtmlName() . '[date]')
+				->id($this->getHtmlId())
+				->value($this->getValue(TRUE));
+		if ($picker) {
+			$input->class("date-picker", TRUE);
+		}
+		if ($this->readOnly) {
+			$input->readonly("readonly");
+		}
+		return $input;
+	}
+
+	private function getIcon()
+	{
+		return Html::el('i class="fa fa-calendar"');
+	}
+
+	private function getButton()
+	{
+		return Html::el('span class="input-group-btn"')
+						->add(Html::el('button class="btn default" type="button"')
+								->add($this->getIcon()));
+	}
+
+	// </editor-fold>s
+
+	public function loadHttpData()
+	{
+		$this->date = $this->getHttpData(\Nette\Forms\Form::DATA_LINE, '[date]');
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function validateDate(\Nette\Forms\IControl $control)
+	{
+		if (!$control->isRequired() && empty($control->date)) {
+			return TRUE;
+		} else {
+			$d = $control->date instanceof \DateTime ?
+					$control->date : DateTime::createFromFormat($control->format, $control->date);
+			return $d && $d->format($control->format) == DateTime::from($control->date)->format($control->format);
+		}
 	}
 
 }

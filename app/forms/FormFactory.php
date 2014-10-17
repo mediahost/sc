@@ -9,6 +9,7 @@ namespace App\Forms;
  */
 abstract class FormFactory implements IFormFactory
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var \App\Forms\IFormFactory */
 	protected $formFactory;
@@ -16,10 +17,16 @@ abstract class FormFactory implements IFormFactory
 	/** @var bool */
 	protected $add = FALSE;
 
+	// </editor-fold>
+
 	public function __construct(IFormFactory $formFactory)
 	{
 		$this->formFactory = $formFactory;
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="create">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="public">
 
 	public function setAdding($add = TRUE)
 	{
@@ -32,4 +39,7 @@ abstract class FormFactory implements IFormFactory
 		return $this->add;
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="private">
+	// </editor-fold>
 }

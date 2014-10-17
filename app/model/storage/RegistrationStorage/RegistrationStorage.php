@@ -7,7 +7,6 @@ use Nette\Http\Session,
 	Nette\Utils\ArrayHash;
 use App\Model\Entity;
 
-
 /**
  * Description of RegistrationStorage
  *
@@ -17,6 +16,8 @@ use App\Model\Entity;
  */
 class RegistrationStorage extends \Nette\Object
 {
+
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	const SOURCE_APP = 'app';
 	const SOURCE_FACEBOOK = 'facebook';
@@ -52,6 +53,7 @@ class RegistrationStorage extends \Nette\Object
 	 */
 	private $twitterKeys = ['id', 'name'];
 
+	// </editor-fold>
 
 	public function __construct(Session $session)
 	{
@@ -63,6 +65,57 @@ class RegistrationStorage extends \Nette\Object
 		// Initialization
 		$this->initSession();
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="setters">
+
+	/** @param Entity\Auth $auth */
+	public function setAuth(Entity\Auth $auth)
+	{
+		$this->section->auth = $auth;
+	}
+
+	/** @param Entity\User $user */
+	public function setUser(Entity\User $user)
+	{
+		$this->section->user = $user;
+	}
+
+	/** @param array $defaults */
+	public function setDefaults($defaults)
+	{
+		$this->section->defaults = (array) $defaults;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
+	/** @return Entity\Auth */
+	public function getAuth()
+	{
+		return $this->section->auth;
+	}
+
+	/** @return Entity\User */
+	public function getUser()
+	{
+		return $this->section->user;
+	}
+
+	/** @return array */
+	public function getDefaults()
+	{
+		return $this->section->defaults;
+	}
+
+	/**
+	 * @param array
+	 */
+	public function getSources()
+	{
+		return $this->sources;
+	}
+
+	// </editor-fold>
 
 	/**
 	 * Saving process from given OAuth to User and Auth entities in session.
@@ -213,42 +266,6 @@ class RegistrationStorage extends \Nette\Object
 		$this->initSession(TRUE);
 	}
 
-	/** @param Entity\Auth $auth */
-	public function setAuth(Entity\Auth $auth)
-	{
-		$this->section->auth = $auth;
-	}
-
-	/** @return Entity\Auth */
-	public function getAuth()
-	{
-		return $this->section->auth;
-	}
-
-	/** @param Entity\User $user */
-	public function setUser(Entity\User $user)
-	{
-		$this->section->user = $user;
-	}
-
-	/** @return Entity\User */
-	public function getUser()
-	{
-		return $this->section->user;
-	}
-
-	/** @param array $defaults */
-	public function setDefaults($defaults)
-	{
-		$this->section->defaults = (array) $defaults;
-	}
-
-	/** @return array */
-	public function getDefaults()
-	{
-		return $this->section->defaults;
-	}
-
 	/**
 	 * Map data from session's Auth and User to Registration.
 	 * @return \App\Model\Entity\Registration
@@ -270,7 +287,8 @@ class RegistrationStorage extends \Nette\Object
 	 * @param bool $force
 	 * @return void
 	 */
-	private function initSession($force = FALSE) {
+	private function initSession($force = FALSE)
+	{
 		$defaults = [
 			'oauth' => FALSE,
 			'verified' => FALSE,
@@ -301,15 +319,9 @@ class RegistrationStorage extends \Nette\Object
 		return in_array($source, $this->sources);
 	}
 
-	/**
-	 * @param array
-	 */
-	public function getSources()
-	{
-		return $this->sources;
-	}
-
 }
 
 class RegistrationStorageException extends \Exception
-{}
+{
+	
+}

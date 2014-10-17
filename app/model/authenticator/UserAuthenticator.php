@@ -12,6 +12,7 @@ use Kdyby\Doctrine\EntityDao;
  */
 class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenticator
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var AuthFacade */
 	private $authFacade;
@@ -22,6 +23,7 @@ class UserAuthenticator extends Nette\Object implements Nette\Security\IAuthenti
 	/** @var EntityDao */
 	private $userDao;
 
+	// </editor-fold>
 
 	public function __construct(AuthFacade $authFacade, EntityManager $em)
 	{
