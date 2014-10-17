@@ -17,6 +17,7 @@ class InstallPresenter extends BasePresenter
 	const PARAM_DOCTRINE = "doctrine";
 	const PARAM_ADMINER = "adminer";
 	const PARAM_COMPOSER = "composer";
+	const PARAM_LOCK = "lockInstaller";
 
 	/** @var string */
 	private $tempDir;
@@ -60,18 +61,19 @@ class InstallPresenter extends BasePresenter
 	{
 		parent::__construct();
 		$this->setPathes($tempDir, $wwwDir, $appDir);
-		$allowedParams = [
-			self::PARAM_USERS,
-			self::PARAM_DOCTRINE,
-			self::PARAM_ADMINER,
-			self::PARAM_COMPOSER,
-		];
-		foreach ($allowedParams as $param) {
-			$value = NULL;
+		
+		// default values
+		$this->installParams[self::PARAM_USERS] = NULL;
+		$this->installParams[self::PARAM_DOCTRINE] = FALSE;
+		$this->installParams[self::PARAM_ADMINER] = FALSE;
+		$this->installParams[self::PARAM_COMPOSER] = FALSE;
+		$this->installParams[self::PARAM_LOCK] = TRUE;
+		
+		// for each default value load value from config
+		foreach ($this->installParams as $param => $value) {
 			if (array_key_exists($param, $params)) {
-				$value = $params[$param];
+				$this->installParams[$param] = $params[$param];
 			}
-			$this->installParams[$param] = $value;
 		}
 	}
 
@@ -235,7 +237,9 @@ class InstallPresenter extends BasePresenter
 	 */
 	private function lockFile($lockFile)
 	{
-		file_put_contents($lockFile, '1');
+		if ($this->installParams[self::PARAM_LOCK]) {
+			file_put_contents($lockFile, '1');
+		}
 	}
 
 	/**

@@ -14,6 +14,7 @@ twitter:
 
 parameters:
 	install:
+		lockInstaller: TRUE # při TRUE zamyká instalaci po spuštění, pak je potřeba odmazat temp/install pro novou instalaci
 		doctrine: FALSE
 		adminer: FALSE
 		composer: FALSE
