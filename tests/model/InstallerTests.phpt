@@ -47,6 +47,7 @@ class InstallerTest extends Tester\TestCase
 	{
 		return [
 			$this->em->getClassMetadata('App\Model\Entity\User'),
+			$this->em->getClassMetadata('App\Model\Entity\UserSettings'),
 			$this->em->getClassMetadata('App\Model\Entity\Role'),
 			$this->em->getClassMetadata('App\Model\Entity\Auth'),
 			$this->em->getClassMetadata('App\Model\Entity\Registration'),

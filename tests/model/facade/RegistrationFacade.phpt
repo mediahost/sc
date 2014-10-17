@@ -53,11 +53,14 @@ class RegistrationFacadeTest extends BaseFacade
 	public function setUp()
 	{
 		parent::setUp();
+		$role = $this->roleFacade->create(Entity\Role::ROLE_CANDIDATE);
+		$this->registration
+				->setRole($role);
 	}
 
 	public function testRegisterAndMerge()
 	{
-		$this->roleFacade->create(Entity\Role::ROLE_CANDIDATE);
+		$this->roleFacade->create(Entity\Role::ROLE_COMPANY_ADMIN);
 
 		$user = (new Entity\User())
 				->setMail(self::U_MAIL)
@@ -84,7 +87,7 @@ class RegistrationFacadeTest extends BaseFacade
 		Assert::count(1, $saved->roles);
 		$role = $saved->roles[0];
 		Assert::type(Entity\Role::getClassName(), $role);
-		Assert::same(Entity\Role::ROLE_CANDIDATE, $role->name);
+		Assert::same(Entity\Role::ROLE_COMPANY_ADMIN, $role->name);
 
 		$this->registrationFacade->merge($saved, $authB);
 		Assert::count(2, $saved->auths);

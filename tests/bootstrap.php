@@ -1,7 +1,7 @@
 <?php
 
 // Increase default timeot limit because of locks on DB.
-set_time_limit(90);
+set_time_limit(180);
 
 require __DIR__ . '/../vendor/autoload.php';
 
