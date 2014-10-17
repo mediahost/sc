@@ -17,7 +17,7 @@ services:
 
 			# Resources
 			- addResource('front')
-			- addResource('dashboard')
+			- addResource('dashboard:home')
 			- addResource('user_settings')
 			- addResource('candidate')
 			- addResource('company')
@@ -30,7 +30,7 @@ services:
 			- deny('guest')
 
 			- allow('guest', 'front')
-			- allow('signed', 'dashboard', 'view')
+			- allow('signed', 'dashboard:home', 'default')
 			- allow('signed', 'user_settings', ['view', 'settings', 'delete'])
 
 			- allow('candidate', 'candidate', 'view')

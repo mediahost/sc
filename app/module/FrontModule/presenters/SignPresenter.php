@@ -133,7 +133,7 @@ class SignPresenter extends BasePresenter
 		if ($user) {
 			$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 			$this->presenter->flashMessage('You have been successfully logged in!', 'success');
-			$this->presenter->redirect(':Admin:Dashboard:');
+			$this->presenter->redirect(':Dashboard:Home:');
 		} else {
 			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
 			$this->redirect('in');
@@ -152,7 +152,7 @@ class SignPresenter extends BasePresenter
 	{
 		$isLogged = $this->user->isLoggedIn();
 		if ($isLogged && $redirect) {
-			$this->redirect(':Admin:Dashboard:');
+			$this->redirect(':Dashboard:Home:');
 		}
 		return $isLogged;
 	}

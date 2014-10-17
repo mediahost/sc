@@ -124,7 +124,7 @@ class AuthControl extends Components\BaseControl
 				'name' => 'SourceCode',
 				'status' => 'deactivated',
 				'action' => 'activate',
-				'plink' => ':Admin:UserSettings:settings#set-password'
+				'plink' => ':Dashboard:UserSettings:settings#set-password'
 			],
 			RegistrationStorage::SOURCE_FACEBOOK => [
 				'name' => 'Facebook',
@@ -409,7 +409,7 @@ class AuthControl extends Components\BaseControl
 		$this->authDao->save($auth);
 
 		$this->presenter->flashMessage('Password has been successfuly set!', 'success');
-		$this->presenter->redirect(':Admin:UserSettings:settings#connect-manager');
+		$this->presenter->redirect(':Dashboard:UserSettings:settings#connect-manager');
 	}
 
 	/**
@@ -429,12 +429,12 @@ class AuthControl extends Components\BaseControl
 				$this->storage->user->mail = $this->presenter->user->getIdentity()->mail;
 
 				if ($source === RegistrationStorage::SOURCE_APP) {
-					$this->presenter->redirect(':Admin:UserSetings:settings#set-password');
+					$this->presenter->redirect(':Dashboard:UserSetings:settings#set-password');
 				} else {
 					$user = $this->mergeOrRegister();
 				}
 
-				$this->presenter->redirect(':Admin:UserSettings:settings#connect-manager');
+				$this->presenter->redirect(':Dashboard:UserSettings:settings#connect-manager');
 			} else {
 				if ($this->storage->isRequired()) {
 					$this->presenter->redirect(':Front:Sign:Registration', $source);
@@ -447,7 +447,7 @@ class AuthControl extends Components\BaseControl
 		} else {
 			if ($this->force === TRUE) {
 				$this->presenter->flashMessage('This account is connected to another user!', 'warning');
-				$this->presenter->redirect(':Admin:UserSettings:settings#connect-manager');
+				$this->presenter->redirect(':Dashboard:UserSettings:settings#connect-manager');
 			} else {
 				$user = $auth->user;
 				$this->authFacade->updateAccessToken($auth, $token);
@@ -469,7 +469,7 @@ class AuthControl extends Components\BaseControl
 		$this->presenter->restoreRequest($this->presenter->backlink);
 
 		$this->presenter->flashMessage('You have been successfully logged in!', 'success');
-		$this->presenter->redirect(':Admin:Dashboard:', [
+		$this->presenter->redirect(':Dashboard:Home:', [
 			'lang' => $this->settingsStorage->language
 		]);
 	}

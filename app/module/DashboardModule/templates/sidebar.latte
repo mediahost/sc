@@ -30,12 +30,12 @@
 				<!-- END RESPONSIVE QUICK SEARCH FORM -->
 			</li>
 
-			<li n:if="$user->isAllowed('dashboard', 'view')"
-				class="start{ifCurrent Dashboard:*} active{/ifCurrent}">
-				<a n:href="Dashboard:">
+			<li n:if="$user->isAllowed('dashboard:home', 'default')"
+				class="start{ifCurrent Home:*} active{/ifCurrent}">
+				<a n:href="Home:">
 					<i class="fa fa-calendar"></i>
 					<span class="title">
-						{_'Dashboard'}
+						{_'Home'}
 					</span>
 					<span class="selected">
 					</span>

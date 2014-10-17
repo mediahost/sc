@@ -22,9 +22,9 @@ class RouterFactory
 
 		$router[] = new Route('index.php', 'Front:Default:default', Route::ONE_WAY);
 
-		$router[] = $adminRouter = new RouteList('Admin');
-		$adminRouter[] = new Route("admin/<presenter>/<action>[/<id>]", array(
-			'presenter' => "Dashboard",
+		$router[] = $adminRouter = new RouteList('Dashboard');
+		$adminRouter[] = new Route("dashboard/<presenter>/<action>[/<id>]", array(
+			'presenter' => "Home",
 			'action' => "default",
 			'id' => NULL,
 		));

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AdminModule\Presenters;
+namespace App\DashboardModule\Presenters;
 
 use App\Components\Sign;
 

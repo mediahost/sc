@@ -53,7 +53,7 @@ class SignInControl extends \App\Components\BaseControl
 		try {
 			$this->presenter->user->login($values->username, $values->password);
 			$this->presenter->restoreRequest($this->presenter->backlink);
-			$this->presenter->redirect(':Admin:Dashboard:');
+			$this->presenter->redirect(':Dashboard:Home:');
 		} catch (Nette\Security\AuthenticationException $e) {
 			$form->addError('Incorrect login or password!');
 		}
