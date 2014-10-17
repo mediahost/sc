@@ -9,12 +9,13 @@ use Nette;
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @persistent string */
 	public $lang = 'en';
 
 	/** @persistent */
-    public $backlink = '';
+	public $backlink = '';
 
 	/** @var \Venne\Bridges\Kdyby\DoctrineForms\FormFactoryFactory @inject */
 	public $formFactoryFactory;
@@ -34,12 +35,27 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	/** @var \Kdyby\Doctrine\EntityManager @inject */
 	public $em;
 
+	// </editor-fold>
+
 	protected function startup()
 	{
 		parent::startup();
 		$this->setLang();
 	}
 
+	protected function beforeRender()
+	{
+		$this->template->lang = $this->lang;
+		$this->template->setTranslator($this->translator);
+	}
+
+	// <editor-fold defaultstate="collapsed" desc="flash messages">
+
+	/**
+	 * Translate flash messages if not HTML
+	 * @param type $message
+	 * @param type $type
+	 */
 	public function flashMessage($message, $type = 'info')
 	{
 		if (!$message instanceof \Nette\Utils\Html) {
@@ -47,6 +63,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		}
 		parent::flashMessage($message, $type);
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="requirments">
 
 	public function checkRequirements($element)
 	{
@@ -64,13 +83,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		}
 	}
 
-	protected function beforeRender()
-	{
-		$this->template->lang = $this->lang;
-		$this->template->setTranslator($this->translator);
-	}
-
-// <editor-fold defaultstate="collapsed" desc="Components">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="components">
 
 	/** @return \App\Components\Sign\SignOutControl */
 	public function createComponentSignOut()
@@ -78,9 +92,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		return $this->iSignOutControlFactory->create();
 	}
 
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Language">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="language">
 	private function setLang()
 	{
 		// Update settings when changes
@@ -92,9 +105,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		$this->translator->setLang($this->lang);
 	}
-// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="css webloader">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="css webloader">
 
 	/** @return CssLoader */
 	protected function createComponentCssFront()
@@ -144,9 +157,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		return $css;
 	}
 
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="js webloader">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="js webloader">
 
 	/** @return JavaScriptLoader */
 	protected function createComponentJsApp()
@@ -178,5 +190,5 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		return $this->webLoader->createJavaScriptLoader('metronicCoreIE9');
 	}
 
-// </editor-fold>
+	// </editor-fold>
 }

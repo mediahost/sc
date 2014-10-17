@@ -12,5 +12,6 @@ use Nette,
  */
 abstract class BasePresenter extends BaseBasePresenter
 {
-
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
 }

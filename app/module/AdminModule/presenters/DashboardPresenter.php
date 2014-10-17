@@ -7,6 +7,8 @@ namespace App\AdminModule\Presenters;
  */
 class DashboardPresenter extends BasePresenter
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
 
 	/**
 	 * @secured
@@ -15,7 +17,7 @@ class DashboardPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-
+		
 	}
 
 }

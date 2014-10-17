@@ -10,6 +10,8 @@ use Nette,
  */
 class ErrorPresenter extends BasePresenter
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
 
 	/**
 	 * @param  Exception

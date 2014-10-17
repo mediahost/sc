@@ -2,7 +2,6 @@
 
 namespace App\FrontModule\Presenters;
 
-
 /**
  * BasePresenter
  *
@@ -10,5 +9,6 @@ namespace App\FrontModule\Presenters;
  */
 abstract class BasePresenter extends \App\BaseModule\Presenters\BasePresenter
 {
-
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
 }

@@ -4,13 +4,11 @@ namespace App\FrontModule\Presenters;
 
 /** Nette */
 use Nette\Security\Identity;
-
 /** Application */
 use App\Components\Sign,
 	App\Model\Storage,
 	App\Model\Storage\RegistrationStorage,
 	App\Model\Facade;
-
 
 /**
  * Sign in, sign out and registration presenters.
@@ -18,6 +16,7 @@ use App\Components\Sign,
 class SignPresenter extends BasePresenter
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 	/** @var Sign\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
 
@@ -42,6 +41,8 @@ class SignPresenter extends BasePresenter
 	/** @var Facade\RoleFacade @inject */
 	public $roleFacade;
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="actions">
 	/**
 	 * Default is SIGN IN.
 	 */
@@ -128,7 +129,7 @@ class SignPresenter extends BasePresenter
 		$this->isLoggedIn();
 
 		$user = $this->registrationFacade->verify($token);
-	
+
 		if ($user) {
 			$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 			$this->presenter->flashMessage('You have been successfully logged in!', 'success');
@@ -138,6 +139,9 @@ class SignPresenter extends BasePresenter
 			$this->redirect('in');
 		}
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="private functions">
 
 	/**
 	 * Redirect logged to certain destination.
@@ -153,7 +157,8 @@ class SignPresenter extends BasePresenter
 		return $isLogged;
 	}
 
-// <editor-fold defaultstate="collapsed" desc="Components">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="components">
 
 	/** @return Sign\SignInControl */
 	protected function createComponentSignIn()
@@ -179,5 +184,5 @@ class SignPresenter extends BasePresenter
 		return $this->iRecoveryControlFactory->create();
 	}
 
-// </editor-fold>
+	// </editor-fold>
 }

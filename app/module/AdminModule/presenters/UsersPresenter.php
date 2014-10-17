@@ -11,6 +11,7 @@ use App\Model\Entity;
  */
 class UsersPresenter extends BasePresenter
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var \Kdyby\Doctrine\EntityManager @inject */
 	public $em;
@@ -30,12 +31,15 @@ class UsersPresenter extends BasePresenter
 	/** @var \App\Model\Entity\User */
 	private $user;
 
+	// </editor-fold>
+
 	protected function startup()
 	{
 		parent::startup();
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="actions & renderers">
 	/**
 	 * @secured
 	 * @resource('admin')
@@ -106,7 +110,8 @@ class UsersPresenter extends BasePresenter
 		$this->redirect("default");
 	}
 
-// <editor-fold defaultstate="collapsed" desc="Forms">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="forms">
 
 	public function createComponentUserForm()
 	{
@@ -127,5 +132,5 @@ class UsersPresenter extends BasePresenter
 		$this->redirect("Users:");
 	}
 
-// </editor-fold>
+	// </editor-fold>
 }

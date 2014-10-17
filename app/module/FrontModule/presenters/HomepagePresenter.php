@@ -11,9 +11,12 @@ use Tracy\Debugger as Debug;
 class HomepagePresenter extends BasePresenter
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// </editor-fold>
+
 	public function actionDefault()
 	{
-
+		
 	}
 
 }

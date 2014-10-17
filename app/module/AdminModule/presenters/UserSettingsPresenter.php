@@ -9,6 +9,7 @@ use App\Components\Sign;
  */
 class UserSettingsPresenter extends BasePresenter
 {
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var \App\Model\Facade\AuthFacade @inject */
 	public $authFacade;
@@ -25,6 +26,8 @@ class UserSettingsPresenter extends BasePresenter
 	/** @var \App\Components\User\ISettingsControlFactory @inject */
 	public $iSettingsControlFactory;
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="actions">
 	/**
 	 * @secured
 	 * @resource('user_settings')
@@ -32,7 +35,7 @@ class UserSettingsPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-
+		
 	}
 
 	/**
@@ -57,7 +60,8 @@ class UserSettingsPresenter extends BasePresenter
 		$this['auth']->setForce();
 	}
 
-// <editor-fold defaultstate="collapsed" desc="Components">
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="components">
 
 	/** @return Sign\AuthControl */
 	protected function createComponentAuth()
@@ -77,5 +81,5 @@ class UserSettingsPresenter extends BasePresenter
 		return $this->iSettingsControlFactory->create();
 	}
 
-// </editor-fold>
+	// </editor-fold>
 }
