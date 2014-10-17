@@ -11,6 +11,8 @@ use Tracy\Debugger as Debug;
 class InstallPresenter extends BasePresenter
 {
 
+	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+
 	const PARAM_USERS = "startUsers";
 	const PARAM_DOCTRINE = "doctrine";
 	const PARAM_ADMINER = "adminer";
@@ -52,6 +54,8 @@ class InstallPresenter extends BasePresenter
 	/** @var bool */
 	private $printHtml;
 
+	// </editor-fold>
+
 	public function __construct($tempDir = NULL, $wwwDir = NULL, $appDir = NULL, $params = [])
 	{
 		parent::__construct();
@@ -70,7 +74,7 @@ class InstallPresenter extends BasePresenter
 			$this->installParams[$param] = $value;
 		}
 	}
-	
+
 	protected function startup()
 	{
 		parent::startup();
@@ -78,7 +82,7 @@ class InstallPresenter extends BasePresenter
 			mkdir($this->installDir);
 		}
 		$this->setUsers($this->installParams[self::PARAM_USERS]);
-		
+
 		// Pouze přidají instalace do fronty - neprovádějí je!!!
 		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
 		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
@@ -94,17 +98,11 @@ class InstallPresenter extends BasePresenter
 			$this->callService($function, $name, $params);
 		}
 		$this->afterInstall();
-		
+
 		$this->terminate();
 	}
-	
-	/**
-	 * Jobs after install is complete
-	 */
-	private function afterInstall()
-	{
-		$this->setUserSettings();
-	}
+
+	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 * Set nested pathes
@@ -134,6 +132,9 @@ class InstallPresenter extends BasePresenter
 		}
 		return $this;
 	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="instalations">
 
 	/**
 	 * Add install DB to queue 'toInstall'
@@ -172,6 +173,9 @@ class InstallPresenter extends BasePresenter
 		}
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="after jobs">
+
 	/**
 	 * Set clear user settings to all users without settings
 	 */
@@ -189,6 +193,17 @@ class InstallPresenter extends BasePresenter
 		}
 
 		$this->em->flush();
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="private functions">
+
+	/**
+	 * Jobs after install is complete
+	 */
+	private function afterInstall()
+	{
+		$this->setUserSettings();
 	}
 
 	/**
@@ -232,4 +247,5 @@ class InstallPresenter extends BasePresenter
 		echo $message . ($this->printHtml ? '<br/>' : ' | ');
 	}
 
+	// </editor-fold>
 }
