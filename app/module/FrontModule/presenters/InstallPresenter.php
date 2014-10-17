@@ -70,7 +70,7 @@ class InstallPresenter extends BasePresenter
 			$this->installParams[$param] = $value;
 		}
 	}
-
+	
 	protected function startup()
 	{
 		parent::startup();
@@ -78,10 +78,11 @@ class InstallPresenter extends BasePresenter
 			mkdir($this->installDir);
 		}
 		$this->setUsers($this->installParams[self::PARAM_USERS]);
+		
+		// Pouze přidají instalace do fronty - neprovádějí je!!!
 		$this->installDb($this->installParams[self::PARAM_DOCTRINE]);
 		$this->installAdminer($this->installParams[self::PARAM_ADMINER]);
 		$this->installComposer($this->installParams[self::PARAM_COMPOSER]);
-		$this->setUserSettings();
 	}
 
 	public function actionDefault($printHtml = TRUE)
@@ -92,10 +93,26 @@ class InstallPresenter extends BasePresenter
 			list($name, $params) = each($serviceArr);
 			$this->callService($function, $name, $params);
 		}
-
+		$this->afterInstall();
+		
 		$this->terminate();
 	}
+	
+	/**
+	 * Jobs after install is complete
+	 */
+	private function afterInstall()
+	{
+		$this->setUserSettings();
+	}
 
+	/**
+	 * Set nested pathes
+	 * @param type $tempDir
+	 * @param type $wwwDir
+	 * @param type $appDir
+	 * @return \App\FrontModule\Presenters\InstallPresenter
+	 */
 	private function setPathes($tempDir, $wwwDir, $appDir)
 	{
 		$this->tempDir = $tempDir;
@@ -118,6 +135,12 @@ class InstallPresenter extends BasePresenter
 		return $this;
 	}
 
+	/**
+	 * Add install DB to queue 'toInstall'
+	 * can create/update DB tables
+	 * set all nested thing (users, roles) to DB
+	 * @param bool $doctrine if create/update DB
+	 */
 	private function installDb($doctrine = FALSE)
 	{
 		if ($doctrine) {
@@ -127,6 +150,10 @@ class InstallPresenter extends BasePresenter
 		$this->toInstall['users'] = ['Users' => [$this->initUsers, $this->roleFacade, $this->userFacade]];
 	}
 
+	/**
+	 * Add install adminer to queue 'toInstall'
+	 * @param bool $adminer if install adminer
+	 */
 	private function installAdminer($adminer = FALSE)
 	{
 		if ($adminer) {
@@ -134,6 +161,10 @@ class InstallPresenter extends BasePresenter
 		}
 	}
 
+	/**
+	 * Add install composer to queue 'toInstall'
+	 * @param bool $composer if install composer
+	 */
 	private function installComposer($composer = FALSE)
 	{
 		if ($composer) {
@@ -141,6 +172,9 @@ class InstallPresenter extends BasePresenter
 		}
 	}
 
+	/**
+	 * Set clear user settings to all users without settings
+	 */
 	private function setUserSettings()
 	{
 		$userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
