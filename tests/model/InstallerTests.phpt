@@ -46,11 +46,11 @@ class InstallerTest extends Tester\TestCase
 	private function getClasses()
 	{
 		return [
-			$this->em->getClassMetadata('App\Model\Entity\User'),
-			$this->em->getClassMetadata('App\Model\Entity\UserSettings'),
-			$this->em->getClassMetadata('App\Model\Entity\Role'),
-			$this->em->getClassMetadata('App\Model\Entity\Auth'),
-			$this->em->getClassMetadata('App\Model\Entity\Registration'),
+			$this->em->getClassMetadata(\App\Model\Entity\User::getClassName()),
+			$this->em->getClassMetadata(\App\Model\Entity\UserSettings::getClassName()),
+			$this->em->getClassMetadata(\App\Model\Entity\Role::getClassName()),
+			$this->em->getClassMetadata(\App\Model\Entity\Auth::getClassName()),
+			$this->em->getClassMetadata(\App\Model\Entity\Registration::getClassName()),
 		];
 	}
 
