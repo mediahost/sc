@@ -42,6 +42,7 @@ composer.lock
 ## Bin
 #################
 /bin/test.bat
+/bin/testOne.bat
 
 #################
 ## NetBeans
