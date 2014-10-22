@@ -29,10 +29,7 @@ abstract class BaseFacade extends \Nette\Object
 	/**
 	 * Method for initialization of other DAOs in extended facades.
 	 */
-	protected function init()
-	{
-		
-	}
+	abstract protected function init();
 
 	// <editor-fold defaultstate="collapsed" desc="save">
 

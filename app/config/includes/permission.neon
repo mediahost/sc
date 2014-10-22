@@ -7,35 +7,29 @@ services:
 			- addRole('signed', 'guest')
 			- addRole('candidate', 'signed')
 			- addRole('company', 'signed')
-			- addRole('company_editor', 'company')
-			- addRole('company_manager', 'company')
-			- addRole('company_admin', 'company')
 
 			- addRole('admin', 'signed')
 			- addRole('superadmin', 'admin')
 
-
 			# Resources
-			- addResource('front')
-			- addResource('dashboard:home')
-			- addResource('user_settings')
+			- addResource('admin')
 			- addResource('candidate')
 			- addResource('company')
-			- addResource('admin')
-
-
+			- addResource('dashboard')
+			- addResource('front')
+			- addResource('profile')
 			- addResource('service')
 
 			# Privilegies
 			- deny('guest')
 
 			- allow('guest', 'front')
-			- allow('signed', 'dashboard:home', 'default')
-			- allow('signed', 'user_settings', ['view', 'settings', 'delete'])
+			- allow('signed', 'dashboard', 'default')
+			- allow('signed', 'profile', ['view', 'settings', 'delete'])
 
 			- allow('candidate', 'candidate', 'view')
 			- allow('company', 'company', 'view')
 
 			- allow('admin', 'admin')
 
-			- allow('superadmin') # Full access for superadmin role
+			- allow('superadmin') # Full access for superadmin

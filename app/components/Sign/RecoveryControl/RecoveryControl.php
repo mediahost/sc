@@ -66,7 +66,7 @@ class RecoveryControl extends Components\BaseControl
 
 		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
-		$this->presenter->redirect(':Dashboard:Home:');
+		$this->presenter->redirect(':App:Dashboard:');
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters">

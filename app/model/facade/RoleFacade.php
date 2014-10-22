@@ -13,7 +13,7 @@ class RoleFacade extends BaseFacade
 	private $roles;
 
 	/** @var array */
-	private $registratable = [Entity\Role::ROLE_CANDIDATE, Entity\Role::ROLE_COMPANY_ADMIN]; // ToDo: Move to configuration.
+	private $registratable = [Entity\Role::ROLE_CANDIDATE, Entity\Role::ROLE_COMPANY]; // ToDo: Move to configuration.
 
 	// </editor-fold>
 

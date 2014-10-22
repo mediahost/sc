@@ -90,16 +90,18 @@
                                 </li>
                                 {/block}
 
-                                {block breadcrumbItems}
-                                <li>
-                                    <i class="fa fa-home"></i>
-                                    <a n:href="Dashboard:">{_'Home'}</a>
-                                    <span class="fa fa-angle-right"></span>
-                                </li>
-                                {block breadcrumbLast}
-                                <li><a n:href="Dashboard:">{_'Dashboard'}</a></li>
+                                {block breadcrumbItems|strip}
+									<li>
+										<i class="fa fa-home"></i>
+										<a n:href="Dashboard:">{_'Home'}</a>
+										<span class="fa fa-angle-right"></span>
+									</li>
+									{block breadcrumbLast}
+										<li>
+											<a n:href="Dashboard:">{_'Dashboard'}</a>
+										</li>
                                     {/block}
-                                    {/block}
+								{/block}
                             </ul>
                             <!-- END FLASH BREADCRUMB-->
                         </div>

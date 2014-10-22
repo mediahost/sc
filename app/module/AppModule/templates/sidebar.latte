@@ -33,34 +33,34 @@
 			<li n:if="$user->isAllowed('dashboard', 'default')"
 				class="start{ifCurrent Dashboard:*} active{/ifCurrent}">
 				<a n:href="Dashboard:">
-					<i class="fa fa-calendar"></i>
-					<span class="title">
-						{_'Home'}
-					</span>
-					<span class="selected">
-					</span>
+					<i class="fa fa-dashboard"></i> <span class="title">{_'Dashboard'}</span><span class="selected"></span>
 				</a>
 			</li>
 
 			<li n:if="$user->isAllowed('admin', 'view')"
 				class="{ifCurrent Users:*} active{/ifCurrent}">
 				<a n:href="Users:">
-					<i class="fa fa-users"></i>
-					<span class="title">
-						{_'Users'}
-					</span>
-					<span class="selected">
-					</span>
+					<i class="fa fa-users"></i> <span class="title">{_'Users'}</span><span class="selected"></span>
+				</a>
+			</li>
+			
+			<li n:if="$user->isAllowed('candidate', 'view')"
+				class="{ifCurrent Candidate:*} active{/ifCurrent}">
+				<a n:href="Candidate:">
+					<i class="fa fa-suitcase"></i> <span class="title">{_'Candidate'}</span><span class="selected"></span>
+				</a>
+			</li>
+			
+			<li n:if="$user->isAllowed('company', 'view')"
+				class="{ifCurrent Company:*} active{/ifCurrent}">
+				<a n:href="Company:">
+					<i class="fa fa-building-o"></i> <span class="title">{_'Company'}</span><span class="selected"></span>
 				</a>
 			</li>
 
 			<li class="{ifCurrent Profile:*} active{/ifCurrent} last">
 				<a n:href="Profile:">
-					<i class="icon-user"></i>
-					<span class="title">
-						{_'My Profile'}
-					</span>
-					<span class="selected"></span>
+					<i class="icon-user"></i> <span class="title">{_'My Profile'}</span><span class="selected"></span>
 				</a>
 				<ul class="sub-menu">
 					<li class="{ifCurrent Profile:} active{/ifCurrent}">

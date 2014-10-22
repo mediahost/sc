@@ -97,7 +97,7 @@ class RegistrationFacade extends BaseFacade
 		$user->addAuth($auth);
 
 		if (empty($user->roles)) {
-			$role = $this->roleDao->findOneBy(['name' => Role::ROLE_COMPANY_ADMIN]);
+			$role = $this->roleDao->findOneBy(['name' => Role::ROLE_COMPANY]);
 			$user->addRole($role);
 		}
 
