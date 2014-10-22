@@ -20,16 +20,12 @@ class Role extends \Kdyby\Doctrine\Entities\BaseEntity
 	const ROLE_GUEST = 'guest';
 	const ROLE_SIGNED = 'signed';
 	const ROLE_CANDIDATE = 'candidate';
-	const ROLE_COMPANY_ADMIN = 'company_admin';
+	const ROLE_COMPANY = 'company';
 
 	/**
 	 * @ORM\Column(type="string", length=128)
 	 */
 	protected $name;
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="setters">
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
 	// </editor-fold>
 }

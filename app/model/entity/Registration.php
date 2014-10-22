@@ -87,6 +87,5 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
-	// </editor-fold>
+
 }
