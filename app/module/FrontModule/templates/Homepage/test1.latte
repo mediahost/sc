@@ -1,0 +1,12 @@
+{layout ../@metronic.layout.latte}
+
+{block content}
+<div class="container">
+	<br/><br/><br/><br/>
+	Testing content for back on this site.<br/>
+	{if $user->isLoggedIn()}
+		{control signOut}
+	{else}
+		<a n:href="Sign:in, backlink => $backlink">{_'Sign In'}</a>
+	{/if}
+</div>

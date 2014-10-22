@@ -19,4 +19,14 @@ class HomepagePresenter extends BasePresenter
 		
 	}
 
+	public function renderTest1()
+	{
+		$this->template->backlink = $this->storeRequest();
+	}
+
+	public function renderTest2()
+	{
+		$this->template->backlink = $this->storeRequest();
+	}
+
 }
