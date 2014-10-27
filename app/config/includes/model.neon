@@ -4,7 +4,8 @@ services:
 	roleDao: @doctrine.dao(App\Model\Entity\Role)
 	registrationDao: @doctrine.dao(App\Model\Entity\Registration)
 	userDao: @doctrine.dao(App\Model\Entity\User)
-
+	skillCategoryDao: @doctrine.dao(App\Model\Entity\SkillCategory)
+	skillDao: @doctrine.dao(App\Model\Entity\Skill)
 
 	# Facades
 	- {class: App\Model\Facade\AuthFacade(@authDao), inject: yes}

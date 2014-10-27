@@ -64,6 +64,8 @@ class Installer
 			$em->getClassMetadata('App\Model\Entity\Role'),
 			$em->getClassMetadata('App\Model\Entity\Auth'),
 			$em->getClassMetadata('App\Model\Entity\Registration'),
+			$em->getClassMetadata('App\Model\Entity\SkillCategory'),
+			$em->getClassMetadata('App\Model\Entity\Skill'),
 		];
 		$tool->updateSchema($classes); // php index.php orm:schema-tool:update --force
 		return TRUE;
