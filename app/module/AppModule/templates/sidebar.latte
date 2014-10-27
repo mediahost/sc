@@ -80,6 +80,26 @@
 					</li>
 				</ul>
 			</li>
+			
+			<li class="{ifCurrent Skills:*} active{/ifCurrent} last">
+				<a n:href="Profile:">
+					<i class="icon-book-open"></i> <span class="title">{_'Skills'}</span><span class="selected"></span>
+				</a>
+				<ul class="sub-menu">
+					<li class="{ifCurrent Skills:default} active{/ifCurrent}">
+						<a n:href="Skills:default">
+							<i class="icon-book-open"></i>
+							{_'Skills'}
+						</a>
+					</li>
+					<li class="{ifCurrent Skills:categories} active{/ifCurrent}">
+						<a n:href="Skills:categories">
+							<i class="icon-folder-alt"></i>
+							{_'Skill categories'}
+						</a>
+					</li>
+				</ul>
+			</li>
 		</ul>
 		<!-- END SIDEBAR MENU -->
 	</div>
