@@ -1,5 +1,5 @@
 {block breadcrumbLast}
-<li><a n:href="Skills:">{_'Skills'}</a></li>
+<li><a n:href="Skills:categories">{_'Categories'}</a></li>
     {/block}
 
 {block content}
@@ -8,15 +8,15 @@
         <div class="portlet box grey-cascade">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="icon-book-open"></i>{_'Skills'}
+                    <i class="icon-folder-alt"></i>{_'Categories'}
                 </div>
             </div>
             <div class="portlet-body">
                 <div class="table-toolbar">
                     <div class="btn-group">
-                        <a n:href="Skills:add"
+                        <a n:href="Skills:categoryAdd"
                            class="btn green">
-                            {_'Add Skill'}
+                            {_'Add Category'}
                             <i class="fa fa-plus"></i>
                         </a>
                     </div>
