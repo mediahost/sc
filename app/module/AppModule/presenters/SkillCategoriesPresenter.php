@@ -2,7 +2,7 @@
 
 namespace App\AppModule\Presenters;
 
-class SkillsPresenter extends BasePresenter
+class SkillCategoriesPresenter extends BasePresenter
 {
 	
 	// <editor-fold defaultstate="collapsed" desc="actions & renderers">

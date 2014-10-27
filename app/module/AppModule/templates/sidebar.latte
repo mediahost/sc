@@ -81,19 +81,19 @@
 				</ul>
 			</li>
 			
-			<li class="{ifCurrent Skills:*} active{/ifCurrent} last">
-				<a n:href="Profile:">
-					<i class="icon-book-open"></i> <span class="title">{_'Skills'}</span><span class="selected"></span>
+			<li class="{if $presenter->isLinkCurrent('Skills:*') || $presenter->isLinkCurrent('SkillCategories:*')} active{/if} last">
+				<a n:href="Skills:">
+					<i class="icon-book-open"></i> <span class="title">{_'Skills & Categories'}</span><span class="selected"></span>
 				</a>
 				<ul class="sub-menu">
-					<li class="{ifCurrent Skills:default} active{/ifCurrent}">
-						<a n:href="Skills:default">
+					<li class="{ifCurrent Skills:*} active{/ifCurrent}">
+						<a n:href="Skills:">
 							<i class="icon-book-open"></i>
 							{_'Skills'}
 						</a>
 					</li>
-					<li class="{ifCurrent Skills:categories} active{/ifCurrent}">
-						<a n:href="Skills:categories">
+					<li class="{ifCurrent SkillCategories:*} active{/ifCurrent}">
+						<a n:href="SkillCategories:">
 							<i class="icon-folder-alt"></i>
 							{_'Skill categories'}
 						</a>
