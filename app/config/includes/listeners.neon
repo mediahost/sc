@@ -1,2 +1,3 @@
 services:
 	- {class: App\Listeners\UserListener, tags: [kdyby.subscriber], inject: yes}
+	- {class: App\Listeners\InstallerListener, tags: [kdyby.subscriber], inject: yes}

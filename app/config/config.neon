@@ -12,7 +12,6 @@ includes:
 	- includes/permission.neon
 	- includes/model.neon
 	- includes/form.neon
-	- includes/presenters.neon
 	- includes/translator.neon
 	- includes/listeners.neon
 
@@ -48,3 +47,4 @@ services:
 
 extensions:
 	events: Kdyby\Events\DI\EventsExtension
+	installer: App\Components\Installer\DI\InstallerExtension
