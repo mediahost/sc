@@ -12,25 +12,15 @@ twitter:
 	consumerKey: 'consumer_key'
 	consumerSecretKey: 'secret_key'
 
-parameters:
-	install:
-		doctrine: FALSE
-		adminer: FALSE
-		composer: FALSE
-		startUsers: ['user_mail' = ['password', 'name_of_role']]
+installer:
+	lock: TRUE
+	doctrine: FALSE
+	initUsers: ['user_mail' = ['password', 'name_of_role']]
 
 nette:
 	mailer:
-		smtp: FALSE # při FALSE využívá mail(); při TRUE je potřeba nastavit údaje
-#		host: smtp.gmail.com
-#		secure: ssl
-#		username: user@gmail.com
-#		password: heslo
+		smtp: FALSE
 
-# Při zakomentování bloku nette:mailer: je možné využít MailPanel níže
-#nette:
-#	debugger:
-#		bar:
-#			- JanDrabek\MailPanel\MailPanel
-#services:
-#	nette.mailer: JanDrabek\MailPanel\SessionMailer
+gettextTranslator:
+	files:
+		all: %appDir%/../app/lang/locale

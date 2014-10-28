@@ -1,0 +1,17 @@
+{layout none}
+{if !$html}
+	{contentType text/plain}
+{/if}
+{foreach $messages as $message => $args}
+	{$message} {$args[0] ? 'INSTALLED' : 'ALREADY INSTALLED'}
+	{if !$iterator->isLast()}
+		{if $html}<br/>
+		{else} | {/if}
+	{/if}
+	{if $html && isset($args[1])}
+		<br/>
+		--------------------------<br/>
+		<pre>{$args[1]}</pre>
+		--------------------------<br/>
+	{/if}
+{/foreach}

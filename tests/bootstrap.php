@@ -11,7 +11,7 @@ if (!class_exists('Tester\Assert')) {
 }
 
 // Using app temporary directory
-define('TEMP_DIR', __DIR__ . '/../temp/');
+define('TEMP_DIR', __DIR__ . '/temp/');
 
 // Directory for lock files
 define('LOCK_DIR', TEMP_DIR);

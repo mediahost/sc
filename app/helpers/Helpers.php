@@ -153,4 +153,25 @@ class Helpers
 	}
 
 	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="dirs">
+
+	/**
+	 * Glob function doesn't return the hidden files, therefore scandir can be more useful, 
+	 * when trying to delete recursively a tree.
+	 * @param string $dir
+	 * @return boolean
+	 */
+	public static function delTree($dir)
+	{
+		if (is_dir($dir)) {
+			$files = array_diff(scandir($dir), array('.', '..'));
+			foreach ($files as $file) {
+				(is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
+			}
+			return rmdir($dir);
+		}
+		return FALSE;
+	}
+
+	// </editor-fold>
 }

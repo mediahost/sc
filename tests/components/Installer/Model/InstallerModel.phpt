@@ -1,24 +1,26 @@
 <?php
 
-namespace Test\Model;
+namespace Test\Components\Installer\Model;
 
 use Nette,
 	Tester,
 	Tester\Assert;
 
-$container = require __DIR__ . '/../../bootstrap.php';
+$container = require __DIR__ . '/../../../bootstrap.php';
 
 /**
- * TEST: Installer Testing
+ * TEST: Installer Model Testing
  *
  * @testCase
  * @phpVersion 5.4
  */
-class InstallerTest extends Tester\TestCase
+class InstallerModelTest extends Tester\TestCase
 {
 
 	/** @var Nette\DI\Container */
 	private $container;
+
+	// <editor-fold defaultstate="collapsed" desc="injects">
 
 	/** @var \Doctrine\ORM\EntityManager @inject */
 	public $em;
@@ -32,8 +34,13 @@ class InstallerTest extends Tester\TestCase
 	/** @var \App\Model\Facade\UserFacade @inject */
 	public $userFacade;
 
-	/** @var Nette\Security\IAuthorizator @inject */
+	/** @var \Nette\Security\IAuthorizator @inject */
 	public $permissions;
+
+	/** @var \App\Components\Installer\Model\InstallerModel @inject */
+	public $installerModel;
+
+	// </editor-fold>
 
 	function __construct(Nette\DI\Container $container)
 	{
@@ -43,33 +50,35 @@ class InstallerTest extends Tester\TestCase
 		\Tester\Environment::lock('db', LOCK_DIR);
 	}
 
-	private function getClasses()
-	{
-		return [
-			$this->em->getClassMetadata(\App\Model\Entity\User::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\UserSettings::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Role::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Auth::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Registration::getClassName()),
-		];
-	}
+	// <editor-fold defaultstate="expanded" desc="tests">
 
 	public function testInstallerFiles()
 	{
-		$installer = new \App\Model\Installer\Installer();
+		$installer = $this->installerModel;
 		$dir = $this->container->getParameters()['tempDir'];
 
+		// test '/adminer/database.sql'
+		$adminerPath = $dir . 'adminer/';
+		$adminerFile = $adminerPath . 'database.sql';
+		mkdir($adminerPath);
+		file_put_contents($adminerFile, 'test');
+		Assert::true($installer->installAdminer($dir));
+		unlink($adminerFile);
+		rmdir($adminerPath);
+
+		// test without existing file
 		Assert::true($installer->installAdminer($dir));
 
-		$file = Tester\FileMock::create('');
-		$installer->installAdminer(NULL, $file);
+		// testing allow writing (chmod 777) in mock file
+		$file = Tester\FileMock::create('', 'sql');
+		Assert::true($installer->installAdminer(NULL, $file));
 		file_put_contents($file, 'test');
 		Assert::same('test', file_get_contents($file));
 	}
 
 	public function testInstallerDb()
 	{
-		$installer = new \App\Model\Installer\Installer();
+		$installer = $this->installerModel;
 
 		Assert::exception(function() {
 			$this->userFacade->find(1);
@@ -78,7 +87,7 @@ class InstallerTest extends Tester\TestCase
 			$this->roleFacade->find(1);
 		}, 'Kdyby\Doctrine\DBALException');
 
-		Assert::true($installer->installDoctrine($this->em));
+		Assert::true($installer->installDoctrine());
 
 		Assert::null($this->userFacade->find(1));
 		Assert::count(0, $this->userFacade->findAll());
@@ -86,13 +95,13 @@ class InstallerTest extends Tester\TestCase
 		Assert::count(0, $this->roleFacade->findAll());
 
 		$roles1 = [];
-		$return1 = $installer->installRoles($roles1, $this->roleFacade);
+		$return1 = $installer->installRoles($roles1);
 		$dbRoles1 = $this->roleFacade->findPairs('name');
 		Assert::true($return1);
 		Assert::same($roles1, $dbRoles1);
 
 		$roles2 = $this->permissions->getRoles();
-		$return2 = $installer->installRoles($roles2, $this->roleFacade);
+		$return2 = $installer->installRoles($roles2);
 		$dbRoles2 = $this->roleFacade->findPairs('name');
 		Assert::true($return2);
 		Assert::equal(array_values($roles2), array_values($dbRoles2));
@@ -120,26 +129,26 @@ class InstallerTest extends Tester\TestCase
 			'username5' => ['password', 'superadmin'],
 		];
 
-		Assert::true($installer->installUsers([], $this->roleFacade, $this->userFacade));
+		Assert::true($installer->installUsers([]));
 		Assert::same([], $this->userFacade->findPairs('mail'));
 
 		Assert::exception(function() use ($installer, $wrongUsers1) {
-			$installer->installUsers($wrongUsers1, $this->roleFacade, $this->userFacade);
+			$installer->installUsers($wrongUsers1);
 		}, 'Nette\InvalidArgumentException');
 
 		Assert::exception(function() use ($installer, $wrongUsers2) {
-			$installer->installUsers($wrongUsers2, $this->roleFacade, $this->userFacade);
+			$installer->installUsers($wrongUsers2);
 		}, 'Nette\InvalidArgumentException');
 
 		Assert::exception(function() use ($installer, $wrongUsers3) {
-			$installer->installUsers($wrongUsers3, $this->roleFacade, $this->userFacade);
+			$installer->installUsers($wrongUsers3);
 		}, 'Nette\InvalidArgumentException');
 
 		Assert::exception(function() use ($installer, $wrongUsers4) {
-			$installer->installUsers($wrongUsers4, $this->roleFacade, $this->userFacade);
+			$installer->installUsers($wrongUsers4);
 		}, 'Nette\InvalidArgumentException');
 
-		Assert::true($installer->installUsers($rightUsers1, $this->roleFacade, $this->userFacade));
+		Assert::true($installer->installUsers($rightUsers1));
 		Assert::equal(array_keys($rightUsers1), array_values($this->userFacade->findPairs('mail')));
 
 		$user0 = $this->userFacade->findByMail('username0');
@@ -151,7 +160,20 @@ class InstallerTest extends Tester\TestCase
 		$this->schemaTool->dropSchema($this->getClasses());
 	}
 
+	// </editor-fold>
+
+	private function getClasses()
+	{
+		return [
+			$this->em->getClassMetadata(\App\Model\Entity\User::getClassName()),
+			$this->em->getClassMetadata(\App\Model\Entity\UserSettings::getClassName()),
+			$this->em->getClassMetadata(\App\Model\Entity\Role::getClassName()),
+			$this->em->getClassMetadata(\App\Model\Entity\Auth::getClassName()),
+			$this->em->getClassMetadata(\App\Model\Entity\Registration::getClassName()),
+		];
+	}
+
 }
 
-$test = new InstallerTest($container);
+$test = new InstallerModelTest($container);
 $test->run();

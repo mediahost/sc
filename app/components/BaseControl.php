@@ -11,7 +11,7 @@ use Nette\Application\UI,
  */
 abstract class BaseControl extends UI\Control
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// <editor-fold defaultstate="expanded" desc="constants & variables">
 
 	/** @var ITranslator @inject */
 	public $translator;
@@ -23,9 +23,9 @@ abstract class BaseControl extends UI\Control
 		parent::__construct();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters">
+	// <editor-fold defaultstate="expanded" desc="setters">
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
+	// <editor-fold defaultstate="expanded" desc="getters">
 
 	public function getTemplate()
 	{
@@ -35,7 +35,7 @@ abstract class BaseControl extends UI\Control
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="renderers">
+	// <editor-fold defaultstate="expanded" desc="renderers">
 
 	public function render()
 	{
