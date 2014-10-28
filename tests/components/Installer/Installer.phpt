@@ -31,9 +31,6 @@ class InstallerTest extends Tester\TestCase
 	/** @var \Doctrine\ORM\Tools\SchemaTool */
 	public $schemaTool;
 
-	/** @var \App\Model\Facade\RoleFacade @inject */
-	public $roleFacade;
-
 	/** @var \App\Model\Facade\UserFacade @inject */
 	public $userFacade;
 
