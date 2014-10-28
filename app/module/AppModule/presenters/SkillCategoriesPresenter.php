@@ -18,6 +18,9 @@ class SkillCategoriesPresenter extends BasePresenter
 	/** @var \Kdyby\Doctrine\EntityDao */
 	private $skillCategoryDao;
 	
+	/** @var array */
+	protected $skillCategories;
+	
 	// </editor-fold>
 	
 	protected function startup()
@@ -27,6 +30,22 @@ class SkillCategoriesPresenter extends BasePresenter
 	}
 	
 	// <editor-fold defaultstate="collapsed" desc="actions & renderers">
+	
+	/**
+	 * @secured
+	 * @resource('admin')
+	 * @privilege('default')
+	 */
+	public function actionDefault()
+	{
+		$this->skillCategories = $this->skillCategoryDao->findAll();
+	}
+
+	public function renderDefault()
+	{
+		$this->template->skillCategories = $this->skillCategories;
+	}
+	
 	/**
 	 * @secured
 	 * @resource('admin')
@@ -52,6 +71,23 @@ class SkillCategoriesPresenter extends BasePresenter
 	public function renderEdit()
 	{
 		$this->template->isAdd = TRUE;
+	}
+	
+	/**
+	 * @secured
+	 * @resource('admin')
+	 * @privilege('delete')
+	 */
+	public function actionDelete($id)
+	{
+		$this->skillCategory = $this->skillCategoryDao->find($id);
+		if ($this->skillCategory) {
+			$this->skillCategoryDao->delete($this->skillCategory);
+			$this->flashMessage("Entity was deleted.", 'success');
+		} else {
+			$this->flashMessage("Entity was not found.", 'warning');
+		}
+		$this->redirect("default");
 	}
 	
 	// </editor-fold>
