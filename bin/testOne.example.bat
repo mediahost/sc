@@ -1,8 +1,8 @@
 set this=%CD%
 set root=%this%/..
 set phpIni="c:/xampp/php/php.ini"
-set testDir="%root%/tests/components/Installer/"
-set testFile="%root%/tests/components/Installer/Model/InstallerModel.phpt"
+set testDir="%root%/tests/src/"
+set testFile="%root%/tests/src/components/Installer/Installer.phpt"
 set testLog=%root%/tests/test.log
 cd /d "%root%/vendor/bin"
 start tester.bat -c %phpIni% -log %testLog% --stop-on-fail -w %testDir% %testFile%

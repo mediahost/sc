@@ -1,72 +1,72 @@
 {block breadcrumbLast}
 <li><a n:href="Users:">{_'Users'}</a></li>
-    {/block}
+	{/block}
 
 {block content}
 <div class="row">
-    <div class="col-md-12">
-        <div class="portlet box grey-cascade">
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="fa fa-users"></i>{_'Users'}
-                </div>
-            </div>
-            <div class="portlet-body">
-                <div class="table-toolbar">
-                    <div class="btn-group">
-                        <a n:href="Users:add"
-                           class="btn green">
-                            {_'Add User'}
-                            <i class="fa fa-plus"></i>
-                        </a>
-                    </div>
-                </div>
-                <table class="datatable table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>
-                                {_'ID'}
-                            </th>
-                            <th>
-                                {_'Username'}
-                            </th>
-                            <th>
-                                {_'Role'}
-                            </th>
-                            <th>
-                                {_'Edit'}
-                            </th>
-                            <th>
-                                {_'Delete'}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr n:foreach="$users as $user"
-                            class="odd gradeX">
-                            <td>
-                                {$user->id}
-                            </td>
-                            <td>
-                                {$user->mail}
-                            </td>
-                            <td>
-                                {$user->rolesPairs|implode:', '}
-                            </td>
-                            <td>
-                                <a n:href="Users:edit, $user->id">
-                                    {_'Edit'}
-                                </a>
-                            </td>
-                            <td>
-                                <a n:href="Users:delete, $user->id" class="delete-confirm">
-                                    {_'Delete'}
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+	<div class="col-md-12">
+		<div class="portlet box grey-cascade">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-users"></i>{_'Users'}
+				</div>
+			</div>
+			<div class="portlet-body">
+				<div class="table-toolbar">
+					<div class="btn-group">
+						<a n:href="Users:add"
+						   class="btn green">
+							{_'Add User'}
+							<i class="fa fa-plus"></i>
+						</a>
+					</div>
+				</div>
+				<table class="datatable table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>
+								{_'ID'}
+							</th>
+							<th>
+								{_'Username'}
+							</th>
+							<th>
+								{_'Role'}
+							</th>
+							<th>
+								{_'Edit'}
+							</th>
+							<th>
+								{_'Delete'}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr n:foreach="$users as $user"
+							class="odd gradeX">
+							<td>
+								{$user->id}
+							</td>
+							<td>
+								{$user->mail}
+							</td>
+							<td>
+								{$user->rolesPairs|implode:', '}
+							</td>
+							<td>
+								<a n:href="Users:edit, $user->id">
+									{_'Edit'}
+								</a>
+							</td>
+							<td>
+								<a n:href="Users:delete, $user->id" class="delete-confirm">
+									{_'Delete'}
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
