@@ -33,6 +33,8 @@ class InstallerModel extends Object
 
 	// </editor-fold>
 
+	// <editor-fold defaultstate="expanded" desc="installers">
+
 	/**
 	 * Create all nested roles
 	 * @return boolean
@@ -74,14 +76,7 @@ class InstallerModel extends Object
 	public function installDoctrine()
 	{
 		$tool = new SchemaTool($this->em);
-		$classes = [
-			$this->em->getClassMetadata('App\Model\Entity\User'),
-			$this->em->getClassMetadata('App\Model\Entity\UserSettings'),
-			$this->em->getClassMetadata('App\Model\Entity\Role'),
-			$this->em->getClassMetadata('App\Model\Entity\Auth'),
-			$this->em->getClassMetadata('App\Model\Entity\Registration'),
-		];
-		$tool->updateSchema($classes); // php index.php orm:schema-tool:update --force
+		$tool->updateSchema($this->getClasses()); // php index.php orm:schema-tool:update --force
 		return TRUE;
 	}
 
@@ -122,6 +117,23 @@ class InstallerModel extends Object
 		}
 		chdir($oldcwd);
 		return TRUE;
+	}
+	
+	// </editor-fold>
+		
+	/**
+	 * Automatic load of Entity classes in namespace App\Model\Entity
+	 * @return array
+	 */
+	private function getClasses()
+	{
+		$classes = [];
+		foreach (get_declared_classes() as $class) {
+			if (preg_match('~^App\\\Model\\\Entity\\\[^\\\]+$~', $class)) {
+				$classes[] = $this->em->getClassMetadata($class);
+			}
+		}
+		return $classes;
 	}
 
 }
