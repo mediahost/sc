@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM,
  * 
  * @property string $name
  * @property SkillCategory $parent
+ * @property SkillCategory[] $childs
  */
 class SkillCategory extends \Kdyby\Doctrine\Entities\BaseEntity
 {
@@ -25,10 +26,27 @@ class SkillCategory extends \Kdyby\Doctrine\Entities\BaseEntity
 	protected $name;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="SkillCategory")
+	 * @ORM\ManyToOne(targetEntity="SkillCategory", mappedBy="childs")
+	 * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
 	 */
 	protected $parent;
 	
+	/**
+	 * @ORM\OneToMany(targetEntity="SkillCategory", mappedBy="parent")
+	 */
+	protected $childs;
+	
 	// </editor-fold>
+	
+	// <editor-fold defaultstate="collapsed" desc="functions">
+	
+	public function __construct()
+	{
+		parent::__construct();
+		$this->childs = new ArrayCollection();
+	}
+	
+	// </editor-fold>
+
 	
 }

@@ -6,6 +6,8 @@ use App\Model\Entity\Auth;
 use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Entity\Skill;
+use App\Model\Entity\SkillCategory;
 use App\Model\Entity\UserSettings;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -59,6 +61,8 @@ abstract class ParentTestCase extends TestCase
 			$this->em->getClassMetadata(Role::getClassName()),
 			$this->em->getClassMetadata(Auth::getClassName()),
 			$this->em->getClassMetadata(Registration::getClassName()),
+			$this->em->getClassMetadata(Skill::getClassName()),
+			$this->em->getClassMetadata(SkillCategory::getClassName()),
 		];
 	}
 

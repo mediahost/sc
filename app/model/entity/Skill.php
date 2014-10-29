@@ -28,8 +28,18 @@ class Skill extends \Kdyby\Doctrine\Entities\BaseEntity
 	 * @ORM\ManyToOne(targetEntity="SkillCategory")
 	 * @ORM\JoinColumn(name="skill_category_id", referencedColumnName="id", nullable=false)
 	 */
-	protected $category;
+	private $category;
 	
 	// </editor-fold>
+	
+	public function getCategory()
+	{
+		return $this->category;
+	}
+
+	public function setCategory(SkillCategory $category)
+	{
+		$this->category = $category;
+	}
 	
 }
