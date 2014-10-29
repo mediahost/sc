@@ -3,94 +3,94 @@
 <!--[if IE 9]> <html lang="{$lang}" class="ie9"> <![endif]-->
 <!--[if !IE]><!--> <html lang="{$lang}"> <!--<![endif]-->
 
-    <!-- BEGIN HEAD -->
-    <head>
-        <title>{block title|striptags}{_'Source-Code'}{/block}</title>
+	<!-- BEGIN HEAD -->
+	<head>
+		<title>{block title|striptags}{_'Source-Code'}{/block}</title>
 
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta name="robots" content="noindex,nofollow">
-        <meta content="" name="description" />
-        <meta content="" name="author" />
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+		<meta name="robots" content="noindex,nofollow">
+		<meta content="" name="description" />
+		<meta content="" name="author" />
 
-        <!-- BEGIN GLOBAL MANDATORY STYLES -->
-        {control cssMetronicCore}
-        <!-- END GLOBAL MANDATORY STYLES -->
+		<!-- BEGIN GLOBAL MANDATORY STYLES -->
+		{control cssMetronicCore}
+		<!-- END GLOBAL MANDATORY STYLES -->
 
-        <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
-        {control cssMetronicPlugin}
-        <!-- END PAGE LEVEL PLUGIN STYLES -->
+		<!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+		{control cssMetronicPlugin}
+		<!-- END PAGE LEVEL PLUGIN STYLES -->
 
-        <!-- BEGIN THEME STYLES -->
-        {control cssMetronicTheme}
-        <!-- END THEME STYLES -->
+		<!-- BEGIN THEME STYLES -->
+		{control cssMetronicTheme}
+		<!-- END THEME STYLES -->
 
-        {control cssAdmin}
-        {control cssPrint}
+		{control cssAdmin}
+		{control cssPrint}
 
-        <link href="{$basePath}/favicon.ico" rel="shortcut icon">
+		<link href="{$basePath}/favicon.ico" rel="shortcut icon">
 
-        {block head}{/block}
-    </head>
-    <!-- END HEAD -->
+		{block head}{/block}
+	</head>
+	<!-- END HEAD -->
 
-    <!-- BEGIN BODY -->
-    <body class="page-header-fixed">
-        <script> document.documentElement.className += ' js'</script>
+	<!-- BEGIN BODY -->
+	<body class="page-header-fixed">
+		<script> document.documentElement.className += ' js'</script>
 
-        {include 'header.latte'}
+		{include 'header.latte'}
 
-        <!-- BEGIN CONTAINER -->
-        <div class="page-container">
+		<!-- BEGIN CONTAINER -->
+		<div class="page-container">
 
-            {include 'sidebar.latte'}
+			{include 'sidebar.latte'}
 
-            <!-- BEGIN CONTENT -->
-            <div class="page-content-wrapper">
-                <!-- BEGIN PAGE -->
-                <div class="page-content">
-                    <!-- BEGIN PAGE HEADER-->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <!-- BEGIN PAGE TITLE-->
-                            <h3 class="page-title" n:block="pageTitle">
-                                {block pageTitleText}
-                                {_'Source-Code'}
-                                <small>{_'ver 2'}</small>
-                                {/block}
-                            </h3>
-                            <!-- END PAGE TITLE-->
+			<!-- BEGIN CONTENT -->
+			<div class="page-content-wrapper">
+				<!-- BEGIN PAGE -->
+				<div class="page-content">
+					<!-- BEGIN PAGE HEADER-->
+					<div class="row">
+						<div class="col-md-12">
+							<!-- BEGIN PAGE TITLE-->
+							<h3 class="page-title" n:block="pageTitle">
+								{block pageTitleText}
+								{_'Source-Code'}
+								<small>{_'ver 2'}</small>
+								{/block}
+							</h3>
+							<!-- END PAGE TITLE-->
 
-                            <!-- BEGIN BREADCRUMB-->
-                            <ul class="page-breadcrumb breadcrumb" n:block="breadcrumb">
-                                {block breadcrumbActions}
-                                <li class="btn-group" n:if="$user->isAllowed('admin', 'add')">
-                                    <button type="button"
-                                            class="btn blue dropdown-toggle"
-                                            data-toggle="dropdown"
-                                            data-hover="dropdown"
-                                            data-delay="1000"
-                                            data-close-others="true">
-                                        <span>
-                                            {block breadcrumbActionsName}{_'New'}{/block}
-                                        </span>
-                                        <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right" role="menu">
-                                        {block breadcrumbActionsList}
-                                        <li n:if="$user->isAllowed('admin', 'add')">
-                                            <a n:href="Users:add">
-                                                <i class="fa fa-user"></i>
-                                                {_'User'}
-                                            </a>
-                                        </li>
-                                        {/block}
-                                    </ul>
-                                </li>
-                                {/block}
+							<!-- BEGIN BREADCRUMB-->
+							<ul class="page-breadcrumb breadcrumb" n:block="breadcrumb">
+								{block breadcrumbActions}
+								<li class="btn-group" n:if="$user->isAllowed('admin', 'add')">
+									<button type="button"
+											class="btn blue dropdown-toggle"
+											data-toggle="dropdown"
+											data-hover="dropdown"
+											data-delay="1000"
+											data-close-others="true">
+										<span>
+											{block breadcrumbActionsName}{_'New'}{/block}
+										</span>
+										<i class="fa fa-angle-down"></i>
+									</button>
+									<ul class="dropdown-menu pull-right" role="menu">
+										{block breadcrumbActionsList}
+										<li n:if="$user->isAllowed('admin', 'add')">
+											<a n:href="Users:add">
+												<i class="fa fa-user"></i>
+												{_'User'}
+											</a>
+										</li>
+										{/block}
+									</ul>
+								</li>
+								{/block}
 
-                                {block breadcrumbItems|strip}
+								{block breadcrumbItems|strip}
 									<li>
 										<i class="fa fa-home"></i>
 										<a n:href="Dashboard:">{_'Home'}</a>
@@ -100,55 +100,55 @@
 										<li>
 											<a n:href="Dashboard:">{_'Dashboard'}</a>
 										</li>
-                                    {/block}
+									{/block}
 								{/block}
-                            </ul>
-                            <!-- END FLASH BREADCRUMB-->
-                        </div>
-                    </div>
-                    <!-- END PAGE HEADER-->
+							</ul>
+							<!-- END FLASH BREADCRUMB-->
+						</div>
+					</div>
+					<!-- END PAGE HEADER-->
 
-                    <!-- BEGIN FLASH MESSAGES-->
-                    <div n:foreach="$flashes as $flash"
-                         class="alert alert-{$flash->type} fade in">
-                        <button type="button" class="close" data-dismiss="alert"></button>
-                        {$flash->message}
-                    </div>
-                    <!-- END FLASH MESSAGES-->
+					<!-- BEGIN FLASH MESSAGES-->
+					<div n:foreach="$flashes as $flash"
+						 class="alert alert-{$flash->type} fade in">
+						<button type="button" class="close" data-dismiss="alert"></button>
+						{$flash->message}
+					</div>
+					<!-- END FLASH MESSAGES-->
 
-                    <!-- CONTENT BODY-->
-                    {include content}
-                    <!-- END CONTENT BODY-->
+					<!-- CONTENT BODY-->
+					{include content}
+					<!-- END CONTENT BODY-->
 
-                </div>
-                <!-- END PAGE -->
-            </div>
-            <!-- END CONTENT -->
+				</div>
+				<!-- END PAGE -->
+			</div>
+			<!-- END CONTENT -->
 
-        </div>
-        <!-- END CONTAINER -->
+		</div>
+		<!-- END CONTAINER -->
 
-        {include 'footer.latte'}
+		{include 'footer.latte'}
 
-        {block scripts}
-        <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-        <!-- BEGIN CORE PLUGINS -->
-        <!--[if lt IE 9]>
-        {control jsMetronicCoreIE9}
-        <![endif]-->
-        {control jsMetronicCore}
-        <!-- END CORE PLUGINS -->
+		{block scripts}
+		<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+		<!-- BEGIN CORE PLUGINS -->
+		<!--[if lt IE 9]>
+		{control jsMetronicCoreIE9}
+		<![endif]-->
+		{control jsMetronicCore}
+		<!-- END CORE PLUGINS -->
 
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
-        {control jsMetronicPlugins}
-        {control jsAppPlugins}
-        <!-- END PAGE LEVEL PLUGINS -->
+		<!-- BEGIN PAGE LEVEL PLUGINS -->
+		{control jsMetronicPlugins}
+		{control jsAppPlugins}
+		<!-- END PAGE LEVEL PLUGINS -->
 
-        <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        {control jsApp}
-        <!-- END PAGE LEVEL SCRIPTS -->
-        <!-- END JAVASCRIPTS -->
+		<!-- BEGIN PAGE LEVEL SCRIPTS -->
+		{control jsApp}
+		<!-- END PAGE LEVEL SCRIPTS -->
+		<!-- END JAVASCRIPTS -->
 
-        {/block}
-    </body>
+		{/block}
+	</body>
 </html>
