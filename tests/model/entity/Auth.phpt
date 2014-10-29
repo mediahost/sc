@@ -2,12 +2,11 @@
 
 namespace Test\Model\Entity;
 
-use Nette,
-	Tester,
-	Tester\Assert;
-
-use App\Model\Entity,
-	Nette\Security\Passwords;
+use App\Model\Entity\Auth;
+use App\Model\Entity\User;
+use Nette\Security\Passwords;
+use Tester;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -26,12 +25,14 @@ class AuthTest extends Tester\TestCase
 	const A_HASH = 'SomethingLikeHash';
 	const A_PASSWORD = 'myS3cr3tPass';
 
+	// <editor-fold defaultstate="expanded" desc="tests">
+
 	public function testSetAndGet()
 	{
-		$auth = new Entity\Auth();
+		$auth = new Auth();
 
-		$auth->user = new Entity\User();
-		Assert::type(Entity\User::getClassName(), $auth->user);
+		$auth->user = new User();
+		Assert::type(User::getClassName(), $auth->user);
 
 		$auth->key = self::A_KEY;
 		Assert::same(self::A_KEY, $auth->key);
@@ -51,11 +52,12 @@ class AuthTest extends Tester\TestCase
 
 	public function testVerifyPassword()
 	{
-		$auth = new Entity\Auth();
+		$auth = new Auth();
 		$auth->password = self::A_PASSWORD;
 		Assert::true($auth->verifyPassword(self::A_PASSWORD));
 	}
 
+	// </editor-fold>
 }
 
 $test = new AuthTest();

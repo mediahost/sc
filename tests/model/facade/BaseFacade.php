@@ -2,26 +2,15 @@
 
 namespace Test\Model\Facade;
 
-use Nette,
-	Tester;
-
-use Doctrine\ORM\Tools\SchemaTool,
-	App\Model\Facade;
+use App\Model\Facade;
+use Nette;
+use Test\ParentTestCase;
 
 /**
- *
+ * Parent of test facades
  */
-abstract class BaseFacade extends Tester\TestCase
+abstract class BaseFacade extends ParentTestCase
 {
-
-	/** @var Nette\DI\Container */
-	protected $container;
-
-	/** @var \Doctrine\ORM\EntityManager @inject */
-	public $em;
-
-	/** @var SchemaTool */
-	protected $schemaTool;
 
 	/** @var Facade\AuthFacade @inject */
 	public $authFacade;
@@ -35,35 +24,20 @@ abstract class BaseFacade extends Tester\TestCase
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
 
-	function __construct(Nette\DI\Container $container)
+	public function __construct(Nette\DI\Container $container)
 	{
-		$this->container = $container;
-		$this->container->callInjects($this);
-
-		$this->schemaTool = new SchemaTool($this->em);
-
+		parent::__construct($container);
 		\Tester\Environment::lock('db', LOCK_DIR);
 	}
 
 	public function setUp()
 	{
-		$this->schemaTool->updateSchema($this->getClasses());
+		$this->updateSchema();
 	}
 
 	public function tearDown()
 	{
-		$this->schemaTool->dropSchema($this->getClasses());
+		$this->dropSchema();
 	}
 
-
-	private function getClasses()
-	{
-		return [
-			$this->em->getClassMetadata(\App\Model\Entity\User::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\UserSettings::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Role::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Auth::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Registration::getClassName()),
-		];
-	}
 }

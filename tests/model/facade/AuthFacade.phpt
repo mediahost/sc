@@ -2,11 +2,13 @@
 
 namespace Test\Model\Facade;
 
-use Nette,
-	Tester,
-	Tester\Assert;
-
 use App\Model\Entity;
+use App\Model\Entity\Auth;
+use App\Model\Entity\User;
+use Kdyby\Doctrine\EntityDao;
+use Nette\DI\Container;
+use Nette\Security\Passwords;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -19,23 +21,23 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class AuthFacadeTest extends BaseFacade
 {
 
-	const SOURCE = \App\Model\Entity\Auth::SOURCE_APP;
+	const SOURCE = Auth::SOURCE_APP;
 	const MAIL = 'tomas.jedno@seznam.cz';
 	const PASSWORD = 'tomik1985';
 	const EXPIRED_TOKEN = 'expiredToken';
 	const VALID_TOKEN = 'validToken';
 	const ACCESS_TOKEN = 'accessToken';
 
-	/** @var \Kdyby\Doctrine\EntityDao */
+	/** @var EntityDao */
 	public $userDao;
 
-	/** @var Entity\User */
+	/** @var User */
 	private $user;
 
-	function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		$this->userDao = $this->em->getDao(\App\Model\Entity\User::getClassName());
+		$this->userDao = $this->em->getDao(User::getClassName());
 	}
 
 	public function setUp()
@@ -45,11 +47,13 @@ class AuthFacadeTest extends BaseFacade
 		$this->user = $this->userFacade->create(self::MAIL, 'heslo', $role);
 	}
 
+	// <editor-fold defaultstate="expanded" desc="tests">
+
 	public function testFindByKey()
 	{
 		$auth = $this->authFacade->findByKey(self::SOURCE, self::MAIL);
 
-		Assert::type(Entity\Auth::getClassName(), $auth);
+		Assert::type(Auth::getClassName(), $auth);
 		Assert::same(self::SOURCE, $auth->source);
 		Assert::same(self::MAIL, $auth->key);
 	}
@@ -58,7 +62,7 @@ class AuthFacadeTest extends BaseFacade
 	{
 		$auth = $this->authFacade->findByMail(self::MAIL);
 
-		Assert::type(Entity\Auth::getClassName(), $auth);
+		Assert::type(Auth::getClassName(), $auth);
 		Assert::same(self::MAIL, $auth->key);
 	}
 
@@ -80,14 +84,14 @@ class AuthFacadeTest extends BaseFacade
 		$this->userDao->save($this->user);
 
 		$auth = $this->authFacade->findByRecoveryToken(self::VALID_TOKEN);
-		Assert::type(Entity\Auth::getClassName(), $auth);
+		Assert::type(Auth::getClassName(), $auth);
 		Assert::same(self::VALID_TOKEN, $auth->user->recoveryToken);
 	}
 
 	public function testFindByUser()
 	{
 		$auths = $this->authFacade->findByUser($this->user);
-		Assert::type(Entity\Auth::getClassName(), $auths[0]);
+		Assert::type(Auth::getClassName(), $auths[0]);
 		Assert::same($auths[0]->key, self::MAIL);
 	}
 
@@ -102,21 +106,23 @@ class AuthFacadeTest extends BaseFacade
 		$this->user->setRecovery(self::VALID_TOKEN, 'now + 1 day');
 		$this->userDao->save($this->user);
 
-		$auth = $this->authFacade->findByRecoveryToken(self::VALID_TOKEN);
-		$auth = $this->authFacade->recoveryPassword($auth, self::PASSWORD);
+		$authFinded = $this->authFacade->findByRecoveryToken(self::VALID_TOKEN);
+		$auth = $this->authFacade->recoveryPassword($authFinded, self::PASSWORD);
 
-		Assert::type(Entity\Auth::getClassName(), $auth);
-		Assert::true(Nette\Security\Passwords::verify(self::PASSWORD, $auth->hash));
+		Assert::type(Auth::getClassName(), $auth);
+		Assert::true(Passwords::verify(self::PASSWORD, $auth->hash));
 	}
 
 	public function testUpdateAccessToken()
 	{
-		$auth = $this->authFacade->findByKey(Entity\Auth::SOURCE_APP, self::MAIL);
-		$auth = $this->authFacade->updateAccessToken($auth, self::ACCESS_TOKEN);
+		$authFinded = $this->authFacade->findByKey(Auth::SOURCE_APP, self::MAIL);
+		$auth = $this->authFacade->updateAccessToken($authFinded, self::ACCESS_TOKEN);
 
-		Assert::type(Entity\Auth::getClassName(), $auth);
+		Assert::type(Auth::getClassName(), $auth);
 		Assert::same(self::ACCESS_TOKEN, $auth->token);
 	}
+	
+	// </editor-fold>
 
 }
 

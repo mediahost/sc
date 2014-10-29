@@ -2,14 +2,15 @@
 
 namespace Test\Model\Authenticator;
 
-use Nette,
-	Tester,
-	Tester\Assert;
-
-use Doctrine\ORM\Tools\SchemaTool,
-	App\Model\Facade,
-	Nette\Security\IAuthenticator,
-	App\Model\Entity;
+use App\Model\Entity\User;
+use App\Model\Facade\RoleFacade;
+use App\Model\Facade\UserFacade;
+use Kdyby\Doctrine\EntityDao;
+use Nette\DI\Container;
+use Nette\Security\IAuthenticator;
+use Test\ParentTestCase;
+use Tester\Assert;
+use Tester\Environment;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -19,51 +20,43 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class AuthenticatorTest extends Tester\TestCase
+class AuthenticatorTest extends ParentTestCase
 {
+
 	const U_MAIL = 'mulder@fbi.gov';
 	const U_PASSWORD = 'IveNeverF**kScully';
 	const R_NAME = 'agent';
 
-	/** @var Nette\DI\Container */
-	private $container;
-
-	/** @var \Kdyby\Doctrine\EntityManager @inject */
-	public $em;
-
-	/** @var SchemaTool */
-	public $schemaTool;
-
-	/** @var Facade\UserFacade @inject */
+	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var Facade\RoleFacade @inject */
+	/** @var RoleFacade @inject */
 	public $roleFacade;
 
-	/** @var \Kdyby\Doctrine\EntityDao */
+	/** @var EntityDao */
 	public $userDao;
 
-	/** @var \Nette\Security\IAuthenticator @inject */
+	/** @var IAuthenticator @inject */
 	public $authenticator;
 
-	function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
-		$this->container = $container;
-		$this->container->callInjects($this);
-		$this->schemaTool = new SchemaTool($this->em);
-		$this->userDao = $this->em->getDao(Entity\User::getClassName());
-		\Tester\Environment::lock('db', LOCK_DIR);
+		parent::__construct($container);
+		Environment::lock('db', LOCK_DIR);
+		$this->userDao = $this->em->getDao(User::getClassName());
 	}
 
 	public function setUp()
 	{
-		$this->schemaTool->updateSchema($this->getClasses());
+		$this->updateSchema();
 	}
 
 	public function tearDown()
 	{
-		$this->schemaTool->dropSchema($this->getClasses());
+		$this->dropSchema();
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="tests">
 
 	public function testAuthenticate()
 	{
@@ -71,18 +64,12 @@ class AuthenticatorTest extends Tester\TestCase
 		$user = $this->userFacade->create(self::U_MAIL, self::U_PASSWORD, $role);
 
 		Assert::exception(function() {
-					$this->authenticator->authenticate(['unknown@email.com', self::U_PASSWORD]);
-				},
-				'\Nette\Security\AuthenticationException',
-				NULL,
-				IAuthenticator::IDENTITY_NOT_FOUND);
+			$this->authenticator->authenticate(['unknown@email.com', self::U_PASSWORD]);
+		}, '\Nette\Security\AuthenticationException', NULL, IAuthenticator::IDENTITY_NOT_FOUND);
 
 		Assert::exception(function() {
-					$this->authenticator->authenticate([self::U_MAIL, 'incorrectPassword']);
-				},
-				'\Nette\Security\AuthenticationException',
-				NULL,
-				IAuthenticator::INVALID_CREDENTIAL);
+			$this->authenticator->authenticate([self::U_MAIL, 'incorrectPassword']);
+		}, '\Nette\Security\AuthenticationException', NULL, IAuthenticator::INVALID_CREDENTIAL);
 
 		$this->userFacade->setRecovery($user);
 
@@ -92,22 +79,13 @@ class AuthenticatorTest extends Tester\TestCase
 		Assert::type('array', $identity->roles);
 		Assert::type('array', $identity->data);
 
-		/* @var $user Entity\User */
-		$user = $this->userDao->find($identity->id);
-		Assert::null($user->recoveryExpiration);
-		Assert::null($user->recoveryToken);
+		/* @var $user User */
+		$userFinded = $this->userDao->find($identity->id);
+		Assert::null($userFinded->recoveryExpiration);
+		Assert::null($userFinded->recoveryToken);
 	}
 
-	private function getClasses()
-	{
-		return [
-			$this->em->getClassMetadata('App\Model\Entity\User'),
-			$this->em->getClassMetadata('App\Model\Entity\UserSettings'),
-			$this->em->getClassMetadata('App\Model\Entity\Role'),
-			$this->em->getClassMetadata('App\Model\Entity\Auth'),
-			$this->em->getClassMetadata('App\Model\Entity\Registration'),
-		];
-	}
+	// </editor-fold>
 }
 
 $test = new AuthenticatorTest($container);

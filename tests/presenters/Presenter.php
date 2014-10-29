@@ -2,22 +2,31 @@
 
 namespace Test\Presenters;
 
+use Nette\Application\IPresenter;
+use Nette\Application\Request;
+use Nette\Application\Responses\RedirectResponse;
+use Nette\Application\Responses\TextResponse;
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\DI\Container;
+use Tester\Assert;
+use Tester\TestCase;
+
 /**
  * Presenter factory
  */
-class Presenter extends \Tester\TestCase
+class Presenter extends TestCase
 {
 
-	/** @var \Nette\DI\Container */
+	/** @var Container */
 	private $container;
 
-	/** @var \Nette\Application\IPresenter */
+	/** @var IPresenter */
 	private $presenter;
 
 	/** @var string */
 	private $presName;
 
-	public function __construct(\Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
 		$this->container = $container;
 	}
@@ -36,7 +45,7 @@ class Presenter extends \Tester\TestCase
 	public function test($action, $method = 'GET', $params = array(), $post = array())
 	{
 		$params['action'] = $action;
-		$request = new \Nette\Application\Request($this->presName, $method, $params, $post);
+		$request = new Request($this->presName, $method, $params, $post);
 		$response = $this->presenter->run($request);
 		return $response;
 	}
@@ -45,8 +54,8 @@ class Presenter extends \Tester\TestCase
 	{
 		$response = $this->test($action, $method, $params, $post);
 
-		\Tester\Assert::true($response instanceof \Nette\Application\Responses\TextResponse);
-		\Tester\Assert::true($response->getSource() instanceof \Nette\Bridges\ApplicationLatte\Template);
+		Assert::true($response instanceof TextResponse);
+		Assert::true($response->getSource() instanceof Template);
 
 		return $response;
 	}
@@ -55,7 +64,7 @@ class Presenter extends \Tester\TestCase
 	{
 		$response = $this->test($action, $method, $post);
 
-		\Tester\Assert::true($response instanceof \Nette\Application\Responses\RedirectResponse);
+		Assert::true($response instanceof RedirectResponse);
 
 		return $response;
 	}

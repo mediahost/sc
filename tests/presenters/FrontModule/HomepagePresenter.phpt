@@ -2,8 +2,8 @@
 
 namespace Test\Presenters\FrontModule;
 
-use Nette,
-	Tester;
+use Tester\Assert;
+use Tester\DomQuery;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -13,32 +13,25 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class HomepagePresenterTest extends Tester\TestCase
+class HomepagePresenterTest extends BasePresenter
 {
-
-	/** @var Presenter */
-	private $tester;
-
-	function __construct(Nette\DI\Container $container)
-	{
-		$this->tester = new \Test\Presenters\Presenter($container);
-	}
 
 	public function setUp()
 	{
+		parent::setUp();
 		$this->tester->init('Front:Homepage');
 	}
 
 	public function testRenderDefault()
 	{
 		$response = $this->tester->testAction('default');
-		
+
 		$html = (string) $response->getSource();
-		$dom = \Tester\DomQuery::fromHtml($html);
-		\Tester\Assert::true($dom->has('html'));
-		\Tester\Assert::true($dom->has('head'));
-		\Tester\Assert::true($dom->has('title'));
-		\Tester\Assert::true($dom->has('body'));
+		$dom = DomQuery::fromHtml($html);
+		Assert::true($dom->has('html'));
+		Assert::true($dom->has('head'));
+		Assert::true($dom->has('title'));
+		Assert::true($dom->has('body'));
 	}
 
 }

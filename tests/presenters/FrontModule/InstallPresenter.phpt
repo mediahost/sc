@@ -2,8 +2,11 @@
 
 namespace Test\Presenters\FrontModule;
 
-use Nette,
-	Tester;
+use App\Helpers;
+use Nette\DI\Container;
+use Tester\Assert;
+use Tester\DomQuery;
+use Tester\Environment;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -13,45 +16,46 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class InstallPresenterTest extends Tester\TestCase
+class InstallPresenterTest extends BasePresenter
 {
-
-	/** @var Nette\DI\Container */
-	private $container;
-
-	/** @var Presenter */
-	private $tester;
 
 	/** @var string */
 	private $installDir;
 
-	function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
-		$this->container = $container;
-		$this->container->callInjects($this);
+		parent::__construct($container);
+		Environment::lock('db', LOCK_DIR);
 		$this->installDir = $this->container->getParameters()['tempDir'] . 'install/';
-		$this->tester = new \Test\Presenters\Presenter($container);
 	}
 
 	public function setUp()
 	{
+		parent::setUp();
+		$this->updateSchema();
+
 		$this->tester->init('Front:Install');
-		mkdir($this->installDir);
+		if (!is_dir($this->installDir)) {
+			mkdir($this->installDir);
+		}
 	}
 
 	public function tearDown()
 	{
-		\App\Helpers::delTree($this->installDir);
+		parent::tearDown();
+		$this->dropSchema();
+
+		Helpers::delTree($this->installDir);
 	}
 
 	public function testRenderDefault()
 	{
 		$response = $this->tester->testAction('default');
-		
 		$html = (string) $response->getSource();
-		$dom = \Tester\DomQuery::fromHtml($html);
-		\Tester\Assert::true($dom->has('html'));
-		\Tester\Assert::true($dom->has('body'));
+		$dom = DomQuery::fromHtml($html);
+		Assert::true($dom->has('html'));
+		Assert::true($dom->has('body'));
+		Assert::true(TRUE);
 	}
 
 }

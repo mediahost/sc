@@ -2,12 +2,11 @@
 
 namespace Test\Model\Entity;
 
-use Nette,
-	Tester,
-	Tester\Assert;
-
-use App\Model\Entity,
-	Nette\Security\Passwords;
+use App\Model\Entity\Registration;
+use DateTime;
+use Nette\Security\Passwords;
+use Tester;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -17,7 +16,6 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-
 class RegistrationTest extends Tester\TestCase
 {
 
@@ -30,9 +28,11 @@ class RegistrationTest extends Tester\TestCase
 	const R_NAME = 'Anakin Skywalker';
 	const R_VERIFICATION_TOKEN = 'verificationToken';
 
+	// <editor-fold defaultstate="expanded" desc="tests">
+
 	public function testSetAndGet()
 	{
-		$reg = new Entity\Registration();
+		$reg = new Registration();
 
 		$reg->mail = self::R_MAIL;
 		Assert::same(self::R_MAIL, $reg->mail);
@@ -55,7 +55,7 @@ class RegistrationTest extends Tester\TestCase
 		$reg->verificationToken = self::R_VERIFICATION_TOKEN;
 		Assert::same(self::R_VERIFICATION_TOKEN, $reg->verificationToken);
 
-		$tomorrow = new \DateTime('now + 1 day');
+		$tomorrow = new DateTime('now + 1 day');
 		$reg->verificationExpiration = $tomorrow;
 		Assert::equal($tomorrow, $reg->verificationExpiration);
 
@@ -63,6 +63,7 @@ class RegistrationTest extends Tester\TestCase
 		Assert::true(Passwords::verify(self::R_PASSWORD, $reg->hash));
 	}
 
+	// </editor-fold>
 }
 
 $test = new RegistrationTest();

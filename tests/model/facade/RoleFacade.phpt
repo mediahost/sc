@@ -2,11 +2,9 @@
 
 namespace Test\Model\Facade;
 
-use Nette,
-	Tester,
-	Tester\Assert;
-
-use App\Model\Entity;
+use App\Model\Entity\Role;
+use Nette\DI\Container;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -19,19 +17,19 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class RoleFacadeTest extends BaseFacade
 {
 
-	function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-
-		// DAOs
-		$this->roleDao = $this->em->getDao(\App\Model\Entity\Role::getClassName());
+		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
 	public function setUp()
 	{
 		parent::setUp();
-		$this->roleFacade->create(Entity\Role::ROLE_CANDIDATE);
+		$this->roleFacade->create(Role::ROLE_CANDIDATE);
 	}
+
+	// <editor-fold defaultstate="expanded" desc="tests">
 
 	public function testGetRoles()
 	{
@@ -40,26 +38,26 @@ class RoleFacadeTest extends BaseFacade
 
 		$roles = $this->roleFacade->getRoles();
 		Assert::type('array', $roles);
-		Assert::same($roles[1], Entity\Role::ROLE_CANDIDATE);
+		Assert::same($roles[1], Role::ROLE_CANDIDATE);
 		Assert::same($roles[2], 'role1');
 		Assert::same($roles[3], 'role2');
 	}
 
 	public function testFindByName()
 	{
-		$role = $this->roleDao->findOneBy(['name' => Entity\Role::ROLE_CANDIDATE]);
-		Assert::same(Entity\Role::ROLE_CANDIDATE, $role->name);
+		$role = $this->roleDao->findOneBy(['name' => Role::ROLE_CANDIDATE]);
+		Assert::same(Role::ROLE_CANDIDATE, $role->name);
 	}
 
 	public function testIsUnique()
 	{
-		Assert::false($this->roleFacade->isUnique(Entity\Role::ROLE_CANDIDATE));
+		Assert::false($this->roleFacade->isUnique(Role::ROLE_CANDIDATE));
 		Assert::true($this->roleFacade->isUnique('galactic_emperor'));
 	}
 
 	public function testCreate()
 	{
-		Assert::null($this->roleFacade->create(Entity\Role::ROLE_CANDIDATE));
+		Assert::null($this->roleFacade->create(Role::ROLE_CANDIDATE));
 
 		$role = $this->roleFacade->create('plumber');
 
@@ -69,6 +67,8 @@ class RoleFacadeTest extends BaseFacade
 		$this->em->remove($role);
 		$this->em->flush();
 	}
+
+	// </editor-fold>
 
 }
 

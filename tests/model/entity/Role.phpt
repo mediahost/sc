@@ -2,11 +2,9 @@
 
 namespace Test\Model\Entity;
 
-use Nette,
-	Tester,
-	Tester\Assert;
-
-use App\Model\Entity;
+use App\Model\Entity\Role;
+use Tester;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -23,7 +21,7 @@ class RoleTest extends Tester\TestCase
 
 	public function testSetAndGet()
 	{
-		$role = new Entity\Role();
+		$role = new Role();
 
 		$role->name = self::R_NAME;
 		Assert::same(self::R_NAME, $role->name);

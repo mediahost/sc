@@ -2,12 +2,14 @@
 
 namespace Test\Model\Facade;
 
-use Nette,
-	Tester,
-	Tester\Assert;
-use App\Model\Entity,
-	App\Model\Facade,
-	Nette\Security\Passwords;
+use App\Model\Entity\Auth;
+use App\Model\Entity\Registration;
+use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use DateTime;
+use Nette\DI\Container;
+use Nette\Security\Passwords;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -30,18 +32,17 @@ class RegistrationFacadeTest extends BaseFacade
 	const B_SOURCE = 'les';
 	const B_TOKEN = 't0k3N';
 
-	/** @var \App\Model\Entity\Registration */
-	private $registration;
+	/** @var Registrationstration;
 
-	/** @var \Kdyby\Doctrine\EntityDao */
+	  /** @var EntityDao */
 	public $registrationDao;
 
-	function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		$this->registrationDao = $this->em->getDao(Entity\Registration::getClassName());
+		$this->registrationDao = $this->em->getDao(Registration::getClassName());
 
-		$this->registration = new Entity\Registration();
+		$this->registration = new Registration();
 		$this->registration->setMail(self::U_MAIL)
 				->setName(self::U_NAME)
 				->setKey(self::A_KEY)
@@ -53,25 +54,27 @@ class RegistrationFacadeTest extends BaseFacade
 	public function setUp()
 	{
 		parent::setUp();
-		$role = $this->roleFacade->create(Entity\Role::ROLE_CANDIDATE);
+		$role = $this->roleFacade->create(Role::ROLE_CANDIDATE);
 		$this->registration
 				->setRole($role);
 	}
 
+	// <editor-fold defaultstate="expanded" desc="tests">
+
 	public function testRegisterAndMerge()
 	{
-		$this->roleFacade->create(Entity\Role::ROLE_COMPANY);
+		$this->roleFacade->create(Role::ROLE_COMPANY);
 
-		$user = (new Entity\User())
+		$user = (new User())
 				->setMail(self::U_MAIL)
 				->setName(self::U_NAME);
 
-		$authA = (new Entity\Auth())
+		$authA = (new Auth())
 				->setKey(self::A_KEY)
 				->setSource(self::A_SOURCE)
 				->setToken(self::A_TOKEN);
 
-		$authB = (new Entity\Auth())
+		$authB = (new Auth())
 				->setKey(self::B_KEY)
 				->setSource(self::B_SOURCE)
 				->setToken(self::B_TOKEN);
@@ -80,14 +83,14 @@ class RegistrationFacadeTest extends BaseFacade
 
 		Assert::count(1, $saved->auths);
 		$auth = $saved->auths[0];
-		Assert::type(Entity\Auth::getClassName(), $auth);
+		Assert::type(Auth::getClassName(), $auth);
 		Assert::same(self::A_KEY, $auth->key);
 		Assert::same(self::A_SOURCE, $auth->source);
 
 		Assert::count(1, $saved->roles);
 		$role = $saved->roles[0];
-		Assert::type(Entity\Role::getClassName(), $role);
-		Assert::same(Entity\Role::ROLE_COMPANY, $role->name);
+		Assert::type(Role::getClassName(), $role);
+		Assert::same(Role::ROLE_COMPANY, $role->name);
 
 		$this->registrationFacade->merge($saved, $authB);
 		Assert::count(2, $saved->auths);
@@ -96,7 +99,7 @@ class RegistrationFacadeTest extends BaseFacade
 	public function testFindByVerificationToken()
 	{
 		$expReg = $this->registrationFacade->registerTemporarily($this->registration);
-		$expReg->verificationExpiration = new \DateTime('now - 1 day');
+		$expReg->verificationExpiration = new DateTime('now - 1 day');
 		$this->registrationDao->save($expReg);
 
 		Assert::null($this->registrationFacade->findByVerificationToken($expReg->verificationToken));
@@ -104,7 +107,7 @@ class RegistrationFacadeTest extends BaseFacade
 
 		$reg = $this->registrationFacade->registerTemporarily($this->registration);
 		$reg = $this->registrationFacade->findByVerificationToken($reg->verificationToken);
-		Assert::type(Entity\Registration::getClassName(), $reg);
+		Assert::type(Registration::getClassName(), $reg);
 	}
 
 	public function testRegisterTemporarily()
@@ -118,20 +121,20 @@ class RegistrationFacadeTest extends BaseFacade
 
 		$reg = $this->registrationFacade->findByVerificationToken($old->verificationToken);
 
-		Assert::type(Entity\Registration::getClassName(), $reg);
+		Assert::type(Registration::getClassName(), $reg);
 		Assert::type('string', $reg->verificationToken);
 		Assert::type('\DateTime', $reg->verificationExpiration);
 	}
 
 	public function testVerify()
 	{
-		$this->roleFacade->create(Entity\Role::ROLE_CANDIDATE);
+		$this->roleFacade->create(Role::ROLE_CANDIDATE);
 		$reg = $this->registrationFacade->registerTemporarily($this->registration);
 
 		Assert::null($this->registrationFacade->verify('invalidToken'));
 
 		$user = $this->registrationFacade->verify($reg->verificationToken);
-		Assert::type(Entity\User::getClassName(), $user);
+		Assert::type(User::getClassName(), $user);
 		Assert::same(self::U_MAIL, $user->mail);
 		Assert::same(self::U_NAME, $user->name);
 
@@ -140,9 +143,9 @@ class RegistrationFacadeTest extends BaseFacade
 		Assert::same(self::A_SOURCE, $auth->source);
 		Assert::same(self::A_TOKEN, $auth->token);
 		Assert::true(Passwords::verify(self::A_PASSWORD, $auth->hash));
-
-
 	}
+
+	// </editor-fold>
 }
 
 $test = new RegistrationFacadeTest($container);

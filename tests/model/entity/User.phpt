@@ -2,12 +2,16 @@
 
 namespace Test\Model\Entity;
 
-use Nette,
-	Tester,
-	Tester\Assert;
-
-use App\Model\Entity,
-	Doctrine\ORM\Tools\SchemaTool;
+use App\Model\Entity\Auth;
+use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use DateTime;
+use Kdyby\Doctrine\EntityDao;
+use Nette\DI\Container;
+use Nette\Utils\Strings;
+use Test\ParentTestCase;
+use Tester\Assert;
+use Tester\Environment;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -17,45 +21,34 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class UserTest extends Tester\TestCase
+class UserTest extends ParentTestCase
 {
+
 	const U_MAIL = 'jack@sg1.sg.gov';
 	const U_NAME = "Jack O'Neill";
 	const U_RECOVERY_TOKEN = 'recov3Rytoken';
 
-	/** @var \App\Model\Entity\User */
+	/** @var User */
 	private $user;
 
-	/** @var Nette\DI\Container */
-	private $container;
-
-	/** @var \Doctrine\ORM\EntityManager @inject */
-	public $em;
-
-	/** @var SchemaTool */
-	private $schemaTool;
-
-	/** @var Kdyby\Doctrine\EntityDao */
+	/** @var EntityDao */
 	private $roleDao;
 
-	/** @var Kdyby\Doctrine\EntityDao */
+	/** @var EntityDao */
 	private $userDao;
 
-	public function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
-		$this->container = $container;
-		$this->container->callInjects($this);
-		$this->schemaTool = new SchemaTool($this->em);
+		parent::__construct($container);
+		Environment::lock('db', LOCK_DIR);
 
-		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
-		$this->userDao = $this->em->getDao(Entity\User::getClassName());
-
-		\Tester\Environment::lock('db', LOCK_DIR);
+		$this->roleDao = $this->em->getDao(Role::getClassName());
+		$this->userDao = $this->em->getDao(User::getClassName());
 	}
 
 	public function setUp()
 	{
-		$this->user = new Entity\User();
+		$this->user = new User();
 	}
 
 	public function tearDown()
@@ -63,21 +56,23 @@ class UserTest extends Tester\TestCase
 		unset($this->user);
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="tests">
+
 	public function testAddAuth()
 	{
 		Assert::count(0, $this->user->auths);
 
-		$auth = new Entity\Auth();
+		$auth = new Auth();
 		$this->user->addAuth($auth);
 
-		Assert::type(Entity\Auth::getClassName(), $this->user->auths[0]);
+		Assert::type(Auth::getClassName(), $this->user->auths[0]);
 	}
 
 	public function testAddRole()
 	{
-		$roleA = (new Entity\Role())->setName('Role A');
-		$roleB = (new Entity\Role())->setName('Role B');
-		$roleC = (new Entity\Role())->setName('Role C');
+		$roleA = (new Role())->setName('Role A');
+		$roleB = (new Role())->setName('Role B');
+		$roleC = (new Role())->setName('Role C');
 
 		Assert::count(0, $this->user->roles); // No roles
 
@@ -99,28 +94,27 @@ class UserTest extends Tester\TestCase
 
 		$this->user->clearRoles();
 		Assert::count(0, $this->user->roles);
-
 	}
 
 	public function testGetRolesKeys()
 	{
-		$this->schemaTool->updateSchema($this->getClasses());
+		$this->updateSchema();
 
-		$roleA = $this->roleDao->save((new Entity\Role())->setName('Role A'));
-		$roleB = $this->roleDao->save((new Entity\Role())->setName('Role B'));
-		$roleC = $this->roleDao->save((new Entity\Role())->setName('Role C'));
+		$roleA = $this->roleDao->save((new Role())->setName('Role A'));
+		$roleB = $this->roleDao->save((new Role())->setName('Role B'));
+		$roleC = $this->roleDao->save((new Role())->setName('Role C'));
 
 		$this->user->addRole([$roleB, $roleC, $roleA, $roleA, $roleC]);
 		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->getRolesKeys());
 
-		$this->schemaTool->dropSchema($this->getClasses());
+		$this->dropSchema();
 	}
 
 	public function testGetRolesPairs()
 	{
-		$roleA = (new Entity\Role())->setName('Role A');
-		$roleB = (new Entity\Role())->setName('Role B');
-		$roleC = (new Entity\Role())->setName('Role C');
+		$roleA = (new Role())->setName('Role A');
+		$roleB = (new Role())->setName('Role B');
+		$roleC = (new Role())->setName('Role C');
 
 		$this->user->addRole([$roleB, $roleA, $roleC]);
 		Assert::same([NULL => 'Role C'], $this->user->getRolesPairs());
@@ -128,8 +122,8 @@ class UserTest extends Tester\TestCase
 
 	public function testRemoveRole()
 	{
-		$roleA = (new Entity\Role())->setName('Role A');
-		$roleB = (new Entity\Role())->setName('Role B');
+		$roleA = (new Role())->setName('Role A');
+		$roleB = (new Role())->setName('Role B');
 
 		$this->user->addRole($roleA);
 		Assert::count(1, $this->user->roles);
@@ -143,10 +137,10 @@ class UserTest extends Tester\TestCase
 
 	public function testToArray()
 	{
-		$this->schemaTool->updateSchema($this->getClasses());
+		$this->updateSchema();
 
-		$roleA = $this->roleDao->save((new Entity\Role())->setName('Role A'));
-		$roleB = $this->roleDao->save((new Entity\Role())->setName('Role B'));
+		$roleA = $this->roleDao->save((new Role())->setName('Role A'));
+		$roleB = $this->roleDao->save((new Role())->setName('Role B'));
 
 		$this->user->mail = self::U_MAIL;
 		$this->user->name = self::U_NAME;
@@ -159,12 +153,12 @@ class UserTest extends Tester\TestCase
 		Assert::same(self::U_MAIL, $array['mail']);
 		Assert::same(self::U_NAME, $array['name']);
 		Assert::type('array', $array['role']);
-		Assert::type(Entity\Role::getClassName(), $array['role'][0]);
+		Assert::type(Role::getClassName(), $array['role'][0]);
 		Assert::same('Role B', $array['role'][0]->name);
-		Assert::type(Entity\Role::getClassName(), $array['role'][1]);
+		Assert::type(Role::getClassName(), $array['role'][1]);
 		Assert::same('Role A', $array['role'][1]->name);
 
-		$this->schemaTool->dropSchema($this->getClasses());
+		$this->dropSchema();
 	}
 
 	public function testSetAndGet()
@@ -181,7 +175,7 @@ class UserTest extends Tester\TestCase
 		$this->user->recoveryToken = self::U_RECOVERY_TOKEN;
 		Assert::same(self::U_RECOVERY_TOKEN, $this->user->recoveryToken);
 
-		$tomorrow = new \DateTime('now + 1 day');
+		$tomorrow = new DateTime('now + 1 day');
 		$this->user->recoveryExpiration = $tomorrow;
 		Assert::equal($tomorrow, $this->user->recoveryExpiration);
 	}
@@ -194,7 +188,7 @@ class UserTest extends Tester\TestCase
 
 	public function testSetRecovery()
 	{
-		$expiration = new \DateTime('now + 3 hours');
+		$expiration = new DateTime('now + 3 hours');
 
 		$this->user->setRecovery(self::U_RECOVERY_TOKEN, $expiration);
 
@@ -204,8 +198,8 @@ class UserTest extends Tester\TestCase
 
 	public function testUnsetRecovery()
 	{
-		$token = Nette\Utils\Strings::random(32);
-		$expiration = new \DateTime();
+		$token = Strings::random(32);
+		$expiration = new DateTime();
 		$this->user->setRecovery($token, $expiration);
 		$this->user->unsetRecovery();
 
@@ -213,11 +207,13 @@ class UserTest extends Tester\TestCase
 		Assert::null($this->user->recoveryExpiration);
 	}
 
-	private function getClasses()
+	// </editor-fold>
+
+	protected function getClasses()
 	{
 		return [
-			$this->em->getClassMetadata('App\Model\Entity\User'),
-			$this->em->getClassMetadata('App\Model\Entity\Role')
+			$this->em->getClassMetadata(User::getClassName()),
+			$this->em->getClassMetadata(Role::getClassName()),
 		];
 	}
 
