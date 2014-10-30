@@ -2,151 +2,116 @@
 
 namespace App\FrontModule\Presenters;
 
-/** Nette */
-use Nette\Security\Identity;
-/** Application */
-use App\Components\Sign,
-	App\Model\Storage,
-	App\Model\Storage\RegistrationStorage,
-	App\Model\Facade;
+use App\Components\Profile;
+use App\Model\Entity\User;
+use App\Model\Facade\UserFacade;
+use App\Model\Storage\SignUpStorage;
 
-/**
- * Sign in, sign out and registration presenters.
- */
 class SignPresenter extends BasePresenter
 {
+	
+	public $onVerify = [];
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	/** @var Sign\ISignInControlFactory @inject */
-	public $iSignInControlFactory;
+	/** @var Profile\IAdditionalControlFactory @inject */
+	public $iAdditionalControlFactory;
 
-	/** @var Sign\IForgottenControlFactory @inject */
+	/** @var Profile\IFacebookControlFactory @inject */
+	public $iFacebookControlFactory;
+
+	/** @var Profile\IForgottenControlFactory @inject */
 	public $iForgottenControlFactory;
 
-	/** @var Sign\IRecoveryControlFactory @inject */
+	/** @var Profile\IRecoveryControlFactory @inject */
 	public $iRecoveryControlFactory;
-
-	/** @var Sign\IAuthControlFactory @inject */
-	public $iAuthControlFactory;
-
-	/** @var Storage\RegistrationStorage @inject */
-	public $registrationStorage;
-
-	/** @var Facade\RegistrationFacade @inject */
-	public $registrationFacade;
-
-	/** @var Facade\AuthFacade @inject */
-	public $authFacade;
-
-	/** @var Facade\RoleFacade @inject */
-	public $roleFacade;
-
-	/** @var \App\Components\Profile\ISignControlFactory @inject */
-	public $iSignControlFactory;
 	
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="actions">
-	/**
-	 * Default is SIGN IN.
-	 */
-	public function actionDefault()
-	{
-		$this->redirect('in');
-	}
+	/** @var Profile\IRequiredControlFactory @inject */
+	public $iRequiredControlFactory;
 
-	/**
-	 * Sign IN.
-	 */
-	public function actionIn()
-	{
-		$this->isLoggedIn();
-	}
+	/** @var Profile\ISignInControlFactory @inject */
+	public $iSignInControlFactory;
 
-	/**
-	 * Sign OUT.
-	 */
-	public function actionOut()
-	{
-		$this->user->logout();
-		$this->redirect(':Front:Sign:in');
-	}
+	/** @var Profile\ISignUpControlFactory @inject */
+	public $iSignUpControlFactory;
 
-	/**
-	 * Lost Password.
-	 */
-	public function actionLostPassword()
+	/** @var Profile\ISummaryControlFactory @inject */
+	public $iSummaryControlFactory;
+	
+	/** @var Profile\ITwitterControlFactory @inject */
+	public $iTwitterControlFactory;
+	
+	/** @var SignUpStorage @inject */
+	public $session;
+	
+	/** @var UserFacade @inject */
+	public $userFacade;
+
+	/** @param string $role */
+	public function actionIn($role)
 	{
 		$this->isLoggedIn();
+		$this->template->role = $role;
+
+		$this['signIn']->onSuccess[] = function () {
+			$this->restoreRequest($this->presenter->backlink);
+			$this->redirect(':App:Dashboard:');
+		};
 	}
 
-	/**
-	 * Recovery password.
-	 * @param string $token
-	 */
-	public function actionRecovery($token)
+	/** @param string $role */
+	public function actionUp($role = NULL, $step = NULL) // ToDo: Check ROLE validity!
 	{
-		$this->isLoggedIn();
-
-		$message = 'Token to recovery your password is no longer active. Please request new one.';
-
-		if ($token !== NULL) {
-			$auth = $this->authFacade->findByRecoveryToken($token);
-
-			if ($auth !== NULL) {
-				$this['recovery']->setAuth($auth);
-			} else {
-				$this->flashMessage($message, 'info');
-				$this->redirect('lostPassword');
-			}
+		$this->isLoggedIn(); 
+		
+		if ($step !== NULL && in_array($step, ['required', 'additional', 'summary'])) {
+			$this->setView('step' . ucfirst($step));
 		} else {
-			$this->flashMessage($message, 'info');
-			$this->redirect('lostPassword');
+			$this->session->role = $role;
 		}
+		
+		$this->template->user = $this->session->user;
+		$this->template->company = $this->session->company;
+		$this->template->role = $this->session->role;
 	}
 
-	/**
-	 * Registration.
-	 * @param string $source
-	 */
-	public function actionRegistration($role = \App\Model\Entity\Role::ROLE_CANDIDATE, $source = RegistrationStorage::SOURCE_APP)
-	{
-		$this->isLoggedIn();
-
-		if (!$this->registrationStorage->isSource($source) || !($role = $this->roleFacade->isRegistratable($role))) {
-			$this->redirect('in');
-		} else {
-			if ($source === RegistrationStorage::SOURCE_APP) {
-				$this->registrationStorage->wipe();
-			}
-
-			$this['auth']->setRole($role);
-		}
-	}
-
-	/**
-	 * User account verification.
-	 * @param string $token
-	 */
+	/** @param string $token */
 	public function actionVerify($token)
 	{
 		$this->isLoggedIn();
 
-		$user = $this->registrationFacade->verify($token);
-
-		if ($user) {
-			$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
-			$this->presenter->flashMessage('You have been successfully logged in!', 'success');
-			$this->presenter->redirect(':App:Dashboard:');
+		if ($signUp = $this->userFacade->findByVerificationToken($token)) {
+			$user = new User();
+			$user->setMail($signUp->mail)
+					->setHash($signUp->hash)
+					->setName($signUp->mail)
+					->addRole($signUp->role);
+			
+			if ($signUp->facebookId) {
+				$user->facebook->setId($signUp->facebookId)
+						->setAccessToken($signUp->facebookAccessToken);
+			}
+			
+			if ($signUp->TwitterId) {
+				$user->twitter->setId($signUp->twitterId)
+						->setAccessToken($signUp->twitterAccessToken);
+			}
+			
+			$this->onVerify($this, $user);
 		} else {
 			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
 			$this->redirect('in');
 		}
 	}
+	
+	/** @param string $token */
+	public function actionRecovery($token)
+	{
+		$this->isLoggedIn();
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="private functions">
+		$this['recovery']->setToken($token);
+	}
 
 	/**
+	 * ToDo: Tohle chce automatiku!
 	 * Redirect logged to certain destination.
 	 * @param type $redirect
 	 * @return bool
@@ -160,38 +125,58 @@ class SignPresenter extends BasePresenter
 		return $isLogged;
 	}
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="components">
-
-	/** @return Sign\SignInControl */
-	protected function createComponentSignIn()
+	/** @return Profile\AdditionalControl */
+	protected function createComponentAdditional()
 	{
-		return $this->iSignInControlFactory->create();
+		return $this->iAdditionalControlFactory->create();
 	}
-
-	/** @return Sign\AuthControl */
-	protected function createComponentAuth()
+	
+	/** @return Profile\FacebookControl */
+	protected function createComponentFacebook()
 	{
-		return $this->iAuthControlFactory->create();
+		return $this->iFacebookControlFactory->create();
 	}
-
-	/** @return Sign\ForgottenControl */
+	
+	/** @return Profile\ForgottenControl*/
 	protected function createComponentForgotten()
 	{
 		return $this->iForgottenControlFactory->create();
 	}
-
-	/** @return Sign\RecoveryControl */
+	
+	/** @return Profile\RecoveryControl*/
 	protected function createComponentRecovery()
 	{
 		return $this->iRecoveryControlFactory->create();
 	}
 	
-	/** @return \App\Components\Profile\SignControl */
-	protected function createComponentSign()
+	/** @return Profile\RequiredControl */
+	protected function createComponentRequired()
 	{
-		return $this->iSignControlFactory->create();
+		return $this->iRequiredControlFactory->create();
 	}
 
-	// </editor-fold>
+	/** @return Profile\SignInControl */
+	protected function createComponentSignIn()
+	{
+		return $this->iSignInControlFactory->create();
+	}
+
+	/** @return Profile\SignUpControl */
+	protected function createComponentSignUp()
+	{
+		return $this->iSignUpControlFactory->create();
+	}
+
+	/** @return Profile\SummaryControl */
+	protected function createComponentSummary()
+	{
+		return $this->iSummaryControlFactory->create();
+	}
+	
+	/** @return Profile\TwitterControl */
+	protected function createComponentTwitter()
+	{
+		return $this->iTwitterControlFactory->create();
+	}
+
 }

@@ -29,13 +29,8 @@ class RouterFactory
 			'id' => NULL,
 		]);
 
-		$router[] = $frontRouter = new RouteList('Front');
-		$frontRouter[] = new Route('sign-in/<role (admin|company|candidate)>', [
-			'presenter' => 'NewSign',
-			'action' => 'in'
-		]);
 //		$frontRouter[] = new Route('sign-up/<role (company|candidate)>', [
-//			'presenter' => 'NewSign',
+//			'presenter' => 'Sign',
 //			'action' => 'up'
 //		]);
 		$frontRouter[] = new Route('<presenter>/<action>[/<id>]', [

@@ -43,7 +43,7 @@ class ForgottenControl extends BaseControl
 
 		if (!$user) {
 			$this->presenter->flashMessage('We do not register any user with this e-mail address!', 'warning');
-			$this->presenter->redirect(':Front:NewSign:lostPassword');
+			$this->presenter->redirect(':Front:Sign:lostPassword');
 		} else {
 			$user = $this->userFacade->setRecovery($user);
 
@@ -56,7 +56,7 @@ class ForgottenControl extends BaseControl
 			$this->mailer->send($message);
 
 			$this->presenter->flashMessage('Recovery link has been send to your mail.');
-			$this->presenter->redirect(':Front:NewSign:in');
+			$this->presenter->redirect(':Front:Sign:in');
 		}
 	}
 }

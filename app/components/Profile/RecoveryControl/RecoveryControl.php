@@ -63,7 +63,7 @@ class RecoveryControl extends BaseControl
 	{
 		if (!$this->user = $this->userFacade->findByRecoveryToken($token)) {
 			$this->presenter->flashMessage('Token to recovery your password is no longer active. Please request new one.', 'info');
-			$this->presenter->redirect(':Front:NewSign:lostPassword');
+			$this->presenter->redirect(':Front:Sign:lostPassword');
 		}
 	}
 

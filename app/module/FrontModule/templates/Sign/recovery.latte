@@ -1,27 +1,8 @@
-{layout ../@metronic.layout.latte}
-
-{block bodyClass}login{/block}
-
 {block content}
-
-<!-- BEGIN LOGO -->
-<div class="logo">
-	<a n:href="Homepage:">
-		<img src="{$basePath}/assets/img/logo-big.png" alt=""/>
-	</a>
+<div class="login-form">
+    <h3 class="form-title">{_'Password recovery'}</h3>
+	<p>
+		{_'Enter a new password to your account.'}:
+	</p>
+	{control recovery}
 </div>
-<!-- END LOGO -->
-
-<div class="content">
-	<!-- BEGIN FORGOT PASSWORD FORM -->
-	<div class="forget-form">
-		{control recovery}
-	</div>
-	<!-- END FORGOT PASSWORD FORM -->
-</div>
-
-<!-- BEGIN COPYRIGHT -->
-<div class="copyright">
-	2014 &copy; {_'Source-Code by Mediahost'}.
-</div>
-<!-- END COPYRIGHT -->
