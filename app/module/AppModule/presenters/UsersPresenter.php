@@ -29,7 +29,7 @@ class UsersPresenter extends BasePresenter
 	public $userFormFactory;
 
 	/** @var \App\Model\Entity\User */
-	private $user;
+	private $userEntity;
 
 	// </editor-fold>
 
@@ -62,7 +62,7 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->user = new \App\Model\Entity\User;
+		$this->userEntity = new \App\Model\Entity\User;
 		$this->userFormFactory->setAdding();
 		$this->setView("edit");
 	}
@@ -74,7 +74,7 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->user = $this->userDao->find($id);
+		$this->userEntity = $this->userDao->find($id);
 	}
 
 	public function renderEdit()
@@ -100,9 +100,9 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$this->user = $this->userDao->find($id);
-		if ($this->user) {
-			$this->userFacade->delete($this->user);
+		$this->userEntity = $this->userDao->find($id);
+		if ($this->userEntity) {
+			$this->userFacade->delete($this->userEntity);
 			$this->flashMessage("Entity was deleted.", 'success');
 		} else {
 			$this->flashMessage("Entity was not found.", 'warning');
@@ -117,7 +117,7 @@ class UsersPresenter extends BasePresenter
 	{
 		$form = $this->formFactoryFactory
 				->create($this->userFormFactory)
-				->setEntity($this->user)
+				->setEntity($this->userEntity)
 				->create();
 		$form->onSuccess[] = $this->userFormSuccess;
 		return $form;
@@ -126,8 +126,8 @@ class UsersPresenter extends BasePresenter
 	public function userFormSuccess($form)
 	{
 		if ($form['submitContinue']->submittedBy) {
-			$this->userDao->save($this->user);
-			$this->redirect("edit", $this->user->getId());
+			$this->userDao->save($this->userEntity);
+			$this->redirect("edit", $this->userEntity->getId());
 		}
 		$this->redirect("Users:");
 	}
