@@ -59,10 +59,11 @@ class InstallerModelTest extends ParentTestCase
 		file_put_contents($adminerFile, 'test');
 		Assert::true($installer->installAdminer($dir));
 		unlink($adminerFile);
-		rmdir($adminerPath);
 
 		// test without existing file
 		Assert::true($installer->installAdminer($dir));
+		unlink($adminerFile);
+		rmdir($adminerPath); 
 
 		// testing allow writing (chmod 777) in mock file
 		$file = FileMock::create('', 'sql');
