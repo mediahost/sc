@@ -51,7 +51,7 @@ class SignInControl extends BaseControl
 		}
 
 		try {
-			$this->presenter->user->login($values->email, $values->password);
+			$this->presenter->user->login($values->mail, $values->password);
 			$this->onSuccess();
 		} catch (AuthenticationException $e) {
 			$form->addError($this->translator->translate('Incorrect login or password!'));

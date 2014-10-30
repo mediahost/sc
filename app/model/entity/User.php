@@ -193,6 +193,16 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
 		return $this;
 	}
+	
+	/**
+	 * @return User
+	 */
+	public function removeRecovery()
+	{
+		$this->recoveryToken = NULL;
+		$this->recoveryExpiration = NULL;
+		return $this;
+	}
 
 	/**
 	 * @param UserSettings $settings

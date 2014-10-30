@@ -3,13 +3,15 @@
 namespace App\FrontModule\Presenters;
 
 use App\Components\Profile;
+use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use Nette\Security\Identity;
 use Tracy\Debugger;
 
 class NewSignPresenter extends BasePresenter
 {
+	
+	public $onVerify = [];
 
 	/** @var Profile\IAdditionalControlFactory @inject */
 	public $iAdditionalControlFactory;
@@ -17,6 +19,12 @@ class NewSignPresenter extends BasePresenter
 	/** @var Profile\IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
 
+	/** @var Profile\IForgottenControlFactory @inject */
+	public $iForgottenControlFactory;
+
+	/** @var Profile\IRecoveryControlFactory @inject */
+	public $iRecoveryControlFactory;
+	
 	/** @var Profile\IRequiredControlFactory @inject */
 	public $iRequiredControlFactory;
 
@@ -75,13 +83,35 @@ class NewSignPresenter extends BasePresenter
 		$this->isLoggedIn();
 
 		if ($signUp = $this->userFacade->findByVerificationToken($token)) {
-			$user = new \App\Model\Entity\User();
-			$this->onVerify();
+			$user = new User();
+			$user->setMail($signUp->mail)
+					->setHash($signUp->hash)
+					->setName($signUp->mail)
+					->addRole($signUp->role);
+			
+			if ($signUp->facebookId) {
+				$user->facebook->setId($signUp->facebookId)
+						->setAccessToken($signUp->facebookAccessToken);
+			}
+			
+			if ($signUp->TwitterId) {
+				$user->twitter->setId($signUp->twitterId)
+						->setAccessToken($signUp->twitterAccessToken);
+			}
+			
+			$this->onVerify($this, $user);
 		} else {
 			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
 			$this->redirect('in');
 		}
+	}
+	
+	/** @param string $token */
+	public function actionRecovery($token)
+	{
+		$this->isLoggedIn();
 
+		$this['recovery']->setToken($token);
 	}
 
 	/**
@@ -109,7 +139,19 @@ class NewSignPresenter extends BasePresenter
 	{
 		return $this->iFacebookControlFactory->create();
 	}
-
+	
+	/** @return Profile\ForgottenControl*/
+	protected function createComponentForgotten()
+	{
+		return $this->iForgottenControlFactory->create();
+	}
+	
+	/** @return Profile\RecoveryControl*/
+	protected function createComponentRecovery()
+	{
+		return $this->iRecoveryControlFactory->create();
+	}
+	
 	/** @return Profile\RequiredControl */
 	protected function createComponentRequired()
 	{

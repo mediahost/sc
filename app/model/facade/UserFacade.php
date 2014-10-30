@@ -4,7 +4,13 @@ namespace App\Model\Facade;
 
 use App\Model\Entity;
 use App\Model\Entity\User;
+use App\Model\Storage\UserSettingsStorage;
+use DateTime;
+use InvalidArgumentException;
+use Kdyby\Doctrine\Entities\BaseEntity;
 use Kdyby\Doctrine\EntityDao;
+use Nette\Utils\Random;
+use Nette\Utils\Strings;
 
 class UserFacade extends BaseFacade
 {
@@ -21,7 +27,7 @@ class UserFacade extends BaseFacade
 	/** @var EntityDao */
 	private $signUpDao;
 
-	/** @var \App\Model\Storage\UserSettingsStorage @inject */
+	/** @var UserSettingsStorage @inject */
 	protected function init()
 	{
 		$this->userDao = $this->em->getDao(User::getClassName());
@@ -29,8 +35,6 @@ class UserFacade extends BaseFacade
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
 		$this->signUpDao = $this->em->getDao(Entity\SignUp::getClassName());
 	}
-
-	// <editor-fold defaultstate="collapsed" desc="create">
 
 	/**
 	 * Create User if isn't exists.
@@ -59,7 +63,6 @@ class UserFacade extends BaseFacade
 		return NULL;
 	}
 
-	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Find methods">
 
 	/**
@@ -126,14 +129,14 @@ class UserFacade extends BaseFacade
 	 */
 	public function setRecovery(User $user)
 	{
-		$user->setRecovery(\Nette\Utils\Strings::random(32), 'now + 1 hour');
+		$user->setRecovery(Random::generate(32), 'now + 1 hour');
 		return $this->userDao->save($user);
 	}
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="delete">
 
-	public function delete(\Kdyby\Doctrine\Entities\BaseEntity $user)
+	public function delete(BaseEntity $user)
 	{
 		$user->clearRoles();
 		$this->userDao->save($user); // ToDo: Do all in one row.
@@ -172,7 +175,7 @@ class UserFacade extends BaseFacade
 			} elseif (is_array($role)) {
 				$role = $this->roleDao->findBy(['name' => $role]);
 			} else {
-				throw new \InvalidArgumentException;
+				throw new InvalidArgumentException;
 			}
 		}
 
@@ -215,8 +218,8 @@ class UserFacade extends BaseFacade
 				->getQuery()
 				->execute();
 
-		$signUp->verificationToken = \Nette\Utils\Strings::random(32);
-		$signUp->verificationExpiration = new \DateTime('now + 1 day');
+		$signUp->verificationToken = Strings::random(32);
+		$signUp->verificationExpiration = new DateTime('now + 1 day');
 
 		$this->em->persist($signUp);
 		$this->em->flush();
@@ -234,7 +237,7 @@ class UserFacade extends BaseFacade
 
 		if ($signUp) {
 			// Expired sign up request is deleted
-			if ($signUp->verificationExpiration > new \DateTime()) {
+			if ($signUp->verificationExpiration > new DateTime()) {
 				return $signUp;
 			} else {
 				$this->signUpDao->delete($signUp);
@@ -242,6 +245,42 @@ class UserFacade extends BaseFacade
 		}
 
 		return NULL;
+	}
+
+	/**
+	 * @param string $token
+	 * @return Entity\User
+	 */
+	public function findByRecoveryToken($token)
+	{
+		if (!empty($token)) {
+			$user = $this->userDao->findOneBy([
+				'recoveryToken' => $token
+			]);
+
+			if ($user) {
+				if ($user->recoveryExpiration > new DateTime) {
+					return $user;
+				} else {
+					$user->unsetRecovery();
+					$this->userDao->save($user);
+				}
+			}
+		}
+			
+		return NULL;
+	}
+	
+	/**
+	 * @param Entity\User $user
+	 * @param string $password
+	 * @return Entity\User
+	 */
+	public function recoveryPassword(Entity\User $user, $password)
+	{
+		$user->password = $password;
+		$user->removeRecovery();
+		return $this->userDao->save($user);
 	}
 
 }

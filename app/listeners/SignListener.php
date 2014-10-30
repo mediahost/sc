@@ -42,7 +42,7 @@ class SignListener extends Object implements Subscriber
 
 	public function __construct(Application $application)
 	{
-		$this->application = $application;
+		$this->application = $application->presenter;
 	}
 
 	public function getSubscribedEvents()
@@ -53,6 +53,7 @@ class SignListener extends Object implements Subscriber
 			'App\Components\Profile\TwitterControl::onSuccess' => 'onStartup',
 			'App\Components\Profile\RequiredControl::onSuccess' => 'onExists',
 			'App\Components\Profile\SummaryControl::onSuccess' => 'onVerify',
+			'App\FrontModule\Presenters\NewSignPresenter::onVerify' => 'onSuccess'
 		);
 	}
 
@@ -62,15 +63,13 @@ class SignListener extends Object implements Subscriber
 			$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 			$control->presenter->redirect(':App:Dashboard:');
 		} else {
+			$this->session->user = $user;
 			$this->onRequire($control, $user);
 		}
 	}
 	
 	public function onRequire(Control $control, User $user)
 	{
-		Debugger::barDump('onRequire');
-		$this->session->user = $user;
-
 		if (!$user->mail) {
 			$control->presenter->redirect(':Front:NewSign:up', [
 				'step' => 'required']
@@ -87,12 +86,13 @@ class SignListener extends Object implements Subscriber
 				'step' => 'additional'
 			]);	
 		} else {
-			$this->onVerify($control, $user);
+			$control->presenter->flash('This e-mail is registered yet.');
+			$control->presenter->redirect(':Front:NewSign:in');
 		}
 	}
 	
 	public function onVerify(Control $control, User $user)
-	{
+	{	
 		if (!$this->session->isVerified()) {
 			$role = $this->roleFacade->findByName($this->session->role);
 			
@@ -135,9 +135,12 @@ class SignListener extends Object implements Subscriber
 	public function onSuccess(Control $control, User $user)
 	{
 		if ($existing = $this->userFacade->findByMail($user->mail)) {
-			// Merge
+			$control->presenter->flash('This e-mail is registered yet.');
+			$control->presenter->redirect(':Front:NewSign:in');
 		} else {
-			$user->addRole($this->roleFacade->findByName($this->session->role));
+			if (empty($user->roles)) {
+				$user->addRole($this->roleFacade->findByName($this->session->role));
+			}
 			$user = $this->userFacade->signUp($user);
 		}
 		
@@ -149,11 +152,6 @@ class SignListener extends Object implements Subscriber
 		$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$control->presenter->restoreRequest($control->presenter->backlink);
 		$control->presenter->redirect(':App:Dashboard:');
-	}
-	
-	public function injectEntityManager(EntityManager $em)
-	{
-//		$this->userDao = $em->getDao(Users);
 	}
 
 }

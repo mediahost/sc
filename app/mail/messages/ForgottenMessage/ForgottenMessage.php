@@ -8,7 +8,7 @@ class ForgottenMessage extends BaseMessage
 	public function __construct()
 	{
 		$this->setFrom('noreply@sc.com');
-		$this->setSubject('Forgotten mail');
+		$this->setSubject('Lost password');
 	}
 
 }

@@ -5,17 +5,14 @@ services:
 	registrationDao: @doctrine.dao(App\Model\Entity\Registration)
 	userDao: @doctrine.dao(App\Model\Entity\User)
 
-
 	# Facades
 	- {class: App\Model\Facade\AuthFacade(@authDao), inject: yes}
-
-	- App\Model\Facade\UserFacade(@userDao)
-	- App\Model\Facade\RoleFacade(@roleDao)
-	- {class: App\Model\Facade\RegistrationFacade(@registrationDao), inject: yes}
+	- {class: App\Model\Facade\RoleFacade(@roleDao), inject: yes}
+	- {class: App\Model\Facade\UserFacade(@userDao), inject: yes}
 
 	# Storages
 	- App\Model\Storage\RegistrationStorage
 	- App\Model\Storage\MessageStorage
 
-	- {class: App\Model\Storage\SignUpStorage, inject: yes} # OK
+	- {class: App\Model\Storage\SignUpStorage, inject: yes}
 	- {class: App\Model\Storage\UserSettingsStorage, inject: yes}
