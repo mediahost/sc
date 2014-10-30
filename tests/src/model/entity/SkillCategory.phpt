@@ -16,7 +16,6 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * TEST: Skill entity
  *
  * @testCase
- * @skip
  */
 class SkillCategoryTest extends ParentTestCase
 {

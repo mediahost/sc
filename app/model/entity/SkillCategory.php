@@ -26,7 +26,7 @@ class SkillCategory extends \Kdyby\Doctrine\Entities\BaseEntity
 	protected $name;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="SkillCategory", mappedBy="childs")
+	 * @ORM\ManyToOne(targetEntity="SkillCategory", inversedBy="childs")
 	 * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
 	 */
 	protected $parent;
