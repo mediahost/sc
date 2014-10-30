@@ -56,7 +56,7 @@ class AuthenticatorTest extends ParentTestCase
 		$this->dropSchema();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="tests">
+	// <editor-fold defaultstate="expanded" desc="tests">
 
 	public function testAuthenticate()
 	{

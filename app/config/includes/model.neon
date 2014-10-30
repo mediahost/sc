@@ -1,12 +1,4 @@
 services:
-	# Entity load - only for instalation
-	- App\Model\Entity\Auth
-	- App\Model\Entity\User
-	- App\Model\Entity\Role
-	- App\Model\Entity\Registration
-	- App\Model\Entity\SkillCategory
-	- App\Model\Entity\Skill
-
 	# DAOs
 	authDao: @doctrine.dao(App\Model\Entity\Auth)
 	roleDao: @doctrine.dao(App\Model\Entity\Role)
