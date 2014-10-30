@@ -41,6 +41,9 @@ class SignPresenter extends BasePresenter
 	/** @var Facade\RoleFacade @inject */
 	public $roleFacade;
 
+	/** @var \App\Components\Profile\ISignControlFactory @inject */
+	public $iSignControlFactory;
+	
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="actions">
 	/**
@@ -182,6 +185,12 @@ class SignPresenter extends BasePresenter
 	protected function createComponentRecovery()
 	{
 		return $this->iRecoveryControlFactory->create();
+	}
+	
+	/** @return \App\Components\Profile\SignControl */
+	protected function createComponentSign()
+	{
+		return $this->iSignControlFactory->create();
 	}
 
 	// </editor-fold>

@@ -3,7 +3,8 @@
 namespace App\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
-	Doctrine\Common\Collections\ArrayCollection;
+	Doctrine\Common\Collections\ArrayCollection,
+	Nette\Security\Passwords;
 
 /**
  * User entity
@@ -49,6 +50,23 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	protected $settings;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Facebook", orphanRemoval=true, fetch="LAZY", cascade={"all"})
+     * @ORM\JoinColumn(name="facebook_id", referencedColumnName="id")
+     **/
+	protected $facebook;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Twitter", orphanRemoval=true, fetch="LAZY", cascade={"all"})
+     * @ORM\JoinColumn(name="twitter_id", referencedColumnName="id")
+     **/
+	protected $twitter;
+	
+	/**
+	 * @ORM\Column(type="string", length=256, nullable=true)
+	 */
+	protected $hash;
+	
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
 	 */
@@ -80,6 +98,39 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $this;
 	}
 
+
+	/**
+	 * Computes salted password hash.
+	 * @param string Password to be hashed.
+	 * @param array with cost (4-31), salt (22 chars)
+	 * @return Auth
+	 */
+	public function setPassword($password, array $options = NULL)
+	{
+		$this->hash = Passwords::hash($password, $options);
+		return $this;
+	}
+	
+	/**
+	 * Verifies that a password matches a hash.
+	 * @param string $password Password in plain text
+	 * @return bool
+	 */
+	public function verifyPassword($password)
+	{
+		return Passwords::verify($password, $this->hash);
+	}
+
+	/**
+	 * Checks if the given hash matches the options.
+	 * @param  array with cost (4-31)
+	 * @return bool
+	 */
+	public function needsRehash(array $options = NULL)
+	{
+		return Passwords::needsRehash($this->hash, $options);
+	}
+	
 	/**
 	 * @param Role|array $role
 	 * @param bool $clear Clear all previous roles.
@@ -140,6 +191,16 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		$this->recoveryToken = $token;
 		$this->recoveryExpiration = $expiration;
 
+		return $this;
+	}
+	
+	/**
+	 * @return User
+	 */
+	public function removeRecovery()
+	{
+		$this->recoveryToken = NULL;
+		$this->recoveryExpiration = NULL;
 		return $this;
 	}
 

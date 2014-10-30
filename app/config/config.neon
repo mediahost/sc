@@ -36,7 +36,8 @@ nette:
 		email: 'pupe.dupe@gmail.com,me@martinsifra.cz'
 
 services:
-	authenticator: App\Model\Authenticator\UserAuthenticator
+	# Authenticator
+	- {class: App\Model\Authenticator, inject: yes}
 
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
@@ -47,4 +48,8 @@ services:
 
 extensions:
 	events: Kdyby\Events\DI\EventsExtension
+<<<<<<< HEAD
 	installer: App\Components\Installer\DI\InstallerExtension
+=======
+	onControlCreate: App\Extensions\EventOnControlCreateCreateExtension
+>>>>>>> nova-registrace

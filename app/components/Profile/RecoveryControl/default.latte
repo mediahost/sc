@@ -1,0 +1,32 @@
+{* RecoveryControl *}
+{block |strip}
+{form form}
+	<div class="alert alert-danger" n:if="$form->errors">
+		<button class="close" data-close="alert"></button>
+		{foreach $form->errors as $error}
+			<span>{$error}</span><br/>
+		{/foreach}
+	</div>
+
+	<div class="form-group">
+		{label newPassword, class=>'control-label visible-ie8 visible-ie9' /}
+		<div class="input-icon">
+			<i class="fa fa-lock"></i> {input newPassword, class=>'form-control placeholder-no-fix'}
+		</div>
+	</div>
+
+	<div class="form-group">
+		{label passwordAgain, class=>'control-label visible-ie8 visible-ie9' /}
+		<div class="input-icon">
+			<i class="fa fa-check"></i> {input passwordAgain, class=>'form-control placeholder-no-fix'}
+		</div>
+	</div>
+
+	<div class="form-actions">
+		{button recovery, class=>'btn green pull-right'}
+			{caption} <i class="m-icon-swapright m-icon-white"></i>
+		{/button}
+		<a class="btn btn-default" href="{plink :Front:NewSign:in}">{_'Back to sign in'}</a>
+	</div>
+{/form}
+{/block}

@@ -2,14 +2,18 @@
 
 namespace App\Model\Facade;
 
-use App\Model\Entity\User,
-	App\Model\Entity,
-	Kdyby\Doctrine\EntityDao,
-	Tracy\Debugger as Debug;
+use App\Model\Entity;
+use App\Model\Entity\User;
+use App\Model\Storage\UserSettingsStorage;
+use DateTime;
+use InvalidArgumentException;
+use Kdyby\Doctrine\Entities\BaseEntity;
+use Kdyby\Doctrine\EntityDao;
+use Nette\Utils\Random;
+use Nette\Utils\Strings;
 
 class UserFacade extends BaseFacade
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var EntityDao */
 	private $userDao;
@@ -20,17 +24,17 @@ class UserFacade extends BaseFacade
 	/** @var EntityDao */
 	private $authDao;
 
-	// </editor-fold>
+	/** @var EntityDao */
+	private $signUpDao;
 
-	/** @var \App\Model\Storage\UserSettingsStorage @inject */
+	/** @var UserSettingsStorage @inject */
 	protected function init()
 	{
 		$this->userDao = $this->em->getDao(User::getClassName());
 		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
 		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
+		$this->signUpDao = $this->em->getDao(Entity\SignUp::getClassName());
 	}
-
-	// <editor-fold defaultstate="collapsed" desc="create">
 
 	/**
 	 * Create User if isn't exists.
@@ -59,17 +63,33 @@ class UserFacade extends BaseFacade
 		return NULL;
 	}
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="finders">
+	// <editor-fold defaultstate="collapsed" desc="Find methods">
 
 	/**
-	 * Find user by e-mail.
 	 * @param string $mail
 	 * @return User
 	 */
 	public function findByMail($mail)
 	{
 		return $this->userDao->findOneBy(['mail' => $mail]);
+	}
+
+	/**
+	 * @param string $id
+	 * @return User
+	 */
+	public function findByFacebookId($id)
+	{
+		return $this->userDao->findOneBy(['facebook.id' => $id]);
+	}
+
+	/**
+	 * @param string $id
+	 * @return User
+	 */
+	public function findByTwitterId($id)
+	{
+		return $this->userDao->findOneBy(['twitter.id' => $id]);
 	}
 
 	// </editor-fold>
@@ -109,14 +129,14 @@ class UserFacade extends BaseFacade
 	 */
 	public function setRecovery(User $user)
 	{
-		$user->setRecovery(\Nette\Utils\Strings::random(32), 'now + 1 hour');
+		$user->setRecovery(Random::generate(32), 'now + 1 hour');
 		return $this->userDao->save($user);
 	}
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="delete">
 
-	public function delete(\Kdyby\Doctrine\Entities\BaseEntity $user)
+	public function delete(BaseEntity $user)
 	{
 		$user->clearRoles();
 		$this->userDao->save($user); // ToDo: Do all in one row.
@@ -155,7 +175,7 @@ class UserFacade extends BaseFacade
 			} elseif (is_array($role)) {
 				$role = $this->roleDao->findBy(['name' => $role]);
 			} else {
-				throw new \InvalidArgumentException;
+				throw new InvalidArgumentException;
 			}
 		}
 
@@ -163,13 +183,104 @@ class UserFacade extends BaseFacade
 	}
 
 	/**
-	 * Is User unique by e-mail?
 	 * @param string $mail
 	 * @return bool
 	 */
 	public function isUnique($mail)
 	{
 		return $this->findByMail($mail) === NULL;
+	}
+
+	/**
+	 * @param User $user
+	 * @return User
+	 */
+	public function signUp(User $user)
+	{
+		$user->settings = new Entity\UserSettings();
+
+		$this->em->persist($user);
+		$this->em->flush();
+
+		return $user;
+	}
+
+	/**
+	 * @param Entity\SignUp $signUp
+	 * @return Entity\SignUp
+	 */
+	public function signUpTemporarily(Entity\SignUp $signUp)
+	{
+		$qb = $this->em->createQueryBuilder();
+		$qb->delete(Entity\SignUp::getClassName(), 's')
+				->where('s.mail = ?1')
+				->setParameter(1, $signUp->mail)
+				->getQuery()
+				->execute();
+
+		$signUp->verificationToken = Strings::random(32);
+		$signUp->verificationExpiration = new DateTime('now + 1 day');
+
+		$this->em->persist($signUp);
+		$this->em->flush();
+
+		return $signUp;
+	}
+
+	/**
+	 * @param string $token
+	 * @return Entity\SignUp
+	 */
+	public function findByVerificationToken($token)
+	{
+		$signUp = $this->signUpDao->findOneBy(['verificationToken' => $token]);
+
+		if ($signUp) {
+			// Expired sign up request is deleted
+			if ($signUp->verificationExpiration > new DateTime()) {
+				return $signUp;
+			} else {
+				$this->signUpDao->delete($signUp);
+			}
+		}
+
+		return NULL;
+	}
+
+	/**
+	 * @param string $token
+	 * @return Entity\User
+	 */
+	public function findByRecoveryToken($token)
+	{
+		if (!empty($token)) {
+			$user = $this->userDao->findOneBy([
+				'recoveryToken' => $token
+			]);
+
+			if ($user) {
+				if ($user->recoveryExpiration > new DateTime) {
+					return $user;
+				} else {
+					$user->unsetRecovery();
+					$this->userDao->save($user);
+				}
+			}
+		}
+			
+		return NULL;
+	}
+	
+	/**
+	 * @param Entity\User $user
+	 * @param string $password
+	 * @return Entity\User
+	 */
+	public function recoveryPassword(Entity\User $user, $password)
+	{
+		$user->password = $password;
+		$user->removeRecovery();
+		return $this->userDao->save($user);
 	}
 
 }
