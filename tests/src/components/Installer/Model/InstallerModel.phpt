@@ -2,52 +2,47 @@
 
 namespace Test\Components\Installer\Model;
 
-use Nette,
-	Tester,
-	Tester\Assert;
+use App\Components\Installer\Model\InstallerModel;
+use App\Model\Facade\RoleFacade;
+use App\Model\Facade\UserFacade;
+use Nette\DI\Container;
+use Nette\Security\IAuthorizator;
+use Test\ParentTestCase;
+use Tester\Assert;
+use Tester\Environment;
+use Tester\FileMock;
 
 $container = require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * TEST: Installer Model Testing
  *
+ * @skip - installDoctrine nefunguje pro testy
  * @testCase
  * @phpVersion 5.4
  */
-class InstallerModelTest extends Tester\TestCase
+class InstallerModelTest extends ParentTestCase
 {
-
-	/** @var Nette\DI\Container */
-	private $container;
-
 	// <editor-fold defaultstate="collapsed" desc="injects">
 
-	/** @var \Doctrine\ORM\EntityManager @inject */
-	public $em;
-
-	/** @var \Doctrine\ORM\Tools\SchemaTool */
-	public $schemaTool;
-
-	/** @var \App\Model\Facade\RoleFacade @inject */
+	/** @var RoleFacade @inject */
 	public $roleFacade;
 
-	/** @var \App\Model\Facade\UserFacade @inject */
+	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var \Nette\Security\IAuthorizator @inject */
+	/** @var IAuthorizator @inject */
 	public $permissions;
 
-	/** @var \App\Components\Installer\Model\InstallerModel @inject */
+	/** @var InstallerModel @inject */
 	public $installerModel;
 
 	// </editor-fold>
 
-	function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
-		$this->container = $container;
-		$this->container->callInjects($this);
-		$this->schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
-		\Tester\Environment::lock('db', LOCK_DIR);
+		parent::__construct($container);
+		Environment::lock('db', LOCK_DIR);
 	}
 
 	// <editor-fold defaultstate="expanded" desc="tests">
@@ -70,7 +65,7 @@ class InstallerModelTest extends Tester\TestCase
 		Assert::true($installer->installAdminer($dir));
 
 		// testing allow writing (chmod 777) in mock file
-		$file = Tester\FileMock::create('', 'sql');
+		$file = FileMock::create('', 'sql');
 		Assert::true($installer->installAdminer(NULL, $file));
 		file_put_contents($file, 'test');
 		Assert::same('test', file_get_contents($file));
@@ -157,22 +152,10 @@ class InstallerModelTest extends Tester\TestCase
 
 		Assert::count(count($rightUsers1), $this->userFacade->findAll());
 
-		$this->schemaTool->dropSchema($this->getClasses());
+		$this->dropSchema();
 	}
 
 	// </editor-fold>
-
-	private function getClasses()
-	{
-		return [
-			$this->em->getClassMetadata(\App\Model\Entity\User::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\UserSettings::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Role::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Auth::getClassName()),
-			$this->em->getClassMetadata(\App\Model\Entity\Registration::getClassName()),
-		];
-	}
-
 }
 
 $test = new InstallerModelTest($container);

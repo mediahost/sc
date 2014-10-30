@@ -64,6 +64,7 @@ abstract class ParentTestCase extends TestCase
 			$this->em->getClassMetadata(Skill::getClassName()),
 			$this->em->getClassMetadata(SkillCategory::getClassName()),
 		];
+//		return $this->em->getMetadataFactory()->getAllMetadata(); // nefunguje pro testy!!!
 	}
 
 }
