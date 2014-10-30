@@ -233,7 +233,7 @@ class UserFacade extends BaseFacade
 		$signUp = $this->signUpDao->findOneBy(['verificationToken' => $token]);
 
 		if ($signUp) {
-			// Expired registration request is deleted
+			// Expired sign up request is deleted
 			if ($signUp->verificationExpiration > new \DateTime()) {
 				return $signUp;
 			} else {
