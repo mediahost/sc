@@ -68,3 +68,8 @@ composer.lock
 !/deployment/deployment_test.bat
 !/deployment/deployment.example.php
 !/deployment/deployment.config.php
+
+#################
+## Installer
+################
+/www/adminer/database.sql

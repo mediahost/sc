@@ -92,9 +92,11 @@ class InstallerModel extends Object
 		if (!$file) {
 			$file = $wwwDir . $this->adminerFilename;
 		}
-		if (file_exists($file)) {
-			@chmod($file, 0777);
+		if (!file_exists($file)) {
+			$handle = fopen($file, "w");
+			fclose($handle);
 		}
+		@chmod($file, 0777);
 		return TRUE;
 	}
 
