@@ -34,9 +34,6 @@ class SignListener extends Object implements Subscriber
 	/** @var IMailer @inject */
 	public $mailer;
 	
-	/** @var MessageStorage @inject */
-	public $messages;
-	
 	/** @var Application @inject */
 	public $application;
 

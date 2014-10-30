@@ -48,8 +48,5 @@ services:
 
 extensions:
 	events: Kdyby\Events\DI\EventsExtension
-<<<<<<< HEAD
 	installer: App\Components\Installer\DI\InstallerExtension
-=======
 	onControlCreate: App\Extensions\EventOnControlCreateCreateExtension
->>>>>>> nova-registrace
