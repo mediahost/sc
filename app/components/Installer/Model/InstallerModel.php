@@ -32,7 +32,6 @@ class InstallerModel extends Object
 	public $userFacade;
 
 	// </editor-fold>
-
 	// <editor-fold defaultstate="expanded" desc="installers">
 
 	/**
@@ -76,7 +75,8 @@ class InstallerModel extends Object
 	public function installDoctrine()
 	{
 		$tool = new SchemaTool($this->em);
-		$tool->updateSchema($this->getClasses()); // php index.php orm:schema-tool:update --force
+		$classes = $this->em->getMetadataFactory()->getAllMetadata();
+		$tool->updateSchema($classes); // php index.php orm:schema-tool:update --force
 		return TRUE;
 	}
 
@@ -118,22 +118,6 @@ class InstallerModel extends Object
 		chdir($oldcwd);
 		return TRUE;
 	}
-	
-	// </editor-fold>
-		
-	/**
-	 * Automatic load of Entity classes in namespace App\Model\Entity
-	 * @return array
-	 */
-	private function getClasses()
-	{
-		$classes = [];
-		foreach (get_declared_classes() as $class) {
-			if (preg_match('~^App\\\Model\\\Entity\\\[^\\\]+$~', $class)) {
-				$classes[] = $this->em->getClassMetadata($class);
-			}
-		}
-		return $classes;
-	}
 
+	// </editor-fold>
 }
