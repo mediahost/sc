@@ -209,6 +209,11 @@ class AuthControl extends Components\BaseControl
 			$data = $this->twitter->tryAuthenticate();
 			$source = RegistrationStorage::SOURCE_TWITTER;
 
+			\Tracy\Debugger::barDump($source);
+			\Tracy\Debugger::barDump($data['user']->id);
+			\Tracy\Debugger::barDump($data['user']);
+			\Tracy\Debugger::barDump($data['accessToken']['key']);
+			
 			$this->process($source, $data['user']->id, $data['user'], $data['accessToken']['key']);
 		} catch (TwitterException $e) {
 			\Tracy\Debugger::log($e->getMessage(), 'twitter');
@@ -311,7 +316,7 @@ class AuthControl extends Components\BaseControl
 
 		// Data processing
 		if ($this->storage->isOAuth()) {
-			// Registrace veia OAuth
+			// Registrace via OAuth
 			if ($this->storage->isVerified()) {
 				// Verified e-mail
 				$user = $this->mergeOrRegister();
@@ -357,7 +362,6 @@ class AuthControl extends Components\BaseControl
 				$this->process($source, $fb->getUser(), $data, $fb->getAccessToken());
 			} catch (FacebookApiException $e) {
 				\Tracy\Debugger::log($e->getMessage(), 'facebook');
-
 				$this->presenter->flashMessage('We are sorry, facebook authentication failed hard.');
 			}
 		};
@@ -437,7 +441,7 @@ class AuthControl extends Components\BaseControl
 				$this->presenter->redirect(':App:Profile:settings#connect-manager');
 			} else {
 				if ($this->storage->isRequired()) {
-					$this->presenter->redirect(':Front:Sign:Registration', $source);
+					$this->presenter->redirect(':Front:Sign:Registration', $role = Entity\Role::ROLE_CANDIDATE, $source);
 				} else {
 					$user = $this->mergeOrRegister();
 				}

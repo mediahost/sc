@@ -2,6 +2,8 @@
 
 namespace App\BaseModule\Presenters;
 
+use App\Components\Profile\ISignOutControlFactory;
+use App\Components\Profile\SignOutControl;
 use Nette;
 
 /**
@@ -23,7 +25,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	/** @var \WebLoader\LoaderFactory @inject */
 	public $webLoader;
 
-	/** @var \App\Components\Sign\ISignOutControlFactory @inject */
+	/** @var ISignOutControlFactory @inject */
 	public $iSignOutControlFactory;
 
 	/** @var \GettextTranslator\Gettext @inject */
@@ -86,7 +88,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="components">
 
-	/** @return \App\Components\Sign\SignOutControl */
+	/** @return SignOutControl */
 	public function createComponentSignOut()
 	{
 		return $this->iSignOutControlFactory->create();

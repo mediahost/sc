@@ -48,8 +48,6 @@ class RegistrationFacade extends BaseFacade
 		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="finders">
-
 	/**
 	 * Find registration request by valid verification tooken.
 	 * @param string $token
@@ -72,7 +70,6 @@ class RegistrationFacade extends BaseFacade
 
 		return NULL;
 	}
-	// </editor-fold>
 
 	/**
 	 * Add new Auth to existing User and save.

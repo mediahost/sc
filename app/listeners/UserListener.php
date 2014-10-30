@@ -5,12 +5,9 @@ namespace App\Listeners;
 class UserListener extends \Nette\Object implements \Kdyby\Events\Subscriber
 {
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 	/** @var \App\Model\Storage\UserSettingsStorage @inject */
 	public $settingsStorage;
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="public">
 	public function getSubscribedEvents()
 	{
 
@@ -30,5 +27,4 @@ class UserListener extends \Nette\Object implements \Kdyby\Events\Subscriber
 		$this->settingsStorage->wipe();
 	}
 
-	// </editor-fold>
 }

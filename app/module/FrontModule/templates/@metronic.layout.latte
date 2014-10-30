@@ -45,7 +45,9 @@
             {$flash->message}
         </div>
 
-        {include content}
+		{block layout}
+			{include #content}
+		{/block}
 
         {block scripts}
         <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->

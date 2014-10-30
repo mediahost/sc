@@ -16,4 +16,6 @@ services:
 	# Storages
 	- App\Model\Storage\RegistrationStorage
 	- App\Model\Storage\MessageStorage
+
+	- {class: App\Model\Storage\SignUpStorage, inject: yes} # OK
 	- {class: App\Model\Storage\UserSettingsStorage, inject: yes}

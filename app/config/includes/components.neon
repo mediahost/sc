@@ -2,9 +2,42 @@ services:
 	# Components
 	- {implement: App\Components\Sign\IAuthControlFactory, inject: yes}
 	- {implement: App\Components\Sign\ISignInControlFactory, inject: yes}
-	- {implement: App\Components\Sign\ISignOutControlFactory, inject: yes}
+	- {implement: App\Components\Profile\ISignOutControlFactory, inject: yes} # OK
 	- {implement: App\Components\Sign\IForgottenControlFactory, inject: yes}
 	- {implement: App\Components\Sign\IRecoveryControlFactory, inject: yes}
+	
+
+	IAdditionalControlFactory: # OK
+		create: App\Components\Profile\AdditionalControl
+		implement: App\Components\Profile\IAdditionalControlFactory
+		inject: yes
+
+	IFacebookControlFactory: # OK
+		create: App\Components\Profile\FacebookControl
+		implement: App\Components\Profile\IFacebookControlFactory
+		inject: yes
+
+	IRequiredControlFactory: # OK
+		create: App\Components\Profile\RequiredControl
+		implement: App\Components\Profile\IRequiredControlFactory
+		inject: yes
+
+	ISignUpControlFactory: # OK
+		create: App\Components\Profile\SignUpControl
+		implement: App\Components\Profile\ISignUpControlFactory
+		inject: yes
+
+	ISummaryControlFactory: # OK
+		create: App\Components\Profile\SummaryControl
+		implement: App\Components\Profile\ISummaryControlFactory
+		inject: yes
+
+	ITwitterControlFactory: # OK
+		create: App\Components\Profile\TwitterControl
+		implement: App\Components\Profile\ITwitterControlFactory
+		inject: yes
+
+	- {implement: App\Components\Profile\ISignInControlFactory, inject: yes} # OK
 
 	- {implement: App\Components\IDeleteControlFactory, inject: yes}
 

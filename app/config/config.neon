@@ -48,3 +48,4 @@ services:
 
 extensions:
 	events: Kdyby\Events\DI\EventsExtension
+	onControlCreate: App\Extensions\EventOnControlCreateCreateExtension

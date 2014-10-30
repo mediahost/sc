@@ -2,49 +2,43 @@
 
 namespace App\Components;
 
-use Nette\Application\UI,
-	Nette\Localization\ITranslator;
+use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 
 /**
- * BaseControl.
+ * BaseControl
  * @author Martin Šifra <me@martinsifra.cz>
+ * Features: Automatic set of default.latte template in current directory.
  */
-abstract class BaseControl extends UI\Control
+abstract class BaseControl extends Control
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var ITranslator @inject */
 	public $translator;
-
-	// </editor-fold>
-
+	
 	public function __construct()
 	{
 		parent::__construct();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters">
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
-
 	public function getTemplate()
 	{
-		$template = parent::getTemplate();
-		$template->setTranslator($this->translator);
-		return $template;
+		return parent::getTemplate()
+						->setTranslator($this->translator);
 	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="renderers">
+	
+	public function beforeRender()
+	{
+		
+	}
 
 	public function render()
 	{
 		$dir = dirname($this->getReflection()->getFileName());
 
-		$template = $this->getTemplate();
-		$template->setFile($dir . '/default.latte');
-		$template->render();
+		$this->template->setFile($dir . \DIRECTORY_SEPARATOR . 'default.latte');
+		$this->beforeRender();
+		$this->template->render();
 	}
 
-	// </editor-fold>
 }

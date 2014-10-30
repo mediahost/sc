@@ -1,6 +1,6 @@
 <?php
 
-Namespace App\Components\Sign;
+namespace App\Components\Sign;
 
 use App\Components\Control,
 	Nette\Application\UI\Form,
@@ -12,8 +12,6 @@ use App\Components\Control,
  */
 class SignInControl extends \App\Components\BaseControl
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	// </editor-fold>
 
 	/**
 	 * Sign in form factory.
@@ -59,14 +57,6 @@ class SignInControl extends \App\Components\BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters">
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="renderers">
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="handlers">
-	// </editor-fold>
 }
 
 interface ISignInControlFactory

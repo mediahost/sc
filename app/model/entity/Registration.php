@@ -57,7 +57,7 @@ class Registration extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
-	 * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
+	 * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=true)
 	 * */
 	protected $role;
 
