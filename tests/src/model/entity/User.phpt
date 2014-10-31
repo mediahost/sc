@@ -3,11 +3,15 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Auth;
+use App\Model\Entity\Facebook;
 use App\Model\Entity\Role;
+use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
+use App\Model\Entity\UserSettings;
 use DateTime;
 use Kdyby\Doctrine\EntityDao;
 use Nette\DI\Container;
+use Nette\Security\Passwords;
 use Nette\Utils\Strings;
 use Test\ParentTestCase;
 use Tester\Assert;
@@ -24,9 +28,11 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class UserTest extends ParentTestCase
 {
 
-	const U_MAIL = 'jack@sg1.sg.gov';
-	const U_NAME = "Jack O'Neill";
-	const U_RECOVERY_TOKEN = 'recov3Rytoken';
+	const MAIL = 'jack@sg1.sg.gov';
+	const NAME = "Jack O'Neill";
+	const HASH = 'SomethingLikeHash';
+	const PASSWORD = 'ThorIsMyFri3nd';
+	const RECOVERY_TOKEN = 'recov3Rytoken';
 
 	/** @var User */
 	private $user;
@@ -56,16 +62,10 @@ class UserTest extends ParentTestCase
 		unset($this->user);
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="tests">
-
-	public function testAddAuth()
+	public function testVerifyPassword()
 	{
-		Assert::count(0, $this->user->auths);
-
-		$auth = new Auth();
-		$this->user->addAuth($auth);
-
-		Assert::type(Auth::getClassName(), $this->user->auths[0]);
+		$this->user->password = self::PASSWORD;
+		Assert::true($this->user->verifyPassword(self::PASSWORD));
 	}
 
 	public function testAddRole()
@@ -142,16 +142,16 @@ class UserTest extends ParentTestCase
 		$roleA = $this->roleDao->save((new Role())->setName('Role A'));
 		$roleB = $this->roleDao->save((new Role())->setName('Role B'));
 
-		$this->user->mail = self::U_MAIL;
-		$this->user->name = self::U_NAME;
+		$this->user->mail = self::MAIL;
+		$this->user->name = self::NAME;
 		$this->user->addRole([$roleB, $roleA]);
 
 		$user = $this->userDao->save($this->user);
 		$array = $user->toArray();
 
 		Assert::same($user->id, $array['id']);
-		Assert::same(self::U_MAIL, $array['mail']);
-		Assert::same(self::U_NAME, $array['name']);
+		Assert::same(self::MAIL, $array['mail']);
+		Assert::same(self::NAME, $array['name']);
 		Assert::type('array', $array['role']);
 		Assert::type(Role::getClassName(), $array['role'][0]);
 		Assert::same('Role B', $array['role'][0]->name);
@@ -163,17 +163,31 @@ class UserTest extends ParentTestCase
 
 	public function testSetAndGet()
 	{
-		Assert::type('array', $this->user->auths);
 		Assert::type('array', $this->user->roles);
 
-		$this->user->mail = self::U_MAIL;
-		Assert::same(self::U_MAIL, $this->user->mail);
+		$this->user->mail = self::MAIL;
+		Assert::same(self::MAIL, $this->user->mail);
 
-		$this->user->name = self::U_NAME;
-		Assert::same(self::U_NAME, $this->user->name);
+		$this->user->name = self::NAME;
+		Assert::same(self::NAME, $this->user->name);
 
-		$this->user->recoveryToken = self::U_RECOVERY_TOKEN;
-		Assert::same(self::U_RECOVERY_TOKEN, $this->user->recoveryToken);
+		$this->user->hash = self::HASH;
+		Assert::same(self::HASH, $this->user->hash);
+
+		$this->user->settings = new UserSettings();
+		Assert::type(UserSettings::getClassName(), $this->user->settings);
+
+		$this->user->facebook = new Facebook();
+		Assert::type(Facebook::getClassName(), $this->user->facebok);
+
+		$this->user->twitter = new Twitter();
+		Assert::type(Twitter::getClassName(), $this->user->twitter);
+
+		$this->user->setPassword(self::PASSWORD);
+		Assert::true(Passwords::verify(self::PASSWORD, $this->user->hash));
+
+		$this->user->recoveryToken = self::RECOVERY_TOKEN;
+		Assert::same(self::RECOVERY_TOKEN, $this->user->recoveryToken);
 
 		$tomorrow = new DateTime('now + 1 day');
 		$this->user->recoveryExpiration = $tomorrow;
@@ -182,21 +196,21 @@ class UserTest extends ParentTestCase
 
 	public function testToString()
 	{
-		$this->user->mail = self::U_MAIL;
-		Assert::same(self::U_MAIL, (string) $this->user);
+		$this->user->mail = self::MAIL;
+		Assert::same(self::MAIL, (string) $this->user);
 	}
 
 	public function testSetRecovery()
 	{
 		$expiration = new DateTime('now + 3 hours');
 
-		$this->user->setRecovery(self::U_RECOVERY_TOKEN, $expiration);
+		$this->user->setRecovery(self::RECOVERY_TOKEN, $expiration);
 
-		Assert::same(self::U_RECOVERY_TOKEN, $this->user->recoveryToken);
+		Assert::same(self::RECOVERY_TOKEN, $this->user->recoveryToken);
 		Assert::equal($expiration, $this->user->recoveryExpiration);
 	}
 
-	public function testUnsetRecovery()
+	public function testRemoveRecovery()
 	{
 		$token = Strings::random(32);
 		$expiration = new DateTime();
@@ -206,8 +220,6 @@ class UserTest extends ParentTestCase
 		Assert::null($this->user->recoveryToken);
 		Assert::null($this->user->recoveryExpiration);
 	}
-
-	// </editor-fold>
 
 	protected function getClasses()
 	{
