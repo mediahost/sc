@@ -2,7 +2,7 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Components\Installer;
+use App\Extensions\Installer;
 
 /**
  * Install presenter.
@@ -23,7 +23,7 @@ class InstallPresenter extends BasePresenter
 	{
 		$this->messages = $this->installer->install();
 	}
-	
+
 	public function renderDefault($printHtml = TRUE)
 	{
 		$this->template->html = (bool) $printHtml;

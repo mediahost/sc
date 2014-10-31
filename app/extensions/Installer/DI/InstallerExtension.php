@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Components\Installer\DI;
+namespace App\Extensions\Installer\DI;
 
-use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Statement;
 use stdClass;
@@ -36,7 +35,7 @@ class InstallerExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('installer'))
-				->setClass('App\Components\Installer')
+				->setClass('App\Extensions\Installer')
 				->addSetup('setPathes', [$config['appDir'], $config['wwwDir'], $config['tempDir'], $config['installDir']])
 				->addSetup('setLock', $this->filterArgs($config['lock']))
 				->addSetup('setInstallDoctrine', $this->filterArgs($config['doctrine']))
@@ -46,7 +45,7 @@ class InstallerExtension extends CompilerExtension
 				->setInject(TRUE);
 
 		$builder->addDefinition($this->prefix('model'))
-				->setClass('App\Components\Installer\Model\InstallerModel')
+				->setClass('App\Extensions\Installer\Model\InstallerModel')
 				->setInject(TRUE);
 	}
 

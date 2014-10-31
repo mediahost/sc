@@ -1,8 +1,8 @@
 <?php
 
-namespace Test\Components\Installer\Model;
+namespace Test\Extensions\Installer\Model;
 
-use App\Components\Installer\Model\InstallerModel;
+use App\Extensions\Installer\Model\InstallerModel;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Nette\DI\Container;
@@ -17,7 +17,6 @@ $container = require __DIR__ . '/../../../bootstrap.php';
 /**
  * TEST: Installer Model Testing
  *
- * @skip - installDoctrine nefunguje pro testy
  * @testCase
  * @phpVersion 5.4
  */
@@ -83,7 +82,9 @@ class InstallerModelTest extends ParentTestCase
 			$this->roleFacade->find(1);
 		}, 'Kdyby\Doctrine\DBALException');
 
-		Assert::true($installer->installDoctrine());
+		// TODO: update schema nahradit zprovozněným testem installDoctrine()
+		$this->updateSchema();
+//		Assert::true($installer->installDoctrine());
 
 		Assert::null($this->userFacade->find(1));
 		Assert::count(0, $this->userFacade->findAll());

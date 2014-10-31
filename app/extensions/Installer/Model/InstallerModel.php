@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Components\Installer\Model;
+namespace App\Extensions\Installer\Model;
 
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
@@ -114,11 +114,7 @@ class InstallerModel extends Object
 	{
 		$oldcwd = getcwd();
 		chdir($oldcwd . "/..");
-		if (is_file($appDir . "/../composer.lock")) {
-			$print = @shell_exec('composer update');
-		} else {
-			$print = @shell_exec('composer instal');
-		}
+		$print = @shell_exec('composer instal');
 		chdir($oldcwd);
 		return TRUE;
 	}

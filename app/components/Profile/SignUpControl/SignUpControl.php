@@ -43,7 +43,7 @@ class SignUpControl extends BaseControl
 
 		$form->addPassword('passwordVerify', 'Re-type Your Password:')
 				->setAttribute('placeholder', 'Re-type Your Password')
-				->addConditionOn($form['passwordVerify'], Form::FILLED)
+				->addConditionOn($form['password'], Form::FILLED)
 					->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
 
 		$form->addSubmit('continue', 'Continue');
