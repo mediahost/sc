@@ -22,11 +22,6 @@
 *.server_test.neon
 
 #################
-## Composer
-#################
-composer.lock
-
-#################
 ## Vendor (3rd side libs)
 ################
 /vendor/*

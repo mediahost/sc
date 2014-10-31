@@ -114,11 +114,7 @@ class InstallerModel extends Object
 	{
 		$oldcwd = getcwd();
 		chdir($oldcwd . "/..");
-		if (is_file($appDir . "/../composer.lock")) {
-			$print = @shell_exec('composer update');
-		} else {
-			$print = @shell_exec('composer instal');
-		}
+		$print = @shell_exec('composer instal');
 		chdir($oldcwd);
 		return TRUE;
 	}
