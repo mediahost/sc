@@ -134,7 +134,6 @@ class SignListener extends Object implements Subscriber
 	
 	public function onSuccess(Control $control, User $user)
 	{
-		Debugger::dump('...');exit;
 		if ($existing = $this->userFacade->findByMail($user->mail)) {
 			$control->presenter->flash('This e-mail is registered yet.');
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
