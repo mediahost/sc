@@ -2,9 +2,11 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\ORM\Mapping as ORM,
-	Doctrine\Common\Collections\ArrayCollection,
-	Nette\Security\Passwords;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\BaseEntity;
+use Nette\Security\Passwords;
 
 /**
  * @ORM\Entity
@@ -15,15 +17,15 @@ use Doctrine\ORM\Mapping as ORM,
  * @property-write $password
  * @property ArrayCollection $roles
  * @property UserSettings $settings
+ * @property Facebook $facebook
+ * @property Twitter $twitter
  * @property string $recoveryToken
- * @property \DateTime $recoveryExpiration
+ * @property DateTime $recoveryExpiration
  */
-class User extends \Kdyby\Doctrine\Entities\BaseEntity
+class User extends BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
-
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @ORM\Column(type="string", nullable=false) */
 	protected $mail;
@@ -58,14 +60,10 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	/** @ORM\Column(type="datetime", nullable=true) */
 	protected $recoveryExpiration;
 
-	// </editor-fold>
-
 	public function __construct()
 	{
 		$this->roles = new ArrayCollection();
 	}
-
-	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 * Computes salted password hash.
@@ -143,15 +141,14 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	}
 
 	/**
-	 * Set token and expiration DateTime.
 	 * @param string $token
-	 * @param \DateTime|string $expiration
+	 * @param DateTime|string $expiration
 	 * @return User
 	 */
 	public function setRecovery($token, $expiration)
 	{
-		if (!($expiration instanceof \DateTime)) {
-			$expiration = new \DateTime($expiration);
+		if (!($expiration instanceof DateTime)) {
+			$expiration = new DateTime($expiration);
 		}
 
 		$this->recoveryToken = $token;
@@ -176,20 +173,6 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $this;
 	}
 
-	/**
-	 * Set NULL to recovery token and expiration properties.
-	 * @return User
-	 */
-	public function unsetRecovery()
-	{
-		$this->recoveryToken = NULL;
-		$this->recoveryExpiration = NULL;
-		return $this;
-	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
-
 	/** @return array */
 	public function getRolesKeys()
 	{
@@ -209,8 +192,6 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		}
 		return $array;
 	}
-
-	// </editor-fold>
 
 	/** @return string */
 	public function __toString()

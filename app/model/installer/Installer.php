@@ -62,8 +62,7 @@ class Installer
 			$em->getClassMetadata('App\Model\Entity\User'),
 			$em->getClassMetadata('App\Model\Entity\UserSettings'),
 			$em->getClassMetadata('App\Model\Entity\Role'),
-			$em->getClassMetadata('App\Model\Entity\Auth'),
-			$em->getClassMetadata('App\Model\Entity\Registration'),
+			$em->getClassMetadata('App\Model\Entity\SignUp'),
 			$em->getClassMetadata('App\Model\Entity\Facebook'),
 			$em->getClassMetadata('App\Model\Entity\Twitter'),
 			$em->getClassMetadata('App\Model\Entity\Company')

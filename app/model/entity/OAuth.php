@@ -7,6 +7,8 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
  * @ORM\MappedSuperclass
+ * 
+ * @property string $id
  */
 class OAuth extends BaseEntity
 {

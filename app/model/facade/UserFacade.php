@@ -3,6 +3,7 @@
 namespace App\Model\Facade;
 
 use App\Model\Entity;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Storage\UserSettingsStorage;
 use DateTime;
@@ -21,23 +22,20 @@ class UserFacade extends BaseFacade
 	/** @var EntityDao */
 	private $roleDao;
 
-	/** @var EntityDao */
-	private $signUpDao;
-
 	/** @var UserSettingsStorage @inject */
 	protected function init()
 	{
 		$this->userDao = $this->em->getDao(User::getClassName());
-		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
-		$this->signUpDao = $this->em->getDao(Entity\SignUp::getClassName());
+		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
 	/**
 	 * @param string $mail
 	 * @param string $password
+	 * @param Role $role
 	 * @return User
 	 */
-	public function create($mail, $password, Entity\Role $role)
+	public function create($mail, $password, Role $role)
 	{
 		if ($this->isUnique($mail)) {
 			$user = new User;
@@ -224,7 +222,7 @@ class UserFacade extends BaseFacade
 				if ($user->recoveryExpiration > new DateTime) {
 					return $user;
 				} else {
-					$user->unsetRecovery();
+					$user->removeRecovery();
 					$this->userDao->save($user);
 				}
 			}
