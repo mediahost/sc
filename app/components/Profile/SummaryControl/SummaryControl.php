@@ -4,7 +4,6 @@ namespace App\Components\Profile;
 
 use App\Components\BaseControl;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Company;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 use Nette\Application\UI\Form;
@@ -33,7 +32,7 @@ class SummaryControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addSubmit('signUp', 'Sign up');
+		$form->addSubmit('complete', 'Complete Registration');
 
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;

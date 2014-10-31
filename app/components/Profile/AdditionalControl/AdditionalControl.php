@@ -20,10 +20,14 @@ class AdditionalControl extends BaseControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-
-	public function beforeRender()
+	
+	public function render()
 	{
-		$this->template->role = $this->session->role;
+		$template = $this->getTemplate();
+		$template->role = $this->session->role;
+		$template->roleCandidate = \App\FrontModule\Presenters\SignPresenter::ROLE_CANDIDATE;
+		$template->roleCompany = \App\FrontModule\Presenters\SignPresenter::ROLE_COMPANY;
+		parent::render();
 	}
 
 	/** @return Form */
@@ -33,12 +37,11 @@ class AdditionalControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addText('fullName', 'Full name:')
-				->setAttribute('placeholder', 'Full name');
+		$form->addText('fullName', 'Name:')
+				->setAttribute('placeholder', 'name and surename');
 
-		$form->addText('shoeSize', 'Shoe size:')
-				->setAttribute('placeholder', 'Shoe size')
-				->addRule(Form::FLOAT, 'Shoe size must be a number.');
+		$form->addText('birthday', 'Birthday:')
+				->setAttribute('placeholder', 'dd/mm/yyyy');
 
 		$form->addSubmit('continue', 'Continue');
 

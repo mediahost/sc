@@ -22,6 +22,9 @@ use Tracy\Debugger;
 class SignListener extends Object implements Subscriber
 {
 	
+	const REDIRECT_AFTER_SIGNIN = ':App:Dashboard:';
+	const REDIRECT_SIGNIN_PAGE = ':Front:Sign:in';
+	
 	/** @var SignUpStorage @inject */
 	public $session;
 	
@@ -58,7 +61,7 @@ class SignListener extends Object implements Subscriber
 	{
 		if ($user->id) {
 			$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
-			$control->presenter->redirect(':App:Dashboard:');
+			$control->presenter->redirect(self::REDIRECT_AFTER_SIGNIN);
 		} else {
 			$this->session->user = $user;
 			$this->onRequire($control, $user);
@@ -84,7 +87,7 @@ class SignListener extends Object implements Subscriber
 			]);	
 		} else {
 			$control->presenter->flash('This e-mail is registered yet.');
-			$control->presenter->redirect(':Front:Sign:in');
+			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		}
 	}
 	
@@ -122,7 +125,7 @@ class SignListener extends Object implements Subscriber
 			$this->mailer->send($message);
 			
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
-			$control->presenter->redirect(':Front:Sign:in');
+			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		} else {
 			$this->onSuccess($control, $user);
 		}
@@ -131,9 +134,10 @@ class SignListener extends Object implements Subscriber
 	
 	public function onSuccess(Control $control, User $user)
 	{
+		Debugger::dump('...');exit;
 		if ($existing = $this->userFacade->findByMail($user->mail)) {
 			$control->presenter->flash('This e-mail is registered yet.');
-			$control->presenter->redirect(':Front:Sign:in');
+			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		} else {
 			if (empty($user->roles)) {
 				$user->addRole($this->roleFacade->findByName($this->session->role));
@@ -148,7 +152,7 @@ class SignListener extends Object implements Subscriber
 	{
 		$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$control->presenter->restoreRequest($control->presenter->backlink);
-		$control->presenter->redirect(':App:Dashboard:');
+		$control->presenter->redirect(self::REDIRECT_AFTER_SIGNIN);
 	}
 
 }

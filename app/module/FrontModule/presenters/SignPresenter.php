@@ -12,6 +12,7 @@ class SignPresenter extends BasePresenter
 
 	const ROLE_CANDIDATE = 'candidate';
 	const ROLE_COMPANY = 'company';
+	const ROLE_DEFAULT = self::ROLE_CANDIDATE;
 	const REDIRECT_AFTER_LOG = ':App:Dashboard:';
 	const REDIRECT_IS_LOGGED = ':App:Dashboard:';
 	const STEP1 = 'required';
@@ -80,45 +81,46 @@ class SignPresenter extends BasePresenter
 	 * @param type $defaultRole
 	 * @return type
 	 */
-	private function validateRole($role, $defaultRole = self::ROLE_CANDIDATE)
+	private function getValidRole($role)
 	{
 		switch ($role) {
 			case self::ROLE_COMPANY:
 			case self::ROLE_CANDIDATE:
 				break;
 			default:
-				$this->redirect('this', ['role' => $defaultRole]);
+				$role = self::ROLE_DEFAULT;
 				break;
 		}
 		return $role;
 	}
 
-	// <editor-fold defaultstate="expanded" desc="actions">
+	// <editor-fold defaultstate="expanded" desc="actions & renders">
 
 	/** @param string $role */
-	public function actionIn($role = NULL)
+	public function actionIn()
 	{
-		$validRole = $this->validateRole($role);
-		$this->template->role = $validRole;
-
 		$this['signIn']->onSuccess[] = function () {
 			$this->restoreRequest($this->presenter->backlink);
 			$this->redirect(self::REDIRECT_AFTER_LOG);
 		};
 	}
+	
+	/** @param string $role */
+	public function renderIn($role = self::ROLE_DEFAULT)
+	{
+		$this->template->role = $this->getValidRole($role);
+	}
 
 	/** @param string $role */
 	public function actionUp($role = NULL, $step = NULL)
 	{
-		$validRole = $this->validateRole($role);
-
 		$allowedSteps = [self::STEP1, self::STEP2, self::STEP3];
 		if ($step !== NULL && in_array($step, $allowedSteps)) {
 			$this->setView('step' . ucfirst($step));
 		} else {
-			$this->session->role = $validRole;
+			$this->session->role = $this->getValidRole($role);
 		}
-
+		
 		$this->template->user = $this->session->user;
 		$this->template->company = $this->session->company;
 		$this->template->role = $this->session->role;
@@ -140,7 +142,7 @@ class SignPresenter extends BasePresenter
 						->setAccessToken($signUp->facebookAccessToken);
 			}
 
-			if ($signUp->TwitterId) {
+			if ($signUp->twitterId) {
 				$user->twitter->setId($signUp->twitterId)
 						->setAccessToken($signUp->twitterAccessToken);
 			}
