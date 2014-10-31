@@ -7,12 +7,12 @@ use Doctrine\ORM\Mapping as ORM,
 	Nette\Security\Passwords;
 
 /**
- * User entity
  * @ORM\Entity
  *
  * @property string $mail
  * @property string $name
- * @property ArrayCollection $auths
+ * @property string $hash
+ * @property-write $password
  * @property ArrayCollection $roles
  * @property UserSettings $settings
  * @property string $recoveryToken
@@ -25,29 +25,16 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
-	/**
-	 * @ORM\Column(type="string", nullable=false)
-	 */
+	/** @ORM\Column(type="string", nullable=false) */
 	protected $mail;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="Auth", mappedBy="user", cascade={"persist","remove"})
-	 * */
-	protected $auths;
-
-	/**
-	 * @ORM\ManyToMany(targetEntity="Role", fetch="EAGER")
-	 */
+	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER") */
 	protected $roles;
 
-	/**
-	 * @ORM\Column(type="string", length=256, nullable=true)
-	 */
+	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $name;
 
-	/**
-	 * @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", orphanRemoval=true, fetch="LAZY", cascade={"all"})
-	 */
+	/** @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", orphanRemoval=true, fetch="LAZY", cascade={"all"}) */
 	protected $settings;
 
     /**
@@ -62,48 +49,29 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
      **/
 	protected $twitter;
 	
-	/**
-	 * @ORM\Column(type="string", length=256, nullable=true)
-	 */
+	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $hash;
 	
-	/**
-	 * @ORM\Column(type="string", length=256, nullable=true)
-	 */
+	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $recoveryToken;
 
-	/**
-	 * @ORM\Column(type="datetime", nullable=true)
-	 */
+	/** @ORM\Column(type="datetime", nullable=true) */
 	protected $recoveryExpiration;
 
 	// </editor-fold>
 
 	public function __construct()
 	{
-		$this->auths = new ArrayCollection();
 		$this->roles = new ArrayCollection();
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
-	 * @param Auth $auth
-	 * @return User
-	 */
-	public function addAuth(Auth $auth)
-	{
-		$this->auths->add($auth);
-		$auth->user = $this;
-		return $this;
-	}
-
-
-	/**
 	 * Computes salted password hash.
 	 * @param string Password to be hashed.
 	 * @param array with cost (4-31), salt (22 chars)
-	 * @return Auth
+	 * @return User
 	 */
 	public function setPassword($password, array $options = NULL)
 	{
@@ -157,9 +125,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $this;
 	}
 
-	/**
-	 * @return User
-	 */
+	/** @return User */
 	public function clearRoles()
 	{
 		$this->roles->clear();
@@ -194,9 +160,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $this;
 	}
 	
-	/**
-	 * @return User
-	 */
+	/** @return User */
 	public function removeRecovery()
 	{
 		$this->recoveryToken = NULL;
@@ -204,9 +168,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $this;
 	}
 
-	/**
-	 * @param UserSettings $settings
-	 */
+	/** @param UserSettings $settings */
 	public function setSettings(UserSettings $settings)
 	{
 		$settings->user = $this;
@@ -228,9 +190,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="getters">
 
-	/**
-	 * @return array
-	 */
+	/** @return array */
 	public function getRolesKeys()
 	{
 		$array = [];
@@ -240,9 +200,7 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 		return $array;
 	}
 
-	/**
-	 * @return array
-	 */
+	/** @return array */
 	public function getRolesPairs()
 	{
 		$array = [];
@@ -254,17 +212,13 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
 
 	// </editor-fold>
 
-	/**
-	 * @return string
-	 */
+	/** @return string */
 	public function __toString()
 	{
 		return (string) $this->mail;
 	}
 
-	/**
-	 * @return array
-	 */
+	/** @return array */
 	public function toArray()
 	{
 		return [

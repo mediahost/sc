@@ -50,7 +50,7 @@ class SignListener extends Object implements Subscriber
 			'App\Components\Profile\TwitterControl::onSuccess' => 'onStartup',
 			'App\Components\Profile\RequiredControl::onSuccess' => 'onExists',
 			'App\Components\Profile\SummaryControl::onSuccess' => 'onVerify',
-			'App\FrontModule\Presenters\NewSignPresenter::onVerify' => 'onSuccess'
+			'App\FrontModule\Presenters\SignPresenter::onVerify' => 'onSuccess'
 		);
 	}
 
@@ -68,7 +68,7 @@ class SignListener extends Object implements Subscriber
 	public function onRequire(Control $control, User $user)
 	{
 		if (!$user->mail) {
-			$control->presenter->redirect(':Front:NewSign:up', [
+			$control->presenter->redirect(':Front:Sign:up', [
 				'step' => 'required']
 			);
 		} else {
@@ -79,17 +79,17 @@ class SignListener extends Object implements Subscriber
 	public function onExists(Control $control, User $user)
 	{
 		if (!$existing = $this->userFacade->findByMail($user->mail)) {
-			$control->presenter->redirect(':Front:NewSign:up', [
+			$control->presenter->redirect(':Front:Sign:up', [
 				'step' => 'additional'
 			]);	
 		} else {
 			$control->presenter->flash('This e-mail is registered yet.');
-			$control->presenter->redirect(':Front:NewSign:in');
+			$control->presenter->redirect(':Front:Sign:in');
 		}
 	}
 	
 	public function onVerify(Control $control, User $user)
-	{	
+	{
 		if (!$this->session->isVerified()) {
 			$role = $this->roleFacade->findByName($this->session->role);
 			
@@ -114,7 +114,7 @@ class SignListener extends Object implements Subscriber
 			
 			// Send verification e-mail
 			$latte = new Latte\Engine;
-			$params = ['link' => $this->application->presenter->link('//:Front:NewSign:verify', $signUp->verificationToken)];
+			$params = ['link' => $this->application->presenter->link('//:Front:Sign:verify', $signUp->verificationToken)];
 			$message = new VerificationMessage();
 			$message->addTo($user->mail)
 					->setHtmlBody($latte->renderToString($message->getPath(), $params));
@@ -122,7 +122,7 @@ class SignListener extends Object implements Subscriber
 			$this->mailer->send($message);
 			
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
-			$control->presenter->redirect(':Front:NewSign:in');
+			$control->presenter->redirect(':Front:Sign:in');
 		} else {
 			$this->onSuccess($control, $user);
 		}
@@ -133,7 +133,7 @@ class SignListener extends Object implements Subscriber
 	{
 		if ($existing = $this->userFacade->findByMail($user->mail)) {
 			$control->presenter->flash('This e-mail is registered yet.');
-			$control->presenter->redirect(':Front:NewSign:in');
+			$control->presenter->redirect(':Front:Sign:in');
 		} else {
 			if (empty($user->roles)) {
 				$user->addRole($this->roleFacade->findByName($this->session->role));

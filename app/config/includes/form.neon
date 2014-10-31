@@ -26,7 +26,6 @@ services:
 		implement: App\Forms\IFormFactory
 		autowired: no
 
-	- App\Forms\SignInFormFactory(@defaultFormFactory)
 	- App\Forms\UserFormFactory(@metronicFormFactory)
 	- App\Forms\SkillCategoryFormFactory(@metronicFormFactory)
 	- App\Forms\SkillFormFactory(@metronicFormFactory)

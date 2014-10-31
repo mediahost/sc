@@ -1,4 +1,4 @@
-{* RecoveryControl *}
+{* SetPasswordControl *}
 {block |strip}
 {form form}
 	<div class="alert alert-danger" n:if="$form->errors">
@@ -6,6 +6,13 @@
 		{foreach $form->errors as $error}
 			<span>{$error}</span><br/>
 		{/foreach}
+	</div>
+	
+	<div class="form-group">
+		{label mail, class=>'control-label visible-ie8 visible-ie9' /}
+		<div class="input-icon">
+			<i class="fa fa-lock"></i> {input mail, class=>'form-control placeholder-no-fix'}
+		</div>
 	</div>
 
 	<div class="form-group">
@@ -23,10 +30,9 @@
 	</div>
 
 	<div class="form-actions">
-		{button recovery, class=>'btn green pull-right'}
+		{button save, class=>'btn green pull-right'}
 			{caption} <i class="m-icon-swapright m-icon-white"></i>
 		{/button}
-		<a class="btn btn-default" href="{plink :Front:Sign:in}">{_'Back to sign in'}</a>
 	</div>
 {/form}
 {/block}

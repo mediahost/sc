@@ -54,7 +54,7 @@ class AdditionalControl extends BaseControl
 	{
 		$this->session->user->name = $values->fullName;
 		
-		$this->presenter->redirect(':Front:NewSign:up', [
+		$this->presenter->redirect(':Front:Sign:up', [
 			'step' => 'summary'
 		]);
 	}
@@ -90,7 +90,7 @@ class AdditionalControl extends BaseControl
 		$company->name = $values->name;
 		$this->session->company = $company;
 		
-		$this->presenter->redirect(':Front:NewSign:up', [
+		$this->presenter->redirect(':Front:Sign:up', [
 			'step' => 'summary'
 		]);
 	}

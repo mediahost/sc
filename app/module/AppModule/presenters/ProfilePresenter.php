@@ -2,32 +2,29 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Sign;
+use App\Components\DeleteControl;
+use App\Components\IDeleteControlFactory;
+use App\Components\Profile\ISetPasswordControlFactory;
+use App\Components\Profile\SetPasswordControl;
+use App\Components\User\ISettingsControlFactory;
+use App\Components\User\SettingsControl;
+use App\Model\Facade\UserFacade;
 
-/**
- * 
- */
 class ProfilePresenter extends BasePresenter
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & properties">
 
-	/** @var \App\Model\Facade\AuthFacade @inject */
-	public $authFacade;
-
-	/** @var \App\Model\Facade\UserFacade @inject */
+	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var Sign\IAuthControlFactory @inject */
-	public $iAuthControlFactory;
-
-	/** @var \App\Components\IDeleteControlFactory @inject */
+	/** @var IDeleteControlFactory @inject */
 	public $iDeleteControlFactory;
 
-	/** @var \App\Components\User\ISettingsControlFactory @inject */
+	/** @var ISetPasswordControlFactory @inject */
+	public $iSetPasswordControlFactory;
+	
+	/** @var ISettingsControlFactory @inject */
 	public $iSettingsControlFactory;
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="actions">
 	/**
 	 * @secured
 	 * @resource('profile')
@@ -57,16 +54,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionSettings()
 	{
-		$this['auth']->setForce();
-	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="components">
-
-	/** @return Sign\AuthControl */
-	protected function createComponentAuth()
-	{
-		return $this->iAuthControlFactory->create();
+//		$this['auth']->setForce();
 	}
 
 	/** @return DeleteControl */
@@ -75,11 +63,16 @@ class ProfilePresenter extends BasePresenter
 		return $this->iDeleteControlFactory->create();
 	}
 
-	/** @return \App\Components\User\SettingsControl */
+	/** @return SetPasswordControl */
+	protected function createComponentSetPassword()
+	{
+		return $this->iSetPasswordControlFactory->create();
+	}
+	
+	/** @return SettingsControl */
 	protected function createComponentSettings()
 	{
 		return $this->iSettingsControlFactory->create();
 	}
 
-	// </editor-fold>
 }

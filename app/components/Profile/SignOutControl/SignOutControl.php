@@ -11,7 +11,7 @@ class SignOutControl extends BaseControl
 	{
 		$this->presenter->user->logout();
 		$this->presenter->flashMessage('You have been successfuly signed out.', 'success');
-		$this->presenter->redirect(':Front:NewSign:in');
+		$this->presenter->redirect(':Front:Sign:in');
 	}
 
 }
