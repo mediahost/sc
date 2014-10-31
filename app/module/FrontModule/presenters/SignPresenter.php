@@ -9,8 +9,22 @@ use App\Model\Storage\SignUpStorage;
 
 class SignPresenter extends BasePresenter
 {
-	
+
+	const ROLE_CANDIDATE = 'candidate';
+	const ROLE_COMPANY = 'company';
+	const REDIRECT_AFTER_LOG = ':App:Dashboard:';
+	const REDIRECT_IS_LOGGED = ':App:Dashboard:';
+	const STEP1 = 'required';
+	const STEP2 = 'additional';
+	const STEP3 = 'summary';
+
+	// <editor-fold defaultstate="expanded" desc="events">
+
+	/** @var array */
 	public $onVerify = [];
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="injects">
 
 	/** @var Profile\IAdditionalControlFactory @inject */
 	public $iAdditionalControlFactory;
@@ -23,7 +37,7 @@ class SignPresenter extends BasePresenter
 
 	/** @var Profile\IRecoveryControlFactory @inject */
 	public $iRecoveryControlFactory;
-	
+
 	/** @var Profile\IRequiredControlFactory @inject */
 	public $iRequiredControlFactory;
 
@@ -35,39 +49,63 @@ class SignPresenter extends BasePresenter
 
 	/** @var Profile\ISummaryControlFactory @inject */
 	public $iSummaryControlFactory;
-	
+
 	/** @var Profile\ITwitterControlFactory @inject */
 	public $iTwitterControlFactory;
-	
+
 	/** @var SignUpStorage @inject */
 	public $session;
-	
+
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @param string $role */
-	public function actionIn($role)
+	// </editor-fold>
+
+	protected function startup()
 	{
+		parent::startup();
 		$this->isLoggedIn();
-		$this->template->role = $role;
+	}
+
+	private function validateRole($role, $defaultRole = self::ROLE_CANDIDATE)
+	{
+		switch ($role) {
+			case self::ROLE_COMPANY:
+			case self::ROLE_CANDIDATE:
+				break;
+			default:
+				$this->redirect('this', ['role' => $defaultRole]);
+				break;
+		}
+		return $role;
+	}
+
+	// <editor-fold defaultstate="expanded" desc="actions">
+
+	/** @param string $role */
+	public function actionIn($role = NULL)
+	{
+		$validRole = $this->validateRole($role);
+		$this->template->role = $validRole;
 
 		$this['signIn']->onSuccess[] = function () {
 			$this->restoreRequest($this->presenter->backlink);
-			$this->redirect(':App:Dashboard:');
+			$this->redirect(self::REDIRECT_AFTER_LOG);
 		};
 	}
 
 	/** @param string $role */
-	public function actionUp($role = NULL, $step = NULL) // ToDo: Check ROLE validity!
+	public function actionUp($role = NULL, $step = NULL)
 	{
-		$this->isLoggedIn(); 
-		
-		if ($step !== NULL && in_array($step, ['required', 'additional', 'summary'])) {
+		$validRole = $this->validateRole($role);
+
+		$allowedSteps = [self::STEP1, self::STEP2, self::STEP3];
+		if ($step !== NULL && in_array($step, $allowedSteps)) {
 			$this->setView('step' . ucfirst($step));
 		} else {
-			$this->session->role = $role;
+			$this->session->role = $validRole;
 		}
-		
+
 		$this->template->user = $this->session->user;
 		$this->template->company = $this->session->company;
 		$this->template->role = $this->session->role;
@@ -76,42 +114,40 @@ class SignPresenter extends BasePresenter
 	/** @param string $token */
 	public function actionVerify($token)
 	{
-		$this->isLoggedIn();
-
-		if ($signUp = $this->userFacade->findByVerificationToken($token)) {
+		$signUp = $this->userFacade->findByVerificationToken($token);
+		if ($signUp) {
 			$user = new User();
 			$user->setMail($signUp->mail)
 					->setHash($signUp->hash)
 					->setName($signUp->mail)
 					->addRole($signUp->role);
-			
+
 			if ($signUp->facebookId) {
 				$user->facebook->setId($signUp->facebookId)
 						->setAccessToken($signUp->facebookAccessToken);
 			}
-			
+
 			if ($signUp->TwitterId) {
 				$user->twitter->setId($signUp->twitterId)
 						->setAccessToken($signUp->twitterAccessToken);
 			}
-			
+
 			$this->onVerify($this, $user);
 		} else {
 			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
 			$this->redirect('in');
 		}
 	}
-	
+
 	/** @param string $token */
 	public function actionRecovery($token)
 	{
-		$this->isLoggedIn();
-
 		$this['recovery']->setToken($token);
 	}
 
+	// </editor-fold>
+
 	/**
-	 * ToDo: Tohle chce automatiku!
 	 * Redirect logged to certain destination.
 	 * @param type $redirect
 	 * @return bool
@@ -120,35 +156,37 @@ class SignPresenter extends BasePresenter
 	{
 		$isLogged = $this->user->isLoggedIn();
 		if ($isLogged && $redirect) {
-			$this->redirect(':App:Dashboard:');
+			$this->redirect(self::REDIRECT_NOT_LOGGED);
 		}
 		return $isLogged;
 	}
+
+	// <editor-fold defaultstate="collapsed" desc="controls">
 
 	/** @return Profile\AdditionalControl */
 	protected function createComponentAdditional()
 	{
 		return $this->iAdditionalControlFactory->create();
 	}
-	
+
 	/** @return Profile\FacebookControl */
 	protected function createComponentFacebook()
 	{
 		return $this->iFacebookControlFactory->create();
 	}
-	
-	/** @return Profile\ForgottenControl*/
+
+	/** @return Profile\ForgottenControl */
 	protected function createComponentForgotten()
 	{
 		return $this->iForgottenControlFactory->create();
 	}
-	
-	/** @return Profile\RecoveryControl*/
+
+	/** @return Profile\RecoveryControl */
 	protected function createComponentRecovery()
 	{
 		return $this->iRecoveryControlFactory->create();
 	}
-	
+
 	/** @return Profile\RequiredControl */
 	protected function createComponentRequired()
 	{
@@ -172,11 +210,12 @@ class SignPresenter extends BasePresenter
 	{
 		return $this->iSummaryControlFactory->create();
 	}
-	
+
 	/** @return Profile\TwitterControl */
 	protected function createComponentTwitter()
 	{
 		return $this->iTwitterControlFactory->create();
 	}
 
+	// </editor-fold>
 }

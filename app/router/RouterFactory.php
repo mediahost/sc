@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\FrontModule\Presenters\SignPresenter;
 use Nette\Application\IRouter;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
@@ -29,10 +30,10 @@ class RouterFactory
 		]);
 		
 		$router[] = $frontRouter = new RouteList('Front');
-//		$frontRouter[] = new Route('sign-up/<role (company|candidate)>', [
-//			'presenter' => 'Sign',
-//			'action' => 'up'
-//		]);
+		$roles = preg_quote(SignPresenter::ROLE_CANDIDATE) . '|' . preg_quote(SignPresenter::ROLE_COMPANY);
+		$frontRouter[] = new Route('sign/<action (in|up)>/<role (' . $roles . ')>', [
+			'presenter' => 'Sign',
+		]);
 		$frontRouter[] = new Route('<presenter>/<action>[/<id>]', [
 			'presenter' => 'Homepage',
 			'action' => 'default',
