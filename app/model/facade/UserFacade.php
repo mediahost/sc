@@ -22,9 +22,6 @@ class UserFacade extends BaseFacade
 	private $roleDao;
 
 	/** @var EntityDao */
-	private $authDao;
-
-	/** @var EntityDao */
 	private $signUpDao;
 
 	/** @var UserSettingsStorage @inject */
@@ -32,12 +29,10 @@ class UserFacade extends BaseFacade
 	{
 		$this->userDao = $this->em->getDao(User::getClassName());
 		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
-		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
 		$this->signUpDao = $this->em->getDao(Entity\SignUp::getClassName());
 	}
 
 	/**
-	 * Create User if isn't exists.
 	 * @param string $mail
 	 * @param string $password
 	 * @return User
@@ -46,16 +41,10 @@ class UserFacade extends BaseFacade
 	{
 		if ($this->isUnique($mail)) {
 			$user = new User;
-			$user->mail = $mail;
-
-			$auth = new Entity\Auth();
-			$auth->key = $mail;
-			$auth->source = Entity\Auth::SOURCE_APP;
-			$auth->password = $password;
-
-			$user->addRole($role);
-			$user->addAuth($auth);
-			$user->settings = new Entity\UserSettings();
+			$user->setMail($mail)
+					->setPassword($password)
+					->addRole($role)
+					->setSettings(new Entity\UserSettings());
 
 			return $this->userDao->save($user);
 		}
@@ -94,33 +83,6 @@ class UserFacade extends BaseFacade
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="setters">
-
-	/**
-	 * Finds application Auth corresponding to e-mail.
-	 * If missing creates new Auth with set password.
-	 * @param User $user
-	 * @param string $password
-	 * @return Entity\Auth
-	 */
-	public function setAppPassword(User $user, $password)
-	{
-		$auth = $this->authDao->findOneBy([
-			'source' => Entity\Auth::SOURCE_APP,
-			'key' => $user->mail,
-			'user' => $user,
-		]);
-
-		if (!$auth) {
-			$auth = new Entity\Auth;
-			$auth->setUser($user);
-			$auth->setSource(Entity\Auth::SOURCE_APP);
-			$auth->setKey($user->mail);
-		}
-
-		$auth->setPassword($password);
-
-		$this->authDao->save($auth);
-	}
 
 	/**
 	 * Sets recovery token and expiration datetime to User.

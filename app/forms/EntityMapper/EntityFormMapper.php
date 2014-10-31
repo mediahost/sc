@@ -4,19 +4,14 @@ namespace App\Forms\EntityMapper;
 
 use App\Model\Entity,
 	Kdyby\Doctrine\EntityManager,
-	App\Model\Facade,
 	Kdyby\Doctrine\EntityDao,
 	App\Model\Facade\UserFacade as UserFacade;
-use Tracy\Debugger as Debug;
 
 /**
- * EntityFormMapper
- *
  * @author Petr Poupě
  */
 class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var EntityManager */
 	private $em;
@@ -24,23 +19,17 @@ class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 	/** @var EntityDao */
 	private $roleDao;
 
-	/** @var EntityDao */
-	private $authDao;
-
 	/** @var UserFacade */
 	private $userFacade;
 
-	// </editor-fold>
 	public function __construct(\Doctrine\ORM\EntityManager $entityManager, EntityManager $em, UserFacade $userFacade)
 	{
 		parent::__construct($entityManager);
 		$this->em = $em;
 		$this->roleDao = $this->em->getDao(Entity\Role::getClassName());
-		$this->authDao = $this->em->getDao(Entity\Auth::getClassName());
 		$this->userFacade = $userFacade;
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="load">
 	public function load($entity, $form)
 	{
 		if ($entity instanceof Entity\User) {
@@ -53,8 +42,6 @@ class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 		}
 	}
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="save">
 	public function save($entity, $form)
 	{
 		if ($entity instanceof Entity\User) {
@@ -63,7 +50,7 @@ class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 			}
 
 			if ($form->values->password !== NULL && $form->values->password !== "") {
-				$this->userFacade->setAppPassword($entity, $form->values->password);
+				$entity->setPassword($form->values->password);
 			}
 
 			$entity->clearRoles();
@@ -79,5 +66,4 @@ class EntityFormMapper extends \Kdyby\DoctrineForms\EntityFormMapper
 		}
 	}
 
-	// </editor-fold>
 }

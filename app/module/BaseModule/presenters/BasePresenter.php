@@ -77,7 +77,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 		if ($secured) {
 			if (!$this->user->isLoggedIn()) {
-				$this->redirect(':Front:Sign:in', array('backlink' => $this->storeRequest()));
+				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
 				$this->flashMessage('You should be logged in!');
 			} elseif (!$this->user->isAllowed($resource, $privilege)) {
 				throw new Nette\Application\ForbiddenRequestException;

@@ -33,7 +33,7 @@ class RouterFactory
 //			'presenter' => 'Sign',
 //			'action' => 'up'
 //		]);
-		$frontRouter[] = new Route('<presenter>/<action>[/<id>]', [
+		$router[] = new Route('<presenter>/<action>[/<id>]', [
 			'presenter' => 'Homepage',
 			'action' => 'default',
 			'id' => NULL,
