@@ -22,8 +22,7 @@ class SignInControl extends BaseControl
 
 		$form->addText('mail', 'E-mail:')
 				->setAttribute('placeholder', 'E-mail')
-				->setRequired('Please enter your e-mail')
-				->addRule(Form::EMAIL, 'E-mail is has not valid format.');
+				->setRequired('Please enter your e-mail');
 
 		$form->addPassword('password', 'Password:')
 				->setAttribute('placeholder', 'Password')

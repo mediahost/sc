@@ -67,6 +67,19 @@ class SignPresenter extends BasePresenter
 		$this->isLoggedIn();
 	}
 
+	protected function beforeRender()
+	{
+		parent::beforeRender();
+		$this->template->roleCandidate = self::ROLE_CANDIDATE;
+		$this->template->roleCompany = self::ROLE_COMPANY;
+	}
+
+	/**
+	 * Validate role parameter and redirect when not allowed
+	 * @param type $role
+	 * @param type $defaultRole
+	 * @return type
+	 */
 	private function validateRole($role, $defaultRole = self::ROLE_CANDIDATE)
 	{
 		switch ($role) {
