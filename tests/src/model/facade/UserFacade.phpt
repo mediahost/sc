@@ -2,12 +2,13 @@
 
 namespace Test\Model\Facade;
 
-use App\Model\Entity\Auth;
+use App\Model\Entity\Facebook;
 use App\Model\Entity\Role;
+use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
 use Kdyby\Doctrine\EntityDao;
-use Nette;
 use Nette\DI\Container;
+use Nette\Security\Passwords;
 use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
@@ -21,21 +22,24 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class UserFacadeTest extends BaseFacade
 {
 
-	const SOURCE = Auth::SOURCE_APP;
 	const MAIL = 'tomas.jedno@seznam.cz';
 	const PASSWORD = 'tomik1985';
 	const EXPIRED_TOKEN = 'expiredToken';
 	const VALID_TOKEN = 'validToken';
-	const ACCESS_TOKEN = 'accessToken';
+	const TWITTER_ID = 'tw123456789';
+	const FACEBOOK_ID = 'fb123456789';
+	
+	/** @var EntityDao */
+	private $facebookDao;
 
 	/** @var EntityDao */
-	public $userDao;
+	private $roleDao;
 
 	/** @var EntityDao */
-	public $authDao;
-
+	private $twitterDao;
+	
 	/** @var EntityDao */
-	public $roleDao;
+	private $userDao;
 
 	/** @var User */
 	private $user;
@@ -43,9 +47,11 @@ class UserFacadeTest extends BaseFacade
 	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		$this->authDao = $this->em->getDao(Auth::getClassName());
-		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->facebookDao = $this->em->getDao(Facebook::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
+		$this->twitterDao = $this->em->getDao(Twitter::getClassName());
+		$this->userDao = $this->em->getDao(User::getClassName());
+
 	}
 
 	public function setUp()
@@ -53,24 +59,24 @@ class UserFacadeTest extends BaseFacade
 		parent::setUp();
 		$role = $this->roleFacade->create(Role::ROLE_CANDIDATE);
 		$this->user = $this->userFacade->create(self::MAIL, 'heslo', $role);
+		$this->user->facebook = (new Facebook())->setId(self::FACEBOOK_ID);
+		$this->user->twitter = (new Twitter())->setId(self::TWITTER_ID);
+		
+		$this->userDao->save($this->user);
 	}
 
 	public function testCreate()
 	{
 		$mail = 'ringo@beatles.com';
 		$password = 'yellowSubmarine';
-
 		$role = $this->roleFacade->findByName(Role::ROLE_CANDIDATE);
-		Assert::null($this->userFacade->create(self::MAIL, self::PASSWORD, $role));
+		
+		Assert::null($this->userFacade->create(self::MAIL, self::PASSWORD, $role)); // Create user with wxisting e-mail
 
 		$user = $this->userFacade->create($mail, $password, $role);
 		Assert::type(User::getClassName(), $user);
 		Assert::same($user->mail, $mail);
-
-		$auth = $this->authFacade->findByMail($mail);
-		Assert::same($mail, $auth->key);
-		Assert::same(Auth::SOURCE_APP, $auth->source);
-		Assert::true(Nette\Security\Passwords::verify($password, $auth->hash));
+		Assert::true(Passwords::verify($password, $user->hash));
 
 		Assert::true(in_array(Role::ROLE_CANDIDATE, $user->getRolesPairs()));
 
@@ -78,24 +84,31 @@ class UserFacadeTest extends BaseFacade
 	}
 
 	public function testDelete()
-	{
+	{	
 		$this->userFacade->delete($this->user);
 
 		Assert::count(1, $this->roleDao->findAll());
-		Assert::count(0, $this->authDao->findAll());
 		Assert::count(0, $this->userDao->findAll());
+		Assert::count(0, $this->facebookDao->findAll());
+		Assert::count(0, $this->twitterDao->findAll());
 	}
 
-	public function delete() // ToDo: Nevím jak zjistit, že se smazaly všechny napojené entity, asi nijak.
+	public function testFindByFacebookId()
 	{
-		$role = $this->roleFacade->findByName(Role::ROLE_CANDIDATE);
-		$user = $this->userFacade->create('user@delete.de', 'AuRevoir!', $role);
-		$id = $user->id;
-
-		$this->userFacade->delete($user);
-		Assert::null($this->userDao->find($id));
+		$user = $this->userFacade->findByFacebookId(self::FACEBOOK_ID);
+		
+		Assert::type(User::getClassName(), $user);
+		Assert::same(self::FACEBOOK_ID, $user->facebook->id);
 	}
 
+	public function testFindByTwitterId()
+	{
+		$user = $this->userFacade->findByTwitterId(self::TWITTER_ID);
+		
+		Assert::type(User::getClassName(), $user);
+		Assert::same(self::TWITTER_ID, $user->twitter->id);
+	}
+	
 	public function testFindByMail()
 	{
 		$user = $this->userFacade->findByMail(self::MAIL);
@@ -108,27 +121,6 @@ class UserFacadeTest extends BaseFacade
 	{
 		Assert::false($this->userFacade->isUnique(self::MAIL));
 		Assert::true($this->userFacade->isUnique('not@unique.com'));
-	}
-
-	public function testSetAppPassword()
-	{
-		$newPassword = 'newPassword2014';
-
-		foreach ($this->user->auths as $auth) {
-			$this->em->remove($auth);
-		}
-
-		$this->em->flush();
-
-		// Test when no application Auth (create new Auth)
-		$this->userFacade->setAppPassword($this->user, self::PASSWORD);
-		$auth = $this->authFacade->findByMail(self::MAIL);
-		Assert::true(\Nette\Security\Passwords::verify(self::PASSWORD, $auth->hash));
-
-		// Test when application Auth exists (set new password)
-		$this->userFacade->setAppPassword($this->user, $newPassword);
-		$auth = $this->authFacade->findByMail(self::MAIL);
-		Assert::true(\Nette\Security\Passwords::verify($newPassword, $auth->hash));
 	}
 
 	public function testSetRecovery()
@@ -147,10 +139,33 @@ class UserFacadeTest extends BaseFacade
 
 		$this->userFacade->hardDelete($id);
 
-		Assert::count(0, $this->authFacade->findByUser($this->user));
+		Assert::count(0, $this->facebookDao->findAll());
+		Assert::count(0, $this->twitterDao->findAll());
 		Assert::null($this->userDao->find($id));
 	}
 
+	public function testFindByRecoveryToken()
+	{
+		// Expired token
+		$this->user->setRecovery(self::EXPIRED_TOKEN, 'now - 1 day');
+		$this->userDao->save($this->user);
+
+		Assert::null($this->userFacade->findByRecoveryToken(self::EXPIRED_TOKEN));
+
+		/* @var $user Entity\User */
+		$user = $this->userDao->find($this->user->id);
+		Assert::null($user->recoveryExpiration);
+		Assert::null($user->recoveryToken);
+
+		// Valid token
+		$this->user->setRecovery(self::VALID_TOKEN, 'now + 1 day');
+		$this->userDao->save($this->user);
+
+		$user = $this->userFacade->findByRecoveryToken(self::VALID_TOKEN);
+		Assert::type(User::getClassName(), $user);
+		Assert::same(self::VALID_TOKEN, $user->recoveryToken);
+	}
+	
 }
 
 $test = new UserFacadeTest($container);

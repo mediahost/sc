@@ -178,7 +178,7 @@ class UserTest extends ParentTestCase
 		Assert::type(UserSettings::getClassName(), $this->user->settings);
 
 		$this->user->facebook = new Facebook();
-		Assert::type(Facebook::getClassName(), $this->user->facebok);
+		Assert::type(Facebook::getClassName(), $this->user->facebook);
 
 		$this->user->twitter = new Twitter();
 		Assert::type(Twitter::getClassName(), $this->user->twitter);
@@ -215,7 +215,7 @@ class UserTest extends ParentTestCase
 		$token = Strings::random(32);
 		$expiration = new DateTime();
 		$this->user->setRecovery($token, $expiration);
-		$this->user->unsetRecovery();
+		$this->user->removeRecovery();
 
 		Assert::null($this->user->recoveryToken);
 		Assert::null($this->user->recoveryExpiration);

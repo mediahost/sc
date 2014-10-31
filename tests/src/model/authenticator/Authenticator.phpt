@@ -56,8 +56,6 @@ class AuthenticatorTest extends ParentTestCase
 		$this->dropSchema();
 	}
 
-	// <editor-fold defaultstate="expanded" desc="tests">
-
 	public function testAuthenticate()
 	{
 		$role = $this->roleFacade->create(self::R_NAME);
@@ -85,7 +83,6 @@ class AuthenticatorTest extends ParentTestCase
 		Assert::null($userFinded->recoveryToken);
 	}
 
-	// </editor-fold>
 }
 
 $test = new AuthenticatorTest($container);

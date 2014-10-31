@@ -2,32 +2,28 @@
 
 namespace Test\Model\Facade;
 
-use App\Model\Facade;
-use Nette;
+use App\Model\Facade\RoleFacade;
+use App\Model\Facade\UserFacade;
+use Nette\DI\Container;
 use Test\ParentTestCase;
+use Tester\Environment;
 
 /**
- * Parent of test facades
+ * Parent of facades' tests
  */
 abstract class BaseFacade extends ParentTestCase
 {
 
-	/** @var Facade\AuthFacade @inject */
-	public $authFacade;
-
-	/** @var Facade\RegistrationFacade @inject */
-	public $registrationFacade;
-
-	/** @var Facade\RoleFacade @inject */
+	/** @var RoleFacade @inject */
 	public $roleFacade;
 
-	/** @var Facade\UserFacade @inject */
+	/** @var UserFacade @inject */
 	public $userFacade;
 
-	public function __construct(Nette\DI\Container $container)
+	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		\Tester\Environment::lock('db', LOCK_DIR);
+		Environment::lock('db', LOCK_DIR);
 	}
 
 	public function setUp()
