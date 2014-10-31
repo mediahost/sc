@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Components;
+namespace App\Extensions;
 
-use App\Components\Installer\Model\InstallerModel;
+use App\Extensions\Installer\Model\InstallerModel;
+use Nette\Object;
 use Nette\Security\IAuthorizator;
 
 /**
@@ -10,7 +11,7 @@ use Nette\Security\IAuthorizator;
  *
  * @author Petr Poupě
  */
-class Installer extends BaseControl
+class Installer extends Object
 {
 
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">

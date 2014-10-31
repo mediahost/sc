@@ -48,5 +48,5 @@ services:
 
 extensions:
 	events: Kdyby\Events\DI\EventsExtension
-	installer: App\Components\Installer\DI\InstallerExtension
+	installer: App\Extensions\Installer\DI\InstallerExtension
 	onControlCreate: App\Extensions\EventOnControlCreateCreateExtension

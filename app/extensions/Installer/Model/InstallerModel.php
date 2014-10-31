@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Components\Installer\Model;
+namespace App\Extensions\Installer\Model;
 
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;

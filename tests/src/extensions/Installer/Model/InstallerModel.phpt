@@ -1,8 +1,8 @@
 <?php
 
-namespace Test\Components\Installer\Model;
+namespace Test\Extensions\Installer\Model;
 
-use App\Components\Installer\Model\InstallerModel;
+use App\Extensions\Installer\Model\InstallerModel;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Nette\DI\Container;
