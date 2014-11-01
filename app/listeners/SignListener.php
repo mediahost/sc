@@ -60,8 +60,7 @@ class SignListener extends Object implements Subscriber
 	public function onStartup(Control $control, User $user)
 	{
 		if ($user->id) {
-			$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
-			$control->presenter->redirect(self::REDIRECT_AFTER_SIGNIN);
+			$this->onSuccess($control, $user);
 		} else {
 			$this->session->user = $user;
 			$this->onRequire($control, $user);
@@ -127,28 +126,12 @@ class SignListener extends Object implements Subscriber
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		} else {
+			$user = $this->userFacade->signUp($user);
 			$this->onSuccess($control, $user);
 		}
 	}
-	
-	
-	public function onSuccess(Control $control, User $user)
-	{
-		Debugger::dump('...');exit;
-		if ($existing = $this->userFacade->findByMail($user->mail)) {
-			$control->presenter->flash('This e-mail is registered yet.');
-			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
-		} else {
-			if (empty($user->roles)) {
-				$user->addRole($this->roleFacade->findByName($this->session->role));
-			}
-			$user = $this->userFacade->signUp($user);
-		}
-		
-		$this->signIn($control, $user);
-	}
 
-	protected function signIn(Control $control, User $user)
+	public function onSuccess(Control $control, User $user)
 	{
 		$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$control->presenter->restoreRequest($control->presenter->backlink);

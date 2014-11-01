@@ -2,9 +2,10 @@
 
 namespace App\Model\Facade;
 
-use App\Model\Entity;
 use App\Model\Entity\Role;
+use App\Model\Entity\SignUp;
 use App\Model\Entity\User;
+use App\Model\Entity\UserSettings;
 use App\Model\Storage\UserSettingsStorage;
 use DateTime;
 use InvalidArgumentException;
@@ -15,18 +16,22 @@ use Nette\Utils\Strings;
 
 class UserFacade extends BaseFacade
 {
-
-	/** @var EntityDao */
-	private $userDao;
-
 	/** @var EntityDao */
 	private $roleDao;
+	
+	/** @var EntityDao */
+	private $signUpDao;
+	
+	/** @var EntityDao */
+	private $userDao;
 
 	/** @var UserSettingsStorage @inject */
 	protected function init()
 	{
-		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->signUpDao = $this->em->getDao(SignUp::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
+		$this->userDao = $this->em->getDao(User::getClassName());
+		
 	}
 
 	/**
@@ -157,7 +162,7 @@ class UserFacade extends BaseFacade
 	 */
 	public function signUp(User $user)
 	{
-		$user->settings = new Entity\UserSettings();
+		$user->settings = new UserSettings();
 
 		$this->em->persist($user);
 		$this->em->flush();
@@ -166,13 +171,13 @@ class UserFacade extends BaseFacade
 	}
 
 	/**
-	 * @param Entity\SignUp $signUp
-	 * @return Entity\SignUp
+	 * @param SignUp $signUp
+	 * @return SignUp
 	 */
-	public function signUpTemporarily(Entity\SignUp $signUp)
+	public function signUpTemporarily(SignUp $signUp)
 	{
 		$qb = $this->em->createQueryBuilder();
-		$qb->delete(Entity\SignUp::getClassName(), 's')
+		$qb->delete(SignUp::getClassName(), 's')
 				->where('s.mail = ?1')
 				->setParameter(1, $signUp->mail)
 				->getQuery()
@@ -189,7 +194,7 @@ class UserFacade extends BaseFacade
 
 	/**
 	 * @param string $token
-	 * @return Entity\SignUp
+	 * @return SignUp
 	 */
 	public function findByVerificationToken($token)
 	{
@@ -240,6 +245,23 @@ class UserFacade extends BaseFacade
 	{
 		$user->password = $password;
 		$user->removeRecovery();
+		return $this->userDao->save($user);
+	}
+
+	/**
+	 * @param User $user
+	 * @param string $token
+	 * @return User
+	 */
+	public function verify($user, $token)
+	{
+		$qb = $this->em->createQueryBuilder();
+		$qb->delete(SignUp::getClassName(), 's')
+				->where('s.verificationToken = ?1')
+				->setParameter(1, $token)
+				->getQuery()
+				->execute();
+		
 		return $this->userDao->save($user);
 	}
 

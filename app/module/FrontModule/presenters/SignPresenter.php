@@ -3,7 +3,10 @@
 namespace App\FrontModule\Presenters;
 
 use App\Components\Profile;
+use App\Model\Entity\Facebook;
+use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
+use App\Model\Entity\UserSettings;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 
@@ -14,6 +17,7 @@ class SignPresenter extends BasePresenter
 	const ROLE_COMPANY = 'company';
 	const ROLE_DEFAULT = self::ROLE_CANDIDATE;
 	const REDIRECT_AFTER_LOG = ':App:Dashboard:';
+	const REDIRECT_NOT_LOGGED = ':Front:Sign:in';
 	const REDIRECT_IS_LOGGED = ':App:Dashboard:';
 	const STEP1 = 'required';
 	const STEP2 = 'additional';
@@ -25,7 +29,7 @@ class SignPresenter extends BasePresenter
 	public $onVerify = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold defaultstate="collapsed" desc="Injects">
 
 	/** @var Profile\IAdditionalControlFactory @inject */
 	public $iAdditionalControlFactory;
@@ -94,7 +98,7 @@ class SignPresenter extends BasePresenter
 		return $role;
 	}
 
-	// <editor-fold defaultstate="expanded" desc="actions & renders">
+	// <editor-fold defaultstate="expanded" desc="Actions & renders">
 
 	/** @param string $role */
 	public function actionIn()
@@ -130,6 +134,7 @@ class SignPresenter extends BasePresenter
 	public function actionVerify($token)
 	{
 		$signUp = $this->userFacade->findByVerificationToken($token);
+
 		if ($signUp) {
 			$user = new User();
 			$user->setMail($signUp->mail)
@@ -138,18 +143,23 @@ class SignPresenter extends BasePresenter
 					->addRole($signUp->role);
 
 			if ($signUp->facebookId) {
-				$user->facebook->setId($signUp->facebookId)
+				$user->facebook = (new Facebook)
+						->setId($signUp->facebookId)
 						->setAccessToken($signUp->facebookAccessToken);
 			}
 
 			if ($signUp->twitterId) {
-				$user->twitter->setId($signUp->twitterId)
+				$user->twitter = (new Twitter)
+						->setId($signUp->twitterId)
 						->setAccessToken($signUp->twitterAccessToken);
 			}
+			
+			$user->settings = new UserSettings();
 
+			$this->userFacade->verify($user, $token);
 			$this->onVerify($this, $user);
 		} else {
-			$this->presenter->flashMessage('Verification code is incorrect.', 'warning');
+			$this->presenter->flashMessage('Verification token is incorrect.', 'warning');
 			$this->redirect('in');
 		}
 	}
