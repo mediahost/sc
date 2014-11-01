@@ -1,10 +1,6 @@
+# Components
 services:
-	# Components
-	- {implement: App\Components\IDeleteControlFactory, inject: yes}
-	- {implement: App\Components\User\ISettingsControlFactory, inject: yes}
-
-
-	# OK
+	# Profile
 	- {implement: App\Components\Profile\IForgottenControlFactory, inject: yes}
 	- {implement: App\Components\Profile\IRecoveryControlFactory, inject: yes}
 	- {implement: App\Components\Profile\ISetPasswordControlFactory, inject: yes}
@@ -40,3 +36,6 @@ services:
 		create: App\Components\Profile\TwitterControl
 		implement: App\Components\Profile\ITwitterControlFactory
 		inject: yes
+	
+	# User
+	- {implement: App\Components\User\ISettingsControlFactory, inject: yes}

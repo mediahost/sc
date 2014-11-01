@@ -3,7 +3,7 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\DeleteControl;
-use App\Components\IDeleteControlFactory;
+use App\Components\Profile\IDeleteControlFactory;
 use App\Components\Profile\ISetPasswordControlFactory;
 use App\Components\Profile\SetPasswordControl;
 use App\Components\User\ISettingsControlFactory;
@@ -15,9 +15,6 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-
-	/** @var IDeleteControlFactory @inject */
-	public $iDeleteControlFactory;
 
 	/** @var ISetPasswordControlFactory @inject */
 	public $iSetPasswordControlFactory;
@@ -55,12 +52,6 @@ class ProfilePresenter extends BasePresenter
 	public function actionSettings()
 	{
 //		$this['auth']->setForce();
-	}
-
-	/** @return DeleteControl */
-	protected function createComponentDelete()
-	{
-		return $this->iDeleteControlFactory->create();
 	}
 
 	/** @return SetPasswordControl */
