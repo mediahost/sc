@@ -176,13 +176,19 @@ class UserTest extends ParentTestCase
 
 		$this->user->settings = new UserSettings();
 		Assert::type(UserSettings::getClassName(), $this->user->settings);
+		$settings = $this->user->settings;
+		Assert::type(User::getClassName(), $settings->user);
 
 		$this->user->facebook = new Facebook();
 		Assert::type(Facebook::getClassName(), $this->user->facebook);
-
+		$facebook = $this->user->facebook;
+		Assert::type(User::getClassName(), $facebook->user);
+		
 		$this->user->twitter = new Twitter();
 		Assert::type(Twitter::getClassName(), $this->user->twitter);
-
+		$twitter = $this->user->settings;
+		Assert::type(User::getClassName(), $twitter->user);
+		
 		$this->user->setPassword(self::PASSWORD);
 		Assert::true(Passwords::verify(self::PASSWORD, $this->user->hash));
 

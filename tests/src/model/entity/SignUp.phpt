@@ -17,7 +17,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class SigUpTest extends TestCase
+class SignUpTest extends TestCase
 {
 
 	const MAIL = 'anakin@skywalker.com';
