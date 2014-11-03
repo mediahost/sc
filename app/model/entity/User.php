@@ -21,6 +21,7 @@ use Nette\Security\Passwords;
  * @property Twitter $twitter
  * @property string $recoveryToken
  * @property DateTime $recoveryExpiration
+ * @method self setMail(string $value)
  */
 class User extends BaseEntity
 {
@@ -30,7 +31,7 @@ class User extends BaseEntity
 	/** @ORM\Column(type="string", nullable=false) */
 	protected $mail;
 
-	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER") */
+	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	protected $roles;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
