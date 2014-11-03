@@ -18,6 +18,9 @@ services:
 			- addResource('dashboard')
 			- addResource('front')
 			- addResource('profile')
+			- addResource('users')
+			- addResource('skills')
+			- addResource('skillCategories')
 			- addResource('service')
 
 			# Privilegies
@@ -30,6 +33,8 @@ services:
 			- allow('candidate', 'candidate', 'view')
 			- allow('company', 'company', 'view')
 
-			- allow('admin', 'admin')
+			- allow('admin', 'users')
+			- allow('admin', 'skills')
+			- allow('admin', 'skillCategories')
 
 			- allow('superadmin') # Full access for superadmin

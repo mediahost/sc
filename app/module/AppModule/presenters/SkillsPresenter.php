@@ -33,7 +33,7 @@ class SkillsPresenter extends BasePresenter
 	
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('skills')
 	 * @privilege('default')
 	 */
 	public function actionDefault()
@@ -48,7 +48,7 @@ class SkillsPresenter extends BasePresenter
 	
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('skills')
 	 * @privilege('add')
 	 */
 	public function actionAdd()
@@ -60,7 +60,7 @@ class SkillsPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('skills')
 	 * @privilege('edit')
 	 */
 	public function actionEdit($id)
@@ -75,7 +75,7 @@ class SkillsPresenter extends BasePresenter
 	
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('skills')
 	 * @privilege('delete')
 	 */
 	public function actionDelete($id)

@@ -38,7 +38,8 @@ class AdditionalControl extends BaseControl
 		$form->setTranslator($this->translator);
 
 		$form->addText('fullName', 'Name:')
-				->setAttribute('placeholder', 'name and surename');
+				->setAttribute('placeholder', 'name and surename')
+				->setRequired('Please enter your name.');
 
 		$form->addText('birthday', 'Birthday:')
 				->setAttribute('placeholder', 'dd/mm/yyyy');
@@ -69,12 +70,15 @@ class AdditionalControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addText('name', 'Comapny name:')
+		$form->addText('name', 'Comapny:')
 				->setAttribute('placeholder', 'Company name')
 				->setRequired('Please enter your company\'s name.');
 
+		$form->addText('company_id', 'ID:')
+				->setAttribute('placeholder', 'Company ID');
+
 		$form->addTextArea('address', 'Address:')
-				->setAttribute('placeholder', 'Address');
+				->setAttribute('placeholder', 'Company full address');
 
 		$form->addSubmit('continue', 'Continue');
 

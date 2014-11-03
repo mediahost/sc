@@ -80,7 +80,7 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * Validate role parameter and redirect when not allowed
+	 * Get valid role name; If isn't valid then return default role
 	 * @param type $role
 	 * @param type $defaultRole
 	 * @return type
@@ -113,6 +113,12 @@ class SignPresenter extends BasePresenter
 	public function renderIn($role = self::ROLE_DEFAULT)
 	{
 		$this->template->role = $this->getValidRole($role);
+	}
+
+	/** @param string $role */
+	public function actionRegister($role = NULL)
+	{
+		$this->redirect('up', ['role' => $this->getValidRole($role)]);
 	}
 
 	/** @param string $role */
@@ -155,7 +161,7 @@ class SignPresenter extends BasePresenter
 			}
 			
 			$user->settings = new UserSettings();
-
+			
 			$this->userFacade->verify($user, $token);
 			$this->onVerify($this, $user);
 		} else {
@@ -181,7 +187,7 @@ class SignPresenter extends BasePresenter
 	{
 		$isLogged = $this->user->isLoggedIn();
 		if ($isLogged && $redirect) {
-			$this->redirect(self::REDIRECT_NOT_LOGGED);
+			$this->redirect(self::REDIRECT_IS_LOGGED);
 		}
 		return $isLogged;
 	}

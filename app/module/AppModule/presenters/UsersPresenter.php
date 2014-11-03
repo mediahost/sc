@@ -42,7 +42,7 @@ class UsersPresenter extends BasePresenter
 	// <editor-fold defaultstate="collapsed" desc="actions & renderers">
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('users')
 	 * @privilege('default')
 	 */
 	public function actionDefault()
@@ -57,7 +57,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('users')
 	 * @privilege('add')
 	 */
 	public function actionAdd()
@@ -69,7 +69,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('users')
 	 * @privilege('edit')
 	 */
 	public function actionEdit($id)
@@ -84,7 +84,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('users')
 	 * @privilege('view')
 	 */
 	public function actionView($id)
@@ -95,7 +95,7 @@ class UsersPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('admin')
+	 * @resource('users')
 	 * @privilege('delete')
 	 */
 	public function actionDelete($id)

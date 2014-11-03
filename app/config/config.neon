@@ -32,9 +32,10 @@ nette:
 	session:
 		autoStart: true
 		expiration: 14 days
+		debugger: true
 
 	debugger:
-		email: 'pupe.dupe@gmail.com,me@martinsifra.cz'
+		email: 'pupe.dupe@gmail.com,me@martinsifra.cz,g.vvoody@gmail.com'
 
 services:
 	# Authenticator
