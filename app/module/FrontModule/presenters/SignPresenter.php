@@ -80,7 +80,7 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * Validate role parameter and redirect when not allowed
+	 * Get valid role name; If isn't valid then return default role
 	 * @param type $role
 	 * @param type $defaultRole
 	 * @return type
@@ -101,21 +101,30 @@ class SignPresenter extends BasePresenter
 	// <editor-fold defaultstate="expanded" desc="Actions & renders">
 
 	/** @param string $role */
-	public function actionIn()
+	public function actionIn($role = self::ROLE_DEFAULT)
 	{
+		$this->session->role = $this->getValidRole($role);
 		$this['signIn']->onSuccess[] = function () {
 			$this->restoreRequest($this->presenter->backlink);
 			$this->redirect(self::REDIRECT_AFTER_LOG);
 		};
 	}
 	
-	/** @param string $role */
-	public function renderIn($role = self::ROLE_DEFAULT)
+	public function renderIn()
 	{
-		$this->template->role = $this->getValidRole($role);
+		$this->template->role = $this->session->role;
 	}
 
 	/** @param string $role */
+	public function actionRegister($role = NULL)
+	{
+		$this->redirect('up', ['role' => $this->getValidRole($role)]);
+	}
+
+	/**
+	 * @param type $role
+	 * @param type $step
+	 */
 	public function actionUp($role = NULL, $step = NULL)
 	{
 		$allowedSteps = [self::STEP1, self::STEP2, self::STEP3];
@@ -124,7 +133,7 @@ class SignPresenter extends BasePresenter
 		} else {
 			$this->session->role = $this->getValidRole($role);
 		}
-		
+		// This cannot be in renderUp() because setting other view
 		$this->template->user = $this->session->user;
 		$this->template->company = $this->session->company;
 		$this->template->role = $this->session->role;
@@ -155,7 +164,7 @@ class SignPresenter extends BasePresenter
 			}
 			
 			$user->settings = new UserSettings();
-
+			
 			$this->userFacade->verify($user, $token);
 			$this->onVerify($this, $user);
 		} else {
@@ -181,7 +190,7 @@ class SignPresenter extends BasePresenter
 	{
 		$isLogged = $this->user->isLoggedIn();
 		if ($isLogged && $redirect) {
-			$this->redirect(self::REDIRECT_NOT_LOGGED);
+			$this->redirect(self::REDIRECT_IS_LOGGED);
 		}
 		return $isLogged;
 	}

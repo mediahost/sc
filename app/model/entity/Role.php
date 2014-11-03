@@ -19,8 +19,15 @@ class Role extends BaseEntity
 	const ROLE_SIGNED = 'signed';
 	const ROLE_CANDIDATE = 'candidate';
 	const ROLE_COMPANY = 'company';
+	const ROLE_ADMIN = 'admin';
+	const ROLE_SUPERADMIN = 'superadmin';
 
 	/** @ORM\Column(type="string", length=128) */
 	protected $name;
+
+	public function __toString()
+	{
+		return $this->name;
+	}
 
 }

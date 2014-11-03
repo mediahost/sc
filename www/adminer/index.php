@@ -1,7 +1,7 @@
 <?php
 
 $allowedIPs = array(
-    '89.176.186.77', // Petr Poupě - Vojtova 10 Brno
+    '62.245.115.59', // Petr Poupě - Vojtova 10 Brno
     '37.221.251.251', // Petr Poupě - Revolucni 331 Svetla n.S.
     '127.0.0.1',
     '::1',

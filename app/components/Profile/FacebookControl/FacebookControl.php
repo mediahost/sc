@@ -4,6 +4,7 @@ namespace App\Components\Profile;
 
 use App\Components\BaseControl;
 use App\Model\Entity;
+use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 use Kdyby\Facebook\Dialog\LoginDialog;
@@ -25,6 +26,9 @@ class FacebookControl extends BaseControl
 	
 	/** @var UserFacade @inject */
 	public $userFacade;
+	
+	/** @var RoleFacade @inject */
+	public $roleFacade;
 
 	protected function createComponentDialog()
 	{
@@ -41,7 +45,6 @@ class FacebookControl extends BaseControl
 
 			try {
 				$me = $fb->api('/me');
-				Debugger::barDump($me);
 
 				if (!$user = $this->userFacade->findByFacebookId($fb->getUser())) {
 					$user = $this->createUser($me);
@@ -74,6 +77,9 @@ class FacebookControl extends BaseControl
 		} else {
 			$this->session->verification = FALSE;
 		}
+		
+		$role = $this->roleFacade->findByName($this->session->role);
+		$user->addRole($role);
 
 		$fb = new Entity\Facebook();
 		$fb->id = $me->id;
