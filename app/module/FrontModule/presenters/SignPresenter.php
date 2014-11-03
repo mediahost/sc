@@ -101,18 +101,18 @@ class SignPresenter extends BasePresenter
 	// <editor-fold defaultstate="expanded" desc="Actions & renders">
 
 	/** @param string $role */
-	public function actionIn()
+	public function actionIn($role = self::ROLE_DEFAULT)
 	{
+		$this->session->role = $this->getValidRole($role);
 		$this['signIn']->onSuccess[] = function () {
 			$this->restoreRequest($this->presenter->backlink);
 			$this->redirect(self::REDIRECT_AFTER_LOG);
 		};
 	}
 	
-	/** @param string $role */
-	public function renderIn($role = self::ROLE_DEFAULT)
+	public function renderIn()
 	{
-		$this->template->role = $this->getValidRole($role);
+		$this->template->role = $this->session->role;
 	}
 
 	/** @param string $role */
@@ -121,7 +121,10 @@ class SignPresenter extends BasePresenter
 		$this->redirect('up', ['role' => $this->getValidRole($role)]);
 	}
 
-	/** @param string $role */
+	/**
+	 * @param type $role
+	 * @param type $step
+	 */
 	public function actionUp($role = NULL, $step = NULL)
 	{
 		$allowedSteps = [self::STEP1, self::STEP2, self::STEP3];
@@ -130,7 +133,7 @@ class SignPresenter extends BasePresenter
 		} else {
 			$this->session->role = $this->getValidRole($role);
 		}
-		
+		// This cannot be in renderUp() because setting other view
 		$this->template->user = $this->session->user;
 		$this->template->company = $this->session->company;
 		$this->template->role = $this->session->role;

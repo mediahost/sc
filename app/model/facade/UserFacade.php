@@ -163,7 +163,7 @@ class UserFacade extends BaseFacade
 	public function signUp(User $user)
 	{
 		$user->settings = new UserSettings();
-
+		
 		$this->em->persist($user);
 		$this->em->flush();
 

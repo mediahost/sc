@@ -2,19 +2,22 @@
 
 namespace App\Model\Storage;
 
-use Nette\Http\Session,
-	Nette\Http\SessionSection,
-	Nette\Utils\ArrayHash;
 use App\Model\Entity;
+use App\Model\Entity\Company;
+use App\Model\Entity\User;
+use Exception;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
+use Nette\Object;
 
 /**
  * Description of RegistrationStorage
  *
- * @property Entity\Auth $auth
- * @property Entity\User $user
+ * @property Auth $auth
+ * @property User $user
  * @property array $defaults
  */
-class SignUpStorage extends \Nette\Object
+class SignUpStorage extends Object
 {
 
 	/** @var Session OK */
@@ -34,7 +37,7 @@ class SignUpStorage extends \Nette\Object
 		$this->initSession();
 	}
 
-	/** @param Entity\User $user */
+	/** @param User $user */
 	public function setUser(Entity\User $user)
 	{
 		$this->section->user = $user;
@@ -46,7 +49,7 @@ class SignUpStorage extends \Nette\Object
 		$this->section->role = $role;
 	}
 
-	/** @param Entity\Company $comapny */
+	/** @param Company $company */
 	public function setCompany($company)
 	{
 		$this->section->company = $company;
@@ -58,7 +61,7 @@ class SignUpStorage extends \Nette\Object
 		$this->section->defaults = (array) $defaults;
 	}
 
-	/** @return Entity\User */
+	/** @return User */
 	public function getUser()
 	{
 		return $this->section->user;
@@ -70,7 +73,7 @@ class SignUpStorage extends \Nette\Object
 		return $this->section->role;
 	}
 
-	/** @return Entity\Company */
+	/** @return Company */
 	public function getCompany()
 	{
 		return $this->section->company;
@@ -107,22 +110,6 @@ class SignUpStorage extends \Nette\Object
 	}
 
 	/**
-	 * Map data from session's Auth and User to Registration.
-	 * @return \App\Model\Entity\Registration
-	 */
-	public function toRegistration()
-	{
-		$registration = new Entity\Registration();
-		$registration->setMail($this->user->mail)
-				->setName($this->user->name)
-				->setKey($this->auth->key)
-				->setSource($this->auth->source)
-				->setHash($this->auth->hash);
-
-		return $registration;
-	}
-
-	/**
 	 * Set up all session properties to their default values.
 	 * @param bool $force
 	 * @return void
@@ -132,7 +119,7 @@ class SignUpStorage extends \Nette\Object
 		$defaults = [
 			'oauth' => FALSE,
 			'verification' => FALSE,
-			'user' => new Entity\User(),
+			'user' => new User(),
 			'defaults' => [],
 			'role' => NULL,
 			'company' => NULL
@@ -153,7 +140,7 @@ class SignUpStorage extends \Nette\Object
 
 }
 
-class SignUpStorageException extends \Exception
+class SignUpStorageException extends Exception
 {
 	
 }
