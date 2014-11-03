@@ -36,19 +36,13 @@ class User extends BaseEntity
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $name;
 
-	/** @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", orphanRemoval=true, fetch="LAZY", cascade={"all"}) */
+	/** @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $settings;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Facebook", orphanRemoval=true, fetch="LAZY", cascade={"all"})
-     * @ORM\JoinColumn(name="facebook_id", referencedColumnName="id")
-     **/
+    /** @ORM\OneToOne(targetEntity="Facebook", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $facebook;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Twitter", orphanRemoval=true, fetch="LAZY", cascade={"all"})
-     * @ORM\JoinColumn(name="twitter_id", referencedColumnName="id")
-     **/
+    /** @ORM\OneToOne(targetEntity="Twitter", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $twitter;
 	
 	/** @ORM\Column(type="string", length=256, nullable=true) */
@@ -165,7 +159,10 @@ class User extends BaseEntity
 		return $this;
 	}
 
-	/** @param UserSettings $settings */
+	/**
+	 * @param UserSettings $settings
+	 * @return User
+	 */
 	public function setSettings(UserSettings $settings)
 	{
 		$settings->user = $this;
@@ -173,6 +170,28 @@ class User extends BaseEntity
 		return $this;
 	}
 
+	/**
+	 * @param Facebook $facebook
+	 * @return User
+	 */
+	public function setFacebook(Facebook $facebook)
+	{
+		$facebook->user = $this;
+		$this->facebook = $facebook;
+		return $this;
+	}
+	
+	/**
+	 * @param Twitter $twitter
+	 * @return User
+	 */
+	public function setTwitter(Twitter $twitter)
+	{
+		$twitter->user = $this;
+		$this->twitter = $twitter;
+		return $this;
+	}
+	
 	/** @return array */
 	public function getRolesKeys()
 	{

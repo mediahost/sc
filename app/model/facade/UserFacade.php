@@ -47,7 +47,7 @@ class UserFacade extends BaseFacade
 			$user->setMail($mail)
 					->setPassword($password)
 					->addRole($role)
-					->setSettings(new Entity\UserSettings());
+					->setSettings(new UserSettings());
 
 			return $this->userDao->save($user);
 		}
@@ -130,11 +130,11 @@ class UserFacade extends BaseFacade
 	/**
 	 * Add role as Role entity, string or array of entites to user.
 	 * @param User $user
-	 * @param Entity\Role|string $role
+	 * @param Role|string $role
 	 */
 	public function addRole(User $user, $role)
 	{
-		if (!($user instanceof Entity\Role)) {
+		if (!($user instanceof Role)) {
 			if (is_string($role)) {
 				$role = $this->roleDao->findOneBy(['name' => $role]);
 			} elseif (is_array($role)) {
@@ -214,7 +214,7 @@ class UserFacade extends BaseFacade
 
 	/**
 	 * @param string $token
-	 * @return Entity\User
+	 * @return User
 	 */
 	public function findByRecoveryToken($token)
 	{
@@ -237,11 +237,11 @@ class UserFacade extends BaseFacade
 	}
 	
 	/**
-	 * @param Entity\User $user
+	 * @param User $user
 	 * @param string $password
-	 * @return Entity\User
+	 * @return User
 	 */
-	public function recoveryPassword(Entity\User $user, $password)
+	public function recoveryPassword(User $user, $password)
 	{
 		$user->password = $password;
 		$user->removeRecovery();
