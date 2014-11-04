@@ -97,7 +97,7 @@ class UserFacade extends BaseFacade
 	 */
 	public function setRecovery(User $user)
 	{
-		$user->setRecovery(Random::generate(32), 'now + 1 hour');
+		$user->setRecovery(Random::generate(32), 'now + ' . $this->settings->expiration->recovery);
 		return $this->userDao->save($user);
 	}
 
