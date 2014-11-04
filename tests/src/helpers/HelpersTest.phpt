@@ -60,6 +60,11 @@ class HelpersTest extends Tester\TestCase
 		Assert::same($expectedText3, Helpers::linkToAnchor($exampleText1, NULL, NULL));
 	}
 
+	public function testMkDir()
+	{
+		Assert::same(NULL, Helpers::mkDir(''));
+	}
+
 }
 
 $test = new HelpersTest();

@@ -197,7 +197,7 @@ class Helpers
 	 */
 	public static function mkDir($dir)
 	{
-		if (!is_dir($dir)) {
+		if ($dir && !is_dir($dir)) {
 			mkdir($dir);
 		}
 	}
