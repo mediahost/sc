@@ -4,6 +4,7 @@ namespace App\Components\Profile;
 
 use App\Components\BaseControl;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Storage\SettingsStorage;
 use Nette\Application\UI\Form;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\ArrayHash;
@@ -12,10 +13,13 @@ class SignInControl extends BaseControl
 {
 	
 	public $onSuccess = [];
+	
+	/** @var SettingsStorage @inject */
+	public $settings;
 
 	/** @return Form */
 	protected function createComponentForm()
-	{
+	{	
 		$form = new Form();
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
@@ -44,10 +48,12 @@ class SignInControl extends BaseControl
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		if ($values->remember) {
-			$this->presenter->getUser()->setExpiration('14 days', FALSE);
+			$this->presenter->getUser()->setExpiration($this->settings->expiration->remember , FALSE);
 		} else {
-			$this->presenter->getUser()->setExpiration('20 minutes', TRUE);
+			$this->presenter->getUser()->setExpiration($this->settings->expiration->notRemember, TRUE);
 		}
+		
+
 
 		try {
 			$this->presenter->user->login($values->mail, $values->password);

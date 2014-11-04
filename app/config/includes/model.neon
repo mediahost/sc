@@ -10,5 +10,6 @@ services:
 	- {class: App\Model\Facade\UserFacade(@userDao), inject: yes}
 
 	# Storages
+#	- {class: App\Model\Storage\SettingsStorage, inject: yes}
 	- {class: App\Model\Storage\SignUpStorage, inject: yes}
 	- {class: App\Model\Storage\UserSettingsStorage, inject: yes}

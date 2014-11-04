@@ -16,6 +16,9 @@ use Nette\Utils\Strings;
 
 class UserFacade extends BaseFacade
 {
+	/** @var \App\Model\Storage\SettingsStorage @inject */
+	public $settings;
+	
 	/** @var EntityDao */
 	private $roleDao;
 	
@@ -184,7 +187,7 @@ class UserFacade extends BaseFacade
 				->execute();
 
 		$signUp->verificationToken = Strings::random(32);
-		$signUp->verificationExpiration = new DateTime('now + 1 day');
+		$signUp->verificationExpiration = new DateTime('now + ' . $this->settings->expiration->verification);
 
 		$this->em->persist($signUp);
 		$this->em->flush();

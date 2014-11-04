@@ -27,7 +27,7 @@ class TwitterControl extends BaseControl
 	public $userFacade;
 
 	/** @var RoleFacade @inject */
-	public $uroleFacade;
+	public $roleFacade;
 
 	public function handleAuthenticate()
 	{
