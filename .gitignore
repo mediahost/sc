@@ -67,5 +67,5 @@
 #################
 ## Installer
 ################
-/www/adminer/database.sql
+/www/adminer/database-log.sql
 /bin/testInstaller.bat

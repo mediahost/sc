@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ed5ad5be1de346ffe23f06fec5cf9110",
+    "hash": "95717b36d6d03fbd032892bde263424b",
     "packages": [
         {
             "name": "dg/adminer-custom",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mediahost/adminer-custom.git",
-                "reference": "7193b8a47c2463cfd9d4df947ffd2ad806e32a79"
+                "reference": "61758ee25500ba2f617a290a691f43fc04474970"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mediahost/adminer-custom/zipball/7193b8a47c2463cfd9d4df947ffd2ad806e32a79",
-                "reference": "7193b8a47c2463cfd9d4df947ffd2ad806e32a79",
+                "url": "https://api.github.com/repos/mediahost/adminer-custom/zipball/61758ee25500ba2f617a290a691f43fc04474970",
+                "reference": "61758ee25500ba2f617a290a691f43fc04474970",
                 "shasum": ""
             },
             "type": "project",
@@ -25,7 +25,7 @@
             "support": {
                 "source": "https://github.com/mediahost/adminer-custom/tree/master"
             },
-            "time": "2014-06-20 12:25:19"
+            "time": "2014-11-04 16:34:31"
         },
         {
             "name": "dg/ftp-deployment",
@@ -1362,12 +1362,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kdyby/Events.git",
-                "reference": "971b210f983a45e80c7f9035a6ec73b7dab251d4"
+                "reference": "8b529e40551a7396e4ebd98a531696088bc3aa34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kdyby/Events/zipball/971b210f983a45e80c7f9035a6ec73b7dab251d4",
-                "reference": "971b210f983a45e80c7f9035a6ec73b7dab251d4",
+                "url": "https://api.github.com/repos/Kdyby/Events/zipball/8b529e40551a7396e4ebd98a531696088bc3aa34",
+                "reference": "8b529e40551a7396e4ebd98a531696088bc3aa34",
                 "shasum": ""
             },
             "require": {
@@ -1435,7 +1435,7 @@
                 "kdyby",
                 "nette"
             ],
-            "time": "2014-09-30 10:26:34"
+            "time": "2014-11-04 13:32:36"
         },
         {
             "name": "kdyby/facebook",
@@ -2859,12 +2859,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/o5/grido.git",
-                "reference": "be993b95bed1d3f03d261b7cd6cf4f28aa063cf0"
+                "reference": "1adb59d68654af1e96fbfd1089139c074b5e3cb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/o5/grido/zipball/be993b95bed1d3f03d261b7cd6cf4f28aa063cf0",
-                "reference": "be993b95bed1d3f03d261b7cd6cf4f28aa063cf0",
+                "url": "https://api.github.com/repos/o5/grido/zipball/1adb59d68654af1e96fbfd1089139c074b5e3cb9",
+                "reference": "1adb59d68654af1e96fbfd1089139c074b5e3cb9",
                 "shasum": ""
             },
             "require": {
@@ -2910,7 +2910,7 @@
                 "table",
                 "tablegrid"
             ],
-            "time": "2014-10-22 09:51:17"
+            "time": "2014-11-04 15:27:01"
         },
         {
             "name": "rm/header",
