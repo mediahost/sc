@@ -82,7 +82,7 @@
 			</li>
 			
 			<li n:if="$user->isAllowed('skills', 'view')"
-				class="{if $presenter->isLinkCurrent('Skills:*') || $presenter->isLinkCurrent('SkillCategories:*')} active{/if} last">
+				class="{ifCurrentIn 'Skills:*', 'SkillCategories:*'} active{/ifCurrentIn} last">
 				<a n:href="Skills:">
 					<i class="icon-book-open"></i> <span class="title">{_'Skills & Categories'}</span><span class="selected"></span>
 					<span class="badge badge-danger badge-roundless">{_'new'}</span>

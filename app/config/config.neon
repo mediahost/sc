@@ -51,6 +51,7 @@ services:
 	urlScript:
 		factory: @httpRequest::getUrl()
 
+	nette.templateFactory: App\Templating\TemplateFactory
 
 extensions:
 	events: Kdyby\Events\DI\EventsExtension
