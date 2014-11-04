@@ -30,7 +30,7 @@ class User extends BaseEntity
 	/** @ORM\Column(type="string", nullable=false) */
 	protected $mail;
 
-	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER") */
+	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	protected $roles;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
