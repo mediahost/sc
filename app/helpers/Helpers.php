@@ -173,5 +173,34 @@ class Helpers
 		return FALSE;
 	}
 
+	/**
+	 * Purges directory.
+	 * @param  string
+	 * @return void
+	 */
+	public static function purge($dir)
+	{
+		self::mkDir($dir);
+		foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
+			if ($entry->isDir()) {
+				rmdir($entry);
+			} else {
+				unlink($entry);
+			}
+		}
+	}
+	
+	/**
+	 * Make directory.
+	 * @param  string
+	 * @return void
+	 */
+	public static function mkDir($dir)
+	{
+		if (!is_dir($dir)) {
+			mkdir($dir);
+		}
+	}
+
 	// </editor-fold>
 }

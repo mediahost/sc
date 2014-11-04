@@ -313,6 +313,7 @@ class Installer extends Object
 	 */
 	private function getLockFile($name)
 	{
+		\App\Helpers::mkDir($this->installDir);
 		return $this->installDir . '/' . $name . '.lock';
 	}
 
