@@ -18,7 +18,7 @@ class InstallerModel extends Object
 {
 
 	/** @var string */
-	private $adminerFilename = '/adminer/database.sql';
+	private $adminerFilename = '/adminer/database-log.sql';
 
 	// <editor-fold defaultstate="collapsed" desc="injects">
 
