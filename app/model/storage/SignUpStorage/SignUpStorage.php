@@ -2,7 +2,6 @@
 
 namespace App\Model\Storage;
 
-use App\Model\Entity;
 use App\Model\Entity\Company;
 use App\Model\Entity\User;
 use Exception;
@@ -38,7 +37,7 @@ class SignUpStorage extends Object
 	}
 
 	/** @param User $user */
-	public function setUser(Entity\User $user)
+	public function setUser(User $user)
 	{
 		$this->section->user = $user;
 	}

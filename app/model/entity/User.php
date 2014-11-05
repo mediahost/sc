@@ -13,6 +13,7 @@ use Nette\Security\Passwords;
  *
  * @property string $mail
  * @property string $name
+ * @property DateTime $birthday
  * @property string $hash
  * @property-write $password
  * @property ArrayCollection $roles
@@ -35,6 +36,9 @@ class User extends BaseEntity
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $name;
+
+	/** @ORM\Column(type="date", nullable=true) */
+	protected $birthday;
 
 	/** @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $settings;
