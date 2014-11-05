@@ -7,8 +7,8 @@ use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
+use App\TaggedString;
 use Nette\Application\UI\Form;
-use Nette\Forms\Controls\TextInput;
 use Nette\Utils\ArrayHash;
 
 class SignUpControl extends BaseControl
@@ -18,7 +18,7 @@ class SignUpControl extends BaseControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var SignUpStorage @inject */
 	public $session;
 
@@ -32,10 +32,7 @@ class SignUpControl extends BaseControl
 		$form->addText('mail', 'E-mail:')
 				->setAttribute('placeholder', 'E-mail')
 				->setRequired('Please enter your e-mail.')
-				->addRule(Form::EMAIL, 'E-mail has not valid format.')
-				->addRule(function (TextInput $item) {
-					return $this->userFacade->isUnique($item->value);
-				}, 'This e-mail is registered yet!');
+				->addRule(Form::EMAIL, 'E-mail has not valid format.');
 
 		$form->addPassword('password', 'Password:')
 				->setAttribute('placeholder', 'Password')
@@ -44,12 +41,23 @@ class SignUpControl extends BaseControl
 		$form->addPassword('passwordVerify', 'Re-type Your Password:')
 				->setAttribute('placeholder', 'Re-type Your Password')
 				->addConditionOn($form['password'], Form::FILLED)
-					->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
+				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
 
 		$form->addSubmit('continue', 'Continue');
 
+		$form->onSubmit[] = $this->formSubmit;
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
+	}
+
+	public function formSubmit(Form $form)
+	{
+		$values = $form->getValues();
+		if (!$this->userFacade->isUnique($values->mail)) {
+			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $values->mail]);
+			$message->setTranslator($this->translator);
+			$form['mail']->addError((string) $message);
+		}
 	}
 
 	/**
