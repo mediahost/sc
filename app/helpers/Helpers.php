@@ -201,6 +201,22 @@ class Helpers
 			mkdir($dir);
 		}
 	}
+	
+	/**
+	 * Removes directory.
+	 * @param  string
+	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
+	 */
+	public static function rmDir($dir, $force = FALSE)
+	{
+		if ($force) {
+			return self::delTree($dir);
+		}
+		if ($dir && is_dir($dir)) {
+			return rmdir($dir);
+		}
+		return FALSE;
+	}
 
 	// </editor-fold>
 }

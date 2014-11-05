@@ -53,8 +53,8 @@ class InstallerModelTest extends ParentTestCase
 
 		// test '/adminer/database.sql'
 		$adminerPath = $dir . 'adminer/';
-		$adminerFile = $adminerPath . 'database.sql';
-		mkdir($adminerPath);
+		$adminerFile = $adminerPath . 'database-log.sql';
+		\App\Helpers::mkDir($adminerPath);
 		file_put_contents($adminerFile, 'test');
 		Assert::true($installer->installAdminer($dir));
 		unlink($adminerFile);
