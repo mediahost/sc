@@ -56,8 +56,16 @@
 							<!-- BEGIN PAGE TITLE-->
 							<h3 class="page-title" n:block="pageTitle">
 								{block pageTitleText}
+								{if $isAdmin}
+								{_'Administration section'}
+								{elseif $isCandidate}
+								{_'Candidate section'}
+								{elseif $isCompany}
+								{_'Company section'}
+								{else}
 								{_'Source-Code'}
 								<small>{_'ver 2'}</small>
+								{/if}
 								{/block}
 							</h3>
 							<!-- END PAGE TITLE-->
