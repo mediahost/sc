@@ -124,6 +124,7 @@ class UsersPresenter extends BasePresenter
 			$this->redirect("Users:");
 		};
 		$form->onContinueButton[] = function () {
+			$this->userDao->save($this->userEntity);
 			$this->redirect("edit", $this->userEntity->getId());
 		};
 		
