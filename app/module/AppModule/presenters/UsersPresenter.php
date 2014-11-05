@@ -119,17 +119,15 @@ class UsersPresenter extends BasePresenter
 				->create($this->userFormFactory)
 				->setEntity($this->userEntity)
 				->create();
-		$form->onSuccess[] = $this->userFormSuccess;
-		return $form;
-	}
-
-	public function userFormSuccess($form)
-	{
-		if ($form['submitContinue']->submittedBy) {
-			$this->userDao->save($this->userEntity);
+		
+		$form->onSaveButton[] = function() {
+			$this->redirect("Users:");
+		};
+		$form->onContinueButton[] = function () {
 			$this->redirect("edit", $this->userEntity->getId());
-		}
-		$this->redirect("Users:");
+		};
+		
+		return $form;
 	}
 
 	// </editor-fold>
