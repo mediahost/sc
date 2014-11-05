@@ -41,7 +41,6 @@ class InstallerModelTest extends ParentTestCase
 	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		Environment::lock('db', LOCK_DIR);
 	}
 
 	// <editor-fold defaultstate="expanded" desc="tests">

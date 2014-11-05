@@ -39,7 +39,6 @@ class SkillCategoryTest extends ParentTestCase
 	
 	public function setUp()
 	{
-		Environment::lock('db', LOCK_DIR);
 		$this->updateSchema();
 		$this->skillCategory = new SkillCategory;
 	}
