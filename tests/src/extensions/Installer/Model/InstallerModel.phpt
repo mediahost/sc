@@ -52,8 +52,8 @@ class InstallerModelTest extends ParentTestCase
 		$dir = $this->container->getParameters()['tempDir'];
 
 		// test '/adminer/database.sql'
-		$adminerPath = $dir . 'adminer/';
-		$adminerFile = $adminerPath . 'database-log.sql';
+		$adminerFile = $dir . InstallerModel::ADMINER_FILENAME;
+		$adminerPath = dirname($adminerFile);
 		\App\Helpers::mkDir($adminerPath);
 		file_put_contents($adminerFile, 'test');
 		Assert::true($installer->installAdminer($dir));

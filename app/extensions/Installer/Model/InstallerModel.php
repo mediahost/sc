@@ -17,8 +17,7 @@ use Nette\Object;
 class InstallerModel extends Object
 {
 
-	/** @var string */
-	private $adminerFilename = '/adminer/database-log.sql';
+	const ADMINER_FILENAME = '/adminer/database-log.sql';
 
 	// <editor-fold defaultstate="collapsed" desc="injects">
 
@@ -90,7 +89,7 @@ class InstallerModel extends Object
 	public function installAdminer($wwwDir, $file = NULL)
 	{
 		if (!$file) {
-			$file = $wwwDir . $this->adminerFilename;
+			$file = $wwwDir . self::ADMINER_FILENAME;
 		}
 		if (is_dir($wwwDir)) {
 			if (!file_exists($file)) {
