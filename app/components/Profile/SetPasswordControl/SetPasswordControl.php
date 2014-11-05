@@ -34,7 +34,7 @@ class SetPasswordControl extends BaseControl
 		$form->addPassword('newPassword', 'New password:', NULL, 255)
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', 8);
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', self::MIN_PASSWORD_CHARACTERS);
 
 		$form->addPassword('passwordAgain', 'Re-type Your Password:', NULL, 255)
 				->setAttribute('placeholder', 'Re-type Your Password')

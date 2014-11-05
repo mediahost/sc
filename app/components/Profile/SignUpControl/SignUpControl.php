@@ -36,7 +36,8 @@ class SignUpControl extends BaseControl
 
 		$form->addPassword('password', 'Password:')
 				->setAttribute('placeholder', 'Password')
-				->setRequired('Please enter your password.');
+				->setRequired('Please enter your password')
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', self::MIN_PASSWORD_CHARACTERS);
 
 		$form->addPassword('passwordVerify', 'Re-type Your Password:')
 				->setAttribute('placeholder', 'Re-type Your Password')
