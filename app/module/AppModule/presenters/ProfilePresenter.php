@@ -40,7 +40,8 @@ class ProfilePresenter extends BasePresenter
 	{
 		$this->userFacade->hardDelete($this->user->id);
 		$this->user->logout();
-		$this->redirect(":Front:Sign:In");
+		$this->flashMessage('Your account has been deleted', 'success');
+		$this->redirect(":Front:Homepage:");
 	}
 
 	/**

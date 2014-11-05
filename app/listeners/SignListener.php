@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Mail\Messages\SuccessRegistrationMessage;
 use App\Mail\Messages\VerificationMessage;
 use App\Model\Entity\SignUp;
 use App\Model\Entity\User;
@@ -12,29 +13,29 @@ use App\TaggedString;
 use Kdyby\Events\Subscriber;
 use Nette\Application\Application;
 use Nette\Application\UI\Control;
-use Nette\Latte;
+use Nette\Latte\Engine;
 use Nette\Mail\IMailer;
 use Nette\Object;
 use Nette\Security\Identity;
 
 class SignListener extends Object implements Subscriber
 {
-	
+
 	const REDIRECT_AFTER_SIGNIN = ':App:Dashboard:';
 	const REDIRECT_SIGNIN_PAGE = ':Front:Sign:in';
-	
+
 	/** @var SignUpStorage @inject */
 	public $session;
-	
+
 	/** @var UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var RoleFacade @inject */
 	public $roleFacade;
-	
+
 	/** @var IMailer @inject */
 	public $mailer;
-	
+
 	/** @var Application @inject */
 	public $application;
 
@@ -64,7 +65,7 @@ class SignListener extends Object implements Subscriber
 			$this->onRequire($control, $user);
 		}
 	}
-	
+
 	public function onRequire(Control $control, User $user)
 	{
 		if (!$user->mail) {
@@ -73,27 +74,27 @@ class SignListener extends Object implements Subscriber
 			);
 		} else {
 			$this->onExists($control, $user);
-		}	
+		}
 	}
-	
+
 	public function onExists(Control $control, User $user)
 	{
 		if (!$existing = $this->userFacade->findByMail($user->mail)) {
 			$control->presenter->redirect(':Front:Sign:up', [
 				'step' => 'additional'
-			]);	
+			]);
 		} else {
 			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $user->mail]);
 			$control->presenter->flashMessage($message);
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		}
 	}
-	
+
 	public function onVerify(Control $control, User $user)
 	{
 		if (!$this->session->isVerified()) {
 			$role = $this->roleFacade->findByName($this->session->role);
-			
+
 			// Sign up temporarily
 			$signUp = new SignUp();
 			$signUp->setMail($user->mail)
@@ -103,25 +104,25 @@ class SignListener extends Object implements Subscriber
 
 			if ($user->facebook) {
 				$signUp->setFacebookId($user->facebook->id)
-					->setFacebookAccessToken($user->facebook->accessToken);
+						->setFacebookAccessToken($user->facebook->accessToken);
 			}
-			
+
 			if ($user->twitter) {
 				$signUp->setTwitterId($user->twitter->id)
-					->setTwitterAccessToken($user->twitter->accessToken);
+						->setTwitterAccessToken($user->twitter->accessToken);
 			}
 
 			$signUp = $this->userFacade->signUpTemporarily($signUp);
-			
+
 			// Send verification e-mail
-			$latte = new Latte\Engine;
+			$latte = new Engine;
 			$params = ['link' => $this->application->presenter->link('//:Front:Sign:verify', $signUp->verificationToken)];
 			$message = new VerificationMessage();
 			$message->addTo($user->mail)
 					->setHtmlBody($latte->renderToString($message->getPath(), $params));
-			
+
 			$this->mailer->send($message);
-			
+
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		} else {
@@ -132,6 +133,15 @@ class SignListener extends Object implements Subscriber
 
 	public function onSuccess(Control $control, User $user)
 	{
+		// Send registration e-mail
+		$latte = new Engine;
+		$message = new SuccessRegistrationMessage();
+		$message->addTo($user->mail)
+				->setHtmlBody($latte->renderToString($message->getPath()));
+
+		$this->mailer->send($message);
+
+		$control->presenter->flashMessage('Your account has been activated. Enjoy your ride!', 'success');
 		$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$control->presenter->restoreRequest($control->presenter->backlink);
 		$control->presenter->redirect(self::REDIRECT_AFTER_SIGNIN);

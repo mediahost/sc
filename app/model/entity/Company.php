@@ -20,6 +20,16 @@ class Company extends BaseEntity
 	 */
 	protected $name;
 
+	/**
+	 * @ORM\Column(type="string", length=100, nullable=true)
+	 */
+	protected $companyId;
+
+	/**
+	 * @ORM\Column(type="text", nullable=true)
+	 */
+	protected $address;
+
 	public function __construct()
 	{
 

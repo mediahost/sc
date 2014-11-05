@@ -1,1 +1,7 @@
 {block content}
+
+{_'This is dashboard for'} 
+{if $isAdmin}{_'administrator'}
+{elseif $isCompany}{_'company'}
+{elseif $isCandidate}{_'candidate'}
+{else}{_'you'}{/if}
