@@ -4,9 +4,11 @@ namespace App\FrontModule\Presenters;
 
 use App\Components\Profile;
 use App\Model\Entity\Facebook;
+use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
 use App\Model\Entity\UserSettings;
+use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 
@@ -63,13 +65,16 @@ class SignPresenter extends BasePresenter
 
 	/** @var UserFacade @inject */
 	public $userFacade;
+	
+	/** @var RoleFacade @inject */
+	public $roleFacade;
 
 	// </editor-fold>
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->isLoggedIn();
+//		$this->isLoggedIn();
 	}
 
 	protected function beforeRender()
@@ -122,8 +127,8 @@ class SignPresenter extends BasePresenter
 	}
 
 	/**
-	 * @param type $role
-	 * @param type $step
+	 * @param string $role
+	 * @param string $step
 	 */
 	public function actionUp($role = NULL, $step = NULL)
 	{
@@ -165,8 +170,14 @@ class SignPresenter extends BasePresenter
 			
 			$user->settings = new UserSettings();
 			
+			$role = $this->roleFacade->findByName(Role::ROLE_SIGNED);
+			$user->addRole($role);
+			
 			$this->userFacade->verify($user, $token);
-			$this->onVerify($this, $user);
+			$this->session->verification = TRUE;
+			$this->presenter->redirect(':Front:Sign:up', [
+				'step' => 'additional'
+			]);
 		} else {
 			$this->presenter->flashMessage('Verification token is incorrect.', 'warning');
 			$this->redirect('in');
