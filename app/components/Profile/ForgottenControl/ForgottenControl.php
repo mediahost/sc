@@ -58,7 +58,7 @@ class ForgottenControl extends BaseControl
 			$message->setHtmlBody($template);
 			$this->mailer->send($message);
 
-			$this->presenter->flashMessage('Recovery link has been send to your mail.');
+			$this->presenter->flashMessage('Recovery link has been sent to your mail.');
 			$this->presenter->redirect(self::REDIRECT_AFTER_SUCCESS);
 		}
 	}

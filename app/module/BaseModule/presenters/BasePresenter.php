@@ -4,12 +4,21 @@ namespace App\BaseModule\Presenters;
 
 use App\Components\Profile\ISignOutControlFactory;
 use App\Components\Profile\SignOutControl;
-use Nette;
+use App\Model\Storage\UserSettingsStorage;
+use App\TaggedString;
+use GettextTranslator\Gettext;
+use Kdyby\Doctrine\EntityManager;
+use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Presenter;
+use Venne\Bridges\Kdyby\DoctrineForms\FormFactoryFactory;
+use WebLoader\LoaderFactory;
+use WebLoader\Nette\CssLoader;
+use WebLoader\Nette\JavaScriptLoader;
 
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Nette\Application\UI\Presenter
+abstract class BasePresenter extends Presenter
 {
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
@@ -19,22 +28,22 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	/** @persistent */
 	public $backlink = '';
 
-	/** @var \Venne\Bridges\Kdyby\DoctrineForms\FormFactoryFactory @inject */
+	/** @var FormFactoryFactory @inject */
 	public $formFactoryFactory;
 
-	/** @var \WebLoader\LoaderFactory @inject */
+	/** @var LoaderFactory @inject */
 	public $webLoader;
 
 	/** @var ISignOutControlFactory @inject */
 	public $iSignOutControlFactory;
 
-	/** @var \GettextTranslator\Gettext @inject */
+	/** @var Gettext @inject */
 	public $translator;
 
-	/** @var \App\Model\Storage\UserSettingsStorage @inject */
+	/** @var UserSettingsStorage @inject */
 	public $settingsStorage;
 
-	/** @var \Kdyby\Doctrine\EntityManager @inject */
+	/** @var EntityManager @inject */
 	public $em;
 
 	// </editor-fold>
@@ -60,8 +69,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	 */
 	public function flashMessage($message, $type = 'info')
 	{
-		if (!$message instanceof \Nette\Utils\Html) {
+		if (is_string($message)) {
 			$message = $this->translator->translate($message);
+		} else if ($message instanceof TaggedString) {
+			$message->setTranslator($this->translator);
+			$message = (string) $message;
 		}
 		parent::flashMessage($message, $type);
 	}
@@ -80,7 +92,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
 				$this->flashMessage('You should be logged in!');
 			} elseif (!$this->user->isAllowed($resource, $privilege)) {
-				throw new Nette\Application\ForbiddenRequestException;
+				throw new ForbiddenRequestException;
 			}
 		}
 	}

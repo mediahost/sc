@@ -7,9 +7,8 @@ use App\Model\Entity\SignUp;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use App\Model\Storage\MessageStorage;
 use App\Model\Storage\SignUpStorage;
-use Kdyby\Doctrine\EntityManager;
+use App\TaggedString;
 use Kdyby\Events\Subscriber;
 use Nette\Application\Application;
 use Nette\Application\UI\Control;
@@ -17,7 +16,6 @@ use Nette\Latte;
 use Nette\Mail\IMailer;
 use Nette\Object;
 use Nette\Security\Identity;
-use Tracy\Debugger;
 
 class SignListener extends Object implements Subscriber
 {
@@ -85,7 +83,8 @@ class SignListener extends Object implements Subscriber
 				'step' => 'additional'
 			]);	
 		} else {
-			$control->presenter->flash('This e-mail is registered yet.');
+			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $user->mail]);
+			$control->presenter->flashMessage($message);
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		}
 	}

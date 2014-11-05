@@ -12,6 +12,8 @@ use Nette\Application\UI,
 abstract class BaseControl extends UI\Control
 {
 	// <editor-fold defaultstate="expanded" desc="constants & variables">
+	
+	const MIN_PASSWORD_CHARACTERS = 8;
 
 	/** @var ITranslator @inject */
 	public $translator;
