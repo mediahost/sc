@@ -132,6 +132,7 @@ class SignListener extends Object implements Subscriber
 
 	public function onSuccess(Control $control, User $user)
 	{
+		$control->presenter->flashMessage('Your account has been activated. Enjoy your ride!', 'success');
 		$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$control->presenter->restoreRequest($control->presenter->backlink);
 		$control->presenter->redirect(self::REDIRECT_AFTER_SIGNIN);
