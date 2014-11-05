@@ -13,3 +13,4 @@ rd /s /q cache
 cd /d "%root%/tests"
 del "test.log"
 cd /d "%this%"
+exit

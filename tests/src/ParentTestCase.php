@@ -40,6 +40,7 @@ abstract class ParentTestCase extends TestCase
 	
 	protected function updateSchema()
 	{
+		\Tester\Environment::lock('db', LOCK_DIR);
 		if (!$this->schemaTool instanceof SchemaTool) {
 			$this->schemaTool = new SchemaTool($this->em);
 		}

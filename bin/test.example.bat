@@ -1,19 +1,7 @@
+start /wait clear.bat
+
 set this=%CD%
 set root=%this%/..
-cd /d "%root%/temp"
-del "btfj.dat"
-rd /s /q cache
-rd /s /q proxies
-rd /s /q install
-cd /d "%this%"
-
-cd /d "%root%/tests/temp"
-del "btfj.dat"
-rd /s /q cache
-cd /d "%root%/tests"
-del "test.log"
-cd /d "%this%"
-
 set phpIni="c:/xampp/php/php.ini"
 set testDir="%root%/tests/src/"
 set testLog=%root%/tests/test.log

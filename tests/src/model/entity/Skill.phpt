@@ -34,7 +34,6 @@ class SkillTest extends ParentTestCase
 	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		Environment::lock('db', LOCK_DIR);
 		
 		$this->skillDao = $this->em->getDao(Skill::getClassName());
 		$this->skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
