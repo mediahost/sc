@@ -6,6 +6,7 @@ use Tracy\Debugger as Debug;
 use Kdyby\Doctrine\EntityManager,
 	Kdyby\Doctrine\EntityDao;
 use App\Model\Entity\Role,
+	App\Model\Entity\User,
 	App\Model\Facade\UserFacade as UserFacade;
 
 /**
@@ -25,6 +26,9 @@ class UserFormFactory extends FormFactory
 
 	/** @var EntityDao */
 	private $roleDao;
+	
+	/** @var EntityDao */
+	protected $userDao;
 
 	/** @var UserFacade */
 	private $userFacade;
@@ -39,6 +43,7 @@ class UserFormFactory extends FormFactory
 		parent::__construct($formFactory);
 		$this->em = $em;
 		$this->roleDao = $this->em->getDao(Role::getClassName());
+		$this->userDao = $this->em->getDao(User::getClassName());
 		$this->roleFacade = $roleFacade;
 		$this->userFacade = $userFacade;
 	}
@@ -68,8 +73,7 @@ class UserFormFactory extends FormFactory
 			$role->setDefaultValue($defaultRole->getId());
 		}
 
-		$form->addSubmit('_submit', 'Save');
-		$form->addSubmit('submitContinue', 'Save and continue edit');
+		$form->addDefaultSubmits();
 		return $form;
 	}
 

@@ -9,6 +9,59 @@ namespace App\Forms;
  */
 class Form extends \Nette\Application\UI\Form
 {
+	
+	/** @var array */
+	public $onAfterSuccess;
+	
+	/** @var array */
+	private $onEnd;
+	
+	/** @var array */
+	public $onSaveButton;
+	
+	/** @var array */
+	public $onContinueButton;
+	
+	public function __construct(\Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+	{
+		$this->onValidate[] = function () {
+			$this->onSuccess[] = function (Form $form, $values) {
+				if ($this->onAfterSuccess) {
+					foreach ($this->onAfterSuccess as $handler) {
+						\Nette\Utils\Callback::invoke($handler, $this, $values);
+					}
+				}
+				if ($this->onEnd) {
+					foreach ($this->onEnd as $handler) {
+						\Nette\Utils\Callback::invoke($handler, $this, $values);
+					}
+				}
+			};
+		};
+		parent::__construct($parent, $name);
+	}
+	
+	public function addDefaultSubmits()
+	{
+		$this->addSubmit('_submit', 'Save');
+		$this->addSubmit('submitContinue', 'Save and continue edit');
+		$this->onEnd[] = function (Form $form, $values) {
+			if ($form['submitContinue']->submittedBy) {
+				if ($this->onContinueButton) {
+					foreach ($this->onContinueButton as $handler) {
+						\Nette\Utils\Callback::invoke($handler, $this, $values);
+					}
+				}
+			} elseif ($form['_submit']->submittedBy) {
+				if ($this->onSaveButton) {
+					foreach ($this->onSaveButton as $handler) {
+						\Nette\Utils\Callback::invoke($handler, $this, $values);
+					}
+				}
+			}
+		};
+	}
+	
 	// <editor-fold defaultstate="collapsed" desc="special items">
 
 	/**
