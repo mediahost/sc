@@ -15,6 +15,7 @@ use Nette\Object;
  * @property Auth $auth
  * @property User $user
  * @property array $defaults
+ * @property bool $verification
  */
 class SignUpStorage extends Object
 {

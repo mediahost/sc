@@ -51,7 +51,7 @@ class SignUpControl extends BaseControl
 		return $form;
 	}
 
-	public function formSubmit(Form $form)
+	public function formSubmit(Form $form) // ToDo: Why this? On Success is good enought!
 	{
 		$values = $form->getValues();
 		if (!$this->userFacade->isUnique($values->mail)) {

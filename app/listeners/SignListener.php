@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Mail\Messages\SuccessRegistrationMessage;
 use App\Mail\Messages\VerificationMessage;
+use App\Model\Entity\Role;
 use App\Model\Entity\SignUp;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
@@ -51,8 +52,7 @@ class SignListener extends Object implements Subscriber
 			'App\Components\Profile\SignUpControl::onSuccess' => 'onStartup',
 			'App\Components\Profile\TwitterControl::onSuccess' => 'onStartup',
 			'App\Components\Profile\RequiredControl::onSuccess' => 'onExists',
-			'App\Components\Profile\SummaryControl::onSuccess' => 'onVerify',
-			'App\FrontModule\Presenters\SignPresenter::onVerify' => 'onSuccess'
+			'App\Components\Profile\SummaryControl::onSuccess' => 'onSuccess'
 		);
 	}
 
@@ -70,8 +70,8 @@ class SignListener extends Object implements Subscriber
 	{
 		if (!$user->mail) {
 			$control->presenter->redirect(':Front:Sign:up', [
-				'step' => 'required']
-			);
+				'step' => 'required'
+			]);
 		} else {
 			$this->onExists($control, $user);
 		}
@@ -80,11 +80,9 @@ class SignListener extends Object implements Subscriber
 	public function onExists(Control $control, User $user)
 	{
 		if (!$existing = $this->userFacade->findByMail($user->mail)) {
-			$control->presenter->redirect(':Front:Sign:up', [
-				'step' => 'additional'
-			]);
+			$this->onVerify($control, $user);
 		} else {
-			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $user->mail]);
+			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $user->mail]); // ToDo: Translator this can do, I think.
 			$control->presenter->flashMessage($message);
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		}
@@ -92,7 +90,14 @@ class SignListener extends Object implements Subscriber
 
 	public function onVerify(Control $control, User $user)
 	{
-		if (!$this->session->isVerified()) {
+		if ($this->session->isVerified()) {
+			$user = $this->userFacade->signUp($user);
+			$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+			$control->presenter->flashMessage('Your e-mail has been seccessfully verified!', 'success');
+			$control->presenter->redirect(':Front:Sign:up', [
+				'step' => 'additional'
+			]);
+		} else {
 			$role = $this->roleFacade->findByName($this->session->role);
 
 			// Sign up temporarily
@@ -125,9 +130,6 @@ class SignListener extends Object implements Subscriber
 
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
-		} else {
-			$user = $this->userFacade->signUp($user);
-			$this->onSuccess($control, $user);
 		}
 	}
 
@@ -141,8 +143,6 @@ class SignListener extends Object implements Subscriber
 
 		$this->mailer->send($message);
 
-		$control->presenter->flashMessage('Your account has been activated. Enjoy your ride!', 'success');
-		$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$control->presenter->restoreRequest($control->presenter->backlink);
 		$control->presenter->redirect(self::REDIRECT_AFTER_SIGNIN);
 	}
