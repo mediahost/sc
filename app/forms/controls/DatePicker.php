@@ -205,7 +205,7 @@ class DatePicker extends BaseControl
 								->add($this->getIcon()));
 	}
 
-	// </editor-fold>s
+	// </editor-fold>
 
 	public function loadHttpData()
 	{

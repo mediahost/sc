@@ -7,7 +7,7 @@ use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Company;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use Nette\Application\UI\Form;
+use App\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 class AdditionalControl extends BaseControl
@@ -41,7 +41,7 @@ class AdditionalControl extends BaseControl
 				->setAttribute('placeholder', 'name and surename')
 				->setRequired('Please enter your name.');
 
-		$form->addText('birthday', 'Birthday:')
+		$form->addDatePicker('birthday', 'Birthday:')
 				->setAttribute('placeholder', 'dd/mm/yyyy');
 
 		$form->addSubmit('continue', 'Continue');
