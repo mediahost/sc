@@ -1,5 +1,5 @@
 /* ===========================================================
- * bootstrap-modal.js v2.2.4
+ * bootstrap-modal.js v2.2.5
  * ===========================================================
  * Copyright 2012 Jordan Schroter
  *
@@ -136,7 +136,7 @@
 			}
 
 			var modalOverflow = $(window).height() - 10 < this.$element.height();
-
+            
 			if (modalOverflow || this.options.modalOverflow) {
 				this.$element
 					.css('margin-top', 0)
@@ -154,24 +154,25 @@
 			if (this.isShown && this.options.consumeTab) {
 				this.$element.on('keydown.tabindex.modal', '[data-tabindex]', function (e) {
 			    	if (e.keyCode && e.keyCode == 9){
-						var $next = $(this),
-							$rollover = $(this);
+						var elements = [],
+							tabindex = Number($(this).data('tabindex'));
 
-						that.$element.find('[data-tabindex]:enabled:not([readonly])').each(function (e) {
-							if (!e.shiftKey){
-						 		$next = $next.data('tabindex') < $(this).data('tabindex') ?
-									$next = $(this) :
-									$rollover = $(this);
-							} else {
-								$next = $next.data('tabindex') > $(this).data('tabindex') ?
-									$next = $(this) :
-									$rollover = $(this);
-							}
+						that.$element.find('[data-tabindex]:enabled:visible:not([readonly])').each(function (ev) {
+							elements.push(Number($(this).data('tabindex')));
 						});
-
-						$next[0] !== $(this)[0] ?
-							$next.focus() : $rollover.focus();
-
+						elements.sort(function(a,b){return a-b});
+						
+						var arrayPos = $.inArray(tabindex, elements);
+						if (!e.shiftKey){
+						 		arrayPos < elements.length-1 ?
+									that.$element.find('[data-tabindex='+elements[arrayPos+1]+']').focus() :
+									that.$element.find('[data-tabindex='+elements[0]+']').focus();
+							} else {
+								arrayPos == 0 ?
+									that.$element.find('[data-tabindex='+elements[elements.length-1]+']').focus() :
+									that.$element.find('[data-tabindex='+elements[arrayPos-1]+']').focus();
+							}
+						
 						e.preventDefault();
 					}
 				});
@@ -304,7 +305,7 @@
 				.removeData('modal')
 				.removeClass('in')
 				.attr('aria-hidden', true);
-
+			
 			if (this.$parent !== this.$element.parent()) {
 				this.$element.appendTo(this.$parent);
 			} else if (!this.$parent.length) {

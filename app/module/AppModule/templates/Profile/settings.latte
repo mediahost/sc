@@ -1,10 +1,13 @@
-{block breadcrumbLast}
+{block pageTitle}
+	{_'Settings'}
+{/block}
+
+{block breadcrumbItems}
 <li>
 	<a n:href="Profile:">{_'My Profile'}</a>
-	<span class="fa fa-angle-right"></span>
 </li>
 <li>
-	<span>{_'Settings'}</span>
+	<a n:href="this">{_'Settings'}</a>
 </li>
 {/block}
 

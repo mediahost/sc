@@ -203,5 +203,5 @@
 			$this.spinner($this.data());
 		});
 	});
-
+	
 }(window.jQuery);

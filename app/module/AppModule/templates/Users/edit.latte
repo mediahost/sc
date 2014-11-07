@@ -1,7 +1,10 @@
-{block breadcrumbLast}
+{block pageTitle}
+	{_'Users'}
+{/block}
+
+{block breadcrumbItems}
 <li>
 	<a n:href="Users:">{_'Users'}</a>
-	<span class="fa fa-angle-right"></span>
 </li>
 <li>
 	<a n:href="this">{if $isAdd}{_'Add'}{else}{_'Edit'}{/if}</a>

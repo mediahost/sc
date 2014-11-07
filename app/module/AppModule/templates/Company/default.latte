@@ -1,5 +1,11 @@
-{block breadcrumbLast}
-	<li><span>{_'Company'}</span></li>
+{block pageTitle}
+	{_'Company'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+	<a n:href="Company:">{_'Company'}</a>
+</li>
 {/block}
 
 {block content}

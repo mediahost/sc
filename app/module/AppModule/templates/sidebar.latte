@@ -2,20 +2,19 @@
 <!-- BEGIN SIDEBAR -->
 <div class="page-sidebar-wrapper">
 	<div class="page-sidebar navbar-collapse collapse">
-		<!-- add "navbar-no-scroll" class to disable the scrolling of the sidebar menu -->
+		
 		<!-- BEGIN SIDEBAR MENU -->
 		<ul class="page-sidebar-menu" data-auto-scroll="true" data-slide-speed="200">
 			<li class="sidebar-toggler-wrapper">
 				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-				<div class="sidebar-toggler">
+				<div class="sidebar-toggler hide">
 				</div>
 				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
 			</li>
 
 			<li class="sidebar-search-wrapper hidden-xs">
 				<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
-				<!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
-				<!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
+				
 				<form class="sidebar-search" action="/" method="POST">
 					<a href="javascript:;" class="remove">
 						<i class="icon-close"></i>
@@ -29,12 +28,45 @@
 				</form>
 				<!-- END RESPONSIVE QUICK SEARCH FORM -->
 			</li>
-
+			
 			<li n:if="$user->isAllowed('dashboard', 'default')"
 				class="start{ifCurrent Dashboard:*} active{/ifCurrent}">
 				<a n:href="Dashboard:">
-					<i class="fa fa-dashboard"></i> <span class="title">{_'Dashboard'}</span><span class="selected"></span>
+					<i class="fa fa-dashboard"></i> 
+					<span class="title">{_'Dashboard'}</span><span class="selected"></span>
+					<span class="badge badge-info badge-roundless">{_'demo'}</span>
 				</a>
+			</li>
+			
+			<li n:if="$user->isInRole('candidate')"
+				class="heading">
+				<h3 class="uppercase">{_'Candidate'}</h3>
+			</li>
+
+			<li n:if="$user->isAllowed('candidate', 'view')"
+				class="{ifCurrent Candidate:*} active{/ifCurrent}">
+				<a n:href="Candidate:">
+					<i class="fa fa-mortar-board"></i> <span class="title">{_'Candidate'}</span><span class="selected"></span>
+					<span class="badge badge-danger badge-roundless">{_'new'}</span>
+				</a>
+			</li>
+			
+			<li n:if="$user->isInRole('company')"
+				class="heading">
+				<h3 class="uppercase">{_'Company'}</h3>
+			</li>
+
+			<li n:if="$user->isAllowed('company', 'view')"
+				class="{ifCurrent Company:*} active{/ifCurrent}">
+				<a n:href="Company:">
+					<i class="fa fa-building-o"></i> <span class="title">{_'Company'}</span><span class="selected"></span>
+					<span class="badge badge-danger badge-roundless">{_'new'}</span>
+				</a>
+			</li>
+			
+			<li n:if="$user->isInRole('admin')"
+				class="heading">
+				<h3 class="uppercase">{_'Admin'}</h3>
 			</li>
 
 			<li n:if="$user->isAllowed('users', 'view')"
@@ -44,20 +76,13 @@
 				</a>
 			</li>
 			
-			<li n:if="$user->isAllowed('candidate', 'view')"
-				class="{ifCurrent Candidate:*} active{/ifCurrent}">
-				<a n:href="Candidate:">
-					<i class="fa fa-mortar-board"></i> <span class="title">{_'Candidate'}</span><span class="selected"></span>
-					<span class="badge badge-danger badge-roundless">{_'new'}</span>
-				</a>
+			<li n:if="$user->isInRole('superadmin')"
+				class="heading">
+				<h3 class="uppercase">{_'Superadmin'}</h3>
 			</li>
 			
-			<li n:if="$user->isAllowed('company', 'view')"
-				class="{ifCurrent Company:*} active{/ifCurrent}">
-				<a n:href="Company:">
-					<i class="fa fa-building-o"></i> <span class="title">{_'Company'}</span><span class="selected"></span>
-					<span class="badge badge-danger badge-roundless">{_'new'}</span>
-				</a>
+			<li class="heading">
+				<h3 class="uppercase">{_'Settings'}</h3>
 			</li>
 
 			<li class="{ifCurrent Profile:*} active{/ifCurrent} last">
@@ -80,7 +105,7 @@
 					</li>
 				</ul>
 			</li>
-			
+
 			<li n:if="$user->isAllowed('skills', 'view')"
 				class="{ifCurrentIn 'Skills:*', 'SkillCategories:*'} active{/ifCurrentIn} last">
 				<a n:href="Skills:">

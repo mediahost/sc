@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="{$lang}" class="ie8"> <![endif]-->
-<!--[if IE 9]> <html lang="{$lang}" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> <html lang="{$lang}"> <!--<![endif]-->
+<!--[if IE 8]> <html lang="{$lang}" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="{$lang}" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="{$lang}" class="no-js">
+<!--<![endif]-->
 
 	<!-- BEGIN HEAD -->
 	<head>
@@ -14,17 +16,10 @@
 		<meta content="" name="description" />
 		<meta content="" name="author" />
 
-		<!-- BEGIN GLOBAL MANDATORY STYLES -->
-		{control cssMetronicCore}
-		<!-- END GLOBAL MANDATORY STYLES -->
-
-		<!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
-		{control cssMetronicPlugin}
-		<!-- END PAGE LEVEL PLUGIN STYLES -->
-
-		<!-- BEGIN THEME STYLES -->
-		{control cssMetronicTheme}
-		<!-- END THEME STYLES -->
+		{includeblock '../../BaseModule/templates/metronic.defines.latte'}
+		{include cssMetronicCore}
+		{include cssMetronicPlugins}
+		{include cssMetronicTheme}
 
 		{control cssAdmin}
 		{control cssPrint}
@@ -51,23 +46,10 @@
 
 		{block scripts}
 		<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-		<!-- BEGIN CORE PLUGINS -->
-		<!--[if lt IE 9]>
-		{control jsMetronicCoreIE9}
-		<![endif]-->
-		{control jsMetronicCore}
-		<!-- END CORE PLUGINS -->
-
-		<!-- BEGIN PAGE LEVEL PLUGINS -->
-		{control jsMetronicPlugins}
-		{control jsAppPlugins}
-		<!-- END PAGE LEVEL PLUGINS -->
-
-		<!-- BEGIN PAGE LEVEL SCRIPTS -->
-		{control jsApp}
-		<!-- END PAGE LEVEL SCRIPTS -->
+		{include jsMetronicCore}
+		{include jsMetronicPlugins}
+		{include jsApp}
 		<!-- END JAVASCRIPTS -->
-
 		{/block}
 	</body>
 </html>

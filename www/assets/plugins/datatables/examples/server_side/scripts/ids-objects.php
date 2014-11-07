@@ -77,3 +77,4 @@ require( 'ssp.class.php' );
 echo json_encode(
 	SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns )
 );
+

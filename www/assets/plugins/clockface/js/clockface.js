@@ -2,7 +2,7 @@
 * Clockface - v1.0.1
 * Clockface timepicker for Twitter Bootstrap
 *
-* Confusion with noon and midnight:
+* Confusion with noon and midnight: 
 * http://en.wikipedia.org/wiki/12-hour_clock
 * Here considered '00:00 am' as midnight and '12:00 pm' as noon.
 *
@@ -15,16 +15,16 @@
     var Clockface = function (element, options) {
         this.$element = $(element);
         this.options = $.extend({}, $.fn.clockface.defaults, options, this.$element.data());
-        this.init();
+        this.init();  
      };
 
     Clockface.prototype = {
-        constructor: Clockface,
+        constructor: Clockface, 
         init: function () {
           //apply template
           this.$clockface = $($.fn.clockface.template);
-          this.$clockface.find('.l1 .cell, .left.cell').html('<div class="outer"></div><div class="inner"></div>');
-          this.$clockface.find('.l5 .cell, .right.cell').html('<div class="inner"></div><div class="outer"></div>');
+          this.$clockface.find('.l1 .cell, .left.cell').html('<div class="outer"></div><div class="inner"></div>'); 
+          this.$clockface.find('.l5 .cell, .right.cell').html('<div class="inner"></div><div class="outer"></div>'); 
           this.$clockface.hide();
 
           this.$outer = this.$clockface.find('.outer');
@@ -35,8 +35,8 @@
           this.ampm = null;
           this.hour = null;
           this.minute = null;
-
-          //click am/pm
+          
+          //click am/pm 
           this.$ampm.click($.proxy(this.clickAmPm, this));
 
           //click cell
@@ -106,13 +106,13 @@
         hide: function() {
             this.$clockface.hide();
             if(!this.isInline) {
-              this.$element.removeClass('clockface-open');
+              this.$element.removeClass('clockface-open');  
               this.$element.off('keydown.clockface');
               $(window).off('resize.clockface');
             }
 
             //trigger hidden event
-            this.$element.triggerHandler('hidden.clockface', this.getTime(true));
+            this.$element.triggerHandler('hidden.clockface', this.getTime(true));            
         },
 
         /*
@@ -133,7 +133,7 @@
         setTime: function(value) {
           var res, hour, minute, ampm = 'am';
 
-          //no new value
+          //no new value 
           if(value === undefined) {
             //if ampm null, it;s first showw, need to render hours ('am' by default)
             if(this.ampm === null) {
@@ -149,7 +149,7 @@
           }
 
           //parse value from string
-          if(typeof value === 'string' && value.length) {
+          if(typeof value === 'string' && value.length) { 
             res = this.parseTime(value);
 
             //'24' always '0'
@@ -157,30 +157,30 @@
               res.hour = 0;
             }
 
-            hour = res.hour;
-            minute = res.minute;
-            ampm = res.ampm;
+            hour = res.hour;             
+            minute = res.minute;             
+            ampm = res.ampm;             
           }
 
           //try to set ampm automatically
           if(hour > 11 && hour < 24) {
             ampm = 'pm';
-            //for 12h format substract 12 from value
+            //for 12h format substract 12 from value 
             if(!this.is24 && hour > 12) {
               hour -= 12;
             }
           } else if(hour >= 0 && hour < 11) {
-                //always set am for 24h and for '0' in 12h
+                //always set am for 24h and for '0' in 12h 
                 if(this.is24 || hour === 0) {
                    ampm = 'am';
-               }
+               } 
                //otherwise ampm should be defined in value itself and retrieved when parsing
-          }
+          }      
 
           this.setAmPm(ampm);
           this.setHour(hour);
           this.setMinute(minute);
-        },
+        },   
 
         /*
         Set ampm and re-fill hours
@@ -198,7 +198,7 @@
           //re-fill and highlight hour
           this.fill('hour');
           this.highlight('hour');
-        },
+        },   
         /*
         Sets hour value and highlight if possible
         */
@@ -235,7 +235,7 @@
           }
 
           this.highlight('minute');
-        },
+        },        
 
         /*
         Highlights hour/minute
@@ -257,11 +257,11 @@
 
         /*
         Fill values around
-        */
+        */ 
         fill: function(what) {
           var values = this.getValues(what),
               $cells = what === 'minute' ? this.$outer : this.$inner,
-              leadZero = what === 'minute';
+              leadZero = what === 'minute';           
 
           $cells.each(function(i){
             var v = values[i];
@@ -270,7 +270,7 @@
             }
             $(this).text(v);
           });
-        },
+        },          
 
         /*
         returns values of hours or minutes, depend on ampm and 24/12 format (0-11, 12-23, 00-55, etc)
@@ -312,10 +312,10 @@
           //update value in input
           if(!this.isInline) {
             this.$element.val(this.getTime());
-          }
+          }          
 
           //trigger pick event
-          this.$element.triggerHandler('pick.clockface', this.getTime(true));
+          this.$element.triggerHandler('pick.clockface', this.getTime(true));  
         },
 
         /*
@@ -329,12 +329,12 @@
           //update value in input
           if(!this.isInline && !this.is24) {
             this.$element.val(this.getTime());
-          }
+          }    
 
           //trigger pick event
-          this.$element.triggerHandler('pick.clockface', this.getTime(true));
+          this.$element.triggerHandler('pick.clockface', this.getTime(true));                  
         },
-
+        
 
         /*
         Place widget below input
@@ -349,7 +349,7 @@
             left: offset.left,
             zIndex: zIndex
           });
-        },
+        },  
 
         /*
         keydown handler (for not inline mode)
@@ -359,13 +359,13 @@
           if(/^(9|27|13)$/.test(e.which)) {
             this.hide();
             return;
-          }
+          } 
 
           clearTimeout(this.timer);
           this.timer = setTimeout($.proxy(function(){
             this.setTime(this.$element.val());
           }, this), 500);
-        },
+        },  
 
         /*
         Parse format from options and set this.is24
@@ -375,7 +375,7 @@
               hFormat = 'HH',
               mFormat = 'mm';
 
-          //hour format
+          //hour format    
           $.each(['HH', 'hh', 'H', 'h'], function(i, f){
             if(format.indexOf(f) !== -1) {
               hFormat = f;
@@ -389,24 +389,24 @@
               mFormat = f;
               return false;
             }
-          });
+          });          
 
           //is 24 hour format
-          this.is24 = hFormat.indexOf('H') !== -1;
+          this.is24 = hFormat.indexOf('H') !== -1; 
 
           this.hFormat = hFormat;
           this.mFormat = mFormat;
         },
 
-
+       
 
         /*
         Parse value passed as string or Date object
         */
         parseTime: function(value) {
-          var hour = null,
-              minute = null,
-              ampm = 'am',
+          var hour = null, 
+              minute = null, 
+              ampm = 'am', 
               parts = [], digits;
 
             value = $.trim(value);
@@ -445,10 +445,10 @@
                   break;
                   case 3:
                     hour = parseInt(digits[0], 10);  //e.g. 105
-                    minute = parseInt(digits[1]+digits[2], 10);
-                    if(minute > 59) {
+                    minute = parseInt(digits[1]+digits[2], 10); 
+                    if(minute > 59) { 
                       hour = parseInt(digits[0]+digits[1], 10); //e.g. 195
-                      minute = parseInt(digits[2], 10);
+                      minute = parseInt(digits[2], 10); 
                       if(hour > 24) {
                         hour = null;
                         minute = null;
@@ -476,11 +476,11 @@
             var sep = this.options.format.match(/h\s*([^hm]?)\s*m/i); //HH-mm, HH:mm
             if(sep && sep.length) {
               sep = sep[1];
-            }
+            } 
 
-            //sep can be null for HH, and '' for HHmm
+            //sep can be null for HH, and '' for HHmm 
             this.separator = sep;
-
+    
             //parse from string
             //use reversed string and regexp to parse 2-digit minutes first
             //see http://stackoverflow.com/questions/141348/what-is-the-best-way-to-parse-a-time-into-a-date-object-from-user-input-in-javas
@@ -511,11 +511,11 @@
 
           if(!hour.length && !minute.length) {
             return '';
-          }
+          }   
 
           if(this.hFormat.length > 1 && hour.length === 1) {
             hour = '0' + hour;
-          }
+          }   
 
           if(this.mFormat.length > 1 && minute.length === 1) {
             minute = '0' + minute;
@@ -546,7 +546,7 @@
           this.$clockface.remove();
           if(!this.isInline && this.options.trigger === 'focus') {
             this.$element.off('focus.clockface');
-          }
+          }          
         }
     };
 
@@ -570,14 +570,14 @@
                 data[option].apply(data, args);
             }
         });
-    };
-
+    };  
+    
     $.fn.clockface.defaults = {
         //see http://momentjs.com/docs/#/displaying/format/
         format: 'H:mm',
         trigger: 'focus' //focus|manual
     };
-
+   
 
  $.fn.clockface.template = ''+
       '<div class="clockface">' +
@@ -604,6 +604,6 @@
                 '<div class="cell"></div>' +
                 '<div class="cell"></div>' +
           '</div>'+
-      '</div>';
+      '</div>';  
 
 }(window.jQuery));

@@ -1,10 +1,13 @@
-{block breadcrumbLast}
+{block pageTitle}
+	{_'Skill Categories'}
+{/block}
+
+{block breadcrumbItems}
 <li>
 	<a n:href="SkillCategories:">{_'Skill Categories'}</a>
-	<span class="fa fa-angle-right"></span>
 </li>
 <li>
-	<a n:href="SkillCategories:add">{if $isAdd}{_'Add'}{else}{_'Edit'}{/if}</a>
+	<a n:href="this">{if $isAdd}{_'Add'}{else}{_'Edit'}{/if}</a>
 </li>
 {/block}
 

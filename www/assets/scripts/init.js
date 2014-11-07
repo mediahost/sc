@@ -7,13 +7,10 @@ jQuery(document).ready(function() {
     ComponentsPickers.init();
     HtmlEditors.init();
     ComponentsFormTools.init();
-    Login.init();
     UIToastr.init();
     Fullscreen.init();
     TableManaged.init();
     ComponentsDropdowns.init();
 
-    Content.init();
-
-    Background.init();
+    AppContent.init();
 });

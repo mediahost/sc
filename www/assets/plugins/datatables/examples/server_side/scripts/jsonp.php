@@ -66,3 +66,4 @@ require( 'ssp.class.php' );
 echo $_GET['callback'].'('.json_encode(
 	SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns )
 ).');';
+

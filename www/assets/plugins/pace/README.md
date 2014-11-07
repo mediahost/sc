@@ -23,3 +23,4 @@ If you use AMD or Browserify, require pace.js and call `pace.start()` as early i
 ```
 
 ![Analytics](https://ga-beacon.appspot.com/UA-45159009-2/pace/readme?pixel)
+

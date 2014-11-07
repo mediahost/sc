@@ -183,3 +183,4 @@ if ( $.fn.DataTable.TableTools ) {
 		}
 	} );
 }
+

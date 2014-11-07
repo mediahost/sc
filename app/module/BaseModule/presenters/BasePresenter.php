@@ -20,7 +20,7 @@ use WebLoader\Nette\JavaScriptLoader;
  */
 abstract class BasePresenter extends Presenter
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// <editor-fold defaultstate="expanded" desc="constants & variables">
 
 	/** @persistent string */
 	public $lang = 'en';
@@ -58,6 +58,7 @@ abstract class BasePresenter extends Presenter
 	{
 		$this->template->lang = $this->lang;
 		$this->template->setTranslator($this->translator);
+		$this->template->designSettings = new \App\Model\Entity\PageDesignSettings();
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="flash messages">

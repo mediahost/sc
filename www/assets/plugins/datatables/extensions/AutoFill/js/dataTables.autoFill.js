@@ -1,11 +1,11 @@
-/*! AutoFill 1.2.0
+/*! AutoFill 1.2.1
  * ©2008-2014 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     AutoFill
  * @description Add Excel like click and drag auto-fill options to DataTables
- * @version     1.2.0
+ * @version     1.2.1
  * @file        dataTables.autoFill.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -26,7 +26,7 @@
 var factory = function( $, DataTable ) {
 "use strict";
 
-/**
+/** 
  * AutoFill provides Excel like auto-fill features for a DataTable
  *
  * @class AutoFill
@@ -330,7 +330,7 @@ AutoFill.prototype = {
 			height = offsetEnd.top + $(nEnd).outerHeight() - offsetStart.top + (2*border),
 			oStyle;
 
-		// Recalculate start and end (when dragging "backwards")
+		// Recalculate start and end (when dragging "backwards")  
 		if( offsetStart.left > offsetEnd.left) {
 			x1 = offsetEnd.left - border;
 			x2 = offsetStart.left + $(nStart).outerWidth();
@@ -720,7 +720,7 @@ DataTable.AutoFill = AutoFill;
  *  @type      String
  *  @default   See code
  */
-AutoFill.version = "1.2.0";
+AutoFill.version = "1.2.1";
 
 
 /**
@@ -839,7 +839,11 @@ return AutoFill;
 
 // Define as an AMD module if possible
 if ( typeof define === 'function' && define.amd ) {
-	define( 'datatables-autofill', ['jquery', 'datatables'], factory );
+	define( ['jquery', 'datatables'], factory );
+}
+else if ( typeof exports === 'object' ) {
+    // Node/CommonJS
+    factory( require('jquery'), require('datatables') );
 }
 else if ( jQuery && !jQuery.fn.dataTable.AutoFill ) {
 	// Otherwise simply initialise as normal, stopping multiple evaluation
@@ -848,3 +852,4 @@ else if ( jQuery && !jQuery.fn.dataTable.AutoFill ) {
 
 
 }(window, document));
+

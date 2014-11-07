@@ -23,7 +23,7 @@ Include the jQuery library (version 1.7 or newer) and Backstretch plugin files i
   $(".foo").backstretch([
     "path/to/image.jpg",
     "path/to/image2.jpg",
-    "path/to/image3.jpg"
+    "path/to/image3.jpg"    
   ], {duration: 4000});
 </script>
 ```

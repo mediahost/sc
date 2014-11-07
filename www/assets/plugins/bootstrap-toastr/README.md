@@ -1,8 +1,10 @@
 # toastr
 **toastr** is a Javascript library for non-blocking notifications. jQuery is required. The goal is to create a simple core library that can be customized and extended.
 
+[![Build Status](https://travis-ci.org/CodeSeven/toastr.svg)](https://travis-ci.org/CodeSeven/toastr)
+
 ## Current Version
-2.0.1
+2.1.0
 
 ## Demo
 - Demo can be found at http://codeseven.github.io/toastr/demo.html
@@ -12,12 +14,12 @@
 Toastr is hosted at CDN JS
 
 #### Debug
-- [//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js](//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.0/js/toastr.js)
-- [//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css](//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.0/css/toastr.css)
+- [//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js](//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js)
+- [//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css](//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css)
 
 #### Minified
-- [//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.min.js](//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.0/js/toastr.min.js)
-- [//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.min.css](//cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.0/css/toastr.min.css)
+- [//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js](//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js) 
+- [//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css](//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css)
 
 ## NuGet Gallery
 http://nuget.org/packages/toastr
@@ -30,10 +32,10 @@ http://nuget.org/packages/toastr
 [Wiki including Change Log](https://github.com/CodeSeven/toastr/wiki)
 
 ## Breaking Changes
-
+ 
 ####Animation Changes
 The following animations options have been deprecated and should be replaced:
-
+ 
  - Replace `options.fadeIn` with `options.showDuration`
  - Replace `options.onFadeIn` with `options.onShown`
  - Replace `options.fadeOut` with `options.hideDuration`
@@ -56,13 +58,13 @@ For other API calls, see the [demo](http://codeseven.github.io/toastr/demo.html)
 ### Other Options
 	// Display a warning toast, with no title
 	toastr.warning('My name is Inigo Montoya. You killed my father, prepare to die!')
-
+	
 	// Display a success toast, with a title
 	toastr.success('Have fun storming the castle!', 'Miracle Max Says')
-
+	
 	// Display an error toast, with a title
 	toastr.error('I do not think that word means what you think it means.', 'Inconceivable!')
-
+		
 	// Clears the current list of toasts
 	toastr.clear()
 
@@ -71,7 +73,7 @@ Optionally enable a close button
 
     toastr.options.closeButton = true;
 
-Optionally override the close button's HTML.
+Optionally override the close button's HTML. 
 
     toastr.options.closeHtml = '<button><i class="icon-off"></i></button>';
 
@@ -104,8 +106,15 @@ Using the jQuery Easing plugin (http://www.gsgd.co.uk/sandbox/jquery/easing/)
 ####Animation Method
 Use the jQuery show/hide method of your choice. These default to fadeIn/fadeOut. The methods fadeIn/fadeOut, slideDown/slideUp, and show/hide are built into jQuery.
 
-	toastr.options.showMethod = 'slideDown';
-	toastr.options.hideMethod = 'slideUp';
+	toastr.options.showMethod = 'slideDown'; 
+	toastr.options.hideMethod = 'slideUp'; 
+	
+
+###Timeouts
+Control how toastr interacts with users by setting timeouts appropriately.
+
+	toastr.options.timeout = 30; // How long the toast will display without user interaction
+	toastr.options.extendedTimeOut = 60; // How long the toast will display after a user hovers over it
 
 ## Building Toastr
 
@@ -143,7 +152,7 @@ Inspired by https://github.com/Srirangan/notifer.js/.
 
 
 ## Copyright
-Copyright © 2012 [Hans Fjällemark](http://twitter.com/hfjallemark) & [John Papa](http://twitter.com/John_Papa).
+Copyright © 2012-2014 [Hans Fjällemark](http://twitter.com/hfjallemark) & [John Papa](http://twitter.com/John_Papa).
 
-## License
+## License 
 toastr is under MIT license - http://www.opensource.org/licenses/mit-license.php

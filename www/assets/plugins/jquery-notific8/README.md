@@ -46,7 +46,7 @@ An interactive demo page can be found here http://willsteinmetz.net/jquery/notif
       verticalEdge: 'left',
       zindex: 1500
     });
-
+    
     // set up your own default settings to save time and typing later
     // NOTE this is not required
     $.notific8('configure', {
@@ -57,7 +57,7 @@ An interactive demo page can be found here http://willsteinmetz.net/jquery/notif
       verticalEdge: 'left',
       zindex: 1500
     });
-
+    
     // set the zindex
     $.notific8('zindex', 1500);
 
