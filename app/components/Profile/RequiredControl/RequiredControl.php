@@ -3,11 +3,11 @@
 namespace App\Components\Profile;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 use App\TaggedString;
-use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
 class RequiredControl extends BaseControl
@@ -24,7 +24,7 @@ class RequiredControl extends BaseControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
-		$form = new Form();
+		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 

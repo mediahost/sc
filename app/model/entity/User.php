@@ -28,7 +28,7 @@ class User extends BaseEntity
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-	/** @ORM\Column(type="string", nullable=false) */
+	/** @ORM\Column(type="string", nullable=false, unique=true) */
 	protected $mail;
 
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */

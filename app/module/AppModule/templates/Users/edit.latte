@@ -7,7 +7,7 @@
 	<a n:href="Users:">{_'Users'}</a>
 </li>
 <li>
-	<a n:href="this">{if $isAdd}{_'Add'}{else}{_'Edit'}{/if}</a>
+	<a n:href="this">{ifset $isAdd}{_'Add'}{else}{_'Edit'}{/ifset}</a>
 </li>
 {/block}
 
@@ -17,7 +17,7 @@
 		<div class="portlet box green">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="fa fa-edit"></i>{if $isAdd}{_'Add'}{else}{_'Edit'}{/if} {_'user'}
+					<i class="fa fa-edit"></i>{ifset $isAdd}{_'Add'}{else}{_'Edit'}{/ifset} {_'user'}
 				</div>
 			</div>
 			<div class="portlet-body form">

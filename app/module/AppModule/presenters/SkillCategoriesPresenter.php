@@ -2,50 +2,43 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Skills\ISkillCategoryControlFactory;
+use App\Components\Skills\SkillCategoryControl;
 use App\Model\Entity\SkillCategory;
+use App\TaggedString;
+use Kdyby\Doctrine\DBALException;
+use Kdyby\Doctrine\EntityDao;
 
 class SkillCategoriesPresenter extends BasePresenter
 {
-	
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	
-	/** @var \App\Forms\SkillCategoryFormFactory @inject */
-	public $skillCategoryFormFactory;
-	
-	/** @var SkillCategory */
-	protected $skillCategory;
-	
-	/** @var \Kdyby\Doctrine\EntityDao */
+
+	/** @var ISkillCategoryControlFactory @inject */
+	public $iSkillCategoryControlFactory;
+
+	/** @var EntityDao */
 	private $skillCategoryDao;
-	
-	/** @var array */
-	protected $skillCategories;
-	
+
 	// </editor-fold>
-	
+
 	protected function startup()
 	{
 		parent::startup();
 		$this->skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
 	}
-	
+
 	// <editor-fold defaultstate="collapsed" desc="actions & renderers">
-	
+
 	/**
 	 * @secured
 	 * @resource('skillCategories')
 	 * @privilege('default')
 	 */
-	public function actionDefault()
-	{
-		$this->skillCategories = $this->skillCategoryDao->findAll();
-	}
-
 	public function renderDefault()
 	{
-		$this->template->skillCategories = $this->skillCategories;
+		$this->template->skillCategories = $this->skillCategoryDao->findAll();
 	}
-	
+
 	/**
 	 * @secured
 	 * @resource('skillCategories')
@@ -53,9 +46,8 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->skillCategory = new SkillCategory;
-		$this->skillCategoryFormFactory->setAdding();
-		$this->setView("edit");
+		$this->setView('edit');
+		$this->template->isAdd = TRUE;
 	}
 
 	/**
@@ -65,14 +57,15 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->skillCategory = $this->skillCategoryDao->find($id);
+		$entity = $this->skillCategoryDao->find($id);
+		if ($entity) {
+			$this['skillCategoryForm']->setEntity($entity);
+		} else {
+			$this->flashMessage('This category wasn\'t found.', 'error');
+			$this->redirect('default');
+		}
 	}
-	
-	public function renderEdit()
-	{
-		$this->template->isAdd = TRUE;
-	}
-	
+
 	/**
 	 * @secured
 	 * @resource('skillCategories')
@@ -80,39 +73,36 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$this->skillCategory = $this->skillCategoryDao->find($id);
-		if ($this->skillCategory) {
-			$this->skillCategoryDao->delete($this->skillCategory);
-			$this->flashMessage("Entity was deleted.", 'success');
+		$skillCategory = $this->skillCategoryDao->find($id);
+		if ($skillCategory) {
+			try {
+				$this->skillCategoryDao->delete($skillCategory);
+				$message = new TaggedString('Category \'<%name%>\' was deleted.', ['name' => $skillCategory->name]);
+				$this->flashMessage($message, 'success');
+			} catch (DBALException $exc) {
+				$message = new TaggedString('\'<%name%>\' has child category or skill. You can\'t delete it.', ['name' => $skillCategory->name]);
+				$this->flashMessage($message, 'warning');
+			}
 		} else {
-			$this->flashMessage("Entity was not found.", 'warning');
+			$this->flashMessage('Category was not found.', 'warning');
 		}
-		$this->redirect("default");
+		$this->redirect('default');
 	}
-	
+
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="forms">
-	
+
+	/** @return SkillCategoryControl */
 	public function createComponentSkillCategoryForm()
 	{
-		$form = $this->formFactoryFactory->create($this->skillCategoryFormFactory)
-			->setEntity($this->skillCategory)
-			->create();
-		$form->onSuccess[] = $this->skillCategoryFormSuccess;
-		return $form;
+		$control = $this->iSkillCategoryControlFactory->create();
+		$control->onAfterSave = function (SkillCategory $saved) {
+			$message = new TaggedString('\'<%name%>\' was successfully saved.', ['name' => $saved->name]);
+			$this->flashMessage($message, 'success');
+			$this->redirect('default');
+		};
+		return $control;
 	}
-	
-	public function skillCategoryFormSuccess($form)
-	{
-		if ($form['submitContinue']->submittedBy) {
-			$this->skillCategoryDao->save($this->skillCategory);
-			$this->redirect("edit", $this->skillCategory->getId());
-		}
-		$this->redirect("default");
-	}
-	
+
 	// </editor-fold>
-	
-	
 }

@@ -2,99 +2,57 @@
 
 namespace App\Forms;
 
+use App\Forms\Controls\CheckSwitch;
+use App\Forms\Controls\DateInput;
+use App\Forms\Controls\DatePicker;
+use App\Forms\Controls\MultiSelect2;
+use App\Forms\Controls\Select2;
+use App\Forms\Controls\Spinner;
+use App\Forms\Controls\TagInput;
+use App\Forms\Controls\TouchSpin;
+use App\Forms\Controls\WysiHtml;
+use Nette\Application\UI\Form as BaseForm;
+
 /**
  * Form
  *
  * @author Petr Poupě
  */
-class Form extends \Nette\Application\UI\Form
+class Form extends BaseForm
 {
-	
-	/** @var array */
-	public $onAfterSuccess;
-	
-	/** @var array */
-	private $onEnd;
-	
-	/** @var array */
-	public $onSaveButton;
-	
-	/** @var array */
-	public $onContinueButton;
-	
-	public function __construct(\Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
-	{
-		$this->onValidate[] = function () {
-			$this->onSuccess[] = function (Form $form, $values) {
-				if ($this->onAfterSuccess) {
-					foreach ($this->onAfterSuccess as $handler) {
-						\Nette\Utils\Callback::invoke($handler, $this, $values);
-					}
-				}
-				if ($this->onEnd) {
-					foreach ($this->onEnd as $handler) {
-						\Nette\Utils\Callback::invoke($handler, $this, $values);
-					}
-				}
-			};
-		};
-		parent::__construct($parent, $name);
-	}
-	
-	public function addDefaultSubmits()
-	{
-		$this->addSubmit('_submit', 'Save');
-		$this->addSubmit('submitContinue', 'Save and continue edit');
-		$this->onEnd[] = function (Form $form, $values) {
-			if ($form['submitContinue']->submittedBy) {
-				if ($this->onContinueButton) {
-					foreach ($this->onContinueButton as $handler) {
-						\Nette\Utils\Callback::invoke($handler, $this, $values);
-					}
-				}
-			} elseif ($form['_submit']->submittedBy) {
-				if ($this->onSaveButton) {
-					foreach ($this->onSaveButton as $handler) {
-						\Nette\Utils\Callback::invoke($handler, $this, $values);
-					}
-				}
-			}
-		};
-	}
-	
-	// <editor-fold defaultstate="collapsed" desc="special items">
+	// <editor-fold defaultstate="expanded" desc="Special controls">
 
 	/**
 	 *
 	 * @param type $name
 	 * @param type $caption
-	 * @return Controls\DateInput
+	 * @return DateInput
 	 */
 	public function addDateInput($name, $caption = NULL)
 	{
-		return $this[$name] = new Controls\DateInput($caption);
+		return $this[$name] = new DateInput($caption);
 	}
 
 	/**
 	 *
 	 * @param type $name
 	 * @param type $caption
-	 * @return Controls\TagInput
+	 * @return TagInput
 	 */
 	public function addTagInput($name, $caption = NULL)
 	{
-		return $this[$name] = new Controls\TagInput($caption);
+		return $this[$name] = new TagInput($caption);
 	}
 
 	/**
 	 *
 	 * @param type $name
 	 * @param type $caption
-	 * @return Controls\DatePicker
+	 * @return DatePicker
 	 */
 	public function addDatePicker($name, $caption = NULL)
 	{
-		return $this[$name] = new Controls\DatePicker($caption);
+		return $this[$name] = new DatePicker($caption);
 	}
 
 	/**
@@ -102,11 +60,11 @@ class Form extends \Nette\Application\UI\Form
 	 * @param type $name
 	 * @param type $caption
 	 * @param type $rows
-	 * @return Controls\WysiHtml
+	 * @return WysiHtml
 	 */
 	public function addWysiHtml($name, $caption = NULL, $rows = NULL)
 	{
-		return $this[$name] = new Controls\WysiHtml($caption, $rows);
+		return $this[$name] = new WysiHtml($caption, $rows);
 	}
 
 	/**
@@ -115,55 +73,55 @@ class Form extends \Nette\Application\UI\Form
 	 * @param type $caption
 	 * @param type $onText
 	 * @param type $offText
-	 * @return Controls\CheckSwitch
+	 * @return CheckSwitch
 	 */
 	public function addCheckSwitch($name, $caption = NULL, $onText = NULL, $offText = NULL)
 	{
-		return $this[$name] = new Controls\CheckSwitch($caption, $onText, $offText);
+		return $this[$name] = new CheckSwitch($caption, $onText, $offText);
 	}
 
 	/**
 	 *
 	 * @param type $name
 	 * @param type $caption
-	 * @return Controls\TouchSpin
+	 * @return TouchSpin
 	 */
 	public function addTouchSpin($name, $caption = NULL)
 	{
-		return $this[$name] = new Controls\TouchSpin($caption);
+		return $this[$name] = new TouchSpin($caption);
 	}
 
 	/**
 	 *
 	 * @param type $name
 	 * @param type $caption
-	 * @return Controls\Spinner
+	 * @return Spinner
 	 */
 	public function addSpinner($name, $caption = NULL)
 	{
-		return $this[$name] = new Controls\Spinner($caption);
+		return $this[$name] = new Spinner($caption);
 	}
 
 	/**
 	 *
 	 * @param type $name
 	 * @param type $label
-	 * @return Controls\Select2
+	 * @return Select2
 	 */
 	public function addSelect2($name, $label = NULL, array $items = NULL)
 	{
-		return $this[$name] = new Controls\Select2($label, $items);
+		return $this[$name] = new Select2($label, $items);
 	}
 
 	/**
 	 *
 	 * @param type $name
 	 * @param type $label
-	 * @return Controls\MultiSelect2
+	 * @return MultiSelect2
 	 */
 	public function addMultiSelect2($name, $label = NULL, array $items = NULL)
 	{
-		return $this[$name] = new Controls\MultiSelect2($label, $items);
+		return $this[$name] = new MultiSelect2($label, $items);
 	}
 
 	// </editor-fold>

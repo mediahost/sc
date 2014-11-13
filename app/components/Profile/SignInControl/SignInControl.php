@@ -3,24 +3,25 @@
 namespace App\Components\Profile;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Storage\SettingsStorage;
-use Nette\Application\UI\Form;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\ArrayHash;
 
 class SignInControl extends BaseControl
 {
-	
+
+	/** @var array */
 	public $onSuccess = [];
-	
+
 	/** @var SettingsStorage @inject */
 	public $settings;
 
 	/** @return Form */
 	protected function createComponentForm()
-	{	
-		$form = new Form();
+	{
+		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
@@ -47,19 +48,19 @@ class SignInControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
+		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
+		$user = $this->presenter->getUser();
 		if ($values->remember) {
-			$this->presenter->getUser()->setExpiration($this->settings->expiration->remember , FALSE);
+			$user->setExpiration($this->settings->expiration->remember, FALSE);
 		} else {
-			$this->presenter->getUser()->setExpiration($this->settings->expiration->notRemember, TRUE);
+			$user->setExpiration($this->settings->expiration->notRemember, TRUE);
 		}
-		
-
 
 		try {
-			$this->presenter->user->login($values->mail, $values->password);
+			$user->login($values->mail, $values->password);
 			$this->onSuccess();
 		} catch (AuthenticationException $e) {
-			$form->addError($this->translator->translate('Incorrect login or password!'));
+			$form->addError('Incorrect login or password!');
 		}
 	}
 

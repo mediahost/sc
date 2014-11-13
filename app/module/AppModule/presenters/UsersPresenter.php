@@ -2,9 +2,14 @@
 
 namespace App\AppModule\Presenters;
 
-use Nette;
-use Tracy\Debugger as Debug;
-use App\Model\Entity;
+use App\Components\User\IUserControlFactory;
+use App\Components\User\UserControl;
+use App\Model\Entity\User;
+use App\Model\Facade\RoleFacade;
+use App\Model\Facade\UserFacade;
+use App\TaggedString;
+use Kdyby\Doctrine\EntityDao;
+use Kdyby\Doctrine\EntityManager;
 
 /**
  * Users presenter.
@@ -13,33 +18,30 @@ class UsersPresenter extends BasePresenter
 {
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
-	/** @var \Kdyby\Doctrine\EntityManager @inject */
+	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var \Kdyby\Doctrine\EntityDao */
+	/** @var EntityDao */
 	private $userDao;
 
-	/** @var \App\Model\Facade\UserFacade @inject */
+	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var array */
-	public $users;
+	/** @var RoleFacade @inject */
+	public $roleFacade;
 
-	/** @var \App\Forms\UserFormFactory @inject */
-	public $userFormFactory;
-
-	/** @var \App\Model\Entity\User */
-	private $userEntity;
+	/** @var IUserControlFactory @inject */
+	public $iUserControlFactory;
 
 	// </editor-fold>
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->userDao = $this->em->getDao(Entity\User::getClassName());
+		$this->userDao = $this->em->getDao(User::getClassName());
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="actions & renderers">
+	// <editor-fold defaultstate="expanded" desc="actions & renderers">
 	/**
 	 * @secured
 	 * @resource('users')
@@ -47,12 +49,9 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$this->users = $this->userDao->findAll();
-	}
-
-	public function renderDefault()
-	{
-		$this->template->users = $this->users;
+		$this->template->users = $this->userDao->findAll();
+		$this->template->identityId = $this->getUser()->getId();
+		$this->template->identityLowerRoles = $this->roleFacade->findLowerRoles($this->getUser()->getRoles());
 	}
 
 	/**
@@ -62,9 +61,8 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->userEntity = new \App\Model\Entity\User;
-		$this->userFormFactory->setAdding();
-		$this->setView("edit");
+		$this->setView('edit');
+		$this->template->isAdd = TRUE;
 	}
 
 	/**
@@ -74,12 +72,13 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->userEntity = $this->userDao->find($id);
-	}
-
-	public function renderEdit()
-	{
-		$this->template->isAdd = $this->userFormFactory->isAdding();
+		$user = $this->userDao->find($id);
+		if ($user) {
+			$this['userForm']->setUser($user);
+		} else {
+			$this->flashMessage('This user wasn\'t found.', 'error');
+			$this->redirect('default');
+		}
 	}
 
 	/**
@@ -89,8 +88,8 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionView($id)
 	{
-		$this->flashMessage("Not implemented yet.", 'warning');
-		$this->redirect("default");
+		$this->flashMessage('Not implemented yet.', 'warning');
+		$this->redirect('default');
 	}
 
 	/**
@@ -100,35 +99,34 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$this->userEntity = $this->userDao->find($id);
-		if ($this->userEntity) {
-			$this->userFacade->delete($this->userEntity);
-			$this->flashMessage("Entity was deleted.", 'success');
+		if ($this->getUser()->getId() === $id) {
+			$this->flashMessage('You can\'t delete yourself.', 'warning');
 		} else {
-			$this->flashMessage("Entity was not found.", 'warning');
+			$user = $this->userDao->find($id);
+			if ($user) {
+				$this->userFacade->delete($user);
+				$this->flashMessage('Entity was deleted.', 'success');
+			} else {
+				$this->flashMessage('Entity was not found.', 'warning');
+			}
 		}
-		$this->redirect("default");
+		$this->redirect('default');
 	}
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="forms">
 
+	/** @return UserControl */
 	public function createComponentUserForm()
 	{
-		$form = $this->formFactoryFactory
-				->create($this->userFormFactory)
-				->setEntity($this->userEntity)
-				->create();
-		
-		$form->onSaveButton[] = function() {
-			$this->redirect("Users:");
+		$control = $this->iUserControlFactory->create();
+		$control->setIdentityRoles($this->getUser()->getRoles());
+		$control->onAfterSave = function (User $savedUser) {
+			$message = new TaggedString('User \'<%mail%>\' was successfully saved.', ['mail' => $savedUser->mail]);
+			$this->flashMessage($message, 'success');
+			$this->redirect('default');
 		};
-		$form->onContinueButton[] = function () {
-			$this->userDao->save($this->userEntity);
-			$this->redirect("edit", $this->userEntity->getId());
-		};
-		
-		return $form;
+		return $control;
 	}
 
 	// </editor-fold>

@@ -3,10 +3,10 @@
 namespace App\Components\Profile;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Mail\Messages\ForgottenMessage;
 use App\Model\Facade\UserFacade;
-use Nette\Application\UI\Form;
 use Nette\Mail\IMailer;
 use Nette\Utils\ArrayHash;
 
@@ -25,7 +25,7 @@ class ForgottenControl extends BaseControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
-		$form = new Form();
+		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
@@ -44,6 +44,7 @@ class ForgottenControl extends BaseControl
 	{
 		$user = $this->userFacade->findByMail($values->mail);
 
+		// TODO: do it without $this->presenter; use events
 		if (!$user) {
 			$this->presenter->flashMessage('We do not register any user with this e-mail address!', 'warning');
 			$this->presenter->redirect(self::REDIRECT_AFTER_FAIL);

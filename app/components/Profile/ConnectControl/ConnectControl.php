@@ -7,6 +7,9 @@ use App\Model\Facade;
 use App\Model\Storage;
 use App\Model\Storage\RegistrationStorage;
 
+/**
+ * TODO: Check independency on presenter
+ */
 class ConnectControl extends BaseControl
 {
 
@@ -91,11 +94,9 @@ class ConnectControl extends BaseControl
 		$template->render();
 	}
 
-
 	public function handleDeactivate($id)
 	{
 		$auth = $this->authDao->findOneBy(['id' => $id]);
-
 
 		if ($auth) {
 			if (count($this->authFacade->findByUser($auth->user)) > 1) {

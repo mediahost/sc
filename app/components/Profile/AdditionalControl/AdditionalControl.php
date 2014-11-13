@@ -3,11 +3,12 @@
 namespace App\Components\Profile;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\FrontModule\Presenters\SignPresenter;
 use App\Model\Entity\Company;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use App\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 class AdditionalControl extends BaseControl
@@ -20,20 +21,20 @@ class AdditionalControl extends BaseControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-	
+
 	public function render()
 	{
 		$template = $this->getTemplate();
 		$template->role = $this->session->role;
-		$template->roleCandidate = \App\FrontModule\Presenters\SignPresenter::ROLE_CANDIDATE;
-		$template->roleCompany = \App\FrontModule\Presenters\SignPresenter::ROLE_COMPANY;
+		$template->roleCandidate = SignPresenter::ROLE_CANDIDATE;
+		$template->roleCompany = SignPresenter::ROLE_COMPANY;
 		parent::render();
 	}
 
 	/** @return Form */
 	protected function createComponentCandidateForm()
 	{
-		$form = new Form();
+		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
@@ -56,8 +57,9 @@ class AdditionalControl extends BaseControl
 	 */
 	public function candidateFormSucceeded(Form $form, ArrayHash $values)
 	{
+		// TODO: save all data from form
 		$this->session->user->name = $values->fullName;
-		
+
 		$this->presenter->redirect(':Front:Sign:up', [
 			'step' => 'summary'
 		]);
@@ -66,7 +68,7 @@ class AdditionalControl extends BaseControl
 	/** @return Form */
 	protected function createComponentCompanyForm()
 	{
-		$form = new Form();
+		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
@@ -77,6 +79,7 @@ class AdditionalControl extends BaseControl
 		$form->addText('company_id', 'ID:')
 				->setAttribute('placeholder', 'Company ID');
 
+		// TODO: do it by addAddress() (do this control)
 		$form->addTextArea('address', 'Address:')
 				->setAttribute('placeholder', 'Company full address');
 
@@ -92,11 +95,11 @@ class AdditionalControl extends BaseControl
 	 */
 	public function companyFormSucceeded(Form $form, ArrayHash $values)
 	{
-		// Uložit data z formuláře.
-		$company = new Company();
+		$company = new Company;
+		// TODO: save all data from form
 		$company->name = $values->name;
 		$this->session->company = $company;
-		
+
 		$this->presenter->redirect(':Front:Sign:up', [
 			'step' => 'summary'
 		]);

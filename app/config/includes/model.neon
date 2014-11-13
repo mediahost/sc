@@ -1,4 +1,7 @@
 services:
+	doctrine: Kdyby\Doctrine\DI\OrmExtension
+	annotations: Kdyby\Annotations\DI\AnnotationsExtension
+
 	# DAOs
 	roleDao: @doctrine.dao(App\Model\Entity\Role)
 	userDao: @doctrine.dao(App\Model\Entity\User)

@@ -3,12 +3,12 @@
 namespace App\Components\Profile;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
-use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
 class SetPasswordControl extends BaseControl
@@ -23,12 +23,14 @@ class SetPasswordControl extends BaseControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
-		$form = new Form();
+		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
+		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
+		$user = $this->presenter->user->identity;
 		$form->addText('mail', 'E-mail')
-				->setEmptyValue($this->presenter->user->getIdentity()->mail)
+				->setEmptyValue($user->mail)
 				->setDisabled();
 
 		$form->addPassword('newPassword', 'New password:', NULL, 255)
@@ -42,8 +44,8 @@ class SetPasswordControl extends BaseControl
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['newPassword']);
 
 		$form->addSubmit('save', 'Save');
+		
 		$form->onSuccess[] = $this->formSucceeded;
-
 		return $form;
 	}
 
@@ -53,11 +55,12 @@ class SetPasswordControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-
+		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
 		$user = $this->userFacade->findByMail($this->presenter->user->identity->mail);
 		$user->password = $values->newPassword;
 		$this->userDao->save($user);
 
+		// TODO: do it without $this->presenter; do it with event
 		$this->presenter->flashMessage('Password has been successfuly set!', 'success');
 		$this->presenter->redirect(':App:Profile:settings#connect-manager');
 	}

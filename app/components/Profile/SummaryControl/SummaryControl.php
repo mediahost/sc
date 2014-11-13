@@ -3,10 +3,10 @@
 namespace App\Components\Profile;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
 class SummaryControl extends BaseControl
@@ -28,7 +28,7 @@ class SummaryControl extends BaseControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
-		$form = new Form();
+		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 

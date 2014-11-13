@@ -50,6 +50,9 @@
 					<tbody>
 						<tr n:foreach="$users as $user"
 							class="odd gradeX">
+							{var rolesPairs => $user->rolesPairs}
+							{var canEdit => $user->id !== $identityId}
+							{var canEdit => $canEdit && in_array(end($rolesPairs), $identityLowerRoles)}
 							<td>
 								{$user->id}
 							</td>
@@ -60,12 +63,15 @@
 								{$user->rolesPairs|implode:', '}
 							</td>
 							<td>
-								<a n:href="Users:edit, $user->id">
+								<a n:href="Users:edit, $user->id"
+								   n:if="$canEdit">
 									{_'Edit'}
 								</a>
 							</td>
 							<td>
-								<a n:href="Users:delete, $user->id" class="delete-confirm">
+								<a n:href="Users:delete, $user->id" 
+								   n:if="$canEdit"
+								   class="delete-confirm">
 									{_'Delete'}
 								</a>
 							</td>

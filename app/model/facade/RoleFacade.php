@@ -2,8 +2,8 @@
 
 namespace App\Model\Facade;
 
-use Kdyby\Doctrine\EntityDao,
-	App\Model\Entity;
+use App\Model\Entity\Role;
+use Kdyby\Doctrine\EntityDao;
 
 class RoleFacade extends BaseFacade
 {
@@ -13,13 +13,13 @@ class RoleFacade extends BaseFacade
 	private $roles;
 
 	/** @var array */
-	private $registratable = [Entity\Role::ROLE_CANDIDATE, Entity\Role::ROLE_COMPANY]; // ToDo: Move to configuration.
+	private $registratable = [Role::ROLE_CANDIDATE, Role::ROLE_COMPANY]; // ToDo: Move to configuration.
 
 	// </editor-fold>
 
 	protected function init()
 	{
-		$this->roles = $this->em->getDao(Entity\Role::getClassName());
+		$this->roles = $this->em->getDao(Role::getClassName());
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="create">
@@ -27,12 +27,12 @@ class RoleFacade extends BaseFacade
 	/**
 	 * Create role if is not exists.
 	 * @param type $name
-	 * @return Entity\Role|null
+	 * @return Role|null
 	 */
 	public function create($name)
 	{
 		if ($this->isUnique($name)) {
-			$entity = new Entity\Role;
+			$entity = new Role;
 			$entity->setName($name);
 			return $this->roles->save($entity);
 		}
@@ -57,11 +57,36 @@ class RoleFacade extends BaseFacade
 	/**
 	 * Find role by name.
 	 * @param type $name
-	 * @return Entity\User
+	 * @return Role
 	 */
 	public function findByName($name)
 	{
 		return $this->roles->findOneBy(['name' => $name]);
+	}
+
+	/**
+	 * Find all lower roles
+	 * TODO: TEST IT!!!
+	 * @param array $roles expect ordered by priority (first is the lowest)
+	 * @return array
+	 */
+	public function findLowerRoles(array $roles, $includeMax = FALSE)
+	{
+		$allRoles = $this->roles->findPairs('name', 'id'); // expect roles by priority (first is the lowest)
+		$lowerRoles = [];
+		$maxRole = end($roles); // expect ordered by priority (first is the lowest)
+		if (in_array($maxRole, $allRoles)) {
+			foreach ($allRoles as $id => $dbRole) {
+				if ($maxRole === $dbRole) {
+					if ($includeMax) {
+						$lowerRoles[$id] = $dbRole;
+					}
+					break;
+				}
+				$lowerRoles[$id] = $dbRole;
+			}
+		}
+		return $lowerRoles;
 	}
 
 	// </editor-fold>

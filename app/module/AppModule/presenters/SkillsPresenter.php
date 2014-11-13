@@ -2,50 +2,42 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Skills\ISkillControlFactory;
+use App\Components\Skills\SkillControl;
 use App\Model\Entity\Skill;
+use App\TaggedString;
+use Kdyby\Doctrine\EntityDao;
 
 class SkillsPresenter extends BasePresenter
 {
-	
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	
-	/** @var \App\Forms\SkillFormFactory @inject */
-	public $skillFormFactory;
-	
-	/** @var Skill */
-	protected $skill;
-	
-	/** @var \Kdyby\Doctrine\EntityDao */
+
+	/** @var ISkillControlFactory @inject */
+	public $iSkillControlFactory;
+
+	/** @var EntityDao */
 	private $skillDao;
-	
-	/** @var array */
-	protected $skills;
-	
+
 	// </editor-fold>
-	
+
 	protected function startup()
 	{
 		parent::startup();
 		$this->skillDao = $this->em->getDao(Skill::getClassName());
 	}
-	
+
 	// <editor-fold defaultstate="collapsed" desc="actions & renderers">
-	
+
 	/**
 	 * @secured
 	 * @resource('skills')
 	 * @privilege('default')
 	 */
-	public function actionDefault()
-	{
-		$this->skills = $this->skillDao->findAll();
-	}
-
 	public function renderDefault()
 	{
-		$this->template->skills = $this->skills;
+		$this->template->skills = $this->skillDao->findAll();
 	}
-	
+
 	/**
 	 * @secured
 	 * @resource('skills')
@@ -53,9 +45,8 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->skill = new Skill;
-		$this->skillFormFactory->setAdding();
-		$this->setView("edit");
+		$this->setView('edit');
+		$this->template->isAdd = TRUE;
 	}
 
 	/**
@@ -65,14 +56,15 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->skill = $this->skillDao->find($id);
+		$entity = $this->skillDao->find($id);
+		if ($entity) {
+			$this['skillForm']->setEntity($entity);
+		} else {
+			$this->flashMessage('This skill wasn\'t found.', 'error');
+			$this->redirect('default');
+		}
 	}
-	
-	public function renderEdit()
-	{
-		$this->template->isAdd = TRUE;
-	}
-	
+
 	/**
 	 * @secured
 	 * @resource('skills')
@@ -80,38 +72,31 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$this->skill = $this->skillDao->find($id);
-		if ($this->skill) {
-			$this->skillDao->delete($this->skill);
-			$this->flashMessage("Entity was deleted.", 'success');
+		$skill = $this->skillDao->find($id);
+		if ($skill) {
+			$this->skillDao->delete($skill);
+			$message = new TaggedString('\'<%name%>\' was deleted.', ['name' => $skill->name]);
+			$this->flashMessage($message, 'success');
 		} else {
-			$this->flashMessage("Entity was not found.", 'warning');
+			$this->flashMessage('Skill was not found.', 'warning');
 		}
-		$this->redirect("default");
+		$this->redirect('default');
 	}
-	
+
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="forms">
-	
+
+	/** @return SkillControl */
 	public function createComponentSkillForm()
 	{
-		$form = $this->formFactoryFactory->create($this->skillFormFactory)
-			->setEntity($this->skill)
-			->create();
-		$form->onSuccess[] = $this->skillFormSuccess;
-		return $form;
+		$control = $this->iSkillControlFactory->create();
+		$control->onAfterSave = function (Skill $saved) {
+			$message = new TaggedString('\'<%name%>\' was successfully saved.', ['name' => $saved->name]);
+			$this->flashMessage($message, 'success');
+			$this->redirect('default');
+		};
+		return $control;
 	}
-	
-	public function skillFormSuccess($form)
-	{
-		if ($form['submitContinue']->submittedBy) {
-			$this->skillDao->save($this->skill);
-			$this->redirect("edit", $this->skill->getId());
-		}
-		$this->redirect("default");
-	}
-	
+
 	// </editor-fold>
-	
 }

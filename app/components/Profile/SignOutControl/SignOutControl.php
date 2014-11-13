@@ -6,7 +6,7 @@ use App\Components\BaseControl;
 
 class SignOutControl extends BaseControl
 {
-	
+
 	const REDIRECT_AFTER_LOGOUT = ':Front:Homepage:';
 
 	public function handleSignOut()

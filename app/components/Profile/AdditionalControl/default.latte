@@ -1,9 +1,7 @@
-{block |strip}
-	{if $role === $roleCompany}
-		{control companyForm}
-	{elseif $role === $roleCandidate}
-		{control candidateForm}
-	{else}
-		{_'No more information are required.'}
-	{/if}
-{/block}
+{if $role === $roleCompany}
+	{control companyForm}
+{elseif $role === $roleCandidate}
+	{control candidateForm}
+{else}
+	{_'No more information are required.'}
+{/if}

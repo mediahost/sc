@@ -3,10 +3,10 @@
 namespace App\Components\Profile;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
-use Nette\Application\UI\Form;
 use Nette\Security\Identity;
 use Nette\Utils\ArrayHash;
 
@@ -22,7 +22,7 @@ class RecoveryControl extends BaseControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
-		$form = new Form();
+		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
@@ -37,8 +37,8 @@ class RecoveryControl extends BaseControl
 					->addRule(Form::EQUAL, 'Passwords must be equal.', $form['newPassword']);
 
 		$form->addSubmit('recovery', 'Set new password');
-		$form->onSuccess[] = $this->formSucceeded;
 
+		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
@@ -50,7 +50,11 @@ class RecoveryControl extends BaseControl
 	{
 		$user = $this->userFacade->recoveryPassword($this->user, $values->newPassword);
 
-		$this->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
+		$identityUser = $this->presenter->user;
+		$identityUser->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+		
+		// TODO: do it without $this->presenter; use events
 		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
 		$this->presenter->redirect(':App:Dashboard:');
 	}
@@ -62,6 +66,7 @@ class RecoveryControl extends BaseControl
 	public function setToken($token)
 	{
 		if (!$this->user = $this->userFacade->findByRecoveryToken($token)) {
+			// TODO: do it without $this->presenter; use events
 			$this->presenter->flashMessage('Token to recovery your password is no longer active. Please request new one.', 'info');
 			$this->presenter->redirect(':Front:Sign:lostPassword');
 		}

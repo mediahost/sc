@@ -5,8 +5,8 @@ namespace App\AppModule\Presenters;
 use App\Components\Profile\ConnectControl;
 use App\Components\Profile\ISetPasswordControlFactory;
 use App\Components\Profile\SetPasswordControl;
-use App\Components\User\ISettingsControlFactory;
-use App\Components\User\SettingsControl;
+use App\Components\User\IPreferencesControlFactory;
+use App\Components\User\PreferencesControl;
 use App\Model\Facade\UserFacade;
 
 class ProfilePresenter extends BasePresenter
@@ -18,8 +18,8 @@ class ProfilePresenter extends BasePresenter
 	/** @var ISetPasswordControlFactory @inject */
 	public $iSetPasswordControlFactory;
 
-	/** @var ISettingsControlFactory @inject */
-	public $iSettingsControlFactory;
+	/** @var IPreferencesControlFactory @inject */
+	public $iPreferencesControlFactory;
 
 	/**
 	 * @secured
@@ -62,10 +62,17 @@ class ProfilePresenter extends BasePresenter
 		return $this->iSetPasswordControlFactory->create();
 	}
 
-	/** @return SettingsControl */
+	/** @return PreferencesControl */
 	protected function createComponentSettings()
 	{
-		return $this->iSettingsControlFactory->create();
+		$control = $this->iPreferencesControlFactory->create();
+		$control->onAfterSave = function ($savedLanguage) {
+			$this->flashMessage('Your settings has been saved.', 'success');
+			$this->redirect('this#personal-settings', [ // TODO: toto nastavení se neudrží
+				'lang' => $savedLanguage,
+			]);
+		};
+		return $control;
 	}
 
 	/** @return ConnectControl */
@@ -73,6 +80,5 @@ class ProfilePresenter extends BasePresenter
 //	{
 //		return $this->iConnectControlFactory->create();
 //	}
-
 	// </editor-fold>
 }

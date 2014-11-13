@@ -4,13 +4,13 @@ namespace App\BaseModule\Presenters;
 
 use App\Components\Profile\ISignOutControlFactory;
 use App\Components\Profile\SignOutControl;
+use App\Model\Entity\PageDesignSettings;
 use App\Model\Storage\UserSettingsStorage;
 use App\TaggedString;
 use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
-use Venne\Bridges\Kdyby\DoctrineForms\FormFactoryFactory;
 use WebLoader\LoaderFactory;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
@@ -27,9 +27,6 @@ abstract class BasePresenter extends Presenter
 
 	/** @persistent */
 	public $backlink = '';
-
-	/** @var FormFactoryFactory @inject */
-	public $formFactoryFactory;
 
 	/** @var LoaderFactory @inject */
 	public $webLoader;
@@ -58,7 +55,7 @@ abstract class BasePresenter extends Presenter
 	{
 		$this->template->lang = $this->lang;
 		$this->template->setTranslator($this->translator);
-		$this->template->designSettings = new \App\Model\Entity\PageDesignSettings();
+		$this->template->designSettings = new PageDesignSettings();
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="flash messages">

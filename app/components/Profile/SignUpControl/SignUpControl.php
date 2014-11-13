@@ -3,17 +3,18 @@
 namespace App\Components\Profile;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 use App\TaggedString;
-use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
 class SignUpControl extends BaseControl
 {
 
+	/** @var array */
 	public $onSuccess = [];
 
 	/** @var UserFacade @inject */
@@ -25,7 +26,7 @@ class SignUpControl extends BaseControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
-		$form = new Form();
+		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
@@ -67,13 +68,24 @@ class SignUpControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$user = new User();
-		$user->setMail($values->mail)
-				->setPassword($values->password);
+		$entity = $this->load($values);
 
 		$this->session->verification = FALSE;
 
-		$this->onSuccess($this, $user);
+		$this->onSuccess($this, $entity);
+	}
+
+	/**
+	 * Load Entity from Form
+	 * @param type $values
+	 * @return User
+	 */
+	private function load($values)
+	{
+		$entity = new User;
+		$entity->setMail($values->mail)
+				->setPassword($values->password);
+		return $entity;
 	}
 
 }
