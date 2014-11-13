@@ -1,18 +1,16 @@
+{block bodyClass}login{/block}
+
 {block content}
-<div class="login-form">
-	<h3 class="form-title">
-		{if $role === $roleCandidate}{_'Candidate Info'}
-		{elseif $role === $roleCompany}{_'Company Info'}{/if}<br/>
-		<small>{_'Step 3/3'}</small>
-	</h3>
-	
-	<div>
-		{_'E-mail'}: {$user->mail}
-	</div>
-	<div>
-		{_'Name'}: {if $role === $roleCandidate}{$user->name}{elseif $role === $roleCompany}{$company->name}{/if}
-	</div>
-	
-	{control summary}
-	
+<h3 class="form-title">
+	{if $role === $roleCandidate}{_'Candidate Info'}
+	{elseif $role === $roleCompany}{_'Company Info'}{/if}<br/>
+	<small>{_'Step 3/3'}</small>
+</h3>
+
+<div>
+	{_'E-mail'}: {$user->mail}
 </div>
+<div>
+{_'Name'}: {if $role === $roleCandidate}{$user->name}{elseif $role === $roleCompany}{$company->name}{/if}
+</div>
+{control summary}
