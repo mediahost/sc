@@ -2,8 +2,15 @@
 
 namespace App\Forms\Renderers;
 
-use Nette,
-	Tracy\Debugger as Debug;
+use App\Forms\Controls\DatePicker;
+use Nette\Forms\Controls\Button;
+use Nette\Forms\Controls\Checkbox;
+use Nette\Forms\Controls\CheckboxList;
+use Nette\Forms\Controls\MultiSelectBox;
+use Nette\Forms\Controls\RadioList;
+use Nette\Forms\Controls\SelectBox;
+use Nette\Forms\Controls\TextBase;
+use Nette\Utils\Html;
 
 /**
  * Converts a Form into the HTML output.
@@ -52,7 +59,7 @@ class MetronicFormRenderer extends ExtendedFormRenderer
 		$this->wrappers['control']['container'] = "div class=\"col-md-{$this->inputWidth}\"";
 		$this->wrappers['control']['actions'] = "div class=\"col-md-offset-{$this->labelWidth} col-md-{$this->inputWidth}\"";
 		$this->wrappers['label']['container'] = NULL;
-		$this->wrappers['label']['requiredsuffix'] = \Nette\Utils\Html::el('span class=required')->setText('*');
+		$this->wrappers['label']['requiredsuffix'] = Html::el('span class=required')->setText('*');
 		$this->wrappers['control']['description'] = 'span class="help-block"';
 		$this->wrappers['control']['errorcontainer'] = 'span class="help-block"';
 	}
@@ -65,21 +72,21 @@ class MetronicFormRenderer extends ExtendedFormRenderer
 
 	protected function customizeControl(&$control, &$usedPrimary)
 	{
-		if ($control->getLabelPrototype() instanceof \Nette\Utils\Html) {
+		if ($control->getLabelPrototype() instanceof Html) {
 			$control->getLabelPrototype()->class("col-md-{$this->labelWidth} control-label", TRUE);
 		}
 
-		if ($control instanceof \Nette\Forms\Controls\Button) {
+		if ($control instanceof Button) {
 			$control->getControlPrototype()->class(!$usedPrimary ? 'btn btn-primary' : 'btn btn-default', TRUE);
 			$usedPrimary = TRUE;
-		} else if ($control instanceof \Nette\Forms\Controls\TextBase ||
-				$control instanceof \Nette\Forms\Controls\SelectBox ||
-				$control instanceof \Nette\Forms\Controls\MultiSelectBox ||
-				$control instanceof \App\Forms\Controls\DatePicker) {
+		} else if ($control instanceof TextBase ||
+				$control instanceof SelectBox ||
+				$control instanceof MultiSelectBox ||
+				$control instanceof DatePicker) {
 			$control->getControlPrototype()->class('form-control', TRUE);
-		} else if ($control instanceof \Nette\Forms\Controls\Checkbox ||
-				$control instanceof \Nette\Forms\Controls\CheckboxList ||
-				$control instanceof \Nette\Forms\Controls\RadioList) {
+		} else if ($control instanceof Checkbox ||
+				$control instanceof CheckboxList ||
+				$control instanceof RadioList) {
 			$control->getSeparatorPrototype()
 					->setName('div')
 					->class($control->getControlPrototype()->type);

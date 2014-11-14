@@ -64,6 +64,12 @@ class SignInControl extends BaseControl
 		}
 	}
 
+	public function renderLogin()
+	{
+		$this->setTemplateFile('login');
+		parent::render();
+	}
+
 }
 
 interface ISignInControlFactory

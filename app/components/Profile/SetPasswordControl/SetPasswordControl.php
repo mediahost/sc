@@ -16,7 +16,7 @@ class SetPasswordControl extends BaseControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var EntityDao */
 	private $userDao;
 
@@ -44,7 +44,7 @@ class SetPasswordControl extends BaseControl
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['newPassword']);
 
 		$form->addSubmit('save', 'Save');
-		
+
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
@@ -70,11 +70,17 @@ class SetPasswordControl extends BaseControl
 		$this->userDao = $em->getDao(User::getClassName());
 	}
 
+	public function renderLogin()
+	{
+		$this->setTemplateFile('login');
+		parent::render();
+	}
+
 }
 
 interface ISetPasswordControlFactory
 {
 
-/** @return SetPasswordControl */
-function create();
+	/** @return SetPasswordControl */
+	function create();
 }

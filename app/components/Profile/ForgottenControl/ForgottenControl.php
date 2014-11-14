@@ -12,7 +12,7 @@ use Nette\Utils\ArrayHash;
 
 class ForgottenControl extends BaseControl
 {
-	
+
 	const REDIRECT_AFTER_SUCCESS = ':Front:Sign:in';
 	const REDIRECT_AFTER_FAIL = ':Front:Sign:lostPassword';
 
@@ -63,6 +63,13 @@ class ForgottenControl extends BaseControl
 			$this->presenter->redirect(self::REDIRECT_AFTER_SUCCESS);
 		}
 	}
+
+	public function renderLogin()
+	{
+		$this->setTemplateFile('login');
+		parent::render();
+	}
+
 }
 
 interface IForgottenControlFactory

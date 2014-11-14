@@ -14,10 +14,10 @@ class RequiredControl extends BaseControl
 {
 
 	public $onSuccess = [];
-	
+
 	/** @var SignUpStorage @inject */
 	public $session;
-	
+
 	/** @var UserFacade @inject */
 	public $userFacade;
 
@@ -59,6 +59,12 @@ class RequiredControl extends BaseControl
 		$this->session->user->mail = $values->mail;
 		$this->session->verification = FALSE;
 		$this->onSuccess($this, $this->session->user);
+	}
+
+	public function renderLogin()
+	{
+		$this->setTemplateFile('login');
+		parent::render();
 	}
 
 }

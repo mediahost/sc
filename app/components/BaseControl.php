@@ -11,23 +11,26 @@ use Nette\Application\UI,
  */
 abstract class BaseControl extends UI\Control
 {
-	// <editor-fold defaultstate="expanded" desc="constants & variables">
-	
+
 	const MIN_PASSWORD_CHARACTERS = 8;
+	const DEFAULT_TEMPLATE = 'default';
 
 	/** @var ITranslator @inject */
 	public $translator;
-
-	// </editor-fold>
+	
+	/** @var string */
+	private $templateFile = self::DEFAULT_TEMPLATE;
 
 	public function __construct()
 	{
 		parent::__construct();
 	}
-
-	// <editor-fold defaultstate="expanded" desc="setters">
-	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="getters">
+	
+	protected function setTemplateFile($name)
+	{
+		$this->templateFile = $name;
+		return $this;
+	}
 
 	public function getTemplate()
 	{
@@ -36,17 +39,13 @@ abstract class BaseControl extends UI\Control
 		return $template;
 	}
 
-	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="renderers">
-
 	public function render()
 	{
 		$dir = dirname($this->getReflection()->getFileName());
 
 		$template = $this->getTemplate();
-		$template->setFile($dir . '/default.latte');
+		$template->setFile($dir . '/' . $this->templateFile . '.latte');
 		$template->render();
 	}
 
-	// </editor-fold>
 }

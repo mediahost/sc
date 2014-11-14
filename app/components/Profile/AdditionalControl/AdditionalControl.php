@@ -24,10 +24,17 @@ class AdditionalControl extends BaseControl
 
 	public function render()
 	{
-		$template = $this->getTemplate();
-		$template->role = $this->session->role;
-		$template->roleCandidate = SignPresenter::ROLE_CANDIDATE;
-		$template->roleCompany = SignPresenter::ROLE_COMPANY;
+		switch ($this->session->role) {
+			case SignPresenter::ROLE_COMPANY:
+				$this->setTemplateFile('company');
+				break;
+			case SignPresenter::ROLE_CANDIDATE:
+				$this->setTemplateFile('candidate');
+				break;
+			default:
+				$this->setTemplateFile('none');
+				break;
+		}
 		parent::render();
 	}
 

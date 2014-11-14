@@ -34,7 +34,7 @@ class RecoveryControl extends BaseControl
 		$form->addPassword('passwordAgain', 'Re-type Your Password:', NULL, 255)
 				->setAttribute('placeholder', 'Re-type Your Password')
 				->addConditionOn($form['newPassword'], Form::FILLED)
-					->addRule(Form::EQUAL, 'Passwords must be equal.', $form['newPassword']);
+				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['newPassword']);
 
 		$form->addSubmit('recovery', 'Set new password');
 
@@ -53,7 +53,7 @@ class RecoveryControl extends BaseControl
 		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
 		$identityUser = $this->presenter->user;
 		$identityUser->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
-		
+
 		// TODO: do it without $this->presenter; use events
 		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
 		$this->presenter->redirect(':App:Dashboard:');
@@ -70,6 +70,12 @@ class RecoveryControl extends BaseControl
 			$this->presenter->flashMessage('Token to recovery your password is no longer active. Please request new one.', 'info');
 			$this->presenter->redirect(':Front:Sign:lostPassword');
 		}
+	}
+
+	public function renderLogin()
+	{
+		$this->setTemplateFile('login');
+		parent::render();
 	}
 
 }

@@ -2,10 +2,15 @@
 
 namespace App\Forms\Renderers;
 
-use Nette,
-	Nette\Utils\Html,
-	Nette\Forms\Rendering\DefaultFormRenderer,
-	Tracy\Debugger as Debug;
+use Nette\Forms\Container;
+use Nette\Forms\ControlGroup;
+use Nette\Forms\Controls\Button;
+use Nette\Forms\Controls\HiddenField;
+use Nette\Forms\Form;
+use Nette\Forms\IControl;
+use Nette\Forms\Rendering\DefaultFormRenderer;
+use Nette\InvalidArgumentException;
+use Nette\Utils\Html;
 
 /**
  * Converts a Form into the HTML output.
@@ -49,11 +54,11 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 
 	/**
 	 * Provides complete form rendering.
-	 * @param  Nette\Forms\Form
+	 * @param  Form
 	 * @param  string 'begin', 'body', 'end' or empty to render all
 	 * @return string
 	 */
-	public function render(Nette\Forms\Form $form, $mode = NULL)
+	public function render(Form $form, $mode = NULL)
 	{
 		if ($this->form !== $form) {
 			$this->form = $form;
@@ -80,7 +85,7 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 	 * Renders validation errors (per form or per control).
 	 * @return string
 	 */
-	public function renderErrors(Nette\Forms\IControl $control = NULL, $own = TRUE)
+	public function renderErrors(IControl $control = NULL, $own = TRUE)
 	{
 		$errors = $control ? $control->getErrors() : ($own ? $this->form->getOwnErrors() : $this->form->getErrors());
 		if (!$errors) {
@@ -176,7 +181,7 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 	{
 		$buttons = NULL;
 		foreach ($this->form->getControls() as $control) {
-			if ($control instanceof Nette\Forms\Controls\Button) {
+			if ($control instanceof Button) {
 				$buttons[] = $control;
 			}
 		}
@@ -206,21 +211,21 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 
 	/**
 	 * Renders group of controls.
-	 * @param  Nette\Forms\Container|FormGroup
+	 * @param  Container|FormGroup
 	 * @return string
 	 */
 	public function renderControls($parent)
 	{
-		if (!($parent instanceof Nette\Forms\Container || $parent instanceof Nette\Forms\ControlGroup)) {
-			throw new Nette\InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
+		if (!($parent instanceof Container || $parent instanceof ControlGroup)) {
+			throw new InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
 		}
 
 		$container = $this->getWrapper('controls container');
 
 		foreach ($parent->getControls() as $control) {
-			if ($control->getOption('rendered') || $control instanceof Nette\Forms\Controls\HiddenField || $control->getForm(FALSE) !== $this->form) {
+			if ($control->getOption('rendered') || $control instanceof HiddenField || $control->getForm(FALSE) !== $this->form) {
 				// skip
-			} elseif ($control instanceof Nette\Forms\Controls\Button) {
+			} elseif ($control instanceof Button) {
 				// skip
 			} else {
 				$container->add($this->renderPair($control));
@@ -244,8 +249,8 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 	{
 		$s = array();
 		foreach ($controls as $control) {
-			if (!$control instanceof Nette\Forms\IControl) {
-				throw new Nette\InvalidArgumentException("Argument must be array of IFormControl instances.");
+			if (!$control instanceof IControl) {
+				throw new InvalidArgumentException("Argument must be array of IFormControl instances.");
 			}
 			$description = $control->getOption('description');
 			if ($description instanceof Html) {
