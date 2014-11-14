@@ -32,7 +32,7 @@ class PreferencesControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addSelect('language', 'Language', [
+		$form->addSelect2('language', 'Language', [
 			'en' => 'English',
 			'cs' => 'Čeština'
 		]);

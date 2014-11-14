@@ -2,7 +2,24 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Components\Profile;
+use App\Components\Profile\AdditionalControl;
+use App\Components\Profile\FacebookControl;
+use App\Components\Profile\ForgottenControl;
+use App\Components\Profile\IAdditionalControlFactory;
+use App\Components\Profile\IFacebookControlFactory;
+use App\Components\Profile\IForgottenControlFactory;
+use App\Components\Profile\IRecoveryControlFactory;
+use App\Components\Profile\IRequiredControlFactory;
+use App\Components\Profile\ISignInControlFactory;
+use App\Components\Profile\ISignUpControlFactory;
+use App\Components\Profile\ISummaryControlFactory;
+use App\Components\Profile\ITwitterControlFactory;
+use App\Components\Profile\RecoveryControl;
+use App\Components\Profile\RequiredControl;
+use App\Components\Profile\SignInControl;
+use App\Components\Profile\SignUpControl;
+use App\Components\Profile\SummaryControl;
+use App\Components\Profile\TwitterControl;
 use App\Model\Entity\Facebook;
 use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
@@ -33,31 +50,31 @@ class SignPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Injects">
 
-	/** @var Profile\IAdditionalControlFactory @inject */
+	/** @var IAdditionalControlFactory @inject */
 	public $iAdditionalControlFactory;
 
-	/** @var Profile\IFacebookControlFactory @inject */
+	/** @var IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
 
-	/** @var Profile\IForgottenControlFactory @inject */
+	/** @var IForgottenControlFactory @inject */
 	public $iForgottenControlFactory;
 
-	/** @var Profile\IRecoveryControlFactory @inject */
+	/** @var IRecoveryControlFactory @inject */
 	public $iRecoveryControlFactory;
 
-	/** @var Profile\IRequiredControlFactory @inject */
+	/** @var IRequiredControlFactory @inject */
 	public $iRequiredControlFactory;
 
-	/** @var Profile\ISignInControlFactory @inject */
+	/** @var ISignInControlFactory @inject */
 	public $iSignInControlFactory;
 
-	/** @var Profile\ISignUpControlFactory @inject */
+	/** @var ISignUpControlFactory @inject */
 	public $iSignUpControlFactory;
 
-	/** @var Profile\ISummaryControlFactory @inject */
+	/** @var ISummaryControlFactory @inject */
 	public $iSummaryControlFactory;
 
-	/** @var Profile\ITwitterControlFactory @inject */
+	/** @var ITwitterControlFactory @inject */
 	public $iTwitterControlFactory;
 
 	/** @var SignUpStorage @inject */
@@ -208,55 +225,55 @@ class SignPresenter extends BasePresenter
 
 	// <editor-fold defaultstate="collapsed" desc="controls">
 
-	/** @return Profile\AdditionalControl */
+	/** @return AdditionalControl */
 	protected function createComponentAdditional()
 	{
 		return $this->iAdditionalControlFactory->create();
 	}
 
-	/** @return Profile\FacebookControl */
+	/** @return FacebookControl */
 	protected function createComponentFacebook()
 	{
 		return $this->iFacebookControlFactory->create();
 	}
 
-	/** @return Profile\ForgottenControl */
+	/** @return ForgottenControl */
 	protected function createComponentForgotten()
 	{
 		return $this->iForgottenControlFactory->create();
 	}
 
-	/** @return Profile\RecoveryControl */
+	/** @return RecoveryControl */
 	protected function createComponentRecovery()
 	{
 		return $this->iRecoveryControlFactory->create();
 	}
 
-	/** @return Profile\RequiredControl */
+	/** @return RequiredControl */
 	protected function createComponentRequired()
 	{
 		return $this->iRequiredControlFactory->create();
 	}
 
-	/** @return Profile\SignInControl */
+	/** @return SignInControl */
 	protected function createComponentSignIn()
 	{
 		return $this->iSignInControlFactory->create();
 	}
 
-	/** @return Profile\SignUpControl */
+	/** @return SignUpControl */
 	protected function createComponentSignUp()
 	{
 		return $this->iSignUpControlFactory->create();
 	}
 
-	/** @return Profile\SummaryControl */
+	/** @return SummaryControl */
 	protected function createComponentSummary()
 	{
 		return $this->iSummaryControlFactory->create();
 	}
 
-	/** @return Profile\TwitterControl */
+	/** @return TwitterControl */
 	protected function createComponentTwitter()
 	{
 		return $this->iTwitterControlFactory->create();

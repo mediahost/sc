@@ -10,86 +10,61 @@ use Nette\Forms\Controls\MultiSelectBox;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\TextBase;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * Converts a Form into the HTML output.
- * Changes:
- * - Move errors into body
- * - Move all buttons out of body
+ * Metronic style
  *
  * @author     Petr Poupě
  */
 class MetronicFormRenderer extends ExtendedFormRenderer
 {
 
-	private $labelWidth;
-	private $inputWidth;
-
-	public function __construct($labelWidth = "3", $inputWidth = "9")
+	public function __construct()
 	{
-		parent::__construct();
-		$this->setLabelWidth($labelWidth)
-				->setInputWidth($inputWidth);
 		$this->initWrapper();
-	}
-
-	private function setLabelWidth($width)
-	{
-		$this->labelWidth = (string) $width;
-		return $this;
-	}
-
-	private function setInputWidth($width)
-	{
-		$this->inputWidth = (string) $width;
-		return $this;
 	}
 
 	protected function initWrapper()
 	{
 		$this->wrappers['form']['container'] = 'div class="form-body"';
-		$this->wrappers['form']['actions'] = 'div class="form-actions fluid"';
 		$this->wrappers['error']['container'] = 'div class="alert alert-danger"';
 		$this->wrappers['error']['item'] = 'p';
 		$this->wrappers['controls']['container'] = NULL;
 		$this->wrappers['pair']['container'] = 'div class="form-group"';
-		$this->wrappers['pair']['actions'] = NULL;
 		$this->wrappers['pair']['.error'] = 'has-error';
-		$this->wrappers['control']['container'] = "div class=\"col-md-{$this->inputWidth}\"";
-		$this->wrappers['control']['actions'] = "div class=\"col-md-offset-{$this->labelWidth} col-md-{$this->inputWidth}\"";
 		$this->wrappers['label']['container'] = NULL;
 		$this->wrappers['label']['requiredsuffix'] = Html::el('span class=required')->setText('*');
 		$this->wrappers['control']['description'] = 'span class="help-block"';
 		$this->wrappers['control']['errorcontainer'] = 'span class="help-block"';
 	}
 
-	protected function initFormWrapper()
+	protected function customizeInitedForm(Form &$form)
 	{
-		$this->form->getElementPrototype()->class('form-horizontal');
-		parent::initFormWrapper();
-	}
+		parent::customizeInitedForm($form);
 
-	protected function customizeControl(&$control, &$usedPrimary)
-	{
-		if ($control->getLabelPrototype() instanceof Html) {
-			$control->getLabelPrototype()->class("col-md-{$this->labelWidth} control-label", TRUE);
-		}
+		$usedPrimary = FALSE;
+		foreach ($form->getControls() as $control) {
+			if ($control->getLabelPrototype() instanceof Html) {
+				$control->getLabelPrototype()->class("control-label", TRUE);
+			}
 
-		if ($control instanceof Button) {
-			$control->getControlPrototype()->class(!$usedPrimary ? 'btn btn-primary' : 'btn btn-default', TRUE);
-			$usedPrimary = TRUE;
-		} else if ($control instanceof TextBase ||
-				$control instanceof SelectBox ||
-				$control instanceof MultiSelectBox ||
-				$control instanceof DatePicker) {
-			$control->getControlPrototype()->class('form-control', TRUE);
-		} else if ($control instanceof Checkbox ||
-				$control instanceof CheckboxList ||
-				$control instanceof RadioList) {
-			$control->getSeparatorPrototype()
-					->setName('div')
-					->class($control->getControlPrototype()->type);
+			if ($control instanceof Button) {
+				$control->getControlPrototype()->class(!$usedPrimary ? 'btn btn-primary' : 'btn btn-default', TRUE);
+				$usedPrimary = TRUE;
+			} else if ($control instanceof TextBase ||
+					$control instanceof SelectBox ||
+					$control instanceof MultiSelectBox ||
+					$control instanceof DatePicker) {
+				$control->getControlPrototype()->class('form-control', TRUE);
+			} else if ($control instanceof Checkbox ||
+					$control instanceof CheckboxList ||
+					$control instanceof RadioList) {
+				$control->getSeparatorPrototype()
+						->setName('div')
+						->class($control->getControlPrototype()->type);
+			}
 		}
 	}
 
