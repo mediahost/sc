@@ -2,10 +2,12 @@
 
 namespace App\Forms;
 
+use App\Forms\Controls\CheckboxList;
 use App\Forms\Controls\CheckSwitch;
 use App\Forms\Controls\DateInput;
 use App\Forms\Controls\DatePicker;
 use App\Forms\Controls\MultiSelect2;
+use App\Forms\Controls\RadioList;
 use App\Forms\Controls\Select2;
 use App\Forms\Controls\Spinner;
 use App\Forms\Controls\TagInput;
@@ -122,6 +124,27 @@ class Form extends BaseForm
 	public function addMultiSelect2($name, $label = NULL, array $items = NULL)
 	{
 		return $this[$name] = new MultiSelect2($label, $items);
+	}
+
+	/**
+	 * Adds set of radio button controls to the form.
+	 * @param  string  control name
+	 * @param  string  label
+	 * @param  array   options from which to choose
+	 * @return RadioList
+	 */
+	public function addRadioList($name, $label = NULL, array $items = NULL)
+	{
+		return $this[$name] = new RadioList($label, $items);
+	}
+
+	/**
+	 * Adds set of checkbox controls to the form.
+	 * @return CheckboxList
+	 */
+	public function addCheckboxList($name, $label = NULL, array $items = NULL)
+	{
+		return $this[$name] = new CheckboxList($label, $items);
 	}
 
 	// </editor-fold>

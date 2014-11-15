@@ -48,7 +48,7 @@ class UserControl extends BaseControl
 	{
 		$form = new Form;
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new MetronicFormRenderer);
 
 		$mail = $form->addText('mail', 'Mail')
 				->addRule(Form::EMAIL, 'Fill right format')
@@ -69,7 +69,7 @@ class UserControl extends BaseControl
 		if ($defaultRole && in_array($defaultRole->getId(), $this->getRoles())) {
 			$role->setDefaultValue($defaultRole->getId());
 		}
-
+		
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
