@@ -50,9 +50,6 @@
 					<tbody>
 						<tr n:foreach="$users as $user"
 							class="odd gradeX">
-							{var rolesPairs => $user->rolesPairs}
-							{var canEdit => $user->id !== $identityId}
-							{var canEdit => $canEdit && in_array(end($rolesPairs), $identityLowerRoles)}
 							<td>
 								{$user->id}
 							</td>
@@ -64,13 +61,13 @@
 							</td>
 							<td>
 								<a n:href="Users:edit, $user->id"
-								   n:if="$canEdit">
+								   n:if="$template->canEdit($identity, $user)">
 									{_'Edit'}
 								</a>
 							</td>
 							<td>
 								<a n:href="Users:delete, $user->id" 
-								   n:if="$canEdit"
+								   n:if="$template->canDelete($identity, $user)"
 								   class="delete-confirm">
 									{_'Delete'}
 								</a>

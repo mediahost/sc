@@ -74,10 +74,10 @@ class RoleFacade extends BaseFacade
 	{
 		$allRoles = $this->roles->findPairs('name', 'id'); // expect roles by priority (first is the lowest)
 		$lowerRoles = [];
-		$maxRole = end($roles); // expect ordered by priority (first is the lowest)
-		if (in_array($maxRole, $allRoles)) {
+		$maxRole = Role::getMaxRole($roles);
+		if (in_array($maxRole->name, $allRoles)) {
 			foreach ($allRoles as $id => $dbRole) {
-				if ($maxRole === $dbRole) {
+				if ($maxRole->name === $dbRole) {
 					if ($includeMax) {
 						$lowerRoles[$id] = $dbRole;
 					}

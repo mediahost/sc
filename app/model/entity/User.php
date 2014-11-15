@@ -215,6 +215,15 @@ class User extends BaseEntity
 		}
 		return $array;
 	}
+	
+	/**
+	 * TODO: TEST IT!
+	 * @return Role
+	 */
+	public function getMaxRole()
+	{
+		return Role::getMaxRole($this->roles);
+	}
 
 	/** @return string */
 	public function __toString()
