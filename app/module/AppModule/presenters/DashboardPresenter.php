@@ -3,7 +3,7 @@
 namespace App\AppModule\Presenters;
 
 /**
- * Home presenter
+ * Dashboard presenter
  */
 class DashboardPresenter extends BasePresenter
 {

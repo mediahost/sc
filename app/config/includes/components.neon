@@ -42,3 +42,4 @@ services:
 	- {implement: App\Components\User\IUserControlFactory, inject: yes}
 	- {implement: App\Components\Skills\ISkillControlFactory, inject: yes}
 	- {implement: App\Components\Skills\ISkillCategoryControlFactory, inject: yes}
+	- {implement: App\Components\Example\Form\IFormControlFactory, inject: yes}

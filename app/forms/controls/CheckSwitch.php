@@ -18,7 +18,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	public function __construct($label = NULL, $onText = NULL, $offText = NULL)
 	{
 		parent::__construct($label);
-		$this->control->class = "make-switch";
+		$this->control->class = 'make-switch';
 		if ($onText) {
 			$this->setOnText($onText);
 		}
@@ -36,7 +36,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	 */
 	public function setOnText($text)
 	{
-		$attr = "data-on-text";
+		$attr = 'data-on-text';
 		$this->control->$attr = $text;
 		return $this;
 	}
@@ -48,7 +48,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	 */
 	public function setOffText($text)
 	{
-		$attr = "data-off-text";
+		$attr = 'data-off-text';
 		$this->control->$attr = $text;
 		return $this;
 	}
@@ -60,7 +60,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	 */
 	public function setOnColor($color)
 	{
-		$attr = "data-on-color";
+		$attr = 'data-on-color';
 		$this->control->$attr = $color;
 		return $this;
 	}
@@ -72,7 +72,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	 */
 	public function setOffColor($color)
 	{
-		$attr = "data-off-color";
+		$attr = 'data-off-color';
 		$this->control->$attr = $color;
 		return $this;
 	}
@@ -84,7 +84,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 	 */
 	public function setLabelIcon($icon)
 	{
-		$attr = "data-label-icon";
+		$attr = 'data-label-icon';
 		$this->control->$attr = $icon;
 		return $this;
 	}

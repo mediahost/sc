@@ -16,7 +16,7 @@ class Select2 extends \Nette\Forms\Controls\SelectBox
 	public function __construct($label = NULL, array $items = NULL)
 	{
 		parent::__construct($label, $items);
-		$this->control->class = "select2";
+		$this->control->class = 'select2';
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters">
@@ -29,7 +29,7 @@ class Select2 extends \Nette\Forms\Controls\SelectBox
 	public function setPrompt($prompt)
 	{
 		$this->setPlaceholder($prompt);
-		$attr = "data-allow_clear";
+		$attr = 'data-allow_clear';
 		$this->control->$attr = 'true';
 		return parent::setPrompt('');
 	}
@@ -41,7 +41,7 @@ class Select2 extends \Nette\Forms\Controls\SelectBox
 	 */
 	public function setPlaceholder($value)
 	{
-		$attr = "data-placeholder";
+		$attr = 'data-placeholder';
 		$this->control->$attr = $value;
 		return $this;
 	}

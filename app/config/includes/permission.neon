@@ -16,6 +16,7 @@ services:
 			- addResource('candidate')
 			- addResource('company')
 			- addResource('dashboard')
+			- addResource('examples')
 			- addResource('front')
 			- addResource('profile')
 			- addResource('users')

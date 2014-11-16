@@ -2,6 +2,7 @@
 
 namespace App\Forms\Renderers;
 
+use App\Forms\Controls\CheckSwitch;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\CheckboxList;
 use Nette\Forms\Form;
@@ -112,7 +113,7 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 	public function renderControl(IControl $control)
 	{
 		// START EDIT
-		if ($control instanceof Checkbox) {
+		if ($control instanceof Checkbox && !$control instanceof CheckSwitch) {
 			$body = $this->getWrapper('control.checkbox container');
 		} else if ($control instanceof CheckboxList) {
 			$body = $this->getWrapper('control.checkboxlist container');

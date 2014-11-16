@@ -306,6 +306,7 @@ var ComponentsFormTools = function () {
 	var handleBootstrapTouchSpin = function () {
 
 		$(".touchspin").each(function () {
+			var size = null;
 			var params = {};
 			for (var i = 0, attrs = this.attributes, l = attrs.length; i < l; i++) {
 				var attr = attrs.item(i).nodeName;
@@ -323,6 +324,9 @@ var ComponentsFormTools = function () {
 						case "step":
 							params[paramName] = parseFloat($(this).attr(attr));
 							break;
+						case "size":
+							size = $(this).attr(attr);
+							break;
 						default:
 							params[paramName] = $(this).attr(attr);
 							break;
@@ -330,6 +334,9 @@ var ComponentsFormTools = function () {
 				}
 			}
 			$(this).TouchSpin(params);
+			if (size) {
+				console.log($(this).closest('.bootstrap-touchspin').addClass(size));
+			}
 		});
 
 	};
@@ -384,14 +391,22 @@ var ComponentsFormTools = function () {
 		if (!jQuery().tagsInput) {
 			return;
 		}
-		$('#tags_1').tagsInput({
-			width: 'auto',
-			'onAddTag': function () {
-				//alert(1);
-			},
-		});
-		$('#tags_2').tagsInput({
-			width: 300
+		$('.tags').each(function () {
+			var params = {
+				width: 'auto'
+			};
+			for (var i = 0, attrs = this.attributes, l = attrs.length; i < l; i++) {
+				var attr = attrs.item(i).nodeName;
+				if (attr.substring(0, 5) === "data-") {
+					var paramName = attr.substring(5).replace(/\-/g, "_");
+					switch (paramName) {
+						case 'defaulttext':
+							paramName = 'defaultText';
+					}
+					params[paramName] = $(this).attr(attr);
+				}
+			}
+			$(this).tagsInput(params);
 		});
 	};
 
@@ -429,7 +444,7 @@ var ComponentsFormTools = function () {
 			handleBootstrapTouchSpin();
 //            handleBootstrapMaxlength();
 			handleSpinners();
-//            handleTagsInput();
+            handleTagsInput();
 //            handlePasswordStrengthChecker();
 		}
 	};

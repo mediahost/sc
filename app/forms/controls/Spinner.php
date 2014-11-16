@@ -14,14 +14,22 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
+	const SIZE_FLUID = NULL;
+	const SIZE_XL = 'input-xlarge';
+	const SIZE_L = 'input-large';
+	const SIZE_M = 'input-medium';
+	const SIZE_S = 'input-small';
+	const SIZE_XS = 'input-xsmall';
+
 	private $attributes = array();
 	private $readonly = TRUE;
+	private $size;
 	private $leftButtUp = FALSE;
-	private $leftButtIcon = "minus";
-	private $leftButtColor = "red";
+	private $leftButtIcon = 'minus';
+	private $leftButtColor = 'red';
 	private $rightButtUp = TRUE;
-	private $rightButtIcon = "plus";
-	private $rightButtColor = "green";
+	private $rightButtIcon = 'plus';
+	private $rightButtColor = 'green';
 
 	// </editor-fold>
 
@@ -50,7 +58,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	 */
 	public function setDisabled($value = TRUE)
 	{
-		$this->attributes["data-disabled"] = $value ? "true" : "false";
+		$this->attributes['data-disabled'] = $value ? 'true' : 'false';
 		$this->setReadOnly($value);
 		return parent::setDisabled($value);
 	}
@@ -62,7 +70,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	 */
 	public function setValue($value)
 	{
-		$this->attributes["data-value"] = $value;
+		$this->attributes['data-value'] = $value;
 		return parent::setValue($value);
 	}
 
@@ -73,7 +81,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	 */
 	public function setMin($value)
 	{
-		$this->attributes["data-min"] = $value;
+		$this->attributes['data-min'] = $value;
 		return $this;
 	}
 
@@ -84,7 +92,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	 */
 	public function setMax($value)
 	{
-		$this->attributes["data-max"] = $value;
+		$this->attributes['data-max'] = $value;
 		return $this;
 	}
 
@@ -95,7 +103,30 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	 */
 	public function setStep($value)
 	{
-		$this->attributes["data-step"] = $value;
+		$this->attributes['data-step'] = $value;
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param type $size
+	 * @return self
+	 */
+	public function setSize($size = self::SIZE_FLUID)
+	{
+		switch ($size) {
+			case self::SIZE_FLUID:
+			case self::SIZE_XL:
+			case self::SIZE_L:
+			case self::SIZE_M:
+			case self::SIZE_S:
+			case self::SIZE_XS:
+				$this->size = $size;
+				break;
+			default:
+				$this->size = self::SIZE_FLUID;
+				break;
+		}
 		return $this;
 	}
 
@@ -156,7 +187,8 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	public function getControl()
 	{
 		$block = Html::el('div')
-				->class("input-group", TRUE)
+				->class('input-group', TRUE)
+				->class($this->size, TRUE)
 				->add($this->getLeftButton())
 				->add($this->getInput())
 				->add($this->getRightButton());
@@ -175,20 +207,20 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 				->id($this->getHtmlId())
 				->value($this->getValue());
 		if ($this->readonly) {
-			$input->readonly("readonly");
+			$input->readonly('readonly');
 		}
 		return $input;
 	}
 
 	private function getLeftButton()
 	{
-		$icon = Html::el("i")->class("fa");
+		$icon = Html::el('i')->class('fa');
 		if ($this->leftButtIcon) {
-			$icon->class("fa-" . $this->leftButtIcon, TRUE);
+			$icon->class('fa-' . $this->leftButtIcon, TRUE);
 		}
 		$button = Html::el('button type="button"')
-				->class("btn {$this->leftButtColor}")
-				->class("spinner-" . ($this->leftButtUp ? "up" : "down"), TRUE)
+				->class('btn ' . $this->leftButtColor)
+				->class('spinner-' . ($this->leftButtUp ? 'up' : 'down'), TRUE)
 				->add($icon);
 		return Html::el('div class="spinner-buttons input-group-btn"')
 						->add($button);
@@ -196,13 +228,13 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 
 	private function getRightButton()
 	{
-		$icon = Html::el("i")->class("fa");
+		$icon = Html::el('i')->class('fa');
 		if ($this->rightButtIcon) {
-			$icon->class("fa-" . $this->rightButtIcon, TRUE);
+			$icon->class('fa-' . $this->rightButtIcon, TRUE);
 		}
 		$button = Html::el('button type="button"')
-				->class("btn {$this->rightButtColor}")
-				->class("spinner-" . ($this->rightButtUp ? "up" : "down"), TRUE)
+				->class('btn ' . $this->rightButtColor)
+				->class('spinner-' . ($this->rightButtUp ? 'up' : 'down'), TRUE)
 				->add($icon);
 		return Html::el('div class="spinner-buttons input-group-btn"')
 						->add($button);

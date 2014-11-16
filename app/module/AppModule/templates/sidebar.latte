@@ -29,6 +29,7 @@
 				<!-- END RESPONSIVE QUICK SEARCH FORM -->
 			</li>
 			
+			<!-- BEGIN DASHBOARD -->
 			<li n:if="$user->isAllowed('dashboard', 'default')"
 				class="start{ifCurrent Dashboard:*} active{/ifCurrent}">
 				<a n:href="Dashboard:">
@@ -37,12 +38,28 @@
 					<span class="badge badge-info badge-roundless">{_'demo'}</span>
 				</a>
 			</li>
+			<!-- END DASHBOARD -->
 			
+			<!-- BEGIN SUBHEADLINE -->
 			<li n:if="$user->isInRole('candidate')"
 				class="heading">
 				<h3 class="uppercase">{_'Candidate'}</h3>
 			</li>
+			<li n:if="$user->isInRole('company')"
+				class="heading">
+				<h3 class="uppercase">{_'Company'}</h3>
+			</li>			
+			<li n:if="$user->isInRole('admin')"
+				class="heading">
+				<h3 class="uppercase">{_'Admin'}</h3>
+			</li>
+			<li n:if="$user->isInRole('superadmin')"
+				class="heading">
+				<h3 class="uppercase">{_'Superadmin'}</h3>
+			</li>
+			<!-- END SUBHEADLINE -->
 
+			<!-- BEGIN CANDIDATE -->
 			<li n:if="$user->isAllowed('candidate', 'view')"
 				class="{ifCurrent Candidate:*} active{/ifCurrent}">
 				<a n:href="Candidate:">
@@ -50,12 +67,9 @@
 					<span class="badge badge-danger badge-roundless">{_'new'}</span>
 				</a>
 			</li>
-			
-			<li n:if="$user->isInRole('company')"
-				class="heading">
-				<h3 class="uppercase">{_'Company'}</h3>
-			</li>
+			<!-- END CANDIDATE -->
 
+			<!-- BEGIN COMPANY -->
 			<li n:if="$user->isAllowed('company', 'view')"
 				class="{ifCurrent Company:*} active{/ifCurrent}">
 				<a n:href="Company:">
@@ -63,24 +77,60 @@
 					<span class="badge badge-danger badge-roundless">{_'new'}</span>
 				</a>
 			</li>
+			<!-- END COMPANY -->
 			
-			<li n:if="$user->isInRole('admin')"
-				class="heading">
-				<h3 class="uppercase">{_'Admin'}</h3>
-			</li>
-
+			<!-- BEGIN ADMIN -->
 			<li n:if="$user->isAllowed('users', 'view')"
 				class="{ifCurrent Users:*} active{/ifCurrent}">
 				<a n:href="Users:">
 					<i class="fa fa-users"></i> <span class="title">{_'Users'}</span><span class="selected"></span>
 				</a>
 			</li>
-			
-			<li n:if="$user->isInRole('superadmin')"
-				class="heading">
-				<h3 class="uppercase">{_'Superadmin'}</h3>
+			<li n:if="$user->isAllowed('skills', 'view')"
+				class="{ifCurrentIn 'Skills:*', 'SkillCategories:*'} active{/ifCurrentIn} last">
+				<a n:href="Skills:">
+					<i class="icon-book-open"></i> <span class="title">{_'Skills'}</span><span class="selected"></span>
+					<span class="badge badge-danger badge-roundless">{_'new'}</span>
+				</a>
+				<ul class="sub-menu">
+					<li class="{ifCurrent Skills:*} active{/ifCurrent}">
+						<a n:href="Skills:">
+							<i class="icon-book-open"></i>
+							{_'Skills'}
+						</a>
+					</li>
+					<li n:if="$user->isAllowed('skillCategories', 'view')"
+						class="{ifCurrent SkillCategories:*} active{/ifCurrent}">
+						<a n:href="SkillCategories:">
+							<i class="icon-folder-alt"></i>
+							{_'Skill categories'}
+						</a>
+					</li>
+				</ul>
 			</li>
+			<!-- END ADMIN -->
 			
+			<!-- BEGIN SUPERADMIN -->
+			<li n:if="$user->isAllowed('examples', 'default')"
+				class="start{ifCurrent Examples:*} active{/ifCurrent}">
+				<a n:href="Examples:">
+					<i class="fa fa-life-ring"></i> 
+					<span class="title">{_'Examples'}</span><span class="selected"></span>
+					<span class="badge badge-info badge-roundless">{_'demo'}</span>
+				</a>
+				<ul class="sub-menu">
+					<li class="{ifCurrent Examples:form} active{/ifCurrent}">
+						<a n:href="Examples:form">
+							<i class="fa fa-file-text-o"></i>
+							<span class="badge badge-danger badge-roundless">{_'new'}</span>
+							{_'Form'}
+						</a>
+					</li>
+				</ul>
+			</li>
+			<!-- END SUPERADMIN -->
+			
+			<!-- BEGIN TOGETHER AREA -->
 			<li class="heading">
 				<h3 class="uppercase">{_'Settings'}</h3>
 			</li>
@@ -105,29 +155,7 @@
 					</li>
 				</ul>
 			</li>
-
-			<li n:if="$user->isAllowed('skills', 'view')"
-				class="{ifCurrentIn 'Skills:*', 'SkillCategories:*'} active{/ifCurrentIn} last">
-				<a n:href="Skills:">
-					<i class="icon-book-open"></i> <span class="title">{_'Skills'}</span><span class="selected"></span>
-					<span class="badge badge-danger badge-roundless">{_'new'}</span>
-				</a>
-				<ul class="sub-menu">
-					<li class="{ifCurrent Skills:*} active{/ifCurrent}">
-						<a n:href="Skills:">
-							<i class="icon-book-open"></i>
-							{_'Skills'}
-						</a>
-					</li>
-					<li n:if="$user->isAllowed('skillCategories', 'view')"
-						class="{ifCurrent SkillCategories:*} active{/ifCurrent}">
-						<a n:href="SkillCategories:">
-							<i class="icon-folder-alt"></i>
-							{_'Skill categories'}
-						</a>
-					</li>
-				</ul>
-			</li>
+			<!-- END TOGETHER AREA -->
 		</ul>
 		<!-- END SIDEBAR MENU -->
 	</div>

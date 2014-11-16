@@ -2,9 +2,8 @@
 
 namespace App\Forms\Renderers;
 
+use App\Forms\Controls\CheckSwitch;
 use Nette\Forms\Controls\Checkbox;
-use Nette\Forms\Controls\CheckboxList;
-use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -15,11 +14,13 @@ use Nette\Utils\Html;
  */
 class MetronicHorizontalFormRenderer extends MetronicFormRenderer
 {
+	const DEFAULT_LABEL_WIDTH = '3';
+	const DEFAULT_INPUT_WIDTH = '9';
 
 	private $labelWidth;
 	private $inputWidth;
 
-	public function __construct($labelWidth = "3", $inputWidth = "9")
+	public function __construct($labelWidth = self::DEFAULT_LABEL_WIDTH, $inputWidth = self::DEFAULT_INPUT_WIDTH)
 	{
 		parent::__construct();
 		$this->setLabelWidth($labelWidth)
@@ -62,8 +63,8 @@ class MetronicHorizontalFormRenderer extends MetronicFormRenderer
 			
 			$this->customizeStandardControl($control, $usedPrimary);
 			
-			if ($control->getLabelPrototype() instanceof Html && !$control instanceof Checkbox) {
-				$control->getLabelPrototype()->class("col-md-{$this->labelWidth}", TRUE);
+			if ($control->getLabelPrototype() instanceof Html && !($control instanceof Checkbox && !$control instanceof CheckSwitch)) {
+				$control->getLabelPrototype()->class('col-md-' . $this->labelWidth, TRUE);
 			}
 		}
 	}

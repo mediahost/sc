@@ -16,20 +16,20 @@ class TagInput extends \Nette\Forms\Controls\TextInput
 	public function __construct($label = NULL)
 	{
 		parent::__construct($label);
-		$this->control->class = "select2";
+		$this->control->class = 'tags';
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters">
-
+	
 	/**
 	 *
-	 * @param array $tags
-	 * @return TagInput
+	 * @param string $text
+	 * @return self
 	 */
-	public function setTags(array $tags)
+	public function setPlaceholder($text)
 	{
-		$attr = "data-tags";
-		$this->control->$attr = json_encode($tags);
+		$attr = 'data-defaultText';
+		$this->control->$attr = $text;
 		return $this;
 	}
 

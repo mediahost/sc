@@ -18,11 +18,11 @@ class DatePicker extends BaseControl
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	const SIZE_FLUID = NULL;
-	const SIZE_XL = "input-xlarge";
-	const SIZE_L = "input-large";
-	const SIZE_M = "input-medium";
-	const SIZE_S = "input-small";
-	const SIZE_XS = "input-xsmall";
+	const SIZE_XL = 'input-xlarge';
+	const SIZE_L = 'input-large';
+	const SIZE_M = 'input-medium';
+	const SIZE_S = 'input-small';
+	const SIZE_XS = 'input-xsmall';
 
 	private $date;
 	private $format;
@@ -32,11 +32,11 @@ class DatePicker extends BaseControl
 
 	// </editor-fold>
 
-	public function __construct($label = NULL, $format = "d.m.Y")
+	public function __construct($label = NULL, $format = 'd.m.Y')
 	{
 		parent::__construct($label);
 		$this->format = $format;
-		$this->attributes["data-date-format"] = \App\Helpers::dateformatPHP2JS($this->format);
+		$this->attributes['data-date-format'] = \App\Helpers::dateformatPHP2JS($this->format);
 		$this->addRule(__CLASS__ . '::validateDate', 'Date is invalid.');
 	}
 
@@ -87,7 +87,7 @@ class DatePicker extends BaseControl
 	 */
 	public function setStartDate(DateTime $value)
 	{
-		$this->attributes["data-start-date"] = $value->format($this->format);
+		$this->attributes['data-start-date'] = $value->format($this->format);
 		return $this;
 	}
 
@@ -98,7 +98,7 @@ class DatePicker extends BaseControl
 	 */
 	public function setEndDate(DateTime $value)
 	{
-		$this->attributes["data-end-date"] = $value->format($this->format);
+		$this->attributes['data-end-date'] = $value->format($this->format);
 		return $this;
 	}
 
@@ -112,7 +112,7 @@ class DatePicker extends BaseControl
 	 */
 	public function setMinViewMode($value)
 	{
-		$this->attributes["data-min-view-mode"] = $value;
+		$this->attributes['data-min-view-mode'] = $value;
 		return $this;
 	}
 
@@ -123,7 +123,7 @@ class DatePicker extends BaseControl
 	 */
 	public function setTodayHighlight($value = TRUE)
 	{
-		$this->attributes["data-today-highlight"] = $value ? "true" : "false";
+		$this->attributes['data-today-highlight'] = $value ? 'true' : 'false';
 		return $this;
 	}
 
@@ -134,7 +134,7 @@ class DatePicker extends BaseControl
 	 */
 	public function setPlaceholder($value)
 	{
-		$this->attributes["placeholder"] = $value;
+		$this->attributes['placeholder'] = $value;
 		return $this;
 	}
 
@@ -185,10 +185,10 @@ class DatePicker extends BaseControl
 				->id($this->getHtmlId())
 				->value($this->getValue(TRUE));
 		if ($picker) {
-			$input->class("date-picker", TRUE);
+			$input->class('date-picker', TRUE);
 		}
 		if ($this->readOnly) {
-			$input->readonly("readonly");
+			$input->readonly('readonly');
 		}
 		return $input;
 	}
