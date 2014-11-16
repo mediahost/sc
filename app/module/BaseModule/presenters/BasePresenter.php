@@ -2,8 +2,8 @@
 
 namespace App\BaseModule\Presenters;
 
-use App\Components\Profile\ISignOutControlFactory;
-use App\Components\Profile\SignOutControl;
+use App\Components\Auth\ISignOutControlFactory;
+use App\Components\Auth\SignOutControl;
 use App\Model\Entity\PageDesignSettings;
 use App\Model\Storage\UserSettingsStorage;
 use App\TaggedString;

@@ -48,11 +48,11 @@ class SignListener extends Object implements Subscriber
 	public function getSubscribedEvents()
 	{
 		return array(
-			'App\Components\Profile\FacebookControl::onSuccess' => 'onStartup',
-			'App\Components\Profile\SignUpControl::onSuccess' => 'onStartup',
-			'App\Components\Profile\TwitterControl::onSuccess' => 'onStartup',
-			'App\Components\Profile\RequiredControl::onSuccess' => 'onExists',
-			'App\Components\Profile\SummaryControl::onSuccess' => 'onSuccess'
+			'App\Components\Auth\FacebookControl::onSuccess' => 'onStartup',
+			'App\Components\Auth\SignUpControl::onSuccess' => 'onStartup',
+			'App\Components\Auth\TwitterControl::onSuccess' => 'onStartup',
+			'App\Components\Auth\RequiredControl::onSuccess' => 'onExists',
+			'App\Components\Auth\SummaryControl::onSuccess' => 'onSuccess'
 		);
 	}
 

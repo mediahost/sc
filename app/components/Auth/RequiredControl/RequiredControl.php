@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Components\Profile;
+namespace App\Components\Auth;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 use App\TaggedString;
 use Nette\Utils\ArrayHash;
 
-class SignUpControl extends BaseControl
+class RequiredControl extends BaseControl
 {
 
-	/** @var array */
 	public $onSuccess = [];
-
-	/** @var UserFacade @inject */
-	public $userFacade;
 
 	/** @var SignUpStorage @inject */
 	public $session;
+
+	/** @var UserFacade @inject */
+	public $userFacade;
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -35,16 +33,6 @@ class SignUpControl extends BaseControl
 				->setRequired('Please enter your e-mail.')
 				->addRule(Form::EMAIL, 'E-mail has not valid format.');
 
-		$form->addPassword('password', 'Password:')
-				->setAttribute('placeholder', 'Password')
-				->setRequired('Please enter your password')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', self::MIN_PASSWORD_CHARACTERS);
-
-		$form->addPassword('passwordVerify', 'Re-type Your Password:')
-				->setAttribute('placeholder', 'Re-type Your Password')
-				->addConditionOn($form['password'], Form::FILLED)
-				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
-
 		$form->addSubmit('continue', 'Continue');
 
 		$form->onSubmit[] = $this->formSubmit;
@@ -52,7 +40,7 @@ class SignUpControl extends BaseControl
 		return $form;
 	}
 
-	public function formSubmit(Form $form) // ToDo: Why this? On Success is good enought!
+	public function formSubmit(Form $form)
 	{
 		$values = $form->getValues();
 		if (!$this->userFacade->isUnique($values->mail)) {
@@ -68,31 +56,22 @@ class SignUpControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$entity = $this->load($values);
-
+		$this->session->user->mail = $values->mail;
 		$this->session->verification = FALSE;
-
-		$this->onSuccess($this, $entity);
+		$this->onSuccess($this, $this->session->user);
 	}
 
-	/**
-	 * Load Entity from Form
-	 * @param type $values
-	 * @return User
-	 */
-	private function load($values)
+	public function renderLogin()
 	{
-		$entity = new User;
-		$entity->setMail($values->mail)
-				->setPassword($values->password);
-		return $entity;
+		$this->setTemplateFile('login');
+		parent::render();
 	}
 
 }
 
-interface ISignUpControlFactory
+interface IRequiredControlFactory
 {
 
-	/** @return SignUpControl */
+	/** @return RequiredControl */
 	function create();
 }

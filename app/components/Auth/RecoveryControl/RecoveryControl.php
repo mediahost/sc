@@ -1,24 +1,23 @@
 <?php
 
-namespace App\Components\Profile;
+namespace App\Components\Auth;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
-use Kdyby\Doctrine\EntityDao;
-use Kdyby\Doctrine\EntityManager;
+use Nette\Security\Identity;
 use Nette\Utils\ArrayHash;
 
-class SetPasswordControl extends BaseControl
+class RecoveryControl extends BaseControl
 {
 
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var EntityDao */
-	private $userDao;
+	/** @var User */
+	private $user;
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -26,12 +25,6 @@ class SetPasswordControl extends BaseControl
 		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
-
-		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
-		$user = $this->presenter->user->identity;
-		$form->addText('mail', 'E-mail')
-				->setEmptyValue($user->mail)
-				->setDisabled();
 
 		$form->addPassword('newPassword', 'New password:', NULL, 255)
 				->setAttribute('placeholder', 'Password')
@@ -43,7 +36,7 @@ class SetPasswordControl extends BaseControl
 				->addConditionOn($form['newPassword'], Form::FILLED)
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['newPassword']);
 
-		$form->addSubmit('save', 'Save');
+		$form->addSubmit('recovery', 'Set new password');
 
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
@@ -55,19 +48,28 @@ class SetPasswordControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
-		$user = $this->userFacade->findByMail($this->presenter->user->identity->mail);
-		$user->password = $values->newPassword;
-		$this->userDao->save($user);
+		$user = $this->userFacade->recoveryPassword($this->user, $values->newPassword);
 
-		// TODO: do it without $this->presenter; do it with event
-		$this->presenter->flashMessage('Password has been successfuly set!', 'success');
-		$this->presenter->redirect(':App:Profile:settings#connect-manager');
+		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
+		$identityUser = $this->presenter->user;
+		$identityUser->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+
+		// TODO: do it without $this->presenter; use events
+		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
+		$this->presenter->redirect(':App:Dashboard:');
 	}
 
-	public function injectEntityManager(EntityManager $em)
+	/**
+	 * @param type $token
+	 * @return void
+	 */
+	public function setToken($token)
 	{
-		$this->userDao = $em->getDao(User::getClassName());
+		if (!$this->user = $this->userFacade->findByRecoveryToken($token)) {
+			// TODO: do it without $this->presenter; use events
+			$this->presenter->flashMessage('Token to recovery your password is no longer active. Please request new one.', 'info');
+			$this->presenter->redirect(':Front:Sign:lostPassword');
+		}
 	}
 
 	public function renderLogin()
@@ -78,9 +80,9 @@ class SetPasswordControl extends BaseControl
 
 }
 
-interface ISetPasswordControlFactory
+interface IRecoveryControlFactory
 {
 
-	/** @return SetPasswordControl */
+	/** @return RecoveryControl */
 	function create();
 }

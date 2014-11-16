@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Components\Profile;
+namespace App\Components\Auth;
 
 use App\Components\BaseControl;
 use App\Model\Entity\User;

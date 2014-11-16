@@ -1,40 +1,40 @@
 # Components
 services:
 	# Profile
-	- {implement: App\Components\Profile\IForgottenControlFactory, inject: yes}
-	- {implement: App\Components\Profile\IRecoveryControlFactory, inject: yes}
-	- {implement: App\Components\Profile\ISetPasswordControlFactory, inject: yes}
-	- {implement: App\Components\Profile\ISignInControlFactory, inject: yes}
-	- {implement: App\Components\Profile\ISignOutControlFactory, inject: yes}
+	- {implement: App\Components\Auth\IForgottenControlFactory, inject: yes}
+	- {implement: App\Components\Auth\IRecoveryControlFactory, inject: yes}
+	- {implement: App\Components\Auth\ISetPasswordControlFactory, inject: yes}
+	- {implement: App\Components\Auth\ISignInControlFactory, inject: yes}
+	- {implement: App\Components\Auth\ISignOutControlFactory, inject: yes}
 
 	IAdditionalControlFactory:
-		create: App\Components\Profile\AdditionalControl
-		implement: App\Components\Profile\IAdditionalControlFactory
+		create: App\Components\Auth\AdditionalControl
+		implement: App\Components\Auth\IAdditionalControlFactory
 		inject: yes
 
 	IFacebookControlFactory:
-		create: App\Components\Profile\FacebookControl
-		implement: App\Components\Profile\IFacebookControlFactory
+		create: App\Components\Auth\FacebookControl
+		implement: App\Components\Auth\IFacebookControlFactory
 		inject: yes
 
 	IRequiredControlFactory:
-		create: App\Components\Profile\RequiredControl
-		implement: App\Components\Profile\IRequiredControlFactory
+		create: App\Components\Auth\RequiredControl
+		implement: App\Components\Auth\IRequiredControlFactory
 		inject: yes
 
 	ISignUpControlFactory:
-		create: App\Components\Profile\SignUpControl
-		implement: App\Components\Profile\ISignUpControlFactory
+		create: App\Components\Auth\SignUpControl
+		implement: App\Components\Auth\ISignUpControlFactory
 		inject: yes
 
 	ISummaryControlFactory:
-		create: App\Components\Profile\SummaryControl
-		implement: App\Components\Profile\ISummaryControlFactory
+		create: App\Components\Auth\SummaryControl
+		implement: App\Components\Auth\ISummaryControlFactory
 		inject: yes
 
 	ITwitterControlFactory:
-		create: App\Components\Profile\TwitterControl
-		implement: App\Components\Profile\ITwitterControlFactory
+		create: App\Components\Auth\TwitterControl
+		implement: App\Components\Auth\ITwitterControlFactory
 		inject: yes
 	
 	# User

@@ -2,9 +2,9 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Profile\ConnectControl;
-use App\Components\Profile\ISetPasswordControlFactory;
-use App\Components\Profile\SetPasswordControl;
+use App\Components\Auth\ConnectControl;
+use App\Components\Auth\ISetPasswordControlFactory;
+use App\Components\Auth\SetPasswordControl;
 use App\Components\User\IPreferencesControlFactory;
 use App\Components\User\PreferencesControl;
 use App\Model\Facade\UserFacade;
