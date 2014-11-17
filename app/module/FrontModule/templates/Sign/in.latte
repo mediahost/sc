@@ -34,15 +34,14 @@
 		{_'No worries, just '} <a n:href="lostPassword">{_'set new password'}</a> {_'in a while'}.
 	</p>
 </div>
-
+	
 <div class="create-account">
 	<p>
-		{_"Don't have an account yet?"}<br/>
-		{_'Create an'} 
-		<a n:href="up, role => $role">
+		<a n:href="up, role => $role" id="register-btn" class="uppercase">
+			{_'Create an'}
 			{if $role === $roleCandidate}{_'candidate'}
-		{elseif $role === $roleCompany}{_'company'}{/if}
-		{_'account'}
-		</a>.
+			{elseif $role === $roleCompany}{_'company'}{/if}
+			{_'account'}
+		</a>
 	</p>
 </div>

@@ -88,6 +88,12 @@ class SignUpControl extends BaseControl
 		return $entity;
 	}
 
+	public function renderLogin()
+	{
+		$this->setTemplateFile('login');
+		parent::render();
+	}
+
 }
 
 interface ISignUpControlFactory

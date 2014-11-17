@@ -8,28 +8,20 @@
 
 	<div class="form-group">
 		{label mail, class=>'control-label visible-ie8 visible-ie9' /}
-		<div class="input-icon">
-			<i class="fa fa-envelope"></i> {input mail, class=>'form-control placeholder-no-fix'}
-		</div>
+		{input mail, class=>'form-control placeholder-no-fix'}
 	</div>
 
 	<div class="form-group">
 		{label password, class=>'control-label visible-ie8 visible-ie9' /}
-		<div class="input-icon">
-			<i class="fa fa-lock"></i> {input password, class=>'form-control placeholder-no-fix'}
-		</div>
+		{input password, class=>'form-control placeholder-no-fix'}
 	</div>
 
 	<div class="form-group">
 		{label passwordVerify, class=>'control-label visible-ie8 visible-ie9' /}
-		<div class="input-icon">
-			<i class="fa fa-check"></i> {input passwordVerify, class=>'form-control placeholder-no-fix'}
-		</div>
+		{input passwordVerify, class=>'form-control placeholder-no-fix'}
 	</div>
-
-    <div class="form-actions">
-        {button continue, class=>'btn green pull-right'}
-			{caption} <i class="m-icon-swapright m-icon-white"></i>
-        {/button}
-    </div>
+	
+	<div class="form-actions">
+		{button continue, class=>'btn btn-success uppercase'}{caption}{/button}
+	</div>
 {/form}

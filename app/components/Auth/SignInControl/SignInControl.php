@@ -33,8 +33,8 @@ class SignInControl extends BaseControl
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password.');
 
-		$form->addCheckbox('remember', 'Remember me')
-						->getLabelPrototype()->class = "checkbox";
+		$form->addCheckbox('remember', 'Remember')
+						->getLabelPrototype()->class = "rememberme check";
 
 		$form->addSubmit('signIn', 'Sign in');
 
