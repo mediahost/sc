@@ -11,6 +11,14 @@
 
 {block content}
 
+<div class="row" n:ifset="$values">
+	<div class="col-md-6 ">
+		<div class="portlet box">
+			{dump $values}
+		</div>
+	</div>
+</div>
+
 <div class="row">
 	<div class="col-md-6 ">
 		<div class="portlet box">
@@ -124,6 +132,7 @@
 </div>
 *}
 
+{*
 <div class="row">
 	<div class="col-md-6 ">
 		<div class="portlet box blue">
@@ -580,3 +589,4 @@
 		</div>
 	</div>
 </div>	
+*}

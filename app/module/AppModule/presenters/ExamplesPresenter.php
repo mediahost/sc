@@ -4,6 +4,7 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Example\Form\FormControl;
 use App\Components\Example\Form\IFormControlFactory;
+use App\Forms\Form;
 
 /**
  * Examples presenter
@@ -39,7 +40,11 @@ class ExamplesPresenter extends BasePresenter
 	/** @return FormControl */
 	protected function createComponentForm()
 	{
-		return $this->iFormControlFactory->create();
+		$control = $this->iFormControlFactory->create();
+		$control->onAfterSave = function (Form $form, $values) {
+			$this->template->values = $values;
+		};
+		return $control;
 	}
 	// </editor-fold>
 

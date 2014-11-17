@@ -2,7 +2,7 @@
 
 namespace App\Forms\Renderers;
 
-use App\Forms\Controls\CheckSwitch;
+use App\Forms\Controls\ChoiseBased\CheckSwitch;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\CheckboxList;
 use Nette\Forms\Form;

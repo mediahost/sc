@@ -13,6 +13,7 @@ class Spinner extends MetronicTextInputBase
 {
 
 	private $attributes = array();
+	private $size = self::SIZE_FLUID;
 	private $readonly = TRUE;
 	private $leftButtUp = FALSE;
 	private $leftButtIcon = 'minus';
@@ -27,6 +28,17 @@ class Spinner extends MetronicTextInputBase
 	}
 
 	// <editor-fold defaultstate="expanded" desc="setters">
+
+	/**
+	 * Set size of main element
+	 * @param string $size
+	 * @return self
+	 */
+	public function setSize($size = self::SIZE_FLUID)
+	{
+		$this->size = $this->getStandardedSize($size);
+		return $this;
+	}
 
 	/**
 	 * Set readonly parameter
@@ -154,6 +166,7 @@ class Spinner extends MetronicTextInputBase
 	{
 		$block = Html::el('div')
 				->class('input-group', TRUE)
+				->class($this->size, TRUE)
 				->add($this->getLeftButton())
 				->add($this->getInput())
 				->add($this->getRightButton());

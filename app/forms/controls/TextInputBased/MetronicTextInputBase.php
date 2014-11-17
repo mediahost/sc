@@ -88,6 +88,16 @@ abstract class MetronicTextInputBase extends TextInput
 	 */
 	public function setSize($size = self::SIZE_FLUID)
 	{
+		return $this->setDataAttribute('size', $this->getStandardedSize($size));
+	}
+	
+	/**
+	 * Get standarded size
+	 * @param string $size
+	 * @return string
+	 */
+	protected function getStandardedSize($size = self::SIZE_FLUID)
+	{
 		switch ($size) {
 			case self::SIZE_FLUID:
 			case self::SIZE_XL:
@@ -100,7 +110,7 @@ abstract class MetronicTextInputBase extends TextInput
 				$size = self::SIZE_FLUID;
 				break;
 		}
-		return $this->setAttribute('data-size', $size);
+		return $size;
 	}
 
 }

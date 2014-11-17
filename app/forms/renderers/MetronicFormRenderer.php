@@ -2,7 +2,7 @@
 
 namespace App\Forms\Renderers;
 
-use App\Forms\Controls\DatePicker;
+use App\Forms\Controls\Custom\DatePicker;
 use Nette\Forms\Controls\Button;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\CheckboxList;

@@ -38,6 +38,8 @@ class FormControl extends BaseControl
 		$values = [1 => 'test1', 2 => 'test2'];
 
 		$form->addText('text', 'Text');
+		$form->addText('textmask', 'Text')
+				->setAttribute('class', 'mask_date');
 		$form->addText('password', 'Password');
 		$form->addCheckSwitch('checkswitch', 'Check Switch', 'On', 'Off')
 				->setOffColor('danger')
@@ -51,9 +53,6 @@ class FormControl extends BaseControl
 				->setMax(100)
 				->setValue(50)
 				->setSize(MetronicTextInputBase::SIZE_S);
-		$form->addTagInput('tags', 'Tags')
-				->setPlaceholder($this->translator->translate('add a tag'))
-				->setValue('ahoj, ahoj2');
 		$form->addTouchSpin('touchspin', 'Touch Spin')
 				->setButtonDownClass('btn red')
 				->setButtonUpClass('btn green')
@@ -75,6 +74,9 @@ class FormControl extends BaseControl
 		$form->addSelect2('select2', 'Select 2', $values);
 		$form->addMultiSelect('multiselect', 'Multi Select', $values);
 		$form->addMultiSelect2('multiselect2', 'Multi Select 2', $values);
+		$form->addTagInput('tags', 'Tags')
+				->setPlaceholder($this->translator->translate('add a tag'))
+				->setValue('ahoj, ahoj2');
 		$form->addTextArea('textarea', 'Textarea');
 		$form->addWysiHtml('wysi', 'HTML');
 
@@ -88,6 +90,7 @@ class FormControl extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->presenter->flashMessage('This is only example form', 'success');
+		$this->onAfterSave($form, $values);
 	}
 
 	/**
