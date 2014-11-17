@@ -428,6 +428,34 @@ var ComponentsFormTools = function () {
 		});
 	};
 
+	/**
+	 * https://github.com/RobinHerbots/jquery.inputmask
+	 */
+	var handleInputMasks = function () {
+		$.extend($.inputmask.defaults, {
+			'autounmask': true
+		});
+
+		$('.mask_date').inputmask('d/m/y', {
+			autoUnmask: true,
+			placeholder: 'dd/mm/yyyy'
+		});
+
+		$('.mask_phone').inputmask('phone', {
+			url: basePath + 'assets/plugins/jquery-inputmask/inputmask/phone-codes/phone-codes.json',
+			onKeyValidation: function () { //show some metadata in the console
+				if ($(this).inputmask('getmetadata') != undefined) {
+					console.log($(this).inputmask('getmetadata')['name_en']);
+				}
+			}
+		});
+
+		$('.mask_ipv4').ipAddress();
+		$('.mask_ipv6').ipAddress({
+			v: 6
+		});
+	};
+
 	var handlePasswordStrengthChecker = function () {
 		var initialized = false;
 		var input = $("#password_strength");
@@ -463,6 +491,7 @@ var ComponentsFormTools = function () {
 //            handleBootstrapMaxlength();
 			handleSpinners();
 			handleTagsInput();
+			handleInputMasks();
 //            handlePasswordStrengthChecker();
 		}
 	};

@@ -38,7 +38,9 @@ class FormControl extends BaseControl
 		$values = [1 => 'test1', 2 => 'test2'];
 
 		$form->addText('text', 'Text');
-		$form->addText('textmask', 'Text')
+		$form->addText('phone', 'Phone')
+				->setAttribute('class', 'mask_phone');
+		$form->addText('date', 'Date')
 				->setAttribute('class', 'mask_date');
 		$form->addText('password', 'Password');
 		$form->addCheckSwitch('checkswitch', 'Check Switch', 'On', 'Off')
