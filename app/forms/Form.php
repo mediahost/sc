@@ -2,17 +2,17 @@
 
 namespace App\Forms;
 
-use App\Forms\Controls\CheckboxList;
-use App\Forms\Controls\CheckSwitch;
-use App\Forms\Controls\DateInput;
-use App\Forms\Controls\DatePicker;
-use App\Forms\Controls\MultiSelect2;
-use App\Forms\Controls\RadioList;
-use App\Forms\Controls\Select2;
-use App\Forms\Controls\Spinner;
-use App\Forms\Controls\TagInput;
-use App\Forms\Controls\TouchSpin;
-use App\Forms\Controls\WysiHtml;
+use App\Forms\Controls\ChoiseBased\CheckboxList;
+use App\Forms\Controls\ChoiseBased\CheckSwitch;
+use App\Forms\Controls\ChoiseBased\RadioList;
+use App\Forms\Controls\Custom\DateInput;
+use App\Forms\Controls\Custom\DatePicker;
+use App\Forms\Controls\SelectBased\MultiSelect2;
+use App\Forms\Controls\SelectBased\Select2;
+use App\Forms\Controls\TextAreaBased\WysiHtml;
+use App\Forms\Controls\TextInputBased\Spinner;
+use App\Forms\Controls\TextInputBased\TagInput;
+use App\Forms\Controls\TextInputBased\TouchSpin;
 use Nette\Application\UI\Form as BaseForm;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Forms\Controls;
+namespace App\Forms\Controls\TextInputBased;
 
 use Nette\Utils\Html;
 
@@ -9,21 +9,11 @@ use Nette\Utils\Html;
  *
  * @author Petr Poupě
  */
-class Spinner extends \Nette\Forms\Controls\TextInput
+class Spinner extends MetronicTextInputBase
 {
-
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-
-	const SIZE_FLUID = NULL;
-	const SIZE_XL = 'input-xlarge';
-	const SIZE_L = 'input-large';
-	const SIZE_M = 'input-medium';
-	const SIZE_S = 'input-small';
-	const SIZE_XS = 'input-xsmall';
 
 	private $attributes = array();
 	private $readonly = TRUE;
-	private $size;
 	private $leftButtUp = FALSE;
 	private $leftButtIcon = 'minus';
 	private $leftButtColor = 'red';
@@ -31,17 +21,15 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	private $rightButtIcon = 'plus';
 	private $rightButtColor = 'green';
 
-	// </editor-fold>
-
-	public function __construct($label = NULL, $rows = NULL)
+	public function __construct($label = NULL)
 	{
 		parent::__construct($label);
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters">
+	// <editor-fold defaultstate="expanded" desc="setters">
 
 	/**
-	 *
+	 * Set readonly parameter
 	 * @param type $value
 	 * @return self
 	 */
@@ -52,7 +40,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 *
+	 * Set disabled and set read only
 	 * @param type $value
 	 * @return self
 	 */
@@ -64,7 +52,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 *
+	 * Set Value for spinner and for input
 	 * @param type $value
 	 * @return self
 	 */
@@ -75,7 +63,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 *
+	 * Set Minimum value
 	 * @param type $value
 	 * @return self
 	 */
@@ -86,7 +74,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 *
+	 * Set maximum value
 	 * @param type $value
 	 * @return self
 	 */
@@ -97,7 +85,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 *
+	 * Set step to move
 	 * @param type $value
 	 * @return self
 	 */
@@ -108,31 +96,8 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 *
-	 * @param type $size
-	 * @return self
-	 */
-	public function setSize($size = self::SIZE_FLUID)
-	{
-		switch ($size) {
-			case self::SIZE_FLUID:
-			case self::SIZE_XL:
-			case self::SIZE_L:
-			case self::SIZE_M:
-			case self::SIZE_S:
-			case self::SIZE_XS:
-				$this->size = $size;
-				break;
-			default:
-				$this->size = self::SIZE_FLUID;
-				break;
-		}
-		return $this;
-	}
-
-	/**
-	 *
-	 * @param type $value
+	 * If TRUE then Up button is in the left
+	 * @param type $inverse
 	 * @return self
 	 */
 	public function setInverse($inverse = TRUE)
@@ -147,8 +112,9 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 *
-	 * @param type $value
+	 * Set color and icon for left button
+	 * @param type $color
+	 * @param type $faIcon
 	 * @return self
 	 */
 	public function setLeftButton($color = NULL, $faIcon = NULL)
@@ -163,8 +129,9 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	/**
-	 *
-	 * @param type $value
+	 * Set color and icon for right button
+	 * @param type $color
+	 * @param type $faIcon
 	 * @return self
 	 */
 	public function setRightButton($color = NULL, $faIcon = NULL)
@@ -179,7 +146,6 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
 
 	/**
 	 * Generates control's HTML element.
@@ -188,7 +154,6 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 	{
 		$block = Html::el('div')
 				->class('input-group', TRUE)
-				->class($this->size, TRUE)
 				->add($this->getLeftButton())
 				->add($this->getInput())
 				->add($this->getRightButton());
@@ -197,8 +162,7 @@ class Spinner extends \Nette\Forms\Controls\TextInput
 						->addAttributes($this->attributes);
 	}
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="private getters">
+	// <editor-fold defaultstate="collapsed" desc="controls for buttons">
 
 	private function getInput()
 	{

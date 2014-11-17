@@ -3,9 +3,8 @@
 namespace App\Components\Example\Form;
 
 use App\Components\BaseControl;
-use App\Forms\Controls\DatePicker;
-use App\Forms\Controls\Spinner;
-use App\Forms\Controls\TouchSpin;
+use App\Forms\Controls\Custom\DatePicker;
+use App\Forms\Controls\TextInputBased\MetronicTextInputBase;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
@@ -51,12 +50,20 @@ class FormControl extends BaseControl
 				->setMin(10)
 				->setMax(100)
 				->setValue(50)
-				->setSize(Spinner::SIZE_S);
+				->setSize(MetronicTextInputBase::SIZE_S);
 		$form->addTagInput('tags', 'Tags')
 				->setPlaceholder($this->translator->translate('add a tag'))
 				->setValue('ahoj, ahoj2');
 		$form->addTouchSpin('touchspin', 'Touch Spin')
-				->setSize(TouchSpin::SIZE_S);
+				->setButtonDownClass('btn red')
+				->setButtonUpClass('btn green')
+				->setPostfix('€')
+				->setDecimals(2)
+				->setValue(1)
+				->setStep(0.1)
+				->setMin(0)
+				->setMax(2)
+				->setSize(MetronicTextInputBase::SIZE_M);
 		$form->addCheckbox('checkbox', 'Checkbox');
 		$form->addCheckboxList('checkboxlist', 'Checkbox list', $values);
 		$form->addCheckboxList('checkboxlistinline', 'Checkbox list inline', $values)

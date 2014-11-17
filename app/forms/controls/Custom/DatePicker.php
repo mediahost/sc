@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Forms\Controls;
+namespace App\Forms\Controls\Custom;
 
+use App\Helpers;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Utils\Html;
+use Nette\Forms\Form;
+use Nette\Forms\IControl;
 use Nette\Utils\DateTime;
-use Tracy\Debugger as Debug;
+use Nette\Utils\Html;
 
 /**
  * DatePicker
@@ -15,8 +17,6 @@ use Tracy\Debugger as Debug;
 class DatePicker extends BaseControl
 {
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-
 	const SIZE_FLUID = NULL;
 	const SIZE_XL = 'input-xlarge';
 	const SIZE_L = 'input-large';
@@ -24,23 +24,30 @@ class DatePicker extends BaseControl
 	const SIZE_S = 'input-small';
 	const SIZE_XS = 'input-xsmall';
 
+	/** @var DateTime */
 	private $date;
-	private $format;
-	private $size;
-	private $readOnly = FALSE;
-	private $attributes = array();
 
-	// </editor-fold>
+	/** @var string */
+	private $format;
+
+	/** @var string */
+	private $size;
+
+	/** @var bool */
+	private $readOnly = FALSE;
+
+	/** @var array */
+	private $attributes = [];
 
 	public function __construct($label = NULL, $format = 'd.m.Y')
 	{
 		parent::__construct($label);
 		$this->format = $format;
-		$this->attributes['data-date-format'] = \App\Helpers::dateformatPHP2JS($this->format);
+		$this->attributes['data-date-format'] = Helpers::dateformatPHP2JS($this->format);
 		$this->addRule(__CLASS__ . '::validateDate', 'Date is invalid.');
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters">
+	// <editor-fold defaultstate="expanded" desc="setters">
 
 	public function setValue($value)
 	{
@@ -52,7 +59,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 *
+	 * Set parent size
 	 * @param type $size
 	 * @return self
 	 */
@@ -74,6 +81,11 @@ class DatePicker extends BaseControl
 		return $this;
 	}
 
+	/**
+	 * Set read only
+	 * @param type $value
+	 * @return self
+	 */
 	public function setReadOnly($value = TRUE)
 	{
 		$this->readOnly = $value;
@@ -81,7 +93,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 *
+	 * Set date of canlendar begin
 	 * @param DateTime $value
 	 * @return self
 	 */
@@ -92,7 +104,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 *
+	 * Set date of calnedar end
 	 * @param DateTime $value
 	 * @return self
 	 */
@@ -117,7 +129,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 *
+	 * Highlight of today
 	 * @param bool $value
 	 * @return self
 	 */
@@ -128,7 +140,7 @@ class DatePicker extends BaseControl
 	}
 
 	/**
-	 *
+	 * Set placeholder text
 	 * @param string $value
 	 * @return self
 	 */
@@ -209,13 +221,13 @@ class DatePicker extends BaseControl
 
 	public function loadHttpData()
 	{
-		$this->date = $this->getHttpData(\Nette\Forms\Form::DATA_LINE, '[date]');
+		$this->date = $this->getHttpData(Form::DATA_LINE, '[date]');
 	}
 
 	/**
 	 * @return bool
 	 */
-	public static function validateDate(\Nette\Forms\IControl $control)
+	public static function validateDate(IControl $control)
 	{
 		if (!$control->isRequired() && empty($control->date)) {
 			return TRUE;

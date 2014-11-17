@@ -335,7 +335,7 @@ var ComponentsFormTools = function () {
 			}
 			$(this).TouchSpin(params);
 			if (size) {
-				console.log($(this).closest('.bootstrap-touchspin').addClass(size));
+				$(this).closest('.bootstrap-touchspin').addClass(size);
 			}
 		});
 
@@ -375,15 +375,26 @@ var ComponentsFormTools = function () {
 
 	var handleSpinners = function () {
 		$(".form-spinner").each(function () {
+			var size = null;
 			var params = {};
 			for (var i = 0, attrs = this.attributes, l = attrs.length; i < l; i++) {
 				var attr = attrs.item(i).nodeName;
 				if (attr.substring(0, 5) === "data-") {
 					var paramName = attr.substring(5).replace(/\-/g, "_");
-					params[paramName] = $(this).attr(attr);
+					switch (paramName) {
+						case "size":
+							size = $(this).attr(attr);
+							break;
+						default:
+							params[paramName] = $(this).attr(attr);
+							break;
+					}
 				}
 			}
 			$(this).spinner(params);
+			if (size) {
+				$(this).closest('.input-group').addClass(size);
+			}
 		});
 	};
 
@@ -397,11 +408,18 @@ var ComponentsFormTools = function () {
 			};
 			for (var i = 0, attrs = this.attributes, l = attrs.length; i < l; i++) {
 				var attr = attrs.item(i).nodeName;
-				if (attr.substring(0, 5) === "data-") {
-					var paramName = attr.substring(5).replace(/\-/g, "_");
-					switch (paramName) {
-						case 'defaulttext':
-							paramName = 'defaultText';
+				if (attr.substring(0, 5) === 'data-') {
+					var paramName = attr.substring(5);
+					var start = 0;
+					var n = paramName.indexOf('-', start);
+					while (n >= 0 && paramName.length >= (n + 1)) {
+						if (paramName.length >= (n + 3)) {
+							paramName = paramName.substring(0, n)
+									+ paramName.substring(n + 1, n + 2).toUpperCase()
+									+ paramName.substring(n + 2);
+						}
+						start = n + 1;
+						n = paramName.indexOf('-', start);
 					}
 					params[paramName] = $(this).attr(attr);
 				}
@@ -444,7 +462,7 @@ var ComponentsFormTools = function () {
 			handleBootstrapTouchSpin();
 //            handleBootstrapMaxlength();
 			handleSpinners();
-            handleTagsInput();
+			handleTagsInput();
 //            handlePasswordStrengthChecker();
 		}
 	};

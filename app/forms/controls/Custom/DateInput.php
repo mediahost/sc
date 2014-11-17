@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Forms\Controls;
+namespace App\Forms\Controls\Custom;
 
+use DateTime;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
+use Nette\Forms\Helpers;
+use Nette\Forms\IControl;
 use Nette\Utils\Html;
 
 /**
@@ -14,12 +17,9 @@ use Nette\Utils\Html;
 class DateInput extends BaseControl
 {
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 	private $day;
 	private $month;
 	private $year;
-
-	// </editor-fold>
 
 	public function __construct($label = NULL)
 	{
@@ -64,10 +64,24 @@ class DateInput extends BaseControl
 	public function getControl()
 	{
 		$name = $this->getHtmlName();
+		$months = [
+			1 => 'January',
+			2 => 'February',
+			3 => 'March',
+			4 => 'April',
+			5 => 'May',
+			6 => 'June',
+			7 => 'July',
+			8 => 'August',
+			9 => 'September',
+			10 => 'October',
+			11 => 'November',
+			12 => 'December',
+		];
 		return Html::el()
 						->add(Html::el('input')->name($name . '[day]')->id($this->getHtmlId())->value($this->day))
-						->add(\Nette\Forms\Helpers::createSelectBox(
-										array('zimní měsíce' => array(1 => 'leden', 2), 'jarní měsíce' => array(3 => 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)), array('selected?' => $this->month)
+						->add(Helpers::createSelectBox(
+										$months, array('selected?' => $this->month)
 								)->name($name . '[month]'))
 						->add(Html::el('input')->name($name . '[year]')->value($this->year));
 	}
@@ -84,7 +98,7 @@ class DateInput extends BaseControl
 	/**
 	 * @return bool
 	 */
-	public static function validateDate(\Nette\Forms\IControl $control)
+	public static function validateDate(IControl $control)
 	{
 		return checkdate($control->month, $control->day, $control->year);
 	}

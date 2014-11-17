@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Forms\Controls;
+namespace App\Forms\Controls\ChoiseBased;
 
 use Nette\Forms\Controls\CheckboxList as CheckboxListParent;
 use Nette\Forms\Controls\MultiChoiceControl;

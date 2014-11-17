@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Forms\Controls;
+namespace App\Forms\Controls\ChoiseBased;
 
-use Nette;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\Checkbox;
+use Nette\Utils\Html;
 
 /**
  * CheckSwitch
  *
  * @author Petr Poupě
  */
-class CheckSwitch extends \Nette\Forms\Controls\Checkbox
+class CheckSwitch extends Checkbox
 {
-
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	// </editor-fold>
 
 	public function __construct($label = NULL, $onText = NULL, $offText = NULL)
 	{
@@ -27,7 +26,7 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters">
+	// <editor-fold defaultstate="expanded" desc="setters">
 
 	/**
 	 *
@@ -94,21 +93,21 @@ class CheckSwitch extends \Nette\Forms\Controls\Checkbox
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette\Utils\Html
+	 * @return Html
 	 */
 	public function getControl()
 	{
-		return \Nette\Forms\Controls\BaseControl::getControl()->checked($this->value);
+		return BaseControl::getControl()->checked($this->value);
 	}
 
 	/**
 	 * Generates label's HTML element.
 	 * @param  string
-	 * @return Nette\Utils\Html
+	 * @return Html
 	 */
 	public function getLabel($caption = NULL)
 	{
-		return \Nette\Forms\Controls\BaseControl::getLabel($caption);
+		return BaseControl::getLabel($caption);
 	}
 
 	// </editor-fold>

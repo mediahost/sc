@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Forms\Controls;
+namespace App\Forms\Controls\ChoiseBased;
 
 use Nette\Forms\Controls\ChoiceControl;
 use Nette\Forms\Controls\RadioList as RadioListParent;

@@ -1,25 +1,22 @@
 <?php
 
-namespace App\Forms\Controls;
+namespace App\Forms\Controls\SelectBased;
+
+use Nette\Forms\Controls\SelectBox;
 
 /**
  * Select2
  *
  * @author Petr Poupě
  */
-class Select2 extends \Nette\Forms\Controls\SelectBox
+class Select2 extends SelectBox
 {
-
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	// </editor-fold>
 
 	public function __construct($label = NULL, array $items = NULL)
 	{
 		parent::__construct($label, $items);
 		$this->control->class = 'select2';
 	}
-
-	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
 	 *
@@ -45,8 +42,4 @@ class Select2 extends \Nette\Forms\Controls\SelectBox
 		$this->control->$attr = $value;
 		return $this;
 	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
-	// </editor-fold>
 }
