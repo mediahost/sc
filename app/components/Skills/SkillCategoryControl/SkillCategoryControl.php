@@ -43,7 +43,7 @@ class SkillCategoryControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 
 		$form->addText('name', 'Name')
-				->setRequired('Please fill non-enpty value');
+				->setRequired('Please fill name');
 
 		// TODO: dont select own category in edit
 		$skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());

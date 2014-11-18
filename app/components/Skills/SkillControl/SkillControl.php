@@ -43,7 +43,7 @@ class SkillControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 
 		$form->addText('name', 'Name')
-				->setRequired('Please fill non-enpty value');
+				->setRequired('Please fill name');
 
 		$skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
 		$form->addSelect2('category', 'Skill category', $skillCategoryDao->findPairs('name', 'id'))
