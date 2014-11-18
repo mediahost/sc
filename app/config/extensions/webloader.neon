@@ -35,10 +35,3 @@ webloader:
 				- @cssMinFilter
 			fileFilters:
 				- @lessFilter
-
-	js:
-		app:
-			files:
-				- ../assets/scripts/init.js
-			filters:
-				- @varFilter

@@ -442,7 +442,7 @@ var ComponentsFormTools = function () {
 		});
 
 		$('.mask_phone').inputmask('phone', {
-			url: basePath + 'assets/plugins/jquery-inputmask/inputmask/phone-codes/phone-codes.json',
+			url: basePath + '/assets/plugins/jquery-inputmask/inputmask/phone-codes/phone-codes.json',
 			onKeyValidation: function () { //show some metadata in the console
 				if ($(this).inputmask('getmetadata') != undefined) {
 					console.log($(this).inputmask('getmetadata')['name_en']);

@@ -40,6 +40,7 @@ class MetronicFormRenderer extends ExtendedFormRenderer
 		$this->wrappers['control']['description'] = 'span class="help-block"';
 		$this->wrappers['control']['errorcontainer'] = 'span class="help-block"';
 		$this->wrappers['control.checkboxlist']['container'] = 'div class="checkbox-list"';
+		// help-block help-block-error
 	}
 
 	protected function customizeInitedForm(Form &$form)
