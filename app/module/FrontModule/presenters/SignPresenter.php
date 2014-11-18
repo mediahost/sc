@@ -2,32 +2,10 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Components\Auth\AdditionalControl;
-use App\Components\Auth\FacebookControl;
-use App\Components\Auth\ForgottenControl;
-use App\Components\Auth\IAdditionalControlFactory;
-use App\Components\Auth\IFacebookControlFactory;
-use App\Components\Auth\IForgottenControlFactory;
-use App\Components\Auth\IRecoveryControlFactory;
-use App\Components\Auth\IRequiredControlFactory;
-use App\Components\Auth\ISignInControlFactory;
-use App\Components\Auth\ISignUpControlFactory;
-use App\Components\Auth\ISummaryControlFactory;
-use App\Components\Auth\ITwitterControlFactory;
-use App\Components\Auth\RecoveryControl;
-use App\Components\Auth\RequiredControl;
-use App\Components\Auth\SignInControl;
-use App\Components\Auth\SignUpControl;
-use App\Components\Auth\SummaryControl;
-use App\Components\Auth\TwitterControl;
-use App\Model\Entity\Facebook;
-use App\Model\Entity\Role;
-use App\Model\Entity\Twitter;
-use App\Model\Entity\User;
-use App\Model\Entity\UserSettings;
-use App\Model\Facade\RoleFacade;
-use App\Model\Facade\UserFacade;
-use App\Model\Storage\SignUpStorage;
+use App\Components\Auth;
+use App\Model\Entity;
+use App\Model\Facade;
+use App\Model\Storage;
 
 class SignPresenter extends BasePresenter
 {
@@ -50,40 +28,40 @@ class SignPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Injects">
 
-	/** @var IAdditionalControlFactory @inject */
+	/** @var Auth\IAdditionalControlFactory @inject */
 	public $iAdditionalControlFactory;
 
-	/** @var IFacebookControlFactory @inject */
+	/** @var Auth\IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
 
-	/** @var IForgottenControlFactory @inject */
+	/** @var Auth\IForgottenControlFactory @inject */
 	public $iForgottenControlFactory;
 
-	/** @var IRecoveryControlFactory @inject */
+	/** @var Auth\IRecoveryControlFactory @inject */
 	public $iRecoveryControlFactory;
 
-	/** @var IRequiredControlFactory @inject */
+	/** @var Auth\IRequiredControlFactory @inject */
 	public $iRequiredControlFactory;
 
-	/** @var ISignInControlFactory @inject */
+	/** @var Auth\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
 
-	/** @var ISignUpControlFactory @inject */
+	/** @var Auth\ISignUpControlFactory @inject */
 	public $iSignUpControlFactory;
 
-	/** @var ISummaryControlFactory @inject */
+	/** @var Auth\ISummaryControlFactory @inject */
 	public $iSummaryControlFactory;
 
-	/** @var ITwitterControlFactory @inject */
+	/** @var Auth\ITwitterControlFactory @inject */
 	public $iTwitterControlFactory;
 
-	/** @var SignUpStorage @inject */
+	/** @var Storage\SignUpStorage @inject */
 	public $session;
 
-	/** @var UserFacade @inject */
+	/** @var Facade\UserFacade @inject */
 	public $userFacade;
 	
-	/** @var RoleFacade @inject */
+	/** @var Facade\RoleFacade @inject */
 	public $roleFacade;
 
 	// </editor-fold>
@@ -167,25 +145,25 @@ class SignPresenter extends BasePresenter
 		$signUp = $this->userFacade->findByVerificationToken($token);
 
 		if ($signUp) {
-			$user = new User();
+			$user = new Entity\User();
 			$user->setMail($signUp->mail)
 					->setHash($signUp->hash)
 					->setName($signUp->mail)
 					->addRole($signUp->role);
 
 			if ($signUp->facebookId) {
-				$user->facebook = (new Facebook)
+				$user->facebook = (new Entity\Facebook)
 						->setId($signUp->facebookId)
 						->setAccessToken($signUp->facebookAccessToken);
 			}
 
 			if ($signUp->twitterId) {
-				$user->twitter = (new Twitter)
+				$user->twitter = (new Entity\Twitter)
 						->setId($signUp->twitterId)
 						->setAccessToken($signUp->twitterAccessToken);
 			}
 			
-			$user->settings = new UserSettings();
+			$user->settings = new Entity\UserSettings();
 			
 			$role = $this->roleFacade->findByName(Role::ROLE_SIGNED);
 			$user->addRole($role);
@@ -225,55 +203,55 @@ class SignPresenter extends BasePresenter
 
 	// <editor-fold defaultstate="collapsed" desc="controls">
 
-	/** @return AdditionalControl */
+	/** @return Auth\AdditionalControl */
 	protected function createComponentAdditional()
 	{
 		return $this->iAdditionalControlFactory->create();
 	}
 
-	/** @return FacebookControl */
+	/** @return Auth\FacebookControl */
 	protected function createComponentFacebook()
 	{
 		return $this->iFacebookControlFactory->create();
 	}
 
-	/** @return ForgottenControl */
+	/** @return Auth\ForgottenControl */
 	protected function createComponentForgotten()
 	{
 		return $this->iForgottenControlFactory->create();
 	}
 
-	/** @return RecoveryControl */
+	/** @return Auth\RecoveryControl */
 	protected function createComponentRecovery()
 	{
 		return $this->iRecoveryControlFactory->create();
 	}
 
-	/** @return RequiredControl */
+	/** @return Auth\RequiredControl */
 	protected function createComponentRequired()
 	{
 		return $this->iRequiredControlFactory->create();
 	}
 
-	/** @return SignInControl */
+	/** @return Auth\SignInControl */
 	protected function createComponentSignIn()
 	{
 		return $this->iSignInControlFactory->create();
 	}
 
-	/** @return SignUpControl */
+	/** @return Auth\SignUpControl */
 	protected function createComponentSignUp()
 	{
 		return $this->iSignUpControlFactory->create();
 	}
 
-	/** @return SummaryControl */
+	/** @return Auth\SummaryControl */
 	protected function createComponentSummary()
 	{
 		return $this->iSummaryControlFactory->create();
 	}
 
-	/** @return TwitterControl */
+	/** @return Auth\TwitterControl */
 	protected function createComponentTwitter()
 	{
 		return $this->iTwitterControlFactory->create();

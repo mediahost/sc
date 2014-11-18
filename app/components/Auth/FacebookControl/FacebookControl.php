@@ -3,7 +3,7 @@
 namespace App\Components\Auth;
 
 use App\Components\BaseControl;
-use App\Model\Entity\User;
+use App\Model\Entity;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
@@ -65,11 +65,11 @@ class FacebookControl extends BaseControl
 
 	/**
 	 * @param ArrayHash $me
-	 * @return User
+	 * @return Entity\User
 	 */
 	protected function createUser(ArrayHash $me)
 	{
-		$user = new User();
+		$user = new Entity\User();
 		$user->name = $me->name;
 
 		if (isset($me->email)) {
@@ -82,7 +82,7 @@ class FacebookControl extends BaseControl
 		$role = $this->roleFacade->findByName($this->session->role);
 		$user->addRole($role);
 
-		$fb = new Facebook();
+		$fb = new Entity\Facebook();
 		$fb->id = $me->id;
 
 		$user->facebook = $fb;
