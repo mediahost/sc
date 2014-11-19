@@ -74,7 +74,6 @@ class UserFacade extends BaseFacade
 		$user = new User;
 		$user->setMail($registration->mail)
 				->setHash($registration->hash)
-				->setName($registration->name)
 				->addRole($role)
 				->setRequiredRole($registration->role)
 				->setSettings(new UserSettings());
@@ -107,7 +106,6 @@ class UserFacade extends BaseFacade
 		$signUp = new SignUp;
 		$signUp->setMail($user->mail)
 				->setHash($user->hash)
-				->setName($user->name)
 				->setRole($this->roleDao->find($user->requiredRole->id));
 
 		if ($user->facebook) {
