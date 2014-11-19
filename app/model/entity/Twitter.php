@@ -20,4 +20,25 @@ class Twitter extends OAuth
 	
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $accessToken;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $name;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $screenName;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $url;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $location ;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $description;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $statusesCount;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $lang;
 }

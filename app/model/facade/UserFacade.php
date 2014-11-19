@@ -74,7 +74,7 @@ class UserFacade extends BaseFacade
 		$user = new User;
 		$user->setMail($registration->mail)
 				->setHash($registration->hash)
-				->setName($registration->mail)
+				->setName($registration->name)
 				->addRole($role)
 				->setRequiredRole($registration->role)
 				->setSettings(new UserSettings());
