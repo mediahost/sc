@@ -7,6 +7,7 @@ use App\Model\Entity;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Facebook\Dialog\LoginDialog;
 use Kdyby\Facebook\Facebook;
 use Kdyby\Facebook\FacebookApiException;
@@ -24,10 +25,13 @@ class FacebookControl extends BaseControl
 
 	/** @var SignUpStorage @inject */
 	public $session;
-	
+
+	/** @var EntityManager @inject */
+	public $em;
+
 	/** @var UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var RoleFacade @inject */
 	public $roleFacade;
 
@@ -47,11 +51,13 @@ class FacebookControl extends BaseControl
 			try {
 				$me = $fb->api('/me');
 
-				if (!$user = $this->userFacade->findByFacebookId($fb->getUser())) {
+				$user = $this->userFacade->findByFacebookId($fb->getUser());
+				if ($user) {
+					$this->loadFacebookEntity($user->facebook, $me);
+					$this->em->getDao(Entity\Facebook::getClassName())->save($user->facebook);
+				} else {
 					$user = $this->createUser($me);
 				}
-
-				$user->facebook->accessToken = $fb->getAccessToken();
 
 				$this->onSuccess($this, $user);
 			} catch (FacebookApiException $e) {
@@ -70,7 +76,6 @@ class FacebookControl extends BaseControl
 	protected function createUser(ArrayHash $me)
 	{
 		$user = new Entity\User();
-		$user->name = $me->name;
 		$user->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
 
 		if (isset($me->email)) {
@@ -82,9 +87,49 @@ class FacebookControl extends BaseControl
 
 		$fb = new Entity\Facebook();
 		$fb->id = $me->id;
+		$this->loadFacebookEntity($fb, $me);
 
 		$user->facebook = $fb;
 		return $user;
+	}
+
+	/**
+	 * Load data to FB entity
+	 * @param Entity\Facebook $fb
+	 * @param ArrayHash $me
+	 */
+	protected function loadFacebookEntity(Entity\Facebook &$fb, ArrayHash $me)
+	{
+		if (isset($me->name)) {
+			$fb->name = $me->name;
+		}
+		if (isset($me->birthday)) {
+			$fb->birthday = $me->birthday;
+		}
+		if (isset($me->gender)) {
+			$fb->gender = $me->gender;
+		}
+		if (isset($me->hometown)) {
+			if (isset($me->hometown->name)) {
+				$fb->hometown = $me->hometown->name;
+			}
+		}
+		if (isset($me->link)) {
+			$fb->link = $me->link;
+		}
+		if (isset($me->location)) {
+			if (isset($me->location->name)) {
+				$fb->location = $me->location->name;
+			}
+		}
+		if (isset($me->locale)) {
+			$fb->locale = $me->locale;
+		}
+		if (isset($me->username)) {
+			$fb->username = $me->username;
+		}
+		
+		$fb->accessToken = $fb->getAccessToken();
 	}
 
 }

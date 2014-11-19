@@ -20,4 +20,28 @@ class Facebook extends OAuth
 	
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $accessToken;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $name;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $birthday;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $gender;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $hometown;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $link;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $location;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $locale;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $username;
 }
