@@ -5,7 +5,9 @@ namespace App\Components\Auth;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 use App\TaggedString;
@@ -19,6 +21,9 @@ class SignUpControl extends BaseControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
+
+	/** @var RoleFacade @inject */
+	public $roleFacade;
 
 	/** @var SignUpStorage @inject */
 	public $session;
@@ -52,7 +57,7 @@ class SignUpControl extends BaseControl
 		return $form;
 	}
 
-	public function formSubmit(Form $form) // ToDo: Why this? On Success is good enought!
+	public function formSubmit(Form $form)
 	{
 		$values = $form->getValues();
 		if (!$this->userFacade->isUnique($values->mail)) {
@@ -68,24 +73,14 @@ class SignUpControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$entity = $this->load($values);
+		$entity = new User;
+		$entity->setMail($values->mail)
+				->setPassword($values->password);
+		$entity->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
 
 		$this->session->verification = FALSE;
 
 		$this->onSuccess($this, $entity);
-	}
-
-	/**
-	 * Load Entity from Form
-	 * @param type $values
-	 * @return User
-	 */
-	private function load($values)
-	{
-		$entity = new User;
-		$entity->setMail($values->mail)
-				->setPassword($values->password);
-		return $entity;
 	}
 
 	public function renderLogin()

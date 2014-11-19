@@ -3,7 +3,7 @@
 namespace App\FrontModule\Presenters;
 
 use App\Components\Auth;
-use App\Model\Entity;
+use App\Model\Entity\Role;
 use App\Model\Facade;
 use App\Model\Storage;
 
@@ -16,9 +16,6 @@ class SignPresenter extends BasePresenter
 	const REDIRECT_AFTER_LOG = ':App:Dashboard:';
 	const REDIRECT_NOT_LOGGED = ':Front:Sign:in';
 	const REDIRECT_IS_LOGGED = ':App:Dashboard:';
-	const STEP1 = 'required';
-	const STEP2 = 'additional';
-	const STEP3 = 'summary';
 
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -27,9 +24,6 @@ class SignPresenter extends BasePresenter
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Injects">
-
-	/** @var Auth\IAdditionalControlFactory @inject */
-	public $iAdditionalControlFactory;
 
 	/** @var Auth\IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
@@ -49,9 +43,6 @@ class SignPresenter extends BasePresenter
 	/** @var Auth\ISignUpControlFactory @inject */
 	public $iSignUpControlFactory;
 
-	/** @var Auth\ISummaryControlFactory @inject */
-	public $iSummaryControlFactory;
-
 	/** @var Auth\ITwitterControlFactory @inject */
 	public $iTwitterControlFactory;
 
@@ -60,7 +51,7 @@ class SignPresenter extends BasePresenter
 
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var Facade\RoleFacade @inject */
 	public $roleFacade;
 
@@ -68,8 +59,8 @@ class SignPresenter extends BasePresenter
 
 	protected function startup()
 	{
+		$this->isLoggedIn();
 		parent::startup();
-//		$this->isLoggedIn();
 	}
 
 	protected function beforeRender()
@@ -103,39 +94,29 @@ class SignPresenter extends BasePresenter
 	/** @param string $role */
 	public function actionIn($role = self::ROLE_DEFAULT)
 	{
+		$this->session->wipe();
 		$this->session->role = $this->getValidRole($role);
 		$this['signIn']->onSuccess[] = function () {
 			$this->restoreRequest($this->presenter->backlink);
 			$this->redirect(self::REDIRECT_AFTER_LOG);
 		};
-	}
-	
-	public function renderIn()
-	{
-		$this->template->role = $this->session->role;
-	}
 
-	/** @param string $role */
-	public function actionRegister($role = NULL)
-	{
-		$this->redirect('up', ['role' => $this->getValidRole($role)]);
+		$this->template->role = $this->session->role;
 	}
 
 	/**
 	 * @param string $role
-	 * @param string $step
 	 */
-	public function actionUp($role = NULL, $step = NULL)
+	public function actionUp($role = self::ROLE_DEFAULT)
 	{
-		$allowedSteps = [self::STEP1, self::STEP2, self::STEP3];
-		if ($step !== NULL && in_array($step, $allowedSteps)) {
-			$this->setView('step' . ucfirst($step));
-		} else {
-			$this->session->role = $this->getValidRole($role);
-		}
-		// This cannot be in renderUp() because setting other view
-		$this->template->user = $this->session->user;
-		$this->template->company = $this->session->company;
+		$this->session->wipe();
+		$this->session->role = $this->getValidRole($role);
+
+		$this->template->role = $this->session->role;
+	}
+
+	public function renderUpRequired()
+	{
 		$this->template->role = $this->session->role;
 	}
 
@@ -143,38 +124,13 @@ class SignPresenter extends BasePresenter
 	public function actionVerify($token)
 	{
 		$signUp = $this->userFacade->findByVerificationToken($token);
-
 		if ($signUp) {
-			$user = new Entity\User();
-			$user->setMail($signUp->mail)
-					->setHash($signUp->hash)
-					->setName($signUp->mail)
-					->addRole($signUp->role);
-
-			if ($signUp->facebookId) {
-				$user->facebook = (new Entity\Facebook)
-						->setId($signUp->facebookId)
-						->setAccessToken($signUp->facebookAccessToken);
-			}
-
-			if ($signUp->twitterId) {
-				$user->twitter = (new Entity\Twitter)
-						->setId($signUp->twitterId)
-						->setAccessToken($signUp->twitterAccessToken);
-			}
-			
-			$user->settings = new Entity\UserSettings();
-			
-			$role = $this->roleFacade->findByName(Role::ROLE_SIGNED);
-			$user->addRole($role);
-			
-			$this->userFacade->verify($user, $token);
-			$this->session->verification = TRUE;
-			$this->presenter->redirect(':Front:Sign:up', [
-				'step' => 'additional'
-			]);
+			$signedRole = $this->roleFacade->findByName(Role::ROLE_SIGNED);
+			$user = $this->userFacade->createFromRegistration($signUp, $signedRole);
+			$this->flashMessage('Your e-mail has been seccessfully verified!', 'success');
+			$this->onVerify($this, $user);
 		} else {
-			$this->presenter->flashMessage('Verification token is incorrect.', 'warning');
+			$this->flashMessage('Verification token is incorrect.', 'warning');
 			$this->redirect('in');
 		}
 	}
@@ -202,12 +158,6 @@ class SignPresenter extends BasePresenter
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="controls">
-
-	/** @return Auth\AdditionalControl */
-	protected function createComponentAdditional()
-	{
-		return $this->iAdditionalControlFactory->create();
-	}
 
 	/** @return Auth\FacebookControl */
 	protected function createComponentFacebook()
@@ -243,12 +193,6 @@ class SignPresenter extends BasePresenter
 	protected function createComponentSignUp()
 	{
 		return $this->iSignUpControlFactory->create();
-	}
-
-	/** @return Auth\SummaryControl */
-	protected function createComponentSummary()
-	{
-		return $this->iSummaryControlFactory->create();
 	}
 
 	/** @return Auth\TwitterControl */

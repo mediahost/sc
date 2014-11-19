@@ -3,7 +3,7 @@
 namespace App\Components\Auth;
 
 use App\Components\BaseControl;
-use App\Model\Entity\User;
+use App\Model\Entity;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
@@ -53,13 +53,11 @@ class TwitterControl extends BaseControl
 	 */
 	protected function createUser(stdClass $data)
 	{
-		$user = new User();
-		$user->setName($data->name);
+		$user = new Entity\User();
+		$user->name = $data->name;
+		$user->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
 
-		$role = $this->roleFacade->findByName($this->session->role);
-		$user->addRole($role);
-
-		$twitter = new Twitter();
+		$twitter = new Entity\Twitter();
 		$twitter->id = $data->id_str;
 
 		$user->twitter = $twitter;

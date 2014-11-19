@@ -12,16 +12,20 @@ services:
 			- addRole('superadmin', 'admin')
 
 			# Resources
-			- addResource('admin')
+			- addResource('front')
+
+			- addResource('dashboard')
+			- addResource('registration')
+			- addResource('profile')
+
 			- addResource('candidate')
 			- addResource('company')
-			- addResource('dashboard')
-			- addResource('examples')
-			- addResource('front')
-			- addResource('profile')
+
 			- addResource('users')
 			- addResource('skills')
 			- addResource('skillCategories')
+
+			- addResource('examples')
 			- addResource('service')
 
 			# Privilegies
@@ -29,10 +33,11 @@ services:
 
 			- allow('guest', 'front')
 			- allow('signed', 'dashboard', 'default')
-			- allow('signed', 'profile', ['view', 'settings', 'delete'])
+			- allow('signed', 'registration')
+			- allow('signed', 'profile', ['default', 'settings', 'delete'])
 
-			- allow('candidate', 'candidate', 'view')
-			- allow('company', 'company', 'view')
+			- allow('candidate', 'candidate', 'default')
+			- allow('company', 'company', 'default')
 
 			- allow('admin', 'users')
 			- allow('admin', 'skills')

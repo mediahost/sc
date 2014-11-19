@@ -22,6 +22,7 @@ use Nette\Security\Passwords;
  * @property Twitter $twitter
  * @property string $recoveryToken
  * @property DateTime $recoveryExpiration
+ * @method self setMail(string $mail)
  */
 class User extends BaseEntity
 {
@@ -43,20 +44,26 @@ class User extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $settings;
 
-    /** @ORM\OneToOne(targetEntity="Facebook", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
+	/** @ORM\OneToOne(targetEntity="Facebook", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $facebook;
 
-    /** @ORM\OneToOne(targetEntity="Twitter", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
+	/** @ORM\OneToOne(targetEntity="Twitter", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $twitter;
-	
+
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $hash;
-	
+
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $recoveryToken;
 
 	/** @ORM\Column(type="datetime", nullable=true) */
 	protected $recoveryExpiration;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
+	 * @ORM\JoinColumn(name="required_role_id", referencedColumnName="id", nullable=true)
+	 */
+	protected $requiredRole;
 
 	public function __construct()
 	{
@@ -74,7 +81,7 @@ class User extends BaseEntity
 		$this->hash = Passwords::hash($password, $options);
 		return $this;
 	}
-	
+
 	/**
 	 * Verifies that a password matches a hash.
 	 * @param string $password Password in plain text
@@ -94,7 +101,7 @@ class User extends BaseEntity
 	{
 		return Passwords::needsRehash($this->hash, $options);
 	}
-	
+
 	/**
 	 * @param Role|array $role
 	 * @param bool $clear Clear all previous roles.
@@ -154,7 +161,7 @@ class User extends BaseEntity
 
 		return $this;
 	}
-	
+
 	/** @return User */
 	public function removeRecovery()
 	{
@@ -184,7 +191,7 @@ class User extends BaseEntity
 		$this->facebook = $facebook;
 		return $this;
 	}
-	
+
 	/**
 	 * @param Twitter $twitter
 	 * @return User
@@ -195,7 +202,7 @@ class User extends BaseEntity
 		$this->twitter = $twitter;
 		return $this;
 	}
-	
+
 	/** @return array */
 	public function getRolesKeys()
 	{
@@ -215,7 +222,7 @@ class User extends BaseEntity
 		}
 		return $array;
 	}
-	
+
 	/**
 	 * TODO: TEST IT!
 	 * @return Role
@@ -238,7 +245,7 @@ class User extends BaseEntity
 			'id' => $this->id,
 			'mail' => $this->mail,
 			'name' => $this->name,
-			'role' => $this->roles->toArray()
+			'role' => $this->roles->toArray(),
 		];
 	}
 

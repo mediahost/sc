@@ -26,6 +26,14 @@ class Role extends BaseEntity
 
 	/** @ORM\Column(type="string", length=128) */
 	protected $name;
+	
+	public function __construct($name = NULL)
+	{
+		if ($name) {
+			$this->name = $name;
+		}
+		parent::__construct();
+	}
 
 	public function __toString()
 	{

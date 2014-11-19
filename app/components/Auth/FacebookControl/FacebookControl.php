@@ -71,6 +71,7 @@ class FacebookControl extends BaseControl
 	{
 		$user = new Entity\User();
 		$user->name = $me->name;
+		$user->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
 
 		if (isset($me->email)) {
 			$user->mail = $me->email;
@@ -78,9 +79,6 @@ class FacebookControl extends BaseControl
 		} else {
 			$this->session->verification = FALSE;
 		}
-		
-		$role = $this->roleFacade->findByName($this->session->role);
-		$user->addRole($role);
 
 		$fb = new Entity\Facebook();
 		$fb->id = $me->id;

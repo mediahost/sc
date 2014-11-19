@@ -24,7 +24,7 @@ class ProfilePresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('profile')
-	 * @privilege('view')
+	 * @privilege('default')
 	 */
 	public function actionDefault()
 	{

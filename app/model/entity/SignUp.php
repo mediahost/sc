@@ -39,18 +39,18 @@ class SignUp extends BaseEntity
 	/**
 	 * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
 	 * @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=true)
-	 * */
+	 */
 	protected $role;
-	
+
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $facebookId;
-	
+
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $facebookAccessToken;
-	
+
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $twitterId;
-	
+
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $twitterAccessToken;
 

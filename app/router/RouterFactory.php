@@ -38,35 +38,8 @@ class RouterFactory
 		// <editor-fold defaultstate="expanded" desc="Front">
 
 		$roles = preg_quote(SignPresenter::ROLE_CANDIDATE) . '|' . preg_quote(SignPresenter::ROLE_COMPANY);
-		$steps = preg_quote(SignPresenter::STEP1) . '|' . preg_quote(SignPresenter::STEP2);
-		$frontRouter[] = new Route('sign/in/<role (' . $roles . ')>', [
-			'presenter' => 'Sign',
-			'action' => 'in',
-			'step' => NULL,
-		]);
-
-		$frontRouter[] = new Route('registration/<role (' . $roles . ')>', [
-			'presenter' => 'Sign',
-			'action' => 'up',
-			'step' => NULL,
-		]);
-		$frontRouter[] = new Route('registration/step1', [
-			'presenter' => 'Sign',
-			'action' => 'up',
-			'role' => NULL,
-			'step' => SignPresenter::STEP1,
-		]);
-		$frontRouter[] = new Route('registration/step2', [
-			'presenter' => 'Sign',
-			'action' => 'up',
-			'role' => NULL,
-			'step' => SignPresenter::STEP2,
-		]);
-		$frontRouter[] = new Route('registration/step3', [
-			'presenter' => 'Sign',
-			'action' => 'up',
-			'role' => NULL,
-			'step' => SignPresenter::STEP3,
+		$frontRouter[] = new Route('<presenter>/<action (in|up)>[/<role (' . $roles . ')>]', [
+			'presenter' => 'Sign'
 		]);
 
 		$frontRouter[] = new Route('<presenter>/<action>[/<id>]', [

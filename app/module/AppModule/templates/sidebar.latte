@@ -60,7 +60,7 @@
 			<!-- END SUBHEADLINE -->
 
 			<!-- BEGIN CANDIDATE -->
-			<li n:if="$user->isAllowed('candidate', 'view')"
+			<li n:if="$user->isAllowed('candidate', 'default')"
 				class="{ifCurrent Candidate:*} active{/ifCurrent}">
 				<a n:href="Candidate:">
 					<i class="fa fa-mortar-board"></i> <span class="title">{_'Candidate'}</span><span class="selected"></span>
@@ -70,7 +70,7 @@
 			<!-- END CANDIDATE -->
 
 			<!-- BEGIN COMPANY -->
-			<li n:if="$user->isAllowed('company', 'view')"
+			<li n:if="$user->isAllowed('company', 'default')"
 				class="{ifCurrent Company:*} active{/ifCurrent}">
 				<a n:href="Company:">
 					<i class="fa fa-building-o"></i> <span class="title">{_'Company'}</span><span class="selected"></span>
@@ -80,7 +80,7 @@
 			<!-- END COMPANY -->
 			
 			<!-- BEGIN ADMIN -->
-			<li n:if="$user->isAllowed('users', 'view')"
+			<li n:if="$user->isAllowed('users', 'default')"
 				class="{ifCurrent Users:*} active{/ifCurrent}">
 				<a n:href="Users:">
 					<i class="fa fa-users"></i> <span class="title">{_'Users'}</span><span class="selected"></span>
@@ -99,7 +99,7 @@
 							{_'Skills'}
 						</a>
 					</li>
-					<li n:if="$user->isAllowed('skillCategories', 'view')"
+					<li n:if="$user->isAllowed('skillCategories', 'default')"
 						class="{ifCurrent SkillCategories:*} active{/ifCurrent}">
 						<a n:href="SkillCategories:">
 							<i class="icon-folder-alt"></i>
@@ -131,6 +131,7 @@
 			<!-- END SUPERADMIN -->
 			
 			<!-- BEGIN TOGETHER AREA -->
+			{if $user->isAllowed('profile', 'default') && !$user->isInRole('signed')}
 			<li class="heading">
 				<h3 class="uppercase">{_'Settings'}</h3>
 			</li>
@@ -147,7 +148,8 @@
 							{_'Overview'}
 						</a>
 					</li>
-					<li class="{ifCurrent Profile:settings} active{/ifCurrent}">
+					<li n:if="$user->isAllowed('profile', 'settings')"
+						class="{ifCurrent Profile:settings} active{/ifCurrent}">
 						<a n:href="Profile:settings">
 							<i class="icon-settings"></i>
 							{_'Settings'}
@@ -155,6 +157,7 @@
 					</li>
 				</ul>
 			</li>
+			{/if}
 			<!-- END TOGETHER AREA -->
 		</ul>
 		<!-- END SIDEBAR MENU -->

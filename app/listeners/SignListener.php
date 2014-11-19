@@ -2,18 +2,19 @@
 
 namespace App\Listeners;
 
-use App\Mail\Messages\SuccessRegistrationMessage;
+use App\Mail\Messages\CreateRegistrationMessage;
 use App\Mail\Messages\VerificationMessage;
 use App\Model\Entity\Role;
-use App\Model\Entity\SignUp;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 use App\TaggedString;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
 use Nette\Application\Application;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Presenter;
 use Nette\Latte\Engine;
 use Nette\Mail\IMailer;
 use Nette\Object;
@@ -22,11 +23,17 @@ use Nette\Security\Identity;
 class SignListener extends Object implements Subscriber
 {
 
-	const REDIRECT_AFTER_SIGNIN = ':App:Dashboard:';
+	const REDIRECT_AFTER_LOGIN = ':App:Dashboard:';
 	const REDIRECT_SIGNIN_PAGE = ':Front:Sign:in';
+	const REDIRECT_SIGN_UP_REQUIRED = ':Front:Sign:upRequired';
+
+	// <editor-fold defaultstate="collapsed" desc="variables">
 
 	/** @var SignUpStorage @inject */
 	public $session;
+
+	/** @var EntityManager @inject */
+	public $em;
 
 	/** @var UserFacade @inject */
 	public $userFacade;
@@ -40,6 +47,8 @@ class SignListener extends Object implements Subscriber
 	/** @var Application @inject */
 	public $application;
 
+	// </editor-fold>
+
 	public function __construct(Application $application)
 	{
 		$this->application = $application->presenter;
@@ -51,73 +60,76 @@ class SignListener extends Object implements Subscriber
 			'App\Components\Auth\FacebookControl::onSuccess' => 'onStartup',
 			'App\Components\Auth\SignUpControl::onSuccess' => 'onStartup',
 			'App\Components\Auth\TwitterControl::onSuccess' => 'onStartup',
-			'App\Components\Auth\RequiredControl::onSuccess' => 'onExists',
-			'App\Components\Auth\SummaryControl::onSuccess' => 'onSuccess'
+			'App\Components\Auth\RequiredControl::onSuccess' => 'onRequiredSuccess',
+			'App\FrontModule\Presenters\SignPresenter::onVerify' => 'onCreate',
 		);
 	}
 
+	/**
+	 * Naslouchá společně všem OAuth metodám a registračnímu formuláři
+	 * Pokud uživatel existuje (má ID), pak jej přihlásíme
+	 * Pokud neexistuje, pak pokračuje v registraci
+	 * @param Control $control
+	 * @param User $user
+	 */
 	public function onStartup(Control $control, User $user)
 	{
 		if ($user->id) {
-			$this->onSuccess($control, $user);
+			$this->onSuccess($control->presenter, $user);
 		} else {
 			$this->session->user = $user;
-			$this->onRequire($control, $user);
+			$this->checkRequire($control, $user);
 		}
 	}
 
-	public function onRequire(Control $control, User $user)
+	/**
+	 * Ověřuje, zda jsou vyplněny všechny nutné položky k registraci
+	 * @param Control $control
+	 * @param User $user
+	 */
+	public function checkRequire(Control $control, User $user)
 	{
 		if (!$user->mail) {
-			$control->presenter->redirect(':Front:Sign:up', [
-				'step' => 'required'
-			]);
+			$control->presenter->redirect(self::REDIRECT_SIGN_UP_REQUIRED);
 		} else {
-			$this->onExists($control, $user);
+			$this->onRequiredSuccess($control, $user);
 		}
 	}
 
-	public function onExists(Control $control, User $user)
+	/**
+	 * Zde jsou již vyplněna všechna data pro registraci
+	 * @param Control $control
+	 * @param User $user
+	 */
+	public function onRequiredSuccess(Control $control, User $user)
 	{
-		if (!$existing = $this->userFacade->findByMail($user->mail)) {
-			$this->onVerify($control, $user);
+		$existedUser = $this->userFacade->findByMail($user->mail);
+		// nepodporuje automatické joinování účtů (nebylo v aplikaci požadováno)
+		if (!$existedUser) {
+			$this->verify($control, $user);
 		} else {
-			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $user->mail]); // ToDo: Translator this can do, I think.
+			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $user->mail]);
 			$control->presenter->flashMessage($message);
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		}
 	}
 
-	public function onVerify(Control $control, User $user)
+	/**
+	 * Pro vefikovanou metodu přímo vytvoří uživatele
+	 * Jinak vytvoří registraci
+	 * @param Control $control
+	 * @param User $user
+	 */
+	private function verify(Control $control, User $user)
 	{
-		if ($this->session->isVerified()) {
-			$user = $this->userFacade->signUp($user);
-			$control->presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
-			$control->presenter->flashMessage('Your e-mail has been seccessfully verified!', 'success');
-			$control->presenter->redirect(':Front:Sign:up', [
-				'step' => 'additional'
-			]);
+		if ($this->session->isVerified()) { // verifikovaná metoda
+			$signedRole = $this->roleFacade->findByName(Role::ROLE_SIGNED);
+			$user->addRole($signedRole);
+			$savedUser = $this->em->getDao(User::getClassName())->save($user);
+			$this->onCreate($control->presenter, $savedUser);
 		} else {
-			$role = $this->roleFacade->findByName($this->session->role);
-
-			// Sign up temporarily
-			$signUp = new SignUp();
-			$signUp->setMail($user->mail)
-					->setHash($user->hash)
-					->setName($user->name)
-					->setRole($role);
-
-			if ($user->facebook) {
-				$signUp->setFacebookId($user->facebook->id)
-						->setFacebookAccessToken($user->facebook->accessToken);
-			}
-
-			if ($user->twitter) {
-				$signUp->setTwitterId($user->twitter->id)
-						->setTwitterAccessToken($user->twitter->accessToken);
-			}
-
-			$signUp = $this->userFacade->signUpTemporarily($signUp);
+			$signUp = $this->userFacade->createRegistration($user);
+			$this->session->remove();
 
 			// Send verification e-mail
 			$latte = new Engine;
@@ -133,18 +145,33 @@ class SignListener extends Object implements Subscriber
 		}
 	}
 
-	public function onSuccess(Control $control, User $user)
+	public function onCreate(Presenter $presenter, User $user)
 	{
-		// Send registration e-mail
 		$latte = new Engine;
-		$message = new SuccessRegistrationMessage();
+		$message = new CreateRegistrationMessage();
 		$message->addTo($user->mail)
 				->setHtmlBody($latte->renderToString($message->getPath()));
 
 		$this->mailer->send($message);
 
-		$control->presenter->restoreRequest($control->presenter->backlink);
-		$control->presenter->redirect(self::REDIRECT_AFTER_SIGNIN);
+		$presenter->flashMessage('Your account has been seccessfully created.', 'success');
+		$this->onSuccess($presenter, $user);
+	}
+
+	/**
+	 * Only login and redirect to app
+	 * @param Presenter $presenter
+	 * @param User $user
+	 */
+	public function onSuccess(Presenter $presenter, User $user)
+	{
+		$this->session->remove();
+
+		$presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+		$presenter->flashMessage('You are logged in.', 'success');
+
+		$presenter->restoreRequest($presenter->backlink);
+		$presenter->redirect(self::REDIRECT_AFTER_LOGIN);
 	}
 
 }

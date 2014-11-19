@@ -2,7 +2,7 @@
 
 namespace App\Mail\Messages;
 
-class SuccessRegistrationMessage extends BaseMessage
+class CreateRegistrationMessage extends BaseMessage
 {
 
 	public function __construct()
