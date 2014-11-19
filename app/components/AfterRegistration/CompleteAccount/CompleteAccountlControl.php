@@ -64,7 +64,7 @@ class CompleteAccountControl extends BaseControl
 		$form->addText('fullName', 'Name')
 				->setAttribute('placeholder', 'name and surename')
 				->setRequired('Please enter your name.')
-				->setDefaultValue($this->user->name);
+				->setDefaultValue($this->user->socialName);
 
 		$form->addDatePicker('birthday', 'Birthday')
 				->setAttribute('placeholder', 'dd/mm/yyyy');

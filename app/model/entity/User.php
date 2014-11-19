@@ -70,6 +70,8 @@ class User extends BaseEntity
 		$this->roles = new ArrayCollection();
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="setters">
+
 	/**
 	 * Computes salted password hash.
 	 * @param string Password to be hashed.
@@ -83,23 +85,36 @@ class User extends BaseEntity
 	}
 
 	/**
-	 * Verifies that a password matches a hash.
-	 * @param string $password Password in plain text
-	 * @return bool
+	 * @param UserSettings $settings
+	 * @return User
 	 */
-	public function verifyPassword($password)
+	public function setSettings(UserSettings $settings)
 	{
-		return Passwords::verify($password, $this->hash);
+		$settings->user = $this;
+		$this->settings = $settings;
+		return $this;
 	}
 
 	/**
-	 * Checks if the given hash matches the options.
-	 * @param  array with cost (4-31)
-	 * @return bool
+	 * @param Facebook $facebook
+	 * @return User
 	 */
-	public function needsRehash(array $options = NULL)
+	public function setFacebook(Facebook $facebook)
 	{
-		return Passwords::needsRehash($this->hash, $options);
+		$facebook->user = $this;
+		$this->facebook = $facebook;
+		return $this;
+	}
+
+	/**
+	 * @param Twitter $twitter
+	 * @return User
+	 */
+	public function setTwitter(Twitter $twitter)
+	{
+		$twitter->user = $this;
+		$this->twitter = $twitter;
+		return $this;
 	}
 
 	/**
@@ -146,6 +161,7 @@ class User extends BaseEntity
 	}
 
 	/**
+	 * Set recovery tokens
 	 * @param string $token
 	 * @param DateTime|string $expiration
 	 * @return User
@@ -162,7 +178,10 @@ class User extends BaseEntity
 		return $this;
 	}
 
-	/** @return User */
+	/**
+	 * Removes recovery tokens
+	 * @return User 
+	 */
 	public function removeRecovery()
 	{
 		$this->recoveryToken = NULL;
@@ -170,40 +189,28 @@ class User extends BaseEntity
 		return $this;
 	}
 
-	/**
-	 * @param UserSettings $settings
-	 * @return User
-	 */
-	public function setSettings(UserSettings $settings)
-	{
-		$settings->user = $this;
-		$this->settings = $settings;
-		return $this;
-	}
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
 
 	/**
-	 * @param Facebook $facebook
-	 * @return User
+	 * Return user name of social connection
+	 * @return string
 	 */
-	public function setFacebook(Facebook $facebook)
+	public function getSocialName()
 	{
-		$facebook->user = $this;
-		$this->facebook = $facebook;
-		return $this;
+		if ($this->facebook) {
+			return $this->facebook->name;
+		}
+		if ($this->twitter) {
+			return $this->twitter->name;
+		}
+		return NULL;
 	}
-
-	/**
-	 * @param Twitter $twitter
-	 * @return User
+	
+	/** 
+	 * Return array of roles ids
+	 * @return array 
 	 */
-	public function setTwitter(Twitter $twitter)
-	{
-		$twitter->user = $this;
-		$this->twitter = $twitter;
-		return $this;
-	}
-
-	/** @return array */
 	public function getRolesKeys()
 	{
 		$array = [];
@@ -213,7 +220,10 @@ class User extends BaseEntity
 		return $array;
 	}
 
-	/** @return array */
+	/** 
+	 * Return array with roleID => roleName
+	 * @return array 
+	 */
 	public function getRolesPairs()
 	{
 		$array = [];
@@ -231,6 +241,28 @@ class User extends BaseEntity
 	{
 		return Role::getMaxRole($this->roles);
 	}
+
+	/**
+	 * Verifies that a password matches a hash.
+	 * @param string $password Password in plain text
+	 * @return bool
+	 */
+	public function verifyPassword($password)
+	{
+		return Passwords::verify($password, $this->hash);
+	}
+
+	/**
+	 * Checks if the given hash matches the options.
+	 * @param  array with cost (4-31)
+	 * @return bool
+	 */
+	public function needsRehash(array $options = NULL)
+	{
+		return Passwords::needsRehash($this->hash, $options);
+	}
+
+	// </editor-fold>
 
 	/** @return string */
 	public function __toString()
