@@ -110,7 +110,7 @@ class UsersPresenter extends BasePresenter
 		} else if (!$this->canDelete($this->getUser(), $user)) {
 			$this->flashMessage('You can\'t delete this user.', 'warning');
 		} else {
-			$this->userFacade->delete($user);
+			$this->userDao->delete($user);
 			$this->flashMessage('User was deleted.', 'success');
 		}
 		$this->redirect('default');

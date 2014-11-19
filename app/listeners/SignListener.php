@@ -128,12 +128,12 @@ class SignListener extends Object implements Subscriber
 			$savedUser = $this->em->getDao(User::getClassName())->save($user);
 			$this->onCreate($control->presenter, $savedUser);
 		} else {
-			$signUp = $this->userFacade->createRegistration($user);
+			$registration = $this->userFacade->createRegistration($user);
 			$this->session->remove();
 
 			// Send verification e-mail
 			$latte = new Engine;
-			$params = ['link' => $this->application->presenter->link('//:Front:Sign:verify', $signUp->verificationToken)];
+			$params = ['link' => $this->application->presenter->link('//:Front:Sign:verify', $registration->verificationToken)];
 			$message = new VerificationMessage();
 			$message->addTo($user->mail)
 					->setHtmlBody($latte->renderToString($message->getPath(), $params));

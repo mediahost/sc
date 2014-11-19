@@ -22,7 +22,7 @@ use Nette\Security\Passwords;
  * @property DateTime $verificationExpiration
  * @property-write string $password
  */
-class SignUp extends BaseEntity
+class Registration extends BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -30,6 +30,7 @@ class SignUp extends BaseEntity
 	/** @ORM\Column(type="string") */
 	protected $mail;
 
+	// todo: delete name
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $name;
 
@@ -64,7 +65,7 @@ class SignUp extends BaseEntity
 	 * Computes salted password hash.
 	 * @param string Password to be hashed.
 	 * @param array with cost (4-31), salt (22 chars)
-	 * @return SignUp
+	 * @return self
 	 */
 	public function setPassword($password, array $options = NULL)
 	{

@@ -123,10 +123,10 @@ class SignPresenter extends BasePresenter
 	/** @param string $token */
 	public function actionVerify($token)
 	{
-		$signUp = $this->userFacade->findByVerificationToken($token);
-		if ($signUp) {
+		$registration = $this->userFacade->findByVerificationToken($token);
+		if ($registration) {
 			$signedRole = $this->roleFacade->findByName(Role::ROLE_SIGNED);
-			$user = $this->userFacade->createFromRegistration($signUp, $signedRole);
+			$user = $this->userFacade->createFromRegistration($registration, $signedRole);
 			$this->flashMessage('Your e-mail has been seccessfully verified!', 'success');
 			$this->onVerify($this, $user);
 		} else {

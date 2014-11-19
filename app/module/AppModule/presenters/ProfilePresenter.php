@@ -38,7 +38,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDelete()
 	{
-		$this->userFacade->hardDelete($this->user->id);
+		$this->userFacade->deleteById($this->user->id);
 		$this->user->logout();
 		$this->flashMessage('Your account has been deleted', 'success');
 		$this->redirect(":Front:Homepage:");

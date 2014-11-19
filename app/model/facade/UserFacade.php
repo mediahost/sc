@@ -3,15 +3,14 @@
 namespace App\Model\Facade;
 
 use App\Model\Entity\Facebook;
+use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
-use App\Model\Entity\SignUp;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
 use App\Model\Entity\UserSettings;
 use App\Model\Storage\SettingsStorage;
 use DateTime;
 use InvalidArgumentException;
-use Kdyby\Doctrine\Entities\BaseEntity;
 use Kdyby\Doctrine\EntityDao;
 use Nette\Utils\Random;
 
@@ -28,14 +27,14 @@ class UserFacade extends BaseFacade
 	private $roleDao;
 
 	/** @var EntityDao */
-	private $signUpDao;
+	private $registrationDao;
 
 	/** @var EntityDao */
 	private $userDao;
 
 	protected function init()
 	{
-		$this->signUpDao = $this->em->getDao(SignUp::getClassName());
+		$this->registrationDao = $this->em->getDao(Registration::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 		$this->userDao = $this->em->getDao(User::getClassName());
 	}
@@ -65,11 +64,11 @@ class UserFacade extends BaseFacade
 
 	/**
 	 * Create user from registration and delete registration entity
-	 * @param SignUp $registration
+	 * @param Registration $registration
 	 * @param Role $role
 	 * @return User
 	 */
-	public function createFromRegistration(SignUp $registration, Role $role)
+	public function createFromRegistration(Registration $registration, Role $role)
 	{
 		$user = new User;
 		$user->setMail($registration->mail)
@@ -89,7 +88,7 @@ class UserFacade extends BaseFacade
 					->setAccessToken($registration->twitterAccessToken);
 		}
 
-		$this->signUpDao->delete($registration);
+		$this->registrationDao->delete($registration);
 
 		return $this->userDao->save($user);
 	}
@@ -97,34 +96,34 @@ class UserFacade extends BaseFacade
 	/**
 	 * Create registration
 	 * @param User $user
-	 * @return SignUp
+	 * @return Registration
 	 */
 	public function createRegistration(User $user)
 	{
 		$this->clearRegistrations($user->mail);
 
-		$signUp = new SignUp;
-		$signUp->setMail($user->mail)
+		$registration = new Registration;
+		$registration->setMail($user->mail)
 				->setHash($user->hash)
 				->setRole($this->roleDao->find($user->requiredRole->id));
 
 		if ($user->facebook) {
-			$signUp->setFacebookId($user->facebook->id)
+			$registration->setFacebookId($user->facebook->id)
 					->setFacebookAccessToken($user->facebook->accessToken);
 		}
 
 		if ($user->twitter) {
-			$signUp->setTwitterId($user->twitter->id)
+			$registration->setTwitterId($user->twitter->id)
 					->setTwitterAccessToken($user->twitter->accessToken);
 		}
 
-		$signUp->verificationToken = Random::generate(32);
-		$signUp->verificationExpiration = new DateTime('now + ' . $this->settings->expiration->verification);
+		$registration->verificationToken = Random::generate(32);
+		$registration->verificationExpiration = new DateTime('now + ' . $this->settings->expiration->verification);
 		
-		$this->em->persist($signUp);
+		$this->em->persist($registration);
 		$this->em->flush();
 
-		return $signUp;
+		return $registration;
 	}
 
 	/**
@@ -135,7 +134,7 @@ class UserFacade extends BaseFacade
 	private function clearRegistrations($mail)
 	{
 		$qb = $this->em->createQueryBuilder();
-		return $qb->delete(SignUp::getClassName(), 's')
+		return $qb->delete(Registration::getClassName(), 's')
 						->where('s.mail = ?1')
 						->setParameter(1, $mail)
 						->getQuery()
@@ -176,17 +175,17 @@ class UserFacade extends BaseFacade
 	 * Find only valid entities
 	 * Expired sign up request is deleted
 	 * @param string $token
-	 * @return SignUp
+	 * @return Registration
 	 */
 	public function findByVerificationToken($token)
 	{
-		$signUp = $this->signUpDao->findOneBy(['verificationToken' => $token]);
+		$registration = $this->registrationDao->findOneBy(['verificationToken' => $token]);
 
-		if ($signUp) {
-			if ($signUp->verificationExpiration > new DateTime()) {
-				return $signUp;
+		if ($registration) {
+			if ($registration->verificationExpiration > new DateTime()) {
+				return $registration;
 			} else {
-				$this->signUpDao->delete($signUp);
+				$this->registrationDao->delete($registration);
 			}
 		}
 
@@ -266,29 +265,23 @@ class UserFacade extends BaseFacade
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="delete">
 
-	public function delete(BaseEntity $user)
-	{
-		$user->clearRoles();
-		$this->userDao->save($user); // ToDo: Do all in one row.
-		return $this->userDao->delete($user);
-	}
+	// TODO: delete
+//	public function delete(User $user)
+//	{
+//		$user->clearRoles();
+//		$this->userDao->save($user); // ToDo: Do all in one row.
+//		return $this->userDao->delete($user);
+//	}
 
 	/**
-	 * Delete all user data (Auth, User)
-	 * @param int $id User ID.
-	 * @return User
-	 * @deprecated
+	 * Delete user by id
+	 * @param int $id User ID
+	 * @return bool
 	 */
-	public function hardDelete($id)
+	public function deleteById($id)
 	{
 		$user = $this->userDao->find($id);
-
-		if ($user !== NULL) {
-			$this->em->remove($user);
-			$this->em->flush();
-		}
-
-		return $user;
+		return $this->userDao->delete($user);
 	}
 
 	// </editor-fold>
@@ -300,21 +293,6 @@ class UserFacade extends BaseFacade
 	public function isUnique($mail)
 	{
 		return $this->findByMail($mail) === NULL;
-	}
-
-	/**
-	 * @param User $user
-	 * @return User
-	 * @deprecated
-	 */
-	public function signUp(User $user)
-	{
-		$user->settings = new UserSettings();
-
-		$this->em->persist($user);
-		$this->em->flush();
-
-		return $user;
 	}
 
 }
