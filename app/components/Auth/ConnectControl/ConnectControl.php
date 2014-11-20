@@ -3,18 +3,22 @@
 namespace App\Components\Auth;
 
 use App\Components\BaseControl;
+use App\Model\Entity\User;
 use App\Model\Facade;
 use App\Model\Storage;
-use App\Model\Storage\RegistrationStorage;
+use Nette\Utils\ArrayHash;
 
 /**
  * TODO: Check independency on presenter
  */
-class ConnectControl extends BaseControl
+class ConnectManagerControl extends BaseControl
 {
 
-	/** @var RegistrationStorage @inject */
-	public $storage;
+	const REDIRECT_THIS = 'this#connect-manager';
+	const REDIRECT_APP_AUTH = ':App:Profile:settings#set-password';
+	const REDIRECT_APP_ACTIVATE = 'activate!';
+	const REDIRECT_FACEBOOK_ACTIVATE = 'facebook-open!';
+	const REDIRECT_TWITTER_ACTIVATE = 'twitter!';
 
 	/** @var Facade\UserFacade @inject */
 	public $userFacade;
@@ -22,76 +26,127 @@ class ConnectControl extends BaseControl
 	/** @var Storage\UserSettingsStorage @inject */
 	public $settingsStorage;
 
+	/** @var User */
+	private $user;
+
+	/**
+	 * Set user to manage
+	 * @param User $user
+	 * @return self
+	 */
+	public function setUser(User $user)
+	{
+		$this->user = $user;
+		return $this;
+	}
+
 	/**
 	 * Activation and deactivation.
 	 */
-	public function renderConnect()
+	public function render()
 	{
-		$template = $this->template;
+		$template = $this->getTemplate();
+
+		$initConnection = ArrayHash::from([
+					'name' => NULL,
+					'active' => FALSE,
+					'link' => NULL,
+		]);
+
+		$appConnection = clone $initConnection;
+		$appConnection->name = $this->translator->translate('SourceCode');
+		$appConnection->active = $this->user->hasSocialConnection(User::SOCIAL_CONNECTION_APP);
+		$appConnection->link = $appConnection->active ? 'deactivate!' : 'activate!';
+
+		$fbConnection = clone $initConnection;
+		$fbConnection->name = $this->translator->translate('Facebook');
+		$fbConnection->active = $this->user->hasSocialConnection(User::SOCIAL_CONNECTION_FACEBOOK);
+		$fbConnection->link = $fbConnection->active ? 'deactivate!' : '//dialog-open!';
+
+		$twConnection = clone $initConnection;
+		$twConnection->name = $this->translator->translate('Twitter');
+		$twConnection->active = $this->user->hasSocialConnection(User::SOCIAL_CONNECTION_TWITTER);
+		$twConnection->link = $twConnection->active ? 'deactivate!' : '//authenticate!';
+
 
 		$sources = [
-			RegistrationStorage::SOURCE_APP => [
-				'name' => 'SourceCode',
-				'status' => 'deactivated',
-				'action' => 'activate',
-				'plink' => ':App:Profile:settings#set-password'
-			],
-			RegistrationStorage::SOURCE_FACEBOOK => [
-				'name' => 'Facebook',
-				'status' => 'deactivated',
-				'action' => 'activate',
-				'link' => 'facebook-open!'
-			],
-			RegistrationStorage::SOURCE_TWITTER => [
-				'name' => 'Twitter',
-				'status' => 'deactivated',
-				'action' => 'activate',
-				'link' => 'twitter!'
-			]
+			$appConnection,
+			$fbConnection,
+			$twConnection,
 		];
-
-		$user = $this->userFacade->find($this->presenter->user->id);
-		$auths = $this->authFacade->findByUser($user);
-
-		$count = count($auths);
-		$lastAuth = $auths[0]->source;
-
-		$template->auths = $auths;
-
-		foreach ($auths as $auth) {
-			switch ($auth->source) {
-				case RegistrationStorage::SOURCE_APP:
-					$sources[RegistrationStorage::SOURCE_APP]['status'] = 'active';
-					$sources[RegistrationStorage::SOURCE_APP]['action'] = 'deactivate';
-					unset($sources[RegistrationStorage::SOURCE_APP]['plink']);
-					$sources[RegistrationStorage::SOURCE_APP]['link'] = 'deactivate!';
-					$sources[RegistrationStorage::SOURCE_APP]['arg'] = $auth->id;
-					break;
-				case RegistrationStorage::SOURCE_FACEBOOK:
-					$sources[RegistrationStorage::SOURCE_FACEBOOK]['status'] = 'active';
-					$sources[RegistrationStorage::SOURCE_FACEBOOK]['action'] = 'deactivate';
-					$sources[RegistrationStorage::SOURCE_FACEBOOK]['link'] = 'deactivate!';
-					$sources[RegistrationStorage::SOURCE_FACEBOOK]['arg'] = $auth->id;
-					break;
-				case RegistrationStorage::SOURCE_TWITTER:
-					$sources[RegistrationStorage::SOURCE_TWITTER]['status'] = 'active';
-					$sources[RegistrationStorage::SOURCE_TWITTER]['action'] = 'deactivate';
-					$sources[RegistrationStorage::SOURCE_TWITTER]['link'] = 'deactivate!';
-					$sources[RegistrationStorage::SOURCE_TWITTER]['arg'] = $auth->id;
-					break;
-				default:
-					break;
-			}
-		}
-
-		if ($count < 2) {
-			$sources[$lastAuth]['action'] = NULL;
-		}
+		
+//		$sources = [
+//			self::SOCIAL_AUTH_APP => [
+//				'name' => 'SourceCode',
+//				'status' => self::STATUS_INACTIVE,
+//				'link' => self::REDIRECT_APP_AUTH,
+//			],
+//			self::SOCIAL_AUTH_FACEBOOK => [
+//				'name' => 'Facebook',
+//				'status' => self::STATUS_INACTIVE,
+//				'link' => 'facebook-open!',
+//			],
+//			self::SOCIAL_AUTH_TWITTER => [
+//				'name' => 'Twitter',
+//				'status' => self::STATUS_INACTIVE,
+//				'link' => 'twitter!',
+//			]
+//		];
+//		$user = $this->userFacade->find($this->presenter->user->id);
+//		$auths = $this->authFacade->findByUser($user);
+//
+//		$count = count($auths);
+//		$lastAuth = $auths[0]->source;
+//
+//		$template->auths = $auths;
+//
+//		foreach ($auths as $auth) {
+//			switch ($auth->source) {
+//				case self::SOCIAL_AUTH_APP:
+//					$sources[self::SOCIAL_AUTH_APP]['status'] = 'active';
+//					$sources[self::SOCIAL_AUTH_APP]['action'] = 'deactivate';
+//					unset($sources[self::SOCIAL_AUTH_APP]['plink']);
+//					$sources[self::SOCIAL_AUTH_APP]['link'] = 'deactivate!';
+//					$sources[self::SOCIAL_AUTH_APP]['arg'] = $auth->id;
+//					break;
+//				case self::SOCIAL_AUTH_FACEBOOK:
+//					$sources[self::SOCIAL_AUTH_FACEBOOK]['status'] = 'active';
+//					$sources[self::SOCIAL_AUTH_FACEBOOK]['action'] = 'deactivate';
+//					$sources[self::SOCIAL_AUTH_FACEBOOK]['link'] = 'deactivate!';
+//					$sources[self::SOCIAL_AUTH_FACEBOOK]['arg'] = $auth->id;
+//					break;
+//				case self::SOCIAL_AUTH_TWITTER:
+//					$sources[self::SOCIAL_AUTH_TWITTER]['status'] = 'active';
+//					$sources[self::SOCIAL_AUTH_TWITTER]['action'] = 'deactivate';
+//					$sources[self::SOCIAL_AUTH_TWITTER]['link'] = 'deactivate!';
+//					$sources[self::SOCIAL_AUTH_TWITTER]['arg'] = $auth->id;
+//					break;
+//				default:
+//					break;
+//			}
+//		}
+//
+//		if ($count < 2) {
+//			$sources[$lastAuth]['action'] = NULL;
+//		}
 
 		$template->sources = $sources;
 
-		$template->setFile(__DIR__ . '/connect.latte');
-		$template->render();
+		parent::render();
+	}
+
+	public function handleActivate($type)
+	{
+		switch ($type) {
+			case self::SOCIAL_AUTH_APP:
+				break;
+			case self::SOCIAL_AUTH_FACEBOOK:
+				break;
+			case self::SOCIAL_AUTH_TWITTER:
+				break;
+		}
+
+		$this->endHandle(self::REDIRECT_THIS);
 	}
 
 	public function handleDeactivate($id)
@@ -107,11 +162,23 @@ class ConnectControl extends BaseControl
 			}
 		}
 
+		$this->endHandle(self::REDIRECT_THIS);
+	}
+
+	private function endHandle($code)
+	{
 		if ($this->presenter->isAjax()) {
 			$this->redrawControl();
 		} else {
-			$this->redirect('this#connect-manager');
+			$this->redirect($code);
 		}
 	}
 
+}
+
+interface IConnectManagerControlFactory
+{
+
+	/** @return ConnectManagerControl */
+	function create();
 }

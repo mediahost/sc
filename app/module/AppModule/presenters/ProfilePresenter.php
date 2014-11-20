@@ -2,7 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Auth\ConnectControl;
+use App\Components\Auth\ConnectManagerControl;
+use App\Components\Auth\IConnectManagerControlFactory;
 use App\Components\Auth\ISetPasswordControlFactory;
 use App\Components\Auth\SetPasswordControl;
 use App\Components\User\IPreferencesControlFactory;
@@ -20,6 +21,9 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var IPreferencesControlFactory @inject */
 	public $iPreferencesControlFactory;
+
+	/** @var IConnectManagerControlFactory @inject */
+	public $iConnectManagerControlFactory;
 
 	/**
 	 * @secured
@@ -51,7 +55,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionSettings()
 	{
-//		$this['auth']->setForce();
+		
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="components">
@@ -75,10 +79,13 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return ConnectControl */
-//	protected function createComponentConnect()
-//	{
-//		return $this->iConnectControlFactory->create();
-//	}
+	/** @return ConnectManagerControl */
+	protected function createComponentConnect()
+	{
+		$control = $this->iConnectManagerControlFactory->create();
+		$control->setUser($this->userFacade->find($this->user->id));
+		return $control;
+	}
+
 	// </editor-fold>
 }

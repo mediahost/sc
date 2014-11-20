@@ -4,34 +4,16 @@ services:
 	- {implement: App\Components\Auth\IForgottenControlFactory, inject: yes}
 	- {implement: App\Components\Auth\IRecoveryControlFactory, inject: yes}
 	- {implement: App\Components\Auth\ISetPasswordControlFactory, inject: yes}
+	- {implement: App\Components\Auth\IRequiredControlFactory, inject: yes}
 	- {implement: App\Components\Auth\ISignInControlFactory, inject: yes}
+	- {implement: App\Components\Auth\ISignUpControlFactory, inject: yes}
 	- {implement: App\Components\Auth\ISignOutControlFactory, inject: yes}
-
-	IFacebookControlFactory:
-		create: App\Components\Auth\FacebookControl
-		implement: App\Components\Auth\IFacebookControlFactory
-		inject: yes
-
-	IRequiredControlFactory:
-		create: App\Components\Auth\RequiredControl
-		implement: App\Components\Auth\IRequiredControlFactory
-		inject: yes
-
-	ISignUpControlFactory:
-		create: App\Components\Auth\SignUpControl
-		implement: App\Components\Auth\ISignUpControlFactory
-		inject: yes
-
-	ITwitterControlFactory:
-		create: App\Components\Auth\TwitterControl
-		implement: App\Components\Auth\ITwitterControlFactory
-		inject: yes
+	- {implement: App\Components\Auth\IConnectManagerControlFactory, inject: yes}
+	- {implement: App\Components\Auth\IFacebookControlFactory, inject: yes}
+	- {implement: App\Components\Auth\ITwitterControlFactory, inject: yes}
 
 	# AfterRegistration
-	ICompleteAccountControlFactory:
-		create: App\Components\AfterRegistration\CompleteAccountControl
-		implement: App\Components\AfterRegistration\ICompleteAccountControlFactory
-		inject: yes
+	- {implement: App\Components\AfterRegistration\ICompleteAccountControlFactory, inject: yes}
 	
 	# User
 	- {implement: App\Components\User\IPreferencesControlFactory, inject: yes}

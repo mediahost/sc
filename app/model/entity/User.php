@@ -24,6 +24,12 @@ use Nette\Security\Passwords;
  */
 class User extends BaseEntity
 {
+	const SOCIAL_CONNECTION_APP = 'app';
+	const SOCIAL_CONNECTION_FACEBOOK = 'facebook';
+	const SOCIAL_CONNECTION_TWITTER = 'twitter';
+	const SOCIAL_CONNECTION_GOOGLE = 'google';
+	const SOCIAL_CONNECTION_GITHUB = 'github';
+	const SOCIAL_CONNECTION_LINKEDIN = 'linkedin';
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -197,6 +203,25 @@ class User extends BaseEntity
 			return $this->twitter->name;
 		}
 		return NULL;
+	}
+	
+	/**
+	 * Decides if asked connection is defined
+	 * @param type $socialName
+	 * @return boolean
+	 */
+	public function hasSocialConnection($socialName)
+	{
+		switch ($socialName) {
+			case self::SOCIAL_CONNECTION_APP:
+				return (bool) $this->hash;
+			case self::SOCIAL_CONNECTION_FACEBOOK:
+				return (bool) ($this->facebook instanceof Facebook && $this->facebook->id);
+			case self::SOCIAL_CONNECTION_TWITTER:
+				return (bool) ($this->facebook instanceof Twitter && $this->twitter->id);
+			default:
+				return FALSE;
+		}
 	}
 	
 	/** 
