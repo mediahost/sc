@@ -5,7 +5,6 @@ namespace App\Components\Auth;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
@@ -35,17 +34,17 @@ class SignUpControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addText('mail', 'E-mail:')
+		$form->addText('mail', 'E-mail')
 				->setAttribute('placeholder', 'E-mail')
 				->setRequired('Please enter your e-mail.')
 				->addRule(Form::EMAIL, 'E-mail has not valid format.');
 
-		$form->addPassword('password', 'Password:')
+		$form->addPassword('password', 'Password')
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')
 				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', self::MIN_PASSWORD_CHARACTERS);
 
-		$form->addPassword('passwordVerify', 'Re-type Your Password:')
+		$form->addPassword('passwordVerify', 'Re-type Your Password')
 				->setAttribute('placeholder', 'Re-type Your Password')
 				->addConditionOn($form['password'], Form::FILLED)
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);

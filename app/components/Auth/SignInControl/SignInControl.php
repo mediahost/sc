@@ -25,11 +25,11 @@ class SignInControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addText('mail', 'E-mail:')
+		$form->addText('mail', 'E-mail')
 				->setAttribute('placeholder', 'E-mail')
 				->setRequired('Please enter your e-mail');
 
-		$form->addPassword('password', 'Password:')
+		$form->addPassword('password', 'Password')
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password.');
 

@@ -26,12 +26,12 @@ class RecoveryControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addPassword('newPassword', 'New password:', NULL, 255)
+		$form->addPassword('newPassword', 'New password', NULL, 255)
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')
 				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', self::MIN_PASSWORD_CHARACTERS);
 
-		$form->addPassword('passwordAgain', 'Re-type Your Password:', NULL, 255)
+		$form->addPassword('passwordAgain', 'Re-type Your Password', NULL, 255)
 				->setAttribute('placeholder', 'Re-type Your Password')
 				->addConditionOn($form['newPassword'], Form::FILLED)
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['newPassword']);

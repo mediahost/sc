@@ -28,7 +28,7 @@ class RequiredControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addText('mail', 'E-mail:')
+		$form->addText('mail', 'E-mail')
 				->setAttribute('placeholder', 'E-mail')
 				->setRequired('Please enter your e-mail.')
 				->addRule(Form::EMAIL, 'E-mail has not valid format.');
