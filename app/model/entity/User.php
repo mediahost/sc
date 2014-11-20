@@ -74,17 +74,27 @@ class User extends BaseEntity
 	 * Computes salted password hash.
 	 * @param string Password to be hashed.
 	 * @param array with cost (4-31), salt (22 chars)
-	 * @return User
+	 * @return self
 	 */
 	public function setPassword($password, array $options = NULL)
 	{
 		$this->hash = Passwords::hash($password, $options);
 		return $this;
 	}
+	
+	/**
+	 * Removes App login password
+	 * @return self
+	 */
+	public function clearHash()
+	{
+		$this->hash = NULL;
+		return $this;
+	}
 
 	/**
 	 * @param UserSettings $settings
-	 * @return User
+	 * @return self
 	 */
 	public function setSettings(UserSettings $settings)
 	{
@@ -95,7 +105,7 @@ class User extends BaseEntity
 
 	/**
 	 * @param Facebook $facebook
-	 * @return User
+	 * @return self
 	 */
 	public function setFacebook(Facebook $facebook)
 	{
@@ -103,10 +113,20 @@ class User extends BaseEntity
 		$this->facebook = $facebook;
 		return $this;
 	}
+	
+	/**
+	 * Removes social auth
+	 * @return self
+	 */
+	public function clearFacebook()
+	{
+		$this->facebook = NULL;
+		return $this;
+	}
 
 	/**
 	 * @param Twitter $twitter
-	 * @return User
+	 * @return self
 	 */
 	public function setTwitter(Twitter $twitter)
 	{
@@ -114,11 +134,21 @@ class User extends BaseEntity
 		$this->twitter = $twitter;
 		return $this;
 	}
+	
+	/**
+	 * Removes social auth
+	 * @return self
+	 */
+	public function clearTwitter()
+	{
+		$this->twitter = NULL;
+		return $this;
+	}
 
 	/**
 	 * @param Role|array $role
 	 * @param bool $clear Clear all previous roles.
-	 * @return User
+	 * @return self
 	 */
 	public function addRole($role, $clear = FALSE)
 	{
@@ -141,7 +171,7 @@ class User extends BaseEntity
 		return $this;
 	}
 
-	/** @return User */
+	/** @return self */
 	public function clearRoles()
 	{
 		$this->roles->clear();
@@ -150,7 +180,7 @@ class User extends BaseEntity
 
 	/**
 	 * @param Role $role
-	 * @return User
+	 * @return self
 	 */
 	public function removeRole(Role $role)
 	{
@@ -162,7 +192,7 @@ class User extends BaseEntity
 	 * Set recovery tokens
 	 * @param string $token
 	 * @param DateTime|string $expiration
-	 * @return User
+	 * @return self
 	 */
 	public function setRecovery($token, $expiration)
 	{
@@ -178,7 +208,7 @@ class User extends BaseEntity
 
 	/**
 	 * Removes recovery tokens
-	 * @return User 
+	 * @return self 
 	 */
 	public function removeRecovery()
 	{
@@ -207,6 +237,7 @@ class User extends BaseEntity
 	
 	/**
 	 * Decides if asked connection is defined
+	 * TODO: TEST IT!
 	 * @param type $socialName
 	 * @return boolean
 	 */
@@ -218,10 +249,34 @@ class User extends BaseEntity
 			case self::SOCIAL_CONNECTION_FACEBOOK:
 				return (bool) ($this->facebook instanceof Facebook && $this->facebook->id);
 			case self::SOCIAL_CONNECTION_TWITTER:
-				return (bool) ($this->facebook instanceof Twitter && $this->twitter->id);
+				return (bool) ($this->twitter instanceof Twitter && $this->twitter->id);
 			default:
 				return FALSE;
 		}
+	}
+	
+	/**
+	 * Get count of all connections
+	 * TODO: TEST IT!
+	 * @return int
+	 */
+	public function getConnectionCount()
+	{
+		$allConnections = [
+			self::SOCIAL_CONNECTION_APP,
+			self::SOCIAL_CONNECTION_FACEBOOK,
+			self::SOCIAL_CONNECTION_GITHUB,
+			self::SOCIAL_CONNECTION_GOOGLE,
+			self::SOCIAL_CONNECTION_LINKEDIN,
+			self::SOCIAL_CONNECTION_TWITTER,
+		];
+		$count = 0;
+		foreach ($allConnections as $connection) {
+			if ($this->hasSocialConnection($connection)) {
+				$count++;
+			}
+		}
+		return $count;
 	}
 	
 	/** 

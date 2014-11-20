@@ -11,6 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Twitter extends OAuth
 {
+	
+	public function __construct($id = NULL)
+	{
+		if ($id) {
+			$this->id = $id;
+		}
+		parent::__construct();
+	}
 
 	/**
 	 * @ORM\OneToOne(targetEntity="User", inversedBy="twitter", fetch="LAZY")

@@ -15,7 +15,14 @@ use Tracy\Debugger;
 class TwitterControl extends BaseControl
 {
 
+	/** @var array */
 	public $onSuccess = [];
+
+	/** @var array */
+	public $onConnect = [];
+
+	/** @var bool */
+	private $onlyConnect = FALSE;
 
 	/** @var SignUpStorage @inject */
 	public $session;
@@ -37,20 +44,35 @@ class TwitterControl extends BaseControl
 		try {
 			$data = $this->twitter->tryAuthenticate();
 
-			$user = $this->userFacade->findByTwitterId($data['user']->id_str);
-			if ($user) {
-				$this->loadTwitterEntity($user->twitter, $data);
-				$this->em->getDao(Entity\Twitter::getClassName())->save($user->twitter);
+			if ($this->onlyConnect) {
+				$tw = new Entity\Twitter($data['user']->id_str);
+				$this->loadTwitterEntity($tw, $data);
+				$this->onConnect($tw);
 			} else {
-				$user = $this->createUser($data);
-			}
+				$user = $this->userFacade->findByTwitterId($data['user']->id_str);
+				if ($user) {
+					$this->loadTwitterEntity($user->twitter, $data);
+					$this->em->getDao(Entity\Twitter::getClassName())->save($user->twitter);
+				} else {
+					$user = $this->createUser($data);
+				}
 
-			$this->onSuccess($this, $user);
+				$this->onSuccess($this, $user);
+			}
 		} catch (TwitterException $e) {
 			Debugger::log($e->getMessage(), 'twitter');
 			$this->presenter->flashMessage('We are sorry, twitter authentication failed hard.');
 		}
 	}
+
+	public function render()
+	{
+		$template = $this->getTemplate();
+		$template->link = $this->getLink();
+		parent::render();
+	}
+
+	// <editor-fold defaultstate="collapsed" desc="load & create">
 
 	/**
 	 * @param array $data
@@ -62,8 +84,7 @@ class TwitterControl extends BaseControl
 		$user = new Entity\User();
 		$user->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
 
-		$twitter = new Entity\Twitter();
-		$twitter->id = $userData->id_str;
+		$twitter = new Entity\Twitter($userData->id_str);
 		$this->loadTwitterEntity($twitter, $data);
 		$user->twitter = $twitter;
 
@@ -105,6 +126,33 @@ class TwitterControl extends BaseControl
 		$twitter->accessToken = $data['accessToken']['key'];
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
+
+	/**
+	 * Fire onConnect event besides onSuccess
+	 * @param bool $onlyConnect
+	 * @return self
+	 */
+	public function setConnect($onlyConnect = TRUE)
+	{
+		$this->onlyConnect = $onlyConnect;
+		return $this;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
+	/**
+	 * return link to open dialog
+	 * @return type
+	 */
+	public function getLink()
+	{
+		return $this->link('//authenticate!');
+	}
+
+	// </editor-fold>
 }
 
 interface ITwitterControlFactory

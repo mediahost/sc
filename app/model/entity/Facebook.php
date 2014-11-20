@@ -11,6 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Facebook extends OAuth
 {
+	
+	public function __construct($id = NULL)
+	{
+		if ($id) {
+			$this->id = $id;
+		}
+		parent::__construct();
+	}
 
 	/**
 	 * @ORM\OneToOne(targetEntity="User", inversedBy="facebook", fetch="LAZY")
@@ -20,6 +28,9 @@ class Facebook extends OAuth
 	
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $accessToken;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $mail;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $name;

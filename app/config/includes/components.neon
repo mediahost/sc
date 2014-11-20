@@ -1,23 +1,78 @@
-# Components
+# Components 
+# !!!must have "crete:" for components with events!!!
+
 services:
 	# Auth
-	- {implement: App\Components\Auth\IForgottenControlFactory, inject: yes}
-	- {implement: App\Components\Auth\IRecoveryControlFactory, inject: yes}
-	- {implement: App\Components\Auth\ISetPasswordControlFactory, inject: yes}
-	- {implement: App\Components\Auth\IRequiredControlFactory, inject: yes}
-	- {implement: App\Components\Auth\ISignInControlFactory, inject: yes}
-	- {implement: App\Components\Auth\ISignUpControlFactory, inject: yes}
-	- {implement: App\Components\Auth\ISignOutControlFactory, inject: yes}
-	- {implement: App\Components\Auth\IConnectManagerControlFactory, inject: yes}
-	- {implement: App\Components\Auth\IFacebookControlFactory, inject: yes}
-	- {implement: App\Components\Auth\ITwitterControlFactory, inject: yes}
+	IForgottenControlFactory:
+		implement: App\Components\Auth\IForgottenControlFactory
+		inject: yes
+
+	IRecoveryControlFactory:
+		implement: App\Components\Auth\IRecoveryControlFactory
+		inject: yes
+
+	ISetPasswordControlFactory:
+		implement: App\Components\Auth\ISetPasswordControlFactory
+		inject: yes
+
+	ISignOutControlFactory:
+		implement: App\Components\Auth\ISignOutControlFactory
+		inject: yes
+
+	IConnectManagerControlFactory:
+		implement: App\Components\Auth\IConnectManagerControlFactory
+		inject: yes
+
+	IFacebookControlFactory:
+		create: App\Components\Auth\FacebookControl
+		implement: App\Components\Auth\IFacebookControlFactory
+		inject: yes
+
+	ITwitterControlFactory:
+		create: App\Components\Auth\TwitterControl
+		implement: App\Components\Auth\ITwitterControlFactory
+		inject: yes
+
+	IRequiredControlFactory:
+		create: App\Components\Auth\RequiredControl
+		implement: App\Components\Auth\IRequiredControlFactory
+		inject: yes
+
+	ISignInControlFactory:
+		create: App\Components\Auth\SignInControl
+		implement: App\Components\Auth\ISignInControlFactory
+		inject: yes
+
+	ISignUpControlFactory:
+		create: App\Components\Auth\SignUpControl
+		implement: App\Components\Auth\ISignUpControlFactory
+		inject: yes
 
 	# AfterRegistration
-	- {implement: App\Components\AfterRegistration\ICompleteAccountControlFactory, inject: yes}
+	ICompleteAccountControlFactory:
+		create: App\Components\AfterRegistration\CompleteAccountControl
+		implement: App\Components\AfterRegistration\ICompleteAccountControlFactory
+		inject: yes
 	
 	# User
-	- {implement: App\Components\User\IPreferencesControlFactory, inject: yes}
-	- {implement: App\Components\User\IUserControlFactory, inject: yes}
-	- {implement: App\Components\Skills\ISkillControlFactory, inject: yes}
-	- {implement: App\Components\Skills\ISkillCategoryControlFactory, inject: yes}
-	- {implement: App\Components\Example\Form\IFormControlFactory, inject: yes}
+	IPreferencesControlFactory:
+		implement: App\Components\User\IPreferencesControlFactory
+		inject: yes
+
+	IUserControlFactory:
+		implement: App\Components\User\IUserControlFactory
+		inject: yes
+
+	# Skills
+	ISkillControlFactory:
+		implement: App\Components\Skills\ISkillControlFactory
+		inject: yes
+
+	ISkillCategoryControlFactory:
+		implement: App\Components\Skills\ISkillCategoryControlFactory
+		inject: yes
+
+	# Example
+	IFormControlFactory:
+		implement: App\Components\Example\Form\IFormControlFactory
+		inject: yes

@@ -20,6 +20,12 @@ class FacebookControl extends BaseControl
 	/** @var array */
 	public $onSuccess = [];
 
+	/** @var array */
+	public $onConnect = [];
+
+	/** @var bool */
+	private $onlyConnect = FALSE;
+
 	/** @var Facebook @inject */
 	public $facebook;
 
@@ -51,15 +57,20 @@ class FacebookControl extends BaseControl
 			try {
 				$me = $fb->api('/me');
 
-				$user = $this->userFacade->findByFacebookId($fb->getUser());
-				if ($user) {
-					$this->loadFacebookEntity($user->facebook, $me);
-					$this->em->getDao(Entity\Facebook::getClassName())->save($user->facebook);
+				if ($this->onlyConnect) {
+					$fb = new Entity\Facebook($me->id);
+					$this->loadFacebookEntity($fb, $me);
+					$this->onConnect($fb);
 				} else {
-					$user = $this->createUser($me);
+					$user = $this->userFacade->findByFacebookId($fb->getUser());
+					if ($user) {
+						$this->loadFacebookEntity($user->facebook, $me);
+						$this->em->getDao(Entity\Facebook::getClassName())->save($user->facebook);
+					} else {
+						$user = $this->createUser($me);
+					}
+					$this->onSuccess($this, $user);
 				}
-
-				$this->onSuccess($this, $user);
 			} catch (FacebookApiException $e) {
 				Debugger::log($e->getMessage(), 'facebook');
 				$this->presenter->flashMessage('We are sorry, facebook authentication failed hard.');
@@ -68,6 +79,15 @@ class FacebookControl extends BaseControl
 
 		return $dialog;
 	}
+	
+	public function render()
+	{
+		$template = $this->getTemplate();
+		$template->link = $this->getLink();
+		parent::render();
+	}
+
+	// <editor-fold defaultstate="collapsed" desc="load & create">
 
 	/**
 	 * @param ArrayHash $me
@@ -85,8 +105,7 @@ class FacebookControl extends BaseControl
 			$this->session->verification = FALSE;
 		}
 
-		$fb = new Entity\Facebook();
-		$fb->id = $me->id;
+		$fb = new Entity\Facebook($me->id);
 		$this->loadFacebookEntity($fb, $me);
 
 		$user->facebook = $fb;
@@ -100,6 +119,9 @@ class FacebookControl extends BaseControl
 	 */
 	protected function loadFacebookEntity(Entity\Facebook &$fb, ArrayHash $me)
 	{
+		if (isset($me->email)) {
+			$fb->mail = $me->email;
+		}
 		if (isset($me->name)) {
 			$fb->name = $me->name;
 		}
@@ -128,10 +150,37 @@ class FacebookControl extends BaseControl
 		if (isset($me->username)) {
 			$fb->username = $me->username;
 		}
-		
+
 		$fb->accessToken = $fb->getAccessToken();
 	}
 
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="setters">
+
+	/**
+	 * Fire onConnect event besides onSuccess
+	 * @param bool $onlyConnect
+	 * @return self
+	 */
+	public function setConnect($onlyConnect = TRUE)
+	{
+		$this->onlyConnect = $onlyConnect;
+		return $this;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="getters">
+
+	/**
+	 * return link to open dialog
+	 * @return type
+	 */
+	public function getLink()
+	{
+		return $this->link('//dialog-open!');
+	}
+
+	// </editor-fold>
 }
 
 interface IFacebookControlFactory
