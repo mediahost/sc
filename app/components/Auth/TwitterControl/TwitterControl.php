@@ -39,6 +39,12 @@ class TwitterControl extends BaseControl
 	/** @var RoleFacade @inject */
 	public $roleFacade;
 
+	/**
+	 * @var bool
+	 * @persistent 
+	 */
+	public $remember = FALSE;
+
 	public function handleAuthenticate()
 	{
 		try {
@@ -57,7 +63,7 @@ class TwitterControl extends BaseControl
 					$user = $this->createUser($data);
 				}
 
-				$this->onSuccess($this, $user);
+				$this->onSuccess($this, $user, $this->remember);
 			}
 		} catch (TwitterException $e) {
 			Debugger::log($e->getMessage(), 'twitter');

@@ -4,6 +4,7 @@ namespace App\FrontModule\Presenters;
 
 use App\Components\Auth;
 use App\Model\Entity\User;
+use Nette\Security\IUserStorage;
 
 /**
  * Lock Screen presenter.
@@ -29,7 +30,7 @@ class LockScreenPresenter extends BasePresenter
 
 	public function actionDefault()
 	{
-		if ($this->user->identity) {
+		if (!$this->user->loggedIn && $this->user->identity && $this->user->logoutReason === IUserStorage::INACTIVITY) {
 			$userDao = $this->em->getDao(User::getClassName());
 			$this->loggedUser = $userDao->find($this->user->identity->id);
 		}

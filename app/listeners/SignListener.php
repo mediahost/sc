@@ -76,11 +76,13 @@ class SignListener extends Object implements Subscriber
 	 * Pokud neexistuje, pak pokračuje v registraci
 	 * @param Control $control
 	 * @param User $user
+	 * @param bool $rememberMe
 	 */
-	public function onStartup(Control $control, User $user)
+	public function onStartup(Control $control, User $user, $rememberMe = FALSE)
 	{
+		\Tracy\Debugger::barDump($rememberMe, 'onSuccess');
 		if ($user->id) {
-			$this->onSuccess($control->presenter, $user);
+			$this->onSuccess($control->presenter, $user, $rememberMe);
 		} else {
 			$this->session->user = $user;
 			$this->checkRequire($control, $user);
@@ -172,7 +174,7 @@ class SignListener extends Object implements Subscriber
 	 * Only login and redirect to app
 	 * @param Presenter $presenter
 	 * @param User $user
-	 * @param type $rememberMe
+	 * @param bool $rememberMe
 	 */
 	public function onSuccess(Presenter $presenter, User $user, $rememberMe = FALSE)
 	{

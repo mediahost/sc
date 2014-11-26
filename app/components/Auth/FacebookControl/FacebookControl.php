@@ -40,6 +40,12 @@ class FacebookControl extends BaseControl
 
 	/** @var RoleFacade @inject */
 	public $roleFacade;
+	
+	/** 
+	 * @var bool
+	 * @persistent 
+	 */
+	public $remember = FALSE;
 
 	protected function createComponentDialog()
 	{
@@ -69,7 +75,7 @@ class FacebookControl extends BaseControl
 					} else {
 						$user = $this->createUser($me);
 					}
-					$this->onSuccess($this, $user);
+					$this->onSuccess($this, $user, $this->remember);
 				}
 			} catch (FacebookApiException $e) {
 				Debugger::log($e->getMessage(), 'facebook');
