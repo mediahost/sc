@@ -96,10 +96,6 @@ class SignPresenter extends BasePresenter
 	{
 		$this->session->wipe();
 		$this->session->role = $this->getValidRole($role);
-		$this['signIn']->onSuccess[] = function () {
-			$this->restoreRequest($this->presenter->backlink);
-			$this->redirect(self::REDIRECT_AFTER_LOG);
-		};
 
 		$this->template->role = $this->session->role;
 	}
@@ -159,12 +155,6 @@ class SignPresenter extends BasePresenter
 
 	// <editor-fold defaultstate="collapsed" desc="controls">
 
-	/** @return Auth\FacebookControl */
-	protected function createComponentFacebook()
-	{
-		return $this->iFacebookControlFactory->create();
-	}
-
 	/** @return Auth\ForgottenControl */
 	protected function createComponentForgotten()
 	{
@@ -193,12 +183,6 @@ class SignPresenter extends BasePresenter
 	protected function createComponentSignUp()
 	{
 		return $this->iSignUpControlFactory->create();
-	}
-
-	/** @return Auth\TwitterControl */
-	protected function createComponentTwitter()
-	{
-		return $this->iTwitterControlFactory->create();
 	}
 
 	// </editor-fold>

@@ -2,10 +2,15 @@
 
 namespace App\Listeners;
 
-class UserListener extends \Nette\Object implements \Kdyby\Events\Subscriber
+use App\Model\Storage\UserSettingsStorage;
+use Kdyby\Events\Subscriber;
+use Nette\Object;
+use Nette\Security\User;
+
+class LoggedListener extends Object implements Subscriber
 {
 
-	/** @var \App\Model\Storage\UserSettingsStorage @inject */
+	/** @var UserSettingsStorage @inject */
 	public $settingsStorage;
 
 	public function getSubscribedEvents()
@@ -17,14 +22,13 @@ class UserListener extends \Nette\Object implements \Kdyby\Events\Subscriber
 		);
 	}
 
-	public function userLoggedIn(\Nette\Security\User $user)
+	public function userLoggedIn(User $user)
 	{
 //		$this->settingsStorage->load($user->id);
 	}
 
-	public function userLoggedOut(\Nette\Security\User $user)
+	public function userLoggedOut(User $user)
 	{
 //		$this->settingsStorage->wipe();
 	}
-
 }

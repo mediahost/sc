@@ -8,6 +8,7 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
+use App\Model\Storage\SettingsStorage;
 use App\Model\Storage\SignUpStorage;
 use App\TaggedString;
 use Kdyby\Doctrine\EntityManager;
@@ -47,6 +48,9 @@ class SignListener extends Object implements Subscriber
 	/** @var Application @inject */
 	public $application;
 
+	/** @var SettingsStorage @inject */
+	public $settings;
+
 	// </editor-fold>
 
 	public function __construct(Application $application)
@@ -61,6 +65,7 @@ class SignListener extends Object implements Subscriber
 			'App\Components\Auth\SignUpControl::onSuccess' => 'onStartup',
 			'App\Components\Auth\TwitterControl::onSuccess' => 'onStartup',
 			'App\Components\Auth\RequiredControl::onSuccess' => 'onRequiredSuccess',
+			'App\Components\Auth\SignInControl::onSuccess' => 'onSuccess',
 			'App\FrontModule\Presenters\SignPresenter::onVerify' => 'onCreate',
 		);
 	}
@@ -145,6 +150,11 @@ class SignListener extends Object implements Subscriber
 		}
 	}
 
+	/**
+	 * After create account
+	 * @param Presenter $presenter
+	 * @param User $user
+	 */
 	public function onCreate(Presenter $presenter, User $user)
 	{
 		$latte = new Engine;
@@ -162,10 +172,17 @@ class SignListener extends Object implements Subscriber
 	 * Only login and redirect to app
 	 * @param Presenter $presenter
 	 * @param User $user
+	 * @param type $rememberMe
 	 */
-	public function onSuccess(Presenter $presenter, User $user)
+	public function onSuccess(Presenter $presenter, User $user, $rememberMe = FALSE)
 	{
 		$this->session->remove();
+		
+		if ($rememberMe) {
+			$presenter->user->setExpiration($this->settings->expiration->remember, FALSE);
+		} else {
+			$presenter->user->setExpiration($this->settings->expiration->notRemember, TRUE);
+		}
 
 		$presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
 		$presenter->flashMessage('You are logged in.', 'success');

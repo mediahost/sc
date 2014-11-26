@@ -4,6 +4,10 @@ namespace App\Extensions;
 
 use Nette\DI\CompilerExtension;
 
+/**
+ * Generická registrace listenerů
+ * http://forum.nette.org/cs/16192-kdyby-events-ako-naviazat-event-na-factory
+ */
 class EventOnControlCreateCreateExtension extends CompilerExtension
 {
 

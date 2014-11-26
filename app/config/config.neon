@@ -42,9 +42,6 @@ nette:
 		email: 'pupe.dupe@gmail.com,me@martinsifra.cz,g.vvoody@gmail.com'
 
 services:
-	# Authenticator
-	- {class: App\Model\Authenticator, inject: yes}
-
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
 

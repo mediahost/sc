@@ -5,8 +5,12 @@ namespace App\Components\Auth;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Entity\User;
+use App\Model\Facade\UserFacade;
 use App\Model\Storage\SettingsStorage;
+use Kdyby\Doctrine\EntityManager;
 use Nette\Security\AuthenticationException;
+use Nette\Security\IAuthenticator;
 use Nette\Utils\ArrayHash;
 
 class SignInControl extends BaseControl
@@ -15,8 +19,23 @@ class SignInControl extends BaseControl
 	/** @var array */
 	public $onSuccess = [];
 
+	/** @var IFacebookControlFactory @inject */
+	public $iFacebookControlFactory;
+
+	/** @var ITwitterControlFactory @inject */
+	public $iTwitterControlFactory;
+
 	/** @var SettingsStorage @inject */
 	public $settings;
+
+	/** @var UserFacade @inject */
+	public $userFacade;
+
+	/** @var EntityManager @inject */
+	public $em;
+
+	/** @var User */
+	private $user;
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -25,9 +44,11 @@ class SignInControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addText('mail', 'E-mail')
-				->setAttribute('placeholder', 'E-mail')
-				->setRequired('Please enter your e-mail');
+		$mail = $form->addText('mail', 'E-mail')
+				->setAttribute('placeholder', 'E-mail');
+		if (!$this->user) {
+			$mail->setRequired('Please enter your e-mail');
+		}
 
 		$form->addPassword('password', 'Password')
 				->setAttribute('placeholder', 'Password')
@@ -48,26 +69,67 @@ class SignInControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
-		$user = $this->presenter->getUser();
-		if ($values->remember) {
-			$user->setExpiration($this->settings->expiration->remember, FALSE);
+		if ($this->user) {
+			$user = $this->user;
 		} else {
-			$user->setExpiration($this->settings->expiration->notRemember, TRUE);
+			$user = $this->userFacade->findByMail($values->mail);
 		}
-
 		try {
-			$user->login($values->mail, $values->password);
-			$this->onSuccess();
+			if (!$user) {
+				throw new AuthenticationException('Username is incorrect.', IAuthenticator::IDENTITY_NOT_FOUND);
+			} elseif (!$user->verifyPassword($values->password)) {
+				throw new AuthenticationException('Password is incorrect.', IAuthenticator::INVALID_CREDENTIAL);
+			} elseif ($user->needsRehash()) {
+				$this->em->persist($user);
+			}
+
+			// Remove recovery data if exists
+			if ($user->recoveryToken !== NULL) {
+				$user->removeRecovery();
+				$this->em->persist($user);
+			}
+			$this->em->flush();
+
+			$this->onSuccess($this->presenter, $user, $values->remember);
 		} catch (AuthenticationException $e) {
 			$form->addError('Incorrect login or password!');
 		}
+	}
+
+	/**
+	 * V případě přidání uživatele není potřeba zadávat e-mail pro přihlášení
+	 * @param User $user
+	 */
+	public function setUserToSign(User $user)
+	{
+		$this->user = $user;
 	}
 
 	public function renderLogin()
 	{
 		$this->setTemplateFile('login');
 		parent::render();
+	}
+
+	public function renderLock()
+	{
+		$this->setTemplateFile('lock');
+		$this->template->loggedUser = $this->user;
+		parent::render();
+	}
+
+	// <editor-fold defaultstate="collapsed" desc="controls">
+
+	/** @return FacebookControl */
+	protected function createComponentFacebook()
+	{
+		return $this->iFacebookControlFactory->create();
+	}
+
+	/** @return TwitterControl */
+	protected function createComponentTwitter()
+	{
+		return $this->iTwitterControlFactory->create();
 	}
 
 }

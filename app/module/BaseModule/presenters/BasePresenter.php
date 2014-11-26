@@ -4,13 +4,15 @@ namespace App\BaseModule\Presenters;
 
 use App\Components\Auth\ISignOutControlFactory;
 use App\Components\Auth\SignOutControl;
-use App\Model\Entity\PageDesignSettings;
+use App\Model\Entity;
+use App\Model\Facade\UserFacade;
 use App\Model\Storage\UserSettingsStorage;
 use App\TaggedString;
 use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
+use Nette\Security\IUserStorage;
 use WebLoader\LoaderFactory;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\JavaScriptLoader;
@@ -43,6 +45,9 @@ abstract class BasePresenter extends Presenter
 	/** @var EntityManager @inject */
 	public $em;
 
+	/** @var UserFacade @inject */
+	public $userFacade;
+
 	// </editor-fold>
 
 	protected function startup()
@@ -55,7 +60,7 @@ abstract class BasePresenter extends Presenter
 	{
 		$this->template->lang = $this->lang;
 		$this->template->setTranslator($this->translator);
-		$this->template->designSettings = new PageDesignSettings();
+		$this->template->designSettings = new Entity\PageDesignSettings();
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="flash messages">
@@ -86,22 +91,18 @@ abstract class BasePresenter extends Presenter
 		$privilege = $element->getAnnotation('privilege');
 
 		if ($secured) {
-			if (!$this->user->isLoggedIn()) {
-				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
-				$this->flashMessage('You should be logged in!');
+			if (!$this->user->loggedIn) {
+				if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
+					$this->flashMessage('You have been signed out, because you have been inactive for long time.');
+					$this->redirect(':Front:LockScreen:', array('backlink' => $this->storeRequest()));
+				} else {
+					$this->flashMessage('You should be logged in!');
+					$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
+				}
 			} elseif (!$this->user->isAllowed($resource, $privilege)) {
 				throw new ForbiddenRequestException;
 			}
 		}
-	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="components">
-
-	/** @return SignOutControl */
-	public function createComponentSignOut()
-	{
-		return $this->iSignOutControlFactory->create();
 	}
 
 	// </editor-fold>
@@ -116,6 +117,15 @@ abstract class BasePresenter extends Presenter
 		}
 
 		$this->translator->setLang($this->lang);
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="components">
+
+	/** @return SignOutControl */
+	public function createComponentSignOut()
+	{
+		return $this->iSignOutControlFactory->create();
 	}
 
 	// </editor-fold>

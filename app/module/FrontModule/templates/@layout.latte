@@ -39,21 +39,25 @@
 			 data-type="{$flash->type}">
 			{$flash->message}
 		</div>
-
-		{block layout}
-		<div class="logo">
-			<a n:href="Homepage:">
-				<img src="{$basePath}/assets/img/logo.png" alt=""/>
-			</a>
-		</div>
-
-		<div class="content">
-			{include #content}
-		</div>
-		{/block}
 		
-		<div class="copyright">
-			 2014 &copy; {_'Source-Code by Mediahost'}.
+		<div class="wrapper">
+
+			{block layout}
+			<div class="logo">
+				<a n:href="Homepage:">
+					<img src="{$basePath}/assets/img/logo.png" alt=""/>
+				</a>
+			</div>
+
+			<div class="content">
+				{include #content}
+			</div>
+			{/block}
+
+			<div class="copyright">
+				 2014 &copy; {_'Source-Code by Mediahost'}.
+			</div>
+		
 		</div>
 
 		{block scripts}
