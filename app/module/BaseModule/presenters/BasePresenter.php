@@ -94,7 +94,7 @@ abstract class BasePresenter extends Presenter
 			if (!$this->user->loggedIn) {
 				if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
 					$this->flashMessage('You have been signed out, because you have been inactive for long time.');
-					$this->redirect(':Front:LockScreen:', array('backlink' => $this->storeRequest()));
+					$this->redirect(':Front:LockScreen:', ['backlink' => $this->storeRequest()]);
 				} else {
 					$this->flashMessage('You should be logged in!');
 					$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);

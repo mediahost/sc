@@ -35,7 +35,7 @@ class LockScreenPresenter extends BasePresenter
 			$this->loggedUser = $userDao->find($this->user->identity->id);
 		}
 		if (!$this->loggedUser) {
-			$this->redirect(":Front:Sign:in", array('backlink' => $this->storeRequest()));
+			$this->redirect(":Front:Sign:in");
 		}
 	}
 
