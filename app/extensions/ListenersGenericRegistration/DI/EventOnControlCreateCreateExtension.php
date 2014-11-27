@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Extensions;
+namespace App\Extensions\ListenersGenericRegistration\DI;
 
 use Nette\DI\CompilerExtension;
 

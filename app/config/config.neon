@@ -54,4 +54,4 @@ extensions:
 	events: Kdyby\Events\DI\EventsExtension
 	installer: App\Extensions\Installer\DI\InstallerExtension
 	settings: App\Extensions\Settings\DI\SettingsExtension
-	onControlCreate: App\Extensions\EventOnControlCreateCreateExtension
+	onControlCreate: App\Extensions\ListenersGenericRegistration\DI\EventOnControlCreateCreateExtension
