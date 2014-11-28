@@ -14,9 +14,19 @@ use Nette\Utils\ArrayHash;
 
 class SignUpControl extends BaseControl
 {
+	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
 	public $onSuccess = [];
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="injects">
+
+	/** @var IFacebookControlFactory @inject */
+	public $iFacebookControlFactory;
+
+	/** @var ITwitterControlFactory @inject */
+	public $iTwitterControlFactory;
 
 	/** @var UserFacade @inject */
 	public $userFacade;
@@ -26,6 +36,8 @@ class SignUpControl extends BaseControl
 
 	/** @var SignUpStorage @inject */
 	public $session;
+
+	// </editor-fold>
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -91,6 +103,21 @@ class SignUpControl extends BaseControl
 		parent::render();
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="controls">
+
+	/** @return FacebookControl */
+	protected function createComponentFacebook()
+	{
+		return $this->iFacebookControlFactory->create();
+	}
+
+	/** @return TwitterControl */
+	protected function createComponentTwitter()
+	{
+		return $this->iTwitterControlFactory->create();
+	}
+
+	// </editor-fold>
 }
 
 interface ISignUpControlFactory

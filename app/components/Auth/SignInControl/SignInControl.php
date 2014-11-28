@@ -15,9 +15,13 @@ use Nette\Utils\ArrayHash;
 
 class SignInControl extends BaseControl
 {
+	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
 	public $onSuccess = [];
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="injects">
 
 	/** @var IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
@@ -33,6 +37,8 @@ class SignInControl extends BaseControl
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	// </editor-fold>
 
 	/** @var User */
 	private $user;
@@ -132,6 +138,7 @@ class SignInControl extends BaseControl
 		return $this->iTwitterControlFactory->create();
 	}
 
+	// </editor-fold>
 }
 
 interface ISignInControlFactory
