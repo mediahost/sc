@@ -7,16 +7,17 @@ services:
 		implement: App\Components\Auth\IForgottenControlFactory
 		inject: yes
 
-	ISetPasswordControlFactory:
-		implement: App\Components\Auth\ISetPasswordControlFactory
-		inject: yes
-
 	ISignOutControlFactory:
 		implement: App\Components\Auth\ISignOutControlFactory
 		inject: yes
 
 	IConnectManagerControlFactory:
 		implement: App\Components\Auth\IConnectManagerControlFactory
+		inject: yes
+
+	ISetPasswordControlFactory:
+		create: App\Components\Auth\SetPasswordControl
+		implement: App\Components\Auth\ISetPasswordControlFactory
 		inject: yes
 
 	IRecoveryControlFactory:

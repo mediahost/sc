@@ -5,21 +5,28 @@ namespace App\Components\Auth;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\User;
+use App\Model\Entity;
 use App\Model\Facade\UserFacade;
 use App\TaggedString;
-use Kdyby\Doctrine\EntityDao;
+use Exception;
 use Kdyby\Doctrine\EntityManager;
+use Nette\Security;
 use Nette\Utils\ArrayHash;
 
 class SetPasswordControl extends BaseControl
 {
 
+	/** @var array */
+	public $onSuccess = [];
+
+	/** @var EntityManager @inject */
+	public $em;
+
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var EntityDao */
-	private $userDao;
+	/** @var Security\User */
+	private $presenterUser;
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -28,8 +35,14 @@ class SetPasswordControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
-		$user = $this->presenter->user->identity;
+		if (!$this->presenterUser) {
+			throw new SetPasswordControlException('Must use method setUser(\Nette\Security\User)');
+		}
+		if (!$this->presenterUser->loggedIn) {
+			throw new SetPasswordControlException('Only for logged users');
+		}
+
+		$user = $this->presenterUser->identity;
 		$form->addText('mail', 'E-mail')
 				->setEmptyValue($user->mail)
 				->setDisabled();
@@ -59,19 +72,18 @@ class SetPasswordControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
-		$user = $this->userFacade->findByMail($this->presenter->user->identity->mail);
+		$user = $this->userFacade->findByMail($this->presenterUser->identity->mail);
 		$user->password = $values->newPassword;
-		$this->userDao->save($user);
 
-		// TODO: do it without $this->presenter; do it with event
-		$this->presenter->flashMessage('Password has been successfuly set!', 'success');
-		$this->presenter->redirect(':App:Profile:settings#connect-manager');
+		$userDao = $this->em->getDao(Entity\User::getClassName());
+		$savedUser = $userDao->save($user);
+
+		$this->onSuccess($savedUser);
 	}
-
-	public function injectEntityManager(EntityManager $em)
+	
+	public function setUser(Security\User $user)
 	{
-		$this->userDao = $em->getDao(User::getClassName());
+		$this->presenterUser = $user;
 	}
 
 	public function renderLogin()
@@ -80,6 +92,11 @@ class SetPasswordControl extends BaseControl
 		parent::render();
 	}
 
+}
+
+class SetPasswordControlException extends Exception
+{
+	
 }
 
 interface ISetPasswordControlFactory

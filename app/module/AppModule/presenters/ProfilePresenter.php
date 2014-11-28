@@ -63,7 +63,13 @@ class ProfilePresenter extends BasePresenter
 	/** @return SetPasswordControl */
 	protected function createComponentSetPassword()
 	{
-		return $this->iSetPasswordControlFactory->create();
+		$control = $this->iSetPasswordControlFactory->create();
+		$control->setUser($this->user);
+		$control->onSuccess[] = function () {
+			$this->flashMessage('Password has been successfuly set!', 'success');
+			$this->redirect(':App:Profile:settings#connect-manager');
+		};
+		return $control;
 	}
 
 	/** @return PreferencesControl */
