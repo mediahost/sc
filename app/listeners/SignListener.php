@@ -116,7 +116,7 @@ class SignListener extends Object implements Subscriber
 		if (!$existedUser) {
 			$this->verify($control, $user);
 		} else {
-			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $user->mail]);
+			$message = new TaggedString('%s is already registered.', $user->mail);
 			$control->presenter->flashMessage($message);
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		}

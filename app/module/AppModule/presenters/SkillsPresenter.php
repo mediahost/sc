@@ -75,7 +75,7 @@ class SkillsPresenter extends BasePresenter
 		$skill = $this->skillDao->find($id);
 		if ($skill) {
 			$this->skillDao->delete($skill);
-			$message = new TaggedString('\'<%name%>\' was deleted.', ['name' => $skill->name]);
+			$message = new TaggedString('\'%s\' was deleted.', $skill->name);
 			$this->flashMessage($message, 'success');
 		} else {
 			$this->flashMessage('Skill was not found.', 'warning');
@@ -91,7 +91,7 @@ class SkillsPresenter extends BasePresenter
 	{
 		$control = $this->iSkillControlFactory->create();
 		$control->onAfterSave = function (Skill $saved) {
-			$message = new TaggedString('\'<%name%>\' was successfully saved.', ['name' => $saved->name]);
+			$message = new TaggedString('\'%s\' was successfully saved.', $saved->name);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};

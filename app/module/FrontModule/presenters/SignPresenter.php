@@ -165,7 +165,7 @@ class SignPresenter extends BasePresenter
 			$this->redirect(':Front:Sign:in');	
 		};
 		$control->onMissingUser[] = function ($mail) {
-			$message = new TaggedString('We do not register any user with mail \'<%mail%>\'.', ['mail' => $mail]);
+			$message = new TaggedString('We do not register any user with mail \'%s\'.', $mail);
 			$this->flashMessage($message, 'warning');
 			$this->redirect(':Front:Sign:lostPassword');
 		};

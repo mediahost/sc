@@ -39,7 +39,7 @@ class SignUpControl extends BaseControl
 				->setRequired('Please enter your e-mail.')
 				->addRule(Form::EMAIL, 'E-mail has not valid format.');
 
-		$helpText = new TaggedString('At least <%number%> characters long.', ['number' => $this->settings->passwordsPolicy->length]);
+		$helpText = new TaggedString('At least %d characters long.', $this->settings->passwordsPolicy->length);
 		$helpText->setTranslator($this->translator);
 		$form->addPassword('password', 'Password')
 				->setAttribute('placeholder', 'Password')
@@ -63,7 +63,7 @@ class SignUpControl extends BaseControl
 	{
 		$values = $form->getValues();
 		if (!$this->userFacade->isUnique($values->mail)) {
-			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $values->mail]);
+			$message = new TaggedString('%s is already registered.', $values->mail);
 			$message->setTranslator($this->translator);
 			$form['mail']->addError((string) $message);
 		}

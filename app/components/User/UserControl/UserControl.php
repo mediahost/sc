@@ -85,7 +85,7 @@ class UserControl extends BaseControl
 			$saved = $userDao->save($entity);
 			$this->onAfterSave($saved);
 		} catch (DuplicateEntryException $exc) {
-			$message = new TaggedString('\'<%mail%>\' is already registred', ['mail' => $values->mail]);
+			$message = new TaggedString('\'%s\' is already registred', $values->mail);
 			$form['mail']->addError($message);
 		}
 	}

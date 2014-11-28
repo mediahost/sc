@@ -44,7 +44,7 @@ class RequiredControl extends BaseControl
 	{
 		$values = $form->getValues();
 		if (!$this->userFacade->isUnique($values->mail)) {
-			$message = new TaggedString('<%mail%> is already registered.', ['mail' => $values->mail]);
+			$message = new TaggedString('%s is already registered.', $values->mail);
 			$message->setTranslator($this->translator);
 			$form['mail']->addError((string) $message);
 		}

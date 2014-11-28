@@ -62,25 +62,6 @@ class Helpers
 		}
 	}
 
-	/**
-	 * Replace tag '<%word%>' with value in $replacements[word]
-	 * @param type $string
-	 * @param array $replacements
-	 * @return string
-	 */
-	public static function replaceMyTag($string, array $replacements)
-	{
-		if (preg_match_all('~\<%(\w+)%\>~', $string, $matches)) {
-			foreach ($matches[1] as $findedKey => $findedValue) {
-				$matchedWord = $matches[0][$findedKey];
-				if (array_key_exists($findedValue, $replacements)) {
-					$string = preg_replace('~' . preg_quote($matchedWord) . '~', $replacements[$findedValue], $string);
-				}
-			}
-		}
-		return $string;
-	}
-
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="date">
 

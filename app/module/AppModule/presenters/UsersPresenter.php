@@ -157,7 +157,7 @@ class UsersPresenter extends BasePresenter
 		$control = $this->iUserControlFactory->create();
 		$control->setIdentityRoles($this->getUser()->getRoles());
 		$control->onAfterSave = function (User $savedUser) {
-			$message = new TaggedString('User \'<%mail%>\' was successfully saved.', ['mail' => $savedUser->mail]);
+			$message = new TaggedString('User \'%s\' was successfully saved.', $savedUser->mail);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};

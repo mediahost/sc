@@ -21,10 +21,16 @@ class TaggedString
 	/** @var Gettext */
 	private $translator;
 
-	public function __construct($taggedString, array $replacements)
+	public function __construct($taggedString, $replacement = NULL, $_ = null)
 	{
 		$this->setTaggedString($taggedString);
-		$this->setReplacements($replacements);
+		$replacements = func_get_args();
+		if (func_num_args() > 2) {
+			array_shift($replacements);
+			$this->setReplacements($replacements);
+		} else {
+			$this->setReplacements([$replacement]);
+		}
 	}
 	
 	public function setTaggedString($string)
@@ -48,7 +54,7 @@ class TaggedString
 	public function __toString()
 	{
 		$string = $this->translator ? $this->translator->translate($this->taggedString) : $this->taggedString;
-		return Helpers::replaceMyTag($string, $this->replacements);
+		return vsprintf($string, $this->replacements);
 	}
 
 }
