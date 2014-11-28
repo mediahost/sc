@@ -5,7 +5,6 @@ namespace App\Components\User;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Storage\UserSettingsStorage;
 
 /**
  * Form with user's personal settings.
@@ -26,38 +25,23 @@ class PreferencesControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addSelect2('language', 'Language', [
-			'en' => 'English',
-			'cs' => 'Čeština'
-		]);
+		$form->addSelect2('language', 'Language', (array) $this->settings->languages->allowed);
 
 		$form->addSubmit('save', 'Save');
 
-		$form->setDefaults($this->getDefaults());
+		$form->setDefaults([
+			'language' => $this->settings->pageSettings->language,
+		]);
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
 	public function formSucceeded(Form $form, $values)
 	{
-//		$this->settingsStorage
-//				->setLanguage($values->language)
-//				->save();
-//
-//		$savedLanguage = $this->settingsStorage->language;
-//		$this->onAfterSave($savedLanguage);
-	}
-
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
-	private function getDefaults()
-	{
-//		$values = [
-//			'language' => $this->settingsStorage->language,
-//		];
-		return $values;
+		// language saving is full controled by persistant parameter LANG
+		$this->onAfterSave($values->language);
+		// for case if not redirected in event
+		$this->presenter->redirect('this', ['lang' => $values->language]);
 	}
 
 }

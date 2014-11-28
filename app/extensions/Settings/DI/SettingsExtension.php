@@ -29,6 +29,10 @@ class SettingsExtension extends CompilerExtension
 				'passwords' => [
 					'length' => 8,
 				],
+				'languages' => [
+					'default' => 'en',
+					'allowed' => ['en' => 'English'],
+				],
 				'page' => [
 					'itemsPerPage' => 20,
 					'itemsPerRow' => 3,
@@ -67,6 +71,7 @@ class SettingsExtension extends CompilerExtension
 				->addSetup('setPageInfo', [$config['web']['page']])
 				->addSetup('setPageControls', [$config['web']['controls']['page']])
 				->addSetup('setExpiration', [$config['web']['controls']['expiration']])
+				->addSetup('setLanguages', [$config['web']['controls']['languages']])
 				->addSetup('setPasswordsPolicy', [$config['web']['controls']['passwords']])
 				->addSetup('setUserPreferences', [$config['user']['preferences']['page'], $config['user']['preferences']['design']]);
 	}

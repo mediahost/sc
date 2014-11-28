@@ -72,7 +72,7 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iPreferencesControlFactory->create();
 		$control->onAfterSave = function ($savedLanguage) {
 			$this->flashMessage('Your settings has been saved.', 'success');
-			$this->redirect('this#personal-settings', [ // TODO: toto nastavení se neudrží
+			$this->redirect('this#personal-settings', [
 				'lang' => $savedLanguage,
 			]);
 		};

@@ -15,6 +15,7 @@ use Nette\Utils\ArrayHash;
  * @property-read ArrayHash $pageInfo Getting page info like author and description
  * @property-read ArrayHash $pageControls Getting page controls like items per page
  * @property-read ArrayHash $expiration Expiration times
+ * @property-read ArrayHash $languages Languages settings
  * @property-read ArrayHash $passwordsPolicy Password policy
  * @property-read Entity\PageConfigSettings $userPageSettings Get user page config entity
  * @property-read Entity\PageConfigSettings $pageSettings Get user page config settings like language (default with user setted values)
@@ -27,6 +28,9 @@ class SettingsStorage extends Object
 
 	/** @var ArrayHash */
 	private $expiration;
+
+	/** @var ArrayHash */
+	private $languages;
 
 	/** @var ArrayHash */
 	private $passwordsPolicy;
@@ -103,6 +107,22 @@ class SettingsStorage extends Object
 	public function getExpiration()
 	{
 		return $this->expiration;
+	}
+
+	/**
+	 * Set languages settings
+	 * @param array $languages
+	 * @return self
+	 */
+	public function setLanguages(array $languages)
+	{
+		$this->languages = ArrayHash::from($languages);
+		return $this;
+	}
+
+	public function getLanguages()
+	{
+		return $this->languages;
 	}
 
 	/**

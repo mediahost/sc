@@ -2,8 +2,9 @@
 
 namespace App\Components;
 
-use Nette\Application\UI,
-	Nette\Localization\ITranslator;
+use App\Model\Storage\SettingsStorage;
+use Nette\Application\UI;
+use Nette\Localization\ITranslator;
 
 /**
  * BaseControl.
@@ -14,6 +15,9 @@ abstract class BaseControl extends UI\Control
 
 	const MIN_PASSWORD_CHARACTERS = 8;
 	const DEFAULT_TEMPLATE = 'default';
+
+	/** @var SettingsStorage @inject */
+	public $settings;
 
 	/** @var ITranslator @inject */
 	public $translator;

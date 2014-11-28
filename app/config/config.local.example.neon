@@ -52,6 +52,11 @@ settings:
 		controls:
 			expiration:
 				notRemember: 5 minutes
+			passwords:
+				length: 5
+			languages:
+				default: en
+				allowed: ['en' = 'English', 'cs' = 'Czech', 'sk' = 'Slovak']
 settings:
 	user:
 		preferences:
