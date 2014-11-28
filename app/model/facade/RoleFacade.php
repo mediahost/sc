@@ -3,19 +3,17 @@
 namespace App\Model\Facade;
 
 use App\Model\Entity\Role;
+use App\Model\Storage\SettingsStorage;
 use Kdyby\Doctrine\EntityDao;
 
 class RoleFacade extends BaseFacade
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+
+	/** @var SettingsStorage @inject */
+	public $settings;
 
 	/** @var EntityDao */
 	private $roles;
-
-	/** @var array */
-	private $registrable = [Role::ROLE_CANDIDATE, Role::ROLE_COMPANY]; // ToDo: Move to configuration.
-
-	// </editor-fold>
 
 	protected function init()
 	{
@@ -106,12 +104,15 @@ class RoleFacade extends BaseFacade
 	 * Check if role is allowed to register.
 	 * @param string $roleName
 	 */
-	public function isRegistratable($roleName)
+	public function isRegistrable($roleName)
 	{
-		$role = $this->findByName($roleName);
+		if ($this->settings->isAllowedModule('registrableRole')) {
+			$role = $this->findByName($roleName);
 
-		if ($role !== NULL && in_array($role->name, $this->registrable)) {
-			return $role;
+			$registrable = $this->settings->getModuleSettings('registrableRole')->roles;
+			if ($role !== NULL && is_array($registrable) && in_array($role->name, $registrable)) {
+				return $role;
+			}
 		}
 
 		return FALSE;

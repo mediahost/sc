@@ -43,10 +43,10 @@ settings:
 settings:
 	web:
 		modules: # default FALSE for all
-			dashboard: TRUE
+			registrableRole: TRUE # for definition whitch role is registrable in RoleFacade
 		modulesSettings:
-			dashboard:
-				onlyForIp: '127.0.0.1'
+			registrableRole:
+				roles: ['candidate', 'company'] # role names
 settings:
 	web:
 		controls:
