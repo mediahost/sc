@@ -7,7 +7,6 @@ use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
-use App\Model\Entity\UserSettings;
 use App\Model\Storage\SettingsStorage;
 use DateTime;
 use InvalidArgumentException;
@@ -53,8 +52,7 @@ class UserFacade extends BaseFacade
 			$user = new User;
 			$user->setMail($mail)
 					->setPassword($password)
-					->addRole($role)
-					->setSettings(new UserSettings());
+					->addRole($role);
 
 			return $this->userDao->save($user);
 		}
@@ -74,8 +72,7 @@ class UserFacade extends BaseFacade
 		$user->setMail($registration->mail)
 				->setHash($registration->hash)
 				->addRole($role)
-				->setRequiredRole($registration->role)
-				->setSettings(new UserSettings());
+				->setRequiredRole($registration->role);
 
 		if ($registration->facebookId) {
 			$user->facebook = (new Facebook)
@@ -119,7 +116,7 @@ class UserFacade extends BaseFacade
 
 		$registration->verificationToken = Random::generate(32);
 		$registration->verificationExpiration = new DateTime('now + ' . $this->settings->expiration->verification);
-		
+
 		$this->em->persist($registration);
 		$this->em->flush();
 
@@ -264,7 +261,6 @@ class UserFacade extends BaseFacade
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="delete">
-
 	// TODO: delete
 //	public function delete(User $user)
 //	{

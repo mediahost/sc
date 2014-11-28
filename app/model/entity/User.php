@@ -41,10 +41,6 @@ class User extends BaseEntity
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	protected $roles;
 
-	// TODO: delete
-	/** @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
-	protected $settings;
-
 	/** @ORM\OneToOne(targetEntity="PageConfigSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $pageConfigSettings;
 
@@ -98,17 +94,6 @@ class User extends BaseEntity
 	public function clearHash()
 	{
 		$this->hash = NULL;
-		return $this;
-	}
-
-	/**
-	 * @param UserSettings $settings
-	 * @return self
-	 */
-	public function setSettings(UserSettings $settings)
-	{
-		$settings->user = $this;
-		$this->settings = $settings;
 		return $this;
 	}
 
