@@ -81,7 +81,6 @@ class SignListener extends Object implements Subscriber
 	 */
 	public function onStartup(Control $control, User $user, $rememberMe = FALSE)
 	{
-		\Tracy\Debugger::barDump($rememberMe, 'onSuccess');
 		if ($user->id) {
 			$this->onSuccess($control->presenter, $user, $rememberMe);
 		} else {
