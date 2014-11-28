@@ -8,6 +8,8 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 /**
  * User's personal settings
  * @ORM\Entity
+ * 
+ * TODO: DELETE!!!
  */
 class UserSettings extends BaseEntity
 {

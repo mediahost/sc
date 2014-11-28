@@ -61,7 +61,7 @@ class SkillCategoryControl extends BaseControl
 	{
 		$entity = $this->load($values);
 		$entityDao = $this->em->getDao(SkillCategory::getClassName());
-		// TODO: Check on duplicity
+		// TODO: Check on duplicity in skill category table
 		$saved = $entityDao->save($entity);
 		$this->onAfterSave($saved);
 	}

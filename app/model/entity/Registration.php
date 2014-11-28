@@ -30,10 +30,6 @@ class Registration extends BaseEntity
 	/** @ORM\Column(type="string") */
 	protected $mail;
 
-	// todo: delete name
-	/** @ORM\Column(type="string", length=512, nullable=true) */
-	protected $name;
-
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $hash;
 

@@ -41,17 +41,14 @@ class User extends BaseEntity
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	protected $roles;
 
+	// TODO: delete
 	/** @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $settings;
 
-	/**
-	 * @ORM\OneToOne(targetEntity="PageConfigSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true)
-	 */
+	/** @ORM\OneToOne(targetEntity="PageConfigSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $pageConfigSettings;
 
-	/**
-	 * @ORM\OneToOne(targetEntity="PageDesignSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true)
-	 */
+	/** @ORM\OneToOne(targetEntity="PageDesignSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $pageDesignSettings;
 
 	/** @ORM\OneToOne(targetEntity="Facebook", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */

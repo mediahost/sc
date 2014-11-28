@@ -60,7 +60,7 @@ class SkillControl extends BaseControl
 	{
 		$entity = $this->load($values);
 		$entityDao = $this->em->getDao(Skill::getClassName());
-		// TODO: Check on duplicity
+		// TODO: Check on duplicity in skill table
 		$saved = $entityDao->save($entity);
 		$this->onAfterSave($saved);
 	}

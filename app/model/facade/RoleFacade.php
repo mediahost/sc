@@ -13,7 +13,7 @@ class RoleFacade extends BaseFacade
 	private $roles;
 
 	/** @var array */
-	private $registratable = [Role::ROLE_CANDIDATE, Role::ROLE_COMPANY]; // ToDo: Move to configuration.
+	private $registrable = [Role::ROLE_CANDIDATE, Role::ROLE_COMPANY]; // ToDo: Move to configuration.
 
 	// </editor-fold>
 
@@ -22,7 +22,7 @@ class RoleFacade extends BaseFacade
 		$this->roles = $this->em->getDao(Role::getClassName());
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="create">
+	// <editor-fold defaultstate="expanded" desc="create">
 
 	/**
 	 * Create role if is not exists.
@@ -40,7 +40,7 @@ class RoleFacade extends BaseFacade
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
+	// <editor-fold defaultstate="expanded" desc="getters">
 
 	/**
 	 * Get all roles
@@ -90,7 +90,7 @@ class RoleFacade extends BaseFacade
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="checkers">
+	// <editor-fold defaultstate="expanded" desc="checkers">
 
 	/**
 	 * Check if name is unique.
@@ -110,7 +110,7 @@ class RoleFacade extends BaseFacade
 	{
 		$role = $this->findByName($roleName);
 
-		if ($role !== NULL && in_array($role->name, $this->registratable)) {
+		if ($role !== NULL && in_array($role->name, $this->registrable)) {
 			return $role;
 		}
 
