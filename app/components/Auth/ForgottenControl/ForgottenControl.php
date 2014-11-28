@@ -12,9 +12,12 @@ use Nette\Utils\ArrayHash;
 
 class ForgottenControl extends BaseControl
 {
-
-	const REDIRECT_AFTER_SUCCESS = ':Front:Sign:in';
-	const REDIRECT_AFTER_FAIL = ':Front:Sign:lostPassword';
+	
+	/** @var array */
+	public $onSuccess = [];
+	
+	/** @var array */
+	public $onMissingUser = [];
 
 	/** @var UserFacade @inject */
 	public $userFacade;
@@ -44,10 +47,8 @@ class ForgottenControl extends BaseControl
 	{
 		$user = $this->userFacade->findByMail($values->mail);
 
-		// TODO: do it without $this->presenter; use events
 		if (!$user) {
-			$this->presenter->flashMessage('We do not register any user with this e-mail address!', 'warning');
-			$this->presenter->redirect(self::REDIRECT_AFTER_FAIL);
+			$this->onMissingUser($values->mail);
 		} else {
 			$user = $this->userFacade->setRecovery($user);
 
@@ -59,8 +60,7 @@ class ForgottenControl extends BaseControl
 			$message->setHtmlBody($template);
 			$this->mailer->send($message);
 
-			$this->presenter->flashMessage('Recovery link has been sent to your mail.');
-			$this->presenter->redirect(self::REDIRECT_AFTER_SUCCESS);
+			$this->onSuccess($user->mail);
 		}
 	}
 

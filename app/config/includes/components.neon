@@ -3,16 +3,17 @@
 
 services:
 	# Auth
-	IForgottenControlFactory:
-		implement: App\Components\Auth\IForgottenControlFactory
-		inject: yes
-
 	ISignOutControlFactory:
 		implement: App\Components\Auth\ISignOutControlFactory
 		inject: yes
 
 	IConnectManagerControlFactory:
 		implement: App\Components\Auth\IConnectManagerControlFactory
+		inject: yes
+
+	IForgottenControlFactory:
+		create: App\Components\Auth\ForgottenControl
+		implement: App\Components\Auth\IForgottenControlFactory
 		inject: yes
 
 	ISetPasswordControlFactory:

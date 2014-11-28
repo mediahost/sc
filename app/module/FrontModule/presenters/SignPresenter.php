@@ -6,6 +6,7 @@ use App\Components\Auth;
 use App\Model\Entity\Role;
 use App\Model\Facade;
 use App\Model\Storage;
+use App\TaggedString;
 
 class SignPresenter extends BasePresenter
 {
@@ -158,7 +159,17 @@ class SignPresenter extends BasePresenter
 	/** @return Auth\ForgottenControl */
 	protected function createComponentForgotten()
 	{
-		return $this->iForgottenControlFactory->create();
+		$control = $this->iForgottenControlFactory->create();
+		$control->onSuccess[] = function ($mail) {
+			$this->flashMessage('Recovery link has been sent to your mail.');
+			$this->redirect(':Front:Sign:in');	
+		};
+		$control->onMissingUser[] = function ($mail) {
+			$message = new TaggedString('We do not register any user with mail \'<%mail%>\'.', ['mail' => $mail]);
+			$this->flashMessage($message, 'warning');
+			$this->redirect(':Front:Sign:lostPassword');
+		};
+		return $control;
 	}
 
 	/** @return Auth\RecoveryControl */
