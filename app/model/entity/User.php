@@ -15,7 +15,8 @@ use Nette\Security\Passwords;
  * @property string $hash
  * @property-write $password
  * @property ArrayCollection $roles
- * @property UserSettings $settings
+ * @property PageConfigSettings $pageConfigSettings
+ * @property PageDesignSettings $pageDesignSettings
  * @property Facebook $facebook
  * @property Twitter $twitter
  * @property string $recoveryToken
@@ -24,6 +25,7 @@ use Nette\Security\Passwords;
  */
 class User extends BaseEntity
 {
+
 	const SOCIAL_CONNECTION_APP = 'app';
 	const SOCIAL_CONNECTION_FACEBOOK = 'facebook';
 	const SOCIAL_CONNECTION_TWITTER = 'twitter';
@@ -42,6 +44,16 @@ class User extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="UserSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $settings;
 
+	/**
+	 * @ORM\OneToOne(targetEntity="PageConfigSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true)
+	 */
+	protected $pageConfigSettings;
+
+	/**
+	 * @ORM\OneToOne(targetEntity="PageDesignSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true)
+	 */
+	protected $pageDesignSettings;
+
 	/** @ORM\OneToOne(targetEntity="Facebook", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $facebook;
 
@@ -58,7 +70,7 @@ class User extends BaseEntity
 	protected $recoveryExpiration;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
+	 * @ORM\ManyToOne(targetEntity="Role", fetch="LAZY")
 	 * @ORM\JoinColumn(name="required_role_id", referencedColumnName="id", nullable=true)
 	 */
 	protected $requiredRole;
@@ -81,7 +93,7 @@ class User extends BaseEntity
 		$this->hash = Passwords::hash($password, $options);
 		return $this;
 	}
-	
+
 	/**
 	 * Removes App login password
 	 * @return self
@@ -104,6 +116,28 @@ class User extends BaseEntity
 	}
 
 	/**
+	 * @param PageConfigSettings $settings
+	 * @return self
+	 */
+	public function setPageConfigSettings(PageConfigSettings $settings)
+	{
+		$settings->user = $this;
+		$this->pageConfigSettings = $settings;
+		return $this;
+	}
+
+	/**
+	 * @param PageDesignSettings $settings
+	 * @return self
+	 */
+	public function setPageDesignSettings(PageDesignSettings $settings)
+	{
+		$settings->user = $this;
+		$this->pageDesignSettings = $settings;
+		return $this;
+	}
+
+	/**
 	 * @param Facebook $facebook
 	 * @return self
 	 */
@@ -113,7 +147,7 @@ class User extends BaseEntity
 		$this->facebook = $facebook;
 		return $this;
 	}
-	
+
 	/**
 	 * Removes social auth
 	 * @return self
@@ -134,7 +168,7 @@ class User extends BaseEntity
 		$this->twitter = $twitter;
 		return $this;
 	}
-	
+
 	/**
 	 * Removes social auth
 	 * @return self
@@ -234,7 +268,7 @@ class User extends BaseEntity
 		}
 		return NULL;
 	}
-	
+
 	/**
 	 * Decides if asked connection is defined
 	 * TODO: TEST IT!
@@ -254,7 +288,7 @@ class User extends BaseEntity
 				return FALSE;
 		}
 	}
-	
+
 	/**
 	 * Get count of all connections
 	 * TODO: TEST IT!
@@ -278,8 +312,8 @@ class User extends BaseEntity
 		}
 		return $count;
 	}
-	
-	/** 
+
+	/**
 	 * Return array of roles ids
 	 * @return array 
 	 */
@@ -292,7 +326,7 @@ class User extends BaseEntity
 		return $array;
 	}
 
-	/** 
+	/**
 	 * Return array with roleID => roleName
 	 * @return array 
 	 */

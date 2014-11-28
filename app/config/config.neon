@@ -8,7 +8,6 @@ includes:
 	# Extensions
 	- extensions/authentication.neon
 	- extensions/doctrine.neon
-	- extensions/settings.neon
 	- extensions/webloader.neon
 
 	# Includes

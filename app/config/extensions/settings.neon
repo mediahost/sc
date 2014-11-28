@@ -1,7 +1,0 @@
-settings:
-	expiration:
-#		recovery: 30 minutes
-#		verification: 1 hour
-#		registration: 1 hour
-#		remember: 14 days
-#		notRemember: 30 minutes

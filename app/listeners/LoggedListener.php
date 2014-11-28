@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Model\Storage\UserSettingsStorage;
+use App\Model\Storage\GuestSettingsStorage;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
 use Nette\Security\User;
@@ -10,8 +10,8 @@ use Nette\Security\User;
 class LoggedListener extends Object implements Subscriber
 {
 
-	/** @var UserSettingsStorage @inject */
-	public $settingsStorage;
+	/** @var GuestSettingsStorage @inject */
+	public $guestStorage;
 
 	public function getSubscribedEvents()
 	{
@@ -24,11 +24,14 @@ class LoggedListener extends Object implements Subscriber
 
 	public function userLoggedIn(User $user)
 	{
-//		$this->settingsStorage->load($user->id);
+		$this->guestStorage
+				->save($user->id)
+				->wipe();
 	}
 
 	public function userLoggedOut(User $user)
 	{
-//		$this->settingsStorage->wipe();
+		
 	}
+
 }

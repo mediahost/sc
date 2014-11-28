@@ -22,9 +22,6 @@ class ConnectManagerControl extends BaseControl
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var Storage\UserSettingsStorage @inject */
-	public $settingsStorage;
-
 	/** @var IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
 

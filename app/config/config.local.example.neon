@@ -34,3 +34,30 @@ nette:
 #			- JanDrabek\MailPanel\MailPanel
 #services:
 #	nette.mailer: JanDrabek\MailPanel\SessionMailer
+
+settings:
+	web:
+		page: # default NULL for all
+			author: author
+			description: description
+settings:
+	web:
+		modules: # default FALSE for all
+			dashboard: TRUE
+		modulesSettings:
+			dashboard:
+				onlyForIp: '127.0.0.1'
+settings:
+	web:
+		controls:
+			expiration:
+				notRemember: 5 minutes
+settings:
+	user:
+		preferences:
+			page:
+				language: en
+			design:
+				color: default
+				pageHeaderFixed: TRUE
+				pageContainerBgSolid: TRUE

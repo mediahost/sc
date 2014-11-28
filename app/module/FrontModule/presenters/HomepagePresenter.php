@@ -11,12 +11,12 @@ use Tracy\Debugger as Debug;
 class HomepagePresenter extends BasePresenter
 {
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	// </editor-fold>
+	/** @var \App\Model\Storage\SettingsStorage @inject */
+	public $mySettings;
 
 	public function actionDefault()
 	{
-		
+		$usersSettings = $this->mySettings->getModuleSettings('users');
 	}
 
 	public function renderTest1()

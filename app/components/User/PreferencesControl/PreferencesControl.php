@@ -18,12 +18,6 @@ class PreferencesControl extends BaseControl
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var UserSettingsStorage @inject */
-	public $settingsStorage;
-	
-	// </editor-fold>
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -46,12 +40,12 @@ class PreferencesControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		$this->settingsStorage
-				->setLanguage($values->language)
-				->save();
-
-		$savedLanguage = $this->settingsStorage->language;
-		$this->onAfterSave($savedLanguage);
+//		$this->settingsStorage
+//				->setLanguage($values->language)
+//				->save();
+//
+//		$savedLanguage = $this->settingsStorage->language;
+//		$this->onAfterSave($savedLanguage);
 	}
 
 	/**
@@ -60,9 +54,9 @@ class PreferencesControl extends BaseControl
 	 */
 	private function getDefaults()
 	{
-		$values = [
-			'language' => $this->settingsStorage->language,
-		];
+//		$values = [
+//			'language' => $this->settingsStorage->language,
+//		];
 		return $values;
 	}
 

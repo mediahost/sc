@@ -6,7 +6,8 @@ use App\Components\Auth\ISignOutControlFactory;
 use App\Components\Auth\SignOutControl;
 use App\Model\Entity;
 use App\Model\Facade\UserFacade;
-use App\Model\Storage\UserSettingsStorage;
+use App\Model\Storage\GuestSettingsStorage;
+use App\Model\Storage\SettingsStorage;
 use App\TaggedString;
 use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
@@ -25,7 +26,7 @@ abstract class BasePresenter extends Presenter
 	// <editor-fold defaultstate="expanded" desc="constants & variables">
 
 	/** @persistent string */
-	public $lang = 'en';
+	public $lang;
 
 	/** @persistent */
 	public $backlink = '';
@@ -39,8 +40,11 @@ abstract class BasePresenter extends Presenter
 	/** @var Gettext @inject */
 	public $translator;
 
-	/** @var UserSettingsStorage @inject */
+	/** @var SettingsStorage @inject */
 	public $settingsStorage;
+
+	/** @var GuestSettingsStorage @inject */
+	public $guestStorage;
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -53,6 +57,7 @@ abstract class BasePresenter extends Presenter
 	protected function startup()
 	{
 		parent::startup();
+		$this->loadSettings();
 		$this->setLang();
 	}
 
@@ -60,7 +65,7 @@ abstract class BasePresenter extends Presenter
 	{
 		$this->template->lang = $this->lang;
 		$this->template->setTranslator($this->translator);
-		$this->template->designSettings = new Entity\PageDesignSettings();
+		$this->template->designSettings = $this->settingsStorage->designSettings;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="flash messages">
@@ -106,16 +111,32 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="settings">
+
+	protected function loadSettings()
+	{
+		if ($this->user->loggedIn && $this->user->id) {
+			$userDao = $this->em->getDao(Entity\User::getClassName());
+			$userEntity = $userDao->find($this->user->id);
+			$this->settingsStorage->userPageSettings = $userEntity->pageConfigSettings;
+			$this->settingsStorage->userDesignSettings = $userEntity->pageDesignSettings;
+		} else {
+			$this->settingsStorage->userPageSettings = $this->guestStorage->pageSettings;
+			$this->settingsStorage->userDesignSettings = $this->guestStorage->designSettings;
+		}
+	}
+
+	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="language">
 	private function setLang()
 	{
-		// Update settings when changes
-		if ($this->lang !== $this->settingsStorage->language) {
-			$this->settingsStorage
-					->setLanguage($this->lang)
-					->save();
+		if (!$this->lang) {
+			$this->lang = $this->settingsStorage->pageSettings->language;
 		}
-
+		if ($this->lang !== $this->settingsStorage->pageSettings->language) {
+			$this->settingsStorage->userPageSettings->language = $this->lang;
+			$this->settingsStorage->save($this->user);
+		}
 		$this->translator->setLang($this->lang);
 	}
 
