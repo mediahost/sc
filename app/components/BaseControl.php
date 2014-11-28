@@ -12,8 +12,7 @@ use Nette\Localization\ITranslator;
  */
 abstract class BaseControl extends UI\Control
 {
-
-	const MIN_PASSWORD_CHARACTERS = 8;
+	
 	const DEFAULT_TEMPLATE = 'default';
 
 	/** @var SettingsStorage @inject */

@@ -7,11 +7,17 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
-use Nette\Security\Identity;
+use App\TaggedString;
 use Nette\Utils\ArrayHash;
 
 class RecoveryControl extends BaseControl
 {
+
+	/** @var array */
+	public $onFailToken = [];
+	
+	/** @var array */
+	public $onSuccess = [];
 
 	/** @var UserFacade @inject */
 	public $userFacade;
@@ -26,10 +32,13 @@ class RecoveryControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
+		$helpText = new TaggedString('At least <%number%> characters long.', ['number' => $this->settings->passwordsPolicy->length]);
+		$helpText->setTranslator($this->translator);
 		$form->addPassword('newPassword', 'New password', NULL, 255)
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', self::MIN_PASSWORD_CHARACTERS);
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwordsPolicy->length)
+				->setOption('description', (string) $helpText);
 
 		$form->addPassword('passwordAgain', 'Re-type Your Password', NULL, 255)
 				->setAttribute('placeholder', 'Re-type Your Password')
@@ -49,14 +58,7 @@ class RecoveryControl extends BaseControl
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		$user = $this->userFacade->recoveryPassword($this->user, $values->newPassword);
-
-		// TODO: do it without $this->presenter; do by method setUser(\Nette\Security)
-		$identityUser = $this->presenter->user;
-		$identityUser->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
-
-		// TODO: do it without $this->presenter; use events
-		$this->presenter->flashMessage('Your password has been successfully changed!', 'success');
-		$this->presenter->redirect(':App:Dashboard:');
+		$this->onSuccess($this->presenter, $user);
 	}
 
 	/**
@@ -66,9 +68,7 @@ class RecoveryControl extends BaseControl
 	public function setToken($token)
 	{
 		if (!$this->user = $this->userFacade->findByRecoveryToken($token)) {
-			// TODO: do it without $this->presenter; use events
-			$this->presenter->flashMessage('Token to recovery your password is no longer active. Please request new one.', 'info');
-			$this->presenter->redirect(':Front:Sign:lostPassword');
+			$this->onFailToken($this, $token);
 		}
 	}
 

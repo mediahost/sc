@@ -9,11 +9,34 @@ use Nette\Security;
 use Nette\Utils\ArrayHash;
 
 /**
+ * SettingsStorage 
+ * 
+ * USING:
+ * - Get min password length:
+ * $minLength = $this->passwordsPolicy->length;
+ * 
+ * - Get allowed languages
+ * $this->languages->allowed
+ * 
+ * - Controls
+ * $expirationSettings = $this->expiration;
+ * $languagesSettings = $this->languages;
+ * $pageInfo = $this->pageInfo;
+ * $pageControls = $this->page;
+ * 
+ * - Save language to user profile
+ * $this->userPageSettings->language = $lang;
+ * $this->save($presenter->user);
+ * 
+ * - Load user setting from user entity
+ * $this->userPageSettings = $userEntity->pageConfigSettings;
+ * $this->userDesignSettings = $userEntity->pageDesignSettings;
+ * 
  * @author Martin Šifra <me@martinsifra.cz>
  * @author Petr Poupě <petr.poupe@gmail.com>
  * 
  * @property-read ArrayHash $pageInfo Getting page info like author and description
- * @property-read ArrayHash $pageControls Getting page controls like items per page
+ * @property-read ArrayHash $page Getting page controls like items per page
  * @property-read ArrayHash $expiration Expiration times
  * @property-read ArrayHash $languages Languages settings
  * @property-read ArrayHash $passwordsPolicy Password policy
@@ -155,6 +178,12 @@ class SettingsStorage extends Object
 	public function getPageControls()
 	{
 		return $this->pageControls;
+	}
+
+	/** Alias for getPageControls */
+	public function getPage()
+	{
+		return $this->getPageControls();
 	}
 
 	/**

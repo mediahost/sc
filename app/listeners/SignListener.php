@@ -66,6 +66,7 @@ class SignListener extends Object implements Subscriber
 			'App\Components\Auth\TwitterControl::onSuccess' => 'onStartup',
 			'App\Components\Auth\RequiredControl::onSuccess' => 'onRequiredSuccess',
 			'App\Components\Auth\SignInControl::onSuccess' => 'onSuccess',
+			'App\Components\Auth\RecoveryControl::onSuccess' => 'onRecovery',
 			'App\FrontModule\Presenters\SignPresenter::onVerify' => 'onCreate',
 		);
 	}
@@ -150,6 +151,17 @@ class SignListener extends Object implements Subscriber
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
 		}
+	}
+
+	/**
+	 * After recovery password
+	 * @param Presenter $presenter
+	 * @param User $user
+	 */
+	public function onRecovery(Presenter $presenter, User $user)
+	{
+		$this->flashMessage('Your password has been successfully changed!', 'success');
+		$this->onSuccess($presenter, $user);
 	}
 
 	/**

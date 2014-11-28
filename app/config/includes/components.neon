@@ -7,10 +7,6 @@ services:
 		implement: App\Components\Auth\IForgottenControlFactory
 		inject: yes
 
-	IRecoveryControlFactory:
-		implement: App\Components\Auth\IRecoveryControlFactory
-		inject: yes
-
 	ISetPasswordControlFactory:
 		implement: App\Components\Auth\ISetPasswordControlFactory
 		inject: yes
@@ -21,6 +17,11 @@ services:
 
 	IConnectManagerControlFactory:
 		implement: App\Components\Auth\IConnectManagerControlFactory
+		inject: yes
+
+	IRecoveryControlFactory:
+		create: App\Components\Auth\RecoveryControl
+		implement: App\Components\Auth\IRecoveryControlFactory
 		inject: yes
 
 	IFacebookControlFactory:

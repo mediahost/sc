@@ -7,6 +7,7 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
+use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
@@ -33,10 +34,13 @@ class SetPasswordControl extends BaseControl
 				->setEmptyValue($user->mail)
 				->setDisabled();
 
+		$helpText = new TaggedString('At least <%number%> characters long.', ['number' => $this->settings->passwordsPolicy->length]);
+		$helpText->setTranslator($this->translator);
 		$form->addPassword('newPassword', 'New password', NULL, 255)
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', self::MIN_PASSWORD_CHARACTERS);
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwordsPolicy->length)
+				->setOption('description', (string) $helpText);
 
 		$form->addPassword('passwordAgain', 'Re-type Your Password', NULL, 255)
 				->setAttribute('placeholder', 'Re-type Your Password')

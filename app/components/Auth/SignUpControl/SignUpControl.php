@@ -39,10 +39,13 @@ class SignUpControl extends BaseControl
 				->setRequired('Please enter your e-mail.')
 				->addRule(Form::EMAIL, 'E-mail has not valid format.');
 
+		$helpText = new TaggedString('At least <%number%> characters long.', ['number' => $this->settings->passwordsPolicy->length]);
+		$helpText->setTranslator($this->translator);
 		$form->addPassword('password', 'Password')
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', self::MIN_PASSWORD_CHARACTERS);
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwordsPolicy->length)
+				->setOption('description', (string) $helpText);
 
 		$form->addPassword('passwordVerify', 'Re-type Your Password')
 				->setAttribute('placeholder', 'Re-type Your Password')

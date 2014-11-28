@@ -164,7 +164,12 @@ class SignPresenter extends BasePresenter
 	/** @return Auth\RecoveryControl */
 	protected function createComponentRecovery()
 	{
-		return $this->iRecoveryControlFactory->create();
+		$control = $this->iRecoveryControlFactory->create();
+		$control->onFailToken[] = function () {
+			$this->flashMessage('Token to recovery your password is no longer active. Please request new one.', 'info');
+			$this->redirect(':Front:Sign:lostPassword');
+		};
+		return $control;
 	}
 
 	/** @return Auth\RequiredControl */
