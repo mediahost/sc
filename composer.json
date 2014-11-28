@@ -50,11 +50,11 @@
 		"zeleznypa/nette-button-macros": "dev-master",
 		"kdyby/facebook": "~1.1",
 		"jandrabek/nette-mailpanel": "dev-master",
-		"sodae/netrium-addons-twitter": "dev-nette-compatibility-22-dev"
+		"sodae/netrium-addons-twitter": "dev-nette-compatibility-22-dev",
+		"nextras/forms": "~1.4"
 	},
 	"require-dev": {
-		"nette/tester": "~1.2.0",
-		"nette/code-checker": "dev-master"
+		"nette/tester": "~1.2.0"
 	},
 	"minimum-stability": "stable"
 }

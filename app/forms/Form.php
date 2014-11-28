@@ -10,6 +10,7 @@ use App\Forms\Controls\Custom\DatePicker;
 use App\Forms\Controls\SelectBased\MultiSelect2;
 use App\Forms\Controls\SelectBased\Select2;
 use App\Forms\Controls\TextAreaBased\WysiHtml;
+use App\Forms\Controls\TextInputBased\ServerValidatedTextInput;
 use App\Forms\Controls\TextInputBased\Spinner;
 use App\Forms\Controls\TextInputBased\TagInput;
 use App\Forms\Controls\TextInputBased\TouchSpin;
@@ -25,7 +26,16 @@ class Form extends BaseForm
 	// <editor-fold defaultstate="expanded" desc="Special controls">
 
 	/**
-	 *
+	 * Adds text Input with server validation
+	 * @return ServerValidatedTextInput
+	 */
+	public function addServerValidatedText($name, $label = NULL, $maxLength = NULL)
+	{
+		return $this[$name] = new ServerValidatedTextInput($label, $maxLength);
+	}
+
+	/**
+	 * Add DateInput
 	 * @param type $name
 	 * @param type $caption
 	 * @return DateInput
@@ -36,7 +46,7 @@ class Form extends BaseForm
 	}
 
 	/**
-	 *
+	 * Add TagInput
 	 * @param type $name
 	 * @param type $caption
 	 * @return TagInput
@@ -47,7 +57,7 @@ class Form extends BaseForm
 	}
 
 	/**
-	 *
+	 * Add DatePicker
 	 * @param type $name
 	 * @param type $caption
 	 * @return DatePicker
@@ -58,7 +68,7 @@ class Form extends BaseForm
 	}
 
 	/**
-	 *
+	 * Add WysiHtml
 	 * @param type $name
 	 * @param type $caption
 	 * @param type $rows
@@ -70,7 +80,7 @@ class Form extends BaseForm
 	}
 
 	/**
-	 *
+	 * Add CheckSwitch
 	 * @param type $name
 	 * @param type $caption
 	 * @param type $onText
@@ -83,7 +93,7 @@ class Form extends BaseForm
 	}
 
 	/**
-	 *
+	 * Add TouchSpin
 	 * @param type $name
 	 * @param type $caption
 	 * @return TouchSpin
@@ -94,7 +104,7 @@ class Form extends BaseForm
 	}
 
 	/**
-	 *
+	 * Add Spinner
 	 * @param type $name
 	 * @param type $caption
 	 * @return Spinner
@@ -105,7 +115,7 @@ class Form extends BaseForm
 	}
 
 	/**
-	 *
+	 * Add Select2
 	 * @param type $name
 	 * @param type $label
 	 * @return Select2
@@ -116,7 +126,7 @@ class Form extends BaseForm
 	}
 
 	/**
-	 *
+	 * Add MultiSelect2
 	 * @param type $name
 	 * @param type $label
 	 * @return MultiSelect2

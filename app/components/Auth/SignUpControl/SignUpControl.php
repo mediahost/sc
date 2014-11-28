@@ -10,6 +10,7 @@ use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
 use App\TaggedString;
+use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 
 class SignUpControl extends BaseControl
@@ -45,11 +46,13 @@ class SignUpControl extends BaseControl
 		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
-
-		$form->addText('mail', 'E-mail')
-				->setAttribute('placeholder', 'E-mail')
+		
+		$form->addServerValidatedText('mail', 'E-mail')
 				->setRequired('Please enter your e-mail.')
-				->addRule(Form::EMAIL, 'E-mail has not valid format.');
+				->setAttribute('placeholder', 'E-mail')
+				->addRule(Form::EMAIL, 'E-mail has not valid format.')
+				->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'))
+				->setOption('description', 'for example: example@domain.com');
 
 		$helpText = new TaggedString('At least %d characters long.', $this->settings->passwordsPolicy->length);
 		$helpText->setTranslator($this->translator);
@@ -66,19 +69,13 @@ class SignUpControl extends BaseControl
 
 		$form->addSubmit('continue', 'Continue');
 
-		$form->onSubmit[] = $this->formSubmit;
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
-
-	public function formSubmit(Form $form)
+	
+	public function validateMail(IControl $control, $arg = NULL)
 	{
-		$values = $form->getValues();
-		if (!$this->userFacade->isUnique($values->mail)) {
-			$message = new TaggedString('%s is already registered.', $values->mail);
-			$message->setTranslator($this->translator);
-			$form['mail']->addError((string) $message);
-		}
+		return $this->userFacade->isUnique($control->getValue());
 	}
 
 	/**
