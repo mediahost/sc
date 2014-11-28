@@ -8,6 +8,7 @@ services:
 		inject: yes
 
 	IConnectManagerControlFactory:
+		create: App\Components\Auth\ConnectManagerControl
 		implement: App\Components\Auth\IConnectManagerControlFactory
 		inject: yes
 

@@ -8,6 +8,7 @@ use App\Components\Auth\ISetPasswordControlFactory;
 use App\Components\Auth\SetPasswordControl;
 use App\Components\User\IPreferencesControlFactory;
 use App\Components\User\PreferencesControl;
+use App\Model\Entity;
 use App\Model\Facade\UserFacade;
 
 class ProfilePresenter extends BasePresenter
@@ -90,6 +91,27 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iConnectManagerControlFactory->create();
 		$control->setUser($this->userFacade->find($this->user->id));
+		$control->setAppActivateRedirect($this->link('this#set-password'));
+		$control->onSuccess[] = function (Entity\User $user, $type) {
+			$message = new \App\TaggedString('%s was disconnected.', $type);
+			$this->flashMessage($message, 'success');
+			if (!$this->isAjax()) {
+				$this->redirect('this#connect-manager');
+			}
+		};
+		$control->onLastConnection[] = function () {
+			$this->flashMessage('Last login method is not possible deactivate.', 'warning');
+			if (!$this->isAjax()) {
+				$this->redirect('this#connect-manager');
+			}
+		};
+		$control->onInvalidType[] = function ($type) {
+			$message = new \App\TaggedString('We can\'t find \'%s\' to disconnect.', $type);
+			$this->flashMessage($message, 'error');
+			if (!$this->isAjax()) {
+				$this->redirect('this#connect-manager');
+			}
+		};
 		return $control;
 	}
 

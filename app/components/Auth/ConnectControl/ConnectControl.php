@@ -6,18 +6,27 @@ use App\Components\BaseControl;
 use App\Model\Entity\Facebook;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
-use App\Model\Storage;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
 /**
- * TODO: Check independency on presenter
+ * ConnectManagerControl
  */
 class ConnectManagerControl extends BaseControl
 {
+	// <editor-fold defaultstate="expanded" desc="events">
 
-	const REDIRECT_THIS = 'this#connect-manager';
-	const REDIRECT_APP_ACTIVATE = 'this#set-password';
+	/** @var array */
+	public $onSuccess = [];
+
+	/** @var array */
+	public $onLastConnection = [];
+
+	/** @var array */
+	public $onInvalidType = [];
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -28,8 +37,13 @@ class ConnectManagerControl extends BaseControl
 	/** @var ITwitterControlFactory @inject */
 	public $iTwitterControlFactory;
 
+	// </editor-fold>
+
 	/** @var User */
 	private $user;
+
+	/** @var string */
+	private $redirectAppActivate;
 
 	/**
 	 * Set user to manage
@@ -39,6 +53,21 @@ class ConnectManagerControl extends BaseControl
 	public function setUser(User $user)
 	{
 		$this->user = $user;
+		return $this;
+	}
+
+	/**
+	 * Set destination to redirect to activate app account
+	 * @param string $link put result of $this->link()
+	 * @param bool $relative if TRUE then link will be transformed to link
+	 * @return self
+	 */
+	public function setAppActivateRedirect($link, $relative = FALSE)
+	{
+		if ($relative) {
+			$link = $this->link($link);
+		}
+		$this->redirectAppActivate = $link;
 		return $this;
 	}
 
@@ -58,7 +87,7 @@ class ConnectManagerControl extends BaseControl
 		$appConnection->active = $this->user->hasSocialConnection(User::SOCIAL_CONNECTION_APP);
 		$appConnection->link = $appConnection->active ?
 				$this->link('deactivate!', User::SOCIAL_CONNECTION_APP) :
-				$this->link(self::REDIRECT_APP_ACTIVATE);
+				$this->redirectAppActivate ? $this->link($this->redirectAppActivate) : '#';
 
 		$fbConnection = clone $initConnection;
 		$fbConnection->name = $this->translator->translate('Facebook');
@@ -89,13 +118,13 @@ class ConnectManagerControl extends BaseControl
 	public function handleDeactivate($type)
 	{
 		if ($this->user->connectionCount <= 1) {
-			$this->presenter->flashMessage('Last login method is not possible deactivate.', 'warning');
-			$this->endHandle(self::REDIRECT_THIS);
+			$this->onLastConnection();
+			$this->redrawControl();
 		}
-		
+
 		$userDao = $this->em->getDao(User::getClassName());
 		$user = $userDao->find($this->user->id);
-		
+
 		$disconected = NULL;
 		switch ($type) {
 			case User::SOCIAL_CONNECTION_APP:
@@ -113,18 +142,11 @@ class ConnectManagerControl extends BaseControl
 		}
 		if ($disconected) {
 			$userDao->save($user);
-			$this->presenter->flashMessage($disconected .' was disconnect', 'success');
-		}
-		$this->endHandle(self::REDIRECT_THIS);
-	}
-
-	private function endHandle($code)
-	{
-		if ($this->presenter->isAjax()) {
-			$this->redrawControl();
+			$this->onSuccess($user, $disconected);
 		} else {
-			$this->redirect($code);
+			$this->onInvalidType($type);
 		}
+		$this->redrawControl();
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="controls">
