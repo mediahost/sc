@@ -91,11 +91,11 @@ class SignUpStorage extends Object
 	{
 		if ($forEntity) {
 			switch ($this->section->role) {
-				case Role::ROLE_CANDIDATE:
-				case Role::ROLE_COMPANY:
+				case Role::CANDIDATE:
+				case Role::COMPANY:
 					break;
 				default:
-					return Role::ROLE_CANDIDATE;
+					return Role::CANDIDATE;
 			}
 		}
 		return $this->section->role;

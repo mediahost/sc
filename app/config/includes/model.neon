@@ -3,14 +3,10 @@ services:
 	annotations: Kdyby\Annotations\DI\AnnotationsExtension
 
 	# DAOs
-	roleDao: @doctrine.dao(App\Model\Entity\Role)
-	userDao: @doctrine.dao(App\Model\Entity\User)
-	skillCategoryDao: @doctrine.dao(App\Model\Entity\SkillCategory)
-	skillDao: @doctrine.dao(App\Model\Entity\Skill)
 
 	# Facades
-	- {class: App\Model\Facade\RoleFacade(@roleDao), inject: yes}
-	- {class: App\Model\Facade\UserFacade(@userDao), inject: yes}
+	- {class: App\Model\Facade\RoleFacade, inject: yes}
+	- {class: App\Model\Facade\UserFacade, inject: yes}
 
 	# Storages
 	- {class: App\Model\Storage\SignUpStorage, inject: yes}

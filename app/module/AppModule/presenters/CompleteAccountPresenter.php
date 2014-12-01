@@ -19,8 +19,8 @@ class CompleteAccountPresenter extends BasePresenter
 	protected function startup()
 	{
 		parent::startup();
-		if (!$this->user->isInRole(Role::ROLE_SIGNED) ||
-				($this->user->isInRole(Role::ROLE_SIGNED) && count($this->user->roles) !== 1)) {
+		if (!$this->user->isInRole(Role::SIGNED) ||
+				($this->user->isInRole(Role::SIGNED) && count($this->user->roles) !== 1)) {
 			$this->flashMessage('Your registration is already complete.', 'info');
 			$this->redirect('Dashboard:');
 		}

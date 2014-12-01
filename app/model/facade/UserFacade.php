@@ -11,16 +11,24 @@ use App\Model\Storage\SettingsStorage;
 use DateTime;
 use InvalidArgumentException;
 use Kdyby\Doctrine\EntityDao;
+use Kdyby\Doctrine\EntityManager;
+use Nette\Object;
 use Nette\Utils\Random;
 
 /**
- * TODO: TEST IT!!!
+ * UserFacade
  */
-class UserFacade extends BaseFacade
+class UserFacade extends Object
 {
+
+	/** @var EntityManager @inject */
+	public $em;
 
 	/** @var SettingsStorage @inject */
 	public $settings;
+
+	/** @var EntityDao */
+	private $userDao;
 
 	/** @var EntityDao */
 	private $roleDao;
@@ -28,14 +36,13 @@ class UserFacade extends BaseFacade
 	/** @var EntityDao */
 	private $registrationDao;
 
-	/** @var EntityDao */
-	private $userDao;
-
-	protected function init()
+	public function __construct(EntityManager $em, SettingsStorage $settings)
 	{
-		$this->registrationDao = $this->em->getDao(Registration::getClassName());
-		$this->roleDao = $this->em->getDao(Role::getClassName());
+		$this->settings = $settings;
+		$this->em = $em;
 		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->roleDao = $this->em->getDao(Role::getClassName());
+		$this->registrationDao = $this->em->getDao(Registration::getClassName());
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="create">
@@ -56,7 +63,6 @@ class UserFacade extends BaseFacade
 
 			return $this->userDao->save($user);
 		}
-
 		return NULL;
 	}
 
@@ -75,14 +81,12 @@ class UserFacade extends BaseFacade
 				->setRequiredRole($registration->role);
 
 		if ($registration->facebookId) {
-			$user->facebook = (new Facebook)
-					->setId($registration->facebookId)
-					->setAccessToken($registration->facebookAccessToken);
+			$user->facebook = new Facebook($registration->facebookId);
+			$user->facebook->setAccessToken($registration->facebookAccessToken);
 		}
 		if ($registration->twitterId) {
-			$user->twitter = (new Twitter)
-					->setId($registration->twitterId)
-					->setAccessToken($registration->twitterAccessToken);
+			$user->twitter = new Twitter($registration->twitterId);
+			$user->twitter->setAccessToken($registration->twitterAccessToken);
 		}
 
 		$this->registrationDao->delete($registration);
@@ -246,14 +250,12 @@ class UserFacade extends BaseFacade
 	 */
 	public function addRole(User $user, $role)
 	{
-		if (!($user instanceof Role)) {
-			if (is_string($role)) {
-				$role = $this->roleDao->findOneBy(['name' => $role]);
-			} elseif (is_array($role)) {
-				$role = $this->roleDao->findBy(['name' => $role]);
-			} else {
-				throw new InvalidArgumentException;
-			}
+		if (is_string($role)) {
+			$role = $this->roleDao->findOneBy(['name' => $role]);
+		} elseif (is_array($role)) {
+			$role = $this->roleDao->findBy(['name' => $role]);
+		} else {
+			throw new InvalidArgumentException;
 		}
 
 		return $user->addRole($role);
@@ -261,13 +263,6 @@ class UserFacade extends BaseFacade
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="delete">
-	// TODO: delete
-//	public function delete(User $user)
-//	{
-//		$user->clearRoles();
-//		$this->userDao->save($user); // ToDo: Do all in one row.
-//		return $this->userDao->delete($user);
-//	}
 
 	/**
 	 * Delete user by id

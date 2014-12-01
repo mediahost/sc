@@ -26,6 +26,7 @@ use Nette\Security\Passwords;
  * @property DateTime $recoveryExpiration
  * @property Role $requiredRole
  * @method self setMail(string $mail)
+ * @method self setRequiredRole(Role $role)
  */
 class User extends BaseEntity
 {

@@ -65,7 +65,7 @@ class UserControl extends BaseControl
 		$role = $form->addMultiSelect2('roles', 'Roles', $this->getRoles())
 				->setRequired('Select any role');
 
-		$defaultRole = $this->roleFacade->findByName(Role::ROLE_CANDIDATE);
+		$defaultRole = $this->roleFacade->findByName(Role::CANDIDATE);
 		if ($defaultRole && in_array($defaultRole->getId(), $this->getRoles())) {
 			$role->setDefaultValue($defaultRole->getId());
 		}

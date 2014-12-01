@@ -4,9 +4,7 @@ namespace Test\Model\Facade;
 
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use Nette\DI\Container;
 use Test\ParentTestCase;
-use Tester\Environment;
 
 /**
  * Parent of facades' tests
@@ -19,11 +17,6 @@ abstract class BaseFacade extends ParentTestCase
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-
-	public function __construct(Container $container)
-	{
-		parent::__construct($container);
-	}
 
 	public function setUp()
 	{

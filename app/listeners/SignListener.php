@@ -130,7 +130,7 @@ class SignListener extends Object implements Subscriber
 	private function verify(Control $control, User $user)
 	{
 		if ($this->session->isVerified()) { // verifikovaná metoda
-			$signedRole = $this->roleFacade->findByName(Role::ROLE_SIGNED);
+			$signedRole = $this->roleFacade->findByName(Role::SIGNED);
 			$user->addRole($signedRole);
 			$savedUser = $this->em->getDao(User::getClassName())->save($user);
 			$this->onCreate($control->presenter, $savedUser);

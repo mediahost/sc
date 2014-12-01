@@ -13,6 +13,7 @@ use Nette\Security\Passwords;
  * @property string $mail
  * @property string $name
  * @property string $hash
+ * @property string $password
  * @property Role $role
  * @property string $facebookId
  * @property string $facebookAccessToken

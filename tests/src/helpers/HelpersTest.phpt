@@ -64,26 +64,6 @@ class HelpersTest extends TestCase
 		Assert::same(NULL, Helpers::mkDir(''));
 	}
 
-	public function testReplaceMyTag()
-	{
-		$toReplace1 = 'test <%word1%> test <%word2%> test';
-		$replacements1 =  ['word1' => 'test1', 'word2' => 'test2'];
-		Assert::same('test test1 test test2 test', Helpers::replaceMyTag($toReplace1, $replacements1));
-		
-		$replacements2 =  [];
-		Assert::same($toReplace1, Helpers::replaceMyTag($toReplace1, $replacements2));
-		
-		$replacements3 =  ['word1' => 'test1'];
-		Assert::same('test test1 test <%word2%> test', Helpers::replaceMyTag($toReplace1, $replacements3));
-		
-		$replacements4 =  ['word2' => 'test2'];
-		Assert::same('test <%word1%> test test2 test', Helpers::replaceMyTag($toReplace1, $replacements4));
-		
-		$toReplace2 = 'test word1 test word2 test';
-		Assert::same($toReplace2, Helpers::replaceMyTag($toReplace2, $replacements1));
-		
-	}
-
 }
 
 $test = new HelpersTest();

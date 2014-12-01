@@ -23,53 +23,80 @@ class RoleFacadeTest extends BaseFacade
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
-	public function setUp()
-	{
-		parent::setUp();
-		$this->roleFacade->create(Role::ROLE_CANDIDATE);
-	}
-
 	// <editor-fold defaultstate="expanded" desc="tests">
 
-	public function testGetRoles()
+	public function testRoles()
 	{
-		$this->roleFacade->create('role1');
-		$this->roleFacade->create('role2');
+		$this->checkCreate();
+		$this->checkIsUnique();
+		$this->checkGetRoles();
+		$this->checkFinds();
+		$this->checkIsRegistrable();
+	}
 
+	private function checkCreate()
+	{
+		$role = $this->roleFacade->create(Role::GUEST);
+		Assert::type(Role::getClassName(), $role);
+		Assert::same(Role::GUEST, $role->name);
+		Assert::null($this->roleFacade->create(Role::GUEST));
+
+		$this->roleFacade->create(Role::SIGNED);
+		$this->roleFacade->create(Role::CANDIDATE);
+		$this->roleFacade->create(Role::COMPANY);
+		$this->roleFacade->create(Role::ADMIN);
+		$this->roleFacade->create(Role::SUPERADMIN);
+	}
+
+	private function checkIsUnique()
+	{
+		Assert::false($this->roleFacade->isUnique(Role::CANDIDATE));
+		Assert::true($this->roleFacade->isUnique('undefined role'));
+	}
+
+	private function checkGetRoles()
+	{
 		$roles = $this->roleFacade->getRoles();
 		Assert::type('array', $roles);
-		Assert::same($roles[1], Role::ROLE_CANDIDATE);
-		Assert::same($roles[2], 'role1');
-		Assert::same($roles[3], 'role2');
+		Assert::count(6, $roles);
+		Assert::same($roles[1], Role::GUEST);
+		Assert::same($roles[2], Role::SIGNED);
+		Assert::same($roles[3], Role::CANDIDATE);
+		Assert::same($roles[4], Role::COMPANY);
+		Assert::same($roles[5], Role::ADMIN);
+		Assert::same($roles[6], Role::SUPERADMIN);
 	}
 
-	public function testFindByName()
+	private function checkFinds()
 	{
-		$role = $this->roleDao->findOneBy(['name' => Role::ROLE_CANDIDATE]);
-		Assert::same(Role::ROLE_CANDIDATE, $role->name);
+		$role = $this->roleFacade->findByName(Role::CANDIDATE);
+		Assert::same(Role::CANDIDATE, $role->name);
+
+		$roles = [Role::CANDIDATE, Role::COMPANY, Role::ADMIN];
+		$lowers = [1 => Role::GUEST, Role::SIGNED, Role::CANDIDATE, Role::COMPANY];
+		Assert::same($lowers, $this->roleFacade->findLowerRoles($roles));
+		$lowers[] = Role::ADMIN;
+		Assert::same($lowers, $this->roleFacade->findLowerRoles($roles, TRUE));
 	}
 
-	public function testIsUnique()
+	public function checkIsRegistrable()
 	{
-		Assert::false($this->roleFacade->isUnique(Role::ROLE_CANDIDATE));
-		Assert::true($this->roleFacade->isUnique('galactic_emperor'));
-	}
+		$modules = ['registrableRole' => TRUE];
+		$settings = ['registrableRole' => ['roles' => [Role::CANDIDATE, Role::COMPANY]]];
+		$this->roleFacade->settings->setModules($modules, $settings);
 
-	public function testCreate()
-	{
-		Assert::null($this->roleFacade->create(Role::ROLE_CANDIDATE));
+		$registerableRole1 = $this->roleFacade->isRegistrable(Role::CANDIDATE);
+		Assert::type(Role::getClassName(), $registerableRole1);
+		Assert::same(Role::CANDIDATE, $registerableRole1->name);
 
-		$role = $this->roleFacade->create('plumber');
+		$registerableRole2 = $this->roleFacade->isRegistrable(Role::COMPANY);
+		Assert::type(Role::getClassName(), $registerableRole2);
+		Assert::same(Role::COMPANY, $registerableRole2->name);
 
-		Assert::type('\App\Model\Entity\Role', $role);
-		Assert::same('plumber', $role->name);
-
-		$this->em->remove($role);
-		$this->em->flush();
+		Assert::false($this->roleFacade->isRegistrable(Role::ADMIN));
 	}
 
 	// </editor-fold>
-
 }
 
 $test = new RoleFacadeTest($container);

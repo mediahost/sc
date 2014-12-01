@@ -89,8 +89,9 @@ class ProfilePresenter extends BasePresenter
 	/** @return ConnectManagerControl */
 	protected function createComponentConnect()
 	{
+		$userDao = $this->em->getDao(Entity\User::getClassName());
 		$control = $this->iConnectManagerControlFactory->create();
-		$control->setUser($this->userFacade->find($this->user->id));
+		$control->setUser($userDao->find($this->user->id));
 		$control->setAppActivateRedirect($this->link('this#set-password'));
 		$control->onSuccess[] = function (Entity\User $user, $type) {
 			$message = new \App\TaggedString('%s was disconnected.', $type);

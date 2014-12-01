@@ -3,13 +3,13 @@
 namespace Test\Extensions\Installer\Model;
 
 use App\Extensions\Installer\Model\InstallerModel;
+use App\Helpers;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Nette\DI\Container;
 use Nette\Security\IAuthorizator;
 use Test\ParentTestCase;
 use Tester\Assert;
-use Tester\Environment;
 use Tester\FileMock;
 
 $container = require __DIR__ . '/../../../bootstrap.php';
@@ -19,6 +19,7 @@ $container = require __DIR__ . '/../../../bootstrap.php';
  *
  * @testCase
  * @phpVersion 5.4
+ * @skip
  */
 class InstallerModelTest extends ParentTestCase
 {
@@ -53,7 +54,7 @@ class InstallerModelTest extends ParentTestCase
 		// test '/adminer/database.sql'
 		$adminerFile = $dir . InstallerModel::ADMINER_FILENAME;
 		$adminerPath = dirname($adminerFile);
-		\App\Helpers::mkDir($adminerPath);
+		Helpers::mkDir($adminerPath);
 		file_put_contents($adminerFile, 'test');
 		Assert::true($installer->installAdminer($dir));
 		unlink($adminerFile);

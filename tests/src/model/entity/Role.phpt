@@ -31,27 +31,27 @@ class RoleTest extends TestCase
 
 	public function testStatics()
 	{
-		Assert::same(self::CMP_EQUAL, Role::cmpRoles(new Role(Role::ROLE_SUPERADMIN), Role::ROLE_SUPERADMIN));
-		Assert::same(self::CMP_LOWER, Role::cmpRoles(new Role(Role::ROLE_ADMIN), new Role(Role::ROLE_SUPERADMIN)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::ROLE_SUPERADMIN), new Role(Role::ROLE_ADMIN)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::ROLE_ADMIN), new Role(Role::ROLE_COMPANY)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::ROLE_COMPANY), new Role(Role::ROLE_CANDIDATE)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::ROLE_CANDIDATE), new Role(Role::ROLE_SIGNED)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::ROLE_SIGNED), new Role(Role::ROLE_GUEST)));
+		Assert::same(self::CMP_EQUAL, Role::cmpRoles(new Role(Role::SUPERADMIN), Role::SUPERADMIN));
+		Assert::same(self::CMP_LOWER, Role::cmpRoles(new Role(Role::ADMIN), new Role(Role::SUPERADMIN)));
+		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::SUPERADMIN), new Role(Role::ADMIN)));
+		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::ADMIN), new Role(Role::COMPANY)));
+		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::COMPANY), new Role(Role::CANDIDATE)));
+		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::CANDIDATE), new Role(Role::SIGNED)));
+		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::SIGNED), new Role(Role::GUEST)));
 
 		$roles1 = [
-			Role::ROLE_ADMIN,
-			new Role(Role::ROLE_COMPANY),
-			new Role(Role::ROLE_SIGNED),
+			Role::ADMIN,
+			new Role(Role::COMPANY),
+			new Role(Role::SIGNED),
 		];
-		$maxRole1 = new Role(Role::ROLE_ADMIN);
+		$maxRole1 = new Role(Role::ADMIN);
 		Assert::same((string) $maxRole1, (string) Role::getMaxRole($roles1));
 		$roles2 = [
-			new Role(Role::ROLE_SIGNED),
-			new Role(Role::ROLE_COMPANY),
-			Role::ROLE_CANDIDATE,
+			new Role(Role::SIGNED),
+			new Role(Role::COMPANY),
+			Role::CANDIDATE,
 		];
-		$maxRole2 = new Role(Role::ROLE_COMPANY);
+		$maxRole2 = new Role(Role::COMPANY);
 		Assert::same((string) $maxRole2, (string) Role::getMaxRole($roles2));
 	}
 

@@ -5,19 +5,30 @@ namespace App\Model\Facade;
 use App\Model\Entity\Role;
 use App\Model\Storage\SettingsStorage;
 use Kdyby\Doctrine\EntityDao;
+use Kdyby\Doctrine\EntityManager;
+use Nette\Object;
+use Nette\Utils\ArrayHash;
 
-class RoleFacade extends BaseFacade
+/**
+ * RoleFacade
+ */
+class RoleFacade extends Object
 {
+
+	/** @var EntityManager @inject */
+	public $em;
 
 	/** @var SettingsStorage @inject */
 	public $settings;
 
 	/** @var EntityDao */
-	private $roles;
-
-	protected function init()
+	private $roleDao;
+	
+	public function __construct(EntityManager $em, SettingsStorage $settings)
 	{
-		$this->roles = $this->em->getDao(Role::getClassName());
+		$this->em = $em;
+		$this->settings = $settings;
+		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
 	// <editor-fold defaultstate="expanded" desc="create">
@@ -30,9 +41,8 @@ class RoleFacade extends BaseFacade
 	public function create($name)
 	{
 		if ($this->isUnique($name)) {
-			$entity = new Role;
-			$entity->setName($name);
-			return $this->roles->save($entity);
+			$entity = new Role($name);
+			return $this->roleDao->save($entity);
 		}
 		return NULL;
 	}
@@ -46,7 +56,7 @@ class RoleFacade extends BaseFacade
 	 */
 	public function getRoles()
 	{
-		return $this->roles->findPairs([], 'name', [], 'id');
+		return $this->roleDao->findPairs([], 'name', [], 'id');
 	}
 
 	// </editor-fold>
@@ -59,18 +69,17 @@ class RoleFacade extends BaseFacade
 	 */
 	public function findByName($name)
 	{
-		return $this->roles->findOneBy(['name' => $name]);
+		return $this->roleDao->findOneBy(['name' => $name]);
 	}
 
 	/**
 	 * Find all lower roles
-	 * TODO: TEST IT!!!
-	 * @param array $roles expect ordered by priority (first is the lowest)
+	 * @param array $roles
 	 * @return array
 	 */
 	public function findLowerRoles(array $roles, $includeMax = FALSE)
 	{
-		$allRoles = $this->roles->findPairs('name', 'id'); // expect roles by priority (first is the lowest)
+		$allRoles = $this->roleDao->findPairs('name', 'id'); // expect roles by priority (first is the lowest)
 		$lowerRoles = [];
 		$maxRole = Role::getMaxRole($roles);
 		if (in_array($maxRole->name, $allRoles)) {
@@ -103,6 +112,7 @@ class RoleFacade extends BaseFacade
 	/**
 	 * Check if role is allowed to register.
 	 * @param string $roleName
+	 * @return Role|FALSE
 	 */
 	public function isRegistrable($roleName)
 	{
@@ -110,11 +120,13 @@ class RoleFacade extends BaseFacade
 			$role = $this->findByName($roleName);
 
 			$registrable = $this->settings->getModuleSettings('registrableRole')->roles;
-			if ($role !== NULL && is_array($registrable) && in_array($role->name, $registrable)) {
+			if ($registrable instanceof ArrayHash) {
+				$registrable = (array) $registrable;
+			}
+			if ($role !== NULL && (is_array($registrable) && in_array($role->name, $registrable))) {
 				return $role;
 			}
 		}
-
 		return FALSE;
 	}
 

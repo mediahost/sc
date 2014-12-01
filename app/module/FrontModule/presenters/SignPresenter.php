@@ -122,7 +122,7 @@ class SignPresenter extends BasePresenter
 	{
 		$registration = $this->userFacade->findByVerificationToken($token);
 		if ($registration) {
-			$signedRole = $this->roleFacade->findByName(Role::ROLE_SIGNED);
+			$signedRole = $this->roleFacade->findByName(Role::SIGNED);
 			$user = $this->userFacade->createFromRegistration($registration, $signedRole);
 			$this->flashMessage('Your e-mail has been seccessfully verified!', 'success');
 			$this->onVerify($this, $user);

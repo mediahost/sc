@@ -12,6 +12,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
  *
  * @testCase
  * @phpVersion 5.4
+ * @skip
  */
 class HomepagePresenterTest extends BasePresenter
 {

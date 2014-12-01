@@ -41,10 +41,10 @@ class CompleteAccountControl extends BaseControl
 	{
 		$requiredRole = (string) $this->user->requiredRole;
 		switch ($requiredRole) {
-			case Role::ROLE_CANDIDATE:
+			case Role::CANDIDATE:
 				$this->setTemplateFile('candidate');
 				break;
-			case Role::ROLE_COMPANY:
+			case Role::COMPANY:
 				$this->setTemplateFile('company');
 				break;
 			default:

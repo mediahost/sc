@@ -16,12 +16,12 @@ class Role extends BaseEntity
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-	const ROLE_GUEST = 'guest';
-	const ROLE_SIGNED = 'signed';
-	const ROLE_CANDIDATE = 'candidate';
-	const ROLE_COMPANY = 'company';
-	const ROLE_ADMIN = 'admin';
-	const ROLE_SUPERADMIN = 'superadmin';
+	const GUEST = 'guest';
+	const SIGNED = 'signed';
+	const CANDIDATE = 'candidate';
+	const COMPANY = 'company';
+	const ADMIN = 'admin';
+	const SUPERADMIN = 'superadmin';
 
 	/** @ORM\Column(type="string", length=128) */
 	protected $name;
@@ -71,12 +71,12 @@ class Role extends BaseEntity
 	public static function cmpRoles($roleA, $roleB)
 	{
 		$roleOrder = [
-			self::ROLE_GUEST,
-			self::ROLE_SIGNED,
-			self::ROLE_CANDIDATE,
-			self::ROLE_COMPANY,
-			self::ROLE_ADMIN,
-			self::ROLE_SUPERADMIN,
+			self::GUEST,
+			self::SIGNED,
+			self::CANDIDATE,
+			self::COMPANY,
+			self::ADMIN,
+			self::SUPERADMIN,
 		];
 		$roleAName = $roleA instanceof Role ? $roleA->name : (string) $roleA;
 		$roleBName = $roleB instanceof Role ? $roleB->name : (string) $roleB;

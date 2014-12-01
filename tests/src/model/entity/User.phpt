@@ -179,19 +179,19 @@ class UserTest extends ParentTestCase
 	{
 		$this->updateSchema();
 
-		$roleA = $this->roleDao->save(new Role(Role::ROLE_GUEST));
-		$roleB = $this->roleDao->save(new Role(Role::ROLE_SIGNED));
-		$roleC = $this->roleDao->save(new Role(Role::ROLE_CANDIDATE));
-		$roleD = $this->roleDao->save(new Role(Role::ROLE_COMPANY));
-		$roleE = $this->roleDao->save(new Role(Role::ROLE_ADMIN));
-		$roleF = $this->roleDao->save(new Role(Role::ROLE_SUPERADMIN));
+		$roleA = $this->roleDao->save(new Role(Role::GUEST));
+		$roleB = $this->roleDao->save(new Role(Role::SIGNED));
+		$roleC = $this->roleDao->save(new Role(Role::CANDIDATE));
+		$roleD = $this->roleDao->save(new Role(Role::COMPANY));
+		$roleE = $this->roleDao->save(new Role(Role::ADMIN));
+		$roleF = $this->roleDao->save(new Role(Role::SUPERADMIN));
 
 		$this->user->addRole([$roleB, $roleC, $roleB, $roleA, $roleA, $roleC]);
 		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->getRolesKeys());
 		
 		$this->user->addRole([$roleB, $roleA, $roleC], TRUE);
 		Assert::count(3, $this->user->getRolesPairs());
-		Assert::same([2 => Role::ROLE_SIGNED, 1 => Role::ROLE_GUEST, 3 => Role::ROLE_CANDIDATE], $this->user->getRolesPairs());
+		Assert::same([2 => Role::SIGNED, 1 => Role::GUEST, 3 => Role::CANDIDATE], $this->user->getRolesPairs());
 		
 		$this->user->addRole([$roleD, $roleE, $roleF], TRUE);
 		Assert::type(Role::getClassName(), $this->user->maxRole);
