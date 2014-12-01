@@ -7,11 +7,21 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * 
+ * @property User $user
  * @property string $accessToken
+ * @property string $mail
+ * @property string $name
+ * @property string $birthday
+ * @property string $gender
+ * @property string $hometown
+ * @property string $link
+ * @property string $location
+ * @property string $locale
+ * @property string $username
  */
 class Facebook extends OAuth
 {
-	
+
 	public function __construct($id = NULL)
 	{
 		if ($id) {
@@ -25,7 +35,7 @@ class Facebook extends OAuth
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
 	 */
 	protected $user;
-	
+
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $accessToken;
 
@@ -55,4 +65,5 @@ class Facebook extends OAuth
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $username;
+
 }

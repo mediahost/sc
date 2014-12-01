@@ -15,12 +15,16 @@ use Nette\Security\Passwords;
  * @property string $hash
  * @property-write $password
  * @property ArrayCollection $roles
+ * @property Role $maxRole
  * @property PageConfigSettings $pageConfigSettings
  * @property PageDesignSettings $pageDesignSettings
  * @property Facebook $facebook
  * @property Twitter $twitter
+ * @property string $socialName
+ * @property int $connectionCount
  * @property string $recoveryToken
  * @property DateTime $recoveryExpiration
+ * @property Role $requiredRole
  * @method self setMail(string $mail)
  */
 class User extends BaseEntity
@@ -70,6 +74,7 @@ class User extends BaseEntity
 
 	public function __construct()
 	{
+		parent::__construct();
 		$this->roles = new ArrayCollection();
 	}
 
@@ -238,6 +243,7 @@ class User extends BaseEntity
 
 	/**
 	 * Return user name of social connection
+	 * Prefer FB
 	 * @return string
 	 */
 	public function getSocialName()
@@ -253,7 +259,6 @@ class User extends BaseEntity
 
 	/**
 	 * Decides if asked connection is defined
-	 * TODO: TEST IT!
 	 * @param type $socialName
 	 * @return boolean
 	 */
@@ -273,7 +278,6 @@ class User extends BaseEntity
 
 	/**
 	 * Get count of all connections
-	 * TODO: TEST IT!
 	 * @return int
 	 */
 	public function getConnectionCount()
@@ -322,7 +326,7 @@ class User extends BaseEntity
 	}
 
 	/**
-	 * TODO: TEST IT!
+	 * Get max role of user roles
 	 * @return Role
 	 */
 	public function getMaxRole()
@@ -342,6 +346,7 @@ class User extends BaseEntity
 
 	/**
 	 * Checks if the given hash matches the options.
+	 * Same as Passwords::needsRehash($this->hash, $options) 
 	 * @param  array with cost (4-31)
 	 * @return bool
 	 */

@@ -2,12 +2,12 @@
 
 namespace Test\Model\Entity;
 
-use App\Model\Entity\Auth;
 use App\Model\Entity\Facebook;
+use App\Model\Entity\PageConfigSettings;
+use App\Model\Entity\PageDesignSettings;
 use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
-use App\Model\Entity\UserSettings;
 use DateTime;
 use Kdyby\Doctrine\EntityDao;
 use Nette\DI\Container;
@@ -15,7 +15,6 @@ use Nette\Security\Passwords;
 use Nette\Utils\Strings;
 use Test\ParentTestCase;
 use Tester\Assert;
-use Tester\Environment;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -29,7 +28,6 @@ class UserTest extends ParentTestCase
 {
 
 	const MAIL = 'jack@sg1.sg.gov';
-	const NAME = "Jack O'Neill";
 	const HASH = 'SomethingLikeHash';
 	const PASSWORD = 'ThorIsMyFri3nd';
 	const RECOVERY_TOKEN = 'recov3Rytoken';
@@ -59,6 +57,88 @@ class UserTest extends ParentTestCase
 	public function tearDown()
 	{
 		unset($this->user);
+	}
+
+	public function testSetAndGet()
+	{
+		Assert::type('array', $this->user->roles);
+
+		$this->user->mail = self::MAIL;
+		Assert::same(self::MAIL, $this->user->mail);
+
+		$this->user->hash = self::HASH;
+		Assert::same(self::HASH, $this->user->hash);
+		$this->user->clearHash();
+		Assert::null($this->user->hash);
+		
+		$this->user->password = self::PASSWORD;
+		Assert::true(Passwords::verify(self::PASSWORD, $this->user->hash));
+		
+		$this->user->pageConfigSettings = new PageConfigSettings;
+		Assert::type(PageConfigSettings::getClassName(), $this->user->pageConfigSettings);
+		$pageConfigSettings = $this->user->pageConfigSettings;
+		Assert::type(User::getClassName(), $pageConfigSettings->user);
+		
+		$this->user->pageDesignSettings = new PageDesignSettings;
+		Assert::type(PageDesignSettings::getClassName(), $this->user->pageDesignSettings);
+		$pageDesignSettings = $this->user->pageDesignSettings;
+		Assert::type(User::getClassName(), $pageDesignSettings->user);
+
+		$this->user->facebook = new Facebook();
+		Assert::type(Facebook::getClassName(), $this->user->facebook);
+		$facebook = $this->user->facebook;
+		Assert::type(User::getClassName(), $facebook->user);
+		$this->user->clearFacebook();
+		Assert::null($this->user->facebook);
+		
+		$this->user->twitter = new Twitter();
+		Assert::type(Twitter::getClassName(), $this->user->twitter);
+		$twitter = $this->user->twitter;
+		Assert::type(User::getClassName(), $twitter->user);
+		$this->user->clearTwitter();
+		Assert::null($this->user->twitter);
+
+		$this->user->recoveryToken = self::RECOVERY_TOKEN;
+		Assert::same(self::RECOVERY_TOKEN, $this->user->recoveryToken);
+
+		$tomorrow = new DateTime('now + 1 day');
+		$this->user->recoveryExpiration = $tomorrow;
+		Assert::equal($tomorrow, $this->user->recoveryExpiration);
+		
+		$requiredRole = new Role('required');
+		$this->user->requiredRole = $requiredRole;
+		Assert::type(Role::getClassName(), $this->user->requiredRole);
+		Assert::same($requiredRole->name, $this->user->requiredRole->name);
+	}
+
+	public function testToArray()
+	{
+		$this->updateSchema();
+
+		$roleA = $this->roleDao->save(new Role('Role A'));
+		$roleB = $this->roleDao->save(new Role('Role B'));
+
+		$this->user->mail = self::MAIL;
+		$this->user->addRole([$roleB, $roleA]);
+
+		$user = $this->userDao->save($this->user);
+		$array = $user->toArray();
+
+		Assert::same($user->id, $array['id']);
+		Assert::same(self::MAIL, $array['mail']);
+		Assert::type('array', $array['role']);
+		Assert::type(Role::getClassName(), $array['role'][0]);
+		Assert::same('Role B', $array['role'][0]->name);
+		Assert::type(Role::getClassName(), $array['role'][1]);
+		Assert::same('Role A', $array['role'][1]->name);
+
+		$this->dropSchema();
+	}
+
+	public function testToString()
+	{
+		$this->user->mail = self::MAIL;
+		Assert::same(self::MAIL, (string) $this->user);
 	}
 
 	public function testVerifyPassword()
@@ -95,34 +175,35 @@ class UserTest extends ParentTestCase
 		Assert::count(0, $this->user->roles);
 	}
 
-	public function testGetRolesKeys()
+	public function testGetRoles()
 	{
 		$this->updateSchema();
 
-		$roleA = $this->roleDao->save((new Role())->setName('Role A'));
-		$roleB = $this->roleDao->save((new Role())->setName('Role B'));
-		$roleC = $this->roleDao->save((new Role())->setName('Role C'));
+		$roleA = $this->roleDao->save(new Role(Role::ROLE_GUEST));
+		$roleB = $this->roleDao->save(new Role(Role::ROLE_SIGNED));
+		$roleC = $this->roleDao->save(new Role(Role::ROLE_CANDIDATE));
+		$roleD = $this->roleDao->save(new Role(Role::ROLE_COMPANY));
+		$roleE = $this->roleDao->save(new Role(Role::ROLE_ADMIN));
+		$roleF = $this->roleDao->save(new Role(Role::ROLE_SUPERADMIN));
 
-		$this->user->addRole([$roleB, $roleC, $roleA, $roleA, $roleC]);
+		$this->user->addRole([$roleB, $roleC, $roleB, $roleA, $roleA, $roleC]);
 		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->getRolesKeys());
+		
+		$this->user->addRole([$roleB, $roleA, $roleC], TRUE);
+		Assert::count(3, $this->user->getRolesPairs());
+		Assert::same([2 => Role::ROLE_SIGNED, 1 => Role::ROLE_GUEST, 3 => Role::ROLE_CANDIDATE], $this->user->getRolesPairs());
+		
+		$this->user->addRole([$roleD, $roleE, $roleF], TRUE);
+		Assert::type(Role::getClassName(), $this->user->maxRole);
+		Assert::same($roleF, $this->user->maxRole);
 
 		$this->dropSchema();
 	}
 
-	public function testGetRolesPairs()
-	{
-		$roleA = (new Role())->setName('Role A');
-		$roleB = (new Role())->setName('Role B');
-		$roleC = (new Role())->setName('Role C');
-
-		$this->user->addRole([$roleB, $roleA, $roleC]);
-		Assert::same([NULL => 'Role C'], $this->user->getRolesPairs());
-	}
-
 	public function testRemoveRole()
 	{
-		$roleA = (new Role())->setName('Role A');
-		$roleB = (new Role())->setName('Role B');
+		$roleA = new Role('Role A');
+		$roleB = new Role('Role B');
 
 		$this->user->addRole($roleA);
 		Assert::count(1, $this->user->roles);
@@ -132,77 +213,6 @@ class UserTest extends ParentTestCase
 		Assert::count(1, $this->user->roles);
 		$this->user->removeRole($roleB);
 		Assert::count(0, $this->user->roles);
-	}
-
-	public function testToArray()
-	{
-		$this->updateSchema();
-
-		$roleA = $this->roleDao->save((new Role())->setName('Role A'));
-		$roleB = $this->roleDao->save((new Role())->setName('Role B'));
-
-		$this->user->mail = self::MAIL;
-		$this->user->name = self::NAME;
-		$this->user->addRole([$roleB, $roleA]);
-
-		$user = $this->userDao->save($this->user);
-		$array = $user->toArray();
-
-		Assert::same($user->id, $array['id']);
-		Assert::same(self::MAIL, $array['mail']);
-		Assert::same(self::NAME, $array['name']);
-		Assert::type('array', $array['role']);
-		Assert::type(Role::getClassName(), $array['role'][0]);
-		Assert::same('Role B', $array['role'][0]->name);
-		Assert::type(Role::getClassName(), $array['role'][1]);
-		Assert::same('Role A', $array['role'][1]->name);
-
-		$this->dropSchema();
-	}
-
-	public function testSetAndGet()
-	{
-		Assert::type('array', $this->user->roles);
-
-		$this->user->mail = self::MAIL;
-		Assert::same(self::MAIL, $this->user->mail);
-
-		$this->user->name = self::NAME;
-		Assert::same(self::NAME, $this->user->name);
-
-		$this->user->hash = self::HASH;
-		Assert::same(self::HASH, $this->user->hash);
-
-		$this->user->settings = new UserSettings();
-		Assert::type(UserSettings::getClassName(), $this->user->settings);
-		$settings = $this->user->settings;
-		Assert::type(User::getClassName(), $settings->user);
-
-		$this->user->facebook = new Facebook();
-		Assert::type(Facebook::getClassName(), $this->user->facebook);
-		$facebook = $this->user->facebook;
-		Assert::type(User::getClassName(), $facebook->user);
-		
-		$this->user->twitter = new Twitter();
-		Assert::type(Twitter::getClassName(), $this->user->twitter);
-		$twitter = $this->user->settings;
-		Assert::type(User::getClassName(), $twitter->user);
-		
-		$this->user->setPassword(self::PASSWORD);
-		Assert::true(Passwords::verify(self::PASSWORD, $this->user->hash));
-
-		$this->user->recoveryToken = self::RECOVERY_TOKEN;
-		Assert::same(self::RECOVERY_TOKEN, $this->user->recoveryToken);
-
-		$tomorrow = new DateTime('now + 1 day');
-		$this->user->recoveryExpiration = $tomorrow;
-		Assert::equal($tomorrow, $this->user->recoveryExpiration);
-	}
-
-	public function testToString()
-	{
-		$this->user->mail = self::MAIL;
-		Assert::same(self::MAIL, (string) $this->user);
 	}
 
 	public function testSetRecovery()
@@ -224,6 +234,37 @@ class UserTest extends ParentTestCase
 
 		Assert::null($this->user->recoveryToken);
 		Assert::null($this->user->recoveryExpiration);
+	}
+	
+	public function testSocialConnection()
+	{
+		Assert::null($this->user->socialName);
+		Assert::false($this->user->hasSocialConnection(User::SOCIAL_CONNECTION_APP));
+		Assert::false($this->user->hasSocialConnection(User::SOCIAL_CONNECTION_TWITTER));
+		Assert::false($this->user->hasSocialConnection(User::SOCIAL_CONNECTION_FACEBOOK));
+		Assert::same(0, $this->user->connectionCount);
+		
+		$tw = new Twitter('12345');
+		$tw->name = 'TW social name';
+		
+		$this->user->twitter = $tw;
+		Assert::same($tw->name, $this->user->socialName);
+		Assert::true($this->user->hasSocialConnection(User::SOCIAL_CONNECTION_TWITTER));
+		Assert::same(1, $this->user->connectionCount);
+		
+		$fb = new Facebook('12345');
+		$fb->name = 'FB social name';
+		
+		$this->user->facebook = $fb;
+		Assert::same($fb->name, $this->user->socialName);
+		Assert::true($this->user->hasSocialConnection(User::SOCIAL_CONNECTION_FACEBOOK));
+		Assert::same(2, $this->user->connectionCount);
+		
+		$this->user->setPassword(self::PASSWORD);
+		Assert::true($this->user->hasSocialConnection(User::SOCIAL_CONNECTION_APP));
+		Assert::same(3, $this->user->connectionCount);
+		
+		Assert::false($this->user->hasSocialConnection('unknown'));
 	}
 
 	protected function getClasses()

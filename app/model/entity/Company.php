@@ -9,6 +9,8 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @ORM\Entity
  *
  * @property string $name
+ * @property string $companyId
+ * @property string $address
  */
 class Company extends BaseEntity
 {
@@ -29,11 +31,6 @@ class Company extends BaseEntity
 	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $address;
-
-	public function __construct()
-	{
-
-	}
 
 	/** @return string */
 	public function __toString()

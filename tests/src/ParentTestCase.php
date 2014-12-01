@@ -2,17 +2,22 @@
 
 namespace Test;
 
+use App\Model\Entity\Candidate;
+use App\Model\Entity\Company;
 use App\Model\Entity\Facebook;
+use App\Model\Entity\OAuth;
+use App\Model\Entity\PageConfigSettings;
+use App\Model\Entity\PageDesignSettings;
+use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
-use App\Model\Entity\SignUp;
 use App\Model\Entity\Skill;
 use App\Model\Entity\SkillCategory;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
-use App\Model\Entity\UserSettings;
 use Doctrine\ORM\Tools\SchemaTool;
 use Kdyby\Doctrine\EntityManager;
 use Nette\DI\Container;
+use Tester\Environment;
 use Tester\TestCase;
 
 /**
@@ -40,7 +45,7 @@ abstract class ParentTestCase extends TestCase
 	
 	protected function updateSchema()
 	{
-		\Tester\Environment::lock('db', LOCK_DIR);
+		Environment::lock('db', LOCK_DIR);
 		if (!$this->schemaTool instanceof SchemaTool) {
 			$this->schemaTool = new SchemaTool($this->em);
 		}
@@ -58,14 +63,18 @@ abstract class ParentTestCase extends TestCase
 	protected function getClasses()
 	{
 		return [
-			$this->em->getClassMetadata(User::getClassName()),
-			$this->em->getClassMetadata(UserSettings::getClassName()),
-			$this->em->getClassMetadata(Role::getClassName()),
+			$this->em->getClassMetadata(Candidate::getClassName()),
+			$this->em->getClassMetadata(Company::getClassName()),
 			$this->em->getClassMetadata(Facebook::getClassName()),
-			$this->em->getClassMetadata(Twitter::getClassName()),
-			$this->em->getClassMetadata(SignUp::getClassName()),
+			$this->em->getClassMetadata(OAuth::getClassName()),
+			$this->em->getClassMetadata(PageConfigSettings::getClassName()),
+			$this->em->getClassMetadata(PageDesignSettings::getClassName()),
+			$this->em->getClassMetadata(Registration::getClassName()),
+			$this->em->getClassMetadata(Role::getClassName()),
 			$this->em->getClassMetadata(Skill::getClassName()),
 			$this->em->getClassMetadata(SkillCategory::getClassName()),
+			$this->em->getClassMetadata(Twitter::getClassName()),
+			$this->em->getClassMetadata(User::getClassName()),
 		];
 		// TODO: getAllMetadata() for tests
 //		return $this->em->getMetadataFactory()->getAllMetadata(); // nefunguje pro testy!!!

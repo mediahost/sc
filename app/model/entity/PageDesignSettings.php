@@ -87,10 +87,10 @@ class PageDesignSettings extends BaseEntity
 	
 	/**
 	 * Append entity data
-	 * @param \App\Model\Entity\PageConfigSettings $entity
+	 * @param PageDesignSettings $entity
 	 * @param type $rewriteExisting
 	 */
-	public function append(PageConfigSettings $entity, $rewriteExisting = FALSE)
+	public function append(PageDesignSettings $entity, $rewriteExisting = FALSE)
 	{
 		if ($rewriteExisting || !$this->color) {
 			$this->color = $entity->color;

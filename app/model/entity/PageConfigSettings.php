@@ -9,7 +9,8 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * Page config settings
  * @ORM\Entity
  * 
- * @property-read array $language
+ * @property User $user
+ * @property-read string $language
  * @property-read array $notNullValuesArray return toArray only for setted values
  */
 class PageConfigSettings extends BaseEntity
@@ -23,7 +24,7 @@ class PageConfigSettings extends BaseEntity
 	 */
 	protected $user;
 
-	/** @ORM\Column(type="string", length=2, nullable=true) */
+	/** @ORM\Column(type="string", length=8, nullable=true) */
 	protected $language;
 
 	/**

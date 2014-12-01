@@ -2,8 +2,9 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\ORM\Mapping as ORM,
-	\Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
  * SkillCategory entity
@@ -13,12 +14,10 @@ use Doctrine\ORM\Mapping as ORM,
  * @property SkillCategory $parent
  * @property SkillCategory[] $childs
  */
-class SkillCategory extends \Kdyby\Doctrine\Entities\BaseEntity
+class SkillCategory extends BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
-
-	// <editor-fold defaultstate="expanded" desc="constants & variables">
 
 	/**
 	 * @ORM\Column(type="string", nullable=false)
@@ -36,14 +35,13 @@ class SkillCategory extends \Kdyby\Doctrine\Entities\BaseEntity
 	 */
 	protected $childs;
 
-	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="functions">
-
-	public function __construct()
+	public function __construct($name = NULL)
 	{
+		if ($name) {
+			$this->name = $name;
+		}
 		parent::__construct();
 		$this->childs = new ArrayCollection();
 	}
 
-	// </editor-fold>
 }

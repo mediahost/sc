@@ -2,8 +2,8 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\ORM\Mapping as ORM,
-	\Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
  * Skill entity
@@ -12,34 +12,28 @@ use Doctrine\ORM\Mapping as ORM,
  * @property string $name
  * @property SkillCategory $category
  */
-class Skill extends \Kdyby\Doctrine\Entities\BaseEntity
+class Skill extends BaseEntity
 {
-	
+
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
-	
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	
+
 	/**
 	 * @ORM\Column(type="string", nullable=false)
 	 */
 	protected $name;
-	
+
 	/**
 	 * @ORM\ManyToOne(targetEntity="SkillCategory")
 	 * @ORM\JoinColumn(name="skill_category_id", referencedColumnName="id", nullable=false)
 	 */
-	private $category;
-	
-	// </editor-fold>
-	
-	public function getCategory()
+	protected $category;
+
+	public function __construct($name = NULL)
 	{
-		return $this->category;
+		if ($name) {
+			$this->name = $name;
+		}
+		parent::__construct();
 	}
 
-	public function setCategory(SkillCategory $category)
-	{
-		$this->category = $category;
-	}
-	
 }

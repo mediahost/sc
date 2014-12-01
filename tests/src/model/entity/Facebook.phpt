@@ -3,6 +3,7 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Facebook;
+use App\Model\Entity\User;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -22,13 +23,49 @@ class FacebookTest extends TestCase
 
 	public function testSetAndGet()
 	{
-		$fb = new Facebook();
-
-		$fb->id = self::ID;
-		Assert::same(self::ID, $fb->id);
+		$id = '123456789';
+		$accessToken = 'veryLongAndCompicatedToken12345678900987654321';
+		$mail = 'mail@server.com';
+		$name = 'Firstname Surname';
+		$birthday = '31.2.1999';
+		$gender = 'male';
+		$hometown = 'Some hometown format';
+		$link = 'facebbok.com/some.nick';
+		$location = 'czech republic';
+		$locale = 'cs';
+		$username = 'some.nick';
+		$user = new User;
+		$user->mail = 'user@mail.com';
 		
-		$fb->accessToken = self::ACCESS_TOKEN;
-		Assert::same(self::ACCESS_TOKEN, $fb->accessToken);
+		$entity = new Facebook($id);
+		$entity->accessToken = $accessToken;
+		$entity->mail = $mail;
+		$entity->name = $name;
+		$entity->birthday = $birthday;
+		$entity->gender = $gender;
+		$entity->hometown = $hometown;
+		$entity->link = $link;
+		$entity->location = $location;
+		$entity->locale = $locale;
+		$entity->username = $username;
+		$entity->user = $user;
+		
+		Assert::same($id, $entity->id);
+		Assert::same($accessToken, $entity->accessToken);
+		Assert::same($mail, $entity->mail);
+		Assert::same($name, $entity->name);
+		Assert::same($birthday, $entity->birthday);
+		Assert::same($gender, $entity->gender);
+		Assert::same($hometown, $entity->hometown);
+		Assert::same($link, $entity->link);
+		Assert::same($location, $entity->location);
+		Assert::same($locale, $entity->locale);
+		Assert::same($username, $entity->username);
+		Assert::same($user->mail, $entity->user->mail);
+		
+		Assert::exception(function() use ($entity, $id) {
+			$entity->id = $id;
+		}, 'Kdyby\Doctrine\MemberAccessException');
 	}
 
 }

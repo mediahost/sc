@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Kdyby\Doctrine\MemberAccessException;
 
 /**
  * @ORM\MappedSuperclass
@@ -19,5 +20,10 @@ class OAuth extends BaseEntity
 	 * @var string
 	 */
 	protected $id;
+
+	public function setId($id)
+	{
+		throw MemberAccessException::propertyNotWritable('a read-only', $this, 'id');
+	}
 
 }

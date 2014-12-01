@@ -2,7 +2,6 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
@@ -26,7 +25,7 @@ class Role extends BaseEntity
 
 	/** @ORM\Column(type="string", length=128) */
 	protected $name;
-	
+
 	public function __construct($name = NULL)
 	{
 		if ($name) {
@@ -42,7 +41,7 @@ class Role extends BaseEntity
 
 	/**
 	 * Get max role from inserted roles
-	 * TODO: TEST IT!
+	 * If collection, then gets only last item
 	 * @param array $roles
 	 * @return Role
 	 */
@@ -65,7 +64,6 @@ class Role extends BaseEntity
 
 	/**
 	 * Compare roles
-	 * TODO: TEST IT!
 	 * @param Role $roleA
 	 * @param Role $roleB
 	 * @return int
@@ -86,7 +84,7 @@ class Role extends BaseEntity
 		$roleAPosition = array_search($roleAName, $roleOrder);
 		$roleBPosition = array_search($roleBName, $roleOrder);
 
-		if ($roleAPosition == $roleB) {
+		if ($roleAPosition == $roleBPosition) {
 			return 0;
 		}
 		return ($roleAPosition < $roleBPosition) ? -1 : 1;
