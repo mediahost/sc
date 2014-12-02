@@ -23,7 +23,7 @@ class Candidate extends BaseEntity
 	 */
 	protected $user;
 
-	/** @ORM\Column(type="string", length=512, nullable=false) */
+	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $name;
 
 	/** @ORM\Column(type="date", nullable=true) */
