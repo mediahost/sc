@@ -6,8 +6,8 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Mail\Messages\ForgottenMessage;
+use App\Mail\Messages\IForgottenMessageFactory;
 use App\Model\Facade\UserFacade;
-use Nette\Mail\IMailer;
 use Nette\Utils\ArrayHash;
 
 class ForgottenControl extends BaseControl
@@ -22,8 +22,8 @@ class ForgottenControl extends BaseControl
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var IMailer @inject */
-	public $mailer;
+	/** @var IForgottenMessageFactory @inject */
+	public $forgottenMessage;
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -53,12 +53,10 @@ class ForgottenControl extends BaseControl
 			$user = $this->userFacade->setRecovery($user);
 
 			// Send e-mail with recovery link
-			$message = new ForgottenMessage();
+			$message = $this->forgottenMessage->create();
+			$message->addParameter('link', $this->link('//:Front:Sign:recovery', $user->recoveryToken));
 			$message->addTo($user->mail);
-			$template = $this->createTemplate()->setFile($message->path);
-			$template->token = $user->recoveryToken;
-			$message->setHtmlBody($template);
-			$this->mailer->send($message);
+			$message->send();
 
 			$this->onSuccess($user->mail);
 		}

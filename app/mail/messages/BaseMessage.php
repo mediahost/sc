@@ -2,22 +2,79 @@
 
 namespace App\Mail\Messages;
 
-use Nette\Application\UI\ITemplate;
+use App\Model\Storage\SettingsStorage;
+use GettextTranslator\Gettext;
+use Latte\Engine;
+use Nette\Http\Request;
+use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 
 /**
  * @author Martin Šifra <me@martinsifra.cz>
+ * @author Petr Poupě <petr.poupe@gmail.com>
  */
 abstract class BaseMessage extends Message
 {
 
+	/** @var IMailer @inject */
+	public $mailer;
+
+	/** @var SettingsStorage @inject */
+	public $settings;
+
+	/** @var Request @inject */
+	public $httpRequest;
+
+	/** @var Gettext @inject */
+	public $translator;
+
+	/** @var array */
+	protected $params = [];
+
+	/** @var bool */
+	protected $isNewsletter = FALSE;
+
+	/** @var string */
+	protected $unsubscribeLink;
+
 	/**
 	 * @return string
 	 */
-	public function getPath()
+	protected function getPath()
 	{
 		$name = $this->reflection->getShortName();
 		return __DIR__ . '/' . $name . '/' . $name . '.latte';
+	}
+
+	protected function build()
+	{
+		$this->params['hostUrl'] = $this->httpRequest->url->hostUrl;
+		$this->params['basePath'] = $this->httpRequest->url->basePath;
+		$this->params['pageInfo'] = $this->settings->pageInfo;
+		$this->params['isNewsletter'] = $this->isNewsletter;
+		$this->params['unsubscribeLink'] = $this->unsubscribeLink ? $this->unsubscribeLink : $this->params['hostUrl'];
+		
+		$engine = new Engine;
+		$engine->addFilter('translate', $this->translator->translate);
+		$this->setHtmlBody($engine->renderToString($this->getPath(), $this->params));
+		
+		return parent::build();
+	}
+	
+	public function setNewsletter($unsubscribeLink = NULL)
+	{
+		$this->isNewsletter = TRUE;
+		$this->unsubscribeLink = $unsubscribeLink;
+	}
+	
+	public function addParameter($paramName, $value)
+	{
+		$this->params[$paramName] = $value;
+	}
+	
+	public function send()
+	{
+		$this->mailer->send($this);
 	}
 
 }

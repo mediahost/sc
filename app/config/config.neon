@@ -12,6 +12,7 @@ includes:
 
 	# Includes
 	- includes/components.neon
+	- includes/mail.neon
 	- includes/form.neon
 	- includes/listeners.neon
 	- includes/model.neon

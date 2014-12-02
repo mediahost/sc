@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Mail\Messages\CreateRegistrationMessage;
-use App\Mail\Messages\VerificationMessage;
+use App\Mail\Messages\ICreateRegistrationMessageFactory;
+use App\Mail\Messages\IVerificationMessageFactory;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
@@ -16,8 +16,6 @@ use Kdyby\Events\Subscriber;
 use Nette\Application\Application;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
-use Nette\Latte\Engine;
-use Nette\Mail\IMailer;
 use Nette\Object;
 use Nette\Security\Identity;
 
@@ -42,8 +40,11 @@ class SignListener extends Object implements Subscriber
 	/** @var RoleFacade @inject */
 	public $roleFacade;
 
-	/** @var IMailer @inject */
-	public $mailer;
+	/** @var ICreateRegistrationMessageFactory @inject */
+	public $createRegistrationMessage;
+
+	/** @var IVerificationMessageFactory @inject */
+	public $verificationMessage;
 
 	/** @var Application @inject */
 	public $application;
@@ -139,13 +140,10 @@ class SignListener extends Object implements Subscriber
 			$this->session->remove();
 
 			// Send verification e-mail
-			$latte = new Engine;
-			$params = ['link' => $this->application->presenter->link('//:Front:Sign:verify', $registration->verificationToken)];
-			$message = new VerificationMessage();
-			$message->addTo($user->mail)
-					->setHtmlBody($latte->renderToString($message->getPath(), $params));
-
-			$this->mailer->send($message);
+			$message = $this->verificationMessage->create();
+			$message->addParameter('link', $this->application->presenter->link('//:Front:Sign:verify', $registration->verificationToken));
+			$message->addTo($user->mail);
+			$message->send();
 
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
@@ -170,12 +168,9 @@ class SignListener extends Object implements Subscriber
 	 */
 	public function onCreate(Presenter $presenter, User $user)
 	{
-		$latte = new Engine;
-		$message = new CreateRegistrationMessage();
-		$message->addTo($user->mail)
-				->setHtmlBody($latte->renderToString($message->getPath()));
-
-		$this->mailer->send($message);
+		$message = $this->createRegistrationMessage->create();
+		$message->addTo($user->mail);
+		$message->send();
 
 		$presenter->flashMessage('Your account has been seccessfully created.', 'success');
 		$this->onSuccess($presenter, $user);
@@ -190,7 +185,7 @@ class SignListener extends Object implements Subscriber
 	public function onSuccess(Presenter $presenter, User $user, $rememberMe = FALSE)
 	{
 		$this->session->remove();
-		
+
 		if ($rememberMe) {
 			$presenter->user->setExpiration($this->settings->expiration->remember, FALSE);
 		} else {
