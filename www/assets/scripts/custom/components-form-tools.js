@@ -425,6 +425,15 @@ var ComponentsFormTools = function () {
 				}
 			}
 			$(this).tagsInput(params);
+
+			var id = $(this).attr('id');
+			$('#' + id + '_tag').focus(function () {
+				$('#' + id + '_tagsinput').addClass('active');
+			});
+			$('#' + id + '_tag').blur(function () {
+				$('#' + id + '_tagsinput').removeClass('active');
+			});
+
 		});
 	};
 

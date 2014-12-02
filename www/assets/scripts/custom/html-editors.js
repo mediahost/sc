@@ -7,7 +7,7 @@ var HtmlEditors = function () {
 
 		if ($('.wysihtml5').size() > 0) {
 			$('.wysihtml5').wysihtml5({
-				"stylesheets": [basePath + "assets/plugins/bootstrap-wysihtml5/wysiwyg-color.min.css"]
+				"stylesheets": [basePath + "/assets/plugins/bootstrap-wysihtml5/wysiwyg-color.min.css"]
 			});
 		}
 	};
