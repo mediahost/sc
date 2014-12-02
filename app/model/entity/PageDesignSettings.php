@@ -25,7 +25,7 @@ class PageDesignSettings extends BaseEntity
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 	/**
-	 * @ORM\OneToOne(targetEntity="User", inversedBy="settings", fetch="LAZY")
+	 * @ORM\OneToOne(targetEntity="User", inversedBy="pageDesignSettings", fetch="LAZY")
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
 	 */
 	protected $user;
