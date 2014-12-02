@@ -1,5 +1,5 @@
 {block pageTitle}
-	{_'Candidate'}
+{_'Candidate'}
 {/block}
 
 {block breadcrumbItems}
@@ -9,3 +9,28 @@
 {/block}
 
 {block content}
+
+<div class="row">
+	<div class="col-md-6">
+		<table class="table table-bordered table-striped">
+			<tbody>
+				<tr>
+					<td>
+						{_'Name'}
+					</td>
+					<td>
+						{$candidate->name}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						{_'Birthday'}
+					</td>
+					<td>
+						{$candidate->birthday|date:'d/m/Y'}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

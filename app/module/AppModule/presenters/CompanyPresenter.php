@@ -10,7 +10,7 @@ class CompanyPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('company')
-	 * @privilege('view')
+	 * @privilege('default')
 	 */
 	public function actionDefault()
 	{

@@ -13,10 +13,10 @@ use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
+use Nette\Security\Identity;
 use Nette\Security\IUserStorage;
 use WebLoader\LoaderFactory;
 use WebLoader\Nette\CssLoader;
-use WebLoader\Nette\JavaScriptLoader;
 
 /**
  * Base presenter for all application presenters.
@@ -57,6 +57,7 @@ abstract class BasePresenter extends Presenter
 	protected function startup()
 	{
 		parent::startup();
+		$this->loadSignedUserData();
 		$this->loadSettings();
 		$this->setLang();
 	}
@@ -112,6 +113,15 @@ abstract class BasePresenter extends Presenter
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="settings">
+	
+	protected function loadSignedUserData()
+	{
+		if ($this->user->loggedIn && $this->user->id) {
+			$userDao = $this->em->getDao(Entity\User::getClassName());
+			$userEntity = $userDao->find($this->user->id);
+			$this->user->login(new Identity($userEntity->id, $userEntity->getRolesPairs(), $userEntity->toArray()));
+		}
+	}
 
 	protected function loadSettings()
 	{

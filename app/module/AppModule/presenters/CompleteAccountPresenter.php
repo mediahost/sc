@@ -4,8 +4,9 @@ namespace App\AppModule\Presenters;
 
 use App\Components\AfterRegistration\CompleteAccountControl;
 use App\Components\AfterRegistration\ICompleteAccountControlFactory;
+use App\Model\Entity\Candidate;
+use App\Model\Entity\Company;
 use App\Model\Entity\Role;
-use App\Model\Entity\User;
 
 /**
  * Complete account presenter
@@ -41,10 +42,16 @@ class CompleteAccountPresenter extends BasePresenter
 	/** @return CompleteAccountControl */
 	protected function createComponentCompleteAccount()
 	{
-		$user = $this->em->getDao(User::getClassName())->find($this->user->id);
-		
 		$control = $this->iCompleteAccountControlFactory->create();
-		$control->setUser($user);
+		$control->setUserId($this->user->id);
+		$control->onCreateCandidate[] = function (CompleteAccountControl $control, Candidate $candidate) {
+			$this->flashMessage('Your candidate account is complete. Enjoy your ride!', 'success');
+			$this->redirect(':App:Candidate:');
+		};
+		$control->onCreateCompany[] = function (CompleteAccountControl $control, Company $company) {
+			$this->flashMessage('Your company account is complete. Enjoy your ride!', 'success');
+			$this->redirect(':App:Company:');
+		};
 		return $control;
 	}
 

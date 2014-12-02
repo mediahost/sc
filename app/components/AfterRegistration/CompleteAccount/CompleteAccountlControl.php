@@ -10,10 +10,13 @@ use App\Model\Entity\Company;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
+use Exception;
+use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
 class CompleteAccountControl extends BaseControl
 {
+	// <editor-fold defaultstate="expoanded" desc="events">
 
 	/** @var array */
 	public $onCreateCandidate = [];
@@ -21,27 +24,52 @@ class CompleteAccountControl extends BaseControl
 	/** @var array */
 	public $onCreateCompany = [];
 
+	/** @var array */
+	public $onMissingUser = [];
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="injects">
+
+	/** @var EntityManager @inject */
+	public $em;
+
 	/** @var UserFacade @inject */
 	public $userFacade;
+
+	// </editor-fold>
+
+	/** @var int */
+	private $userId;
 
 	/** @var User */
 	private $user;
 
 	/**
-	 * Set user to complete account
-	 * If null then set role to candidate
-	 * @param User $user
+	 * Set user id to complete account
+	 * @param int $userId
 	 * @return self
 	 */
-	public function setUser($user)
+	public function setUserId($userId)
 	{
-		$this->user = $user;
+		$this->userId = $userId;
 		return $this;
+	}
+
+	/**
+	 * Load and return user
+	 * @return User
+	 */
+	private function getUser()
+	{
+		if (!$this->user) {
+			$this->user = $this->em->getDao(User::getClassName())->find($this->userId);
+		}
+		return $this->user;
 	}
 
 	public function render()
 	{
-		$requiredRole = (string) $this->user->requiredRole;
+		$requiredRole = (string) $this->getUser()->requiredRole;
 		switch ($requiredRole) {
 			case Role::CANDIDATE:
 				$this->setTemplateFile('candidate');
@@ -63,12 +91,17 @@ class CompleteAccountControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
+		if (!$this->getUser()->id) {
+			throw new CompleteAccountControlException('Use setUserId($id) with existed ID');
+		}
+
 		$form->addText('fullName', 'Name')
 				->setAttribute('placeholder', 'name and surename')
 				->setRequired('Please enter your name.')
-				->setDefaultValue($this->user->socialName);
+				->setDefaultValue($this->getUser()->socialName);
 
-		$form->addDateInput('birthday', 'Birthday');
+		$form->addDateInput('birthday', 'Birthday')
+				->setDefaultValue($this->getUser()->socialBirthday);
 
 		$form->addSubmit('confirm', 'Confirm');
 
@@ -82,9 +115,26 @@ class CompleteAccountControl extends BaseControl
 	 */
 	public function candidateFormSucceeded(Form $form, ArrayHash $values)
 	{
+		$candidateDao = $this->em->getDao(Candidate::getClassName());
+		$roleDao = $this->em->getDao(Role::getClassName());
+		$userDao = $this->em->getDao(User::getClassName());
+		
+		if (!$this->getUser()->id) {
+			throw new CompleteAccountControlException('Use setUserId($id) with existed ID');
+		}
+		if ($candidateDao->findOneBy(['user' => $this->getUser()])) {
+			throw new CompleteAccountControlException('This user is already candidate');
+		}
+		
 		$candidate = new Candidate;
+		$candidate->user = $this->getUser();
 		$candidate->name = $values->fullName;
-		// TODO: create candidate
+		$candidate->birthday = $values->birthday;
+		$candidateDao->save($candidate);
+		
+		$requiredRole = $roleDao->find($this->getUser()->requiredRole->id);
+		$candidate->user->addRole($requiredRole);
+		$userDao->save($candidate->user);
 
 		$this->onCreateCandidate($this, $candidate);
 	}
@@ -126,6 +176,11 @@ class CompleteAccountControl extends BaseControl
 		$this->onCreateCompany($this, $company);
 	}
 
+}
+
+class CompleteAccountControlException extends Exception
+{
+	
 }
 
 interface ICompleteAccountControlFactory

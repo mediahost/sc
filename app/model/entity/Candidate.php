@@ -8,8 +8,9 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 /**
  * @ORM\Entity
  *
+ * @property User $user
  * @property string $name
- * @property string $address
+ * @property DateTime $birthday
  */
 class Candidate extends BaseEntity
 {
@@ -17,14 +18,16 @@ class Candidate extends BaseEntity
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 	/**
-	 * @ORM\Column(type="string", length=512, nullable=false)
+	 * @ORM\OneToOne(targetEntity="User", inversedBy="candidate", fetch="LAZY")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
 	 */
+	protected $user;
+
+	/** @ORM\Column(type="string", length=512, nullable=false) */
 	protected $name;
 
-	/**
-	 * @ORM\Column(type="text", nullable=true)
-	 */
-	protected $address;
+	/** @ORM\Column(type="date", nullable=true) */
+	protected $birthday;
 
 	/** @return string */
 	public function __toString()

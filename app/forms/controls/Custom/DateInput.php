@@ -55,7 +55,8 @@ class DateInput extends BaseControl
 	 */
 	public function getValue()
 	{
-		return self::validateDate($this) ? date_create()->setDate($this->year, $this->month, $this->day) : NULL;
+		return (self::validateDate($this) && !self::isEmpty($this)) ?
+				date_create()->setDate($this->year, $this->month, $this->day) : NULL;
 	}
 
 	/**
@@ -97,9 +98,9 @@ class DateInput extends BaseControl
 		$separator = Html::el('span class="separator"')->setText(' ');
 
 		return Html::el('div class="form-inline"')
-				->add($elDay)->add($separator)
-				->add($elMonth)->add($separator)
-				->add($elYear);
+						->add($elDay)->add($separator)
+						->add($elMonth)->add($separator)
+						->add($elYear);
 	}
 
 	// </editor-fold>
@@ -116,7 +117,22 @@ class DateInput extends BaseControl
 	 */
 	public static function validateDate(IControl $control)
 	{
-		return checkdate($control->month, $control->day, $control->year);
+		if (!$control->isRequired() && self::isEmpty($control)) {
+			return TRUE;
+		} else {
+			return checkdate((int) $control->month, (int) $control->day, (int) $control->year);
+		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function isEmpty(IControl $control)
+	{
+		if (empty($control->day) || empty($control->month) || empty($control->year)) {
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 }

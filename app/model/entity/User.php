@@ -20,7 +20,9 @@ use Nette\Security\Passwords;
  * @property PageDesignSettings $pageDesignSettings
  * @property Facebook $facebook
  * @property Twitter $twitter
+ * @property Candidate $candidate
  * @property string $socialName
+ * @property string $socialBirthday
  * @property int $connectionCount
  * @property string $recoveryToken
  * @property DateTime $recoveryExpiration
@@ -57,6 +59,9 @@ class User extends BaseEntity
 
 	/** @ORM\OneToOne(targetEntity="Twitter", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $twitter;
+
+	/** @ORM\OneToOne(targetEntity="Candidate", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
+	protected $candidate;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $hash;
@@ -254,6 +259,18 @@ class User extends BaseEntity
 		}
 		if ($this->twitter) {
 			return $this->twitter->name;
+		}
+		return NULL;
+	}
+
+	/**
+	 * Return user birthday from social connections
+	 * @return string
+	 */
+	public function getSocialBirthday()
+	{
+		if ($this->facebook) {
+			return $this->facebook->birthday;
 		}
 		return NULL;
 	}

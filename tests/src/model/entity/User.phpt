@@ -249,14 +249,17 @@ class UserTest extends ParentTestCase
 		
 		$this->user->twitter = $tw;
 		Assert::same($tw->name, $this->user->socialName);
+		Assert::null($this->user->socialBirthday);
 		Assert::true($this->user->hasSocialConnection(User::SOCIAL_CONNECTION_TWITTER));
 		Assert::same(1, $this->user->connectionCount);
 		
 		$fb = new Facebook('12345');
 		$fb->name = 'FB social name';
+		$fb->birthday = '30.2.1920';
 		
 		$this->user->facebook = $fb;
 		Assert::same($fb->name, $this->user->socialName);
+		Assert::same($fb->birthday, $this->user->socialBirthday);
 		Assert::true($this->user->hasSocialConnection(User::SOCIAL_CONNECTION_FACEBOOK));
 		Assert::same(2, $this->user->connectionCount);
 		
