@@ -23,13 +23,14 @@ use WebLoader\Nette\CssLoader;
  */
 abstract class BasePresenter extends Presenter
 {
-	// <editor-fold defaultstate="expanded" desc="constants & variables">
 
 	/** @persistent string */
-	public $lang;
+	public $lang = 'en';
 
 	/** @persistent */
 	public $backlink = '';
+	
+	// <editor-fold defaultstate="collapsed" desc="injects">
 
 	/** @var LoaderFactory @inject */
 	public $webLoader;
