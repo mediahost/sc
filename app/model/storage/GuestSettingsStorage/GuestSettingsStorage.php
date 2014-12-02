@@ -87,12 +87,12 @@ class GuestSettingsStorage extends Object
 		$userDao = $this->em->getDao(User::getClassName());
 		$userEntity = $userDao->find($userId);
 		if ($userEntity) {
-			if ($this->section->page) {
+			if ($this->section->page && $userEntity->pageConfigSettings instanceof PageConfigSettings) {
 				$pageSettings = $userEntity->pageConfigSettings->append($this->section->page);
 				$pageSettingsDao = $this->em->getDao(PageConfigSettings::getClassName());
 				$pageSettingsDao->save($pageSettings);
 			}
-			if ($this->section->design) {
+			if ($this->section->design && $userEntity->pageDesignSettings instanceof PageDesignSettings) {
 				$designSettings = $userEntity->pageDesignSettings->append($this->section->design);
 				$designSettingsDao = $this->em->getDao(PageDesignSettings::getClassName());
 				$designSettingsDao->save($designSettings);

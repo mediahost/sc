@@ -5,8 +5,10 @@ namespace App\Components\AfterRegistration;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use Nette\Utils\ArrayHash;
 
@@ -81,7 +83,7 @@ class CompleteAccountControl extends BaseControl
 	 */
 	public function candidateFormSucceeded(Form $form, ArrayHash $values)
 	{
-		$candidate = new User;
+		$candidate = new Candidate;
 		$candidate->name = $values->fullName;
 		// TODO: create candidate
 

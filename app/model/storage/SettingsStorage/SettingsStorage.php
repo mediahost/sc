@@ -99,13 +99,17 @@ class SettingsStorage extends Object
 			$userDao = $this->em->getDao(Entity\User::getClassName());
 			$userEntity = $userDao->find($user->id);
 
-			$this->userPageSettings->setUser($userEntity);
-			$pageSettingsDao = $this->em->getDao(Entity\PageConfigSettings::getClassName());
-			$pageSettingsDao->save($this->userPageSettings);
+			if ($this->userPageSettings) {
+				$this->userPageSettings->setUser($userEntity);
+				$pageSettingsDao = $this->em->getDao(Entity\PageConfigSettings::getClassName());
+				$pageSettingsDao->save($this->userPageSettings);
+			}
 
-			$this->userDesignSettings->setUser($userEntity);
-			$designSettingsDao = $this->em->getDao(Entity\PageDesignSettings::getClassName());
-			$designSettingsDao->save($this->userDesignSettings);
+			if ($this->userDesignSettings) {
+				$this->userDesignSettings->setUser($userEntity);
+				$designSettingsDao = $this->em->getDao(Entity\PageDesignSettings::getClassName());
+				$designSettingsDao->save($this->userDesignSettings);
+			}
 		} else {
 			if ($this->userPageSettings) {
 				$this->guestStorage->setPageSettings($this->userPageSettings);

@@ -160,7 +160,7 @@ class DatePicker extends BaseControl
 	{
 		$date = $this->date instanceof \DateTime ?
 				$this->date : DateTime::createFromFormat($this->format, $this->date);
-		return self::validateDate($this) ? ($formated ? $date->format($this->format) : $date) : NULL;
+		return (self::validateDate($this) && $date) ? ($formated ? $date->format($this->format) : $date) : NULL;
 	}
 
 	/**
