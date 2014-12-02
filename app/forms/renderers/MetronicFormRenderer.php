@@ -38,6 +38,7 @@ class MetronicFormRenderer extends ExtendedFormRenderer
 		$this->wrappers['label']['container'] = NULL;
 		$this->wrappers['label']['suffix'] = ':';
 		$this->wrappers['label']['requiredsuffix'] = Html::el('span class=required')->setText('*');
+		$this->wrappers['control']['container'] = 'div';
 		$this->wrappers['control']['description'] = 'span class="help-block"';
 		$this->wrappers['control']['errorcontainer'] = 'span class="help-block"';
 		$this->wrappers['control.checkboxlist']['container'] = 'div class="checkbox-list"';

@@ -68,8 +68,7 @@ class CompleteAccountControl extends BaseControl
 				->setRequired('Please enter your name.')
 				->setDefaultValue($this->user->socialName);
 
-		$form->addDatePicker('birthday', 'Birthday')
-				->setAttribute('placeholder', 'dd/mm/yyyy');
+		$form->addDateInput('birthday', 'Birthday');
 
 		$form->addSubmit('confirm', 'Confirm');
 

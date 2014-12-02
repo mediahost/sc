@@ -78,12 +78,28 @@ class DateInput extends BaseControl
 			11 => 'November',
 			12 => 'December',
 		];
-		return Html::el()
-						->add(Html::el('input')->name($name . '[day]')->id($this->getHtmlId())->value($this->day))
-						->add(Helpers::createSelectBox(
-										$months, array('selected?' => $this->month)
-								)->name($name . '[month]'))
-						->add(Html::el('input')->name($name . '[year]')->value($this->year));
+		$elDay = Html::el('input')
+				->name($name . '[day]')
+				->id($this->getHtmlId())
+				->value($this->day)
+				->addAttributes(['placeholder' => $this->translator->translate('day')]);
+		$elDay->class = 'form-control input-xsmall';
+		$elMonth = Helpers::createSelectBox(
+						$months, array('selected?' => $this->month)
+				)
+				->name($name . '[month]');
+		$elMonth->class = 'form-control input-small';
+		$elYear = Html::el('input')
+				->name($name . '[year]')
+				->value($this->year)
+				->addAttributes(['placeholder' => $this->translator->translate('year')]);
+		$elYear->class = 'form-control input-small';
+		$separator = Html::el('span class="separator"')->setText(' ');
+
+		return Html::el('div class="form-inline"')
+				->add($elDay)->add($separator)
+				->add($elMonth)->add($separator)
+				->add($elYear);
 	}
 
 	// </editor-fold>
