@@ -2,7 +2,8 @@
 
 namespace App\Components;
 
-use App\Model\Storage\SettingsStorage;
+use App\Extensions\Settings\Model\Service\LanguageService;
+use App\Extensions\Settings\Model\Service\PasswordService;
 use Nette\Application\UI;
 use Nette\Localization\ITranslator;
 
@@ -15,8 +16,11 @@ abstract class BaseControl extends UI\Control
 	
 	const DEFAULT_TEMPLATE = 'default';
 
-	/** @var SettingsStorage @inject */
-	public $settings;
+	/** @var LanguageService @inject */
+	public $languageService;
+
+	/** @var PasswordService @inject */
+	public $passwordService;
 
 	/** @var ITranslator @inject */
 	public $translator;

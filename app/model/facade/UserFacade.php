@@ -2,12 +2,13 @@
 
 namespace App\Model\Facade;
 
+use App\Extensions\Settings\Model\Service\ExpirationService;
+use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Model\Entity\Facebook;
 use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
-use App\Model\Storage\SettingsStorage;
 use DateTime;
 use InvalidArgumentException;
 use Kdyby\Doctrine\EntityDao;
@@ -24,8 +25,8 @@ class UserFacade extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var SettingsStorage @inject */
-	public $settings;
+	/** @var ExpirationService @inject */
+	public $expirationService;
 
 	/** @var EntityDao */
 	private $userDao;
@@ -36,9 +37,9 @@ class UserFacade extends Object
 	/** @var EntityDao */
 	private $registrationDao;
 
-	public function __construct(EntityManager $em, SettingsStorage $settings)
+	public function __construct(EntityManager $em, ExpirationService $expiration)
 	{
-		$this->settings = $settings;
+		$this->expirationService = $expiration;
 		$this->em = $em;
 		$this->userDao = $this->em->getDao(User::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
@@ -119,7 +120,7 @@ class UserFacade extends Object
 		}
 
 		$registration->verificationToken = Random::generate(32);
-		$registration->verificationExpiration = new DateTime('now + ' . $this->settings->expiration->verification);
+		$registration->verificationExpiration = new DateTime('now + ' . $this->expirationService->verification);
 
 		$this->em->persist($registration);
 		$this->em->flush();
@@ -227,7 +228,7 @@ class UserFacade extends Object
 	 */
 	public function setRecovery(User $user)
 	{
-		$user->setRecovery(Random::generate(32), 'now + ' . $this->settings->expiration->recovery);
+		$user->setRecovery(Random::generate(32), 'now + ' . $this->expirationService->recovery);
 		return $this->userDao->save($user);
 	}
 

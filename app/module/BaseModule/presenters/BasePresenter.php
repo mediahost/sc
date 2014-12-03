@@ -4,10 +4,11 @@ namespace App\BaseModule\Presenters;
 
 use App\Components\Auth\ISignOutControlFactory;
 use App\Components\Auth\SignOutControl;
+use App\Extensions\Settings\Model\Service\DesignService;
+use App\Extensions\Settings\Model\Service\LanguageService;
+use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Model\Entity;
 use App\Model\Facade\UserFacade;
-use App\Model\Storage\GuestSettingsStorage;
-use App\Model\Storage\SettingsStorage;
 use App\TaggedString;
 use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
@@ -24,12 +25,12 @@ use WebLoader\Nette\CssLoader;
 abstract class BasePresenter extends Presenter
 {
 
-	/** @persistent string */
+	/** @persistent */
 	public $lang = 'en';
 
 	/** @persistent */
 	public $backlink = '';
-	
+
 	// <editor-fold defaultstate="collapsed" desc="injects">
 
 	/** @var LoaderFactory @inject */
@@ -41,11 +42,14 @@ abstract class BasePresenter extends Presenter
 	/** @var Gettext @inject */
 	public $translator;
 
-	/** @var SettingsStorage @inject */
-	public $settingsStorage;
+	/** @var DefaultSettingsStorage @inject */
+	public $settingStorage;
 
-	/** @var GuestSettingsStorage @inject */
-	public $guestStorage;
+	/** @var DesignService @inject */
+	public $designService;
+
+	/** @var LanguageService @inject */
+	public $languageService;
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -58,8 +62,7 @@ abstract class BasePresenter extends Presenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->loadSignedUserData();
-		$this->loadSettings();
+		$this->loadUserSettings();
 		$this->setLang();
 	}
 
@@ -67,7 +70,7 @@ abstract class BasePresenter extends Presenter
 	{
 		$this->template->lang = $this->lang;
 		$this->template->setTranslator($this->translator);
-		$this->template->designSettings = $this->settingsStorage->designSettings;
+		$this->template->designSettings = $this->designService->settings;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="flash messages">
@@ -114,39 +117,24 @@ abstract class BasePresenter extends Presenter
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="settings">
-	
-	protected function loadSignedUserData()
+
+	protected function loadUserSettings()
 	{
 		if ($this->user->loggedIn && $this->user->id) {
 			$userDao = $this->em->getDao(Entity\User::getClassName());
 			$userEntity = $userDao->find($this->user->id);
 			$this->user->login(new Identity($userEntity->id, $userEntity->getRolesPairs(), $userEntity->toArray()));
 		}
-	}
-
-	protected function loadSettings()
-	{
-		if ($this->user->loggedIn && $this->user->id) {
-			$userDao = $this->em->getDao(Entity\User::getClassName());
-			$userEntity = $userDao->find($this->user->id);
-			$this->settingsStorage->userPageSettings = $userEntity->pageConfigSettings;
-			$this->settingsStorage->userDesignSettings = $userEntity->pageDesignSettings;
-		} else {
-			$this->settingsStorage->userPageSettings = $this->guestStorage->pageSettings;
-			$this->settingsStorage->userDesignSettings = $this->guestStorage->designSettings;
-		}
+		$this->settingStorage->identity = $this->user;
 	}
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="language">
+
 	private function setLang()
 	{
 		if (!$this->lang) {
-			$this->lang = $this->settingsStorage->pageSettings->language;
-		}
-		if ($this->lang !== $this->settingsStorage->pageSettings->language) {
-			$this->settingsStorage->userPageSettings->language = $this->lang;
-			$this->settingsStorage->save($this->user);
+			$this->lang = $this->languageService->language;
 		}
 		$this->translator->setLang($this->lang);
 	}

@@ -40,6 +40,7 @@ class RequiredControl extends BaseControl
 		return $form;
 	}
 
+	// TODO: do it by server-side validation
 	public function formSubmit(Form $form)
 	{
 		$values = $form->getValues();

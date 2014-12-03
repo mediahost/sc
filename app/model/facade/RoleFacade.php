@@ -2,8 +2,9 @@
 
 namespace App\Model\Facade;
 
+use App\Extensions\Settings\Model\Service\ModuleService;
+use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Model\Entity\Role;
-use App\Model\Storage\SettingsStorage;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
@@ -18,16 +19,16 @@ class RoleFacade extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var SettingsStorage @inject */
-	public $settings;
+	/** @var ModuleService @inject */
+	public $moduleService;
 
 	/** @var EntityDao */
 	private $roleDao;
 	
-	public function __construct(EntityManager $em, SettingsStorage $settings)
+	public function __construct(EntityManager $em, ModuleService $modules)
 	{
 		$this->em = $em;
-		$this->settings = $settings;
+		$this->moduleService = $modules;
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
@@ -116,10 +117,10 @@ class RoleFacade extends Object
 	 */
 	public function isRegistrable($roleName)
 	{
-		if ($this->settings->isAllowedModule('registrableRole')) {
+		if ($this->moduleService->isAllowedModule('registrableRole')) {
 			$role = $this->findByName($roleName);
 
-			$registrable = $this->settings->getModuleSettings('registrableRole')->roles;
+			$registrable = $this->moduleService->getModuleSettings('registrableRole')->roles;
 			if ($registrable instanceof ArrayHash) {
 				$registrable = (array) $registrable;
 			}

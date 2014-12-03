@@ -25,12 +25,12 @@ class PreferencesControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addSelect2('language', 'Language', (array) $this->settings->languages->allowed);
+		$form->addSelect2('language', 'Language', (array) $this->languageService->allowedLanguages);
 
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults([
-			'language' => $this->settings->pageSettings->language,
+			'language' => $this->languageService->language,
 		]);
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
@@ -38,10 +38,8 @@ class PreferencesControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		// language saving is full controled by persistant parameter LANG
+		// TODO: Save lang
 		$this->onAfterSave($values->language);
-		// for case if not redirected in event
-		$this->presenter->redirect('this', ['lang' => $values->language]);
 	}
 
 }

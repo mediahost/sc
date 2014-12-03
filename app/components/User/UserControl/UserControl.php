@@ -59,7 +59,11 @@ class UserControl extends BaseControl
 
 		$password = $form->addText('password', 'Password');
 		if (!$this->isUserExists()) {
-			$password->addRule(Form::FILLED, 'Password must be filled');
+			$helpText = new TaggedString('At least %d characters long.', $this->passwordService->length);
+			$helpText->setTranslator($this->translator);
+			$password->addRule(Form::FILLED, 'Password must be filled')
+					->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->passwordService->length)
+					->setOption('description', (string) $helpText);
 		}
 
 		$role = $form->addMultiSelect2('roles', 'Roles', $this->getRoles())
@@ -69,7 +73,7 @@ class UserControl extends BaseControl
 		if ($defaultRole && in_array($defaultRole->getId(), $this->getRoles())) {
 			$role->setDefaultValue($defaultRole->getId());
 		}
-		
+
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
@@ -157,7 +161,7 @@ class UserControl extends BaseControl
 	{
 		return $this->getUser()->id !== NULL;
 	}
-	
+
 	public function setIdentityRoles(array $roles)
 	{
 		$this->identityRoles = $roles;

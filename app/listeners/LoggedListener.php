@@ -24,6 +24,7 @@ class LoggedListener extends Object implements Subscriber
 
 	public function userLoggedIn(User $user)
 	{
+		// TODO: do it by new settings
 		$this->guestStorage
 				->save($user->id)
 				->wipe();

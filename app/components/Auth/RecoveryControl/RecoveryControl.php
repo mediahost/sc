@@ -32,12 +32,12 @@ class RecoveryControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$helpText = new TaggedString('At least %d characters long.', $this->settings->passwordsPolicy->length);
+		$helpText = new TaggedString('At least %d characters long.', $this->passwordService->length);
 		$helpText->setTranslator($this->translator);
 		$form->addPassword('newPassword', 'New password', NULL, 255)
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwordsPolicy->length)
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->passwordService->length)
 				->setOption('description', (string) $helpText);
 
 		$form->addPassword('passwordAgain', 'Re-type Your Password', NULL, 255)

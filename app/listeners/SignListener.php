@@ -2,13 +2,13 @@
 
 namespace App\Listeners;
 
+use App\Extensions\Settings\Model\Service\ExpirationService;
 use App\Mail\Messages\ICreateRegistrationMessageFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use App\Model\Storage\SettingsStorage;
 use App\Model\Storage\SignUpStorage;
 use App\TaggedString;
 use Kdyby\Doctrine\EntityManager;
@@ -49,8 +49,8 @@ class SignListener extends Object implements Subscriber
 	/** @var Application @inject */
 	public $application;
 
-	/** @var SettingsStorage @inject */
-	public $settings;
+	/** @var ExpirationService @inject */
+	public $expirationService;
 
 	// </editor-fold>
 
@@ -187,9 +187,9 @@ class SignListener extends Object implements Subscriber
 		$this->session->remove();
 
 		if ($rememberMe) {
-			$presenter->user->setExpiration($this->settings->expiration->remember, FALSE);
+			$presenter->user->setExpiration($this->expirationService->remember, FALSE);
 		} else {
-			$presenter->user->setExpiration($this->settings->expiration->notRemember, TRUE);
+			$presenter->user->setExpiration($this->expirationService->notRemember, TRUE);
 		}
 
 		$presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));

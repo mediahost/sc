@@ -7,7 +7,6 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
-use App\Model\Storage\SettingsStorage;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
@@ -28,9 +27,6 @@ class SignInControl extends BaseControl
 
 	/** @var ITwitterControlFactory @inject */
 	public $iTwitterControlFactory;
-
-	/** @var SettingsStorage @inject */
-	public $settings;
 
 	/** @var UserFacade @inject */
 	public $userFacade;
