@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b5cd761cc95cc08132998a9df8a4397b",
+    "hash": "4241447a520df5f1044090ecd7abf14d",
     "packages": [
         {
             "name": "dg/adminer-custom",
@@ -1695,6 +1695,66 @@
                 "validation"
             ],
             "time": "2014-10-02 10:36:24"
+        },
+        {
+            "name": "knplabs/doctrine-behaviors",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KnpLabs/DoctrineBehaviors.git",
+                "reference": "977677d6645185b990607c136effefe08ce9b198"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KnpLabs/DoctrineBehaviors/zipball/977677d6645185b990607c136effefe08ce9b198",
+                "reference": "977677d6645185b990607c136effefe08ce9b198",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": ">=2.2",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "doctrine/orm": ">=2.2",
+                "ext-pdo_pgsql": "*",
+                "ext-pdo_sqlite": "*",
+                "jakub-onderka/php-parallel-lint": "~0.8",
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Knp\\DoctrineBehaviors\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KnpLabs",
+                    "homepage": "http://knplabs.com"
+                }
+            ],
+            "description": "Doctrine2 behavior traits",
+            "homepage": "http://knplabs.com",
+            "keywords": [
+                "Blameable",
+                "behaviors",
+                "doctrine2",
+                "filterable",
+                "softdeletable",
+                "timestampable",
+                "translatable",
+                "tree"
+            ],
+            "time": "2014-11-18 08:30:35"
         },
         {
             "name": "latte/latte",
@@ -3505,6 +3565,59 @@
                 "source": "https://github.com/mediahost/nette-button-macros/tree/master"
             },
             "time": "2014-06-16 17:22:16"
+        },
+        {
+            "name": "zenify/doctrine-behaviors",
+            "version": "v1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Zenify/DoctrineBehaviors.git",
+                "reference": "8796a77f5315ab612e3a2a4c2c3374688486efef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Zenify/DoctrineBehaviors/zipball/8796a77f5315ab612e3a2a4c2c3374688486efef",
+                "reference": "8796a77f5315ab612e3a2a4c2c3374688486efef",
+                "shasum": ""
+            },
+            "require": {
+                "kdyby/events": "~2.0",
+                "knplabs/doctrine-behaviors": "~1.1@dev",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "~0.8",
+                "kdyby/doctrine": "~2.0",
+                "nette/bootstrap": "~2.0",
+                "nette/di": "~2.0",
+                "nette/http": "~2.0",
+                "nette/mail": "~2.0",
+                "nette/robot-loader": "~2.0",
+                "nette/safe-stream": "~2.0",
+                "nette/security": "~2.0",
+                "nette/tester": "~1.2",
+                "nette/utils": "~2.0",
+                "tracy/tracy": "~2.0",
+                "zenify/coding-standard": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zenify\\DoctrineBehaviors\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tomáš Votruba",
+                    "homepage": "http://tomasvotruba.cz"
+                }
+            ],
+            "description": "Port of KnpLabs/DoctrineBehaviors to Nette",
+            "time": "2014-11-24 16:03:48"
         }
     ],
     "packages-dev": [
@@ -3584,7 +3697,8 @@
         "dg/ftp-deployment": 20,
         "zeleznypa/nette-button-macros": 20,
         "jandrabek/nette-mailpanel": 20,
-        "sodae/netrium-addons-twitter": 20
+        "sodae/netrium-addons-twitter": 20,
+        "knplabs/doctrine-behaviors": 20
     },
     "prefer-stable": false,
     "platform": {

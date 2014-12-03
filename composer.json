@@ -51,7 +51,9 @@
 		"kdyby/facebook": "~1.1",
 		"jandrabek/nette-mailpanel": "dev-master",
 		"sodae/netrium-addons-twitter": "dev-nette-compatibility-22-dev",
-		"nextras/forms": "~1.4"
+		"nextras/forms": "~1.4",
+		"knplabs/doctrine-behaviors": "@dev",
+		"zenify/doctrine-behaviors": "~1.2"
 	},
 	"require-dev": {
 		"nette/tester": "~1.2.0"
