@@ -68,7 +68,7 @@ class ProfilePresenter extends BasePresenter
 		$control->setUser($this->user);
 		$control->onSuccess[] = function () {
 			$this->flashMessage('Password has been successfuly set!', 'success');
-			$this->redirect(':App:Profile:settings#connect-manager');
+			$this->redirect('this#connect-manager');
 		};
 		return $control;
 	}
@@ -77,11 +77,9 @@ class ProfilePresenter extends BasePresenter
 	protected function createComponentSettings()
 	{
 		$control = $this->iPreferencesControlFactory->create();
-		$control->onAfterSave = function ($savedLanguage) {
+		$control->onAfterSave = function () {
 			$this->flashMessage('Your settings has been saved.', 'success');
-			$this->redirect('this#personal-settings', [
-				'lang' => $savedLanguage,
-			]);
+			$this->redirect('this#personal-settings');
 		};
 		return $control;
 	}
@@ -93,7 +91,14 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iConnectManagerControlFactory->create();
 		$control->setUser($userDao->find($this->user->id));
 		$control->setAppActivateRedirect($this->link('this#set-password'));
-		$control->onSuccess[] = function (Entity\User $user, $type) {
+		$control->onConnect[] = function ($type) {
+			$message = new \App\TaggedString('%s was connected.', $type);
+			$this->flashMessage($message, 'success');
+			if (!$this->isAjax()) {
+				$this->redirect('this#connect-manager');
+			}
+		};
+		$control->onDisconnect[] = function (Entity\User $user, $type) {
 			$message = new \App\TaggedString('%s was disconnected.', $type);
 			$this->flashMessage($message, 'success');
 			if (!$this->isAjax()) {
@@ -108,7 +113,14 @@ class ProfilePresenter extends BasePresenter
 		};
 		$control->onInvalidType[] = function ($type) {
 			$message = new \App\TaggedString('We can\'t find \'%s\' to disconnect.', $type);
-			$this->flashMessage($message, 'error');
+			$this->flashMessage($message, 'warning');
+			if (!$this->isAjax()) {
+				$this->redirect('this#connect-manager');
+			}
+		};
+		$control->onUsingConnection[] = function ($type) {
+			$message = new \App\TaggedString('Logged %s account is using by another account.', $type);
+			$this->flashMessage($message, 'warning');
 			if (!$this->isAjax()) {
 				$this->redirect('this#connect-manager');
 			}

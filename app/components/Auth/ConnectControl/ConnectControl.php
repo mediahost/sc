@@ -14,16 +14,26 @@ use Nette\Utils\ArrayHash;
  */
 class ConnectManagerControl extends BaseControl
 {
+	
+	const APP = 'App login';
+	const FACEBOOK = 'Facebook';
+	const TWITTER = 'Twitter';
 	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
-	public $onSuccess = [];
+	public $onConnect = [];
+
+	/** @var array */
+	public $onDisconnect = [];
 
 	/** @var array */
 	public $onLastConnection = [];
 
 	/** @var array */
 	public $onInvalidType = [];
+
+	/** @var array */
+	public $onUsingConnection = [];
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="injects">
@@ -87,7 +97,7 @@ class ConnectManagerControl extends BaseControl
 		$appConnection->active = $this->user->hasSocialConnection(User::SOCIAL_CONNECTION_APP);
 		$appConnection->link = $appConnection->active ?
 				$this->link('deactivate!', User::SOCIAL_CONNECTION_APP) :
-				$this->redirectAppActivate ? $this->link($this->redirectAppActivate) : '#';
+				$this->redirectAppActivate ? $this->redirectAppActivate : '#';
 
 		$fbConnection = clone $initConnection;
 		$fbConnection->name = $this->translator->translate('Facebook');
@@ -128,21 +138,21 @@ class ConnectManagerControl extends BaseControl
 		$disconected = NULL;
 		switch ($type) {
 			case User::SOCIAL_CONNECTION_APP:
-				$disconected = 'SourceCode login';
+				$disconected = self::APP;
 				$user->clearHash();
 				break;
 			case User::SOCIAL_CONNECTION_FACEBOOK:
-				$disconected = 'Facebook';
+				$disconected = self::FACEBOOK;
 				$user->clearFacebook();
 				break;
 			case User::SOCIAL_CONNECTION_TWITTER:
-				$disconected = 'Twitter';
+				$disconected = self::TWITTER;
 				$user->clearTwitter();
 				break;
 		}
 		if ($disconected) {
 			$userDao->save($user);
-			$this->onSuccess($user, $disconected);
+			$this->onDisconnect($user, $disconected);
 		} else {
 			$this->onInvalidType($type);
 		}
@@ -157,13 +167,18 @@ class ConnectManagerControl extends BaseControl
 		$control = $this->iFacebookControlFactory->create();
 		$control->setConnect();
 		$control->onConnect[] = function (Facebook $fb) {
+			$fbDao = $this->em->getDao(Facebook::getClassName());
+			if ($fbDao->find($fb->id)) {
+				$this->onUsingConnection(self::FACEBOOK);
+				return;
+			}
 			$userDao = $this->em->getDao(User::getClassName());
 			$user = $userDao->find($this->user->id);
 			if (!$user->hasSocialConnection(User::SOCIAL_CONNECTION_FACEBOOK)) {
 				$user->facebook = $fb;
 				$userDao->save($user);
 			}
-			$this->presenter->redirect(self::REDIRECT_THIS);
+			$this->onConnect(self::FACEBOOK);
 		};
 		return $control;
 	}
@@ -173,14 +188,20 @@ class ConnectManagerControl extends BaseControl
 	{
 		$control = $this->iTwitterControlFactory->create();
 		$control->setConnect();
-		$control->onConnect[] = function (Twitter $fb) {
+		$control->onConnect[] = function (Twitter $tw) {
+			$twDao = $this->em->getDao(Twitter::getClassName());
+			if ($twDao->find($tw->id)) {
+				$this->onUsingConnection(self::TWITTER);
+				return;
+			}
 			$userDao = $this->em->getDao(User::getClassName());
 			$user = $userDao->find($this->user->id);
 			if (!$user->hasSocialConnection(User::SOCIAL_CONNECTION_TWITTER)) {
-				$user->twitter = $fb;
+				$user->twitter = $tw;
 				$userDao->save($user);
 			}
-			$this->presenter->redirect(self::REDIRECT_THIS);
+			$this->onConnect(self::TWITTER);
+			$this->presenter->redirect('this');
 		};
 		return $control;
 	}
