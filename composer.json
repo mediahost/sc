@@ -53,7 +53,8 @@
 		"sodae/netrium-addons-twitter": "dev-nette-compatibility-22-dev",
 		"nextras/forms": "~1.4",
 		"knplabs/doctrine-behaviors": "@dev",
-		"zenify/doctrine-behaviors": "~1.2"
+		"zenify/doctrine-behaviors": "~1.2",
+		"majkl578/nette-identity-doctrine": "~2.1"
 	},
 	"require-dev": {
 		"nette/tester": "~1.2.0"

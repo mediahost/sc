@@ -192,7 +192,7 @@ class SignListener extends Object implements Subscriber
 			$presenter->user->setExpiration($this->expirationService->notRemember, TRUE);
 		}
 
-		$presenter->user->login(new Identity($user->id, $user->getRolesPairs(), $user->toArray()));
+		$presenter->user->login($user);
 		$presenter->flashMessage('You are logged in.', 'success');
 
 		$presenter->restoreRequest($presenter->backlink);

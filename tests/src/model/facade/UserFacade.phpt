@@ -95,7 +95,7 @@ class UserFacadeTest extends BaseFacade
 		Assert::same($user->mail, $mail);
 		Assert::true(Passwords::verify($password, $user->hash));
 
-		Assert::true(in_array(Role::CANDIDATE, $user->getRolesPairs()));
+		Assert::true(in_array(Role::CANDIDATE, $user->getRoles()));
 
 		Assert::same(1, $this->user->id);
 		Assert::same(2, $user->id);

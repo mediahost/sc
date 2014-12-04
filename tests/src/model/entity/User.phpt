@@ -190,8 +190,8 @@ class UserTest extends ParentTestCase
 		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->getRolesKeys());
 		
 		$this->user->addRole([$roleB, $roleA, $roleC], TRUE);
-		Assert::count(3, $this->user->getRolesPairs());
-		Assert::same([2 => Role::SIGNED, 1 => Role::GUEST, 3 => Role::CANDIDATE], $this->user->getRolesPairs());
+		Assert::count(3, $this->user->getRoles());
+		Assert::same([2 => Role::SIGNED, 1 => Role::GUEST, 3 => Role::CANDIDATE], $this->user->getRoles());
 		
 		$this->user->addRole([$roleD, $roleE, $roleF], TRUE);
 		Assert::type(Role::getClassName(), $this->user->maxRole);

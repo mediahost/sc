@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Nette\Security\IIdentity;
 use Nette\Security\Passwords;
 
 /**
@@ -14,7 +15,7 @@ use Nette\Security\Passwords;
  * @property string $mail
  * @property string $hash
  * @property-write $password
- * @property ArrayCollection $roles
+ * @property-read array $roles
  * @property Role $maxRole
  * @property PageConfigSettings $pageConfigSettings
  * @property PageDesignSettings $pageDesignSettings
@@ -30,7 +31,7 @@ use Nette\Security\Passwords;
  * @method self setMail(string $mail)
  * @method self setRequiredRole(Role $role)
  */
-class User extends BaseEntity
+class User extends BaseEntity implements IIdentity
 {
 
 	const SOCIAL_CONNECTION_APP = 'app';
@@ -46,7 +47,7 @@ class User extends BaseEntity
 	protected $mail;
 
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
-	protected $roles;
+	private $roles;
 
 	/** @ORM\OneToOne(targetEntity="PageConfigSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $pageConfigSettings;
@@ -334,7 +335,7 @@ class User extends BaseEntity
 	 * Return array with roleID => roleName
 	 * @return array 
 	 */
-	public function getRolesPairs()
+	public function getRoles()
 	{
 		$array = [];
 		foreach ($this->roles as $role) {

@@ -120,11 +120,6 @@ abstract class BasePresenter extends Presenter
 
 	protected function loadUserSettings()
 	{
-		if ($this->user->loggedIn && $this->user->id) {
-			$userDao = $this->em->getDao(Entity\User::getClassName());
-			$userEntity = $userDao->find($this->user->id);
-			$this->user->login(new Identity($userEntity->id, $userEntity->getRolesPairs(), $userEntity->toArray()));
-		}
 		$this->settingStorage->identity = $this->user;
 	}
 

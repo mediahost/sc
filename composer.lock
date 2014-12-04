@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4241447a520df5f1044090ecd7abf14d",
+    "hash": "ce84db22126e09416296aa3ff8ecfd5f",
     "packages": [
         {
             "name": "dg/adminer-custom",
@@ -1854,6 +1854,51 @@
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
             "time": "2014-11-24 19:21:51"
+        },
+        {
+            "name": "majkl578/nette-identity-doctrine",
+            "version": "2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Majkl578/nette-identity-doctrine.git",
+                "reference": "f6e6d459a0a4d14cf17d3167c456090dc88b8de6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Majkl578/nette-identity-doctrine/zipball/f6e6d459a0a4d14cf17d3167c456090dc88b8de6",
+                "reference": "f6e6d459a0a4d14cf17d3167c456090dc88b8de6",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "~2.3",
+                "nette/nette": "~2.0",
+                "php": ">=5.3.2"
+            },
+            "type": "nette-addon",
+            "autoload": {
+                "psr-0": {
+                    "Majkl578\\NetteAddons\\Doctrine2Identity\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Moravec"
+                }
+            ],
+            "description": "Integration of entities implementing IIdentity in Nette 2",
+            "keywords": [
+                "Authentication",
+                "doctrine",
+                "identity",
+                "nette",
+                "orm",
+                "security"
+            ],
+            "time": "2013-12-09 14:24:34"
         },
         {
             "name": "natxet/CssMin",
