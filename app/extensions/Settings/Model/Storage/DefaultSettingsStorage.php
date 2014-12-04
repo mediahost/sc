@@ -2,6 +2,7 @@
 
 namespace App\Extensions\Settings\Model\Storage;
 
+use App\Model\Entity\User;
 use Nette\Object;
 use Nette\Security;
 use Nette\Utils\ArrayHash;
@@ -19,7 +20,7 @@ use Nette\Utils\ArrayHash;
  * @property ArrayHash $pageInfo Page Info default settings
  * @property ArrayHash $modules Allowed modules
  * @property ArrayHash $modulesSettings Settings of modules
- * @property Security\User $identity Signed identity
+ * @property User $user Signed user
  * @property GuestSettingsStorage $guest Unsigned settings
  */
 class DefaultSettingsStorage extends Object
@@ -49,8 +50,8 @@ class DefaultSettingsStorage extends Object
 	/** @var ArrayHash */
 	private $modulesSettings;
 
-	/** @var Security\User */
-	private $identity;
+	/** @var User */
+	private $user;
 
 	/** @var GuestSettingsStorage */
 	private $guest;
@@ -159,16 +160,16 @@ class DefaultSettingsStorage extends Object
 	}
 	
 	/** @return self */
-	public function setIdentity(Security\User $user)
+	public function setUser(User $user)
 	{
-		$this->identity = $user;
+		$this->user = $user;
 		return $this;
 	}
 	
-	/** @return Security\User */
-	public function getIdentity()
+	/** @return User */
+	public function getUser()
 	{
-		return $this->identity;
+		return $this->user;
 	}
 	
 	/** @return self */

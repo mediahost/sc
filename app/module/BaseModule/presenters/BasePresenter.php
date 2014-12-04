@@ -14,7 +14,6 @@ use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
-use Nette\Security\Identity;
 use Nette\Security\IUserStorage;
 use WebLoader\LoaderFactory;
 use WebLoader\Nette\CssLoader;
@@ -120,7 +119,9 @@ abstract class BasePresenter extends Presenter
 
 	protected function loadUserSettings()
 	{
-		$this->settingStorage->identity = $this->user;
+		if ($this->user->identity instanceof Entity\User) {
+			$this->settingStorage->user = $this->user->identity;
+		}
 	}
 
 	// </editor-fold>
@@ -128,11 +129,9 @@ abstract class BasePresenter extends Presenter
 
 	private function setLang()
 	{
-		// for signed user load from settings
-		if ($this->user->loggedIn) {
-			$this->lang = $this->languageService->userLanguage;
-		}
-		// for unsigned or not setted detect from browser (or default)
+		// for identity in session load from settings
+		$this->lang = $this->languageService->userLanguage;
+		// for no identity in session or not setted in identity (detect from browser or default)
 		if (!$this->lang) {
 			$this->lang = $this->languageService->detectedLanguage;
 		}
