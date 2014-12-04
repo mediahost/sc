@@ -201,7 +201,6 @@ class ConnectManagerControl extends BaseControl
 				$userDao->save($user);
 			}
 			$this->onConnect(self::TWITTER);
-			$this->presenter->redirect('this');
 		};
 		return $control;
 	}

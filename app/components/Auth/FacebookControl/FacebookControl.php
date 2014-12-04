@@ -40,8 +40,8 @@ class FacebookControl extends BaseControl
 
 	/** @var RoleFacade @inject */
 	public $roleFacade;
-	
-	/** 
+
+	/**
 	 * @var bool
 	 * @persistent 
 	 */
@@ -85,7 +85,7 @@ class FacebookControl extends BaseControl
 
 		return $dialog;
 	}
-	
+
 	public function render()
 	{
 		$template = $this->getTemplate();

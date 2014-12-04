@@ -29,9 +29,40 @@ class ProfilePresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('profile')
-	 * @privilege('default')
+	 * @privilege('settings')
 	 */
-	public function actionDefault()
+	public function actionSettings()
+	{
+		$this->redirect('connectManager');
+	}
+
+	/**
+	 * @secured
+	 * @resource('profile')
+	 * @privilege('settings')
+	 */
+	public function actionConnectManager()
+	{
+		
+	}
+
+	/**
+	 * TODO: delete
+	 * @secured
+	 * @resource('profile')
+	 * @privilege('settings')
+	 */
+	public function actionLanguage()
+	{
+		
+	}
+
+	/**
+	 * @secured
+	 * @resource('profile')
+	 * @privilege('settings')
+	 */
+	public function actionSetPassword()
 	{
 		
 	}
@@ -43,20 +74,20 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDelete()
 	{
-		$this->userFacade->deleteById($this->user->id);
-		$this->user->logout();
-		$this->flashMessage('Your account has been deleted', 'success');
-		$this->redirect(":Front:Homepage:");
+		
 	}
 
 	/**
 	 * @secured
 	 * @resource('profile')
-	 * @privilege('settings')
+	 * @privilege('delete')
 	 */
-	public function actionSettings()
+	public function handleDelete()
 	{
-		
+		$this->userFacade->deleteById($this->user->id);
+		$this->user->logout();
+		$this->flashMessage('Your account has been deleted', 'success');
+		$this->redirect(":Front:Homepage:");
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="components">
@@ -68,7 +99,7 @@ class ProfilePresenter extends BasePresenter
 		$control->setUser($this->user);
 		$control->onSuccess[] = function () {
 			$this->flashMessage('Password has been successfuly set!', 'success');
-			$this->redirect('this#connect-manager');
+			$this->redirect('this');
 		};
 		return $control;
 	}
@@ -79,7 +110,7 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iPreferencesControlFactory->create();
 		$control->onAfterSave = function () {
 			$this->flashMessage('Your settings has been saved.', 'success');
-			$this->redirect('this#personal-settings');
+			$this->redirect('this');
 		};
 		return $control;
 	}
@@ -90,39 +121,39 @@ class ProfilePresenter extends BasePresenter
 		$userDao = $this->em->getDao(Entity\User::getClassName());
 		$control = $this->iConnectManagerControlFactory->create();
 		$control->setUser($userDao->find($this->user->id));
-		$control->setAppActivateRedirect($this->link('this#set-password'));
+		$control->setAppActivateRedirect($this->link('setPassword'));
 		$control->onConnect[] = function ($type) {
 			$message = new \App\TaggedString('%s was connected.', $type);
 			$this->flashMessage($message, 'success');
 			if (!$this->isAjax()) {
-				$this->redirect('this#connect-manager');
+				$this->redirect('this');
 			}
 		};
 		$control->onDisconnect[] = function (Entity\User $user, $type) {
 			$message = new \App\TaggedString('%s was disconnected.', $type);
 			$this->flashMessage($message, 'success');
 			if (!$this->isAjax()) {
-				$this->redirect('this#connect-manager');
+				$this->redirect('this');
 			}
 		};
 		$control->onLastConnection[] = function () {
 			$this->flashMessage('Last login method is not possible deactivate.', 'warning');
 			if (!$this->isAjax()) {
-				$this->redirect('this#connect-manager');
+				$this->redirect('this');
 			}
 		};
 		$control->onInvalidType[] = function ($type) {
 			$message = new \App\TaggedString('We can\'t find \'%s\' to disconnect.', $type);
 			$this->flashMessage($message, 'warning');
 			if (!$this->isAjax()) {
-				$this->redirect('this#connect-manager');
+				$this->redirect('this');
 			}
 		};
 		$control->onUsingConnection[] = function ($type) {
 			$message = new \App\TaggedString('Logged %s account is using by another account.', $type);
 			$this->flashMessage($message, 'warning');
 			if (!$this->isAjax()) {
-				$this->redirect('this#connect-manager');
+				$this->redirect('this');
 			}
 		};
 		return $control;
