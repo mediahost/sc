@@ -27,14 +27,12 @@
                     </a>
 
                     <ul class="dropdown-menu">
-						{if !$user->isInRole('signed')}
-                        <li n:if="$user->isAllowed('profile', 'default')">
+                        <li n:if="$user->isAllowed('profile', 'default') && $isCompleteAccount">
                             <a n:href="Profile:"><i class="icon-user"></i> {_'My Profile'}</a>
                         </li>
-                        <li n:if="$user->isAllowed('profile', 'settings')">
+                        <li n:if="$user->isAllowed('profile', 'settings') && $isCompleteAccount">
                             <a n:href="Profile:settings"><i class="icon-settings"></i> {_'Settings'}</a>
                         </li>
-						{/if}
                         <li>
                             <a href="javascript:;" id="trigger_fullscreen"><i class="icon-size-fullscreen"></i> {_'Full Screen'}</a>
                         </li>

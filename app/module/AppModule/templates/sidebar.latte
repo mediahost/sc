@@ -131,7 +131,7 @@
 			<!-- END SUPERADMIN -->
 			
 			<!-- BEGIN TOGETHER AREA -->
-			{if $user->isAllowed('profile', 'default') && !$user->isInRole('signed')}
+			{if $user->isAllowed('profile', 'default') && $isCompleteAccount}
 			<li class="heading">
 				<h3 class="uppercase">{_'Settings'}</h3>
 			</li>

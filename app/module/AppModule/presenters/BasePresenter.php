@@ -20,6 +20,7 @@ abstract class BasePresenter extends BaseBasePresenter
 		$this->template->isCandidate = in_array(Role::CANDIDATE, $this->getUser()->getRoles());
 		$this->template->isCompany = in_array(Role::COMPANY, $this->getUser()->getRoles());
 		$this->template->isAdmin = in_array(Role::ADMIN, $this->getUser()->getRoles());
+		$this->template->isCompleteAccount = !$this->isUncompleteAccount();
 	}
 
 	/**
@@ -27,11 +28,18 @@ abstract class BasePresenter extends BaseBasePresenter
 	 */
 	private function checkUncompleteAccount()
 	{
-		if ($this->user->isInRole(Role::SIGNED) && count($this->user->roles) === 1) {
-			if ($this->name !== 'App:CompleteAccount') {
-				$this->redirect(':App:CompleteAccount:');
-			}
+		if ($this->isUncompleteAccount() && $this->name !== 'App:CompleteAccount') {
+			$this->redirect(':App:CompleteAccount:');
 		}
+	}
+
+	/**
+	 * Check if user account is uncomplete
+	 * @return bool
+	 */
+	private function isUncompleteAccount()
+	{
+		return $this->user->isInRole(Role::SIGNED) && count($this->user->roles) === 1;
 	}
 
 }
