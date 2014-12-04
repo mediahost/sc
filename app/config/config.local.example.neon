@@ -36,33 +36,28 @@ nette:
 #	nette.mailer: JanDrabek\MailPanel\SessionMailer
 
 settings:
-	web:
-		page: # default NULL for all
-			author: author
-			description: description
-settings:
-	web:
-		modules: # default FALSE for all
-			registrableRole: TRUE # for definition whitch role is registrable in RoleFacade
-		modulesSettings:
-			registrableRole:
-				roles: ['candidate', 'company'] # role names
-settings:
-	web:
-		controls:
-			expiration:
-				notRemember: 5 minutes
-			passwords:
-				length: 5
-			languages:
-				default: en
-				allowed: ['en' = 'English', 'cs' = 'Czech', 'sk' = 'Slovak']
-settings:
-	user:
-		preferences:
-			page:
-				language: en
-			design:
-				color: default
-				pageHeaderFixed: TRUE
-				pageContainerBgSolid: TRUE
+	modules: # default FALSE for all
+		registrableRole: TRUE # for definition whitch role is registrable in RoleFacade
+	modulesSettings:
+		registrableRole:
+			roles: ['candidate', 'company'] # role names
+	pageInfo:
+		projectName: My Project
+		author: author
+		description: description
+	pageConfig:
+		itemsPerPage: 9
+		itemsPerRow: 3
+		rowsPerPage: 3
+	expiration:
+		remember = 14 days
+		notRemember = 30 minutes
+	design:
+		color: default
+		pageHeaderFixed: TRUE
+		pageContainerBgSolid: TRUE
+	passwords:
+		length: 5
+	languages:
+		default: en
+		allowed: ['en' = 'English', 'cs' = 'Czech', 'sk' = 'Slovak']

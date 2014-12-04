@@ -3,8 +3,9 @@
 namespace App\Model\Facade;
 
 use App\Extensions\Settings\Model\Service\ExpirationService;
-use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Model\Entity\Facebook;
+use App\Model\Entity\PageConfigSettings;
+use App\Model\Entity\PageDesignSettings;
 use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
@@ -37,6 +38,12 @@ class UserFacade extends Object
 	/** @var EntityDao */
 	private $registrationDao;
 
+	/** @var EntityDao */
+	private $configSettingsDao;
+
+	/** @var EntityDao */
+	private $designSettingsDao;
+
 	public function __construct(EntityManager $em, ExpirationService $expiration)
 	{
 		$this->expirationService = $expiration;
@@ -44,6 +51,8 @@ class UserFacade extends Object
 		$this->userDao = $this->em->getDao(User::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 		$this->registrationDao = $this->em->getDao(Registration::getClassName());
+		$this->configSettingsDao = $this->em->getDao(PageConfigSettings::getClassName());
+		$this->designSettingsDao = $this->em->getDao(PageDesignSettings::getClassName());
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="create">
@@ -260,6 +269,31 @@ class UserFacade extends Object
 		}
 
 		return $user->addRole($role);
+	}
+
+	/**
+	 * Append settings to user
+	 * @param type $userId
+	 * @param PageConfigSettings $configSettings
+	 * @param PageDesignSettings $designSettings
+	 */
+	public function appendSettings($userId, PageConfigSettings $configSettings = NULL, PageDesignSettings $designSettings = NULL)
+	{
+		$user = $this->userDao->find($userId);
+		if ($user && $configSettings) {
+			if (!$user->pageConfigSettings instanceof PageConfigSettings) {
+				$user->pageConfigSettings = new PageConfigSettings;
+			}
+			$user->pageConfigSettings->append($configSettings);
+			$this->configSettingsDao->save($user->pageConfigSettings);
+		}
+		if ($user && $designSettings) {
+			if (!$user->pageDesignSettings instanceof PageDesignSettings) {
+				$user->pageDesignSettings = new PageDesignSettings;
+			}
+			$user->pageDesignSettings->append($designSettings);
+			$this->designSettingsDao->save($user->pageDesignSettings);
+		}
 	}
 
 	// </editor-fold>

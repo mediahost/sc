@@ -31,9 +31,9 @@ class SettingsExtension extends CompilerExtension
 			'notRemember' => '30 minutes',
 		],
 		'languages' => [
-			'default' => 'en',
-			'allowed' => ['en' => 'English', 'cs' => 'Czech'],
-			'recognize' => ['en' => 'en', 'cs_CZ' => 'cs'], // https://docs.moodle.org/dev/Table_of_locales
+			'default' => 'en', // code
+			'allowed' => ['en' => 'English', 'cs' => 'Czech'], // code => name
+			'recognize' => ['en' => 'en', 'cs' => 'cs'], // toDetect => code - http://www.metamodpro.com/browser-language-codes
 		],
 		'passwords' => [
 			'length' => 8,
@@ -64,6 +64,10 @@ class SettingsExtension extends CompilerExtension
 				->addSetup('setLanguages', [$config['languages']])
 				->addSetup('setPasswords', [$config['passwords']])
 				->addSetup('setDesign', [$config['design']])
+				->setInject(TRUE);
+
+		$builder->addDefinition($this->prefix('guest'))
+				->setClass('App\Extensions\Settings\Model\Storage\GuestSettingsStorage')
 				->setInject(TRUE);
 
 		$builder->addDefinition($this->prefix('design'))

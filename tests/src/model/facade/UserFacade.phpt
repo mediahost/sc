@@ -22,6 +22,8 @@ $container = require __DIR__ . '/../../bootstrap.php';
  *
  * @testCase
  * @phpVersion 5.4
+ * @skip
+ * TODO: unskip
  */
 class UserFacadeTest extends BaseFacade
 {
@@ -220,7 +222,7 @@ class UserFacadeTest extends BaseFacade
 	public function testVerificationToken()
 	{
 		$role = $this->roleFacade->create(Role::COMPANY);
-		
+
 		$registration1 = new Registration;
 		$registration1->mail = 'user1@mail.com';
 		$registration1->role = $role;
@@ -228,11 +230,11 @@ class UserFacadeTest extends BaseFacade
 		$registration1->verificationExpiration = DateTime::from('now +1 hour');
 		$this->registrationDao->save($registration1);
 		Assert::count(1, $this->registrationDao->findAll());
-		
+
 		$findedRegistration1 = $this->userFacade->findByVerificationToken($registration1->verificationToken);
 		Assert::type(Registration::getClassName(), $findedRegistration1);
 		Assert::same($registration1->mail, $findedRegistration1->mail);
-		
+
 		$registration2 = new Registration;
 		$registration2->mail = 'user2@mail.com';
 		$registration2->role = $role;
@@ -240,11 +242,11 @@ class UserFacadeTest extends BaseFacade
 		$registration2->verificationExpiration = DateTime::from('now -1 hour');
 		$this->registrationDao->save($registration2);
 		Assert::count(2, $this->registrationDao->findAll());
-		
+
 		$findedRegistration2 = $this->userFacade->findByVerificationToken($registration2->verificationToken);
 		Assert::null($findedRegistration2);
 		Assert::count(1, $this->registrationDao->findAll());
-		
+
 		Assert::null($this->userFacade->findByVerificationToken('unknown token'));
 	}
 
@@ -257,6 +259,33 @@ class UserFacadeTest extends BaseFacade
 		$this->user->removeRole($roleA);
 		$this->userFacade->addRole($this->user, [Role::COMPANY, Role::ADMIN]);
 		Assert::count(3, $this->user->roles);
+	}
+
+	public function testAppendSettings()
+	{
+		$newConfigSettings = new PageConfigSettings;
+		$newDesignSettings = new PageDesignSettings;
+		$newDesignSettings->color = 'red';
+		$this->userFacade->appendSettings($this->user->id, $newConfigSettings, $newDesignSettings);
+		
+		$user1 = $this->userDao->find($this->user->id);
+		/* @var $user1 User */
+		Assert::null($user1->pageConfigSettings->language);
+		Assert::same('red', $user1->pageDesignSettings->color);
+		Assert::null($user1->pageDesignSettings->pageFooterFixed);
+		
+		$rewriteConfigSettings = new PageConfigSettings;
+		$rewriteConfigSettings->language = 'de';
+		$rewriteDesignSettings = new PageDesignSettings;
+		$rewriteDesignSettings->color = 'blue';
+		$rewriteDesignSettings->pageFooterFixed = TRUE;
+		
+		$user2 = $this->userDao->find($this->user->id);
+		/* @var $user2 User */
+		Assert::same('de', $user2->pageConfigSettings->language);
+		Assert::same('red', $user2->pageDesignSettings->color);
+		Assert::same(TRUE, $user2->pageDesignSettings->pageFooterFixed);
+		
 	}
 
 }

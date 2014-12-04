@@ -2,12 +2,9 @@ services:
 	doctrine: Kdyby\Doctrine\DI\OrmExtension
 	annotations: Kdyby\Annotations\DI\AnnotationsExtension
 
-	# DAOs
-
 	# Facades
 	- {class: App\Model\Facade\RoleFacade, inject: yes}
 	- {class: App\Model\Facade\UserFacade, inject: yes}
 
 	# Storages
 	- {class: App\Model\Storage\SignUpStorage, inject: yes}
-	- {class: App\Model\Storage\GuestSettingsStorage, inject: yes}

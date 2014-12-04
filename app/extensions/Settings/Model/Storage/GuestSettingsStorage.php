@@ -2,22 +2,22 @@
 
 namespace App\Extensions\Settings\Model\Storage;
 
+use App\Extensions\Settings\Model\Service\PageConfigService;
 use App\Model\Entity\PageConfigSettings;
 use App\Model\Entity\PageDesignSettings;
-use App\Model\Entity\User;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Object;
 
 /**
  * Storage for unsigned user's customization settings
+ * 
+ * @property PageConfigService $pageSettings
+ * @property PageDesignService $designSettings
+ * @property-read bool $empty
  */
 class GuestSettingsStorage extends Object
 {
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	/** @var SessionSection */
 	private $section;
@@ -29,17 +29,6 @@ class GuestSettingsStorage extends Object
 	{
 		$this->section = $session->getSection('guestSettings');
 		$this->section->warnOnUndefined = TRUE;
-		$this->init();
-	}
-
-	private function init()
-	{
-		if (!isset($this->section->page)) {
-			$this->section->page = new PageConfigSettings;
-		}
-		if (!isset($this->section->design)) {
-			$this->section->design = new PageDesignSettings;
-		}
 	}
 
 	/**
@@ -52,10 +41,13 @@ class GuestSettingsStorage extends Object
 		return $this;
 	}
 
-	/** @return PageConfigSettings */
+	/** @return PageConfigSettings|NULL */
 	public function getPageSettings()
 	{
-		return $this->section->page;
+		if (isset($this->section->page)) {
+			return $this->section->page;
+		}
+		return NULL;
 	}
 
 	/**
@@ -71,7 +63,15 @@ class GuestSettingsStorage extends Object
 	/** @return PageDesignSettings */
 	public function getDesignSettings()
 	{
-		return $this->section->design;
+		if (isset($this->section->design)) {
+			return $this->section->design;
+		}
+		return NULL;
+	}
+	
+	public function isEmpty()
+	{
+		return (!isset($this->section->page) && !isset($this->section->design));
 	}
 
 	/** @return self */

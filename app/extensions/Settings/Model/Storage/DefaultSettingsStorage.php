@@ -2,7 +2,6 @@
 
 namespace App\Extensions\Settings\Model\Storage;
 
-use App\Model\Storage\GuestSettingsStorage;
 use Nette\Object;
 use Nette\Security;
 use Nette\Utils\ArrayHash;

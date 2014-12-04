@@ -19,7 +19,7 @@ class DesignService extends BaseService
 	{
 		$settings = new PageDesignSettings();
 		$settings->setValues((array) $this->defaultStorage->design);
-		if ($this->user) {
+		if ($this->user && $this->user->pageDesignSettings) {
 			$settings->append($this->user->pageDesignSettings);
 		}
 		return $settings;
