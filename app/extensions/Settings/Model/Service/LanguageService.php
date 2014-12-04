@@ -11,6 +11,7 @@ use Nette\Http\Request;
  * 
  * @property-read string $language Default or user language
  * @property-read string $defaultLanguage
+ * @property-read string $userLanguage
  * @property-read array $allowedLanguages
  * @property-read array $detectedLanguage
  */
@@ -37,6 +38,17 @@ class LanguageService extends BaseService
 	public function getDefaultLanguage()
 	{
 		return $this->defaultStorage->languages->default;
+	}
+
+	/**
+	 * @return string|NULL
+	 */
+	public function getUserLanguage()
+	{
+		if ($this->user && $this->user->pageConfigSettings && $this->user->pageConfigSettings->language) {
+			return $this->user->pageConfigSettings->language;
+		}
+		return NULL;
 	}
 
 	/**

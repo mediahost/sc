@@ -133,11 +133,13 @@ abstract class BasePresenter extends Presenter
 
 	private function setLang()
 	{
+		// for signed user load from settings
+		if ($this->user->loggedIn) {
+			$this->lang = $this->languageService->userLanguage;
+		}
+		// for unsigned or not setted detect from browser (or default)
 		if (!$this->lang) {
 			$this->lang = $this->languageService->detectedLanguage;
-		}
-		if (!$this->lang) {
-			$this->lang = $this->languageService->language;
 		}
 		$this->translator->setLang($this->lang);
 	}
