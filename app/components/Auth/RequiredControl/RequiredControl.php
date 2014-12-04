@@ -27,28 +27,23 @@ class RequiredControl extends BaseControl
 		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
-
-		$form->addText('mail', 'E-mail')
+		
+		$form->addServerValidatedText('mail', 'E-mail')
 				->setAttribute('placeholder', 'E-mail')
 				->setRequired('Please enter your e-mail.')
-				->addRule(Form::EMAIL, 'E-mail has not valid format.');
+				->addRule(Form::EMAIL, 'E-mail has not valid format.')
+				->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'))
+				->setOption('description', 'for example: example@domain.com');
 
 		$form->addSubmit('continue', 'Continue');
 
-		$form->onSubmit[] = $this->formSubmit;
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
-
-	// TODO: do it by server-side validation
-	public function formSubmit(Form $form)
+	
+	public function validateMail(IControl $control, $arg = NULL)
 	{
-		$values = $form->getValues();
-		if (!$this->userFacade->isUnique($values->mail)) {
-			$message = new TaggedString('%s is already registered.', $values->mail);
-			$message->setTranslator($this->translator);
-			$form['mail']->addError((string) $message);
-		}
+		return $this->userFacade->isUnique($control->getValue());
 	}
 
 	/**
