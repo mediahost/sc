@@ -2,6 +2,8 @@
 
 namespace App\Extensions\Settings\Model\Service;
 
+use Nette\Http\Request;
+
 /**
  * LanguageService
  * 
@@ -10,9 +12,13 @@ namespace App\Extensions\Settings\Model\Service;
  * @property-read string $language Default or user language
  * @property-read string $defaultLanguage
  * @property-read array $allowedLanguages
+ * @property-read array $detectedLanguage
  */
 class LanguageService extends BaseService
 {
+
+	/** @var Request @inject */
+	public $httpRequest;
 
 	/**
 	 * @return string 
@@ -52,15 +58,14 @@ class LanguageService extends BaseService
 	}
 
 	/**
-	 * Recognize code and return recognized language or default language
-	 * @param string $code
-	 * @return string 
+	 * Detect language from http request
+	 * @return string return allowed lang code or default lang code
 	 */
-	public function recognizeLanguage($code)
+	public function getDetectedLanguage()
 	{
-		$languages = $this->defaultStorage->languages->recognize;
-		if (array_key_exists($code, $languages)) {
-			return $languages[$code];
+		$detected = $this->httpRequest->detectLanguage(array_keys((array) $this->defaultStorage->languages->recognize));
+		if ($detected && $this->isAllowed($detected)) {
+				return $detected;
 		}
 		return $this->getDefaultLanguage();
 	}

@@ -26,7 +26,7 @@ abstract class BasePresenter extends Presenter
 {
 
 	/** @persistent */
-	public $lang = 'en';
+	public $lang = '';
 
 	/** @persistent */
 	public $backlink = '';
@@ -133,6 +133,9 @@ abstract class BasePresenter extends Presenter
 
 	private function setLang()
 	{
+		if (!$this->lang) {
+			$this->lang = $this->languageService->detectedLanguage;
+		}
 		if (!$this->lang) {
 			$this->lang = $this->languageService->language;
 		}
