@@ -39,27 +39,12 @@
 				</a>
 			</li>
 			<!-- END DASHBOARD -->
-			
-			<!-- BEGIN SUBHEADLINE -->
-			<li n:if="$user->isInRole('candidate')"
-				class="heading">
-				<h3 class="uppercase">{_'Candidate'}</h3>
-			</li>
-			<li n:if="$user->isInRole('company')"
-				class="heading">
-				<h3 class="uppercase">{_'Company'}</h3>
-			</li>			
-			<li n:if="$user->isInRole('admin')"
-				class="heading">
-				<h3 class="uppercase">{_'Admin'}</h3>
-			</li>
-			<li n:if="$user->isInRole('superadmin')"
-				class="heading">
-				<h3 class="uppercase">{_'Superadmin'}</h3>
-			</li>
-			<!-- END SUBHEADLINE -->
 
 			<!-- BEGIN CANDIDATE -->
+			{if $user->isInRole('candidate')}
+			<li class="heading">
+				<h3 class="uppercase">{_'Candidate'}</h3>
+			</li>
 			<li n:if="$user->isAllowed('candidate', 'default')"
 				class="{ifCurrent Candidate:*} active{/ifCurrent}">
 				<a n:href="Candidate:">
@@ -67,9 +52,14 @@
 					<span class="badge badge-danger badge-roundless">{_'new'}</span>
 				</a>
 			</li>
+			{/if}
 			<!-- END CANDIDATE -->
 
 			<!-- BEGIN COMPANY -->
+			{if $user->isInRole('company')}
+			<li class="heading">
+				<h3 class="uppercase">{_'Company'}</h3>
+			</li>			
 			<li n:if="$user->isAllowed('company', 'default')"
 				class="{ifCurrent Company:*} active{/ifCurrent}">
 				<a n:href="Company:">
@@ -77,9 +67,14 @@
 					<span class="badge badge-danger badge-roundless">{_'new'}</span>
 				</a>
 			</li>
+			{/if}
 			<!-- END COMPANY -->
 			
 			<!-- BEGIN ADMIN -->
+			{if $user->isAllowed('users')|| $user->isAllowed('skills')}
+			<li class="heading">
+				<h3 class="uppercase">{_'Admin'}</h3>
+			</li>
 			<li n:if="$user->isAllowed('users', 'default')"
 				class="{ifCurrent Users:*} active{/ifCurrent}">
 				<a n:href="Users:">
@@ -108,9 +103,14 @@
 					</li>
 				</ul>
 			</li>
+			{/if}
 			<!-- END ADMIN -->
 			
 			<!-- BEGIN SUPERADMIN -->
+			{if $user->isAllowed('examples')}
+			<li class="heading">
+				<h3 class="uppercase">{_'Superadmin'}</h3>
+			</li>
 			<li n:if="$user->isAllowed('examples', 'default')"
 				class="start{ifCurrent Examples:*} active{/ifCurrent}">
 				<a n:href="Examples:">
@@ -128,6 +128,7 @@
 					</li>
 				</ul>
 			</li>
+			{/if}
 			<!-- END SUPERADMIN -->
 			
 			<!-- BEGIN TOGETHER AREA -->
