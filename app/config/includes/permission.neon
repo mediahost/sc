@@ -12,8 +12,6 @@ services:
 			- addRole('superadmin', 'admin')
 
 			# Resources
-			- addResource('front')
-
 			- addResource('dashboard')
 			- addResource('registration')
 			- addResource('profile')
@@ -31,7 +29,6 @@ services:
 			# Privilegies
 			- deny('guest')
 
-			- allow('guest', 'front')
 			- allow('signed', 'dashboard', 'default')
 			- allow('signed', 'registration')
 			- allow('signed', 'profile', ['default', 'settings', 'delete'])

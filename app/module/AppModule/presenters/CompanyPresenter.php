@@ -7,6 +7,7 @@ namespace App\AppModule\Presenters;
  */
 class CompanyPresenter extends BasePresenter
 {
+
 	/**
 	 * @secured
 	 * @resource('company')
@@ -16,4 +17,5 @@ class CompanyPresenter extends BasePresenter
 	{
 		
 	}
+
 }

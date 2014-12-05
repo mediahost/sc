@@ -10,6 +10,7 @@ use App\Model\Entity\User;
  */
 class CandidatePresenter extends BasePresenter
 {
+
 	/**
 	 * @secured
 	 * @resource('candidate')
@@ -24,7 +25,8 @@ class CandidatePresenter extends BasePresenter
 			$this->em->getDao(Candidate::getClassName())->save($candidate);
 			$user->candidate = $candidate;
 		}
-		
+
 		$this->template->candidate = $user->candidate;
 	}
+
 }
