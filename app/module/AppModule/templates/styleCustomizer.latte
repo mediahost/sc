@@ -9,17 +9,13 @@
 		<div class="theme-option theme-colors clearfix">
 			<span>{_'Theme Color'|upper}</span>
 			<ul>
-				<li class="color-default current tooltips" data-style="default" data-container="body" data-original-title="{_'Default'}">
-				</li>
-				<li class="color-darkblue tooltips" data-style="darkblue" data-container="body" data-original-title="{_'Dark Blue'}">
-				</li>
-				<li class="color-blue tooltips" data-style="blue" data-container="body" data-original-title="{_'Blue'}">
-				</li>
-				<li class="color-grey tooltips" data-style="grey" data-container="body" data-original-title="{_'Grey'}">
-				</li>
-				<li class="color-light tooltips" data-style="light" data-container="body" data-original-title="{_'Light'}">
-				</li>
-				<li class="color-light2 tooltips" data-style="light2" data-container="body" data-html="true" data-original-title="{_'Light 2'}">
+				<li n:foreach="$designColors as $designColorCode => $designColorName"
+					n:class="'color-' . $designColorCode, tooltips, $designSettings->color === $designColorCode ? current"
+					data-style="{$designColorCode}"
+					data-url="{link :Ajax:Design:setColor, $designColorCode}"
+					data-container="body"
+					{if $iterator->isLast()}data-html="true"{/if}
+					data-original-title="{_$designColorName}">
 				</li>
 			</ul>
 		</div>

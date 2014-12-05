@@ -39,6 +39,7 @@ class SettingsExtension extends CompilerExtension
 			'length' => 8,
 		],
 		'design' => [
+			'colors' => ['default' => 'Default'], // code => name
 			'color' => 'default',
 			'pageHeaderFixed' => FALSE,
 			'pageSidebarClosed' => FALSE,

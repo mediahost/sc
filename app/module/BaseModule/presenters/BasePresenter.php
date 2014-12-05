@@ -70,6 +70,7 @@ abstract class BasePresenter extends Presenter
 		$this->template->lang = $this->lang;
 		$this->template->setTranslator($this->translator);
 		$this->template->designSettings = $this->designService->settings;
+		$this->template->designColors = $this->designService->colors;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="flash messages">

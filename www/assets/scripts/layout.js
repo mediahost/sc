@@ -735,6 +735,7 @@ var Layout = function () {
         $('.theme-colors > ul > li', panel).click(function() {
             var color = $(this).attr("data-style");
             setColor(color);
+			$.ajax($(this).attr("data-url"));
             $('ul > li', panel).removeClass("current");
             $(this).addClass("current");
         });
