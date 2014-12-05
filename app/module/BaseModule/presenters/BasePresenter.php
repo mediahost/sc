@@ -139,6 +139,20 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="handlers">
+
+	public function handleChangeLanguage($newLang)
+	{
+		if ($this->languageService->isAllowed($newLang)) {
+			$this->languageService->userLanguage = $newLang;
+			$this->redirect('this', ['lang' => $newLang]);
+		} else {
+			$this->flashMessage('Requested language isn\'t supported.', 'warning');
+			$this->redirect('this');
+		}
+	}
+
+	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="components">
 
 	/** @return SignOutControl */

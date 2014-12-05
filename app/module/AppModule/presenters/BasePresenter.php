@@ -21,6 +21,7 @@ abstract class BasePresenter extends BaseBasePresenter
 		$this->template->isCompany = in_array(Role::COMPANY, $this->getUser()->getRoles());
 		$this->template->isAdmin = in_array(Role::ADMIN, $this->getUser()->getRoles());
 		$this->template->isCompleteAccount = !$this->isUncompleteAccount();
+		$this->template->allowedLanguages = $this->languageService->allowedLanguages;
 	}
 
 	/**

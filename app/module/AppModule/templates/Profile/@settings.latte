@@ -21,15 +21,6 @@
 		<span class="after" n:ifCurrent="connectManager">
 		</span>
 	</li>
-	<li {ifCurrent language}class="active"{/ifCurrent}>
-		<a n:href="language">
-			<i class="icon-speech"></i>
-			{_'Language'}
-			<span class="badge badge-warning badge-roundless">{_'new'}</span>
-		</a>
-		<span class="after" n:ifCurrent="language">
-		</span>
-	</li>
 	<li {ifCurrent setPassword}class="active"{/ifCurrent}>
 		<a n:href="setPassword">
 			<i class="icon-key"></i>

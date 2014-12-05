@@ -20,9 +20,6 @@ class ProfilePresenter extends BasePresenter
 	/** @var ISetPasswordControlFactory @inject */
 	public $iSetPasswordControlFactory;
 
-	/** @var IPreferencesControlFactory @inject */
-	public $iPreferencesControlFactory;
-
 	/** @var IConnectManagerControlFactory @inject */
 	public $iConnectManagerControlFactory;
 
@@ -42,17 +39,6 @@ class ProfilePresenter extends BasePresenter
 	 * @privilege('settings')
 	 */
 	public function actionConnectManager()
-	{
-		
-	}
-
-	/**
-	 * TODO: delete
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('settings')
-	 */
-	public function actionLanguage()
 	{
 		
 	}
@@ -99,17 +85,6 @@ class ProfilePresenter extends BasePresenter
 		$control->setUser($this->user);
 		$control->onSuccess[] = function () {
 			$this->flashMessage('Password has been successfuly set!', 'success');
-			$this->redirect('this');
-		};
-		return $control;
-	}
-
-	/** @return PreferencesControl */
-	protected function createComponentSettings()
-	{
-		$control = $this->iPreferencesControlFactory->create();
-		$control->onAfterSave = function () {
-			$this->flashMessage('Your settings has been saved.', 'success');
 			$this->redirect('this');
 		};
 		return $control;

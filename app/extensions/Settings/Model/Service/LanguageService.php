@@ -2,6 +2,7 @@
 
 namespace App\Extensions\Settings\Model\Service;
 
+use App\Model\Entity\PageConfigSettings;
 use Nette\Http\Request;
 
 /**
@@ -11,7 +12,7 @@ use Nette\Http\Request;
  * 
  * @property-read string $language Default or user language
  * @property-read string $defaultLanguage
- * @property-read string $userLanguage
+ * @property string $userLanguage
  * @property-read array $allowedLanguages
  * @property-read array $detectedLanguage
  */
@@ -49,6 +50,23 @@ class LanguageService extends BaseService
 			return $this->user->pageConfigSettings->language;
 		}
 		return NULL;
+	}
+
+	/**
+	 * Set and save user language
+	 * @return self
+	 */
+	public function setUserLanguage($lang)
+	{
+		if ($this->user->id && $this->isAllowed($lang)) {
+			if ($this->user->pageConfigSettings instanceof PageConfigSettings) {
+				$this->user->pageConfigSettings->language = $lang;
+			} else {
+				$this->user->pageConfigSettings = new PageConfigSettings;
+			}
+			$this->saveUser();
+		}
+		return $this;
 	}
 
 	/**

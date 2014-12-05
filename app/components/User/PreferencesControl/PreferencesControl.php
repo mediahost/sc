@@ -38,7 +38,6 @@ class PreferencesControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		// TODO: Save lang
 		$this->onAfterSave($values->language);
 	}
 

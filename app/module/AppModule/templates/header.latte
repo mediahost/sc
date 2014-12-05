@@ -18,6 +18,22 @@
         <!-- BEGIN TOP NAVIGATION MENU -->
         <div class="top-menu">
             <ul class="nav navbar-nav pull-right">
+				
+				<!-- BEGIN LANGUAGE BAR -->
+				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+				<li class="dropdown dropdown-language">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+						<img alt="{_$allowedLanguages[$lang]}" src="{$basePath}/assets/img/flags/{$lang}.png">
+						<span class="langname">{_$allowedLanguages[$lang]}</span> <i class="fa fa-angle-down"></i>
+					</a>
+					<ul class="dropdown-menu dropdown-menu-default">
+						<li n:foreach="$allowedLanguages as $langCode => $langName" n:if="$langCode !== $lang">
+							<a n:href="changeLanguage! $langCode">
+							<img alt="{_$langName}" src="{$basePath}/assets/img/flags/{$langCode}.png">{_$langName}</a>
+						</li>
+					</ul>
+				</li>
+				<!-- END LANGUAGE BAR -->
 
                 <!-- BEGIN USER LOGIN DROPDOWN -->
                 <li class="dropdown dropdown-user">
