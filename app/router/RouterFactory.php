@@ -23,9 +23,18 @@ class RouterFactory
 
 		$router[] = new Route('index.php', 'Front:Default:default', Route::ONE_WAY);
 
+		$router[] = $ajaxRouter = new RouteList('Ajax');
 		$router[] = $adminRouter = new RouteList('App');
 		$router[] = $frontRouter = new RouteList('Front');
+		// <editor-fold defaultstate="expanded" desc="Ajax">
 
+		$ajaxRouter[] = new Route('ajax/<presenter>/<action>[/<id>]', [
+			'presenter' => 'Default',
+			'action' => 'default',
+			'id' => NULL,
+		]);
+
+		// </editor-fold>
 		// <editor-fold defaultstate="expanded" desc="App">
 
 		$adminRouter[] = new Route('app/<presenter>/<action>[/<id>]', [
