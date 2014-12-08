@@ -435,11 +435,11 @@ Page Header
   font-size: 14px;
 }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-language > .dropdown-menu > li > a {
-  font-size: 13px;
+  /*font-size: 13px;*/
 }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-language > .dropdown-menu > li > a > img {
   margin-bottom: 2px;
-  margin-right: 5px;
+  margin-right: 9px;
 }
 .page-header.navbar .top-menu .navbar-nav li.dropdown-dark .dropdown-menu {
   border: 0;
