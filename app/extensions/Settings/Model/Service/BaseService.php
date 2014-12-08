@@ -26,17 +26,20 @@ abstract class BaseService extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @return User */
+	/** @return User|NULL */
 	public function getUser()
 	{
-		return $this->defaultStorage->user;
+		if ($this->defaultStorage->loggedIn) {
+			return $this->defaultStorage->user;
+		}
+		return NULL;
 	}
 
 	/**
 	 * Saving user
 	 * @return User
 	 */
-	protected function saveUser()
+	public function saveUser()
 	{
 		if ($this->user instanceof User && $this->user->id) {
 			$userDao = $this->em->getDao(User::getClassName());

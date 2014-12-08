@@ -54,8 +54,8 @@ settings:
 		notRemember = 30 minutes
 	design:
 		color: default
-		pageHeaderFixed: TRUE
-		pageContainerBgSolid: TRUE
+		headerFixed: TRUE
+		containerBgSolid: TRUE
 	passwords:
 		length: 5
 	languages:

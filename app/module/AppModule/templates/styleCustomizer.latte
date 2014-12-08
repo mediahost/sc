@@ -5,7 +5,8 @@
 	</div>
 	<div class="toggler-close">
 	</div>
-	<div class="theme-options">
+	<div class="theme-options"
+		data-url="{link :Ajax:Design:setLayout}">
 		<div class="theme-option theme-colors clearfix">
 			<span>{_'Theme Color'|upper}</span>
 			<ul>
@@ -19,70 +20,55 @@
 				</li>
 			</ul>
 		</div>
-<!--		<div class="theme-option">
-			<span>
-				Layout </span>
+		<div class="theme-option">
+			<span>{_'Layout'}</span>
 			<select class="layout-option form-control input-sm">
-				<option value="fluid" selected="selected">Fluid</option>
-				<option value="boxed">Boxed</option>
+				<option value="fluid"{if !$designSettings->layoutBoxed} selected="selected"{/if}>{_'Fluid'}</option>
+				<option value="boxed"{if $designSettings->layoutBoxed} selected="selected"{/if}>{_'Boxed'}</option>
 			</select>
-		</div>-->
-<!--		<div class="theme-option">
-			<span>
-				Header </span>
+		</div>
+		<div class="theme-option">
+			<span>{_'Header'}</span>
 			<select class="page-header-option form-control input-sm">
-				<option value="fixed" selected="selected">Fixed</option>
-				<option value="default">Default</option>
+				<option value="fixed"{if $designSettings->headerFixed} selected="selected"{/if}>{_'Fixed'}</option>
+				<option value="default"{if !$designSettings->headerFixed} selected="selected"{/if}>{_'Default'}</option>
 			</select>
-		</div>-->
-<!--		<div class="theme-option">
-			<span>
-				Top Menu Dropdown</span>
-			<select class="page-header-top-dropdown-style-option form-control input-sm">
-				<option value="light" selected="selected">Light</option>
-				<option value="dark">Dark</option>
-			</select>
-		</div>-->
-<!--		<div class="theme-option">
-			<span>
-				Sidebar Mode</span>
+		</div>
+		<div class="theme-option">
+			<span>{_'Sidebar Mode'}</span>
 			<select class="sidebar-option form-control input-sm">
-				<option value="fixed">Fixed</option>
-				<option value="default" selected="selected">Default</option>
+				<option value="fixed"{if $designSettings->sidebarFixed} selected="selected"{/if}>{_'Fixed'}</option>
+				<option value="default"{if !$designSettings->sidebarFixed} selected="selected"{/if}>{_'Default'}</option>
 			</select>
-		</div>-->
-<!--		<div class="theme-option">
-			<span>
-				Sidebar Menu </span>
+		</div>
+		<div class="theme-option">
+			<span>{_'Sidebar Menu'}</span>
 			<select class="sidebar-menu-option form-control input-sm">
-				<option value="accordion" selected="selected">Accordion</option>
-				<option value="hover">Hover</option>
+				<option value="accordion"{if !$designSettings->sidebarMenuHover} selected="selected"{/if}>{_'Accordion'}</option>
+				<option value="hover"{if $designSettings->sidebarMenuHover} selected="selected"{/if}>{_'Hover'}</option>
 			</select>
-		</div>-->
-<!--		<div class="theme-option">
-			<span>
-				Sidebar Style </span>
+		</div>
+		<div class="theme-option">
+			<span>{_'Sidebar Style'}</span>
 			<select class="sidebar-style-option form-control input-sm">
-				<option value="default" selected="selected">Default</option>
-				<option value="light">Light</option>
+				<option value="default"{if !$designSettings->sidebarMenuLight} selected="selected"{/if}>{_'Default'}</option>
+				<option value="light"{if $designSettings->sidebarMenuLight} selected="selected"{/if}>{_'Light'}</option>
 			</select>
-		</div>-->
-<!--		<div class="theme-option">
-			<span>
-				Sidebar Position </span>
+		</div>
+		<div class="theme-option">
+			<span>{_'Sidebar Position'}</span>
 			<select class="sidebar-pos-option form-control input-sm">
-				<option value="left" selected="selected">Left</option>
-				<option value="right">Right</option>
+				<option value="left"{if !$designSettings->sidebarReversed} selected="selected"{/if}>{_'Left'}</option>
+				<option value="right"{if $designSettings->sidebarReversed} selected="selected"{/if}>{_'Right'}</option>
 			</select>
-		</div>-->
-<!--		<div class="theme-option">
-			<span>
-				Footer </span>
+		</div>
+		<div class="theme-option">
+			<span>{_'Footer'}</span>
 			<select class="page-footer-option form-control input-sm">
-				<option value="fixed">Fixed</option>
-				<option value="default" selected="selected">Default</option>
+				<option value="fixed"{if $designSettings->footerFixed} selected="selected"{/if}>{_'Fixed'}</option>
+				<option value="default"{if !$designSettings->footerFixed} selected="selected"{/if}>{_'Default'}</option>
 			</select>
-		</div>-->
+		</div>
 	</div>
 </div>
 <!-- END STYLE CUSTOMIZER -->

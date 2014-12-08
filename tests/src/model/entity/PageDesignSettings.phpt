@@ -22,13 +22,12 @@ class PageDesignSettingsTest extends TestCase
 	{
 		$values = [
 			'color' => 'default',
-			'pageHeaderFixed' => TRUE,
-			'pageSidebarClosed' => FALSE,
-			'pageSidebarFixed' => TRUE,
-			'pageFooterFixed' => FALSE,
-			'pageSidebarReversed' => TRUE,
-			'pageFullWidth' => FALSE,
-			'pageContainerBgSolid' => TRUE,
+			'headerFixed' => TRUE,
+			'sidebarClosed' => FALSE,
+			'sidebarFixed' => TRUE,
+			'footerFixed' => FALSE,
+			'sidebarReversed' => TRUE,
+			'containerBgSolid' => TRUE,
 		];
 		$user = new User;
 		$user->mail = ('user@mail.com');
@@ -45,13 +44,12 @@ class PageDesignSettingsTest extends TestCase
 		$entity1->setValues($values);
 		Assert::count(9, $entity1->notNullValuesArray);
 		Assert::same($values['color'], $entity1->color);
-		Assert::same($values['pageHeaderFixed'], $entity1->pageHeaderFixed);
-		Assert::same($values['pageSidebarClosed'], $entity1->pageSidebarClosed);
-		Assert::same($values['pageSidebarFixed'], $entity1->pageSidebarFixed);
-		Assert::same($values['pageFooterFixed'], $entity1->pageFooterFixed);
-		Assert::same($values['pageSidebarReversed'], $entity1->pageSidebarReversed);
-		Assert::same($values['pageFullWidth'], $entity1->pageFullWidth);
-		Assert::same($values['pageContainerBgSolid'], $entity1->pageContainerBgSolid);
+		Assert::same($values['containerBgSolid'], $entity1->containerBgSolid);
+		Assert::same($values['headerFixed'], $entity1->headerFixed);
+		Assert::same($values['footerFixed'], $entity1->footerFixed);
+		Assert::same($values['sidebarClosed'], $entity1->sidebarClosed);
+		Assert::same($values['sidebarFixed'], $entity1->sidebarFixed);
+		Assert::same($values['sidebarReversed'], $entity1->sidebarReversed);
 
 		Assert::exception(function() use ($entity1) {
 			$entity1->id = 123;

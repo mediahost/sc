@@ -31,18 +31,19 @@
 	<!-- END HEAD -->
 
 	<!-- BEGIN BODY -->
-	<body n:class="$designSettings->pageHeaderFixed ? page-header-fixed,
-					$designSettings->pageSidebarClosed ? 'page-sidebar-closed page-sidebar-menu-closed',
-					$designSettings->pageSidebarFixed ? page-sidebar-fixed,
-					$designSettings->pageFooterFixed ? page-footer-fixed,
-					$designSettings->pageSidebarReversed ? page-sidebar-reversed,
-					$designSettings->pageFullWidth ? page-full-width,
-					$designSettings->pageContainerBgSolid ? page-container-bg-solid">
+	<body n:class="$designSettings->headerFixed ? page-header-fixed,
+					$designSettings->layoutBoxed ? page-boxed,
+					$designSettings->sidebarClosed ? 'page-sidebar-closed page-sidebar-menu-closed',
+					$designSettings->sidebarFixed ? page-sidebar-fixed,
+					$designSettings->footerFixed ? page-footer-fixed,
+					$designSettings->sidebarReversed ? page-sidebar-reversed,
+					$designSettings->containerBgSolid ? page-container-bg-solid">
 		<script> document.documentElement.className += ' js'</script>
 
 		{include 'header.latte'}
 
 		<!-- BEGIN CONTAINER -->
+		{if $designSettings->layoutBoxed}<div class="container">{/if}
 		<div class="page-container">
 
 			{include 'sidebar.latte'}
@@ -75,9 +76,14 @@
 			<!-- END CONTENT -->
 
 		</div>
+		{if $designSettings->layoutBoxed && $designSettings->footerFixed}</div>{/if}
 		<!-- END CONTAINER -->
 
+		{if $designSettings->layoutBoxed && $designSettings->footerFixed}<div class="container">{/if}
 		{include 'footer.latte'}
+		{if $designSettings->layoutBoxed && $designSettings->footerFixed}</div>{/if}
+		
+		{if $designSettings->layoutBoxed && !$designSettings->footerFixed}</div>{/if}
 
 		{block scripts}
 		<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->

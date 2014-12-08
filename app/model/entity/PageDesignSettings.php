@@ -10,13 +10,15 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @ORM\Entity
  * 
  * @property-read string $color
- * @property-read boolean $pageHeaderFixed
- * @property-read boolean $pageSidebarClosed
- * @property-read boolean $pageSidebarFixed
- * @property-read boolean $pageFooterFixed
- * @property-read boolean $pageSidebarReversed
- * @property-read boolean $pageFullWidth
- * @property-read boolean $pageContainerBgSolid
+ * @property-read boolean $layoutBoxed
+ * @property-read boolean $containerBgSolid
+ * @property-read boolean $headerFixed
+ * @property-read boolean $footerFixed
+ * @property-read boolean $sidebarClosed
+ * @property-read boolean $sidebarFixed
+ * @property-read boolean $sidebarReversed
+ * @property-read boolean $sidebarMenuHover
+ * @property-read boolean $sidebarMenuLight
  * @property-read array $notNullValuesArray
  */
 class PageDesignSettings extends BaseEntity
@@ -34,25 +36,31 @@ class PageDesignSettings extends BaseEntity
 	protected $color;
 
 	/** @ORM\Column(type="boolean", nullable=true) */
-	protected $pageHeaderFixed;
+	protected $layoutBoxed;
 
 	/** @ORM\Column(type="boolean", nullable=true) */
-	protected $pageSidebarClosed;
+	protected $containerBgSolid;
 
 	/** @ORM\Column(type="boolean", nullable=true) */
-	protected $pageSidebarFixed;
+	protected $headerFixed;
 
 	/** @ORM\Column(type="boolean", nullable=true) */
-	protected $pageFooterFixed;
+	protected $footerFixed;
 
 	/** @ORM\Column(type="boolean", nullable=true) */
-	protected $pageSidebarReversed;
+	protected $sidebarClosed;
 
 	/** @ORM\Column(type="boolean", nullable=true) */
-	protected $pageFullWidth;
+	protected $sidebarFixed;
 
 	/** @ORM\Column(type="boolean", nullable=true) */
-	protected $pageContainerBgSolid;
+	protected $sidebarReversed;
+
+	/** @ORM\Column(type="boolean", nullable=true) */
+	protected $sidebarMenuHover;
+
+	/** @ORM\Column(type="boolean", nullable=true) */
+	protected $sidebarMenuLight;
 
 	/**
 	 * Set default value for entity
@@ -95,26 +103,29 @@ class PageDesignSettings extends BaseEntity
 		if ($rewriteExisting || !$this->color) {
 			$this->color = $entity->color;
 		}
-		if ($rewriteExisting || !$this->pageHeaderFixed) {
-			$this->pageHeaderFixed = $entity->pageHeaderFixed;
+		if ($rewriteExisting || !$this->containerBgSolid) {
+			$this->containerBgSolid = $entity->containerBgSolid;
 		}
-		if ($rewriteExisting || !$this->pageSidebarClosed) {
-			$this->pageSidebarClosed = $entity->pageSidebarClosed;
+		if ($rewriteExisting || !$this->headerFixed) {
+			$this->headerFixed = $entity->headerFixed;
 		}
-		if ($rewriteExisting || !$this->pageSidebarFixed) {
-			$this->pageSidebarFixed = $entity->pageSidebarFixed;
+		if ($rewriteExisting || !$this->footerFixed) {
+			$this->footerFixed = $entity->footerFixed;
 		}
-		if ($rewriteExisting || !$this->pageFooterFixed) {
-			$this->pageFooterFixed = $entity->pageFooterFixed;
+		if ($rewriteExisting || !$this->sidebarClosed) {
+			$this->sidebarClosed = $entity->sidebarClosed;
 		}
-		if ($rewriteExisting || !$this->pageSidebarReversed) {
-			$this->pageSidebarReversed = $entity->pageSidebarReversed;
+		if ($rewriteExisting || !$this->sidebarFixed) {
+			$this->sidebarFixed = $entity->sidebarFixed;
 		}
-		if ($rewriteExisting || !$this->pageFullWidth) {
-			$this->pageFullWidth = $entity->pageFullWidth;
+		if ($rewriteExisting || !$this->sidebarReversed) {
+			$this->sidebarReversed = $entity->sidebarReversed;
 		}
-		if ($rewriteExisting || !$this->pageContainerBgSolid) {
-			$this->pageContainerBgSolid = $entity->pageContainerBgSolid;
+		if ($rewriteExisting || !$this->sidebarMenuHover) {
+			$this->sidebarMenuHover = $entity->sidebarMenuHover;
+		}
+		if ($rewriteExisting || !$this->sidebarMenuLight) {
+			$this->sidebarMenuLight = $entity->sidebarMenuLight;
 		}
 		return $this;
 	}

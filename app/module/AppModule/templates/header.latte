@@ -1,13 +1,14 @@
 {block header}
 <!-- BEGIN HEADER -->
-<div class="page-header navbar navbar-fixed-top">
+<div n:class="page-header, navbar, 
+			$designSettings->headerFixed ? navbar-fixed-top : navbar-static-top">
     <!-- BEGIN TOP NAVIGATION BAR -->
-    <div class="page-header-inner">
+    <div n:class="page-header-inner, $designSettings->layoutBoxed ? container">
 
         <!-- BEGIN LOGO -->
         <div class="page-logo">
             <a n:href="this"><img src="{$basePath}/assets/img/logo.png" alt="logo" class="logo-default"/></a>
-            <div class="menu-toggler sidebar-toggler"></div>
+            <div class="menu-toggler sidebar-toggler" data-url="{link :Ajax:Design:setSidebarClosed}"></div>
         </div>
         <!-- END LOGO -->
 

@@ -4,10 +4,16 @@
 	<div class="page-sidebar navbar-collapse collapse">
 		
 		<!-- BEGIN SIDEBAR MENU -->
-		<ul class="page-sidebar-menu" data-auto-scroll="true" data-slide-speed="200">
+		<ul n:class="page-sidebar-menu,
+					$designSettings->sidebarClosed ? page-sidebar-menu-closed,
+					$designSettings->sidebarMenuHover ? page-sidebar-menu-hover-submenu,
+					$designSettings->sidebarMenuLight ? page-sidebar-menu-light,
+					$designSettings->sidebarFixed ? page-sidebar-menu-fixed : page-sidebar-menu-default"
+			data-auto-scroll="true" 
+			data-slide-speed="200">
 			<li class="sidebar-toggler-wrapper">
 				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-				<div class="sidebar-toggler hide">
+				<div class="sidebar-toggler hide" data-url="{link :Ajax:Design:setSidebarClosed}">
 				</div>
 				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
 			</li>

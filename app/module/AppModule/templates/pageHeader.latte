@@ -3,7 +3,7 @@
 {define pageHeader}
 <!-- BEGIN PAGE HEADER-->
 <h3 class="page-title"
-	n:if="!$designSettings->pageContainerBgSolid">
+	n:if="!$designSettings->containerBgSolid">
 	{include pageTitle}
 </h3>
 <div class="page-bar">
@@ -22,7 +22,7 @@
 	</div>
 </div>
 <h3 class="page-title"
-	n:if="$designSettings->pageContainerBgSolid">
+	n:if="$designSettings->containerBgSolid">
 	{include pageTitle}
 </h3>
 <!-- END PAGE HEADER-->

@@ -9,9 +9,19 @@ use App\Model\Entity\PageDesignSettings;
  * 
  * @author Petr Poupě <petr.poupe@gmail.com>
  * 
- * @property PageDesignSettings $settings
- * @property array $colors Allowed colors
+ * @property-read PageDesignSettings $settings Default settings extended by user settings
+ * @property-read PageDesignSettings $userSettings User settings
+ * @property-read array $colors Allowed colors
  * @property-write string $color
+ * @property-write bool $layoutBoxed
+ * @property-write bool $containerBgSolid
+ * @property-write bool $headerFixed
+ * @property-write bool $footerFixed
+ * @property-write bool $sidebarClosed
+ * @property-write bool $sidebarFixed
+ * @property-write bool $sidebarReversed
+ * @property-write bool $sidebarMenuHover
+ * @property-write bool $sidebarMenuLight
  */
 class DesignService extends BaseService
 {
@@ -36,23 +46,42 @@ class DesignService extends BaseService
 		return $this->defaultStorage->design->colors;
 	}
 
-	public function setColor($color)
+	/** @return PageDesignSettings */
+	public function getUserSettings()
 	{
-		if ($this->isAllowedColor($color)) {
-			if (!$this->user->pageDesignSettings) {
-				$this->user->pageDesignSettings = new PageDesignSettings;
-			}
-			if ($color === 'default') {
-				$color = NULL;
-			}
-			$this->user->pageDesignSettings->color = $color;
-			$this->saveUser();
+		if (!$this->user->pageDesignSettings) {
+			$this->user->pageDesignSettings = new PageDesignSettings;
 		}
+		return $this->user->pageDesignSettings;
 	}
 
+	/** @return bool */
 	public function isAllowedColor($color)
 	{
 		return array_key_exists($color, $this->colors);
+	}
+
+	/** @return self */
+	public function setColor($color)
+	{
+		if ($this->isAllowedColor($color)) {
+			$pageDesignSettings = $this->getUserSettings();
+			if ($color === 'default') {
+				$color = NULL;
+			}
+			$pageDesignSettings->color = $color;
+			$this->saveUser();
+		}
+		return $this;
+	}
+
+	/** @return self */
+	public function setSidebarClosed($value = TRUE)
+	{
+		$pageDesignSettings = $this->getUserSettings();
+		$pageDesignSettings->sidebarClosed = $value;
+		$this->saveUser();
+		return $this;
 	}
 
 }

@@ -272,19 +272,19 @@ class UserFacadeTest extends BaseFacade
 		/* @var $user1 User */
 		Assert::null($user1->pageConfigSettings->language);
 		Assert::same('red', $user1->pageDesignSettings->color);
-		Assert::null($user1->pageDesignSettings->pageFooterFixed);
+		Assert::null($user1->pageDesignSettings->footerFixed);
 		
 		$rewriteConfigSettings = new PageConfigSettings;
 		$rewriteConfigSettings->language = 'de';
 		$rewriteDesignSettings = new PageDesignSettings;
 		$rewriteDesignSettings->color = 'blue';
-		$rewriteDesignSettings->pageFooterFixed = TRUE;
+		$rewriteDesignSettings->footerFixed = TRUE;
 		
 		$user2 = $this->userDao->find($this->user->id);
 		/* @var $user2 User */
 		Assert::same('de', $user2->pageConfigSettings->language);
 		Assert::same('red', $user2->pageDesignSettings->color);
-		Assert::same(TRUE, $user2->pageDesignSettings->pageFooterFixed);
+		Assert::same(TRUE, $user2->pageDesignSettings->footerFixed);
 		
 	}
 

@@ -18,6 +18,14 @@ class InstallPresenter extends BasePresenter
 	public $installer;
 
 	// </editor-fold>
+	
+	protected function startup()
+	{
+		if ($this->user->loggedIn) {
+			$this->user->logout();
+		}
+		parent::startup();
+	}
 
 	public function actionDefault()
 	{

@@ -120,6 +120,7 @@ abstract class BasePresenter extends Presenter
 
 	protected function loadUserSettings()
 	{
+		$this->settingStorage->loggedIn = $this->user->loggedIn;
 		if ($this->user->identity instanceof Entity\User) {
 			$this->settingStorage->user = $this->user->identity;
 		}

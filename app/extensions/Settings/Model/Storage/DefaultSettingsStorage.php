@@ -21,6 +21,7 @@ use Nette\Utils\ArrayHash;
  * @property ArrayHash $modules Allowed modules
  * @property ArrayHash $modulesSettings Settings of modules
  * @property User $user Signed user
+ * @property bool $loggedIn If identity logged in
  * @property GuestSettingsStorage $guest Unsigned settings
  */
 class DefaultSettingsStorage extends Object
@@ -52,6 +53,9 @@ class DefaultSettingsStorage extends Object
 
 	/** @var User */
 	private $user;
+
+	/** @var bool */
+	private $isLoggedIn;
 
 	/** @var GuestSettingsStorage */
 	private $guest;
@@ -170,6 +174,19 @@ class DefaultSettingsStorage extends Object
 	public function getUser()
 	{
 		return $this->user;
+	}
+	
+	/** @return self */
+	public function setLoggedIn($isLoggedIn)
+	{
+		$this->isLoggedIn = $isLoggedIn;
+		return $this;
+	}
+	
+	/** @return bool */
+	public function getLoggedIn()
+	{
+		return $this->isLoggedIn;
 	}
 	
 	/** @return self */

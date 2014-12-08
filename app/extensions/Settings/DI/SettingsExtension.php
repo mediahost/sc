@@ -41,13 +41,14 @@ class SettingsExtension extends CompilerExtension
 		'design' => [
 			'colors' => ['default' => 'Default'], // code => name
 			'color' => 'default',
-			'pageHeaderFixed' => FALSE,
-			'pageSidebarClosed' => FALSE,
-			'pageSidebarFixed' => FALSE,
-			'pageFooterFixed' => FALSE,
-			'pageSidebarReversed' => FALSE,
-			'pageFullWidth' => FALSE,
-			'pageContainerBgSolid' => FALSE,
+			'layoutBoxed' => FALSE,
+			'containerBgSolid' => FALSE,
+			'headerFixed' => FALSE,
+			'footerFixed' => FALSE,
+			'sidebarClosed' => FALSE,
+			'sidebarFixed' => FALSE,
+			'sidebarReversed' => FALSE,
+			'sidebarMenuHover' => FALSE,
 		],
 	];
 
