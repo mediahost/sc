@@ -124,7 +124,7 @@ class InstallerTest extends ParentTestCase
 		Assert::null($user);
 		$user1 = $this->userFacade->findByMail('user1');
 		Assert::same('user1', $user1->mail);
-		Assert::same([1 => 'guest'], $user1->rolesPairs);
+		Assert::same([1 => 'guest'], $user1->roles);
 		Assert::count(2, $this->userFacade->findAll());
 	}
 
