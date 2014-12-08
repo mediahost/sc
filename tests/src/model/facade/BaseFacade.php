@@ -2,6 +2,7 @@
 
 namespace Test\Model\Facade;
 
+use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Test\ParentTestCase;
@@ -18,6 +19,9 @@ abstract class BaseFacade extends ParentTestCase
 	/** @var UserFacade @inject */
 	public $userFacade;
 
+	/** @var DefaultSettingsStorage @inject */
+	public $defaultSettings;
+
 	public function setUp()
 	{
 		$this->updateSchema();
@@ -26,6 +30,7 @@ abstract class BaseFacade extends ParentTestCase
 	public function tearDown()
 	{
 		$this->dropSchema();
+		$this->em->clear();
 	}
 
 }

@@ -3,6 +3,7 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Candidate;
+use App\Model\Entity\User;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -20,16 +21,22 @@ class CandidateTest extends TestCase
 	public function testSetAndGet()
 	{
 		$name = 'Testovací kandidát';
-		$address = 'Silniční 123, Město nad Řekou';
+		$birthday = '30.2.1920';
 
+		$user = new User;
+		$user->mail = 'user@mail.com';
+		
 		$entity = new Candidate();
 		$entity->name = $name;
-		$entity->address = $address;
+		$entity->birthday = $birthday;
+		$entity->user = $user;
 
 		Assert::null($entity->id);
 		Assert::same($name, $entity->name);
 		Assert::same($name, (string) $entity);
-		Assert::same($address, $entity->address);
+		Assert::same($birthday, $entity->birthday);
+		Assert::same($user, $entity->user);
+		Assert::same($user->mail, $entity->user->mail);
 
 		Assert::exception(function() use ($entity) {
 			$entity->id = 123;

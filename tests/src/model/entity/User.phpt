@@ -157,25 +157,31 @@ class UserTest extends ParentTestCase
 
 		$this->user->addRole($roleA); // Add first role
 		Assert::count(1, $this->user->roles);
+		Assert::same($roleA->name, $this->user->roles[0]);
 
 		$this->user->addRole($roleA); // Add the same role
 		Assert::count(1, $this->user->roles);
+		Assert::same($roleA->name, $this->user->roles[0]);
 
 		$this->user->addRole($roleB); // Add another role
 		Assert::count(2, $this->user->roles);
+		Assert::same($roleA->name, $this->user->roles[0]);
+		Assert::same($roleB->name, $this->user->roles[1]);
 
 		$this->user->addRole($roleC, TRUE); // Clear roles and add new one
 		Assert::count(1, $this->user->roles);
-		Assert::same('Role C', $this->user->roles[0]->name);
+		Assert::same('Role C', $this->user->roles[0]);
 
 		$this->user->addRole([$roleA, $roleC]); // Add array with duplicit roles
 		Assert::count(2, $this->user->roles);
+		Assert::same($roleC->name, $this->user->roles[0]);
+		Assert::same($roleA->name, $this->user->roles[1]);
 
 		$this->user->clearRoles();
 		Assert::count(0, $this->user->roles);
 	}
 
-	public function testGetRoles()
+	public function testGetSavedRoles()
 	{
 		$this->updateSchema();
 
@@ -187,11 +193,11 @@ class UserTest extends ParentTestCase
 		$roleF = $this->roleDao->save(new Role(Role::SUPERADMIN));
 
 		$this->user->addRole([$roleB, $roleC, $roleB, $roleA, $roleA, $roleC]);
-		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->getRolesKeys());
+		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->rolesKeys);
 		
 		$this->user->addRole([$roleB, $roleA, $roleC], TRUE);
-		Assert::count(3, $this->user->getRoles());
-		Assert::same([2 => Role::SIGNED, 1 => Role::GUEST, 3 => Role::CANDIDATE], $this->user->getRoles());
+		Assert::count(3, $this->user->roles);
+		Assert::same([2 => Role::SIGNED, 1 => Role::GUEST, 3 => Role::CANDIDATE], $this->user->roles);
 		
 		$this->user->addRole([$roleD, $roleE, $roleF], TRUE);
 		Assert::type(Role::getClassName(), $this->user->maxRole);

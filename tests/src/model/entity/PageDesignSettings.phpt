@@ -22,27 +22,30 @@ class PageDesignSettingsTest extends TestCase
 	{
 		$values = [
 			'color' => 'default',
+			'layoutBoxed' => TRUE,
+			'containerBgSolid' => TRUE,
 			'headerFixed' => TRUE,
+			'footerFixed' => FALSE,
 			'sidebarClosed' => FALSE,
 			'sidebarFixed' => TRUE,
-			'footerFixed' => FALSE,
 			'sidebarReversed' => TRUE,
-			'containerBgSolid' => TRUE,
+			'sidebarMenuHover' => FALSE,
+			'sidebarMenuLight' => TRUE,
 		];
 		$user = new User;
-		$user->mail = ('user@mail.com');
+		$user->mail = 'user@mail.com';
 
 		$entity1 = new PageDesignSettings;
 		Assert::null($entity1->id);
 		Assert::count(0, $entity1->notNullValuesArray);
-		Assert::count(10, $entity1->toArray());
+		Assert::count(12, $entity1->toArray());
 
 		$entity1->user = $user;
 		Assert::count(1, $entity1->notNullValuesArray);
 		Assert::same($user->mail, $entity1->user->mail);
 
 		$entity1->setValues($values);
-		Assert::count(9, $entity1->notNullValuesArray);
+		Assert::count(11, $entity1->notNullValuesArray);
 		Assert::same($values['color'], $entity1->color);
 		Assert::same($values['containerBgSolid'], $entity1->containerBgSolid);
 		Assert::same($values['headerFixed'], $entity1->headerFixed);
@@ -50,6 +53,8 @@ class PageDesignSettingsTest extends TestCase
 		Assert::same($values['sidebarClosed'], $entity1->sidebarClosed);
 		Assert::same($values['sidebarFixed'], $entity1->sidebarFixed);
 		Assert::same($values['sidebarReversed'], $entity1->sidebarReversed);
+		Assert::same($values['sidebarMenuHover'], $entity1->sidebarMenuHover);
+		Assert::same($values['sidebarMenuLight'], $entity1->sidebarMenuLight);
 
 		Assert::exception(function() use ($entity1) {
 			$entity1->id = 123;

@@ -34,8 +34,8 @@ class ModuleService extends BaseService
 	 */
 	public function getModuleSettings($name)
 	{
-		if ($this->isAllowedModule($name) && isset($this->defaultStorage->modulesSettings->$name)) {
-			return new UniversalDataEntity((array) $this->defaultStorage->modulesSettings->$name);
+		if ($this->isAllowedModule($name) && isset($this->defaultStorage->moduleSettings->$name)) {
+			return new UniversalDataEntity((array) $this->defaultStorage->moduleSettings->$name);
 		}
 		return NULL;
 	}

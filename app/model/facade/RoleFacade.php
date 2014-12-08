@@ -3,7 +3,6 @@
 namespace App\Model\Facade;
 
 use App\Extensions\Settings\Model\Service\ModuleService;
-use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Model\Entity\Role;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;

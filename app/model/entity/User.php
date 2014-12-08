@@ -16,6 +16,7 @@ use Nette\Security\Passwords;
  * @property string $hash
  * @property-write $password
  * @property-read array $roles
+ * @property-read array $roleKeys
  * @property Role $maxRole
  * @property PageConfigSettings $pageConfigSettings
  * @property PageDesignSettings $pageDesignSettings
@@ -339,7 +340,11 @@ class User extends BaseEntity implements IIdentity
 	{
 		$array = [];
 		foreach ($this->roles as $role) {
-			$array[$role->id] = $role->name;
+			if ($role->id) {
+				$array[$role->id] = $role->name;
+			} else {
+				$array[] = $role->name;
+			}
 		}
 		return $array;
 	}

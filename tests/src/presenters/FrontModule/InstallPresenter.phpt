@@ -6,7 +6,6 @@ use App\Helpers;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\DomQuery;
-use Tester\Environment;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 

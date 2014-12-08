@@ -12,8 +12,6 @@ $container = require __DIR__ . '/../../bootstrap.php';
  *
  * @testCase
  * @phpVersion 5.4
- * TODO: unskip
- * @skip
  */
 class HomepagePresenterTest extends BasePresenter
 {

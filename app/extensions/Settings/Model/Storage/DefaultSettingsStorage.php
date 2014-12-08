@@ -19,7 +19,7 @@ use Nette\Utils\ArrayHash;
  * @property ArrayHash $pageConfig Page Controls default settings
  * @property ArrayHash $pageInfo Page Info default settings
  * @property ArrayHash $modules Allowed modules
- * @property ArrayHash $modulesSettings Settings of modules
+ * @property ArrayHash $moduleSettings Settings of modules
  * @property User $user Signed user
  * @property bool $loggedIn If identity logged in
  * @property GuestSettingsStorage $guest Unsigned settings
