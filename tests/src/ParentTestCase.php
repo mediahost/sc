@@ -62,22 +62,7 @@ abstract class ParentTestCase extends TestCase
 
 	protected function getClasses()
 	{
-		return [
-			$this->em->getClassMetadata(Candidate::getClassName()),
-			$this->em->getClassMetadata(Company::getClassName()),
-			$this->em->getClassMetadata(Facebook::getClassName()),
-			$this->em->getClassMetadata(OAuth::getClassName()),
-			$this->em->getClassMetadata(PageConfigSettings::getClassName()),
-			$this->em->getClassMetadata(PageDesignSettings::getClassName()),
-			$this->em->getClassMetadata(Registration::getClassName()),
-			$this->em->getClassMetadata(Role::getClassName()),
-			$this->em->getClassMetadata(Skill::getClassName()),
-			$this->em->getClassMetadata(SkillCategory::getClassName()),
-			$this->em->getClassMetadata(Twitter::getClassName()),
-			$this->em->getClassMetadata(User::getClassName()),
-		];
-		// TODO: getAllMetadata() for tests
-//		return $this->em->getMetadataFactory()->getAllMetadata(); // nefunguje pro testy!!!
+		return $this->em->getMetadataFactory()->getAllMetadata();
 	}
 
 }

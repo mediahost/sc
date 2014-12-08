@@ -4,6 +4,8 @@ namespace Test\Extensions\Installer\Model;
 
 use App\Extensions\Installer\Model\InstallerModel;
 use App\Helpers;
+use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Nette\DI\Container;
@@ -19,8 +21,6 @@ $container = require __DIR__ . '/../../../bootstrap.php';
  *
  * @testCase
  * @phpVersion 5.4
- * TODO: unskip
- * @skip
  */
 class InstallerModelTest extends ParentTestCase
 {
@@ -63,7 +63,7 @@ class InstallerModelTest extends ParentTestCase
 		// test without existing file
 		Assert::true($installer->installAdminer($dir));
 		unlink($adminerFile);
-		rmdir($adminerPath); 
+		rmdir($adminerPath);
 
 		// testing allow writing (chmod 777) in mock file
 		$file = FileMock::create('', 'sql');
@@ -76,31 +76,32 @@ class InstallerModelTest extends ParentTestCase
 	{
 		$installer = $this->installerModel;
 
-		Assert::exception(function() {
-			$this->userFacade->find(1);
+		$userDao = $this->em->getDao(User::getClassName());
+		$roleDao = $this->em->getDao(Role::getClassName());
+		
+		Assert::exception(function() use($userDao) {
+			$userDao->find(1);
 		}, 'Kdyby\Doctrine\DBALException');
-		Assert::exception(function() {
-			$this->roleFacade->find(1);
+		Assert::exception(function() use($roleDao) {
+			$roleDao->find(1);
 		}, 'Kdyby\Doctrine\DBALException');
 
-		// TODO: update schema nahradit zprovozněným testem installDoctrine()
-		$this->updateSchema();
-//		Assert::true($installer->installDoctrine());
+		Assert::true($installer->installDoctrine());
 
-		Assert::null($this->userFacade->find(1));
-		Assert::count(0, $this->userFacade->findAll());
-		Assert::null($this->roleFacade->find(1));
-		Assert::count(0, $this->roleFacade->findAll());
+		Assert::null($userDao->find(1));
+		Assert::count(0, $userDao->findAll());
+		Assert::null($userDao->find(1));
+		Assert::count(0, $userDao->findAll());
 
 		$roles1 = [];
 		$return1 = $installer->installRoles($roles1);
-		$dbRoles1 = $this->roleFacade->findPairs('name');
+		$dbRoles1 = $roleDao->findPairs([], 'name');
 		Assert::true($return1);
 		Assert::same($roles1, $dbRoles1);
 
 		$roles2 = $this->permissions->getRoles();
 		$return2 = $installer->installRoles($roles2);
-		$dbRoles2 = $this->roleFacade->findPairs('name');
+		$dbRoles2 = $roleDao->findPairs([], 'name');
 		Assert::true($return2);
 		Assert::equal(array_values($roles2), array_values($dbRoles2));
 
@@ -128,7 +129,7 @@ class InstallerModelTest extends ParentTestCase
 		];
 
 		Assert::true($installer->installUsers([]));
-		Assert::same([], $this->userFacade->findPairs('mail'));
+		Assert::same([], $userDao->findPairs([], 'mail'));
 
 		Assert::exception(function() use ($installer, $wrongUsers1) {
 			$installer->installUsers($wrongUsers1);
@@ -147,13 +148,13 @@ class InstallerModelTest extends ParentTestCase
 		}, 'Nette\InvalidArgumentException');
 
 		Assert::true($installer->installUsers($rightUsers1));
-		Assert::equal(array_keys($rightUsers1), array_values($this->userFacade->findPairs('mail')));
+		Assert::equal(array_keys($rightUsers1), array_values($userDao->findPairs([], 'mail')));
 
 		$user0 = $this->userFacade->findByMail('username0');
 		Assert::same('username0', $user0->mail);
 		Assert::same([1 => 'guest'], $user0->roles);
 
-		Assert::count(count($rightUsers1), $this->userFacade->findAll());
+		Assert::count(count($rightUsers1), $userDao->findAll());
 
 		$this->dropSchema();
 	}

@@ -24,6 +24,7 @@ $configurator = new Nette\Configurator;
 //$configurator->setDebugMode(TRUE);
 //$configurator->enableDebugger(__DIR__ . '/../../log');
 $configurator->setTempDirectory(TEMP_DIR);
+$configurator->addParameters(['appDir' => __DIR__ . '/../../app']); // řeší problém s nefunkčním $this->em->getMetadataFactory()->getAllMetadata()
 $configurator->createRobotLoader()
 		->addDirectory(__DIR__ . '/../../app')
 		->addDirectory(__DIR__ . '/../../tests')

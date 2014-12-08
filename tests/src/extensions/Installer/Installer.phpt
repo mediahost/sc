@@ -4,12 +4,12 @@ namespace Test\Extensions\Installer;
 
 use App\Extensions\Installer;
 use App\Helpers;
+use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use Nette\DI\Container;
 use Nette\Security\IAuthorizator;
 use Test\ParentTestCase;
 use Tester\Assert;
-use Tester\Environment;
 use Tester\Helpers as Helpers2;
 
 $container = require __DIR__ . '/../../bootstrap.php';
@@ -60,12 +60,6 @@ class InstallerTest extends ParentTestCase
 		Assert::count(2, $messages1);
 		Assert::same(['DB_Roles', 'DB_Users'], array_keys($messages1));
 		Assert::same([[0 => TRUE], [0 => TRUE]], array_values($messages1));
-		
-		return;
-		// TODO: $this->em->getMetadataFactory()->getAllMetadata() v testech
-		// Další testy neprojdou, protože installDoctrine() v testech nefunguje
-		// Respektive $this->em->getMetadataFactory()->getAllMetadata() nevrací všechny entity
-		// V případě zprovoznění lze tento řádek uplatnit i v ParentTestCase::getClasses() a zbylé testy budou fungovat
 
 		// install all (empty) with lock
 		$messages2 = $this->installer->setPathes(NULL, NULL, NULL, $this->installDir)
@@ -125,7 +119,8 @@ class InstallerTest extends ParentTestCase
 		$user1 = $this->userFacade->findByMail('user1');
 		Assert::same('user1', $user1->mail);
 		Assert::same([1 => 'guest'], $user1->roles);
-		Assert::count(2, $this->userFacade->findAll());
+		$userDao = $this->em->getDao(User::getClassName());
+		Assert::count(2, $userDao->findAll());
 	}
 
 	// </editor-fold>
