@@ -12,6 +12,7 @@ use Nette\DI\Container;
 use Nette\Security\IAuthorizator;
 use Test\ParentTestCase;
 use Tester\Assert;
+use Tester\Environment;
 use Tester\FileMock;
 
 $container = require __DIR__ . '/../../../bootstrap.php';
@@ -75,7 +76,7 @@ class InstallerModelTest extends ParentTestCase
 	public function testInstallerDb()
 	{
 		$installer = $this->installerModel;
-
+		
 		$userDao = $this->em->getDao(User::getClassName());
 		$roleDao = $this->em->getDao(Role::getClassName());
 		
@@ -86,6 +87,7 @@ class InstallerModelTest extends ParentTestCase
 			$roleDao->find(1);
 		}, 'Kdyby\Doctrine\DBALException');
 
+		Environment::lock('db', LOCK_DIR);
 		Assert::true($installer->installDoctrine());
 
 		Assert::null($userDao->find(1));
