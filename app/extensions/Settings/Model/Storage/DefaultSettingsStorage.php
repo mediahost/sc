@@ -4,7 +4,6 @@ namespace App\Extensions\Settings\Model\Storage;
 
 use App\Model\Entity\User;
 use Nette\Object;
-use Nette\Security;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -18,8 +17,8 @@ use Nette\Utils\ArrayHash;
  * @property ArrayHash $design Design default settings
  * @property ArrayHash $pageConfig Page Controls default settings
  * @property ArrayHash $pageInfo Page Info default settings
- * @property ArrayHash $modules Allowed modules
- * @property ArrayHash $moduleSettings Settings of modules
+ * @property-read ArrayHash $modules Allowed modules
+ * @property-read ArrayHash $moduleSettings Settings of modules
  * @property User $user Signed user
  * @property bool $loggedIn If identity logged in
  * @property GuestSettingsStorage $guest Unsigned settings

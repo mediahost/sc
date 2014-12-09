@@ -65,7 +65,7 @@ class PageConfigSettings extends BaseEntity
 	 */
 	public function append(PageConfigSettings $entity, $rewriteExisting = FALSE)
 	{
-		if ($rewriteExisting || !$this->language) {
+		if ($rewriteExisting || $this->language === NULL) {
 			$this->language = $entity->language;
 		}
 		return $this;

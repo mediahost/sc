@@ -58,6 +58,7 @@ abstract class ParentTestCase extends TestCase
 			$this->schemaTool = new SchemaTool($this->em);
 		}
 		$this->schemaTool->dropSchema($this->getClasses());
+		$this->em->clear();
 	}
 
 	protected function getClasses()

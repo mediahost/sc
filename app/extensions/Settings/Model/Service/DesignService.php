@@ -13,15 +13,7 @@ use App\Model\Entity\PageDesignSettings;
  * @property-read PageDesignSettings $userSettings User settings
  * @property-read array $colors Allowed colors
  * @property-write string $color
- * @property-write bool $layoutBoxed
- * @property-write bool $containerBgSolid
- * @property-write bool $headerFixed
- * @property-write bool $footerFixed
  * @property-write bool $sidebarClosed
- * @property-write bool $sidebarFixed
- * @property-write bool $sidebarReversed
- * @property-write bool $sidebarMenuHover
- * @property-write bool $sidebarMenuLight
  */
 class DesignService extends BaseService
 {
@@ -31,7 +23,7 @@ class DesignService extends BaseService
 	{
 		$defaultSettings = new PageDesignSettings();
 		$defaultSettings->setValues((array) $this->defaultStorage->design);
-		if ($this->user && $this->user->pageDesignSettings) {
+		if ($this->defaultStorage->loggedIn && $this->user && $this->user->pageDesignSettings) {
 			$settings = $this->user->pageDesignSettings;
 			$settings->append($defaultSettings);
 		} else {

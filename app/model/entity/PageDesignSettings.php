@@ -100,31 +100,31 @@ class PageDesignSettings extends BaseEntity
 	 */
 	public function append(PageDesignSettings $entity, $rewriteExisting = FALSE)
 	{
-		if ($rewriteExisting || !$this->color) {
+		if ($rewriteExisting || $this->color === NULL) {
 			$this->color = $entity->color;
 		}
-		if ($rewriteExisting || !$this->containerBgSolid) {
+		if ($rewriteExisting || $this->containerBgSolid === NULL) {
 			$this->containerBgSolid = $entity->containerBgSolid;
 		}
-		if ($rewriteExisting || !$this->headerFixed) {
+		if ($rewriteExisting || $this->headerFixed === NULL) {
 			$this->headerFixed = $entity->headerFixed;
 		}
-		if ($rewriteExisting || !$this->footerFixed) {
+		if ($rewriteExisting || $this->footerFixed === NULL) {
 			$this->footerFixed = $entity->footerFixed;
 		}
-		if ($rewriteExisting || !$this->sidebarClosed) {
+		if ($rewriteExisting || $this->sidebarClosed === NULL) {
 			$this->sidebarClosed = $entity->sidebarClosed;
 		}
-		if ($rewriteExisting || !$this->sidebarFixed) {
+		if ($rewriteExisting || $this->sidebarFixed === NULL) {
 			$this->sidebarFixed = $entity->sidebarFixed;
 		}
-		if ($rewriteExisting || !$this->sidebarReversed) {
+		if ($rewriteExisting || $this->sidebarReversed === NULL) {
 			$this->sidebarReversed = $entity->sidebarReversed;
 		}
-		if ($rewriteExisting || !$this->sidebarMenuHover) {
+		if ($rewriteExisting || $this->sidebarMenuHover === NULL) {
 			$this->sidebarMenuHover = $entity->sidebarMenuHover;
 		}
-		if ($rewriteExisting || !$this->sidebarMenuLight) {
+		if ($rewriteExisting || $this->sidebarMenuLight === NULL) {
 			$this->sidebarMenuLight = $entity->sidebarMenuLight;
 		}
 		return $this;

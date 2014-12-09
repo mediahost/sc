@@ -30,7 +30,6 @@ abstract class BaseFacade extends ParentTestCase
 	public function tearDown()
 	{
 		$this->dropSchema();
-		$this->em->clear();
 	}
 
 }
