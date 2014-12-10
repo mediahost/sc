@@ -191,15 +191,27 @@ class Helpers
 	}
 
 	/**
-	 * Make directory.
-	 * @param  string
-	 * @return void
+	 * Makes directory
+	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
 	 */
-	public static function mkDir($dir)
+	public static function mkDir($dir, $mode = 0777, $recursive = FALSE)
 	{
 		if ($dir && !is_dir($dir)) {
-			mkdir($dir);
+			return mkdir($dir, $mode, $recursive);
 		}
+		return FALSE;
+	}
+
+	/**
+	 * Makes directory recursice
+	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
+	 */
+	public static function mkDirForce($dir)
+	{
+		if ($dir && !is_dir($dir)) {
+			return mkdir($dir, 0777, TRUE);
+		}
+		return FALSE;
 	}
 
 	/**
@@ -216,6 +228,15 @@ class Helpers
 			return rmdir($dir);
 		}
 		return FALSE;
+	}
+
+	/**
+	 * Set inserted parameters to path separated by /
+	 * @return string
+	 */
+	public static function getPath($_ = NULL)
+	{
+		return call_user_func_array(get_class() . '::concatStrings', array_merge(["/"], func_get_args()));
 	}
 
 	// </editor-fold>

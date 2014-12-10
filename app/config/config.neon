@@ -39,7 +39,7 @@ nette:
 		debugger: true
 
 	debugger:
-		email: 'pupe.dupe@gmail.com,me@martinsifra.cz,g.vvoody@gmail.com'
+		email: 'pupe.dupe@gmail.com'
 
 services:
 	- App\RouterFactory
@@ -51,7 +51,8 @@ services:
 	nette.templateFactory: App\Templating\TemplateFactory
 
 extensions:
+	onControlCreate: App\Extensions\ListenersGenericRegistration\DI\EventOnControlCreateCreateExtension
 	events: Kdyby\Events\DI\EventsExtension
 	installer: App\Extensions\Installer\DI\InstallerExtension
 	settings: App\Extensions\Settings\DI\SettingsExtension
-	onControlCreate: App\Extensions\ListenersGenericRegistration\DI\EventOnControlCreateCreateExtension
+	foto: App\Extensions\Foto\DI\FotoExtension

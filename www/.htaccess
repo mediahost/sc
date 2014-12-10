@@ -16,6 +16,10 @@
 	# prevents files starting with dot to be viewed by browser
 	RewriteRule /\.|^\. - [F]
 
+	# FotoModule
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^foto\/(.+)$ index.php [L]
+
 	# front controller
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d

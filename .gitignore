@@ -70,3 +70,9 @@
 ################
 /www/adminer/database-log.sql
 /bin/testInstaller.bat
+
+#################
+## Foto
+################
+/www/foto/*
+!/www/foto/

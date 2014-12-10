@@ -64,6 +64,11 @@ class HelpersTest extends TestCase
 		Assert::same(NULL, Helpers::mkDir(''));
 	}
 
+	public function testGetPath()
+	{
+		Assert::same('root/path/to/file', Helpers::getPath('root', 'path', 'to', 'file'));
+	}
+
 }
 
 $test = new HelpersTest();
