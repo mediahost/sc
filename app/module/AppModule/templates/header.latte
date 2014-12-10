@@ -22,7 +22,7 @@
 				
 				<!-- BEGIN LANGUAGE BAR -->
 				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-				<li class="dropdown dropdown-language">
+				<li class="dropdown dropdown-language" n:if="$user->loggedIn">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 						<img alt="{_$allowedLanguages[$lang]}" src="{$basePath}/assets/img/flags/{$lang}.png">
 						<span class="langname">{_$allowedLanguages[$lang]}</span> <i class="fa fa-angle-down"></i>
@@ -37,7 +37,7 @@
 				<!-- END LANGUAGE BAR -->
 
                 <!-- BEGIN USER LOGIN DROPDOWN -->
-                <li class="dropdown dropdown-user">
+                <li class="dropdown dropdown-user" n:if="$user->loggedIn">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                         <img alt="avatar" src="{$basePath}/assets/img/avatar_small.png"/>
                         <span class="username">{$user->getIdentity()->mail}</span> <i class="fa fa-angle-down"></i>

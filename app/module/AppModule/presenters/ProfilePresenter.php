@@ -6,10 +6,9 @@ use App\Components\Auth\ConnectManagerControl;
 use App\Components\Auth\IConnectManagerControlFactory;
 use App\Components\Auth\ISetPasswordControlFactory;
 use App\Components\Auth\SetPasswordControl;
-use App\Components\User\IPreferencesControlFactory;
-use App\Components\User\PreferencesControl;
 use App\Model\Entity;
 use App\Model\Facade\UserFacade;
+use App\TaggedString;
 
 class ProfilePresenter extends BasePresenter
 {
@@ -22,6 +21,16 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var IConnectManagerControlFactory @inject */
 	public $iConnectManagerControlFactory;
+
+	/**
+	 * @secured
+	 * @resource('profile')
+	 * @privilege('default')
+	 */
+	public function actionDefault()
+	{
+		
+	}
 
 	/**
 	 * @secured
@@ -98,14 +107,14 @@ class ProfilePresenter extends BasePresenter
 		$control->setUser($userDao->find($this->user->id));
 		$control->setAppActivateRedirect($this->link('setPassword'));
 		$control->onConnect[] = function ($type) {
-			$message = new \App\TaggedString('%s was connected.', $type);
+			$message = new TaggedString('%s was connected.', $type);
 			$this->flashMessage($message, 'success');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}
 		};
 		$control->onDisconnect[] = function (Entity\User $user, $type) {
-			$message = new \App\TaggedString('%s was disconnected.', $type);
+			$message = new TaggedString('%s was disconnected.', $type);
 			$this->flashMessage($message, 'success');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
@@ -118,14 +127,14 @@ class ProfilePresenter extends BasePresenter
 			}
 		};
 		$control->onInvalidType[] = function ($type) {
-			$message = new \App\TaggedString('We can\'t find \'%s\' to disconnect.', $type);
+			$message = new TaggedString('We can\'t find \'%s\' to disconnect.', $type);
 			$this->flashMessage($message, 'warning');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}
 		};
 		$control->onUsingConnection[] = function ($type) {
-			$message = new \App\TaggedString('Logged %s account is using by another account.', $type);
+			$message = new TaggedString('Logged %s account is using by another account.', $type);
 			$this->flashMessage($message, 'warning');
 			if (!$this->isAjax()) {
 				$this->redirect('this');

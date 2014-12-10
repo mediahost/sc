@@ -56,7 +56,7 @@ class DesignService extends BaseService
 	/** @return self */
 	public function setColor($color)
 	{
-		if ($this->isAllowedColor($color)) {
+		if ($this->isAllowedColor($color) && $this->user) {
 			$pageDesignSettings = $this->getUserSettings();
 			if ($color === 'default') {
 				$color = NULL;
@@ -70,9 +70,11 @@ class DesignService extends BaseService
 	/** @return self */
 	public function setSidebarClosed($value = TRUE)
 	{
-		$pageDesignSettings = $this->getUserSettings();
-		$pageDesignSettings->sidebarClosed = $value;
-		$this->saveUser();
+		if ($this->user) {
+			$pageDesignSettings = $this->getUserSettings();
+			$pageDesignSettings->sidebarClosed = $value;
+			$this->saveUser();
+		}
 		return $this;
 	}
 
