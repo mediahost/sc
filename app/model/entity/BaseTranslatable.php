@@ -7,12 +7,13 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
  * @ORM\MappedSuperclass()
+ * @method void setCurrentLocale(mixed $locale) the current locale
  */
 abstract class BaseTranslatable extends BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
-	
+
 	public function __construct($currentLocale = NULL)
 	{
 		parent::__construct();
@@ -25,7 +26,7 @@ abstract class BaseTranslatable extends BaseEntity
 	{
 		return $this->proxyCurrentLocaleTranslation($method, $arguments);
 	}
-	
+
 	/**
 	 * Translation properties can get only by getProperty()
 	 * For all tranlation property redirect $this->property to $this->getProperty()
@@ -43,7 +44,7 @@ abstract class BaseTranslatable extends BaseEntity
 		}
 		return parent::__get($name);
 	}
-	
+
 	/**
 	 * Translation properties can set only by setProperty()
 	 * For all tranlation property redirect $this->property = $value to $this->setProperty($value)
@@ -60,7 +61,7 @@ abstract class BaseTranslatable extends BaseEntity
 		}
 		parent::__set($name, $value);
 	}
-	
+
 	static private function isBehaviorProperty($propertyName)
 	{
 		return property_exists('Knp\DoctrineBehaviors\Model\Translatable\TranslationProperties', $propertyName);

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Model\Entity;
+namespace Test\Examples\Model\Entity;
 
+use App\Model\Entity\BaseTranslatable;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model;
 
@@ -14,5 +15,4 @@ class Article extends BaseTranslatable
 {
 
 	use Model\Translatable\Translatable;
-
 }

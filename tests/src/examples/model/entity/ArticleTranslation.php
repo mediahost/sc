@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Entity;
+namespace Test\Examples\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;

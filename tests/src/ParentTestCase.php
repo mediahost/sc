@@ -2,18 +2,6 @@
 
 namespace Test;
 
-use App\Model\Entity\Candidate;
-use App\Model\Entity\Company;
-use App\Model\Entity\Facebook;
-use App\Model\Entity\OAuth;
-use App\Model\Entity\PageConfigSettings;
-use App\Model\Entity\PageDesignSettings;
-use App\Model\Entity\Registration;
-use App\Model\Entity\Role;
-use App\Model\Entity\Skill;
-use App\Model\Entity\SkillCategory;
-use App\Model\Entity\Twitter;
-use App\Model\Entity\User;
 use Doctrine\ORM\Tools\SchemaTool;
 use Kdyby\Doctrine\EntityManager;
 use Nette\DI\Container;
