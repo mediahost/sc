@@ -11,12 +11,12 @@ use Tester\Assert;
 $container = require __DIR__ . '/../bootstrap.php';
 
 /**
- * TEST: Article use
+ * TEST: Translation use
  *
  * @testCase
  * @phpVersion 5.4
  */
-class ArticleUseTest extends BaseUse
+class TranslationUseTest extends BaseUse
 {
 
 	/** @var EntityDao */
@@ -91,5 +91,5 @@ class ArticleUseTest extends BaseUse
 
 }
 
-$test = new ArticleUseTest($container);
+$test = new TranslationUseTest($container);
 $test->run();
