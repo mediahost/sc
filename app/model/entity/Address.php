@@ -9,6 +9,10 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @ORM\Entity
  *
  * @property string $name
+ * @property string $street
+ * @property string $city
+ * @property string $zipcode
+ * @property string $country
  */
 class Address extends BaseEntity
 {
@@ -30,9 +34,10 @@ class Address extends BaseEntity
 	/** @ORM\Column(type="string", length=512, nullable=false) */
 	protected $country;
 	
+	/** @var return self */
 	public function parseFromText($text)
 	{
-		
+		return $this;
 	}
 
 	/** @return string */
