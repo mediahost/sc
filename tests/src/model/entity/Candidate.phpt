@@ -26,7 +26,7 @@ class CandidateTest extends TestCase
 		$user = new User;
 		$user->mail = 'user@mail.com';
 		
-		$entity = new Candidate();
+		$entity = new Candidate;
 		$entity->name = $name;
 		$entity->birthday = $birthday;
 		$entity->user = $user;

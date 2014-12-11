@@ -23,7 +23,7 @@ class CompanyTest extends TestCase
 		$comapnyId = '123-345-567 99';
 		$address = 'Silniční 123, Město nad Řekou';
 
-		$entity = new Company();
+		$entity = new Company;
 
 		$entity->name = $name;
 		$entity->companyId = $comapnyId;

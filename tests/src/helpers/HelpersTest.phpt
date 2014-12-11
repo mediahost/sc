@@ -33,9 +33,9 @@ class HelpersTest extends TestCase
 		$concatStr3 = Helpers::concatTwoStrings('word1', 'word2', ':');
 		Assert::same('word1:word2', $concatStr3);
 		$concatStr4 = Helpers::concatTwoStrings();
-		Assert::same(NULL, $concatStr4);
+		Assert::null($concatStr4);
 		$concatStr5 = Helpers::concatStrings();
-		Assert::same(NULL, $concatStr5);
+		Assert::null($concatStr5);
 		$concatStr6 = Helpers::concatStrings(NULL, ['word1', 'word2']);
 		Assert::same('word1word2', $concatStr6);
 	}
@@ -61,7 +61,7 @@ class HelpersTest extends TestCase
 
 	public function testMkDir()
 	{
-		Assert::same(NULL, Helpers::mkDir(''));
+		Assert::false(Helpers::mkDir(''));
 	}
 
 	public function testGetPath()
