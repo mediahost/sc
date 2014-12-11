@@ -21,8 +21,10 @@ $_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/../../www/index.php';
 Tester\Environment::setup();
 
 $configurator = new Nette\Configurator;
-//$configurator->setDebugMode(TRUE);
-//$configurator->enableDebugger(__DIR__ . '/../../log');
+if (isset ($_GET['debugger']) && $_GET['debugger']) {
+	$configurator->setDebugMode(TRUE);
+	$configurator->enableDebugger(__DIR__ . '/../../log');
+}
 $configurator->setTempDirectory(TEMP_DIR);
 $configurator->addParameters(['appDir' => __DIR__ . '/../../app']); // řeší problém s nefunkčním $this->em->getMetadataFactory()->getAllMetadata()
 $configurator->createRobotLoader()
