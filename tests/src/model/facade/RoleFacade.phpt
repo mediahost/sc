@@ -3,6 +3,7 @@
 namespace Test\Model\Facade;
 
 use App\Model\Entity\Role;
+use Kdyby\Doctrine\EntityDao;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -16,6 +17,8 @@ $container = require __DIR__ . '/../../bootstrap.php';
  */
 class RoleFacadeTest extends BaseFacade
 {
+	/** @var EntityDao */
+	private $roleDao;
 
 	public function __construct(Container $container)
 	{
@@ -41,11 +44,13 @@ class RoleFacadeTest extends BaseFacade
 		$this->roleFacade->create(Role::COMPANY);
 		$this->roleFacade->create(Role::ADMIN);
 		$this->roleFacade->create(Role::SUPERADMIN);
+		$this->roleDao->clear();
 	}
 	
 	public function testIsUnique()
 	{
 		$this->roleFacade->create(Role::CANDIDATE);
+		$this->roleDao->clear();
 		Assert::false($this->roleFacade->isUnique(Role::CANDIDATE));
 		Assert::true($this->roleFacade->isUnique(Role::GUEST));
 	}
@@ -56,12 +61,12 @@ class RoleFacadeTest extends BaseFacade
 		$roles = $this->roleFacade->getRoles();
 		Assert::type('array', $roles);
 		Assert::count(6, $roles);
-		Assert::same($roles[1], Role::GUEST);
-		Assert::same($roles[2], Role::SIGNED);
-		Assert::same($roles[3], Role::CANDIDATE);
-		Assert::same($roles[4], Role::COMPANY);
-		Assert::same($roles[5], Role::ADMIN);
-		Assert::same($roles[6], Role::SUPERADMIN);
+		Assert::same(Role::GUEST, $roles[1]);
+		Assert::same(Role::SIGNED, $roles[2]);
+		Assert::same(Role::CANDIDATE, $roles[3]);
+		Assert::same(Role::COMPANY, $roles[4]);
+		Assert::same(Role::ADMIN, $roles[5]);
+		Assert::same(Role::SUPERADMIN, $roles[6]);
 	}
 
 	public function testFinds()
@@ -82,6 +87,7 @@ class RoleFacadeTest extends BaseFacade
 	{
 		$this->roleFacade->create(Role::CANDIDATE);
 		$this->roleFacade->create(Role::COMPANY);
+		$this->roleDao->clear();
 		
 		$modules = ['registrableRole' => TRUE];
 		$settings = ['registrableRole' => ['roles' => [Role::CANDIDATE, Role::COMPANY]]];
