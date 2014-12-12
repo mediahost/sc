@@ -32,20 +32,14 @@ class PageDesignSettingsTest extends TestCase
 			'sidebarMenuHover' => FALSE,
 			'sidebarMenuLight' => TRUE,
 		];
-		$user = new User;
-		$user->mail = 'user@mail.com';
 
 		$entity1 = new PageDesignSettings;
 		Assert::null($entity1->id);
 		Assert::count(0, $entity1->notNullValuesArray);
-		Assert::count(12, $entity1->toArray());
-
-		$entity1->user = $user;
-		Assert::count(1, $entity1->notNullValuesArray);
-		Assert::same($user->mail, $entity1->user->mail);
+		Assert::count(11, $entity1->toArray());
 
 		$entity1->setValues($values);
-		Assert::count(11, $entity1->notNullValuesArray);
+		Assert::count(10, $entity1->notNullValuesArray);
 		Assert::same($values['color'], $entity1->color);
 		Assert::same($values['containerBgSolid'], $entity1->containerBgSolid);
 		Assert::same($values['headerFixed'], $entity1->headerFixed);

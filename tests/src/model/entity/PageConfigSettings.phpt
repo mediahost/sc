@@ -29,14 +29,10 @@ class PageConfigSettingsTest extends TestCase
 		$entity1 = new PageConfigSettings;
 		Assert::null($entity1->id);
 		Assert::count(0, $entity1->notNullValuesArray);
-		Assert::count(3, $entity1->toArray());
-
-		$entity1->user = $user;
-		Assert::count(1, $entity1->notNullValuesArray);
-		Assert::same($user->mail, $entity1->user->mail);
+		Assert::count(2, $entity1->toArray());
 
 		$entity1->setValues($values);
-		Assert::count(2, $entity1->notNullValuesArray);
+		Assert::count(1, $entity1->notNullValuesArray);
 		Assert::same($values['language'], $entity1->language);
 
 		Assert::exception(function() use ($entity1) {

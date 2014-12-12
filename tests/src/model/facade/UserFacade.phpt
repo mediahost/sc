@@ -290,32 +290,33 @@ class UserFacadeTest extends BaseFacade
 		Assert::count(3, $this->user->roles);
 	}
 
-//	public function testAppendSettings()
-//	{
-//		$newConfigSettings = new PageConfigSettings;
-//		$newDesignSettings = new PageDesignSettings;
-//		$newDesignSettings->color = 'red';
-//		$this->userFacade->appendSettings($this->user->id, $newConfigSettings, $newDesignSettings);
-//
-//		$user1 = $this->userDao->find($this->user->id);
-//		/* @var $user1 User */
-//		Assert::null($user1->pageConfigSettings->language);
-//		Assert::same('red', $user1->pageDesignSettings->color);
-//		Assert::null($user1->pageDesignSettings->footerFixed);
-//
-//		$rewriteConfigSettings = new PageConfigSettings;
-//		$rewriteConfigSettings->language = 'de';
-//		$rewriteDesignSettings = new PageDesignSettings;
-//		$rewriteDesignSettings->color = 'blue';
-//		$rewriteDesignSettings->footerFixed = TRUE;
-//		$this->userFacade->appendSettings($this->user->id, $rewriteConfigSettings, $rewriteDesignSettings);
-//
-//		$user2 = $this->userDao->find($this->user->id);
-//		/* @var $user2 User */
-//		Assert::same('de', $user2->pageConfigSettings->language);
-//		Assert::same('red', $user2->pageDesignSettings->color);
-//		Assert::same(TRUE, $user2->pageDesignSettings->footerFixed);
-//	}
+	public function testAppendSettings()
+	{
+		$newConfigSettings = new PageConfigSettings;
+		$newDesignSettings = new PageDesignSettings;
+		$newDesignSettings->color = 'red';
+		$this->userFacade->appendSettings($this->user->id, $newConfigSettings, $newDesignSettings);
+
+		$user1 = $this->userDao->find($this->user->id);
+		/* @var $user1 User */
+		Assert::null($user1->pageConfigSettings->language);
+		Assert::same('red', $user1->pageDesignSettings->color);
+		Assert::null($user1->pageDesignSettings->footerFixed);
+
+		$rewriteConfigSettings = new PageConfigSettings;
+		$rewriteConfigSettings->language = 'de';
+		$rewriteDesignSettings = new PageDesignSettings;
+		$rewriteDesignSettings->color = 'blue';
+		$rewriteDesignSettings->footerFixed = TRUE;
+		$this->userFacade->appendSettings($this->user->id, $rewriteConfigSettings, $rewriteDesignSettings);
+
+		$user2 = $this->userDao->find($this->user->id);
+		/* @var $user2 User */
+		Assert::same('de', $user2->pageConfigSettings->language);
+		Assert::same('red', $user2->pageDesignSettings->color);
+		Assert::same(TRUE, $user2->pageDesignSettings->footerFixed);
+	}
+
 }
 
 $test = new UserFacadeTest($container);

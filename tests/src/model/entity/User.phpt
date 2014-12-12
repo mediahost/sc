@@ -76,25 +76,17 @@ class UserTest extends ParentTestCase
 		
 		$this->user->pageConfigSettings = new PageConfigSettings;
 		Assert::type(PageConfigSettings::getClassName(), $this->user->pageConfigSettings);
-		$pageConfigSettings = $this->user->pageConfigSettings;
-		Assert::type(User::getClassName(), $pageConfigSettings->user);
 		
 		$this->user->pageDesignSettings = new PageDesignSettings;
 		Assert::type(PageDesignSettings::getClassName(), $this->user->pageDesignSettings);
-		$pageDesignSettings = $this->user->pageDesignSettings;
-		Assert::type(User::getClassName(), $pageDesignSettings->user);
 
 		$this->user->facebook = new Facebook();
 		Assert::type(Facebook::getClassName(), $this->user->facebook);
-		$facebook = $this->user->facebook;
-		Assert::type(User::getClassName(), $facebook->user);
 		$this->user->clearFacebook();
 		Assert::null($this->user->facebook);
 		
 		$this->user->twitter = new Twitter();
 		Assert::type(Twitter::getClassName(), $this->user->twitter);
-		$twitter = $this->user->twitter;
-		Assert::type(User::getClassName(), $twitter->user);
 		$this->user->clearTwitter();
 		Assert::null($this->user->twitter);
 

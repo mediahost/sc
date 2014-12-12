@@ -50,10 +50,10 @@ class User extends BaseEntity implements IIdentity
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	private $roles;
 
-	/** @ORM\OneToOne(targetEntity="PageConfigSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
+	/** @ORM\OneToOne(targetEntity="PageConfigSettings", fetch="EAGER", cascade={"all"}) */
 	protected $pageConfigSettings;
 
-	/** @ORM\OneToOne(targetEntity="PageDesignSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
+	/** @ORM\OneToOne(targetEntity="PageDesignSettings", fetch="EAGER", cascade={"all"}) */
 	protected $pageDesignSettings;
 
 	/** @ORM\OneToOne(targetEntity="Facebook", fetch="LAZY", cascade={"all"}) */
@@ -107,28 +107,6 @@ class User extends BaseEntity implements IIdentity
 	public function clearHash()
 	{
 		$this->hash = NULL;
-		return $this;
-	}
-
-	/**
-	 * @param PageConfigSettings $settings
-	 * @return self
-	 */
-	public function setPageConfigSettings(PageConfigSettings $settings)
-	{
-		$settings->user = $this;
-		$this->pageConfigSettings = $settings;
-		return $this;
-	}
-
-	/**
-	 * @param PageDesignSettings $settings
-	 * @return self
-	 */
-	public function setPageDesignSettings(PageDesignSettings $settings)
-	{
-		$settings->user = $this;
-		$this->pageDesignSettings = $settings;
 		return $this;
 	}
 
