@@ -1,11 +1,11 @@
 <?php
 
-$allowedIPs = array(
-    '62.245.115.59', // Petr Poupě - Vojtova 10 Brno
-    '37.221.251.251', // Petr Poupě - Revolucni 331 Svetla n.S.
+$allowedIPs = [
+    '62.245.115.59', // Petr - Brno
+    '37.221.251.251', // Petr - Svetla n.S.
     '127.0.0.1',
     '::1',
-);
+];
 
 if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) || !isset($_SERVER['REMOTE_ADDR']) ||
         !in_array($_SERVER['REMOTE_ADDR'], $allowedIPs)) {
