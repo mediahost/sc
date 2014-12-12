@@ -20,6 +20,8 @@ return array(
 			bin/
 			www/webtemp/*
 			!www/webtemp/.htaccess
+			www/foto/*
+			!www/foto/
 			*.local.neon
 			*.server.neon
 			*.server_dev.neon
