@@ -7,7 +7,7 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use App\TaggedString;
+use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 
 class RequiredControl extends BaseControl
