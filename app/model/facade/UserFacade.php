@@ -131,8 +131,7 @@ class UserFacade extends Object
 		$registration->verificationToken = Random::generate(32);
 		$registration->verificationExpiration = new DateTime('now + ' . $this->expirationService->verification);
 
-		$this->em->persist($registration);
-		$this->em->flush();
+		$this->registrationDao->save($registration);
 
 		return $registration;
 	}
@@ -233,24 +232,20 @@ class UserFacade extends Object
 	/**
 	 * Sets recovery token and expiration datetime to User.
 	 * @param User $user
-	 * @return User
 	 */
-	public function setRecovery(User $user)
+	public function setRecovery(User &$user)
 	{
 		$user->setRecovery(Random::generate(32), 'now + ' . $this->expirationService->recovery);
-		return $this->userDao->save($user);
 	}
 
 	/**
 	 * @param User $user
 	 * @param string $password
-	 * @return User
 	 */
-	public function recoveryPassword(User $user, $password)
+	public function recoveryPassword(User &$user, $password)
 	{
 		$user->password = $password;
 		$user->removeRecovery();
-		return $this->userDao->save($user);
 	}
 
 	/**

@@ -57,8 +57,9 @@ class RecoveryControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$user = $this->userFacade->recoveryPassword($this->user, $values->newPassword);
-		$this->onSuccess($this->presenter, $user);
+		$this->userFacade->recoveryPassword($this->user, $values->newPassword);
+		$this->em->getDao(User::getClassName())->save($this->user);
+		$this->onSuccess($this->presenter, $this->user);
 	}
 
 	/**
