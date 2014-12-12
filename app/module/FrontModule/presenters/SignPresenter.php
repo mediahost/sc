@@ -3,7 +3,9 @@
 namespace App\FrontModule\Presenters;
 
 use App\Components\Auth;
+use App\Mail\Messages\IForgottenMessageFactory;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Facade;
 use App\Model\Storage;
 use App\TaggedString;
@@ -55,6 +57,9 @@ class SignPresenter extends BasePresenter
 
 	/** @var Facade\RoleFacade @inject */
 	public $roleFacade;
+
+	/** @var IForgottenMessageFactory @inject */
+	public $forgottenMessage;
 
 	// </editor-fold>
 
@@ -160,7 +165,14 @@ class SignPresenter extends BasePresenter
 	protected function createComponentForgotten()
 	{
 		$control = $this->iForgottenControlFactory->create();
-		$control->onSuccess[] = function ($mail) {
+		$control->onSuccess[] = function (User $user) {
+			
+			// Send e-mail with recovery link
+			$message = $this->forgottenMessage->create();
+			$message->addParameter('link', $this->link('//:Front:Sign:recovery', $user->recoveryToken));
+			$message->addTo($user->mail);
+			$message->send();
+			
 			$this->flashMessage('Recovery link has been sent to your mail.');
 			$this->redirect(':Front:Sign:in');	
 		};
