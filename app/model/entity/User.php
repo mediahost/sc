@@ -56,10 +56,10 @@ class User extends BaseEntity implements IIdentity
 	/** @ORM\OneToOne(targetEntity="PageDesignSettings", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
 	protected $pageDesignSettings;
 
-	/** @ORM\OneToOne(targetEntity="Facebook", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
+	/** @ORM\OneToOne(targetEntity="Facebook", fetch="LAZY", cascade={"all"}) */
 	protected $facebook;
 
-	/** @ORM\OneToOne(targetEntity="Twitter", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
+	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"all"}) */
 	protected $twitter;
 
 	/** @ORM\OneToOne(targetEntity="Candidate", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
@@ -133,34 +133,12 @@ class User extends BaseEntity implements IIdentity
 	}
 
 	/**
-	 * @param Facebook $facebook
-	 * @return self
-	 */
-	public function setFacebook(Facebook $facebook)
-	{
-		$facebook->user = $this;
-		$this->facebook = $facebook;
-		return $this;
-	}
-
-	/**
 	 * Removes social auth
 	 * @return self
 	 */
 	public function clearFacebook()
 	{
 		$this->facebook = NULL;
-		return $this;
-	}
-
-	/**
-	 * @param Twitter $twitter
-	 * @return self
-	 */
-	public function setTwitter(Twitter $twitter)
-	{
-		$twitter->user = $this;
-		$this->twitter = $twitter;
 		return $this;
 	}
 

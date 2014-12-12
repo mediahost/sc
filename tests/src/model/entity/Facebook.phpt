@@ -3,7 +3,6 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Facebook;
-use App\Model\Entity\User;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -34,8 +33,6 @@ class FacebookTest extends TestCase
 		$location = 'czech republic';
 		$locale = 'cs';
 		$username = 'some.nick';
-		$user = new User;
-		$user->mail = 'user@mail.com';
 		
 		$entity = new Facebook($id);
 		$entity->accessToken = $accessToken;
@@ -48,7 +45,6 @@ class FacebookTest extends TestCase
 		$entity->location = $location;
 		$entity->locale = $locale;
 		$entity->username = $username;
-		$entity->user = $user;
 		
 		Assert::same($id, $entity->id);
 		Assert::same($accessToken, $entity->accessToken);
@@ -61,7 +57,6 @@ class FacebookTest extends TestCase
 		Assert::same($location, $entity->location);
 		Assert::same($locale, $entity->locale);
 		Assert::same($username, $entity->username);
-		Assert::same($user->mail, $entity->user->mail);
 		
 		Assert::exception(function() use ($entity, $id) {
 			$entity->id = $id;

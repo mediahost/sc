@@ -3,7 +3,6 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Twitter;
-use App\Model\Entity\User;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -29,8 +28,6 @@ class TwitterTest extends TestCase
 		$description = 'some long description';
 		$statusesCount = '123';
 		$lang = 'cs';
-		$user = new User;
-		$user->mail = 'user@mail.com';
 
 		$entity = new Twitter($id);
 		$entity->accessToken = $accessToken;
@@ -41,7 +38,6 @@ class TwitterTest extends TestCase
 		$entity->description = $description;
 		$entity->statusesCount = $statusesCount;
 		$entity->lang = $lang;
-		$entity->user = $user;
 
 		Assert::same($id, $entity->id);
 		Assert::same($accessToken, $entity->accessToken);
@@ -52,7 +48,6 @@ class TwitterTest extends TestCase
 		Assert::same($description, $entity->description);
 		Assert::same($statusesCount, $entity->statusesCount);
 		Assert::same($lang, $entity->lang);
-		Assert::same($user->mail, $entity->user->mail);
 
 		Assert::exception(function() use ($entity, $id) {
 			$entity->id = $id;
