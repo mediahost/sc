@@ -50,20 +50,17 @@ class User extends BaseEntity implements IIdentity
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	private $roles;
 
-	/** @ORM\OneToOne(targetEntity="PageConfigSettings", fetch="EAGER", cascade={"all"}) */
+	/** @ORM\OneToOne(targetEntity="PageConfigSettings", fetch="EAGER", cascade={"persist"}) */
 	protected $pageConfigSettings;
 
-	/** @ORM\OneToOne(targetEntity="PageDesignSettings", fetch="EAGER", cascade={"all"}) */
+	/** @ORM\OneToOne(targetEntity="PageDesignSettings", fetch="EAGER", cascade={"persist"}) */
 	protected $pageDesignSettings;
 
-	/** @ORM\OneToOne(targetEntity="Facebook", fetch="LAZY", cascade={"all"}) */
+	/** @ORM\OneToOne(targetEntity="Facebook", fetch="LAZY", cascade={"persist"}) */
 	protected $facebook;
 
-	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"all"}) */
+	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"persist"}) */
 	protected $twitter;
-
-	/** @ORM\OneToOne(targetEntity="Candidate", mappedBy="user", fetch="LAZY", cascade={"all"}, orphanRemoval=true) */
-	protected $candidate;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $hash;
@@ -80,10 +77,17 @@ class User extends BaseEntity implements IIdentity
 	 */
 	protected $requiredRole;
 
+	/** @ORM\OneToOne(targetEntity="Candidate", fetch="LAZY", cascade={"persist"}) */
+	protected $candidate;
+	
+	/** @ORM\OneToMany(targetEntity="CompanyPriviledge", mappedBy="user", fetch="LAZY", cascade={"persist"}) */
+	protected $allowedCompanies;
+
 	public function __construct()
 	{
 		parent::__construct();
-		$this->roles = new ArrayCollection();
+		$this->roles = new ArrayCollection;
+		$this->allowedCompanies = new ArrayCollection;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters">

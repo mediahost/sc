@@ -8,20 +8,17 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 /**
  * @ORM\Entity
  *
- * @property User $user
  * @property string $name
- * @property DateTime $birthday
  */
-class Candidate extends BaseEntity
+class CompanyRole extends BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-	/** @ORM\Column(type="string", length=512, nullable=true) */
+	/**
+	 * @ORM\Column(type="string", length=50)
+	 */
 	protected $name;
-
-	/** @ORM\Column(type="date", nullable=true) */
-	protected $birthday;
 
 	/** @return string */
 	public function __toString()

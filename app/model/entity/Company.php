@@ -31,6 +31,9 @@ class Company extends BaseEntity
 	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $address;
+	
+	/** @ORM\OneToMany(targetEntity="CompanyPriviledge", mappedBy="company", fetch="LAZY", cascade={"persist"}) */
+	protected $acceses;
 
 	/** @return string */
 	public function __toString()
