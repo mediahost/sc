@@ -11,22 +11,21 @@
 {block content}
 <div class="row">
 	<div class="col-md-12">
-		<div class="portlet box grey-cascade">
+		<div class="portlet light">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="fa fa-users"></i>{_'Users'}
+					<i class="icon-users"></i>
+					<span class="caption-subject bold uppercase">{_'Users'}</span>
+				</div>
+				<div class="actions">
+					<a n:href="Users:add" class="btn btn-circle green-sharp">
+						<i class="fa fa-plus"></i> {_'Add User'}
+					</a>
+					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
+					</a>
 				</div>
 			</div>
 			<div class="portlet-body">
-				<div class="table-toolbar">
-					<div class="btn-group">
-						<a n:href="Users:add"
-						   class="btn green">
-							{_'Add User'}
-							<i class="fa fa-plus"></i>
-						</a>
-					</div>
-				</div>
 				<table class="datatable table table-striped table-bordered table-hover">
 					<thead>
 						<tr>

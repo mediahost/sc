@@ -11,67 +11,66 @@
 {block content}
 <div class="row">
 	<div class="col-md-12">
-		<div class="portlet box grey-cascade">
+		<div class="portlet light">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="icon-book-open"></i>{_'Skills'}
+					<i class="icon-book-open"></i>
+					<span class="caption-subject bold uppercase">{_'Skills'}</span>
+				</div>
+				<div class="actions">
+					<a n:href="Skills:add" class="btn btn-circle green-sharp">
+						<i class="fa fa-plus"></i> {_'Add Skill'}
+					</a>
+					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
+					</a>
 				</div>
 			</div>
 			<div class="portlet-body">
-				<div class="table-toolbar">
-					<div class="btn-group">
-						<a n:href="Skills:add"
-						   class="btn green">
-							{_'Add Skill'}
-							<i class="fa fa-plus"></i>
-						</a>
-					</div>
-				</div>
-			<table class="datatable table table-striped table-bordered table-hover">
-				<thead>
-					<tr>
-						<th>
-							{_'ID'}
-						</th>
-						<th>
-							{_'Name'}
-						</th>
-						<th>
-							{_'Category'}
-						</th>
-						<th>
-							{_'Edit'}
-						</th>
-						<th>
-							{_'Delete'}
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr n:foreach="$skills as $skill"
-						class="odd gradeX">
-						<td>
-							{$skill->id}
-						</td>
-						<td>
-							{$skill->name}
-						</td>
-						<td>
-							{$skill->category->name}
-						</td>
-						<td>
-							<a n:href="edit, $skill->id">
+				<table class="datatable table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>
+								{_'ID'}
+							</th>
+							<th>
+								{_'Name'}
+							</th>
+							<th>
+								{_'Category'}
+							</th>
+							<th>
 								{_'Edit'}
-							</a>
-						</td>
-						<td>
-							<a n:href="delete, $skill->id" class="delete-confirm">
+							</th>
+							<th>
 								{_'Delete'}
-							</a>
-						</td>
-					</tr>
-					</tbody>
-				</table>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr n:foreach="$skills as $skill"
+							class="odd gradeX">
+							<td>
+								{$skill->id}
+							</td>
+							<td>
+								{$skill->name}
+							</td>
+							<td>
+								{$skill->category->name}
+							</td>
+							<td>
+								<a n:href="edit, $skill->id">
+									{_'Edit'}
+								</a>
+							</td>
+							<td>
+								<a n:href="delete, $skill->id" class="delete-confirm">
+									{_'Delete'}
+								</a>
+							</td>
+						</tr>
+						</tbody>
+					</table>
 			</div>
 		</div>
 	</div>

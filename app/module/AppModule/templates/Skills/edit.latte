@@ -14,10 +14,17 @@
 {block content}
 <div class="row">
 	<div class="col-md-8">
-		<div class="portlet box green">
+		<div class="portlet light">
 			<div class="portlet-title">
-				<div class="caption">
-					<i class="fa fa-edit"></i>{ifset $isAdd}{_'Add'}{else}{_'Edit'}{/ifset} {_'skill'}
+				<div class="caption font-green-sharp">
+					<i class="fa fa-edit font-green-sharp"></i>
+					<span class="caption-subject bold uppercase">
+						{ifset $isAdd}{_'Add'}{else}{_'Edit'}{/ifset} {_'skill'}
+					</span>
+				</div>
+				<div class="actions">
+					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
+					</a>
 				</div>
 			</div>
 			<div class="portlet-body form">
