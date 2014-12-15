@@ -47,7 +47,6 @@ class SkillCategoriesPresenter extends BasePresenter
 	public function actionAdd()
 	{
 		$this->setView('edit');
-		$this->template->isAdd = TRUE;
 	}
 
 	/**
@@ -64,6 +63,11 @@ class SkillCategoriesPresenter extends BasePresenter
 			$this->flashMessage('This category wasn\'t found.', 'error');
 			$this->redirect('default');
 		}
+	}
+
+	public function renderEdit()
+	{
+		$this->template->isAdd = !$this['skillCategoryForm']->isEntityExists();
 	}
 
 	/**

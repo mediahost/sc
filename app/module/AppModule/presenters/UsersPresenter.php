@@ -43,6 +43,7 @@ class UsersPresenter extends BasePresenter
 	}
 
 	// <editor-fold defaultstate="expanded" desc="actions & renderers">
+	
 	/**
 	 * @secured
 	 * @resource('users')
@@ -64,7 +65,6 @@ class UsersPresenter extends BasePresenter
 	public function actionAdd()
 	{
 		$this->setView('edit');
-		$this->template->isAdd = TRUE;
 	}
 
 	/**
@@ -78,12 +78,17 @@ class UsersPresenter extends BasePresenter
 		if (!$user) {
 			$this->flashMessage('This user wasn\'t found.', 'error');
 			$this->redirect('default');
-		} else if (!$this->canEdit($this->getUser(), $user)) {
+		} else if (!$this->canEdit($this->user, $user)) {
 			$this->flashMessage('You can\'t edit this user.', 'warning');
 			$this->redirect('default');
 		} else {
-			$this['userForm']->setUser($user);
+			$this['userForm']->setEntity($user);
 		}
+	}
+	
+	public function renderEdit()
+	{
+		$this->template->isAdd = !$this['userForm']->isEntityExists();
 	}
 
 	/**
@@ -107,7 +112,7 @@ class UsersPresenter extends BasePresenter
 		$user = $this->userDao->find($id);
 		if (!$user) {
 			$this->flashMessage('User wasn\'t found.', 'warning');
-		} else if (!$this->canDelete($this->getUser(), $user)) {
+		} else if (!$this->canDelete($this->user, $user)) {
 			$this->flashMessage('You can\'t delete this user.', 'warning');
 		} else {
 			$this->userDao->delete($user);
@@ -155,9 +160,9 @@ class UsersPresenter extends BasePresenter
 	public function createComponentUserForm()
 	{
 		$control = $this->iUserControlFactory->create();
-		$control->setIdentityRoles($this->getUser()->getRoles());
+		$control->setIdentityRoles($this->user->roles);
 		$control->onAfterSave = function (User $savedUser) {
-			$message = new TaggedString('User \'%s\' was successfully saved.', $savedUser->mail);
+			$message = new TaggedString('User \'%s\' was successfully saved.', (string) $savedUser);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};

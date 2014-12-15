@@ -1,24 +1,22 @@
 <?php
 
-namespace App\Components\Skills;
+namespace App\Components\Company;
 
 use App\Components\EntityControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Skill;
-use App\Model\Entity\SkillCategory;
-use App\Model\Facade\RoleFacade;
+use App\Model\Entity\Company;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
 /**
- * Form with all user's personal settings.
+ * Form with all company settings.
  * 
- * @method self setEntity(Skill $entity)
- * @method Skill getEntity()
- * @property Skill $entity
+ * @method self setEntity(Company $entity)
+ * @method Company getEntity()
+ * @property Company $entity
  */
-class SkillControl extends EntityControl
+class CompanyControl extends EntityControl
 {
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -27,9 +25,6 @@ class SkillControl extends EntityControl
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var RoleFacade @inject */
-	public $roleFacade;
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -41,14 +36,9 @@ class SkillControl extends EntityControl
 	{
 		$form = new Form;
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new MetronicFormRenderer);
 
-		$form->addText('name', 'Name')
-				->setRequired('Please fill name');
-
-		$skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
-		$form->addSelect2('category', 'Skill category', $skillCategoryDao->findPairs('name', 'id'))
-				->setRequired('Please select some category');
+		$name = $form->addText('name', 'Name');
 
 		$form->addSubmit('save', 'Save');
 
@@ -60,28 +50,20 @@ class SkillControl extends EntityControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$entity = $this->load($values);
-		$entityDao = $this->em->getDao(Skill::getClassName());
-		// TODO: Check on duplicity in skill table
-		$saved = $entityDao->save($entity);
+		$companyDao = $this->em->getDao(Company::getClassName());
+		$saved = $companyDao->save($entity);
 		$this->onAfterSave($saved);
 	}
 
 	/**
 	 * Load Entity from Form
 	 * @param ArrayHash $values
-	 * @return Skill
+	 * @return Company
 	 */
 	protected function load(ArrayHash $values)
 	{
 		$entity = $this->getEntity();
 		$entity->name = $values->name;
-
-		$skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
-		$skillCategory = $skillCategoryDao->find($values->category);
-		if ($values->category && $skillCategory) {
-			$entity->category = $skillCategory;
-		}
-
 		return $entity;
 	}
 
@@ -91,10 +73,9 @@ class SkillControl extends EntityControl
 	 */
 	protected function getDefaults()
 	{
-		$entity = $this->getEntity();
+		$company = $this->getEntity();
 		$values = [
-			'name' => $entity->name,
-			'category' => $entity->category ? $entity->category->id : NULL,
+			'name' => $company->name,
 		];
 		return $values;
 	}
@@ -103,21 +84,21 @@ class SkillControl extends EntityControl
 
 	protected function checkEntityType($entity)
 	{
-		return $entity instanceof Skill;
+		return $entity instanceof Company;
 	}
 
-	/** @return Skill */
+	/** @return Company */
 	protected function getNewEntity()
 	{
-		return new Skill;
+		return new Company;
 	}
 
 	// </editor-fold>
 }
 
-interface ISkillControlFactory
+interface ICompanyControlFactory
 {
 
-	/** @return SkillControl */
+	/** @return CompanyControl */
 	function create();
 }

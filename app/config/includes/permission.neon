@@ -17,7 +17,9 @@ services:
 			- addResource('profile')
 
 			- addResource('candidate')
+			- addResource('candidates')
 			- addResource('company')
+			- addResource('companies')
 
 			- addResource('users')
 			- addResource('skills')
@@ -39,5 +41,7 @@ services:
 			- allow('admin', 'users')
 			- allow('admin', 'skills')
 			- allow('admin', 'skillCategories')
+			- allow('admin', 'candidates')
+			- allow('admin', 'companies')
 
 			- allow('superadmin') # Full access for superadmin

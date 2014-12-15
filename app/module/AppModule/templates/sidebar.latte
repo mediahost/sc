@@ -77,7 +77,7 @@
 			<!-- END COMPANY -->
 			
 			<!-- BEGIN ADMIN -->
-			{if $user->isAllowed('users')|| $user->isAllowed('skills')}
+			{if $user->isAllowed('users')|| $user->isAllowed('companies')|| $user->isAllowed('skills')}
 			<li class="heading">
 				<h3 class="uppercase">{_'Admin'}</h3>
 			</li>
@@ -85,6 +85,12 @@
 				class="{ifCurrent Users:*} active{/ifCurrent}">
 				<a n:href="Users:">
 					<i class="fa fa-users"></i> <span class="title">{_'Users'}</span><span class="selected"></span>
+				</a>
+			</li>
+			<li n:if="$user->isAllowed('companies', 'default')"
+				class="{ifCurrent Companies:*} active{/ifCurrent}">
+				<a n:href="Companies:">
+					<i class="fa fa-building"></i> <span class="title">{_'Companies'}</span><span class="selected"></span>
 				</a>
 			</li>
 			<li n:if="$user->isAllowed('skills', 'view')"

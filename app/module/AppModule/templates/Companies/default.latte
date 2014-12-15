@@ -1,0 +1,72 @@
+{block pageTitle}
+	{_'Companies'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+	<a n:href="Companies:">{_'Companies'}</a>
+</li>
+{/block}
+
+{block content}
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet light">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-users"></i>
+					<span class="caption-subject bold uppercase">{_'Companies'}</span>
+				</div>
+				<div class="actions">
+					<a n:href="Companies:add" class="btn btn-circle green-sharp">
+						<i class="fa fa-plus"></i> {_'Add Company'}
+					</a>
+					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<table class="datatable table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>
+								{_'ID'}
+							</th>
+							<th>
+								{_'Name'}
+							</th>
+							<th>
+								{_'Edit'}
+							</th>
+							<th>
+								{_'Delete'}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr n:foreach="$companies as $company"
+							class="odd gradeX">
+							<td>
+								{$company->id}
+							</td>
+							<td>
+								{$company->mail}
+							</td>
+							<td>
+								<a n:href="Companies:edit, $company->id">
+									{_'Edit'}
+								</a>
+							</td>
+							<td>
+								<a n:href="Companies:delete, $company->id"
+								   class="delete-confirm">
+									{_'Delete'}
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

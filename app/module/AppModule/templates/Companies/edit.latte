@@ -1,10 +1,10 @@
 {block pageTitle}
-	{_'Users'}
+	{_'Companies'}
 {/block}
 
 {block breadcrumbItems}
 <li>
-	<a n:href="Users:">{_'Users'}</a>
+	<a n:href="Companies:">{_'Companies'}</a>
 </li>
 <li>
 	<a n:href="this">{if $isAdd}{_'Add'}{else}{_'Edit'}{/if}</a>
@@ -19,7 +19,7 @@
 				<div class="caption font-green-sharp">
 					<i class="fa fa-edit font-green-sharp"></i>
 					<span class="caption-subject bold uppercase">
-						{if $isAdd}{_'Add'}{else}{_'Edit'}{/if} {_'user'}
+						{if $isAdd}{_'Add'}{else}{_'Edit'}{/if} {_'company'}
 					</span>
 				</div>
 				<div class="actions">
@@ -28,7 +28,7 @@
 				</div>
 			</div>
 			<div class="portlet-body form">
-				{control userForm}
+				{control companyForm}
 			</div>
 		</div>
 	</div>

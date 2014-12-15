@@ -31,7 +31,7 @@ abstract class BaseControl extends UI\Control
 	
 	/** @var string */
 	private $templateFile = self::DEFAULT_TEMPLATE;
-
+	
 	public function __construct()
 	{
 		parent::__construct();

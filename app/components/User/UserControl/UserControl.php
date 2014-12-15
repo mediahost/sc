@@ -2,7 +2,7 @@
 
 namespace App\Components\User;
 
-use App\Components\BaseControl;
+use App\Components\EntityControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Role;
@@ -15,8 +15,12 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Form with all user's personal settings.
+ * 
+ * @method self setEntity(User $entity)
+ * @method User getEntity()
+ * @property User $entity
  */
-class UserControl extends BaseControl
+class UserControl extends EntityControl
 {
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -25,9 +29,6 @@ class UserControl extends BaseControl
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var User */
-	private $user;
 
 	/** @var array */
 	private $identityRoles = [];
@@ -53,12 +54,12 @@ class UserControl extends BaseControl
 		$mail = $form->addText('mail', 'Mail')
 				->addRule(Form::EMAIL, 'Fill right format')
 				->addRule(Form::FILLED, 'Mail must be filled');
-		if ($this->isUserExists()) {
+		if ($this->isEntityExists()) {
 			$mail->setDisabled();
 		}
 
 		$password = $form->addText('password', 'Password');
-		if (!$this->isUserExists()) {
+		if (!$this->isEntityExists()) {
 			$helpText = new TaggedString('At least %d characters long.', $this->passwordService->length);
 			$helpText->setTranslator($this->translator);
 			$password->addRule(Form::FILLED, 'Password must be filled')
@@ -99,9 +100,9 @@ class UserControl extends BaseControl
 	 * @param ArrayHash $values
 	 * @return User
 	 */
-	private function load(ArrayHash $values)
+	protected function load(ArrayHash $values)
 	{
-		$entity = $this->getUser();
+		$entity = $this->getEntity();
 		if (isset($values->mail)) {
 			$entity->mail = $values->mail;
 		}
@@ -123,9 +124,9 @@ class UserControl extends BaseControl
 	 * Get Entity for Form
 	 * @return array
 	 */
-	private function getDefaults()
+	protected function getDefaults()
 	{
-		$user = $this->getUser();
+		$user = $this->getEntity();
 		$values = [
 			'mail' => $user->mail,
 			'roles' => $user->getRolesKeys(),
@@ -135,31 +136,15 @@ class UserControl extends BaseControl
 
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	/**
-	 * @param User $user
-	 * @return self
-	 */
-	public function setUser(User $user)
+	protected function checkEntityType($entity)
 	{
-		$this->user = $user;
-		return $this;
+		return $entity instanceof User;
 	}
 
-	/**
-	 * @return User
-	 */
-	public function getUser()
+	/** @return User */
+	protected function getNewEntity()
 	{
-		if ($this->user) {
-			return $this->user;
-		} else {
-			return new User;
-		}
-	}
-
-	private function isUserExists()
-	{
-		return $this->getUser()->id !== NULL;
+		return new User;
 	}
 
 	public function setIdentityRoles(array $roles)

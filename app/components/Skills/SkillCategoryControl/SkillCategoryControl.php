@@ -2,10 +2,9 @@
 
 namespace App\Components\Skills;
 
-use App\Components\BaseControl;
+use App\Components\EntityControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Skill;
 use App\Model\Entity\SkillCategory;
 use App\Model\Facade\RoleFacade;
 use Kdyby\Doctrine\EntityManager;
@@ -13,8 +12,12 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Form with all user's personal settings.
+ * 
+ * @method self setEntity(SkillCategory $entity)
+ * @method SkillCategory getEntity()
+ * @property SkillCategory $entity
  */
-class SkillCategoryControl extends BaseControl
+class SkillCategoryControl extends EntityControl
 {
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -23,9 +26,6 @@ class SkillCategoryControl extends BaseControl
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var Skill */
-	private $skill;
 
 	/** @var RoleFacade @inject */
 	public $roleFacade;
@@ -71,7 +71,7 @@ class SkillCategoryControl extends BaseControl
 	 * @param ArrayHash $values
 	 * @return SkillCategory
 	 */
-	private function load(ArrayHash $values)
+	protected function load(ArrayHash $values)
 	{
 		$entity = $this->getEntity();
 		$entity->name = $values->name;
@@ -92,7 +92,7 @@ class SkillCategoryControl extends BaseControl
 	 * Get Entity for Form
 	 * @return array
 	 */
-	private function getDefaults()
+	protected function getDefaults()
 	{
 		$entity = $this->getEntity();
 		$values = [
@@ -104,26 +104,15 @@ class SkillCategoryControl extends BaseControl
 
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	/**
-	 * @param SkillCategory $entity
-	 * @return self
-	 */
-	public function setEntity(SkillCategory $entity)
+	protected function checkEntityType($entity)
 	{
-		$this->skill = $entity;
-		return $this;
+		return $entity instanceof SkillCategory;
 	}
 
-	/**
-	 * @return SkillCategory
-	 */
-	public function getEntity()
+	/** @return SkillCategory */
+	protected function getNewEntity()
 	{
-		if ($this->skill) {
-			return $this->skill;
-		} else {
-			return new SkillCategory;
-		}
+		return new SkillCategory;
 	}
 
 	// </editor-fold>
