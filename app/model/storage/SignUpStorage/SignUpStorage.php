@@ -16,6 +16,8 @@ use Nette\Object;
  * @property User $user
  * @property array $defaults
  * @property bool $verification
+ * @property string $role
+ * @property-read string $redirectRole
  */
 class SignUpStorage extends Object
 {
@@ -85,10 +87,13 @@ class SignUpStorage extends Object
 	/**
 	 * Get role from section
 	 * @param type $forEntity if TRUE then retur role in Entity\Role format
-	 * @return type
+	 * @return string
 	 */
 	public function getRole($forEntity = FALSE)
 	{
+		if (!isset($this->section->role)) {
+			return NULL;
+		}
 		if ($forEntity) {
 			switch ($this->section->role) {
 				case Role::CANDIDATE:
@@ -99,6 +104,28 @@ class SignUpStorage extends Object
 			}
 		}
 		return $this->section->role;
+	}
+
+	/**
+	 * Get translated role for redirect
+	 * @return type
+	 */
+	public function getRedirectRole()
+	{
+		$role = $this->getRole();
+			switch ($role) {
+				case Role::COMPANY:
+					$redirectRole = \App\FrontModule\Presenters\SignPresenter::ROLE_COMPANY;
+					break;
+				case Role::CANDIDATE:
+					$redirectRole = \App\FrontModule\Presenters\SignPresenter::ROLE_CANDIDATE;
+					break;
+				default:
+					$redirectRole = \App\FrontModule\Presenters\SignPresenter::ROLE_DEFAULT;
+					break;
+			}
+		
+		return $redirectRole;
 	}
 
 	/**

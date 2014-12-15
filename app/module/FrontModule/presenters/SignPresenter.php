@@ -133,7 +133,7 @@ class SignPresenter extends BasePresenter
 			$this->onVerify($this, $user);
 		} else {
 			$this->flashMessage('Verification token is incorrect.', 'warning');
-			$this->redirect('in');
+			$this->redirect('in', ['role' => $this->session->redirectRole]);
 		}
 	}
 

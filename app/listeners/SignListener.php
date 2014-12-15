@@ -17,7 +17,6 @@ use Nette\Application\Application;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Object;
-use Nette\Security\Identity;
 
 class SignListener extends Object implements Subscriber
 {
@@ -118,7 +117,7 @@ class SignListener extends Object implements Subscriber
 		} else {
 			$message = new TaggedString('%s is already registered.', $user->mail);
 			$control->presenter->flashMessage($message);
-			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
+			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE, ['role' => $this->session->redirectRole]);
 		}
 	}
 
@@ -137,6 +136,7 @@ class SignListener extends Object implements Subscriber
 			$this->onCreate($control->presenter, $savedUser);
 		} else {
 			$registration = $this->userFacade->createRegistration($user);
+			$redirectRole = $this->session->redirectRole;
 			$this->session->remove();
 
 			// Send verification e-mail
@@ -145,8 +145,9 @@ class SignListener extends Object implements Subscriber
 			$message->addTo($user->mail);
 			$message->send();
 
+			
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
-			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE);
+			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE, ['role' => $redirectRole]);
 		}
 	}
 
