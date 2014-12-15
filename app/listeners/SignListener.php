@@ -158,7 +158,7 @@ class SignListener extends Object implements Subscriber
 	 */
 	public function onRecovery(Presenter $presenter, User $user)
 	{
-		$this->flashMessage('Your password has been successfully changed!', 'success');
+		$presenter->flashMessage('Your password has been successfully changed!', 'success');
 		$this->onSuccess($presenter, $user);
 	}
 
