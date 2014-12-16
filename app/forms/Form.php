@@ -8,6 +8,7 @@ use App\Forms\Controls\ChoiseBased\RadioList;
 use App\Forms\Controls\Custom\DateInput;
 use App\Forms\Controls\Custom\DatePicker;
 use App\Forms\Controls\SelectBased\MultiSelect2;
+use App\Forms\Controls\SelectBased\MultiSelectBoxes;
 use App\Forms\Controls\SelectBased\Select2;
 use App\Forms\Controls\TextAreaBased\WysiHtml;
 use App\Forms\Controls\TextInputBased\ServerValidatedTextInput;
@@ -134,6 +135,17 @@ class Form extends BaseForm
 	public function addMultiSelect2($name, $label = NULL, array $items = NULL)
 	{
 		return $this[$name] = new MultiSelect2($label, $items);
+	}
+
+	/**
+	 * Add MultiSelectBoxes
+	 * @param type $name
+	 * @param type $label
+	 * @return MultiSelectBoxes
+	 */
+	public function addMultiSelectBoxes($name, $label = NULL, array $items = NULL)
+	{
+		return $this[$name] = new MultiSelectBoxes($label, $items);
 	}
 
 	/**

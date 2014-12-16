@@ -75,7 +75,8 @@ class FormControl extends BaseControl
 		$form->addSelect('select', 'Select', $values);
 		$form->addSelect2('select2', 'Select 2', $values);
 		$form->addMultiSelect('multiselect', 'Multi Select', $values);
-		$form->addMultiSelect2('multiselect2', 'Multi Select 2', $values);
+		$form->addMultiSelect2('multiselect2', 'Multi Select2', $values);
+		$form->addMultiSelectBoxes('multiselectboxes', 'Multi Select Boxes', $values);
 		$form->addTagInput('tags', 'Tags')
 				->setPlaceholder($this->translator->translate('add a tag'))
 				->setValue('ahoj, ahoj2');

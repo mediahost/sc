@@ -67,7 +67,7 @@ class UserControl extends EntityControl
 					->setOption('description', (string) $helpText);
 		}
 
-		$role = $form->addMultiSelect2('roles', 'Roles', $this->getRoles())
+		$role = $form->addMultiSelectBoxes('roles', 'Roles', $this->getRoles())
 				->setRequired('Select any role');
 
 		$defaultRole = $this->roleFacade->findByName(Role::CANDIDATE);
