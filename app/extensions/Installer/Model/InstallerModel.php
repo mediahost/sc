@@ -2,6 +2,7 @@
 
 namespace App\Extensions\Installer\Model;
 
+use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Doctrine\ORM\EntityManager;
@@ -30,6 +31,9 @@ class InstallerModel extends Object
 	/** @var UserFacade @inject */
 	public $userFacade;
 
+	/** @var CompanyFacade @inject */
+	public $companyFacade;
+
 	// </editor-fold>
 	// <editor-fold defaultstate="expanded" desc="installers">
 
@@ -41,6 +45,18 @@ class InstallerModel extends Object
 	{
 		foreach ($roles as $roleName) {
 			$this->roleFacade->create($roleName);
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Create all nested roles
+	 * @return boolean
+	 */
+	public function installCompanyRoles(array $roles)
+	{
+		foreach ($roles as $roleName) {
+			$this->companyFacade->createRole($roleName);
 		}
 		return TRUE;
 	}

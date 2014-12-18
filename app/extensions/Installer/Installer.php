@@ -3,6 +3,7 @@
 namespace App\Extensions;
 
 use App\Extensions\Installer\Model\InstallerModel;
+use App\Helpers;
 use Nette\Object;
 use Nette\Security\IAuthorizator;
 
@@ -146,6 +147,11 @@ class Installer extends Object
 		return $this->permissions->getRoles();
 	}
 
+	private function getCompanyRoles()
+	{
+		return (new \App\Security\CompanyPermission)->getRoles();
+	}
+
 	// </editor-fold>
 
 	/**
@@ -210,6 +216,7 @@ class Installer extends Object
 		$this->installDoctrine($prefix);
 		$this->installRoles($prefix);
 		$this->installUsers($prefix);
+		$this->installCompany($prefix);
 	}
 
 	private function installDoctrine($lockPrefix = NULL)
@@ -253,6 +260,23 @@ class Installer extends Object
 		$name = $lockPrefix . $this->getLockName(__METHOD__);
 		if ($this->lock($name)) {
 			$this->model->installUsers($this->initUsers);
+			$this->onSuccessInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_SUCCESS];
+		} else {
+			$this->onLockedInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_LOCKED];
+		}
+	}
+
+	/**
+	 * Instal company
+	 * @param string $lockPrefix
+	 */
+	private function installCompany($lockPrefix = NULL)
+	{
+		$name = $lockPrefix . $this->getLockName(__METHOD__);
+		if ($this->lock($name)) {
+			$this->model->installCompanyRoles($this->getCompanyRoles());
 			$this->onSuccessInstall($this, $name);
 			$this->messages[$name] = [self::INSTALL_SUCCESS];
 		} else {
@@ -313,7 +337,7 @@ class Installer extends Object
 	 */
 	private function getLockFile($name)
 	{
-		\App\Helpers::mkDir($this->installDir);
+		Helpers::mkDir($this->installDir);
 		return $this->installDir . '/' . $name . '.lock';
 	}
 
