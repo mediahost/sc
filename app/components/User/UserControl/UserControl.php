@@ -8,9 +8,11 @@ use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
+use App\Model\Facade\UserFacade;
 use App\TaggedString;
 use Kdyby\Doctrine\DuplicateEntryException;
 use Kdyby\Doctrine\EntityManager;
+use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -39,6 +41,9 @@ class UserControl extends EntityControl
 	/** @var RoleFacade @inject */
 	public $roleFacade;
 
+	/** @var UserFacade @inject */
+	public $userFacade;
+
 	/** @var EntityManager @inject */
 	public $em;
 
@@ -50,12 +55,14 @@ class UserControl extends EntityControl
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
-
-		$mail = $form->addText('mail', 'Mail')
+		
+		$mail = $form->addServerValidatedText('mail', 'E-mail')
 				->addRule(Form::EMAIL, 'Fill right format')
 				->addRule(Form::FILLED, 'Mail must be filled');
 		if ($this->isEntityExists()) {
 			$mail->setDisabled();
+		} else {
+			$mail->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'));
 		}
 
 		$password = $form->addText('password', 'Password');
@@ -80,6 +87,11 @@ class UserControl extends EntityControl
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
+	}
+	
+	public function validateMail(IControl $control, $arg = NULL)
+	{
+		return $this->userFacade->isUnique($control->getValue());
 	}
 
 	public function formSucceeded(Form $form, $values)
