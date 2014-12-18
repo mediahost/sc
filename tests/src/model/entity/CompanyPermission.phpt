@@ -2,28 +2,28 @@
 
 namespace Test\Model\Entity;
 
-use App\Model\Entity\CompanyPriviledge;
+use App\Model\Entity\CompanyPermission;
 use Tester\Assert;
 use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
 /**
- * TEST: Company Priviledge entity
+ * TEST: Company Permission entity
  *
  * @testCase
  * @phpVersion 5.4
  */
-class CompanyPriviledgeTest extends TestCase
+class CompanyPermissionTest extends TestCase
 {
 
 	public function testSetAndGet()
 	{
-		$companyPriviledge = new CompanyPriviledge;
+		$companyPriviledge = new CompanyPermission;
 		Assert::same(TRUE, TRUE);
 	}
 
 }
 
-$test = new CompanyPriviledgeTest();
+$test = new CompanyPermissionTest();
 $test->run();

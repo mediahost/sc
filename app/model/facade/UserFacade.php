@@ -144,11 +144,23 @@ class UserFacade extends Object
 	private function clearRegistrations($mail)
 	{
 		$qb = $this->em->createQueryBuilder();
-		return $qb->delete(Registration::getClassName(), 's')
-						->where('s.mail = ?1')
+		return $qb->delete(Registration::getClassName(), 'r')
+						->where('r.mail = ?1')
 						->setParameter(1, $mail)
 						->getQuery()
 						->execute();
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="expanded" desc="getters">
+
+	/**
+	 * Get all users
+	 * @return array
+	 */
+	public function getUsers()
+	{
+		return $this->userDao->findPairs([], 'mail', [], 'id');
 	}
 
 	// </editor-fold>

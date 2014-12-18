@@ -67,7 +67,11 @@ services:
 		implement: App\Components\User\IUserControlFactory
 		inject: yes
 
-	# Cmpany
+	ICompanyUserControlFactory:
+		implement: App\Components\User\ICompanyUserControlFactory
+		inject: yes
+
+	# Company
 	ICompanyControlFactory:
 		implement: App\Components\Company\ICompanyControlFactory
 		inject: yes

@@ -1,16 +1,20 @@
-jQuery(document).ready(function() {
-    Metronic.init(); // init metronic core componets
-    Layout.init(); // init layout
-	
-    Login.init();
+jQuery(document).ready(function () {
+	Metronic.init(); // init metronic core componets
+	Layout.init(); // init layout
 
-    ComponentsPickers.init();
-    HtmlEditors.init();
-    ComponentsFormTools.init();
-    UIToastr.init();
-    Fullscreen.init();
-    TableManaged.init();
-    ComponentsDropdowns.init();
+	Login.init();
 
-    AppContent.init();
+	ComponentsPickers.init();
+	HtmlEditors.init();
+	ComponentsFormTools.init();
+	UIToastr.init();
+	Fullscreen.init();
+	TableManaged.init();
+	ComponentsDropdowns.init();
+
+	AppContent.init();
+});
+
+$('.modal.ajax').on('loaded.bs.modal', function (e) {
+	ComponentsDropdowns.init();
 });

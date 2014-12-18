@@ -36,6 +36,9 @@
 								{_'Name'}
 							</th>
 							<th>
+								{_'Users'}
+							</th>
+							<th>
 								{_'Edit'}
 							</th>
 							<th>
@@ -47,10 +50,20 @@
 						<tr n:foreach="$companies as $company"
 							class="odd gradeX">
 							<td>
-								{$company->id}
+								{$company->companyId}
 							</td>
 							<td>
-								{$company->mail}
+								{$company->name}
+							</td>
+							<td>
+								{foreach $company->accesses as $access}
+									<a n:href="editUser, $access->user->id, $company->id" 
+									   data-target="#editUser" 
+									   data-toggle="modal">
+										{$access->user}
+									</a>
+									{if !$iterator->last},{/if}
+								{/foreach}
 							</td>
 							<td>
 								<a n:href="Companies:edit, $company->id">
@@ -67,6 +80,17 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade ajax" id="editUser" aria-hidden="true">
+	<div class="page-loading page-loading-boxed">
+		<img src="{$basePath}/assets/img/loading-spinner-grey.gif" alt="" class="loading">
+		<span>&nbsp;&nbsp;{_'Loading...'} </span>
+	</div>
+	<div class="modal-dialog">
+		<div class="modal-content">
 		</div>
 	</div>
 </div>

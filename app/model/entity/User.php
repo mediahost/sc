@@ -16,7 +16,7 @@ use Nette\Security\Passwords;
  * @property string $hash
  * @property-write $password
  * @property-read array $roles
- * @property-read array $roleKeys
+ * @property-read array $rolesKeys
  * @property Role $maxRole
  * @property PageConfigSettings $pageConfigSettings
  * @property PageDesignSettings $pageDesignSettings
@@ -80,7 +80,7 @@ class User extends BaseEntity implements IIdentity
 	/** @ORM\OneToOne(targetEntity="Candidate", fetch="LAZY", cascade={"persist"}) */
 	protected $candidate;
 	
-	/** @ORM\OneToMany(targetEntity="CompanyPriviledge", mappedBy="user", fetch="LAZY", cascade={"persist"}) */
+	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="user", fetch="LAZY", cascade={"persist"}) */
 	protected $allowedCompanies;
 
 	public function __construct()

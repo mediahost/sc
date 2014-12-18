@@ -2,6 +2,7 @@
 
 namespace App\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
 
@@ -11,6 +12,10 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property string $name
  * @property string $companyId
  * @property string $address
+ * @property ArrayCollection $accesses
+ * @property-read ArrayCollection $adminAccesses
+ * @property-read ArrayCollection $managerAccesses
+ * @property-read ArrayCollection $editorAccesses
  */
 class Company extends BaseEntity
 {
@@ -32,13 +37,45 @@ class Company extends BaseEntity
 	 */
 	protected $address;
 	
-	/** @ORM\OneToMany(targetEntity="CompanyPriviledge", mappedBy="company", fetch="LAZY", cascade={"persist"}) */
-	protected $acceses;
+	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="company", fetch="LAZY", cascade={"persist"}) */
+	protected $accesses;
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->accesses = new ArrayCollection;
+	}
 
 	/** @return string */
 	public function __toString()
 	{
 		return (string) $this->name;
+	}
+	
+	/** @return ArrayCollection */
+	public function getAdminAccesses()
+	{
+		return $this->getAccessesFilter(CompanyRole::ADMIN);
+	}
+	
+	/** @return ArrayCollection */
+	public function getManagerAccesses()
+	{
+		return $this->getAccessesFilter(CompanyRole::MANAGER);
+	}
+	
+	/** @return ArrayCollection */
+	public function getEditorAccesses()
+	{
+		return $this->getAccessesFilter(CompanyRole::EDITOR);
+	}
+	
+	/** @return ArrayCollection */
+	private function getAccessesFilter($roleName)
+	{
+		return $this->accesses->filter(function ($permission) use ($roleName) {
+			return $permission->containRoleName($roleName);
+		});
 	}
 
 }
