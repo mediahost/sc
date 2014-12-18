@@ -43,7 +43,7 @@ class UsersPresenter extends BasePresenter
 	}
 
 	// <editor-fold defaultstate="expanded" desc="actions & renderers">
-	
+
 	/**
 	 * @secured
 	 * @resource('users')
@@ -55,6 +55,7 @@ class UsersPresenter extends BasePresenter
 		$this->template->identity = $this->user;
 		$this->template->addFilter('canEdit', $this->canEdit);
 		$this->template->addFilter('canDelete', $this->canDelete);
+		$this->template->addFilter('canAccess', $this->canAccess);
 	}
 
 	/**
@@ -85,7 +86,7 @@ class UsersPresenter extends BasePresenter
 			$this['userForm']->setEntity($user);
 		}
 	}
-	
+
 	public function renderEdit()
 	{
 		$this->template->isAdd = !$this['userForm']->isEntityExists();
@@ -121,6 +122,26 @@ class UsersPresenter extends BasePresenter
 		$this->redirect('default');
 	}
 
+	/**
+	 * @secured
+	 * @resource('users')
+	 * @privilege('access')
+	 */
+	public function actionAccess($id)
+	{
+		$user = $this->userDao->find($id);
+		if (!$user) {
+			$this->flashMessage('User wasn\'t found.', 'warning');
+		} else if (!$this->canAccess($this->user, $user)) {
+			$this->flashMessage('You can\'t access to this user.', 'warning');
+		} else {
+			$this->user->login($user);
+			$message = new TaggedString('You are logged as \'%s\'.', $user);
+			$this->flashMessage($message, 'success');
+		}
+		$this->redirect('default');
+	}
+
 	// </editor-fold>
 	// <editor-fold defaultstate="expanded" desc="edit/delete priviledges">
 
@@ -149,6 +170,17 @@ class UsersPresenter extends BasePresenter
 	 * @return boolean
 	 */
 	public function canDelete(IdentityUser $identityUser, User $user)
+	{
+		return $this->canEdit($identityUser, $user);
+	}
+
+	/**
+	 * Decides if identity user can access user
+	 * @param IdentityUser $identityUser
+	 * @param User $user
+	 * @return boolean
+	 */
+	public function canAccess(IdentityUser $identityUser, User $user)
 	{
 		return $this->canEdit($identityUser, $user);
 	}

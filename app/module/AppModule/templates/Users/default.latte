@@ -54,6 +54,8 @@
 							</td>
 							<td>
 								{$user->mail}
+								<a n:href="Users:access, $user->id"
+								   n:if="$template->canAccess($identity, $user)"><i class="icon-key"></i></a>
 							</td>
 							<td>
 								{$user->roles|implode:', '}
