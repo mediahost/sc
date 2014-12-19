@@ -1,5 +1,6 @@
 {block pageTitle}
-	{_'Company'}
+	{$company->name}
+	<small n:if="$companyPermission->isAllowed('info', 'edit')">{_'You can edit info'}</small>
 {/block}
 
 {block breadcrumbItems}
@@ -9,3 +10,14 @@
 {/block}
 
 {block content}
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="well">
+			<address>
+				<strong>{$company->name}</strong><br>
+				{!$company->address|nl2br}
+			</address>
+		</div>
+	</div>
+</div>

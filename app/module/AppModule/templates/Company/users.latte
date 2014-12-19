@@ -1,0 +1,39 @@
+{block pageTitle}
+	{$company->name}
+	<small n:if="$companyPermission->isAllowed('users', 'edit')">{_'You can edit users'}</small>
+{/block}
+
+{block breadcrumbItems}
+<li>
+	<a n:href="Company:">{_'Company'}</a>
+</li>
+{/block}
+
+{block content}
+
+<div class="row">
+	<div class="col-md-6">
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>
+						{_'User'}
+					</th>
+					<th>
+						{_'Roles'}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$company->accesses as $access">
+					<td>
+						{$access->user}
+					</td>
+					<td>
+						{$access->roles|implode:', '}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

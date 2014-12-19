@@ -2,9 +2,11 @@
 
 namespace App\Model\Entity;
 
+use App\Security\CompanyPermission as Authorizator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Nette\Security\IAuthorizator;
 
 /**
  * @ORM\Entity
@@ -74,7 +76,7 @@ class CompanyPermission extends BaseEntity
 		$this->roles->clear();
 		return $this;
 	}
-	
+
 	/**
 	 * Check if any roles has roleName
 	 * @param type $roleName
@@ -83,8 +85,8 @@ class CompanyPermission extends BaseEntity
 	public function containRoleName($roleName)
 	{
 		return $this->roles->exists(function ($key, CompanyRole $role) use ($roleName) {
-			return $role->name === $roleName;
-		});
+					return $role->name === $roleName;
+				});
 	}
 
 	/**
@@ -99,6 +101,25 @@ class CompanyPermission extends BaseEntity
 		}
 		return $array;
 	}
+	
+	/**
+	 * Has a user effective access to the company Resource?
+	 * If $resource is NULL, then the query applies to all resources.
+	 * @param  string  resource
+	 * @param  string  privilege
+	 * @return bool
+	 */
+	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
+	{
+		$authorizator = new Authorizator;
+		foreach ($this->roles as $role) {
+			if ($authorizator->isAllowed((string) $role, $resource, $privilege)) {
+				return TRUE;
+			}
+		}
 
-	// </editor-fold>
+		return FALSE;
+	}
+
+	// </editor-fold>	
 }

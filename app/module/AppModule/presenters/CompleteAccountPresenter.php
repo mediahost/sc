@@ -50,7 +50,7 @@ class CompleteAccountPresenter extends BasePresenter
 		};
 		$control->onCreateCompany[] = function (CompleteAccountControl $control, Company $company) {
 			$this->flashMessage('Your company account is complete. Enjoy your ride!', 'success');
-			$this->redirect(':App:Company:');
+			$this->redirect(':App:Company:default', ['id' => $company->id]);
 		};
 		return $control;
 	}

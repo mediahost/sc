@@ -62,16 +62,36 @@
 			<!-- END CANDIDATE -->
 
 			<!-- BEGIN COMPANY -->
-			{if $user->isInRole('company')}
+			{if $user->isInRole('company') && count($user->identity->allowedCompanies)}
 			<li class="heading">
 				<h3 class="uppercase">{_'Company'}</h3>
-			</li>			
-			<li n:if="$user->isAllowed('company', 'default')"
-				class="{ifCurrent Company:*} active{/ifCurrent}">
-				<a n:href="Company:">
-					<i class="fa fa-building-o"></i> <span class="title">{_'Company'}</span><span class="selected"></span>
-					<span class="badge badge-roundless badge-danger">{_'new'}</span>
+			</li>		
+			<li n:foreach="$user->identity->allowedCompanies as $allowedPermission"
+				n:if="$user->isAllowed('company', 'default')"
+				class="{ifCurrent Company:default, $allowedPermission->company->id} active{/ifCurrent}">
+				<a n:href="Company:default, $allowedPermission->company->id">
+					<i class="fa fa-building-o"></i>
+					<span class="title">{$allowedPermission->company->name}</span>
+					<span class="selected"></span>
+					<span class="badge badge-danger badge-roundless">{_'new'}</span>
 				</a>
+				<ul n:if="$allowedPermission->isAllowed('info', 'view') && $allowedPermission->isAllowed('users', 'view')"
+					class="sub-menu">
+					<li n:if="$allowedPermission->isAllowed('info', 'view')"
+						class="{ifCurrent Company:default, $allowedPermission->company->id} active{/ifCurrent}">
+						<a n:href="Company:default, $allowedPermission->company->id">
+							<i class="icon-info"></i>
+							{_'Profile'}
+						</a>
+					</li>
+					<li n:if="$allowedPermission->isAllowed('users', 'view')"
+						class="{ifCurrent Company:users, $allowedPermission->company->id} active{/ifCurrent}">
+						<a n:href="Company:users, $allowedPermission->company->id">
+							<i class="icon-user"></i>
+							{_'Users'}
+						</a>
+					</li>
+				</ul>
 			</li>
 			{/if}
 			<!-- END COMPANY -->

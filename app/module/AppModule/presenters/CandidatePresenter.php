@@ -20,10 +20,10 @@ class CandidatePresenter extends BasePresenter
 	{
 		$user = $this->em->getDao(User::getClassName())->find($this->user->id);
 		if (!$user->candidate) {
+			// create new candidate
 			$candidate = new Candidate();
-			$candidate->user = $user;
-			$this->em->getDao(Candidate::getClassName())->save($candidate);
 			$user->candidate = $candidate;
+			$this->em->getDao(User::getClassName())->save($user);
 		}
 
 		$this->template->candidate = $user->candidate;

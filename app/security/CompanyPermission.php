@@ -20,7 +20,9 @@ class CompanyPermission extends Security\Permission
 		$this->deny('editor');
 		$this->deny('manager');
 
-		$this->allow('manager', 'info');
+		$this->allow('editor', 'info');
+		$this->allow('manager', 'info', ['view']);
+		$this->allow('manager', 'users');
 		$this->allow('admin');
 	}
 

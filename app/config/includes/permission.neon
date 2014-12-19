@@ -36,7 +36,7 @@ services:
 			- allow('signed', 'profile', ['default', 'settings', 'delete'])
 
 			- allow('candidate', 'candidate', 'default')
-			- allow('company', 'company', 'default')
+			- allow('company', 'company', ['default', 'users'])
 
 			- allow('admin', 'users')
 			- allow('admin', 'skills')
