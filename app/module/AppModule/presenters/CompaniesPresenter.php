@@ -8,6 +8,7 @@ use App\Components\User\CompanyUserControl;
 use App\Components\User\ICompanyUserControlFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\User;
+use App\Model\Facade\CompanyFacade;
 use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
@@ -17,10 +18,16 @@ use Kdyby\Doctrine\EntityManager;
  */
 class CompaniesPresenter extends BasePresenter
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// <editor-fold defaultstate="expanded" desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	/** @var CompanyFacade @inject */
+	public $companyFacade;
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="variables">
 
 	/** @var EntityDao */
 	private $companyDao;
@@ -109,12 +116,12 @@ class CompaniesPresenter extends BasePresenter
 		if (!$company) {
 			$this->flashMessage('Company wasn\'t found.', 'warning');
 		} else {
-			$this->companyDao->delete($company);
+			$this->companyFacade->delete($company);
 			$this->flashMessage('Company was deleted.', 'success');
 		}
 		$this->redirect('default');
 	}
-	
+
 	/**
 	 * @secured
 	 * @resource('companies')

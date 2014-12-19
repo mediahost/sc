@@ -7,7 +7,9 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
+use App\Model\Entity\Role;
 use App\Model\Facade\CompanyFacade;
+use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Forms\IControl;
@@ -39,6 +41,9 @@ class CompanyControl extends EntityControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
+
+	/** @var RoleFacade @inject */
+	public $roleFacade;
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
@@ -76,7 +81,7 @@ class CompanyControl extends EntityControl
 		}
 
 		if ($this->canEditUsers) {
-			$users = $this->userFacade->getUsers();
+			$users = $this->userFacade->getUsersInRole($this->roleFacade->findByName(Role::COMPANY));
 			$admins = $form->addMultiSelect2('admins', 'Administrators', $users)
 					->setRequired('Company must have administrator');
 			$managers = $form->addMultiSelect2('managers', 'Managers', $users);
@@ -106,21 +111,27 @@ class CompanyControl extends EntityControl
 	public function validateCompanyId(IControl $control, $arg = NULL)
 	{
 		$id = $this->entity ? $this->entity->id : NULL;
-		return $this->companyFacade->isUnique($control->getValue(), $id);
+		return $this->companyFacade->isUniqueId($control->getValue(), $id);
 	}
 
 	public function formSucceeded(Form $form, $values)
 	{
-		$entity = $this->load($values);
+		list($company, $roles) = $this->load($values);
 		$companyDao = $this->em->getDao(Company::getClassName());
-		$saved = $companyDao->save($entity);
-		$this->onAfterSave($saved);
+		$savedCompany = $companyDao->save($company);
+		if ($this->canEditUsers) {
+			$this->companyFacade->clearPermissions($savedCompany);
+			foreach ($roles as $userId => $userRoles) {
+				$this->companyFacade->addPermission($savedCompany, $userId, $userRoles);
+			}
+		}
+		$this->onAfterSave($savedCompany);
 	}
 
 	/**
 	 * Load Entity from Form
 	 * @param ArrayHash $values
-	 * @return Company
+	 * @return array[Company, array]
 	 */
 	protected function load(ArrayHash $values)
 	{
@@ -130,8 +141,8 @@ class CompanyControl extends EntityControl
 			$entity->companyId = $values->companyId;
 			$entity->address = $values->address;
 		}
+		$usersRoles = [];
 		if ($this->canEditUsers) {
-			$usersRoles = [];
 			foreach ($values->admins as $adminId) {
 				$usersRoles[$adminId][] = CompanyRole::ADMIN;
 			}
@@ -141,11 +152,8 @@ class CompanyControl extends EntityControl
 			foreach ($values->editors as $editorId) {
 				$usersRoles[$editorId][] = CompanyRole::EDITOR;
 			}
-			foreach ($usersRoles as $userId => $userRoles) {
-				$this->companyFacade->addPermission($this->entity, $userId, $userRoles);
-			}
 		}
-		return $entity;
+		return [$entity, $usersRoles];
 	}
 
 	/**

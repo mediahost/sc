@@ -52,6 +52,11 @@ class Company extends BaseEntity
 		return (string) $this->name;
 	}
 	
+	public function clearAccesses()
+	{
+		return $this->accesses->clear();
+	}
+	
 	/** @return ArrayCollection */
 	public function getAdminAccesses()
 	{

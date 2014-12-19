@@ -163,6 +163,25 @@ class UserFacade extends Object
 		return $this->userDao->findPairs([], 'mail', [], 'id');
 	}
 
+	/**
+	 * Get all users in inserted role
+	 * @return array
+	 */
+	public function getUsersInRole(Role $role)
+	{
+		$qb = $this->em->createQueryBuilder();
+		$query = $qb->select('u.mail', 'u.id')
+				->from(User::getClassName(), 'u', 'u.id')
+				->innerJoin('u.roles', 'r')
+				->where('r.id = :roleid')
+				->setParameter('roleid', $role->id)
+				->getQuery();
+		
+		return array_map(function ($row) {
+			return reset($row);
+		}, $query->getArrayResult());
+	}
+
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="find methods">
 

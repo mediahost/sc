@@ -43,7 +43,7 @@ class CompanyFacade extends Object
 
 	// <editor-fold defaultstate="expanded" desc="create & add">
 
-	/** 
+	/**
 	 * Create role if isn't exists
 	 * @return CompanyRole|NULL 
 	 */
@@ -139,6 +139,16 @@ class CompanyFacade extends Object
 	}
 
 	/**
+	 * Find company by name.
+	 * @param type $name
+	 * @return Company
+	 */
+	public function findByName($name)
+	{
+		return $this->companyDao->findOneBy(['name' => $name]);
+	}
+
+	/**
 	 * Find company permission by company and user
 	 * @param Company $company
 	 * @param User $user
@@ -150,6 +160,23 @@ class CompanyFacade extends Object
 					'company' => $company,
 					'user' => $user,
 		]);
+	}
+
+	/**
+	 * Find company permissions by company or user
+	 * @param Company $company
+	 * @param User $user
+	 * @return array
+	 */
+	public function findPermissions($company = NULL, $user = NULL)
+	{
+		if ($company instanceof Company) {
+			return $this->companyPermissionDao->findBy(['company' => $company]);
+		}
+		if ($user instanceof User) {
+			return $this->companyPermissionDao->findBy(['user' => $user]);
+		}
+		return [];
 	}
 
 	/**
@@ -219,11 +246,53 @@ class CompanyFacade extends Object
 	 * @param type $id row with this id is unique
 	 * @return bool
 	 */
-	public function isUnique($companyId, $id = NULL)
+	public function isUniqueId($companyId, $id = NULL)
 	{
 		$finded = $this->findByCompanyId($companyId);
-		if ($finded && $id) {
+		if ($finded) {
 			return $finded->id === $id;
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Check if company name is unique.
+	 * @param type $name
+	 * @param type $id row with this id is unique
+	 * @return bool
+	 */
+	public function isUniqueName($name, $id = NULL)
+	{
+		$finded = $this->findByName($name);
+		if ($finded) {
+			return $finded->id === $id;
+		}
+		return TRUE;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="delete">
+
+	/**
+	 * Delete company and all permission for this company
+	 * @param Company $company
+	 * @return bool
+	 */
+	public function delete(Company $company)
+	{
+		$this->clearPermissions($company);
+		return $this->companyDao->delete($company);
+	}
+	
+	/**
+	 * Delete all permission for this company
+	 * @param Company $company
+	 * @return bool
+	 */
+	public function clearPermissions(Company $company)
+	{
+		foreach ($this->findPermissions($company) as $permission) {
+			$this->companyPermissionDao->delete($permission);
 		}
 		return TRUE;
 	}
