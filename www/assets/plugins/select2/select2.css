@@ -469,14 +469,14 @@ disabled look for disabled choices in the results dropdown
 /* disabled styles */
 
 .select2-container.select2-container-disabled .select2-choice {
-    background-color: #f4f4f4;
+    background-color: #eee;
     background-image: none;
-    border: 1px solid #ddd;
-    cursor: default;
+    border: 1px solid #e5e5e5;
+    cursor: not-allowed;
 }
 
 .select2-container.select2-container-disabled .select2-choice .select2-arrow {
-    background-color: #f4f4f4;
+    background-color: #eee;
     background-image: none;
     border-left: 0;
 }
