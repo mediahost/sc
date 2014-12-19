@@ -138,6 +138,7 @@ class UsersPresenter extends BasePresenter
 			$this->user->login($user);
 			$message = new TaggedString('You are logged as \'%s\'.', $user);
 			$this->flashMessage($message, 'success');
+			$this->redirect('Dashboard:');
 		}
 		$this->redirect('default');
 	}
