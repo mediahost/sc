@@ -37,7 +37,7 @@
 			
 			<!-- BEGIN DASHBOARD -->
 			<li n:if="$user->isAllowed('dashboard', 'default')"
-				class="start{ifCurrent Dashboard:*} active{/ifCurrent}">
+				n:class="start, $presenter->isLinkCurrent('Dashboard:*') ? active">
 				<a n:href="Dashboard:">
 					<i class="fa fa-dashboard"></i> 
 					<span class="title">{_'Dashboard'}</span><span class="selected"></span>
@@ -52,7 +52,7 @@
 				<h3 class="uppercase">{_'Candidate'}</h3>
 			</li>
 			<li n:if="$user->isAllowed('candidate', 'default')"
-				class="{ifCurrent Candidate:*} active{/ifCurrent}">
+				n:class="$presenter->isLinkCurrent('Candidate:*') ? active">
 				<a n:href="Candidate:">
 					<i class="fa fa-mortar-board"></i> <span class="title">{_'Candidate'}</span><span class="selected"></span>
 					<span class="badge badge-success badge-roundless">{_'new'}</span>
@@ -68,7 +68,7 @@
 			</li>		
 			<li n:foreach="$user->identity->allowedCompanies as $allowedPermission"
 				n:if="$user->isAllowed('company', 'default')"
-				class="{ifCurrent Company:default, $allowedPermission->company->id} active{/ifCurrent}">
+				n:class="$presenter->isLinkCurrent('Company:default', $allowedPermission->company->id) || $presenter->isLinkCurrent('Company:users', $allowedPermission->company->id) ? active">
 				<a n:href="Company:default, $allowedPermission->company->id">
 					<i class="fa fa-building-o"></i>
 					<span class="title">{$allowedPermission->company->name}</span>
@@ -102,33 +102,33 @@
 				<h3 class="uppercase">{_'Admin'}</h3>
 			</li>
 			<li n:if="$user->isAllowed('users', 'default')"
-				class="{ifCurrent Users:*} active{/ifCurrent}">
+				n:class="$presenter->isLinkCurrent('Users:*') ? active">
 				<a n:href="Users:">
 					<i class="fa fa-users"></i> <span class="title">{_'Users'}</span><span class="selected"></span>
 				</a>
 			</li>
 			<li n:if="$user->isAllowed('companies', 'default')"
-				class="{ifCurrent Companies:*} active{/ifCurrent}">
+				n:class="$presenter->isLinkCurrent('Companies:*') ? active">
 				<a n:href="Companies:">
 					<i class="fa fa-building"></i> <span class="title">{_'Companies'}</span><span class="selected"></span>
 					<span class="badge badge-roundless badge-danger">{_'new'}</span>
 				</a>
 			</li>
 			<li n:if="$user->isAllowed('skills', 'view')"
-				class="{ifCurrentIn 'Skills:*', 'SkillCategories:*'} active{/ifCurrentIn} last">
+				n:class="$presenter->isLinkCurrent('Skills:*') || $presenter->isLinkCurrent('SkillCategories:*') ? active, last">
 				<a n:href="Skills:">
 					<i class="icon-book-open"></i> <span class="title">{_'Skills'}</span><span class="selected"></span>
 					<span class="badge badge-success badge-roundless">{_'new'}</span>
 				</a>
 				<ul class="sub-menu">
-					<li class="{ifCurrent Skills:*} active{/ifCurrent}">
+					<li n:class="$presenter->isLinkCurrent('Skills:*') ? active">
 						<a n:href="Skills:">
 							<i class="icon-book-open"></i>
 							{_'Skills'}
 						</a>
 					</li>
 					<li n:if="$user->isAllowed('skillCategories', 'default')"
-						class="{ifCurrent SkillCategories:*} active{/ifCurrent}">
+						n:class="$presenter->isLinkCurrent('SkillCategories:*') ? active">
 						<a n:href="SkillCategories:">
 							<i class="icon-folder-alt"></i>
 							{_'Skill categories'}
@@ -145,14 +145,14 @@
 				<h3 class="uppercase">{_'Superadmin'}</h3>
 			</li>
 			<li n:if="$user->isAllowed('examples', 'default')"
-				class="start{ifCurrent Examples:*} active{/ifCurrent}">
+				n:class="start, $presenter->isLinkCurrent('Examples:*') ? active">
 				<a n:href="Examples:">
 					<i class="fa fa-life-ring"></i> 
 					<span class="title">{_'Examples'}</span><span class="selected"></span>
 					<span class="badge badge-info badge-roundless">{_'demo'}</span>
 				</a>
 				<ul class="sub-menu">
-					<li class="{ifCurrent Examples:form} active{/ifCurrent}">
+					<li n:class="$presenter->isLinkCurrent('Examples:form') ? active">
 						<a n:href="Examples:form">
 							<i class="fa fa-file-text-o"></i>
 							<span class="badge badge-danger badge-roundless">{_'new'}</span>
@@ -170,12 +170,12 @@
 				<h3 class="uppercase">{_'Settings'}</h3>
 			</li>
 
-			<li class="{ifCurrent Profile:*} active{/ifCurrent} last">
+			<li n:class="$presenter->isLinkCurrent('Profile:*') ? active, last">
 				<a n:href="Profile:">
 					<i class="icon-user"></i> <span class="title">{_'My Profile'}</span><span class="selected"></span>
 				</a>
 				<ul class="sub-menu">
-					<li class="{ifCurrent Profile:} active{/ifCurrent}">
+					<li n:class="$presenter->isLinkCurrent('Profile:*') ? active">
 						<a n:href="Profile:">
 							<i class="icon-eye"></i>
 							<span class="badge badge-info badge-roundless">{_'demo'}</span>
@@ -183,7 +183,7 @@
 						</a>
 					</li>
 					<li n:if="$user->isAllowed('profile', 'settings')"
-						class="{ifCurrent Profile:settings} active{/ifCurrent}">
+						n:class="$presenter->isLinkCurrent('Profile:settings') ? active">
 						<a n:href="Profile:settings">
 							<i class="icon-settings"></i>
 							{_'Settings'}
