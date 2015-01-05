@@ -7,6 +7,7 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
@@ -122,7 +123,7 @@ class CompanyUserControl extends BaseControl
 		}
 		
 		$this->companyFacade->addPermission($company, $user, $roles);
-		$this->onAfterSave($user);
+		$this->onAfterSave($user, $company);
 	}
 
 	/**

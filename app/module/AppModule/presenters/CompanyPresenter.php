@@ -2,8 +2,14 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Company\CompanyControl;
+use App\Components\Company\ICompanyControlFactory;
+use App\Components\User\CompanyUserControl;
+use App\Components\User\ICompanyUserControlFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyPermission;
+use App\Model\Entity\User;
+use App\TaggedString;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -11,6 +17,16 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class CompanyPresenter extends BasePresenter
 {
+	// <editor-fold defaultstate="collapsed" desc="inject">
+
+	/** @var ICompanyControlFactory @inject */
+	public $iCompanyControlFactory;
+
+	/** @var ICompanyUserControlFactory @inject */
+	public $iCompanyUserControlFactory;
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="variables">
 
 	/** @var CompanyPermission */
 	private $companyPermission;
@@ -18,16 +34,20 @@ class CompanyPresenter extends BasePresenter
 	/** @var Company */
 	private $company;
 
+	// </editor-fold>
+
 	protected function startup()
 	{
 		parent::startup();
-		if (!count($this->user->identity->allowedCompanies)) {
-			$this->flashMessage('You have no company to show', 'info');
-			$this->redirect('wrongCompany');
+		if ($this->action !== 'wrongCompany' && $this->action !== 'editUser') {
+			if (!count($this->user->identity->allowedCompanies)) {
+				$this->flashMessage('You have no company to show', 'info');
+				$this->redirect('wrongCompany');
+			}
+			$this->getCompany($this->getParameter('id'));
 		}
-		$this->getCompany($this->getParameter('id'));
 	}
-	
+
 	protected function beforeRender()
 	{
 		parent::beforeRender();
@@ -64,7 +84,8 @@ class CompanyPresenter extends BasePresenter
 	 */
 	public function actionDefault($id)
 	{
-		
+		$this['companyForm']->setEntity($this->company);
+		$this['companyForm']->setCanEditInfo($this->companyPermission->isAllowed('info', 'edit'));
 	}
 
 	/**
@@ -74,7 +95,64 @@ class CompanyPresenter extends BasePresenter
 	 */
 	public function actionUsers($id)
 	{
-		
+		$this->template->addFilter('canEditUser', $this->canEditUser);
 	}
 
+	/**
+	 * @secured
+	 * @resource('company')
+	 * @privilege('editUser')
+	 */
+	public function actionEditUser($userId = NULL, $companyId = NULL)
+	{
+		$this->getCompany($companyId);
+		$this['editUserForm']->setCompany($this->company);
+		if ($userId) {
+			$user = $this->em->getDao(User::getClassName())->find($userId);
+			if ($user && $this->canEditUser($user)) {
+				$this['editUserForm']->setUser($user);
+			}
+		}
+	}
+
+	// <editor-fold defaultstate="expanded" desc="edit/delete priviledges">
+
+	/**
+	 * Decides if user can edit roles for user
+	 * @param User $user
+	 * @return boolean
+	 */
+	public function canEditUser(User $user)
+	{
+		return $this->companyPermission->isAllowed('users', 'edit') && $this->user->id != $user->id;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="forms">
+
+	/** @return CompanyControl */
+	public function createComponentCompanyForm()
+	{
+		$control = $this->iCompanyControlFactory->create();
+		$control->onAfterSave = function (Company $saved) {
+			$message = new TaggedString('Company \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('this');
+		};
+		return $control;
+	}
+
+	/** @return CompanyUserControl */
+	public function createComponentEditUserForm()
+	{
+		$control = $this->iCompanyUserControlFactory->create();
+		$control->onAfterSave = function (User $saved, Company $company) {
+			$message = new TaggedString('User \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('users', $company->id);
+		};
+		return $control;
+	}
+
+	// </editor-fold>
 }

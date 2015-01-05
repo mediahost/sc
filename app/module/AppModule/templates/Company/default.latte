@@ -1,7 +1,4 @@
-{block pageTitle}
-	{$company->name}
-	<small n:if="$companyPermission->isAllowed('info', 'edit')">{_'You can edit info'}</small>
-{/block}
+{block pageTitle}{$company->name}{/block}
 
 {block breadcrumbItems}
 <li>
@@ -13,11 +10,38 @@
 
 <div class="row">
 	<div class="col-md-6">
-		<div class="well">
-			<address>
-				<strong>{$company->name}</strong><br>
-				{!$company->address|nl2br}
-			</address>
+		<div class="portlet light">
+			<div class="portlet-title tabbable-line">
+				<div class="caption">
+					<i class="icon-home"></i>
+					<span class="caption-subject bold uppercase">{_'Address'}</span>
+				</div>
+				<ul n:if="$companyPermission->isAllowed('info', 'edit')"
+					class="nav nav-tabs">
+					<li class="active">
+						<a href="#tab_view" data-toggle="tab">{_'View'}</a>
+					</li>
+					<li>
+						<a href="#tab_edit" data-toggle="tab">{_'Edit'}</a>
+					</li>
+				</ul>
+			</div>
+			<div class="portlet-body">
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_view">
+						<address>
+							<strong>{$company->name}</strong><br>
+							{!$company->address|nl2br}<br>
+							<br>
+							<abbr title="{_'Company identification'}">{_'ID'}:</abbr> {$company->companyId}
+						</address>
+					</div>
+					<div n:if="$companyPermission->isAllowed('info', 'edit')" 
+						 class="tab-pane" id="tab_edit">
+						{control companyForm}
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

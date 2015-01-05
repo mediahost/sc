@@ -163,8 +163,8 @@ class CompleteAccountControl extends BaseControl
 				->addServerRule([$this, 'validateCompanyName'], $this->translator->translate('%s is already registered.'));
 
 		$form->addServerValidatedText('companyId', 'Company ID')
-				->setAttribute('placeholder', 'Company ID')
-				->setRequired('Please enter company ID.')
+				->setAttribute('placeholder', 'Company identification')
+				->setRequired('Please enter company identification.')
 				->addServerRule([$this, 'validateCompanyId'], $this->translator->translate('%s is already registered.'));
 
 		// TODO: do it by addAddress() (do this control)

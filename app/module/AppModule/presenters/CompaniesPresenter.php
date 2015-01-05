@@ -26,6 +26,12 @@ class CompaniesPresenter extends BasePresenter
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
 
+	/** @var ICompanyControlFactory @inject */
+	public $iCompanyControlFactory;
+
+	/** @var ICompanyUserControlFactory @inject */
+	public $iCompanyUserControlFactory;
+
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
 
@@ -34,12 +40,6 @@ class CompaniesPresenter extends BasePresenter
 
 	/** @var EntityDao */
 	private $userDao;
-
-	/** @var ICompanyControlFactory @inject */
-	public $iCompanyControlFactory;
-
-	/** @var ICompanyUserControlFactory @inject */
-	public $iCompanyUserControlFactory;
 
 	// </editor-fold>
 
@@ -129,13 +129,17 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionEditUser($userId = NULL, $companyId = NULL)
 	{
-		$user = $this->userDao->find($userId);
-		if ($user) {
-			$this['editUserForm']->setUser($user);
+		if ($userId) {
+			$user = $this->userDao->find($userId);
+			if ($user) {
+				$this['editUserForm']->setUser($user);
+			}
 		}
-		$company = $this->companyDao->find($companyId);
-		if ($company) {
-			$this['editUserForm']->setCompany($company);
+		if ($companyId) {
+			$company = $this->companyDao->find($companyId);
+			if ($company) {
+				$this['editUserForm']->setCompany($company);
+			}
 		}
 	}
 

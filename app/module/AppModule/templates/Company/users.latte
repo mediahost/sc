@@ -1,7 +1,4 @@
-{block pageTitle}
-	{$company->name}
-	<small n:if="$companyPermission->isAllowed('users', 'edit')">{_'You can edit users'}</small>
-{/block}
+{block pageTitle}{$company->name}{/block}
 
 {block breadcrumbItems}
 <li>
@@ -13,27 +10,67 @@
 
 <div class="row">
 	<div class="col-md-6">
-		<table class="table table-bordered table-striped">
-			<thead>
-				<tr>
-					<th>
-						{_'User'}
-					</th>
-					<th>
-						{_'Roles'}
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr n:foreach="$company->accesses as $access">
-					<td>
-						{$access->user}
-					</td>
-					<td>
-						{$access->roles|implode:', '}
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="portlet light">
+			<div class="portlet-title tabbable-line">
+				<div class="caption">
+					<i class="icon-users"></i>
+					<span class="caption-subject bold uppercase">{_'Users for'} {$company->name}</span>
+				</div>
+				<div n:if="$companyPermission->isAllowed('users', 'edit')"
+					 class="actions">
+					<a n:href="editUser, NULL, $company->id" 
+					   data-target="#editUser" 
+					   data-toggle="modal"
+					   class="btn btn-circle btn-default">
+						<i class="fa fa-plus"></i> 
+						{_'Add user'}
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>
+								{_'User'}
+							</th>
+							<th>
+								{_'Roles'}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr n:foreach="$company->accesses as $access">
+							<td>
+								{$access->user}
+							</td>
+							<td>
+								{if $template->canEditUser($access->user)}
+									<a n:href="editUser, $access->user->id, $company->id" 
+									   data-target="#editUser" 
+									   data-toggle="modal"
+									   title="{_'Edit roles'}">
+										{$access->roles|implode:', '}
+									</a>
+								{else}
+									{$access->roles|implode:', '}
+								{/if}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade ajax" id="editUser" aria-hidden="true">
+	<div class="page-loading page-loading-boxed">
+		<img src="{$basePath}/assets/img/loading-spinner-grey.gif" alt="" class="loading">
+		<span>&nbsp;&nbsp;{_'Loading...'} </span>
+	</div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+		</div>
 	</div>
 </div>

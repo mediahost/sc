@@ -71,11 +71,13 @@ class CompanyControl extends EntityControl
 
 		if ($this->canEditInfo) {
 			$form->addServerValidatedText('companyId', 'Company ID')
-					->setRequired('Please enter company ID.')
+					->setAttribute('placeholder', 'Company identification')
+					->setRequired('Please enter company\'s identification.')
 					->addServerRule([$this, 'validateCompanyId'], $this->translator->translate('%s is already registered.'));
-			$form->addText('name', 'Name')
-					->setAttribute('placeholder', 'Company Name')
-					->setRequired('Please enter company name.');
+			$form->addServerValidatedText('name', 'Name')
+					->setAttribute('placeholder', 'Company name')
+					->setRequired('Please enter your company\'s name.')
+					->addServerRule([$this, 'validateCompanyName'], $this->translator->translate('%s is already registered.'));
 			$form->addTextArea('address', 'Address')
 					->setAttribute('placeholder', 'Company Address');
 		}
@@ -112,6 +114,12 @@ class CompanyControl extends EntityControl
 	{
 		$id = $this->entity ? $this->entity->id : NULL;
 		return $this->companyFacade->isUniqueId($control->getValue(), $id);
+	}
+
+	public function validateCompanyName(IControl $control, $arg = NULL)
+	{
+		$id = $this->entity ? $this->entity->id : NULL;
+		return $this->companyFacade->isUniqueName($control->getValue(), $id);
 	}
 
 	public function formSucceeded(Form $form, $values)
