@@ -26,6 +26,8 @@ return array(
 			*.server.neon
 			*.server_dev.neon
 			*.server_test.neon
+			*.server_ver21.neon
+			*.server_ver22.neon
 			*.local.example.neon
 			composer.lock
 			composer.json

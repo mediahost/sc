@@ -20,6 +20,8 @@
 *.server.neon
 *.server_dev.neon
 *.server_test.neon
+*.server_ver21.neon
+*.server_ver22.neon
 /app/config/settings.local/*
 
 #################
@@ -56,12 +58,14 @@
 !/www/webtemp/.htaccess
 
 #################
-## PhpStorm
+## Deployment
 ################
 /deployment/*
 !/deployment/deployment.bat
 !/deployment/deployment_dev.bat
 !/deployment/deployment_test.bat
+!/deployment/deployment_ver21.bat
+!/deployment/deployment_ver22.bat
 !/deployment/deployment.example.php
 !/deployment/deployment.config.php
 
