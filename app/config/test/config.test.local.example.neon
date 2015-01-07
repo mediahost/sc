@@ -15,7 +15,8 @@ twitter:
 installer:
 	lock: TRUE
 	doctrine: FALSE
-	initUsers: ['user_mail' = ['password', 'name_of_role']]
+#	initUsers: ['user_mail' = ['password', 'name_of_role']]
+	initUsers: ['admin' = ['admin', 'admin'], 'superadmin' = ['superadmin', 'superadmin'], 'candidate' = ['candidate', 'candidate'], 'company' = ['company', 'company']]
 
 nette:
 	mailer:

@@ -4,6 +4,7 @@ namespace Test\Presenters\FrontModule;
 
 use App\Helpers;
 use Nette\DI\Container;
+use Test\Presenters\BasePresenter;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -48,12 +49,11 @@ class InstallPresenterTest extends BasePresenter
 
 	public function testRenderDefault()
 	{
-		$response = $this->tester->testAction('default');
+		$response = $this->tester->testActionGet('default', ['printHtml' => TRUE]);
 		$html = (string) $response->getSource();
 		$dom = DomQuery::fromHtml($html);
 		Assert::true($dom->has('html'));
 		Assert::true($dom->has('body'));
-		Assert::true(TRUE);
 	}
 
 }

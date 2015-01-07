@@ -36,23 +36,24 @@ class CompanyPresenter extends BasePresenter
 
 	// </editor-fold>
 
-	protected function startup()
-	{
-		parent::startup();
-		if ($this->action !== 'wrongCompany' && $this->action !== 'editUser') {
-			if (!count($this->user->identity->allowedCompanies)) {
-				$this->flashMessage('You have no company to show', 'info');
-				$this->redirect('wrongCompany');
-			}
-			$this->getCompany($this->getParameter('id'));
-		}
-	}
-
 	protected function beforeRender()
 	{
 		parent::beforeRender();
 		$this->template->companyPermission = $this->companyPermission;
 		$this->template->company = $this->company;
+	}
+	
+	/**
+	 * Check if user has any company to show and get company ID
+	 * @param type $id
+	 */
+	private function checkCompanyId($id)
+	{
+		if (!count($this->user->identity->allowedCompanies)) {
+			$this->flashMessage('You have no company to show', 'info');
+			$this->redirect('wrongCompany');
+		}
+		$this->getCompany($id);
 	}
 
 	/**
@@ -84,6 +85,7 @@ class CompanyPresenter extends BasePresenter
 	 */
 	public function actionDefault($id)
 	{
+		$this->checkCompanyId($id);
 		$this['companyForm']->setEntity($this->company);
 		$this['companyForm']->setCanEditInfo($this->companyPermission->isAllowed('info', 'edit'));
 	}
@@ -95,6 +97,7 @@ class CompanyPresenter extends BasePresenter
 	 */
 	public function actionUsers($id)
 	{
+		$this->checkCompanyId($id);
 		$this->template->addFilter('canEditUser', $this->canEditUser);
 	}
 

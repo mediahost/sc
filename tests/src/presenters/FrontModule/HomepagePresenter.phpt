@@ -2,6 +2,7 @@
 
 namespace Test\Presenters\FrontModule;
 
+use Test\Presenters\BasePresenter;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -24,7 +25,7 @@ class HomepagePresenterTest extends BasePresenter
 
 	public function testRenderDefault()
 	{
-		$response = $this->tester->testAction('default');
+		$response = $this->tester->testActionGet('default');
 
 		$html = (string) $response->getSource();
 		$dom = DomQuery::fromHtml($html);

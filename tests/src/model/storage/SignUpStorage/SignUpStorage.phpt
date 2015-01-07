@@ -27,12 +27,12 @@ class SignUpStorageTest extends ParentTestCase
 	public function testStorage()
 	{
 		$storage = new SignUpStorage($this->session);
+		$storage->wipe();
 
 		Assert::false($storage->isVerified());
 		Assert::type(User::getClassName(), $storage->getUser());
 		Assert::null($storage->getUser()->mail);
 		Assert::null($storage->getRole());
-		Assert::same(Role::CANDIDATE, $storage->getRole(TRUE));
 
 		$user = new User;
 		$user->mail = 'user@mail.com';

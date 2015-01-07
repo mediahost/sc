@@ -16,7 +16,7 @@ use Tester\TestCase;
  */
 class Presenter extends TestCase
 {
-	
+
 	const METHOD_GET = 'GET';
 	const METHOD_POST = 'POST';
 
@@ -45,7 +45,7 @@ class Presenter extends TestCase
 		$this->presName = $presName;
 	}
 
-	public function test($action, $method = self::METHOD_GET, $params = array(), $post = array())
+	public function test($action, $method = self::METHOD_GET, $params = [], $post = [])
 	{
 		$params['action'] = $action;
 		$request = new Request($this->presName, $method, $params, $post);
@@ -53,7 +53,7 @@ class Presenter extends TestCase
 		return $response;
 	}
 
-	public function testAction($action, $method = self::METHOD_GET, $params = array(), $post = array())
+	public function testAction($action, $method = self::METHOD_GET, $params = [], $post = [])
 	{
 		$response = $this->test($action, $method, $params, $post);
 
@@ -63,7 +63,12 @@ class Presenter extends TestCase
 		return $response;
 	}
 
-	public function testForm($action, $method = self::METHOD_POST, $post = array())
+	public function testActionGet($action, $params = [])
+	{
+		return $this->testAction($action, self::METHOD_GET, $params);
+	}
+
+	public function testForm($action, $method = self::METHOD_POST, $post = [])
 	{
 		$response = $this->test($action, $method, $post);
 

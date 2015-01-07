@@ -50,16 +50,16 @@ class User extends BaseEntity implements IIdentity
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	private $roles;
 
-	/** @ORM\OneToOne(targetEntity="PageConfigSettings", fetch="EAGER", cascade={"persist"}) */
+	/** @ORM\OneToOne(targetEntity="PageConfigSettings", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $pageConfigSettings;
 
-	/** @ORM\OneToOne(targetEntity="PageDesignSettings", fetch="EAGER", cascade={"persist"}) */
+	/** @ORM\OneToOne(targetEntity="PageDesignSettings", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $pageDesignSettings;
 
-	/** @ORM\OneToOne(targetEntity="Facebook", fetch="LAZY", cascade={"persist"}) */
+	/** @ORM\OneToOne(targetEntity="Facebook", fetch="LAZY", cascade={"persist", "remove"}) */
 	protected $facebook;
 
-	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"persist"}) */
+	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"persist", "remove"}) */
 	protected $twitter;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */

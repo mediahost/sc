@@ -2,8 +2,7 @@
 
 namespace Test\Presenters\FrontModule;
 
-use App\Extensions\Installer;
-use Test\Presenters\Presenter;
+use Test\Presenters\BasePresenter;
 use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
@@ -16,9 +15,6 @@ $container = require __DIR__ . '/../../bootstrap.php';
  */
 class DesignPresenterTest extends BasePresenter
 {
-
-	/** @var Installer @inject */
-	public $installer;
 
 	public function setUp()
 	{
@@ -38,7 +34,7 @@ class DesignPresenterTest extends BasePresenter
 	{
 		$this->loginAdmin();
 		$color = 'default';
-		$response = $this->tester->testAction('setColor', Presenter::METHOD_GET, ['color' => $color]);
+		$response = $this->tester->testActionGet('setColor', ['color' => $color]);
 
 		$json = (string) $response->getSource();
 		$arrayResponse = json_decode($json);
@@ -49,7 +45,7 @@ class DesignPresenterTest extends BasePresenter
 	public function testRenderSetColorFail()
 	{
 		$this->loginAdmin();
-		$response = $this->tester->testAction('setColor', Presenter::METHOD_GET, ['color' => 'blue']);
+		$response = $this->tester->testActionGet('setColor', ['color' => 'blue']);
 
 		$json = (string) $response->getSource();
 		$arrayResponse = json_decode($json);
@@ -60,7 +56,7 @@ class DesignPresenterTest extends BasePresenter
 	public function testRenderSetColorUnlogged()
 	{
 		$color = 'default';
-		$response = $this->tester->testAction('setColor', Presenter::METHOD_GET, ['color' => $color]);
+		$response = $this->tester->testActionGet('setColor', ['color' => $color]);
 
 		$json = (string) $response->getSource();
 		$arrayResponse = json_decode($json);
@@ -72,7 +68,7 @@ class DesignPresenterTest extends BasePresenter
 	{
 		$this->loginAdmin();
 
-		$response = $this->tester->testAction('setSidebarClosed', Presenter::METHOD_GET, ['value' => TRUE]);
+		$response = $this->tester->testActionGet('setSidebarClosed', ['value' => TRUE]);
 		$json = (string) $response->getSource();
 		$arrayResponse = json_decode($json);
 		Assert::count(1, (array) $arrayResponse);
@@ -81,7 +77,7 @@ class DesignPresenterTest extends BasePresenter
 
 	public function testRenderSetSidebarClosedUnlogged()
 	{
-		$response = $this->tester->testAction('setSidebarClosed', Presenter::METHOD_GET, ['value' => TRUE]);
+		$response = $this->tester->testActionGet('setSidebarClosed', ['value' => TRUE]);
 		$json = (string) $response->getSource();
 		$arrayResponse = json_decode($json);
 		Assert::count(1, (array) $arrayResponse);
@@ -92,7 +88,7 @@ class DesignPresenterTest extends BasePresenter
 	{
 		$this->loginAdmin();
 
-		$response = $this->tester->testAction('setLayout', Presenter::METHOD_GET, [
+		$response = $this->tester->testActionGet('setLayout', [
 			'layoutOption' => 'boxed',
 			'sidebarOption' => 'fixed',
 			'headerOption' => 'fixed',
@@ -116,7 +112,7 @@ class DesignPresenterTest extends BasePresenter
 
 	public function testRenderSetLayoutUnlogged()
 	{
-		$response = $this->tester->testAction('setLayout', Presenter::METHOD_GET, []);
+		$response = $this->tester->testActionGet('setLayout', []);
 		$json = (string) $response->getSource();
 		$arrayResponse = json_decode($json);
 		Assert::count(1, (array) $arrayResponse);

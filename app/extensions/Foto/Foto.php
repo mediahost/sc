@@ -102,7 +102,7 @@ class Foto extends Object
 		}
 
 		if ($sizeX > 0 && $sizeY > 0) {
-			$resizedPath = Helpers::getPath($this->originalFolder, "{$sizeX}-{$sizeY}");
+			$resizedPath = Helpers::getPath($this->rootFolder, "{$sizeX}-{$sizeY}");
 			Helpers::mkDirForce(Helpers::getPath($resizedPath, self::getFolderFromPath($name)));
 			$resized = Helpers::getPath($resizedPath, $name);
 
