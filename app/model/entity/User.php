@@ -83,11 +83,14 @@ class User extends BaseEntity implements IIdentity
 	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="user", fetch="LAZY", cascade={"persist"}) */
 	protected $allowedCompanies;
 
-	public function __construct()
+	public function __construct($mail = NULL)
 	{
 		parent::__construct();
 		$this->roles = new ArrayCollection;
 		$this->allowedCompanies = new ArrayCollection;
+		if ($mail) {
+			$this->mail = $mail;
+		}
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters">

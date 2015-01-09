@@ -40,16 +40,24 @@ class Company extends BaseEntity
 	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="company", fetch="LAZY", cascade={"persist"}) */
 	protected $accesses;
 
-	public function __construct()
+	public function __construct($name = NULL)
 	{
 		parent::__construct();
 		$this->accesses = new ArrayCollection;
+		if ($name) {
+			$this->name = $name;
+		}
 	}
 
 	/** @return string */
 	public function __toString()
 	{
 		return (string) $this->name;
+	}
+	
+	public function addAccess(CompanyPermission $permission)
+	{
+		return $this->accesses->add($permission);
 	}
 	
 	public function clearAccesses()

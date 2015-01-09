@@ -58,6 +58,12 @@ class UserTest extends ParentTestCase
 	{
 		unset($this->user);
 	}
+	
+	public function testCreate()
+	{
+		$this->user = new User(self::MAIL);
+		Assert::same(self::MAIL, $this->user->mail);
+	}
 
 	public function testSetAndGet()
 	{

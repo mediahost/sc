@@ -80,7 +80,7 @@ class CompanyPermission extends BaseEntity
 	/**
 	 * Check if any roles has roleName
 	 * @param type $roleName
-	 * @return type
+	 * @return bool
 	 */
 	public function containRoleName($roleName)
 	{

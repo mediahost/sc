@@ -11,7 +11,6 @@ use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
 /**
- * TODO: TEST IT!!!
  * CompanyFacade
  */
 class CompanyFacade extends Object
@@ -57,7 +56,7 @@ class CompanyFacade extends Object
 	}
 
 	/**
-	 * TODO: TEST IT!!!
+	 * Add permission for inserted company and user with inserted roles
 	 * @param string|Company $company Company or CompanyId
 	 * @param string|User $user User or UserId
 	 * @param array $roles
@@ -190,7 +189,7 @@ class CompanyFacade extends Object
 	}
 
 	/**
-	 * Find company role by name
+	 * Find users (or its ids) by company
 	 * @param string|Company $company
 	 * @param bool $onlyIds Return only user ids
 	 * @return array

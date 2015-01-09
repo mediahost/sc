@@ -3,6 +3,7 @@
 namespace Test\Model\Facade;
 
 use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
+use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Test\ParentTestCase;
@@ -18,6 +19,9 @@ abstract class BaseFacade extends ParentTestCase
 
 	/** @var UserFacade @inject */
 	public $userFacade;
+
+	/** @var CompanyFacade @inject */
+	public $companyFacade;
 
 	/** @var DefaultSettingsStorage @inject */
 	public $defaultSettings;
