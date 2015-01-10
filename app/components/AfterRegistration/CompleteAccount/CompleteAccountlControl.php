@@ -126,28 +126,26 @@ class CompleteAccountControl extends BaseControl
 	 */
 	public function candidateFormSucceeded(Form $form, ArrayHash $values)
 	{
-		$candidateDao = $this->em->getDao(Candidate::getClassName());
 		$roleDao = $this->em->getDao(Role::getClassName());
 		$userDao = $this->em->getDao(User::getClassName());
 
 		if (!$this->getUser()->id) {
 			throw new CompleteAccountControlException('Use setUserId($id) with existed ID');
 		}
-		if ($candidateDao->findOneBy(['user' => $this->getUser()])) {
+		$user = $userDao->find($this->getUser()->id);
+		if ($user->candidate !== NULL) {
 			throw new CompleteAccountControlException('This user is already candidate');
 		}
 
-		$candidate = new Candidate;
-		$candidate->user = $this->getUser();
-		$candidate->name = $values->fullName;
-		$candidate->birthday = $values->birthday;
-		$candidateDao->save($candidate);
-
 		$requiredRole = $roleDao->find($this->getUser()->requiredRole->id);
-		$candidate->user->addRole($requiredRole);
-		$userDao->save($candidate->user);
+		$user->addRole($requiredRole);
+		$user->removeRole($this->roleFacade->findByName(Role::SIGNED));
+		$user->candidate = new Candidate;
+		$user->candidate->name = $values->fullName;
+		$user->candidate->birthday = $values->birthday;
+		$userDao->save($user);
 
-		$this->onCreateCandidate($this, $candidate);
+		$this->onCreateCandidate($this, $user->candidate);
 	}
 
 	/** @return Form */
@@ -213,6 +211,7 @@ class CompleteAccountControl extends BaseControl
 		$requiredRole = $this->roleFacade->findByName(Role::COMPANY);
 		$user = $this->getUser();
 		$user->addRole($requiredRole);
+		$user->removeRole($this->roleFacade->findByName(Role::SIGNED));
 		$userDao->save($user);
 
 		$this->onCreateCompany($this, $company);
