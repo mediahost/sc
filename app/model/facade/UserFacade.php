@@ -3,6 +3,7 @@
 namespace App\Model\Facade;
 
 use App\Extensions\Settings\Model\Service\ExpirationService;
+use App\Model\Entity\CompanyPermission;
 use App\Model\Entity\Facebook;
 use App\Model\Entity\PageConfigSettings;
 use App\Model\Entity\PageDesignSettings;
@@ -28,6 +29,9 @@ class UserFacade extends Object
 
 	/** @var ExpirationService @inject */
 	public $expirationService;
+
+	/** @var CompanyFacade @inject */
+	public $companyFacade;
 
 	/** @var EntityDao */
 	private $userDao;
@@ -176,7 +180,7 @@ class UserFacade extends Object
 				->where('r.id = :roleid')
 				->setParameter('roleid', $role->id)
 				->getQuery();
-		
+
 		return array_map(function ($row) {
 			return reset($row);
 		}, $query->getArrayResult());
@@ -333,7 +337,38 @@ class UserFacade extends Object
 	public function deleteById($id)
 	{
 		$user = $this->userDao->find($id);
+		return $this->delete($user);
+	}
+
+	/**
+	 * TODO: TEST IT! / all delete
+	 * Delete user or throw exception
+	 * @param User $user
+	 * @return type
+	 */
+	public function delete(User $user)
+	{
+		if ($this->isLastAdminForSomeCompany($user)) {
+			throw new CantDeleteUserException('You\'re only one admin');
+		}
 		return $this->userDao->delete($user);
+	}
+
+	/**
+	 * If some user is last admin for some company then return TRUE
+	 * @param User $user
+	 * @return boolean
+	 */
+	private function isLastAdminForSomeCompany(User $user)
+	{
+		$permissions = $this->companyFacade->findPermissions(NULL, $user);
+		foreach ($permissions as $permission) {
+			if (count($permission->company->adminAccesses) === 1 &&
+					$user->id === $permission->company->adminAccesses->first()->user->id) {
+				return TRUE;
+			}
+		}
+		return FALSE;
 	}
 
 	// </editor-fold>
@@ -347,4 +382,9 @@ class UserFacade extends Object
 		return $this->findByMail($mail) === NULL;
 	}
 
+}
+
+class CantDeleteUserException extends \Exception
+{
+	
 }

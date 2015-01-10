@@ -141,6 +141,11 @@ class CompaniesPresenter extends BasePresenter
 				$this['editUserForm']->setCompany($company);
 			}
 		}
+		$this['editUserForm']->onAfterSave = function (User $saved) {
+			$message = new TaggedString('User \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('default');
+		};
 	}
 
 	// </editor-fold>

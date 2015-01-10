@@ -8,7 +8,6 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 /**
  * @ORM\Entity
  *
- * @property User $user
  * @property string $name
  * @property DateTime $birthday
  */

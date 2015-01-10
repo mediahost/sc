@@ -41,7 +41,9 @@ services:
 			- allow('admin', 'users')
 			- allow('admin', 'skills')
 			- allow('admin', 'skillCategories')
+			- allow('admin', 'candidate')
 			- allow('admin', 'candidates')
+			- allow('admin', 'company')
 			- allow('admin', 'companies')
 
 			- allow('superadmin') # Full access for superadmin

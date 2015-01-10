@@ -7,6 +7,7 @@ use App\Components\Auth\IConnectManagerControlFactory;
 use App\Components\Auth\ISetPasswordControlFactory;
 use App\Components\Auth\SetPasswordControl;
 use App\Model\Entity;
+use App\Model\Facade\CantDeleteUserException;
 use App\Model\Facade\UserFacade;
 use App\TaggedString;
 
@@ -79,10 +80,15 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function handleDelete()
 	{
-		$this->userFacade->deleteById($this->user->id);
-		$this->user->logout();
-		$this->flashMessage('Your account has been deleted', 'success');
-		$this->redirect(":Front:Homepage:");
+		try {
+			$this->userFacade->deleteById($this->user->id);
+			$this->user->logout();
+			$this->flashMessage('Your account has been deleted', 'success');
+			$this->redirect(":Front:Homepage:");
+		} catch (CantDeleteUserException $ex) {
+			$this->flashMessage('You can\'t delete account, because you are only one admin for your company.', 'warning');
+			$this->redirect("this");
+		}
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="components">
