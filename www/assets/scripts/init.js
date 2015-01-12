@@ -16,5 +16,6 @@ jQuery(document).ready(function () {
 });
 
 $('.modal.ajax').on('loaded.bs.modal', function (e) {
-	ComponentsDropdowns.init();
+	ComponentsDropdowns.init(); // init form components after ajax load modal window
+	Nette.initAllForms(); // reinit all nette forms
 });

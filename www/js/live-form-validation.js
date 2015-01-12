@@ -772,13 +772,15 @@ Nette.inArray = function(arr, val) {
 	}
 };
 
-
-Nette.addEvent(window, 'load', function() {
+Nette.initAllForms = function() {
 	for (var i = 0; i < document.forms.length; i++) {
 		Nette.initForm(document.forms[i]);
 	}
-});
+};
 
+Nette.addEvent(window, 'load', function() {
+	Nette.initAllForms();
+});
 
 /**
  * Converts string to web safe characters [a-z0-9-] text.
