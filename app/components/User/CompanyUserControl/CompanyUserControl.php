@@ -86,8 +86,9 @@ class CompanyUserControl extends BaseControl
 			$company->setDisabled();
 		}
 
-		$form->addMultiSelectBoxes('roles', 'Roles', $this->getRoles())
-				->setRequired('Please select some role');
+		$form->addServerMultiSelectBoxes('roles', 'Roles', $this->getRoles())
+				->setRequired('Please select some role')
+				->addServerRule([$this, 'validateAdminRoles'], $this->translator->translate('Company must have administrator.'));
 
 		$form->addSubmit('save', 'Save');
 
@@ -99,6 +100,27 @@ class CompanyUserControl extends BaseControl
 	public function validateMail(IControl $control, $arg = NULL)
 	{
 		return $this->userFacade->isUnique($control->getValue());
+	}
+
+	public function validateAdminRoles(IControl $control, $arg = NULL)
+	{
+		// new user
+		if (!$this->user) {
+			return TRUE;
+		}
+		// values contain admin
+		$adminRole = $this->companyFacade->findRoleByName(CompanyRole::ADMIN);
+		if (in_array($adminRole->id, $control->getValue())) {
+			return TRUE;
+		}
+		// check if company has another admin
+		$company = $this->company ? $this->company : $this->companyFacade->find($control->getParent()->values->company);
+		foreach ($this->companyFacade->findPermissions($company) as $permission) {
+			if ($permission->user->id !== $this->user->id && $permission->containRoleName(CompanyRole::ADMIN)) {
+				return TRUE;
+			}
+		}
+		return FALSE;
 	}
 
 	public function formSucceeded(Form $form, $values)
@@ -121,7 +143,7 @@ class CompanyUserControl extends BaseControl
 				$roles[] = $companyRoleDao->find($roleId);
 			}
 		}
-		
+
 		$this->companyFacade->addPermission($company, $user, $roles);
 		$this->onAfterSave($user, $company);
 	}

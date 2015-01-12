@@ -10,6 +10,7 @@ use App\Forms\Controls\Custom\DatePicker;
 use App\Forms\Controls\SelectBased\MultiSelect2;
 use App\Forms\Controls\SelectBased\MultiSelectBoxes;
 use App\Forms\Controls\SelectBased\Select2;
+use App\Forms\Controls\SelectBased\ServerValidatedMultiSelectBoxes;
 use App\Forms\Controls\TextAreaBased\WysiHtml;
 use App\Forms\Controls\TextInputBased\ServerValidatedTextInput;
 use App\Forms\Controls\TextInputBased\Spinner;
@@ -135,6 +136,15 @@ class Form extends BaseForm
 	public function addMultiSelect2($name, $label = NULL, array $items = NULL)
 	{
 		return $this[$name] = new MultiSelect2($label, $items);
+	}
+
+	/**
+	 * Adds MultiSelectBoxes with server validation
+	 * @return ServerValidatedMultiSelectBoxes
+	 */
+	public function addServerMultiSelectBoxes($name, $label = NULL, array $items = NULL)
+	{
+		return $this[$name] = new ServerValidatedMultiSelectBoxes($label, $items);
 	}
 
 	/**

@@ -123,8 +123,8 @@ class CompanyFacade extends Object
 	 */
 	public function find($company)
 	{
-		$companyId = $company instanceof Company ? $company->id : (string) $company;
-		return $this->companyDao->find($companyId);
+		$id = $company instanceof Company ? $company->id : (string) $company;
+		return $this->companyDao->find($id);
 	}
 
 	/**
