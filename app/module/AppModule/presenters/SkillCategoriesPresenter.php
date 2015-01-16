@@ -81,10 +81,10 @@ class SkillCategoriesPresenter extends BasePresenter
 		if ($skillCategory) {
 			try {
 				$this->skillCategoryDao->delete($skillCategory);
-				$message = new TaggedString('Category \'%s\' was deleted.', $skillCategory->name);
+				$message = new TaggedString('Category \'%s\' was deleted.', (string) $skillCategory);
 				$this->flashMessage($message, 'success');
 			} catch (DBALException $exc) {
-				$message = new TaggedString('\'%s\' has child category or skill. You can\'t delete it.', $skillCategory->name);
+				$message = new TaggedString('\'%s\' has child category or skill. You can\'t delete it.', (string) $skillCategory);
 				$this->flashMessage($message, 'warning');
 			}
 		} else {
@@ -101,7 +101,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	{
 		$control = $this->iSkillCategoryControlFactory->create();
 		$control->onAfterSave = function (SkillCategory $saved) {
-			$message = new TaggedString('\'%s\' was successfully saved.', $saved->name);
+			$message = new TaggedString('\'%s\' was successfully saved.', (string) $saved);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};

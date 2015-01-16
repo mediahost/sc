@@ -56,7 +56,7 @@
 							{$category->name}
 						</td>
 						<td>
-							{if $category->parent}{$category->parent->name}{/if}
+							{$category->parent}
 						</td>
 						<td>
 							<a n:href="edit, $category->id">

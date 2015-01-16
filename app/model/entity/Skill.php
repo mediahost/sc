@@ -36,4 +36,9 @@ class Skill extends BaseEntity
 		parent::__construct();
 	}
 
+	public function __toString()
+	{
+		return (string) $this->name;
+	}
+
 }
