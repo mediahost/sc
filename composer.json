@@ -28,6 +28,10 @@
 		{
 			"type": "vcs",
 			"url": "https://github.com/mediahost/nette-button-macros.git"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/mediahost/DoctrineBehaviors.git"
 		}
 	],
 	"require": {
@@ -35,7 +39,7 @@
 		"nette/nette": "~2.2.3",
 		"dg/adminer-custom": "@dev",
 		"kdyby/doctrine": "2.1.*@dev",
-		"kdyby/events": "2.2.x-dev",
+		"kdyby/events": "2.3.*@dev",
 		"kdyby/console": "2.3.*@dev",
 		"kdyby/annotations": "2.1.*@dev",
 		"kdyby/validator": "@dev",
