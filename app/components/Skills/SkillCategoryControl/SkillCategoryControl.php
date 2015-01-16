@@ -45,9 +45,12 @@ class SkillCategoryControl extends EntityControl
 		$form->addText('name', 'Name')
 				->setRequired('Please fill name');
 
-		// TODO: dont select own category in edit
 		$skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
-		$form->addSelect2('parent', 'Parent category', $skillCategoryDao->findPairs('name', 'id'))
+		$parents = $skillCategoryDao->findPairs('name', 'id');
+		if ($this->entity) {
+			unset($parents[$this->entity->id]);
+		}
+		$form->addSelect2('parent', 'Parent category', $parents)
 				->setPrompt('--- NO PARENT ---');
 
 		$form->addSubmit('save', 'Save');
@@ -59,9 +62,14 @@ class SkillCategoryControl extends EntityControl
 
 	public function formSucceeded(Form $form, $values)
 	{
+		if ($values->parent && $this->entity && $values->parent == $this->entity->id) {
+			$form['parent']->addError('Category can\'t be own parent');
+			return;
+		}
+		
 		$entity = $this->load($values);
 		$entityDao = $this->em->getDao(SkillCategory::getClassName());
-		// TODO: Check on duplicity in skill category table
+
 		$saved = $entityDao->save($entity);
 		$this->onAfterSave($saved);
 	}
