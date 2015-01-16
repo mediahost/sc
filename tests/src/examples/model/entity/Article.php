@@ -8,6 +8,8 @@ use Knp\DoctrineBehaviors\Model;
 
 /**
  * @ORM\Entity
+ * https://github.com/Zenify/DoctrineBehaviors#translatable
+ * https://github.com/KnpLabs/DoctrineBehaviors/blob/master/tests/fixtures/BehaviorFixtures/ORM/TranslatableEntity.php
  *
  * @property string $title
  */
