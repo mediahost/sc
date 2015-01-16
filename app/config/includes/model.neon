@@ -9,3 +9,9 @@ services:
 
 	# Storages
 	- {class: App\Model\Storage\SignUpStorage, inject: yes}
+
+	# Events subscribers
+	treeSubscriber:
+		class: Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber
+		arguments: [Knp\DoctrineBehaviors\Reflection\ClassAnalyzer(), FALSE, 'Knp\DoctrineBehaviors\Model\Tree\Node']
+		tags: [kdyby.subscriber]
