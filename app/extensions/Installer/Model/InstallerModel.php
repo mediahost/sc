@@ -2,6 +2,7 @@
 
 namespace App\Extensions\Installer\Model;
 
+use App\Model\Entity\SkillLevel;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
@@ -57,6 +58,23 @@ class InstallerModel extends Object
 	{
 		foreach ($roles as $roleName) {
 			$this->companyFacade->createRole($roleName);
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Create all nested skill levels
+	 * @return boolean
+	 */
+	public function installSkillLevels(array $levels)
+	{
+		$skillLevelDao = $this->em->getDao(SkillLevel::getClassName());
+		foreach ($levels as $levelId => $levelName) {
+			$skillLevel = $skillLevelDao->find($levelId);
+			if (!$skillLevel) {
+				$skillLevel = new SkillLevel($levelName);
+				$skillLevelDao->save($skillLevel);
+			}
 		}
 		return TRUE;
 	}

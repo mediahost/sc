@@ -152,6 +152,17 @@ class Installer extends Object
 		return (new \App\Security\CompanyPermission)->getRoles();
 	}
 
+	private function getSkillLevels()
+	{
+		return [
+			1 => 'N/A',
+			2 => 'Basic',
+			3 => 'Intermediate',
+			4 => 'Advanced',
+			5 => 'Expert',
+		];
+	}
+
 	// </editor-fold>
 
 	/**
@@ -217,6 +228,7 @@ class Installer extends Object
 		$this->installRoles($prefix);
 		$this->installUsers($prefix);
 		$this->installCompany($prefix);
+		$this->installSkillLevels($prefix);
 	}
 
 	private function installDoctrine($lockPrefix = NULL)
@@ -277,6 +289,23 @@ class Installer extends Object
 		$name = $lockPrefix . $this->getLockName(__METHOD__);
 		if ($this->lock($name)) {
 			$this->model->installCompanyRoles($this->getCompanyRoles());
+			$this->onSuccessInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_SUCCESS];
+		} else {
+			$this->onLockedInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_LOCKED];
+		}
+	}
+
+	/**
+	 * Instal skill levels
+	 * @param string $lockPrefix
+	 */
+	private function installSkillLevels($lockPrefix = NULL)
+	{
+		$name = $lockPrefix . $this->getLockName(__METHOD__);
+		if ($this->lock($name)) {
+			$this->model->installSkillLevels($this->getSkillLevels());
 			$this->onSuccessInstall($this, $name);
 			$this->messages[$name] = [self::INSTALL_SUCCESS];
 		} else {
