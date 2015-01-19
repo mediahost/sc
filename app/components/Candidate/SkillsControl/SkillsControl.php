@@ -8,6 +8,7 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Skill;
+use App\Model\Entity\SkillLevel;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
@@ -42,7 +43,8 @@ class SkillsControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
 
-		$form->addSlider('select', 'Select', [1 => 'N/A', 'Basic', 'Intermediate', 'Advanced', 'Expert'])
+		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairs([], 'name', [], 'id');
+		$form->addSlider('select', 'Select', $skillLevels)
 				->setColor('info')
 				->setPips();
 		$form->addTouchSpin('spinner', 'Spinner')
