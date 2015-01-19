@@ -11,6 +11,7 @@ jQuery(document).ready(function () {
 	Fullscreen.init();
 	TableManaged.init();
 	ComponentsDropdowns.init();
+	ComponentsNoUiSliders.init()
 
 	AppContent.init();
 });

@@ -65,6 +65,10 @@ class FormControl extends BaseControl
 				->setMin(0)
 				->setMax(2)
 				->setSize(MetronicTextInputBase::SIZE_M);
+		$form->addSlider('slider', 'Slider', [1 => 'N/A', 'One', 'Two', 'Tree'])
+				->setColor('info')
+				->setTooltip()
+				->setPips();
 		$form->addCheckbox('checkbox', 'Checkbox');
 		$form->addCheckboxList('checkboxlist', 'Checkbox list', $values);
 		$form->addCheckboxList('checkboxlistinline', 'Checkbox list inline', $values)
