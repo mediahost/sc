@@ -42,7 +42,7 @@ class CompanyPresenter extends BasePresenter
 		$this->template->companyPermission = $this->companyPermission;
 		$this->template->company = $this->company;
 	}
-	
+
 	/**
 	 * Check if user has any company to show and get company ID
 	 * @param type $id

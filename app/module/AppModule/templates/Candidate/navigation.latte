@@ -1,0 +1,39 @@
+{block pageTitle}
+{_'Candidate'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+	<a n:href="Candidate:">{_'Candidate'}</a>
+</li>
+{/block}
+
+{define navigation}
+<div class="row">
+	<div class="col-md-6">
+		<div class="navbar navbar-default navbar-static" role="navigation">
+			<div class="navbar-header">
+				<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-js-navbar-cv">
+					<span class="sr-only">{_'Toggle navigation'}</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" n:href="this">
+					{_'Your CV'}
+				</a>
+			</div>
+			<div class="collapse navbar-collapse bs-js-navbar-cv">
+				<ul class="nav navbar-nav">
+					<li {ifCurrent default}class="active"{/ifCurrent}>
+						<a n:href="default">{_'Main'}</a>
+					</li>
+					<li {ifCurrent skills}class="active"{/ifCurrent}>
+						<a n:href="skills">{_'IT Skills'}</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{/define}

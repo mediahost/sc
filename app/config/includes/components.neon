@@ -85,6 +85,10 @@ services:
 		implement: App\Components\Skills\ISkillCategoryControlFactory
 		inject: yes
 
+	ICandidateSkillsControlFactory:
+		implement: App\Components\Candidate\ISkillsControlFactory
+		inject: yes
+
 	# Example
 	IFormControlFactory:
 		implement: App\Components\Example\Form\IFormControlFactory
