@@ -79,7 +79,7 @@ class User extends BaseEntity implements IIdentity
 
 	/** @ORM\OneToOne(targetEntity="Candidate", fetch="LAZY", cascade={"persist", "remove"}) */
 	protected $candidate;
-	
+
 	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="user", fetch="LAZY", cascade={"persist"}) */
 	protected $allowedCompanies;
 
@@ -138,28 +138,38 @@ class User extends BaseEntity implements IIdentity
 	}
 
 	/**
-	 * @param Role|array $role
+	 * @param Role $role
 	 * @param bool $clear Clear all previous roles.
 	 * @return self
 	 */
-	public function addRole($role, $clear = FALSE)
+	public function addRole(Role $role, $clear = FALSE)
 	{
 		if ($clear) {
 			$this->clearRoles();
 		}
-
-		if (is_array($role)) {
-			foreach ($role as $entity) {
-				if (!$this->roles->contains($entity)) {
-					$this->roles->add($entity);
-				}
-			}
-		} else {
-			if (!$this->roles->contains($role)) {
-				$this->roles->add($role);
+		if (!$this->roles->contains($role)) {
+			$this->roles->add($role);
+			if ($role->name === Role::CANDIDATE) {
+				$this->initCandidate();
 			}
 		}
+		return $this;
+	}
 
+	/**
+	 * Add array of roles
+	 * @param array $roles
+	 * @param type $clear
+	 * @return self
+	 */
+	public function addRoles(array $roles, $clear = FALSE)
+	{
+		if ($clear) {
+			$this->clearRoles();
+		}
+		foreach ($roles as $role) {
+			$this->addRole($role, FALSE);
+		}
 		return $this;
 	}
 
@@ -195,6 +205,18 @@ class User extends BaseEntity implements IIdentity
 		$this->recoveryToken = $token;
 		$this->recoveryExpiration = $expiration;
 
+		return $this;
+	}
+
+	/**
+	 * Init candidate
+	 * @return self
+	 */
+	public function initCandidate()
+	{
+		if (!$this->candidate) {
+			$this->candidate = new Candidate;
+		}
 		return $this;
 	}
 

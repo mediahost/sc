@@ -2,6 +2,7 @@
 
 namespace Test\Model\Entity;
 
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Facebook;
 use App\Model\Entity\PageConfigSettings;
 use App\Model\Entity\PageDesignSettings;
@@ -107,6 +108,9 @@ class UserTest extends ParentTestCase
 		$this->user->requiredRole = $requiredRole;
 		Assert::type(Role::getClassName(), $this->user->requiredRole);
 		Assert::same($requiredRole->name, $this->user->requiredRole->name);
+		
+		$this->user->initCandidate();
+		Assert::type(Candidate::getClassName(), $this->user->candidate);
 	}
 
 	public function testToArray()
@@ -117,7 +121,7 @@ class UserTest extends ParentTestCase
 		$roleB = $this->roleDao->save(new Role('Role B'));
 
 		$this->user->mail = self::MAIL;
-		$this->user->addRole([$roleB, $roleA]);
+		$this->user->addRoles([$roleB, $roleA]);
 
 		$user = $this->userDao->save($this->user);
 		$array = $user->toArray();
@@ -170,13 +174,18 @@ class UserTest extends ParentTestCase
 		Assert::count(1, $this->user->roles);
 		Assert::same('Role C', $this->user->roles[0]);
 
-		$this->user->addRole([$roleA, $roleC]); // Add array with duplicit roles
+		$this->user->addRoles([$roleA, $roleC]); // Add array with duplicit roles
 		Assert::count(2, $this->user->roles);
 		Assert::same($roleC->name, $this->user->roles[0]);
 		Assert::same($roleA->name, $this->user->roles[1]);
 
 		$this->user->clearRoles();
 		Assert::count(0, $this->user->roles);
+		
+		Assert::null($this->user->candidate);
+		$this->user->addRole((new Role())->setName(Role::CANDIDATE));
+		Assert::type(Candidate::getClassName(), $this->user->candidate);
+		
 	}
 
 	public function testGetSavedRoles()
@@ -190,14 +199,14 @@ class UserTest extends ParentTestCase
 		$roleE = $this->roleDao->save(new Role(Role::ADMIN));
 		$roleF = $this->roleDao->save(new Role(Role::SUPERADMIN));
 
-		$this->user->addRole([$roleB, $roleC, $roleB, $roleA, $roleA, $roleC]);
+		$this->user->addRoles([$roleB, $roleC, $roleB, $roleA, $roleA, $roleC]);
 		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->rolesKeys);
 		
-		$this->user->addRole([$roleB, $roleA, $roleC], TRUE);
+		$this->user->addRoles([$roleB, $roleA, $roleC], TRUE);
 		Assert::count(3, $this->user->roles);
 		Assert::same([2 => Role::SIGNED, 1 => Role::GUEST, 3 => Role::CANDIDATE], $this->user->roles);
 		
-		$this->user->addRole([$roleD, $roleE, $roleF], TRUE);
+		$this->user->addRoles([$roleD, $roleE, $roleF], TRUE);
 		Assert::type(Role::getClassName(), $this->user->maxRole);
 		Assert::same($roleF, $this->user->maxRole);
 

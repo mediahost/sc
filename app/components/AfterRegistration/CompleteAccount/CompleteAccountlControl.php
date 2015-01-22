@@ -140,7 +140,7 @@ class CompleteAccountControl extends BaseControl
 		$requiredRole = $roleDao->find($this->getUser()->requiredRole->id);
 		$user->addRole($requiredRole);
 		$user->removeRole($this->roleFacade->findByName(Role::SIGNED));
-		$user->candidate = new Candidate;
+		$user->initCandidate();
 		$user->candidate->name = $values->fullName;
 		$user->candidate->birthday = $values->birthday;
 		$userDao->save($user);

@@ -287,18 +287,17 @@ class UserFacade extends Object
 	 * Add role as Role entity, string or array of entites to user.
 	 * @param User $user
 	 * @param Role|string $role
+	 * @throws InvalidArgumentException
 	 */
 	public function addRole(User $user, $role)
 	{
 		if (is_string($role)) {
-			$role = $this->roleDao->findOneBy(['name' => $role]);
+			return $user->addRole($this->roleDao->findOneBy(['name' => $role]));
 		} elseif (is_array($role)) {
-			$role = $this->roleDao->findBy(['name' => $role]);
+			return $user->addRoles($this->roleDao->findBy(['name' => $role]));
 		} else {
 			throw new InvalidArgumentException;
 		}
-
-		return $user->addRole($role);
 	}
 
 	/**
