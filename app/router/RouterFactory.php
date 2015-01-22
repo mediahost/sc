@@ -49,7 +49,7 @@ class RouterFactory
 		// <editor-fold defaultstate="expanded" desc="App">
 
 		$adminRouter[] = new Route('app/<presenter>/<action>[/<id>]', [
-			'presenter' => 'Home',
+			'presenter' => 'Dashboard',
 			'action' => 'default',
 			'id' => NULL,
 		]);
