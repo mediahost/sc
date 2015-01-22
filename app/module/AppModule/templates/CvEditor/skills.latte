@@ -2,10 +2,11 @@
 
 {block content}
 
-{include navigation}
+{var colMd => 8}
+{include navigation, colMd => $colMd, cv => $cv}
 
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-{$colMd}">
 		{control skillsForm}
 	</div>
 </div>

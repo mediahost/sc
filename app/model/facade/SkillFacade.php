@@ -11,6 +11,7 @@ use Nette\Object;
 
 /**
  * SkillFacade
+ * TODO: Test it
  */
 class SkillFacade extends Object
 {
@@ -38,11 +39,23 @@ class SkillFacade extends Object
 	// <editor-fold defaultstate="expanded" desc="create & add">
 	// </editor-fold>
 	// <editor-fold defaultstate="expanded" desc="getters">
+
+	/**
+	 * Return all end skill categories
+	 * @param type $onlyUsed
+	 */
+	public function getTopCategories()
+	{
+		return $this->skillCategoryDao->findBy([
+			'parent' => NULL,
+		]);
+	}
+
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="finders">
+	// <editor-fold defaultstate="expanded" desc="finders">
 	// </editor-fold>
 	// <editor-fold defaultstate="expanded" desc="checkers">
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="delete">
+	// <editor-fold defaultstate="expanded" desc="delete">
 	// </editor-fold>
 }

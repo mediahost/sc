@@ -10,7 +10,7 @@
 
 {define navigation}
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-{$colMd}">
 		<div class="navbar navbar-default navbar-static" role="navigation">
 			<div class="navbar-header">
 				<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-js-navbar-cv">
@@ -20,7 +20,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" n:href="this">
-					{_'Your CV'}
+					{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
 				</a>
 			</div>
 			<div class="collapse navbar-collapse bs-js-navbar-cv">

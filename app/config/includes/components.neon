@@ -76,6 +76,16 @@ services:
 		implement: App\Components\Company\ICompanyControlFactory
 		inject: yes
 
+	# Candidate
+	ICandidateProfileControlFactory:
+		implement: App\Components\Candidate\IProfileControlFactory
+		inject: yes
+
+	# Cv
+	ICvSkillKnowsControlFactory:
+		implement: App\Components\Cv\ISkillKnowsControlFactory
+		inject: yes
+
 	# Skills
 	ISkillControlFactory:
 		implement: App\Components\Skills\ISkillControlFactory
@@ -83,10 +93,6 @@ services:
 
 	ISkillCategoryControlFactory:
 		implement: App\Components\Skills\ISkillCategoryControlFactory
-		inject: yes
-
-	ICandidateSkillsControlFactory:
-		implement: App\Components\Candidate\ISkillsControlFactory
 		inject: yes
 
 	# Example

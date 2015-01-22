@@ -2,11 +2,9 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Candidate\ISkillsControlFactory;
-use App\Components\Candidate\SkillsControl;
+use App\Components\Candidate\IProfileControlFactory;
+use App\Components\Candidate\ProfileControl;
 use App\Model\Entity\Candidate;
-use App\Model\Entity\Skill;
-use App\Model\Entity\User;
 use App\TaggedString;
 
 /**
@@ -16,10 +14,23 @@ class CandidatePresenter extends BasePresenter
 {
 	// <editor-fold defaultstate="collapsed" desc="inject">
 
-	/** @var ISkillsControlFactory @inject */
-	public $iSkillsControlFactory;
+	/** @var IProfileControlFactory @inject */
+	public $iProfileControlFactory;
 
 	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="variables">
+
+	/** @var Candidate */
+	private $candidate;
+
+	// </editor-fold>
+
+
+
+	protected function startup()
+	{
+		parent::startup();
+	}
 
 	/**
 	 * @secured
@@ -28,34 +39,21 @@ class CandidatePresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$user = $this->em->getDao(User::getClassName())->find($this->user->id);
-		if (!$user->candidate) {
-			// create new candidate
-			$candidate = new Candidate();
-			$user->candidate = $candidate;
-			$this->em->getDao(User::getClassName())->save($user);
-		}
-
-		$this->template->candidate = $user->candidate;
-		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
+		$this->candidate = $this->user->identity->candidate;
 	}
 
-	/**
-	 * @secured
-	 * @resource('candidate')
-	 * @privilege('default')
-	 */
-	public function actionSkills()
+	public function renderDefault()
 	{
-		
+		$this->template->candidate = $this->candidate;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="forms">
 
-	/** @return SkillsControl */
-	public function createComponentSkillsForm()
+	/** @return ProfileControl */
+	public function createComponentProfileForm()
 	{
-		$control = $this->iSkillsControlFactory->create();
+		$control = $this->iProfileControlFactory->create();
+		$control->setEntity($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = new TaggedString('Candidate \'%s\' was successfully saved.', (string) $saved);
 			$this->flashMessage($message, 'success');

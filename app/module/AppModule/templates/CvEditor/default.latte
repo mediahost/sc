@@ -1,0 +1,23 @@
+{includeblock 'navigation.latte'}
+
+{block content}
+
+{var colMd => 6}
+{include navigation, colMd => $colMd, cv => $cv}
+
+<div class="row">
+	<div class="col-md-{$colMd}">
+		<table class="table table-bordered table-striped">
+			<tbody>
+				<tr n:foreach="$skills as $skill">
+					<td>
+						{$skill}
+					</td>
+					<td>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

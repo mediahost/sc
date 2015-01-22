@@ -2,20 +2,18 @@
 
 namespace App\Components\Candidate;
 
-use App\Components\BaseControl;
-use App\Forms\Controls\TextInputBased\TouchSpin;
+use App\Components\EntityControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
-use App\Model\Entity\Skill;
-use App\Model\Entity\SkillLevel;
+use Exception;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
 /**
  * Form with skills settings.
  */
-class SkillsControl extends BaseControl
+class ProfileControl extends EntityControl
 {
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -29,12 +27,6 @@ class SkillsControl extends BaseControl
 	public $em;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var Skill[] */
-	private $skills = [];
-
-	// </editor-fold>
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -43,15 +35,11 @@ class SkillsControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
 
-		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairs([], 'name', [], 'id');
-		$form->addSlider('select', 'Select', $skillLevels)
-				->setColor('info')
-				->setPips();
-		$form->addTouchSpin('spinner', 'Spinner')
-				->setMin(0)->setMax(100)
-				->setButtonDownClass('btn red')
-				->setButtonUpClass('btn green')
-				->setSize(TouchSpin::SIZE_S);
+		$form->addText('name', 'Name')
+				->setAttribute('placeholder', 'name and surename')
+				->setRequired('Please enter your name.');
+
+		$form->addDateInput('birthday', 'Birthday');
 
 		$form->addSubmit('save', 'Save');
 
@@ -62,12 +50,10 @@ class SkillsControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		\Tracy\Debugger::barDump($values);
-		exit;
 		$entity = $this->load($values);
-//		$candidateDao = $this->em->getDao(\App\Model\Entity\Candidate::getClassName());
-//		$savedEntity = $candidateDao->save($entity);
-		$this->onAfterSave($entity);
+		$entityDao = $this->em->getDao(Candidate::getClassName());
+		$saved = $entityDao->save($entity);
+		$this->onAfterSave($saved);
 	}
 
 	/**
@@ -77,7 +63,9 @@ class SkillsControl extends BaseControl
 	 */
 	protected function load(ArrayHash $values)
 	{
-		$entity = new Candidate;
+		$entity = $this->getEntity();
+		$entity->name = $values->name;
+		$entity->birthday = $values->birthday;
 		return $entity;
 	}
 
@@ -87,27 +75,38 @@ class SkillsControl extends BaseControl
 	 */
 	protected function getDefaults()
 	{
+		$entity = $this->getEntity();
 		$values = [
-			'spinner' => 0,
-			'select' => 2,
+			'name' => $entity->name,
+			'birthday' => $entity->birthday,
 		];
 		return $values;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	/** @return self */
-//	public function setCanEditInfo($value = TRUE)
-//	{
-//		$this->canEditInfo = $value;
-//		return $this;
-//	}
+	protected function checkEntityType($entity)
+	{
+		return $entity instanceof Candidate;
+	}
+
+	/** @throwsProfileControlExceptionn */
+	protected function getNewEntity()
+	{
+		throw new ProfileControlException('Must use method setEntity(\App\Model\Entity\Candidate)');
+	}
+
 	// </editor-fold>
 }
 
-interface ISkillsControlFactory
+class ProfileControlException extends Exception
+{
+	
+}
+
+interface IProfileControlFactory
 {
 
-	/** @return SkillsControl */
+	/** @return ProfileControl */
 	function create();
 }

@@ -35,6 +35,11 @@ class SkillCategory extends BaseEntity
 	 */
 	protected $childs;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="Skill", mappedBy="category")
+	 */
+	protected $skills;
+
 	public function __construct($name = NULL)
 	{
 		if ($name) {
@@ -42,10 +47,12 @@ class SkillCategory extends BaseEntity
 		}
 		parent::__construct();
 		$this->childs = new ArrayCollection();
+		$this->skills = new ArrayCollection();
 	}
 
 	public function __toString()
 	{
 		return (string) $this->name;
 	}
+
 }

@@ -54,9 +54,28 @@
 			<li n:if="$user->isAllowed('candidate', 'default')"
 				n:class="$presenter->isLinkCurrent('Candidate:*') ? active">
 				<a n:href="Candidate:">
-					<i class="fa fa-mortar-board"></i> <span class="title">{_'Candidate'}</span><span class="selected"></span>
+					<i class="fa fa-mortar-board"></i>
+					<span class="title">{_'Candidate'}</span><span class="selected"></span>
 					<span class="badge badge-success badge-roundless">{_'new'}</span>
 				</a>
+			</li>
+			<li n:if="$user->isAllowed('cvEditor', 'default') && $user->identity->candidate"
+				n:class="$presenter->isLinkCurrent('CvEditor:*') ? active">
+				<a n:href="CvEditor:">
+					<i class="fa fa-edit"></i>
+					<span class="title">{_'Cv Editor'}</span><span class="selected"></span>
+					<span class="badge badge-success badge-roundless">{_'new'}</span>
+				</a>
+				<ul class="sub-menu" n:if="count($user->identity->candidate->cvs)">
+					<li n:foreach="$user->identity->candidate->cvs as $cv"
+						n:class="($presenter->isLinkCurrent('CvEditor:', $cv->id) 
+								|| $presenter->isLinkCurrent('CvEditor:skills', $cv->id)) ? active">
+						<a n:href="CvEditor:, $cv->id">
+							<i n:class="fa, $cv->isDefault ? fa-star : fa-star-o"></i>
+							{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
+						</a>
+					</li>
+				</ul>
 			</li>
 			{/if}
 			<!-- END CANDIDATE -->
@@ -104,20 +123,23 @@
 			<li n:if="$user->isAllowed('users', 'default')"
 				n:class="$presenter->isLinkCurrent('Users:*') ? active">
 				<a n:href="Users:">
-					<i class="fa fa-users"></i> <span class="title">{_'Users'}</span><span class="selected"></span>
+					<i class="fa fa-users"></i>
+					<span class="title">{_'Users'}</span><span class="selected"></span>
 				</a>
 			</li>
 			<li n:if="$user->isAllowed('companies', 'default')"
 				n:class="$presenter->isLinkCurrent('Companies:*') ? active">
 				<a n:href="Companies:">
-					<i class="fa fa-building"></i> <span class="title">{_'Companies'}</span><span class="selected"></span>
+					<i class="fa fa-building"></i>
+					<span class="title">{_'Companies'}</span><span class="selected"></span>
 					<span class="badge badge-roundless badge-danger">{_'new'}</span>
 				</a>
 			</li>
 			<li n:if="$user->isAllowed('skills', 'view')"
 				n:class="$presenter->isLinkCurrent('Skills:*') || $presenter->isLinkCurrent('SkillCategories:*') ? active, last">
 				<a n:href="Skills:">
-					<i class="icon-book-open"></i> <span class="title">{_'Skills'}</span><span class="selected"></span>
+					<i class="icon-book-open"></i>
+					<span class="title">{_'Skills'}</span><span class="selected"></span>
 					<span class="badge badge-success badge-roundless">{_'new'}</span>
 				</a>
 				<ul class="sub-menu">

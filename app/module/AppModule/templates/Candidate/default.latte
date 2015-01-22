@@ -1,11 +1,19 @@
-{includeblock 'navigation.latte'}
+{block pageTitle}
+{_'Candidate'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+	<a n:href="Candidate:">{_'Candidate'}</a>
+</li>
+{/block}
 
 {block content}
 
-{include navigation}
-
 <div class="row">
 	<div class="col-md-6">
+		{control profileForm}
+
 		<table class="table table-bordered table-striped">
 			<tbody>
 				<tr>
@@ -26,22 +34,28 @@
 				</tr>
 			</tbody>
 		</table>
-	</div>
-</div>
 
-<div class="row">
-	<div class="col-md-6">
-		<table class="table table-bordered table-striped">
-			<tbody>
-				<tr n:foreach="$skills as $skill">
-					<td>
-						{$skill}
-					</td>
-					<td>
-
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="table-scrollable"
+			 n:if="count($candidate->cvs)">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>
+							{_'Your CVs'}
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr n:foreach="$candidate->cvs as $cv">
+						<td>
+							<a n:href="CvEditor:, $cv->id">{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}</a>
+							<span n:if="$cv->isDefault" class="label label-default">
+								{_'Default'}
+							</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
