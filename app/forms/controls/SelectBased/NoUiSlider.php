@@ -43,6 +43,18 @@ class NoUiSlider extends SelectBox
 	}
 
 	/**
+	 * Set Slider tooltip
+	 * @param type $allow
+	 * @return self
+	 */
+	public function setTooltipFixed($allow = TRUE)
+	{
+		$attr = 'data-tooltip-fixed';
+		$this->control->$attr = $allow ? 'true' : 'false';
+		return $this;
+	}
+
+	/**
 	 * Set Pips under slider
 	 * @param type $allow
 	 * @return self

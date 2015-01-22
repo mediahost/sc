@@ -35,3 +35,6 @@ div.tagsinput.active {
 .noUi-control.hasPips {
 	margin-bottom: 49px;
 }
+.noUi-marker-normal {
+	display: none;
+}

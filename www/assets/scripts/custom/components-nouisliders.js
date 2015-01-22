@@ -17,6 +17,7 @@ var ComponentsNoUiSliders = function () {
 					.addClass('noUi-control')
 					.addClass(select.attr('data-class'));
 			var isTooltip = (select.attr('data-tooltip')) === 'true';
+			var isTooltipFixed = (select.attr('data-tooltip-fixed')) === 'true';
 			var isPips = (select.attr('data-pips')) === 'true';
 
 			slider.noUiSlider({
@@ -30,23 +31,26 @@ var ComponentsNoUiSliders = function () {
 				}
 			});
 
-			slider.on({
-				slide: function (e, value) {
-					var selectedOption = options.filter(function () {
-						return parseInt($(this).val()) === parseInt(value);
-					});
-					selectedOption.prop('selected', true);
-				}
-			});
+			var getSelectedOption = function (options, value) {
+				return options.filter(function () {
+					return parseInt($(this).val()) === parseInt(value);
+				});
+			};
 
 			if (isTooltip) {
-				slider.addClass('hasTooltips');
+				slider.addClass('hasTooltip');
 				slider.Link('lower').to('-inline-<div class="noUi-tooltip"></div>', function (value) {
-					var selectedOption = options.filter(function () {
-						return parseInt($(this).val()) === parseInt(value);
-					});
+					var selectedOption = getSelectedOption(options, value);
 					$(this).html('<span>' + selectedOption.text() + '</span>');
 				});
+			}
+
+			if (isTooltipFixed) {
+				slider.addClass('hasTooltipFixed');
+				var fixedTooltip = $('<div id="' + id + '_tooltip">')
+						.addClass('noUi-tooltip-fixed');
+				fixedTooltip.text(getSelectedOption(options, select.val()).text());
+				select.after(fixedTooltip);
 			}
 
 			if (isPips) {
@@ -67,6 +71,14 @@ var ComponentsNoUiSliders = function () {
 			}
 
 			select.after(slider);
+
+			slider.on({
+				slide: function (e, value) {
+					var selectedOption = getSelectedOption(options, value);
+					selectedOption.prop('selected', true);
+					fixedTooltip.text(selectedOption.text());
+				}
+			});
 		});
 	};
 
