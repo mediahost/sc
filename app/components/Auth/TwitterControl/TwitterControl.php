@@ -7,7 +7,6 @@ use App\Model\Entity;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use Kdyby\Doctrine\EntityManager;
 use Netrium\Addons\Twitter\AuthenticationException as TwitterException;
 use Netrium\Addons\Twitter\Authenticator as Twitter;
 use Tracy\Debugger;
@@ -26,9 +25,6 @@ class TwitterControl extends BaseControl
 
 	/** @var SignUpStorage @inject */
 	public $session;
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	/** @var Twitter @inject */
 	public $twitter;

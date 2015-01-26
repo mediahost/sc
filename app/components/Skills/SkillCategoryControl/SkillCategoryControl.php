@@ -7,7 +7,6 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\SkillCategory;
 use App\Model\Facade\RoleFacade;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -29,9 +28,6 @@ class SkillCategoryControl extends EntityControl
 
 	/** @var RoleFacade @inject */
 	public $roleFacade;
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	// </editor-fold>
 

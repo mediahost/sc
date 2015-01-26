@@ -7,7 +7,6 @@ use App\Model\Entity;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use Kdyby\Doctrine\EntityManager;
 use Kdyby\Facebook\Dialog\LoginDialog;
 use Kdyby\Facebook\Facebook;
 use Kdyby\Facebook\FacebookApiException;
@@ -31,9 +30,6 @@ class FacebookControl extends BaseControl
 
 	/** @var SignUpStorage @inject */
 	public $session;
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	/** @var UserFacade @inject */
 	public $userFacade;

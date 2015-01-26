@@ -2,11 +2,25 @@
 
 {block content}
 
-{var colMd => 6}
+{var colMd => 12}
 {include navigation, colMd => $colMd, cv => $cv}
 
 <div class="row">
-	<div class="col-md-{$colMd}">
+	<div class="col-md-6">
+		<table class="table table-bordered table-striped">
+			<tbody>
+				<tr n:foreach="$skills as $skill">
+					<td>
+						{$skill}
+					</td>
+					<td>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-md-6">
 		<table class="table table-bordered table-striped">
 			<tbody>
 				<tr n:foreach="$skills as $skill">

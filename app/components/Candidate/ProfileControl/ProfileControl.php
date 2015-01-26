@@ -7,7 +7,6 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
 use Exception;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -19,12 +18,6 @@ class ProfileControl extends EntityControl
 
 	/** @var array */
 	public $onAfterSave = [];
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	// </editor-fold>
 

@@ -11,7 +11,6 @@ use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\TaggedString;
 use Kdyby\Doctrine\DuplicateEntryException;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 
@@ -43,9 +42,6 @@ class UserControl extends EntityControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	// </editor-fold>
 

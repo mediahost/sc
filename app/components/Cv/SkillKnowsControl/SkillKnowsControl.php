@@ -12,7 +12,6 @@ use App\Model\Entity\SkillKnow;
 use App\Model\Entity\SkillLevel;
 use App\Model\Facade\SkillFacade;
 use Exception;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -27,9 +26,6 @@ class SkillKnowsControl extends BaseControl
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="injects">
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	/** @var SkillFacade @inject */
 	public $skillFacade;

@@ -8,7 +8,6 @@ use App\Forms\Controls\TextInputBased\MetronicTextInputBase;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
-use Kdyby\Doctrine\EntityManager;
 
 /**
  * Form with all items for test rendering
@@ -19,12 +18,6 @@ class FormControl extends BaseControl
 
 	/** @var array */
 	public $onAfterSave = [];
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	// </editor-fold>
 

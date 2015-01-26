@@ -9,7 +9,6 @@ use App\Model\Entity;
 use App\Model\Facade\UserFacade;
 use App\TaggedString;
 use Exception;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Security;
 use Nette\Utils\ArrayHash;
 
@@ -18,9 +17,6 @@ class SetPasswordControl extends BaseControl
 
 	/** @var array */
 	public $onSuccess = [];
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	/** @var UserFacade @inject */
 	public $userFacade;

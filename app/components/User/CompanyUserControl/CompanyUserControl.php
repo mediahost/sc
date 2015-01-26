@@ -13,7 +13,6 @@ use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\TaggedString;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Forms\IControl;
 
 /**
@@ -28,9 +27,6 @@ class CompanyUserControl extends BaseControl
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="injects">
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;

@@ -7,7 +7,6 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Utils\ArrayHash;
@@ -30,9 +29,6 @@ class SignInControl extends BaseControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	// </editor-fold>
 

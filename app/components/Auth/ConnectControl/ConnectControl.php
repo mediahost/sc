@@ -6,7 +6,6 @@ use App\Components\BaseControl;
 use App\Model\Entity\Facebook;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -37,9 +36,6 @@ class ConnectManagerControl extends BaseControl
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="injects">
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	/** @var IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
