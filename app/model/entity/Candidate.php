@@ -2,8 +2,9 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Nette\Utils\DateTime;
 
 /**
  * @ORM\Entity

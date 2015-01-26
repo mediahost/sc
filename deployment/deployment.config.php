@@ -48,7 +48,8 @@ return array(
 			'tmp/'
 		),
 		'preprocess' => FALSE,
-		'tempdir' => 'temp/deployment',
-		'colors' => TRUE,
 	),
+	
+	'tempdir' => __DIR__ . '/temp',
+	'colors' => TRUE,
 );

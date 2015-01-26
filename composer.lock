@@ -33,21 +33,29 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/ftp-deployment.git",
-                "reference": "d254b436efd657162b932cd47bc701baaec741be"
+                "reference": "88adcaf168a42b3e99900e386b0269280ddc790a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/ftp-deployment/zipball/d254b436efd657162b932cd47bc701baaec741be",
-                "reference": "d254b436efd657162b932cd47bc701baaec741be",
+                "url": "https://api.github.com/repos/dg/ftp-deployment/zipball/88adcaf168a42b3e99900e386b0269280ddc790a",
+                "reference": "88adcaf168a42b3e99900e386b0269280ddc790a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
+            "require-dev": {
+                "nette/tester": "~1.3"
+            },
             "bin": [
                 "Deployment/deployment"
             ],
             "type": "project",
+            "autoload": {
+                "classmap": [
+                    "Deployment/"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause",
@@ -67,7 +75,7 @@
                 "ftp",
                 "ssh"
             ],
-            "time": "2015-01-13 03:12:44"
+            "time": "2015-01-25 16:18:14"
         },
         {
             "name": "doctrine/annotations",
@@ -139,16 +147,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.3.1",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "cf483685798a72c93bf4206e3dd6358ea07d64e7"
+                "reference": "2346085d2b027b233ae1d5de59b07440b9f288c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/cf483685798a72c93bf4206e3dd6358ea07d64e7",
-                "reference": "cf483685798a72c93bf4206e3dd6358ea07d64e7",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/2346085d2b027b233ae1d5de59b07440b9f288c8",
+                "reference": "2346085d2b027b233ae1d5de59b07440b9f288c8",
                 "shasum": ""
             },
             "require": {
@@ -159,6 +167,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": ">=3.7",
+                "predis/predis": "~0.8",
                 "satooshi/php-coveralls": "~0.6"
             },
             "type": "library",
@@ -204,7 +213,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2014-09-17 14:24:04"
+            "time": "2015-01-15 20:38:55"
         },
         {
             "name": "doctrine/collections",
@@ -1115,12 +1124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kdyby/Doctrine.git",
-                "reference": "d81a7b7f1b016f5510fff4a3f4e02f6b3debe2de"
+                "reference": "1557fb9fd86174500f11113f5ab88cf1ccc60e20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kdyby/Doctrine/zipball/d81a7b7f1b016f5510fff4a3f4e02f6b3debe2de",
-                "reference": "d81a7b7f1b016f5510fff4a3f4e02f6b3debe2de",
+                "url": "https://api.github.com/repos/Kdyby/Doctrine/zipball/1557fb9fd86174500f11113f5ab88cf1ccc60e20",
+                "reference": "1557fb9fd86174500f11113f5ab88cf1ccc60e20",
                 "shasum": ""
             },
             "require": {
@@ -1195,7 +1204,7 @@
                 "nette",
                 "orm"
             ],
-            "time": "2015-01-09 16:43:17"
+            "time": "2015-01-25 11:51:23"
         },
         {
             "name": "kdyby/doctrine-cache",
@@ -1922,12 +1931,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/natxet/CssMin.git",
-                "reference": "8883d28cd2de131c364f2f657e4bcc09bfa45082"
+                "reference": "2feb2aa71c5b299369c63ecc256185aaa5c05bcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/natxet/CssMin/zipball/8883d28cd2de131c364f2f657e4bcc09bfa45082",
-                "reference": "8883d28cd2de131c364f2f657e4bcc09bfa45082",
+                "url": "https://api.github.com/repos/natxet/CssMin/zipball/2feb2aa71c5b299369c63ecc256185aaa5c05bcf",
+                "reference": "2feb2aa71c5b299369c63ecc256185aaa5c05bcf",
                 "shasum": ""
             },
             "require": {
@@ -1961,7 +1970,7 @@
                 "css",
                 "minify"
             ],
-            "time": "2014-12-05 11:02:56"
+            "time": "2015-01-21 10:40:33"
         },
         {
             "name": "nette/application",
@@ -3051,12 +3060,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/o5/grido.git",
-                "reference": "2396cfb17b46eff4cb35fc5c912be77291d68df1"
+                "reference": "1a4f1e57acb16acbdff352d272a8459831ff66e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/o5/grido/zipball/2396cfb17b46eff4cb35fc5c912be77291d68df1",
-                "reference": "2396cfb17b46eff4cb35fc5c912be77291d68df1",
+                "url": "https://api.github.com/repos/o5/grido/zipball/1a4f1e57acb16acbdff352d272a8459831ff66e7",
+                "reference": "1a4f1e57acb16acbdff352d272a8459831ff66e7",
                 "shasum": ""
             },
             "require": {
@@ -3103,7 +3112,7 @@
                 "table",
                 "tablegrid"
             ],
-            "time": "2015-01-13 21:43:40"
+            "time": "2015-01-24 11:58:42"
         },
         {
             "name": "rm/header",
