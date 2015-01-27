@@ -2,23 +2,40 @@
 
 {block content}
 
-{var colMd => 12}
+{var colMd => $showPreview ? 12 : 6}
 {include navigation, colMd => $colMd, cv => $cv}
 
 <div class="row">
-	<div class="col-md-6">
-		<table class="table table-bordered table-striped">
-			<tbody>
-				<tr n:foreach="$skills as $skill">
-					<td>
-						{$skill}
-					</td>
-					<td>
-
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<div n:if="$showPreview" class="col-md-6">
+		<div class="portlet light">
+			<div class="portlet-title">
+				<div class="caption font-green-sharp">
+					<i class="icon-eye font-green-sharp"></i>
+					<span class="caption-subject"> {_'Live Preview'}</span>
+					<span class="caption-helper">{_'of your CV'}</span>
+				</div>
+				<div class="actions">
+					<a class="btn btn-circle btn-icon-only btn-default" 
+					   n:href="this">
+						<i class="icon-printer"></i>
+					</a>
+					<a class="btn btn-circle btn-icon-only btn-default" 
+					   n:href="this">
+						<i class="icon-cloud-upload"></i>
+					</a>
+					<a class="btn btn-circle btn-icon-only btn-default" 
+					   n:href="this">
+						<i class="icon-paper-plane"></i>
+					</a>
+					<a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+					   href="#" data-original-title="" title="">
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body" style="height: auto;">
+				{control cvPreview}
+			</div>
+		</div>
 	</div>
 	<div class="col-md-6">
 		<table class="table table-bordered table-striped">

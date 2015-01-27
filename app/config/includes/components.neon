@@ -86,6 +86,10 @@ services:
 		implement: App\Components\Cv\ISkillKnowsControlFactory
 		inject: yes
 
+	ILivePreviewControlFactory:
+		implement: App\Components\Cv\ILivePreviewControlFactory
+		inject: yes
+
 	# Skills
 	ISkillControlFactory:
 		implement: App\Components\Skills\ISkillControlFactory

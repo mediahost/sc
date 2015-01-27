@@ -2,9 +2,10 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Cv\ILivePreviewControlFactory;
 use App\Components\Cv\ISkillKnowsControlFactory;
+use App\Components\Cv\LivePreviewControl;
 use App\Components\Cv\SkillKnowsControl;
-use App\Model\Entity\Candidate;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Skill;
 use App\Model\Facade\CvFacade;
@@ -26,6 +27,9 @@ class CvEditorPresenter extends BasePresenter
 
 	/** @var ISkillKnowsControlFactory @inject */
 	public $iSkillKnowsControlFactory;
+
+	/** @var ILivePreviewControlFactory @inject */
+	public $iLivePreviewControlFactory;
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
@@ -75,10 +79,11 @@ class CvEditorPresenter extends BasePresenter
 	 * @resource('cvEditor')
 	 * @privilege('default')
 	 */
-	public function actionDefault($id = NULL)
+	public function actionDefault($id = NULL, $withPreview = TRUE)
 	{
 		$this->getCv();
 		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
+		$this->template->showPreview = $withPreview;
 	}
 
 	/**
@@ -103,6 +108,17 @@ class CvEditorPresenter extends BasePresenter
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};
+		return $control;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="preview">
+
+	/** @return LivePreviewControl */
+	public function createComponentCvPreview()
+	{
+		$control = $this->iLivePreviewControlFactory->create();
+		$control->setCv($this->cv);
 		return $control;
 	}
 

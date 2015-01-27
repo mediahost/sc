@@ -10,6 +10,8 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @ORM\Entity
  *
  * @property string $name
+ * @property integer $lastOpenedPreviewPage Get last opened preview page
+ * @property integer $lastUsedPreviewScale Get last used preview scale
  * @property boolean $isDefault
  * @property ArrayCollection $skillKnows
  * @property-write SkillKnow $skillKnow
@@ -22,6 +24,12 @@ class Cv extends BaseEntity
 
 	/** @ORM\Column(type="string", length=100, nullable=true) */
 	protected $name;
+
+	/** @ORM\Column(type="integer", nullable=true) */
+	protected $lastOpenedPreviewPage;
+
+	/** @ORM\Column(type="float", nullable=true) */
+	protected $lastUsedPreviewScale;
 
 	/** @ORM\Column(type="boolean", nullable=false) */
 	protected $isDefault;
