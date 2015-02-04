@@ -24,8 +24,10 @@ var PdfPreview = function () {
 
 	return {
 		init: function () {
-			PDFJS.workerSrc = basePath + '/js/pdfjs/pdf.worker.js';
-			handlePdfPreview();
+			if (typeof PDFJS !== 'undefined') {
+				PDFJS.workerSrc = basePath + '/js/pdfjs/pdf.worker.js';
+				handlePdfPreview();
+			}
 		}
 	};
 
