@@ -38,3 +38,7 @@ div.tagsinput.active {
 .noUi-marker-normal {
 	display: none;
 }
+
+.page-spinner-bar > div, .block-spinner-bar > div {
+	background: #2299dd;
+}

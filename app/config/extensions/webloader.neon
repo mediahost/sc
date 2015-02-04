@@ -18,9 +18,9 @@ webloader:
 			fileFilters:
 				- @lessFilter
 
-		admin:
+		app:
 			files:
-				- {files: ["*.less"], from: %wwwDir%/less/admin/includes}
+				- {files: ["*.less"], from: %wwwDir%/less/app/includes}
 			filters:
 				- @cssUrlFilter
 				- @cssMinFilter

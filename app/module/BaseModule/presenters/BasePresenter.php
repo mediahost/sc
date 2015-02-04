@@ -175,9 +175,9 @@ abstract class BasePresenter extends Presenter
 	}
 
 	/** @return CssLoader */
-	protected function createComponentCssAdmin()
+	protected function createComponentCssApp()
 	{
-		$css = $this->webLoader->createCssLoader('admin')
+		$css = $this->webLoader->createCssLoader('app')
 				->setMedia('screen,projection,tv');
 		return $css;
 	}

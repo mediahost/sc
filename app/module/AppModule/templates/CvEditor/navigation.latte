@@ -19,9 +19,11 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" n:href="this">
-					{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
-				</a>
+				<div n:snippet="cvName">
+					<a class="navbar-brand" n:href="this">
+						{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
+					</a>
+				</div>
 			</div>
 			<div class="collapse navbar-collapse bs-js-navbar-cv">
 				<ul class="nav navbar-nav">

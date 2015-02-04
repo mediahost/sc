@@ -6,6 +6,36 @@
 {include navigation, colMd => $colMd, cv => $cv}
 
 <div class="row">
+
+	<div class="col-md-6">
+		<div class="portlet light">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-notebook font-green-sharp"></i>
+					<span class="caption-subject font-green-sharp">
+						{_'Edit'}
+					</span>
+				</div>
+			</div>
+			<div class="portlet-body">
+				{control basicInfoForm}
+			</div>
+		</div>
+
+		<table class="table table-bordered table-striped">
+			<tbody>
+				<tr n:foreach="$skills as $skill">
+					<td>
+						{$skill}
+					</td>
+					<td>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 	<div n:if="$showPreview" class="col-md-6">
 		<div class="portlet light">
 			<div class="portlet-title">
@@ -37,18 +67,5 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-6">
-		<table class="table table-bordered table-striped">
-			<tbody>
-				<tr n:foreach="$skills as $skill">
-					<td>
-						{$skill}
-					</td>
-					<td>
 
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
 </div>

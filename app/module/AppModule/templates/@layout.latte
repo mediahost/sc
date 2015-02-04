@@ -21,7 +21,7 @@
 		{include cssMetronicPlugins}
 		{include cssMetronicTheme}
 
-		{control cssAdmin}
+		{control cssApp}
 		{control cssPrint}
 
 		<link href="{$basePath}/favicon.ico" rel="shortcut icon">
@@ -59,10 +59,12 @@
 					{include pageHeader}
 
 					<!-- BEGIN FLASH MESSAGES-->
-					<div n:foreach="$flashes as $flash"
-						 class="alert alert-{$flash->type} fade in">
-						<button type="button" class="close" data-dismiss="alert"></button>
-						{$flash->message}
+					<div n:snippet="flashMessages">
+						<div n:foreach="$flashes as $flash"
+							 class="alert alert-{$flash->type} fade in">
+							<button type="button" class="close" data-dismiss="alert"></button>
+							{$flash->message}
+						</div>
 					</div>
 					<!-- END FLASH MESSAGES-->
 

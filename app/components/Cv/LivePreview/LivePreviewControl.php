@@ -4,7 +4,6 @@ namespace App\Components\Cv;
 
 use App\Components\BaseControl;
 use App\Model\Entity\Cv;
-use Exception;
 
 /**
  * Live Preview Control
@@ -53,7 +52,7 @@ class LivePreviewControl extends BaseControl
 	private function getCv()
 	{
 		if (!$this->cv) {
-			throw new LivePreviewControlException('Must use method setCv(\App\Model\Entity\Cv)');
+			throw new CvControlException('Must use method setCv(\App\Model\Entity\Cv)');
 		}
 		return $this->cv;
 	}
@@ -70,11 +69,6 @@ class LivePreviewControl extends BaseControl
 		parent::render();
 	}
 
-}
-
-class LivePreviewControlException extends Exception
-{
-	
 }
 
 interface ILivePreviewControlFactory

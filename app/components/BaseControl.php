@@ -11,6 +11,7 @@ use Nette\Localization\ITranslator;
 /**
  * BaseControl.
  * @author Martin Šifra <me@martinsifra.cz>
+ * @author Petr Poupě <petr.poupe@gmail.com>
  */
 abstract class BaseControl extends UI\Control
 {
@@ -32,6 +33,12 @@ abstract class BaseControl extends UI\Control
 	/** @var string */
 	private $templateFile = self::DEFAULT_TEMPLATE;
 	
+	/** @var bool */
+	protected $isAjax = FALSE;
+	
+	/** @var bool */
+	protected $isSendOnChange = FALSE;
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -40,6 +47,16 @@ abstract class BaseControl extends UI\Control
 	protected function setTemplateFile($name)
 	{
 		$this->templateFile = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set ajax for form
+	 */
+	public function setAjax($isAjax = TRUE, $sendOnChange = TRUE)
+	{
+		$this->isAjax = $isAjax;
+		$this->isSendOnChange = $sendOnChange;
 		return $this;
 	}
 

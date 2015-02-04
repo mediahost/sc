@@ -82,6 +82,10 @@ services:
 		inject: yes
 
 	# Cv
+	ICvBasicInfoControlFactory:
+		implement: App\Components\Cv\IBasicInfoControlFactory
+		inject: yes
+
 	ICvSkillKnowsControlFactory:
 		implement: App\Components\Cv\ISkillKnowsControlFactory
 		inject: yes

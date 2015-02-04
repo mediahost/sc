@@ -2,6 +2,7 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Cv\IBasicInfoControlFactory;
 use App\Components\Cv\ILivePreviewControlFactory;
 use App\Components\Cv\ISkillKnowsControlFactory;
 use App\Components\Cv\LivePreviewControl;
@@ -27,6 +28,9 @@ class CvEditorPresenter extends BasePresenter
 
 	/** @var ISkillKnowsControlFactory @inject */
 	public $iSkillKnowsControlFactory;
+
+	/** @var IBasicInfoControlFactory @inject */
+	public $iBasicInfoControlFactory;
 
 	/** @var ILivePreviewControlFactory @inject */
 	public $iLivePreviewControlFactory;
@@ -97,6 +101,26 @@ class CvEditorPresenter extends BasePresenter
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="forms">
+
+	/** @return SkillKnowsControl */
+	public function createComponentBasicInfoForm()
+	{
+		$control = $this->iBasicInfoControlFactory->create();
+		$control->setAjax(TRUE, TRUE);
+		$control->setCv($this->cv);
+		$control->onAfterSave = function (Cv $saved) {
+			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			
+			if ($this->isAjax()) {
+				$this['cvPreview']->redrawControl();
+				$this->redrawControl();
+			} else {
+				$this->redirect('this');
+			}
+		};
+		return $control;
+	}
 
 	/** @return SkillKnowsControl */
 	public function createComponentSkillsForm()

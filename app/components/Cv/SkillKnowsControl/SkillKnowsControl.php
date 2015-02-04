@@ -11,7 +11,6 @@ use App\Model\Entity\Skill;
 use App\Model\Entity\SkillKnow;
 use App\Model\Entity\SkillLevel;
 use App\Model\Facade\SkillFacade;
-use Exception;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -129,7 +128,7 @@ class SkillKnowsControl extends BaseControl
 	private function getCv()
 	{
 		if (!$this->cv) {
-			throw new SkillKnowsControlException('Must use method setCv(\App\Model\Entity\Cv)');
+			throw new CvControlException('Must use method setCv(\App\Model\Entity\Cv)');
 		}
 		return $this->cv;
 	}
@@ -143,11 +142,6 @@ class SkillKnowsControl extends BaseControl
 		parent::render();
 	}
 
-}
-
-class SkillKnowsControlException extends Exception
-{
-	
 }
 
 interface ISkillKnowsControlFactory

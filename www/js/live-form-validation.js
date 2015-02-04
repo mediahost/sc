@@ -738,6 +738,12 @@ Nette.initForm = function(form) {
 		var target = e.target || e.srcElement;
 		form['nette-submittedBy'] = (target.type in {submit: 1, image: 1}) ? target : null;
 	});
+	
+	if ($(form).hasClass('sendOnChange')) {
+		$(form).on('change', function () {
+			$(this).submit();
+		});
+	}
 
 	Nette.toggleForm(form);
 

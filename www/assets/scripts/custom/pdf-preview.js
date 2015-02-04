@@ -57,6 +57,11 @@ var PdfViewer = function () {
 		data.page = startPage;
 		data.scale = startScale;
 		data.scaleStep = scaleStep;
+		data.pdf = null;
+		data.canvas = null;
+		data.context = null;
+		data.pending = null;
+		data.rendering = false;
 	};
 
 	/**
@@ -65,6 +70,7 @@ var PdfViewer = function () {
 	var setNavigation = function (id) {
 		var classes = {
 			navigation: '.pdf-preview-navigation',
+			closestParent: '.portlet',
 			button: '.pdf-preview-navigation-button',
 			paginator: {
 				text: {
@@ -78,6 +84,7 @@ var PdfViewer = function () {
 		};
 		var navigationBar = $(classes.navigation + '[data-for="' + id + '"]');
 		navigation = {
+			parent: navigationBar.closest(classes.closestParent),
 			prev: navigationBar.find(classes.button + '[data-navigation="prev"]'),
 			next: navigationBar.find(classes.button + '[data-navigation="next"]'),
 			zoomIn: navigationBar.find(classes.button + '[data-navigation="zoomIn"]'),
@@ -96,7 +103,7 @@ var PdfViewer = function () {
 	};
 
 	/**
-	 * Add events for all buttons
+	 * Add events to its buttons
 	 */
 	var addEvents = function () {
 		navigation.prev.on('click', onPrevPage);
@@ -188,8 +195,13 @@ var PdfViewer = function () {
 
 	/**
 	 * Before loading PDF
+	 * Do it once before first load document
 	 */
 	var beforeLoadingPdf = function () {
+		Metronic.blockUI({
+			target: navigation.parent,
+			animate: true
+		});
 		navigation.paginator.text.main.addClass('loading');
 		navigation.paginator.text.actualPage.hide();
 		navigation.paginator.text.separator.hide();
@@ -199,6 +211,7 @@ var PdfViewer = function () {
 
 	/**
 	 * After loading PDF
+	 * Do it once after load document
 	 */
 	var afterLoadingPdf = function () {
 		navigation.paginator.text.main.removeClass('loading');
@@ -206,6 +219,7 @@ var PdfViewer = function () {
 		navigation.paginator.text.separator.show();
 		navigation.paginator.text.totalPage.show();
 		navigation.paginator.text.loading.hide();
+		Metronic.unblockUI(navigation.parent);
 	};
 
 	/**
@@ -214,7 +228,7 @@ var PdfViewer = function () {
 	 */
 	var setScaleNumber = function (scaleNum) {
 		data.scale = scaleNum;
-		
+
 		if (scaleNum + data.scaleStep >= data.scaleMax) {
 			navigation.zoomIn.addClass('disabled');
 		} else {
@@ -234,7 +248,7 @@ var PdfViewer = function () {
 	var setPageNumber = function (pageNum) {
 		data.page = pageNum;
 		navigation.paginator.text.actualPage.html(pageNum);
-		
+
 		if (pageNum >= data.pdf.numPages) {
 			navigation.next.addClass('disabled');
 		} else {
