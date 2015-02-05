@@ -82,10 +82,10 @@ class InstallerModelTest extends ParentTestCase
 		
 		Assert::exception(function() use($userDao) {
 			$userDao->find(1);
-		}, 'Kdyby\Doctrine\DBALException');
+		}, 'Doctrine\DBAL\Exception\TableNotFoundException');
 		Assert::exception(function() use($roleDao) {
 			$roleDao->find(1);
-		}, 'Kdyby\Doctrine\DBALException');
+		}, 'Doctrine\DBAL\Exception\TableNotFoundException');
 
 		Environment::lock('db', LOCK_DIR);
 		Assert::true($installer->installDoctrine());
