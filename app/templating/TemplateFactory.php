@@ -2,28 +2,33 @@
 
 namespace App\Templating;
 
-class TemplateFactory extends \Nette\Bridges\ApplicationLatte\TemplateFactory
+use Latte\Engine;
+use Latte\Macros\MacroSet;
+use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Bridges\ApplicationLatte\TemplateFactory;
+
+class TemplateFactory extends TemplateFactory
 {
-	
+
 	/**
-	 * @param \Nette\Application\UI\Control $control
-	 * @return \Nette\Bridges\ApplicationLatte\Template
+	 * @param Control $control
+	 * @return Template
 	 */
-	public function createTemplate(\Nette\Application\UI\Control $control = NULL)
+	public function createTemplate(Control $control = NULL)
 	{
-		
 		$template = parent::createTemplate($control);
 		$latte = $template->getLatte();
 		$latte->onCompile[] = $this->addMacros;
 		return $template;
 	}
-	
-	public function addMacros(\Latte\Engine $latte)
+
+	public function addMacros(Engine $latte)
 	{
-		$set = new \Latte\Macros\MacroSet($latte->getCompiler());
+		$set = new MacroSet($latte->getCompiler());
 		$set->addMacro('ifCurrentIn', $this->ifCurrentInBegin, 'endif; unset($_c);');
 	}
-	
+
 	public function ifCurrentInBegin($node, $writer)
 	{
 		return $writer->write('foreach (%node.array as $l) { if ($_presenter->isLinkCurrent($l)) { $_c = true; break; }} if (isset($_c)): ');
