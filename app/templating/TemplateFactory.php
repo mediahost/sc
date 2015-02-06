@@ -6,9 +6,9 @@ use Latte\Engine;
 use Latte\Macros\MacroSet;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
-use Nette\Bridges\ApplicationLatte\TemplateFactory;
+use Nette\Bridges\ApplicationLatte\TemplateFactory as ParentTemplateFactory;
 
-class TemplateFactory extends TemplateFactory
+class TemplateFactory extends ParentTemplateFactory
 {
 
 	/**
