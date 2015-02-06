@@ -19,10 +19,6 @@
 		},
 		{
 			"type": "vcs",
-			"url": "https://github.com/mediahost/WebLoader.git"
-		},
-		{
-			"type": "vcs",
 			"url": "https://github.com/mediahost/forms.git"
 		},
 		{
@@ -36,7 +32,7 @@
 	],
 	"require": {
 		"php": ">= 5.4.0",
-		"nette/nette": "~2.2.7",
+		"nette/nette": "2.3.*@dev",
 		"dg/adminer-custom": "@dev",
 		"kdyby/doctrine": "2.1.*@dev",
 		"kdyby/events": "2.3.*@dev",
@@ -46,10 +42,12 @@
 		"kdyby/doctrine-forms": "@dev",
 		"janmarek/webloader": "@dev",
 		"natxet/CssMin": "dev-master",
+		"linkorb/jsmin-php": "~1.0.0",
+		"joseki/webloader-filters": "dev-master",
 		"rm/header": "dev-master",
 		"leafo/lessphp": "0.4.*@dev",
 		"o5/grido": "dev-master",
-		"h4kuna/exchange": "4.0.*",
+		"h4kuna/exchange": "dev-master",
 		"dg/ftp-deployment": "dev-master",
 		"zeleznypa/nette-button-macros": "dev-master",
 		"kdyby/facebook": "~1.1",
@@ -63,5 +61,6 @@
 	"require-dev": {
 		"nette/tester": "~1.2.0"
 	},
-	"minimum-stability": "stable"
+	"minimum-stability": "beta",
+	"prefer-stable": true
 }

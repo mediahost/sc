@@ -85,7 +85,7 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script id="jsConf" type="text/json">
 	{
-		"basePath" : {$basePath}
+		"basePath" : {if $basePath}{$basePath}{else}""{/if}
 	}
 </script>
 <script src="{$basePath}/assets/scripts/config.js" type="text/javascript"></script>

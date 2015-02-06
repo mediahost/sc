@@ -15,8 +15,8 @@ use Kdyby\Doctrine\EntityManager;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Security\IUserStorage;
-use WebLoader\LoaderFactory;
 use WebLoader\Nette\CssLoader;
+use WebLoader\Nette\LoaderFactory;
 
 /**
  * Base presenter for all application presenters.

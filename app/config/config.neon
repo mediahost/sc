@@ -49,6 +49,7 @@ services:
 		factory: @httpRequest::getUrl()
 
 	nette.templateFactory: App\Templating\TemplateFactory
+	security.userStorage: Majkl578\NetteAddons\Doctrine2Identity\Http\UserStorage
 
 extensions:
 	onControlCreate: App\Extensions\ListenersGenericRegistration\DI\EventOnControlCreateCreateExtension

@@ -3,7 +3,7 @@ extensions:
 
 services:
 	cssUrlFilter: WebLoader\Filter\CssUrlsFilter(%wwwDir%)
-	cssMinFilter: WebLoader\Filter\CssMinFilter
+	cssMinFilter: Joseki\Webloader\CssMinFilter
 	lessFilter: WebLoader\Filter\LessFilter
 	varFilter: WebLoader\Filter\VariablesFilter([basePath=@urlScript::getBasePath()])
 

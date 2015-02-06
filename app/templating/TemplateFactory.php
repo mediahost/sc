@@ -9,7 +9,7 @@ class TemplateFactory extends \Nette\Bridges\ApplicationLatte\TemplateFactory
 	 * @param \Nette\Application\UI\Control $control
 	 * @return \Nette\Bridges\ApplicationLatte\Template
 	 */
-	public function createTemplate(\Nette\Application\UI\Control $control)
+	public function createTemplate(\Nette\Application\UI\Control $control = NULL)
 	{
 		
 		$template = parent::createTemplate($control);
