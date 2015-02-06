@@ -50,7 +50,6 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 	{
 		if ($this->form !== $form) {
 			$this->form = $form;
-			$this->init();
 		}
 
 		// START EDIT
@@ -85,7 +84,7 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 		$s = array();
 		foreach ($controls as $control) {
 			if (!$control instanceof IControl) {
-				throw new InvalidArgumentException('Argument must be array of IFormControl instances.');
+				throw new InvalidArgumentException('Argument must be array of Nette\Forms\IControl instances.');
 			}
 			$description = $control->getOption('description');
 			if ($description instanceof Html) {
@@ -96,7 +95,12 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 				$description = '';
 			}
 
-			$s[] = $control->getControl() . $description;
+			$control->setOption('rendered', TRUE);
+			$el = $control->getControl();
+			if ($el instanceof Html && $el->getName() === 'input') {
+				$el->class($this->getValue("control .$el->type"), TRUE);
+			}
+			$s[] = $el . $description;
 		}
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
@@ -138,7 +142,11 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 			$description = $this->getValue('control requiredsuffix') . $description;
 		}
 
+		$control->setOption('rendered', TRUE);
 		$el = $control->getControl();
+		if ($el instanceof Html && $el->getName() === 'input') {
+			$el->class($this->getValue("control .$el->type"), TRUE);
+		}
 		return $body->setHtml($el . $description . $this->renderErrors($control));
 	}
 
