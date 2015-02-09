@@ -37,8 +37,15 @@ class Company extends BaseEntity
 	 */
 	protected $address;
 	
-	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="company", fetch="LAZY", cascade={"persist"}) */
+	/** 
+	 * @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="company", fetch="LAZY", cascade={"persist"}) 
+	 */
 	protected $accesses;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="Job", mappedBy="company")
+	 */
+	protected $jobs;
 
 	public function __construct($name = NULL)
 	{

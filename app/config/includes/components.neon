@@ -76,6 +76,11 @@ services:
 		implement: App\Components\Company\ICompanyControlFactory
 		inject: yes
 
+	# Job
+	IJobControlFactory:
+		implement: App\Components\Job\IJobControlFactory
+		inject: yes
+
 	# Candidate
 	ICandidateProfileControlFactory:
 		implement: App\Components\Candidate\IProfileControlFactory

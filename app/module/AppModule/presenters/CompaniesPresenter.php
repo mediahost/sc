@@ -89,8 +89,9 @@ class CompaniesPresenter extends BasePresenter
 		}
 	}
 
-	public function renderEdit()
+	public function renderEdit($id)
 	{
+		$this->template->company = $this->companyDao->find($id);
 		$this->template->isAdd = !$this['companyForm']->isEntityExists();
 	}
 

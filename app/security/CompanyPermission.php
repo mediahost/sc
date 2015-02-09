@@ -16,13 +16,14 @@ class CompanyPermission extends Security\Permission
 
 		$this->addResource('info');
 		$this->addResource('users');
+		$this->addResource('jobs');
 
 		$this->deny('editor');
 		$this->deny('manager');
 
 		$this->allow('editor', 'info');
 		$this->allow('manager', 'info', ['view']);
-		$this->allow('manager', 'users');
+		$this->allow('manager', ['users', 'jobs']);
 		$this->allow('admin');
 	}
 
