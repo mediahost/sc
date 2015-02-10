@@ -16,7 +16,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class SkillCategoriesPresenterTest extends BasePresenter
 {
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 		$this->tester->init('App:SkillCategories');

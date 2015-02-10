@@ -25,8 +25,6 @@ class CandidatePresenter extends BasePresenter
 
 	// </editor-fold>
 
-
-
 	protected function startup()
 	{
 		parent::startup();

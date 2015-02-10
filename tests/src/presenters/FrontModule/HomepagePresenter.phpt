@@ -17,7 +17,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class HomepagePresenterTest extends BasePresenter
 {
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 		$this->tester->init('Front:Homepage');

@@ -16,7 +16,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class DashboardPresenterTest extends BasePresenter
 {
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 		$this->tester->init('App:Dashboard');

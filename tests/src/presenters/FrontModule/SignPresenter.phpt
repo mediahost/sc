@@ -17,7 +17,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class SignPresenterTest extends BasePresenter
 {
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 		$this->updateSchema();
@@ -25,9 +25,8 @@ class SignPresenterTest extends BasePresenter
 		$this->tester->init('Front:Sign');
 	}
 
-	public function tearDown()
+	protected function tearDown()
 	{
-		$this->logout();
 		$this->dropSchema();
 	}
 
@@ -58,7 +57,7 @@ class SignPresenterTest extends BasePresenter
 		$remember = $dom->find('input#frm-signIn-form-remember[type=checkbox]');
 		Assert::count(1, $remember);
 		
-		$button = $dom->find('button#frm-signIn-form-signIn[type=submit]');
+		$button = $dom->find('button[type=submit]');
 		Assert::count(1, $button);
 	}
 
@@ -67,6 +66,7 @@ class SignPresenterTest extends BasePresenter
 		$this->loginAdmin();
 		$response = $this->tester->test('in');
 		Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+		$this->logout();
 	}
 
 }

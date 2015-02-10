@@ -16,7 +16,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class DesignPresenterTest extends BasePresenter
 {
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 		$this->updateSchema();
@@ -24,7 +24,7 @@ class DesignPresenterTest extends BasePresenter
 		$this->tester->init('Ajax:Design');
 	}
 
-	public function tearDown()
+	protected function tearDown()
 	{
 		$this->logout();
 		$this->dropSchema();

@@ -11,7 +11,7 @@ use Tester\Environment;
 abstract class BasePresenter extends ParentBasePresenter
 {
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 		$this->updateSchema();
@@ -19,7 +19,7 @@ abstract class BasePresenter extends ParentBasePresenter
 		Environment::lock('session', LOCK_DIR);
 	}
 
-	public function tearDown()
+	protected function tearDown()
 	{
 		$this->logout();
 		$this->dropSchema();

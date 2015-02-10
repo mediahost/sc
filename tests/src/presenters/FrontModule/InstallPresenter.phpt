@@ -28,7 +28,7 @@ class InstallPresenterTest extends BasePresenter
 		$this->installDir = $this->container->getParameters()['tempDir'] . 'install/';
 	}
 
-	public function setUp()
+	protected function setUp()
 	{
 		parent::setUp();
 		$this->updateSchema();
@@ -39,7 +39,7 @@ class InstallPresenterTest extends BasePresenter
 		}
 	}
 
-	public function tearDown()
+	protected function tearDown()
 	{
 		parent::tearDown();
 		$this->dropSchema();
