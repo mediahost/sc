@@ -12,7 +12,7 @@ use Test\Presenters\Presenter;
 use Tester\Assert;
 
 /**
- * Parent presenter
+ * Parent presenter for all presenters
  */
 abstract class BasePresenter extends ParentTestCase
 {

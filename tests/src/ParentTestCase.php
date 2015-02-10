@@ -8,11 +8,6 @@ use Nette\DI\Container;
 use Tester\Environment;
 use Tester\TestCase;
 
-/**
- * ParentTestCase
- *
- * @author Petr Poupě
- */
 abstract class ParentTestCase extends TestCase
 {
 

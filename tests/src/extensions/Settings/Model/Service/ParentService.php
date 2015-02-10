@@ -7,9 +7,7 @@ use Nette\DI\Container;
 use Test\ParentTestCase;
 
 /**
- * Parent Service
- *
- * @author Petr Poupě
+ * Parent for all Settings services
  */
 abstract class ParentService extends ParentTestCase
 {

@@ -8,9 +8,7 @@ use Nette\DI\Container;
 use Test\ParentTestCase;
 
 /**
- * Parent for use
- *
- * @author Petr Poupě
+ * Parent for example use
  */
 abstract class BaseUse extends ParentTestCase
 {

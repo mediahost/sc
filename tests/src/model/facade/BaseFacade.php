@@ -26,13 +26,15 @@ abstract class BaseFacade extends ParentTestCase
 	/** @var DefaultSettingsStorage @inject */
 	public $defaultSettings;
 
-	public function setUp()
+	protected function setUp()
 	{
+		parent::setUp();
 		$this->updateSchema();
 	}
 
-	public function tearDown()
+	protected function tearDown()
 	{
+		parent::tearDown();
 		$this->dropSchema();
 	}
 

@@ -3,7 +3,6 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Candidate;
-use App\Model\Entity\User;
 use Tester\Assert;
 use Tester\TestCase;
 

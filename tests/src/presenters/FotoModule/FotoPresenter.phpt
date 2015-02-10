@@ -2,7 +2,6 @@
 
 namespace Test\Presenters\FotoModule;
 
-use Nette\Utils\Image;
 use Test\Presenters\BasePresenter;
 use Test\Presenters\Presenter;
 use Tester\Assert;
