@@ -27,6 +27,7 @@ if (isset ($_GET['debugger']) && $_GET['debugger']) {
 }
 $configurator->setTempDirectory(TEMP_DIR);
 $configurator->addParameters(['appDir' => __DIR__ . '/../../app']); // řeší problém s nefunkčním $this->em->getMetadataFactory()->getAllMetadata()
+$configurator->addParameters(['wwwDir' => __DIR__ . '/../../www']); // potřebné pro správné nastavení webloaderu
 $configurator->createRobotLoader()
 		->addDirectory(__DIR__ . '/../../app')
 		->addDirectory(__DIR__ . '/../../tests')
