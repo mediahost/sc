@@ -10,7 +10,6 @@ $container = require __DIR__ . '/../../bootstrap.php';
 /**
  * TEST: DesignPresenter
  *
- * @skip
  * @testCase
  * @phpVersion 5.4
  */
