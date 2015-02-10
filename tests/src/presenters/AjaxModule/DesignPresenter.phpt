@@ -21,6 +21,7 @@ class DesignPresenterTest extends BasePresenter
 		parent::setUp();
 		$this->updateSchema();
 		$this->installer->install();
+		Environment::lock('login', LOCK_DIR);
 		$this->tester->init('Ajax:Design');
 	}
 

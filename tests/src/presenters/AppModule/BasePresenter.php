@@ -16,7 +16,7 @@ abstract class BasePresenter extends ParentBasePresenter
 		parent::setUp();
 		$this->updateSchema();
 		$this->installer->install();
-		Environment::lock('session', LOCK_DIR);
+		Environment::lock('login', LOCK_DIR);
 	}
 
 	protected function tearDown()
