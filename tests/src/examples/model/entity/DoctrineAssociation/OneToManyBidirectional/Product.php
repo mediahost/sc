@@ -23,7 +23,7 @@ class Product extends BaseEntity
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Feature", mappedBy="product")
-	 * */
+	 */
 	protected $features;
 
 	public function __construct()

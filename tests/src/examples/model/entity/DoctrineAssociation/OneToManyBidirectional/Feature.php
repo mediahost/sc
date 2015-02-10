@@ -23,7 +23,7 @@ class Feature extends BaseEntity
     /**
      * @ORM\ManyToOne(targetEntity="Product", inversedBy="features")
      * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     **/
+     */
     protected $product;
 
 }
