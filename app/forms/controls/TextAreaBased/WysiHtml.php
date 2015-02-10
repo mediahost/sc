@@ -4,11 +4,6 @@ namespace App\Forms\Controls\TextAreaBased;
 
 use Nette\Forms\Controls\TextArea;
 
-/**
- * WysiHtml
- *
- * @author Petr Poupě
- */
 class WysiHtml extends TextArea
 {
 

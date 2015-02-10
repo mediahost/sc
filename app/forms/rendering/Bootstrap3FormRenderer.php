@@ -13,11 +13,6 @@ use Nette\Forms\Controls\TextBase;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Converts a Form into bootstrap3 style
- *
- * @author     Petr Poupě
- */
 class Bootstrap3FormRenderer extends ExtendedFormRenderer
 {
 

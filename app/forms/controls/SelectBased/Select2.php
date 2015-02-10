@@ -4,11 +4,6 @@ namespace App\Forms\Controls\SelectBased;
 
 use Nette\Forms\Controls\SelectBox;
 
-/**
- * Select2
- *
- * @author Petr Poupě
- */
 class Select2 extends SelectBox
 {
 

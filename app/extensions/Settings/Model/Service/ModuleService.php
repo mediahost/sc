@@ -5,10 +5,6 @@ namespace App\Extensions\Settings\Model\Service;
 use App\Model\Entity\Special\UniversalDataEntity;
 
 /**
- * ModuleService
- * 
- * @author Petr Poupě <petr.poupe@gmail.com>
- * 
  * @property-read string $length Length of password
  */
 class ModuleService extends BaseService

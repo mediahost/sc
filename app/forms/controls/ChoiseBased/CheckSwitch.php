@@ -6,11 +6,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
-/**
- * CheckSwitch
- *
- * @author Petr Poupě
- */
 class CheckSwitch extends Checkbox
 {
 

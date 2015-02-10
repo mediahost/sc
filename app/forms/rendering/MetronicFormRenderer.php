@@ -13,11 +13,6 @@ use Nette\Forms\Controls\TextBase;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Metronic style
- *
- * @author Petr Poupě
- */
 class MetronicFormRenderer extends ExtendedFormRenderer
 {
 

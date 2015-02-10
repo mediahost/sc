@@ -5,11 +5,6 @@ namespace App\Forms\Controls\SelectBased;
 use Nette\Application\UI\ISignalReceiver;
 use Nette\Utils\Callback;
 
-/**
- * Server validated Multiselectboxes
- * 
- * @author Petr Poupě
- */
 class ServerValidatedMultiSelectBoxes extends MultiSelectBoxes implements ISignalReceiver
 {
 

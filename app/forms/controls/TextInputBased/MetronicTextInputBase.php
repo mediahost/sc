@@ -5,9 +5,7 @@ namespace App\Forms\Controls\TextInputBased;
 use Nette\Forms\Controls\TextInput;
 
 /**
- * TextInputBase
- *
- * @author Petr Poupě
+ * TextInputBase for Metronic style
  */
 abstract class MetronicTextInputBase extends TextInput
 {

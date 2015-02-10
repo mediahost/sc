@@ -6,10 +6,6 @@ use Nette\Configurator;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 
-/**
- * @author Martin Šifra <me@martinsifra.cz>
- * @author Petr Poupě <petr.poupe@gmail.com>
- */
 class SettingsExtension extends CompilerExtension
 {
 

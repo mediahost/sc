@@ -4,11 +4,6 @@ namespace App\Forms\Controls\TextInputBased;
 
 use Nette\Utils\Html;
 
-/**
- * Spinner
- *
- * @author Petr Poupě
- */
 class Spinner extends MetronicTextInputBase
 {
 

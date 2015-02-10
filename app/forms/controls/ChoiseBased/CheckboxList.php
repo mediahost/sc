@@ -7,9 +7,7 @@ use Nette\Forms\Controls\MultiChoiceControl;
 use Nette\Forms\Helpers;
 
 /**
- * rewrited CheckboxList
- *
- * @author Petr Poupě
+ * Rewrited CheckboxList
  */
 class CheckboxList extends CheckboxListParent
 {

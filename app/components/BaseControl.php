@@ -8,11 +8,6 @@ use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI;
 use Nette\Localization\ITranslator;
 
-/**
- * BaseControl.
- * @author Martin Šifra <me@martinsifra.cz>
- * @author Petr Poupě <petr.poupe@gmail.com>
- */
 abstract class BaseControl extends UI\Control
 {
 	

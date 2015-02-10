@@ -9,11 +9,6 @@ use Nette\Object;
 use Nette\Utils\Image;
 use Tracy\Debugger;
 
-/**
- * Foto
- *
- * @author Petr Poupě
- */
 class Foto extends Object
 {
 	// <editor-fold defaultstate="collapsed" desc="variables">

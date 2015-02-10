@@ -7,10 +7,6 @@ use Nette\Object;
 use Nette\Utils\ArrayHash;
 
 /**
- * Storage for default settings
- * 
- * @author Petr Poupě <petr.poupe@gmail.com>
- * 
  * @property ArrayHash $expiration Expiration default settings
  * @property ArrayHash $languages Languages default settings
  * @property ArrayHash $passwords Passwords default settings

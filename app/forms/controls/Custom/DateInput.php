@@ -9,11 +9,6 @@ use Nette\Forms\Helpers;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
 
-/**
- * DateInput
- *
- * @author Petr Poupě
- */
 class DateInput extends BaseControl
 {
 

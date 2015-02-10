@@ -5,10 +5,6 @@ namespace App\Extensions\Settings\Model\Service;
 use App\Model\Entity\PageDesignSettings;
 
 /**
- * DesignService
- * 
- * @author Petr Poupě <petr.poupe@gmail.com>
- * 
  * @property-read PageDesignSettings $settings Default settings extended by user settings
  * @property-read PageDesignSettings $userSettings User settings
  * @property-read array $colors Allowed colors

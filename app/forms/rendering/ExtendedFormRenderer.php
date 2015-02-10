@@ -12,10 +12,7 @@ use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
 
 /**
- * Converts a Form into the HTML output.
  * Extended about new abstract functions
- *
- * @author Petr Poupě
  */
 class ExtendedFormRenderer extends DefaultFormRenderer
 {

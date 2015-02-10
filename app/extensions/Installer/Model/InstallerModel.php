@@ -11,11 +11,6 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 
-/**
- * Installer
- *
- * @author Petr Poupě
- */
 class InstallerModel extends Object
 {
 

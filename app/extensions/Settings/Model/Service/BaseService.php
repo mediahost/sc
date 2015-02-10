@@ -11,10 +11,6 @@ use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
 /**
- * BaseService
- * 
- * @author Petr Poupě <petr.poupe@gmail.com>
- * 
  * @property-read User $user
  */
 abstract class BaseService extends Object

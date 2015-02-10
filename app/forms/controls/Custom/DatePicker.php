@@ -9,11 +9,6 @@ use Nette\Forms\IControl;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 
-/**
- * DatePicker
- *
- * @author Petr Poupě
- */
 class DatePicker extends BaseControl
 {
 

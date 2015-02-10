@@ -8,9 +8,7 @@ use Nette\Forms\Helpers;
 use Nette\Utils\Html;
 
 /**
- * rewrited Radiolist
- *
- * @author Petr Poupě
+ * Rewrited Radiolist
  */
 class RadioList extends RadioListParent
 {

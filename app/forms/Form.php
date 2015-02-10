@@ -4,11 +4,6 @@ namespace App\Forms;
 
 use Nette\Application\UI\Form as BaseForm;
 
-/**
- * Form
- *
- * @author Petr Poupě
- */
 class Form extends BaseForm
 {
 	

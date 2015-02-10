@@ -3,7 +3,6 @@
 namespace App\Forms\Controls\TextInputBased;
 
 /**
- * TouchSpin
  * http://www.virtuosoft.eu/code/bootstrap-touchspin/
  *
  * @method self setPrefix(string $value) Set text before the input - default none
@@ -17,8 +16,6 @@ namespace App\Forms\Controls\TextInputBased;
  * @method self setBooster(string $value) If enabled, the the spinner is continually becoming faster as holding the button - default true
  * @method self setBoostat(string $value) Boost at every nth step - default 10
  * @method self setMaxBoostedStep(string $value) Maximum step when boosted - default false
- * 
- * @author Petr Poupě
  */
 class TouchSpin extends MetronicTextInputBase
 {

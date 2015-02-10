@@ -6,11 +6,6 @@ use Nette\DI\CompilerExtension;
 use Nette\DI\Statement;
 use stdClass;
 
-/**
- * InstallerExtension
- *
- * @author Petr Poupě
- */
 class InstallerExtension extends CompilerExtension
 {
 

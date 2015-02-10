@@ -6,9 +6,6 @@ use Nette\Configurator;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 
-/**
- * @author Petr Poupě <petr.poupe@gmail.com>
- */
 class FotoExtension extends CompilerExtension
 {
 

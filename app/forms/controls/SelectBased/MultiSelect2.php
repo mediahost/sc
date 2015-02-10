@@ -2,11 +2,6 @@
 
 namespace App\Forms\Controls\SelectBased;
 
-/**
- * MultiSelect2
- *
- * @author Petr Poupě
- */
 class MultiSelect2 extends \Nette\Forms\Controls\MultiSelectBox
 {
 

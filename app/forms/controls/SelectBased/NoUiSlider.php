@@ -4,11 +4,6 @@ namespace App\Forms\Controls\SelectBased;
 
 use Nette\Forms\Controls\SelectBox;
 
-/**
- * NoUiSlider
- *
- * @author Petr Poupě
- */
 class NoUiSlider extends SelectBox
 {
 

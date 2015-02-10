@@ -2,11 +2,6 @@
 
 namespace App;
 
-/**
- * Helpers.
- *
- * @author Petr Poupě
- */
 class Helpers
 {
 
@@ -21,8 +16,7 @@ class Helpers
 	// <editor-fold defaultstate="collapsed" desc="strings">
 
 	/**
-	 * Short for concatStrings()
-	 * @author Petr Poupě
+	 * Alias for concatStrings()
 	 * @param string $first
 	 * @param string $second
 	 * @param string $separator
@@ -35,7 +29,6 @@ class Helpers
 
 	/**
 	 * Accepts unlimited parameters or two parameters, where second is array
-	 * @author Petr Poupě
 	 * @param string $separator
 	 * @return string|null
 	 */

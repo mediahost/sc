@@ -5,11 +5,7 @@ namespace App\Forms\Controls\TextInputBased;
 use App\Forms\Controls\TextInputBased\MetronicTextInputBase;
 
 /**
- * TagInput
- *
  * @method self setPlaceholder(string $value) Set placeholder text
- * 
- * @author Petr Poupě
  */
 class TagInput extends MetronicTextInputBase
 {

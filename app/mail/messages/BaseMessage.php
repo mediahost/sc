@@ -9,10 +9,6 @@ use Nette\Http\Request;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 
-/**
- * @author Martin Šifra <me@martinsifra.cz>
- * @author Petr Poupě <petr.poupe@gmail.com>
- */
 abstract class BaseMessage extends Message
 {
 

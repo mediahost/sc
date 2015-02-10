@@ -7,11 +7,6 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Metronic horizontal style
- *
- * @author Petr Poupě
- */
 class MetronicHorizontalFormRenderer extends MetronicFormRenderer
 {
 	const DEFAULT_LABEL_WIDTH = '3';

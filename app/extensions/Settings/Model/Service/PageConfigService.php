@@ -3,10 +3,6 @@
 namespace App\Extensions\Settings\Model\Service;
 
 /**
- * PageConfigService
- * 
- * @author Petr Poupě <petr.poupe@gmail.com>
- * 
  * @property-read string $itemsPerPage
  * @property-read string $itemsPerRow
  * @property-read string $rowsPerPage

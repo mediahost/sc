@@ -2,18 +2,10 @@
 
 namespace App;
 
-/**
- * DateInterval
- *
- * @author Petr Poupě
- */
 class DateInterval extends \DateInterval
 {
 
-	/**
-	 * Recalculate interval
-	 * @return self
-	 */
+	/** @return self */
 	public function recalculate()
 	{
 		$from = new \Nette\Utils\DateTime;

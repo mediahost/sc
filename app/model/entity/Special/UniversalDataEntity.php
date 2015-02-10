@@ -3,10 +3,7 @@
 namespace App\Model\Entity\Special;
 
 /**
- * UniversalDataEntity
  * Return setted data from array
- *
- * @author Petr Poupě
  */
 class UniversalDataEntity
 {

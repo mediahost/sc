@@ -3,10 +3,6 @@
 namespace App\Extensions\Settings\Model\Service;
 
 /**
- * ExpirationService
- * 
- * @author Petr Poupě <petr.poupe@gmail.com>
- * 
  * @property-read string $recovery Recovery password token time
  * @property-read string $verification Verification token time
  * @property-read string $registration Registration token time

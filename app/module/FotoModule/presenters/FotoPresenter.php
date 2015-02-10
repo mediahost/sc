@@ -5,11 +5,6 @@ namespace App\FotoModule\Presenters;
 use App\Extensions\Foto;
 use Nette\Application\UI\Presenter;
 
-/**
- * FotoPresenter
- *
- * @author Petr Poupě
- */
 class FotoPresenter extends Presenter
 {
 

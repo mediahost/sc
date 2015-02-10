@@ -6,8 +6,6 @@ use GettextTranslator\Gettext;
 
 /**
  * String with tags to replace
- *
- * @author Petr Poupě
  */
 class TaggedString
 {

@@ -9,8 +9,6 @@ use Nette\Utils\Callback;
 /**
  * Server validated TextInput
  * From: https://www.youtube.com/watch?v=Yc1-_lvZVZs
- * 
- * @author Petr Poupě
  */
 class ServerValidatedTextInput extends TextInput implements ISignalReceiver
 {

@@ -7,11 +7,6 @@ use App\Helpers;
 use Nette\Object;
 use Nette\Security\IAuthorizator;
 
-/**
- * Installer
- *
- * @author Petr Poupě
- */
 class Installer extends Object
 {
 

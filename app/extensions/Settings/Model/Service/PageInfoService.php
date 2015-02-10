@@ -3,10 +3,6 @@
 namespace App\Extensions\Settings\Model\Service;
 
 /**
- * PageInfoService
- * 
- * @author Petr Poupě <petr.poupe@gmail.com>
- * 
  * @property-read string $projectName Name of project
  * @property-read string $author
  * @property-read string $description

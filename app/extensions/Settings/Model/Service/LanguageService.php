@@ -6,10 +6,6 @@ use App\Model\Entity\PageConfigSettings;
 use Nette\Http\Request;
 
 /**
- * LanguageService
- * 
- * @author Petr Poupě <petr.poupe@gmail.com>
- * 
  * @property-read string $language Default or user language
  * @property-read string $defaultLanguage
  * @property string $userLanguage
