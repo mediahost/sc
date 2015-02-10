@@ -2,11 +2,11 @@
 
 namespace App\Components\Candidate;
 
+use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
 use Exception;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\ArrayHash;
 
 /**
