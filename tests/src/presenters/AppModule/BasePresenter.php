@@ -3,10 +3,9 @@
 namespace Test\Presenters\AppModule;
 
 use Test\Presenters\BasePresenter as ParentBasePresenter;
-use Tester\Environment;
 
 /**
- * Parent presenter
+ * Parent presenter for app presenters
  */
 abstract class BasePresenter extends ParentBasePresenter
 {
@@ -16,11 +15,11 @@ abstract class BasePresenter extends ParentBasePresenter
 		parent::setUp();
 		$this->updateSchema();
 		$this->installer->install();
-		Environment::lock('login', LOCK_DIR);
 	}
 
 	protected function tearDown()
 	{
+		parent::tearDown();
 		$this->logout();
 		$this->dropSchema();
 	}

@@ -10,6 +10,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
 /**
  * TEST: DesignPresenter
  *
+ * @skip
  * @testCase
  * @phpVersion 5.4
  */
@@ -21,7 +22,6 @@ class DesignPresenterTest extends BasePresenter
 		parent::setUp();
 		$this->updateSchema();
 		$this->installer->install();
-		Environment::lock('login', LOCK_DIR);
 		$this->tester->init('Ajax:Design');
 	}
 
