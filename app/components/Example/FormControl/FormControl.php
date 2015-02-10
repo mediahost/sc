@@ -93,11 +93,8 @@ class FormControl extends BaseControl
 		$this->onAfterSave($form, $values);
 	}
 
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
-	private function getDefaults()
+	/** @return array */
+	protected function getDefaults()
 	{
 		$values = [];
 		return $values;

@@ -10,6 +10,10 @@ use Kdyby\Doctrine\EntityDao;
 
 class SkillsPresenter extends BasePresenter
 {
+	
+	/** @var Skill */
+	private $skill;
+	
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var ISkillControlFactory @inject */
@@ -45,6 +49,8 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
+		$this->skill = new Skill;
+		$this['skillForm']->setSkill($this->skill);
 		$this->setView('edit');
 	}
 
@@ -55,9 +61,9 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$entity = $this->skillDao->find($id);
-		if ($entity) {
-			$this['skillForm']->setEntity($entity);
+		$this->skill = $this->skillDao->find($id);
+		if ($this->skill) {
+			$this['skillForm']->setSkill($this->skill);
 		} else {
 			$this->flashMessage('This skill wasn\'t found.', 'error');
 			$this->redirect('default');
@@ -66,7 +72,7 @@ class SkillsPresenter extends BasePresenter
 	
 	public function renderEdit()
 	{
-		$this->template->isAdd = !$this['skillForm']->isEntityExists();
+		$this->template->skill = $this->skill;
 	}
 
 	/**
@@ -76,10 +82,10 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$skill = $this->skillDao->find($id);
-		if ($skill) {
-			$this->skillDao->delete($skill);
-			$message = new TaggedString('\'%s\' was deleted.', $skill->name);
+		$this->skill = $this->skillDao->find($id);
+		if ($this->skill) {
+			$this->skillDao->delete($this->skill);
+			$message = new TaggedString('\'%s\' was deleted.', $this->skill);
 			$this->flashMessage($message, 'success');
 		} else {
 			$this->flashMessage('Skill was not found.', 'warning');

@@ -2,22 +2,23 @@
 
 namespace App\Components\Skills;
 
-use App\Components\EntityControl;
+use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\SkillCategory;
 use App\Model\Facade\RoleFacade;
+use Exception;
 use Nette\Utils\ArrayHash;
 
 /**
  * Form with all user's personal settings.
- * 
- * @method self setEntity(SkillCategory $entity)
- * @method SkillCategory getEntity()
- * @property SkillCategory $entity
  */
-class SkillCategoryControl extends EntityControl
+class SkillCategoryControl extends BaseControl
 {
+
+	/** @var SkillCategory */
+	private $skillCategory;
+
 	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
@@ -34,6 +35,8 @@ class SkillCategoryControl extends EntityControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
+		$this->checkEntityExistsBeforeRender();
+
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
@@ -43,8 +46,8 @@ class SkillCategoryControl extends EntityControl
 
 		$skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
 		$parents = $skillCategoryDao->findPairs('name', 'id');
-		if ($this->entity) {
-			unset($parents[$this->entity->id]);
+		if ($this->skillCategory) {
+			unset($parents[$this->skillCategory->id]);
 		}
 		$form->addSelect2('parent', 'Parent category', $parents)
 				->setPrompt('--- NO PARENT ---');
@@ -62,64 +65,58 @@ class SkillCategoryControl extends EntityControl
 			$form['parent']->addError('Category can\'t be own parent');
 			return;
 		}
-		
-		$entity = $this->load($values);
+
+		$this->load($values);
 		$entityDao = $this->em->getDao(SkillCategory::getClassName());
 
-		$saved = $entityDao->save($entity);
+		$saved = $entityDao->save($this->skillCategory);
 		$this->onAfterSave($saved);
 	}
 
-	/**
-	 * Load Entity from Form
-	 * @param ArrayHash $values
-	 * @return SkillCategory
-	 */
-	protected function load(ArrayHash $values)
+	private function load(ArrayHash $values)
 	{
-		$entity = $this->getEntity();
-		$entity->name = $values->name;
-
-		$entity->parent = NULL;
+		$this->skillCategory->name = $values->name;
+		$this->skillCategory->parent = NULL;
 		if ($values->parent) {
 			$skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
 			$skillParent = $skillCategoryDao->find($values->parent);
 			if ($skillParent) {
-				$entity->parent = $skillParent;
+				$this->skillCategory->parent = $skillParent;
 			}
 		}
-
-		return $entity;
 	}
 
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
+	/** @return array */
 	protected function getDefaults()
 	{
-		$entity = $this->getEntity();
 		$values = [
-			'name' => $entity->name,
-			'parent' => $entity->parent ? $entity->parent->id : NULL,
+			'name' => $this->skillCategory->name,
+			'parent' => $this->skillCategory->parent ? $this->skillCategory->parent->id : NULL,
 		];
 		return $values;
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
-	protected function checkEntityType($entity)
+	private function checkEntityExistsBeforeRender()
 	{
-		return $entity instanceof SkillCategory;
+		if (!$this->skillCategory) {
+			throw new SkillCategoryControlException('Use setSkillCategory(\App\Model\Entity\SkillCategory) before render');
+		}
 	}
 
-	/** @return SkillCategory */
-	protected function getNewEntity()
+	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+
+	public function setSkillCategory(SkillCategory $skillCategory)
 	{
-		return new SkillCategory;
+		$this->skillCategory = $skillCategory;
+		return $this;
 	}
 
 	// </editor-fold>
+}
+
+class SkillCategoryControlException extends Exception
+{
+	
 }
 
 interface ISkillCategoryControlFactory

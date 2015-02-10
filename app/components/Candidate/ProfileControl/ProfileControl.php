@@ -2,18 +2,22 @@
 
 namespace App\Components\Candidate;
 
-use App\Components\EntityControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
 use Exception;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\ArrayHash;
 
 /**
  * Form with skills settings.
  */
-class ProfileControl extends EntityControl
+class ProfileControl extends BaseControl
 {
+
+	/** @var Candidate */
+	public $candidate;
+	
 	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
@@ -24,6 +28,8 @@ class ProfileControl extends EntityControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
+		$this->checkEntityExistsBeforeRender();
+		
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
@@ -43,50 +49,41 @@ class ProfileControl extends EntityControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		$entity = $this->load($values);
+		$this->load($values);
 		$entityDao = $this->em->getDao(Candidate::getClassName());
-		$saved = $entityDao->save($entity);
+		$saved = $entityDao->save($this->candidate);
 		$this->onAfterSave($saved);
 	}
 
-	/**
-	 * Load Entity from Form
-	 * @param ArrayHash $values
-	 * @return Candidate
-	 */
 	protected function load(ArrayHash $values)
 	{
-		$entity = $this->getEntity();
-		$entity->name = $values->name;
-		$entity->birthday = $values->birthday;
-		return $entity;
+		$this->candidate->name = $values->name;
+		$this->candidate->birthday = $values->birthday;
 	}
 
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
+	/** @return array */
 	protected function getDefaults()
 	{
-		$entity = $this->getEntity();
 		$values = [
-			'name' => $entity->name,
-			'birthday' => $entity->birthday,
+			'name' => $this->candidate->name,
+			'birthday' => $this->candidate->birthday,
 		];
 		return $values;
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
-	protected function checkEntityType($entity)
+	private function checkEntityExistsBeforeRender()
 	{
-		return $entity instanceof Candidate;
+		if (!$this->candidate) {
+			throw new ProfileControlException('Use setJob(\App\Model\Entity\Job) before render');
+		}
 	}
 
-	/** @throwsProfileControlExceptionn */
-	protected function getNewEntity()
+	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+
+	public function setCandidate(Candidate $candidate)
 	{
-		throw new ProfileControlException('Must use method setEntity(\App\Model\Entity\Candidate)');
+		$this->candidate = $candidate;
+		return $this;
 	}
 
 	// </editor-fold>

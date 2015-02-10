@@ -49,6 +49,11 @@ class SkillCategory extends BaseEntity
 		$this->childs = new ArrayCollection();
 		$this->skills = new ArrayCollection();
 	}
+	
+	public function isNew()
+	{
+		return $this->id === NULL;
+	}
 
 	public function __toString()
 	{

@@ -71,13 +71,12 @@ class JobControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		$job = $this->load($values);
+		$this->load($values);
 		$jobDao = $this->em->getDao(Job::getClassName());
-		$savedJob = $jobDao->save($job);
+		$savedJob = $jobDao->save($this->job);
 		$this->onAfterSave($savedJob);
 	}
 
-	/** @return Job */
 	protected function load(ArrayHash $values)
 	{
 //		if ($this->canEditInfo) {
@@ -87,7 +86,6 @@ class JobControl extends BaseControl
 //		if ($this->canEditSkills) {
 			
 //		}
-		return $this->job;
 	}
 
 	/** @return array */
@@ -102,8 +100,8 @@ class JobControl extends BaseControl
 
 	private function checkEntityExistsBeforeRender()
 	{
-		if ($this->job === NULL) {
-			throw new JobControlException('Use setJob() before render');
+		if (!$this->job) {
+			throw new JobControlException('Use setJob(\App\Model\Entity\Job) before render');
 		}
 	}
 

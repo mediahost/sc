@@ -53,7 +53,7 @@ class CandidatePresenter extends BasePresenter
 	public function createComponentProfileForm()
 	{
 		$control = $this->iProfileControlFactory->create();
-		$control->setEntity($this->candidate);
+		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = new TaggedString('Candidate \'%s\' was successfully saved.', (string) $saved);
 			$this->flashMessage($message, 'success');

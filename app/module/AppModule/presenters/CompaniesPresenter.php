@@ -18,6 +18,10 @@ use Kdyby\Doctrine\EntityManager;
  */
 class CompaniesPresenter extends BasePresenter
 {
+
+	/** @var Company */
+	private $company;
+	
 	// <editor-fold defaultstate="expanded" desc="injects">
 
 	/** @var EntityManager @inject */
@@ -69,6 +73,8 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
+		$this->company = new Company;
+		$this['companyForm']->setCompany($this->company);
 		$this->setView('edit');
 	}
 
@@ -79,20 +85,19 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$company = $this->companyDao->find($id);
-		if (!$company) {
+		$this->company = $this->companyDao->find($id);
+		if (!$this->company) {
 			$this->flashMessage('This company wasn\'t found.', 'error');
 			$this->redirect('default');
 		} else {
-			$this['companyForm']->setEntity($company);
-			$this['editUserForm']->setCompany($company);
+			$this['companyForm']->setCompany($this->company);
+			$this['editUserForm']->setCompany($this->company);
 		}
 	}
 
 	public function renderEdit($id)
 	{
 		$this->template->company = $this->companyDao->find($id);
-		$this->template->isAdd = !$this['companyForm']->isEntityExists();
 	}
 
 	/**

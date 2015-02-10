@@ -7,7 +7,7 @@
 	<a n:href="SkillCategories:">{_'Skill Categories'}</a>
 </li>
 <li>
-	<a n:href="this">{ifset $isAdd}{_'Add'}{else}{_'Edit'}{/ifset}</a>
+	<a n:href="this">{if $skillCategory->isNew()}{_'Add'}{else}{_'Edit'}{/if}</a>
 </li>
 {/block}
 
@@ -19,7 +19,7 @@
 				<div class="caption font-green-sharp">
 					<i class="fa fa-edit font-green-sharp"></i>
 					<span class="caption-subject bold uppercase">
-						{ifset $isAdd}{_'Add'}{else}{_'Edit'}{/ifset} {_'category'}
+						{if $skillCategory->isNew()}{_'Add'}{else}{_'Edit'}{/if} {_'category'}
 					</span>
 				</div>
 				<div class="actions">

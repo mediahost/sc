@@ -2,7 +2,7 @@
 
 namespace App\Components\Company;
 
-use App\Components\EntityControl;
+use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Company;
@@ -11,19 +11,23 @@ use App\Model\Entity\Role;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
+use Exception;
 use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
 /**
  * Form with all company settings.
- * 
- * @method self setEntity(Company $entity)
- * @method Company getEntity()
- * @property Company $entity
  */
-class CompanyControl extends EntityControl
+class CompanyControl extends BaseControl
 {
+
+	/** @var Company */
+	private $company;
+
+	/** @var array */
+	private $usersRoles = [];
+
 	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
@@ -50,17 +54,16 @@ class CompanyControl extends EntityControl
 	/** @var bool */
 	private $canEditUsers = FALSE;
 
-	/** @var string */
+	/** @var Html */
 	private $linkAddUser;
-
-	/** @var array */
-	private $linkAddUserAttrs = [];
 
 	// </editor-fold>
 
 	/** @return Form */
 	protected function createComponentForm()
 	{
+		$this->checkEntityExistsBeforeRender();
+
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
@@ -86,13 +89,10 @@ class CompanyControl extends EntityControl
 			$editors = $form->addMultiSelect2('editors', 'Editors', $users);
 
 			if ($this->linkAddUser) {
-				$link = Html::el('a')
-						->setText($this->translator->translate('add new user'));
-				$link->href($this->linkAddUser);
-				$link->addAttributes($this->linkAddUserAttrs);
+				$this->linkAddUser->setText($this->translator->translate('add new user'));
 				$message = Html::el('')
 						->setText($this->translator->translate('You can') . ' ')
-						->add($link);
+						->add($this->linkAddUser);
 				$admins->setOption('description', $message);
 				$managers->setOption('description', $message);
 				$editors->setOption('description', $message);
@@ -120,108 +120,101 @@ class CompanyControl extends EntityControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		list($company, $roles) = $this->load($values);
+		$this->load($values);
 		$companyDao = $this->em->getDao(Company::getClassName());
-		$savedCompany = $companyDao->save($company);
+		$savedCompany = $companyDao->save($this->company);
 		if ($this->canEditUsers) {
 			$this->companyFacade->clearPermissions($savedCompany);
-			foreach ($roles as $userId => $userRoles) {
+			foreach ($this->usersRoles as $userId => $userRoles) {
 				$this->companyFacade->addPermission($savedCompany, $userId, $userRoles);
 			}
 		}
 		$this->onAfterSave($savedCompany);
 	}
 
-	/**
-	 * Load Entity from Form
-	 * @param ArrayHash $values
-	 * @return array[Company, array]
-	 */
-	protected function load(ArrayHash $values)
+	private function load(ArrayHash $values)
 	{
-		$entity = $this->getEntity();
 		if ($this->canEditInfo) {
-			$entity->name = $values->name;
-			$entity->companyId = $values->companyId;
-			$entity->address = $values->address;
+			$this->company->name = $values->name;
+			$this->company->companyId = $values->companyId;
+			$this->company->address = $values->address;
 		}
-		$usersRoles = [];
 		if ($this->canEditUsers) {
 			foreach ($values->admins as $adminId) {
-				$usersRoles[$adminId][] = CompanyRole::ADMIN;
+				$this->usersRoles[$adminId][] = CompanyRole::ADMIN;
 			}
 			foreach ($values->managers as $managerId) {
-				$usersRoles[$managerId][] = CompanyRole::MANAGER;
+				$this->usersRoles[$managerId][] = CompanyRole::MANAGER;
 			}
 			foreach ($values->editors as $editorId) {
-				$usersRoles[$editorId][] = CompanyRole::EDITOR;
+				$this->usersRoles[$editorId][] = CompanyRole::EDITOR;
 			}
 		}
-		return [$entity, $usersRoles];
 	}
 
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
+	/** @return array */
 	protected function getDefaults()
 	{
-		$company = $this->getEntity();
 		$values = [
-			'name' => $company->name,
-			'companyId' => $company->companyId,
-			'address' => $company->address,
+			'name' => $this->company->name,
+			'companyId' => $this->company->companyId,
+			'address' => $this->company->address,
 		];
 		if ($this->canEditUsers) {
-			foreach ($company->adminAccesses as $adminPermission) {
+			foreach ($this->company->adminAccesses as $adminPermission) {
 				$values['admins'][] = $adminPermission->user->id;
 			}
-			foreach ($company->managerAccesses as $managerPermission) {
+			foreach ($this->company->managerAccesses as $managerPermission) {
 				$values['managers'][] = $managerPermission->user->id;
 			}
-			foreach ($company->editorAccesses as $editorPermission) {
+			foreach ($this->company->editorAccesses as $editorPermission) {
 				$values['editors'][] = $editorPermission->user->id;
 			}
 		}
 		return $values;
 	}
 
+	private function checkEntityExistsBeforeRender()
+	{
+		if (!$this->company) {
+			throw new CompanyControlException('Use setCompany(\App\Model\Entity\Company) before render');
+		}
+	}
+
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	protected function checkEntityType($entity)
+	protected function setCompany(Company $company)
 	{
-		return $entity instanceof Company;
+		$this->company = $company;
+		return $this;
 	}
 
-	/** @return Company */
-	protected function getNewEntity()
-	{
-		return new Company;
-	}
-
-	/** @return self */
 	public function setCanEditInfo($value = TRUE)
 	{
 		$this->canEditInfo = $value;
 		return $this;
 	}
 
-	/** @return self */
 	public function setCanEditUsers($value = TRUE)
 	{
 		$this->canEditUsers = $value;
 		return $this;
 	}
 
-	/** @return self */
 	public function setLinkAddUser($link, array $attributes = [])
 	{
-		$this->linkAddUser = $link;
-		$this->linkAddUserAttrs = $attributes;
+		$this->linkAddUser = Html::el('a')
+				->href($link)
+				->addAttributes($attributes);
 		return $this;
 	}
 
 	// </editor-fold>
+}
+
+class CompanyControlException extends Exception
+{
+	
 }
 
 interface ICompanyControlFactory

@@ -363,6 +363,11 @@ class User extends BaseEntity implements IIdentity
 	{
 		return Passwords::needsRehash($this->hash, $options);
 	}
+	
+	public function isNew()
+	{
+		return $this->id === NULL;
+	}
 
 	// </editor-fold>
 

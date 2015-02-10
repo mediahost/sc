@@ -40,5 +40,10 @@ class Skill extends BaseEntity
 	{
 		return (string) $this->name;
 	}
+	
+	public function isNew()
+	{
+		return $this->id === NULL;
+	}
 
 }

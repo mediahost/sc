@@ -2,7 +2,7 @@
 
 namespace App\Components\User;
 
-use App\Components\EntityControl;
+use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Role;
@@ -10,19 +10,20 @@ use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\TaggedString;
+use Exception;
 use Kdyby\Doctrine\DuplicateEntryException;
 use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 
 /**
  * Form with all user's personal settings.
- * 
- * @method self setEntity(User $entity)
- * @method User getEntity()
- * @property User $entity
  */
-class UserControl extends EntityControl
+class UserControl extends BaseControl
 {
+
+	/** @var User */
+	private $user;
+
 	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
@@ -48,21 +49,23 @@ class UserControl extends EntityControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
+		$this->checkEntityExistsBeforeRender();
+
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
-		
+
 		$mail = $form->addServerValidatedText('mail', 'E-mail')
 				->addRule(Form::EMAIL, 'Fill right format')
 				->addRule(Form::FILLED, 'Mail must be filled');
-		if ($this->isEntityExists()) {
-			$mail->setDisabled();
-		} else {
+		if ($this->user->isNew()) {
 			$mail->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'));
+		} else {
+			$mail->setDisabled();
 		}
 
 		$password = $form->addText('password', 'Password');
-		if (!$this->isEntityExists()) {
+		if ($this->user->isNew()) {
 			$helpText = new TaggedString('At least %d characters long.', $this->passwordService->length);
 			$helpText->setTranslator($this->translator);
 			$password->addRule(Form::FILLED, 'Password must be filled')
@@ -84,7 +87,7 @@ class UserControl extends EntityControl
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
-	
+
 	public function validateMail(IControl $control, $arg = NULL)
 	{
 		return $this->userFacade->isUnique($control->getValue());
@@ -103,56 +106,47 @@ class UserControl extends EntityControl
 		}
 	}
 
-	/**
-	 * Load Entity from Form
-	 * @param ArrayHash $values
-	 * @return User
-	 */
-	protected function load(ArrayHash $values)
+	private function load(ArrayHash $values)
 	{
-		$entity = $this->getEntity();
 		if (isset($values->mail)) {
-			$entity->mail = $values->mail;
+			$this->user->mail = $values->mail;
 		}
 		if ($values->password !== NULL && $values->password !== "") {
-			$entity->setPassword($values->password);
+			$this->user->setPassword($values->password);
 		}
-		$entity->clearRoles();
+		$this->user->clearRoles();
 		foreach ($values->roles as $id) {
 			$roleDao = $this->em->getDao(Role::getClassName());
 			$item = $roleDao->find($id);
 			if ($item) {
-				$entity->addRole($item);
+				$this->user->addRole($item);
 			}
 		}
-		return $entity;
 	}
 
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
+	/** @return array */
 	protected function getDefaults()
 	{
-		$user = $this->getEntity();
 		$values = [
-			'mail' => $user->mail,
-			'roles' => $user->getRolesKeys(),
+			'mail' => $this->user->mail,
+			'roles' => $this->user->getRolesKeys(),
 		];
 		return $values;
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
-	protected function checkEntityType($entity)
+	private function checkEntityExistsBeforeRender()
 	{
-		return $entity instanceof User;
+		if (!$this->user) {
+			throw new UserControlException('Use setUser(\App\Model\Entity\User) before render');
+		}
 	}
 
-	/** @return User */
-	protected function getNewEntity()
+	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+
+	public function setUser(User $user)
 	{
-		return new User;
+		$this->user = $user;
+		return $this;
 	}
 
 	public function setIdentityRoles(array $roles)
@@ -169,6 +163,11 @@ class UserControl extends EntityControl
 	}
 
 	// </editor-fold>
+}
+
+class UserControlException extends Exception
+{
+	
 }
 
 interface IUserControlFactory

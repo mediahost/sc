@@ -11,6 +11,10 @@ use Kdyby\Doctrine\EntityDao;
 
 class SkillCategoriesPresenter extends BasePresenter
 {
+	
+	/** @var SkillCategory */
+	private $skillCategory;
+	
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var ISkillCategoryControlFactory @inject */
@@ -46,6 +50,8 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
+		$this->skillCategory = new SkillCategory;
+		$this['skillCategoryForm']->setSkillCategory($this->skillCategory);
 		$this->setView('edit');
 	}
 
@@ -56,9 +62,9 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$entity = $this->skillCategoryDao->find($id);
-		if ($entity) {
-			$this['skillCategoryForm']->setEntity($entity);
+		$this->skillCategory = $this->skillCategoryDao->find($id);
+		if ($this->skillCategory) {
+			$this['skillCategoryForm']->setSkillCategory($this->skillCategory);
 		} else {
 			$this->flashMessage('This category wasn\'t found.', 'error');
 			$this->redirect('default');
@@ -67,7 +73,7 @@ class SkillCategoriesPresenter extends BasePresenter
 
 	public function renderEdit()
 	{
-		$this->template->isAdd = !$this['skillCategoryForm']->isEntityExists();
+		$this->template->skillCategory = $this->skillCategory;
 	}
 
 	/**
@@ -77,14 +83,14 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$skillCategory = $this->skillCategoryDao->find($id);
-		if ($skillCategory) {
+		$this->skillCategory = $this->skillCategoryDao->find($id);
+		if ($this->skillCategory) {
 			try {
-				$this->skillCategoryDao->delete($skillCategory);
-				$message = new TaggedString('Category \'%s\' was deleted.', (string) $skillCategory);
+				$this->skillCategoryDao->delete($this->skillCategory);
+				$message = new TaggedString('Category \'%s\' was deleted.', (string) $this->skillCategory);
 				$this->flashMessage($message, 'success');
 			} catch (DBALException $exc) {
-				$message = new TaggedString('\'%s\' has child category or skill. You can\'t delete it.', (string) $skillCategory);
+				$message = new TaggedString('\'%s\' has child category or skill. You can\'t delete it.', (string) $this->skillCategory);
 				$this->flashMessage($message, 'warning');
 			}
 		} else {

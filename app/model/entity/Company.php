@@ -62,6 +62,11 @@ class Company extends BaseEntity
 		return (string) $this->name;
 	}
 	
+	public function isNew()
+	{
+		return $this->id === NULL;
+	}
+	
 	public function addAccess(CompanyPermission $permission)
 	{
 		return $this->accesses->add($permission);

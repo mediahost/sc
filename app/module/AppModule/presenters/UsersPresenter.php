@@ -17,6 +17,10 @@ use Nette\Security\User as IdentityUser;
  */
 class UsersPresenter extends BasePresenter
 {
+
+	/** @var User */
+	private $userEntity;
+
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var EntityManager @inject */
@@ -65,6 +69,8 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
+		$this->userEntity = new User;
+		$this['userForm']->setUser($this->userEntity);
 		$this->setView('edit');
 	}
 
@@ -75,21 +81,21 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$user = $this->userDao->find($id);
-		if (!$user) {
+		$this->userEntity = $this->userDao->find($id);
+		if (!$this->userEntity) {
 			$this->flashMessage('This user wasn\'t found.', 'error');
 			$this->redirect('default');
-		} else if (!$this->canEdit($this->user, $user)) {
+		} else if (!$this->canEdit($this->user, $this->userEntity)) {
 			$this->flashMessage('You can\'t edit this user.', 'warning');
 			$this->redirect('default');
 		} else {
-			$this['userForm']->setEntity($user);
+			$this['userForm']->setUser($this->userEntity);
 		}
 	}
 
 	public function renderEdit()
 	{
-		$this->template->isAdd = !$this['userForm']->isEntityExists();
+		$this->template->isAdd = $this->userEntity->isNew();
 	}
 
 	/**

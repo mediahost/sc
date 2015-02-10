@@ -21,18 +21,16 @@ class BasicInfoControl extends BaseControl
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
 
-	/** 
-	 * Private variable for Cv
-	 * Use $this->cv or $this->getCv() instead
-	 * @var Cv 
-	 */
-	private $_cv;
+	/** @var Cv */
+	private $cv;
 
 	// </editor-fold>
 
 	/** @return Form */
 	protected function createComponentForm()
 	{
+		$this->checkEntityExistsBeforeRender();
+
 		$form = new Form;
 
 		$form->setTranslator($this->translator);
@@ -53,7 +51,7 @@ class BasicInfoControl extends BaseControl
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$this->loadData($values);
+		$this->load($values);
 		$this->em->persist($this->cv);
 		$this->em->flush();
 
@@ -61,22 +59,13 @@ class BasicInfoControl extends BaseControl
 		$this->onAfterSave($this->cv);
 	}
 
-	/**
-	 * Load data to CV
-	 * @param ArrayHash $values
-	 * @return Cv
-	 */
-	private function loadData(ArrayHash $values)
+	private function load(ArrayHash $values)
 	{
 		$this->cv->name = $values->name;
-		return $this->cv;
 	}
 
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
-	private function getDefaults()
+	/** @return array */
+	protected function getDefaults()
 	{
 		$values = [
 			'name' => $this->cv->name,
@@ -84,34 +73,22 @@ class BasicInfoControl extends BaseControl
 		return $values;
 	}
 
+	private function checkEntityExistsBeforeRender()
+	{
+		if (!$this->cv) {
+			throw new CvControlException('Use setCv(\App\Model\Entity\Cv) before render');
+		}
+	}
+
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	/** @return self */
 	public function setCv(Cv $cv)
 	{
-		$this->_cv = $cv;
+		$this->cv = $cv;
 		return $this;
 	}
 
-	/** @return Cv */
-	private function &getCv()
-	{
-		if (!$this->_cv) {
-			throw new CvControlException('Must use method setCv(\App\Model\Entity\Cv)');
-		}
-		return $this->_cv;
-	}
-
 	// </editor-fold>
-
-	public function &__get($name)
-	{
-		if ($name === 'cv') {
-			return $this->getCv();
-		}
-		return parent::__get($name);
-	}
-
 }
 
 interface IBasicInfoControlFactory

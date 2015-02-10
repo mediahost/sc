@@ -18,6 +18,10 @@ use Nette\Utils\ArrayHash;
  */
 class SkillKnowsControl extends BaseControl
 {
+
+	/** @var Cv */
+	private $cv;
+
 	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
@@ -30,16 +34,12 @@ class SkillKnowsControl extends BaseControl
 	public $skillFacade;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var Cv */
-	private $cv;
-
-	// </editor-fold>
 
 	/** @return Form */
 	protected function createComponentForm()
 	{
+		$this->checkEntityExistsBeforeRender();
+
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
@@ -67,21 +67,14 @@ class SkillKnowsControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		$entity = $this->load($values);
-		$this->em->persist($entity);
+		$this->load($values);
+		$this->em->persist($this->cv);
 		$this->em->flush();
-		$this->onAfterSave($entity);
+		$this->onAfterSave($this->cv);
 	}
 
-	/**
-	 * Load Entity from Form
-	 * @param ArrayHash $values
-	 * @return Cv
-	 */
-	protected function load(ArrayHash $values)
+	private function load(ArrayHash $values)
 	{
-		$entity = $this->getCv();
-		$usedSkillIds = [];
 		foreach ($values->skillLevel as $skillId => $levelId) {
 			$skill = $this->em->getDao(Skill::getClassName())->find($skillId);
 			$level = $this->em->getDao(SkillLevel::getClassName())->find($levelId);
@@ -91,46 +84,38 @@ class SkillKnowsControl extends BaseControl
 			$newSkillKnow->skill = $skill;
 			$newSkillKnow->level = $level;
 			$newSkillKnow->years = $years;
-			$newSkillKnow->cv = $entity;
-			$entity->skillKnow = $newSkillKnow;
-			$usedSkillIds[] = $skillId;
+			$newSkillKnow->cv = $this->cv;
+			$this->cv->skillKnow = $newSkillKnow;
 		}
-		return $entity;
 	}
 
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
+	/** @return array */
 	protected function getDefaults()
 	{
 		$values = [
 			'skillLevel' => [],
 			'skillYear' => [],
 		];
-		foreach ($this->getCv()->skillKnows as $skillKnow) {
+		foreach ($this->cv->skillKnows as $skillKnow) {
 			$values['skillLevel'][$skillKnow->skill->id] = $skillKnow->level->id;
 			$values['skillYear'][$skillKnow->skill->id] = $skillKnow->level->id > 1 ? $skillKnow->years : 0;
 		}
 		return $values;
 	}
 
+	private function checkEntityExistsBeforeRender()
+	{
+		if (!$this->cv) {
+			throw new CvControlException('Use setCv(\App\Model\Entity\Cv) before render');
+		}
+	}
+
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	/** @return self */
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
 		return $this;
-	}
-
-	/** @return Cv */
-	private function getCv()
-	{
-		if (!$this->cv) {
-			throw new CvControlException('Must use method setCv(\App\Model\Entity\Cv)');
-		}
-		return $this->cv;
 	}
 
 	// </editor-fold>

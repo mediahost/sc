@@ -144,10 +144,7 @@ class CompanyUserControl extends BaseControl
 		$this->onAfterSave($user, $company);
 	}
 
-	/**
-	 * Get Entity for Form
-	 * @return array
-	 */
+	/** @return array */
 	protected function getDefaults()
 	{
 		$values = [];
@@ -166,14 +163,12 @@ class CompanyUserControl extends BaseControl
 
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	/** @return self */
 	public function setCompany(Company $company)
 	{
 		$this->company = $company;
 		return $this;
 	}
 
-	/** @return self */
 	public function setUser(User $user)
 	{
 		$this->user = $user;

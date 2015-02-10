@@ -86,7 +86,7 @@ class CompanyPresenter extends BasePresenter
 	public function actionDefault($id)
 	{
 		$this->checkCompanyId($id);
-		$this['companyForm']->setEntity($this->company);
+		$this['companyForm']->setCompany($this->company);
 		$this['companyForm']->setCanEditInfo($this->companyPermission->isAllowed('info', 'edit'));
 	}
 

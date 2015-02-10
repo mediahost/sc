@@ -48,23 +48,21 @@ class LivePreviewControl extends BaseControl
 		return $this;
 	}
 
-	/** @return Cv */
-	private function getCv()
+	// </editor-fold>
+
+	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->cv) {
-			throw new CvControlException('Must use method setCv(\App\Model\Entity\Cv)');
+			throw new CvControlException('Use setCv(\App\Model\Entity\Cv) before render');
 		}
-		return $this->cv;
 	}
-
-	// </editor-fold>
 
 	public function render()
 	{
-		$cv = $this->getCv();
-		$this->template->cv = $cv;
-		$this->template->startPage = $cv->lastOpenedPreviewPage ? $cv->lastOpenedPreviewPage : $this->startPage;
-		$this->template->scale = $cv->lastUsedPreviewScale ? $cv->lastUsedPreviewScale : $this->scale;
+		$this->checkEntityExistsBeforeRender();
+		$this->template->cv = $this->cv;
+		$this->template->startPage = $this->cv->lastOpenedPreviewPage ? $this->cv->lastOpenedPreviewPage : $this->startPage;
+		$this->template->scale = $this->cv->lastUsedPreviewScale ? $this->cv->lastUsedPreviewScale : $this->scale;
 		$this->template->scaleStep = $this->scaleStep;
 		parent::render();
 	}
