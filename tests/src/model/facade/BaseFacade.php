@@ -8,9 +8,6 @@ use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Test\ParentTestCase;
 
-/**
- * Parent of facades' tests
- */
 abstract class BaseFacade extends ParentTestCase
 {
 
