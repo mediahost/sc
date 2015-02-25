@@ -86,7 +86,7 @@ class UsersPresenter extends BasePresenter
 			$this->flashMessage('This user wasn\'t found.', 'error');
 			$this->redirect('default');
 		} else if (!$this->canEdit($this->user, $this->userEntity)) {
-			$this->flashMessage('You can\'t edit this user.', 'warning');
+			$this->flashMessage('You can\'t edit this user.', 'danger');
 			$this->redirect('default');
 		} else {
 			$this['userForm']->setUser($this->userEntity);
@@ -118,9 +118,9 @@ class UsersPresenter extends BasePresenter
 	{
 		$user = $this->userDao->find($id);
 		if (!$user) {
-			$this->flashMessage('User wasn\'t found.', 'warning');
+			$this->flashMessage('User wasn\'t found.', 'danger');
 		} else if (!$this->canDelete($this->user, $user)) {
-			$this->flashMessage('You can\'t delete this user.', 'warning');
+			$this->flashMessage('You can\'t delete this user.', 'danger');
 		} else {
 			$this->userDao->delete($user);
 			$this->flashMessage('User was deleted.', 'success');
@@ -137,9 +137,9 @@ class UsersPresenter extends BasePresenter
 	{
 		$user = $this->userDao->find($id);
 		if (!$user) {
-			$this->flashMessage('User wasn\'t found.', 'warning');
+			$this->flashMessage('User wasn\'t found.', 'danger');
 		} else if (!$this->canAccess($this->user, $user)) {
-			$this->flashMessage('You can\'t access to this user.', 'warning');
+			$this->flashMessage('You can\'t access to this user.', 'danger');
 		} else {
 			$this->user->login($user);
 			$message = new TaggedString('You are logged as \'%s\'.', $user);

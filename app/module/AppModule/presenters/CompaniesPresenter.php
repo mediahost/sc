@@ -120,7 +120,7 @@ class CompaniesPresenter extends BasePresenter
 	{
 		$company = $this->companyDao->find($id);
 		if (!$company) {
-			$this->flashMessage('Company wasn\'t found.', 'warning');
+			$this->flashMessage('Company wasn\'t found.', 'danger');
 		} else {
 			$this->companyFacade->delete($company);
 			$this->flashMessage('Company was deleted.', 'success');

@@ -86,7 +86,7 @@ class ProfilePresenter extends BasePresenter
 			$this->flashMessage('Your account has been deleted', 'success');
 			$this->redirect(":Front:Homepage:");
 		} catch (CantDeleteUserException $ex) {
-			$this->flashMessage('You can\'t delete account, because you are only one admin for your company.', 'warning');
+			$this->flashMessage('You can\'t delete account, because you are only one admin for your company.', 'danger');
 			$this->redirect("this");
 		}
 	}
@@ -127,21 +127,21 @@ class ProfilePresenter extends BasePresenter
 			}
 		};
 		$control->onLastConnection[] = function () {
-			$this->flashMessage('Last login method is not possible deactivate.', 'warning');
+			$this->flashMessage('Last login method is not possible deactivate.', 'danger');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}
 		};
 		$control->onInvalidType[] = function ($type) {
 			$message = new TaggedString('We can\'t find \'%s\' to disconnect.', $type);
-			$this->flashMessage($message, 'warning');
+			$this->flashMessage($message, 'danger');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}
 		};
 		$control->onUsingConnection[] = function ($type) {
 			$message = new TaggedString('Logged %s account is using by another account.', $type);
-			$this->flashMessage($message, 'warning');
+			$this->flashMessage($message, 'danger');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}

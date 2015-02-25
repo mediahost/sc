@@ -88,7 +88,7 @@ class SkillsPresenter extends BasePresenter
 			$message = new TaggedString('\'%s\' was deleted.', $this->skill);
 			$this->flashMessage($message, 'success');
 		} else {
-			$this->flashMessage('Skill was not found.', 'warning');
+			$this->flashMessage('Skill was not found.', 'danger');
 		}
 		$this->redirect('default');
 	}

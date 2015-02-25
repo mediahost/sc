@@ -91,10 +91,10 @@ class SkillCategoriesPresenter extends BasePresenter
 				$this->flashMessage($message, 'success');
 			} catch (DBALException $exc) {
 				$message = new TaggedString('\'%s\' has child category or skill. You can\'t delete it.', (string) $this->skillCategory);
-				$this->flashMessage($message, 'warning');
+				$this->flashMessage($message, 'danger');
 			}
 		} else {
-			$this->flashMessage('Category was not found.', 'warning');
+			$this->flashMessage('Category was not found.', 'danger');
 		}
 		$this->redirect('default');
 	}
