@@ -98,7 +98,6 @@ class CvEditorPresenter extends BasePresenter
 	public function actionDefault($id = NULL, $withPreview = TRUE)
 	{
 		$this->getCv($id);
-		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$this->template->showPreview = $withPreview;
 	}
 
@@ -108,6 +107,16 @@ class CvEditorPresenter extends BasePresenter
 	 * @privilege('skills')
 	 */
 	public function actionSkills($id = NULL)
+	{
+		$this->getCv($id);
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
+	 * @privilege('jobs')
+	 */
+	public function actionJobs($id = NULL)
 	{
 		$this->getCv($id);
 	}

@@ -40,7 +40,7 @@ services:
 			- allow('signed', 'profile', ['default', 'settings', 'delete'])
 
 			- allow('candidate', 'candidate', 'default')
-			- allow('candidate', 'cvEditor', ['default', 'skills'])
+			- allow('candidate', 'cvEditor', ['default', 'skills', 'jobs'])
 			- allow('company', 'company', ['default', 'users', 'jobs', 'editUser'])
 			- allow('company', 'job', ['default', 'edit'])
 

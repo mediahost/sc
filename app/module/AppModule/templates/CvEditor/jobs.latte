@@ -1,0 +1,33 @@
+{includeblock 'navigation.latte'}
+
+{block content}
+
+{var colMd => 8}
+{include navigation, colMd => $colMd, cv => $cv}
+
+<div class="row">
+	<div class="col-md-{$colMd}">		
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>{_'Skill'}</th>
+					<th>{_'Level'}</th>
+					<th>{_'Years'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$cv->skillKnows as $skillKnow">
+					<td>
+						{$skillKnow->skill}
+					</td>
+					<td>
+						{$skillKnow->level}
+					</td>
+					<td>
+						{$skillKnow->years}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
