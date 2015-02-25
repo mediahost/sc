@@ -1,0 +1,59 @@
+{block pageTitle}
+{_'Job'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+	<a n:href="Companies:">{_'Companies'}</a>
+</li>
+{/block}
+
+{block content}
+<div class="row">
+	<div class="col-md-8">
+		<div class="portlet light">
+			<div class="portlet-title tabbable-line">
+				<div class="caption font-green-sharp">
+					<i class="fa fa-briefcase font-green-sharp"></i>
+					<span class="caption-subject bold uppercase">{$job}</span>
+				</div>
+				<div class="actions">
+					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>{_'Skill'}</th>
+							<th>{_'Level from'}</th>
+							<th>{_'Level to'}</th>
+							<th>{_'Years from'}</th>
+							<th>{_'Years to'}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr n:foreach="$job->skillRequests as $skillKnow">
+							<td>
+								{$skillKnow->skill}
+							</td>
+							<td>
+								{$skillKnow->levelFrom}
+							</td>
+							<td>
+								{$skillKnow->levelTo}
+							</td>
+							<td>
+								{$skillKnow->yearsFrom}
+							</td>
+							<td>
+								{$skillKnow->yearsTo}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

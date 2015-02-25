@@ -61,8 +61,13 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionView($id)
 	{
-		$this->flashMessage('Not implemented yet.', 'warning');
-		$this->redirect('default');
+		$job = $this->jobDao->find($id);
+		if ($job) {
+			$this->template->job = $job;
+		} else {
+			$this->flashMessage('Finded job isn\'t exists.', 'danger');
+			$this->redirect('Dashboard:');
+		}
 	}
 
 	/**
