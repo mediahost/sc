@@ -1,11 +1,30 @@
 {block pageTitle}
-{_'Candidate'}
+{if $cv->candidate->user->id === $user->id}
+	{_'Candidate'}
+{else}
+	{_"%s's CV", 1, $cv->candidate}
+{/if}
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="Candidate:">{_'Candidate'}</a>
-</li>
+{if $cv->candidate->user->id === $user->id}
+	<li>
+		<a n:href="Candidate:">{_'Candidate'}</a>
+	</li>
+{else}
+	<li>
+		<a n:href="Users:">{_'Users'}</a>
+	</li>
+	<li>
+		<a n:href="User:edit, $cv->candidate->user->id">{$cv->candidate->user}</a>
+	</li>
+	<li>
+		<a n:href="Cvs:">{_'CVs'}</a>
+	</li>
+	<li>
+		<a n:href="Users:view, $cv->candidate->user->id">{$cv->candidate}</a>
+	</li>
+{/if}
 {/block}
 
 {define navigation}

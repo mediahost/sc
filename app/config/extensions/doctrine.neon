@@ -6,3 +6,6 @@ extensions:
 	doctrine2identity: Majkl578\NetteAddons\Doctrine2Identity\DI\IdentityExtension
 	# behaviors https://github.com/Zenify/DoctrineBehaviors#translatable
 	translatable: Zenify\DoctrineBehaviors\DI\TranslatableExtension
+
+events:
+    debugger: on

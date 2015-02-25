@@ -20,7 +20,7 @@
 		<div class="portlet light">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="icon-users"></i>
+					<i class="icon-briefcase"></i>
 					<span class="caption-subject bold uppercase">{_'Jobs'}</span>
 				</div>
 				<div class="actions">
@@ -64,7 +64,7 @@
 								</a>
 							</td>
 							<td>
-								{$job->description}
+								{$job->description|truncate:30}
 							</td>
 							<td>
 								<a n:href="Job:edit, $job->id">

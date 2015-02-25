@@ -40,7 +40,7 @@
 		"kdyby/annotations": "2.1.*@dev",
 		"kdyby/validator": "@dev",
 		"kdyby/doctrine-forms": "@dev",
-		"janmarek/webloader": "@dev",
+		"janmarek/webloader": "dev-master",
 		"natxet/CssMin": "dev-master",
 		"linkorb/jsmin-php": "~1.0.0",
 		"joseki/webloader-filters": "dev-master",

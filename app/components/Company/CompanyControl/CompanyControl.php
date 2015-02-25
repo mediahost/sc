@@ -183,7 +183,7 @@ class CompanyControl extends BaseControl
 
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	protected function setCompany(Company $company)
+	public function setCompany(Company $company)
 	{
 		$this->company = $company;
 		return $this;
