@@ -16,7 +16,7 @@ use Nette\Utils\ArrayHash;
 /**
  * Form with skills settings.
  */
-class SkillKnowsControl extends BaseControl
+class SkillsControl extends BaseControl
 {
 
 	/** @var Cv */
@@ -48,6 +48,7 @@ class SkillKnowsControl extends BaseControl
 		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairs([], 'name', [], 'id');
 		$levels = $form->addContainer('skillLevel');
 		$years = $form->addContainer('skillYear');
+		
 		foreach ($skills as $skill) {
 			$levels->addSlider($skill->id, $skill->name, $skillLevels)
 					->setColor('success')
@@ -129,9 +130,9 @@ class SkillKnowsControl extends BaseControl
 
 }
 
-interface ISkillKnowsControlFactory
+interface ISkillsControlFactory
 {
 
-	/** @return SkillKnowsControl */
+	/** @return SkillsControl */
 	function create();
 }

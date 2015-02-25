@@ -77,7 +77,7 @@ class User extends BaseEntity implements IIdentity
 	 */
 	protected $requiredRole;
 
-	/** @ORM\OneToOne(targetEntity="Candidate", fetch="LAZY", cascade={"persist", "remove"}) */
+	/** @ORM\OneToOne(targetEntity="Candidate", inversedBy="user", fetch="LAZY", cascade={"persist", "remove"}) */
 	protected $candidate;
 
 	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="user", fetch="LAZY", cascade={"persist"}) */

@@ -7,17 +7,16 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Job;
 use App\Model\Facade\CompanyFacade;
-use Exception;
 use Nette\Utils\ArrayHash;
 
 /**
  * Job info form
  */
-class JobControl extends BaseControl
+class BasicInfoControl extends BaseControl
 {
 
 	/** @var Job */
-	public $job;
+	private $job;
 
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -31,14 +30,7 @@ class JobControl extends BaseControl
 	public $companyFacade;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var bool */
-	private $canEditInfo = FALSE;
-
-	/** @var bool */
-	private $canEditSkills = FALSE;
-
+	// <editor-fold defaultstate="expanded" desc="variables">
 	// </editor-fold>
 
 	/** @return Form */
@@ -50,17 +42,11 @@ class JobControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
 
-//		if ($this->canEditInfo) {
-			$form->addText('name', 'Name')
-					->setAttribute('placeholder', 'Job title')
-					->setRequired('Please enter job\'s name.');
-			$form->addTextArea('description', 'Description')
-					->setAttribute('placeholder', 'Job description');
-//		}
-
-//		if ($this->canEditSkills) {
-			
-//		}
+		$form->addText('name', 'Name')
+				->setAttribute('placeholder', 'Job title')
+				->setRequired('Please enter job\'s name.');
+		$form->addTextArea('description', 'Description')
+				->setAttribute('placeholder', 'Job description');
 
 		$form->addSubmit('save', 'Save');
 
@@ -79,13 +65,8 @@ class JobControl extends BaseControl
 
 	protected function load(ArrayHash $values)
 	{
-//		if ($this->canEditInfo) {
-			$this->job->name = $values->name;
-			$this->job->description = $values->description;
-//		}
-//		if ($this->canEditSkills) {
-			
-//		}
+		$this->job->name = $values->name;
+		$this->job->description = $values->description;
 	}
 
 	/** @return array */
@@ -113,29 +94,12 @@ class JobControl extends BaseControl
 		return $this;
 	}
 
-	public function setCanEditInfo($value = TRUE)
-	{
-		$this->canEditInfo = $value;
-		return $this;
-	}
-
-	public function setCanEditSkills($value = TRUE)
-	{
-		$this->canEditSkills = $value;
-		return $this;
-	}
-
 	// </editor-fold>
 }
 
-class JobControlException extends Exception
-{
-	
-}
-
-interface IJobControlFactory
+interface IBasicInfoControlFactory
 {
 
-	/** @return JobControl */
+	/** @return BasicInfoControl */
 	function create();
 }

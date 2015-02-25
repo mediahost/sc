@@ -9,6 +9,7 @@ use App\Forms\Controls\Custom\DateInput;
 use App\Forms\Controls\Custom\DatePicker;
 use App\Forms\Controls\SelectBased\MultiSelect2;
 use App\Forms\Controls\SelectBased\MultiSelectBoxes;
+use App\Forms\Controls\SelectBased\NoUiRanger;
 use App\Forms\Controls\SelectBased\NoUiSlider;
 use App\Forms\Controls\SelectBased\Select2;
 use App\Forms\Controls\SelectBased\ServerValidatedMultiSelectBoxes;
@@ -120,6 +121,17 @@ trait AddControls
 	public function addSlider($name, $label = NULL, array $items = NULL)
 	{
 		return $this[$name] = new NoUiSlider($label, $items);
+	}
+
+	/**
+	 * Add NoUiRanger
+	 * @param type $name
+	 * @param type $label
+	 * @return NoUiRanger
+	 */
+	public function addRangeSlider($name, $label = NULL, array $items = NULL)
+	{
+		return $this[$name] = new NoUiRanger($label, $items);
 	}
 
 	/**

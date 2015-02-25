@@ -12,6 +12,7 @@ jQuery(document).ready(function () {
 	UIToastr.init();
 	Fullscreen.init();
 	TableManaged.init();
+	ConnectedNumbers.init();
 	ComponentsDropdowns.init();
 	ComponentsNoUiSliders.init();
 	PdfPreview.init();

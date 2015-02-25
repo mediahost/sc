@@ -2,7 +2,7 @@
 <!-- BEGIN SIDEBAR -->
 <div class="page-sidebar-wrapper">
 	<div class="page-sidebar navbar-collapse collapse">
-		
+
 		<!-- BEGIN SIDEBAR MENU -->
 		<ul n:class="page-sidebar-menu,
 					$designSettings->sidebarClosed ? page-sidebar-menu-closed,
@@ -13,14 +13,12 @@
 			data-slide-speed="200">
 			<li class="sidebar-toggler-wrapper">
 				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-				<div class="sidebar-toggler hide" data-url="{link :Ajax:Design:setSidebarClosed}">
-				</div>
+				<div class="sidebar-toggler hide" data-url="{link :Ajax:Design:setSidebarClosed}"></div>
 				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
 			</li>
 
 			<li class="sidebar-search-wrapper hidden-xs">
 				<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
-				
 				<form class="sidebar-search" action="/" method="POST">
 					<a href="javascript:;" class="remove">
 						<i class="icon-close"></i>
@@ -34,7 +32,7 @@
 				</form>
 				<!-- END RESPONSIVE QUICK SEARCH FORM -->
 			</li>
-			
+
 			<!-- BEGIN DASHBOARD -->
 			<li n:if="$user->isAllowed('dashboard', 'default')"
 				n:class="start, $presenter->isLinkCurrent('Dashboard:*') ? active">
@@ -48,46 +46,47 @@
 
 			<!-- BEGIN CANDIDATE -->
 			{if $user->isInRole('candidate')}
-			<li class="heading">
-				<h3 class="uppercase">{_'Candidate'}</h3>
-			</li>
-			<li n:if="$user->isAllowed('candidate', 'default')"
-				n:class="$presenter->isLinkCurrent('Candidate:*') ? active">
-				<a n:href="Candidate:">
-					<i class="fa fa-mortar-board"></i>
-					<span class="title">{_'Candidate'}</span><span class="selected"></span>
-					<span class="badge badge-success badge-roundless">{_'new'}</span>
-				</a>
-			</li>
-			<li n:if="$user->isAllowed('cvEditor', 'default') && $user->identity->candidate"
-				n:class="$presenter->isLinkCurrent('CvEditor:*') ? active">
-				<a n:href="CvEditor:">
-					<i class="fa fa-edit"></i>
-					<span class="title">{_'Cv Editor'}</span><span class="selected"></span>
-					<span class="badge badge-success badge-roundless">{_'new'}</span>
-				</a>
-				<ul class="sub-menu" n:if="count($user->identity->candidate->cvs)">
-					<li n:foreach="$user->identity->candidate->cvs as $cv"
-						n:class="($presenter->isLinkCurrent('CvEditor:', $cv->id) 
+				<li class="heading">
+					<h3 class="uppercase">{_'Candidate'}</h3>
+				</li>
+				<li n:if="$user->isAllowed('candidate', 'default')"
+					n:class="$presenter->isLinkCurrent('Candidate:*') ? active">
+					<a n:href="Candidate:">
+						<i class="fa fa-mortar-board"></i>
+						<span class="title">{_'Candidate'}</span><span class="selected"></span>
+					</a>
+				</li>
+				<li n:if="$user->isAllowed('cvEditor', 'default') && $user->identity->candidate"
+					n:class="$presenter->isLinkCurrent('CvEditor:*') ? active">
+					<a n:href="CvEditor:">
+						<i class="fa fa-edit"></i>
+						<span class="title">{_'Cv Editor'}</span><span class="selected"></span>
+						<span class="badge badge-success badge-roundless">{_'new'}</span>
+					</a>
+					<ul class="sub-menu" n:if="count($user->identity->candidate->cvs)">
+						<li n:foreach="$user->identity->candidate->cvs as $cv"
+							n:class="($presenter->isLinkCurrent('CvEditor:', $cv->id) 
 								|| $presenter->isLinkCurrent('CvEditor:skills', $cv->id)) ? active">
-						<a n:href="CvEditor:, $cv->id">
-							<i n:class="fa, $cv->isDefault ? fa-star : fa-star-o"></i>
+							<a n:href="CvEditor:, $cv->id">
+								<i n:class="fa, $cv->isDefault ? fa-star : fa-star-o"></i>
 							{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
 						</a>
 					</li>
 				</ul>
 			</li>
-			{/if}
-			<!-- END CANDIDATE -->
+		{/if}
+		<!-- END CANDIDATE -->
 
-			<!-- BEGIN COMPANY -->
-			{if $user->isInRole('company') && count($user->identity->allowedCompanies)}
+		<!-- BEGIN COMPANY -->
+		{if $user->isInRole('company') && count($user->identity->allowedCompanies)}
 			<li class="heading">
 				<h3 class="uppercase">{_'Company'}</h3>
 			</li>		
 			<li n:foreach="$user->identity->allowedCompanies as $allowedPermission"
 				n:if="$user->isAllowed('company', 'default')"
-				n:class="$presenter->isLinkCurrent('Company:default', $allowedPermission->company->id) || $presenter->isLinkCurrent('Company:users', $allowedPermission->company->id) ? active">
+				n:class="$presenter->isLinkCurrent('Company:default', $allowedPermission->company->id) || 
+						 $presenter->isLinkCurrent('Company:users', $allowedPermission->company->id) || 
+						 $presenter->isLinkCurrent('Company:jobs', $allowedPermission->company->id) ? active">
 				<a n:href="Company:default, $allowedPermission->company->id">
 					<i class="fa fa-building-o"></i>
 					<span class="title">{$allowedPermission->company->name}</span>
@@ -110,13 +109,20 @@
 							{_'Users'}
 						</a>
 					</li>
+					<li n:if="$allowedPermission->isAllowed('jobs', 'view')"
+						class="{ifCurrent Company:jobs, $allowedPermission->company->id} active{/ifCurrent}">
+						<a n:href="Company:jobs, $allowedPermission->company->id">
+							<i class="icon-briefcase"></i>
+							{_'Jobs'}
+						</a>
+					</li>
 				</ul>
 			</li>
-			{/if}
-			<!-- END COMPANY -->
-			
-			<!-- BEGIN ADMIN -->
-			{if $user->isAllowed('users')|| $user->isAllowed('companies')|| $user->isAllowed('skills')}
+		{/if}
+		<!-- END COMPANY -->
+
+		<!-- BEGIN ADMIN -->
+		{if $user->isAllowed('users')|| $user->isAllowed('companies')|| $user->isAllowed('skills')}
 			<li class="heading">
 				<h3 class="uppercase">{_'Admin'}</h3>
 			</li>
@@ -127,12 +133,25 @@
 					<span class="title">{_'Users'}</span><span class="selected"></span>
 				</a>
 			</li>
+			<li n:if="$user->isAllowed('cvs', 'default')"
+				n:class="$presenter->isLinkCurrent('Cvs:*') ? active">
+				<a n:href="Cvs:">
+					<i class="fa fa-file-text"></i>
+					<span class="title">{_'CVs'}</span><span class="selected"></span>
+				</a>
+			</li>
 			<li n:if="$user->isAllowed('companies', 'default')"
 				n:class="$presenter->isLinkCurrent('Companies:*') ? active">
 				<a n:href="Companies:">
 					<i class="fa fa-building"></i>
 					<span class="title">{_'Companies'}</span><span class="selected"></span>
-					<span class="badge badge-roundless badge-danger">{_'new'}</span>
+				</a>
+			</li>
+			<li n:if="$user->isAllowed('jobs', 'default')"
+				n:class="$presenter->isLinkCurrent('Jobs:*') ? active">
+				<a n:href="Jobs:showAll">
+					<i class="fa fa-briefcase"></i>
+					<span class="title">{_'Jobs'}</span><span class="selected"></span>
 				</a>
 			</li>
 			<li n:if="$user->isAllowed('skills', 'view')"
@@ -140,7 +159,6 @@
 				<a n:href="Skills:">
 					<i class="icon-book-open"></i>
 					<span class="title">{_'Skills'}</span><span class="selected"></span>
-					<span class="badge badge-success badge-roundless">{_'new'}</span>
 				</a>
 				<ul class="sub-menu">
 					<li n:class="$presenter->isLinkCurrent('Skills:*') ? active">
@@ -158,11 +176,11 @@
 					</li>
 				</ul>
 			</li>
-			{/if}
-			<!-- END ADMIN -->
-			
-			<!-- BEGIN SUPERADMIN -->
-			{if $user->isAllowed('examples')}
+		{/if}
+		<!-- END ADMIN -->
+
+		<!-- BEGIN SUPERADMIN -->
+		{if $user->isAllowed('examples')}
 			<li class="heading">
 				<h3 class="uppercase">{_'Superadmin'}</h3>
 			</li>
@@ -171,23 +189,21 @@
 				<a n:href="Examples:">
 					<i class="fa fa-life-ring"></i> 
 					<span class="title">{_'Examples'}</span><span class="selected"></span>
-					<span class="badge badge-info badge-roundless">{_'demo'}</span>
 				</a>
 				<ul class="sub-menu">
 					<li n:class="$presenter->isLinkCurrent('Examples:form') ? active">
 						<a n:href="Examples:form">
 							<i class="fa fa-file-text-o"></i>
-							<span class="badge badge-danger badge-roundless">{_'new'}</span>
 							{_'Form'}
 						</a>
 					</li>
 				</ul>
 			</li>
-			{/if}
-			<!-- END SUPERADMIN -->
-			
-			<!-- BEGIN TOGETHER AREA -->
-			{if $user->isAllowed('profile', 'default') && $isCompleteAccount}
+		{/if}
+		<!-- END SUPERADMIN -->
+
+		<!-- BEGIN TOGETHER AREA -->
+		{if $user->isAllowed('profile', 'default') && $isCompleteAccount}
 			<li class="heading">
 				<h3 class="uppercase">{_'Settings'}</h3>
 			</li>
@@ -213,10 +229,10 @@
 					</li>
 				</ul>
 			</li>
-			{/if}
-			<!-- END TOGETHER AREA -->
-		</ul>
-		<!-- END SIDEBAR MENU -->
-	</div>
+		{/if}
+		<!-- END TOGETHER AREA -->
+	</ul>
+	<!-- END SIDEBAR MENU -->
+</div>
 </div>
 <!-- END SIDEBAR -->

@@ -118,6 +118,17 @@ class CompanyPresenter extends BasePresenter
 		}
 	}
 
+	/**
+	 * @secured
+	 * @resource('company')
+	 * @privilege('jobs')
+	 */
+	public function actionJobs($id)
+	{
+		$this->checkCompanyId($id);
+		$this->template->addFilter('canEditUser', $this->canEditUser);
+	}
+
 	// <editor-fold defaultstate="expanded" desc="edit/delete priviledges">
 
 	/**

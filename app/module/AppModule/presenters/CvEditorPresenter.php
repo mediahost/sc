@@ -4,13 +4,14 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Cv\IBasicInfoControlFactory;
 use App\Components\Cv\ILivePreviewControlFactory;
-use App\Components\Cv\ISkillKnowsControlFactory;
+use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\LivePreviewControl;
-use App\Components\Cv\SkillKnowsControl;
+use App\Components\Cv\SkillsControl;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Skill;
 use App\Model\Facade\CvFacade;
 use App\TaggedString;
+use Exception;
 
 /**
  * 
@@ -26,8 +27,8 @@ class CvEditorPresenter extends BasePresenter
 	/** @var CvFacade @inject */
 	public $cvFacade;
 
-	/** @var ISkillKnowsControlFactory @inject */
-	public $iSkillKnowsControlFactory;
+	/** @var ISkillsControlFactory @inject */
+	public $iSkillsControlFactory;
 
 	/** @var IBasicInfoControlFactory @inject */
 	public $iBasicInfoControlFactory;
@@ -54,28 +55,39 @@ class CvEditorPresenter extends BasePresenter
 		$this->template->cv = $this->cv;
 	}
 
-	private function getCv()
+	private function getCv($id)
 	{
-		if (!$this->cv) {
-			$candidate = $this->user->identity->candidate;
-
-			if ($this->id) {
-				$cvDao = $this->em->getDao(Cv::getClassName());
-				$findedCv = $cvDao->find($this->id);
-
-				if (($findedCv && $candidate && $findedCv->candidate->id === $candidate->id) ||
-						($findedCv && $this->user->isAllowed('cvEditor', 'editForeign'))) {
-					$this->cv = $findedCv;
-				}
-			} else if ($candidate) { // pro kandidáta načti defaultní
-				$this->cv = $this->cvFacade->getDefaultCv($this->user->identity->candidate);
-			}
-		}
-		if (!$this->cv) {
-			$this->flashMessage('Requested CV wasn\'t found.');
+		try {
+			$this->setCv($id);
+		} catch (CvEditorPresenterException $ex) {
+			$this->flashMessage($ex->getMessage(), 'danger');
 			$this->redirect('Dashboard:');
 		}
 		return $this->cv;
+	}
+
+	private function setCv($id)
+	{
+		if ($this->cv) {
+			return;
+		}
+		$candidate = $this->user->identity->candidate;
+		
+		if ($id) {
+			$cvDao = $this->em->getDao(Cv::getClassName());
+			$findedCv = $cvDao->find($id);
+			$isOwnCv = $candidate && $findedCv->candidate->id === $candidate->id;
+			$canEditForeignCv = $findedCv && $this->user->isAllowed('cvEditor', 'editForeign');
+			if ($isOwnCv || $canEditForeignCv) {
+				$this->cv = $findedCv;
+			}
+		} else if ($candidate) { // pro kandidáta načti defaultní
+			$this->cv = $this->cvFacade->getDefaultCv($candidate);
+		}
+		
+		if (!$this->cv) {
+			throw new CvEditorPresenterException('Requested CV wasn\'t found.');
+		}
 	}
 
 	/**
@@ -85,7 +97,7 @@ class CvEditorPresenter extends BasePresenter
 	 */
 	public function actionDefault($id = NULL, $withPreview = TRUE)
 	{
-		$this->getCv();
+		$this->getCv($id);
 		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$this->template->showPreview = $withPreview;
 	}
@@ -97,12 +109,12 @@ class CvEditorPresenter extends BasePresenter
 	 */
 	public function actionSkills($id = NULL)
 	{
-		$this->getCv();
+		$this->getCv($id);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="forms">
 
-	/** @return SkillKnowsControl */
+	/** @return BasicInfoControl */
 	public function createComponentBasicInfoForm()
 	{
 		$control = $this->iBasicInfoControlFactory->create();
@@ -111,7 +123,7 @@ class CvEditorPresenter extends BasePresenter
 		$control->onAfterSave = function (Cv $saved) {
 			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
 			$this->flashMessage($message, 'success');
-			
+
 			if ($this->isAjax()) {
 				$this['cvPreview']->redrawControl();
 				$this->redrawControl();
@@ -122,10 +134,10 @@ class CvEditorPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return SkillKnowsControl */
+	/** @return SkillsControl */
 	public function createComponentSkillsForm()
 	{
-		$control = $this->iSkillKnowsControlFactory->create();
+		$control = $this->iSkillsControlFactory->create();
 		$control->setCv($this->cv);
 		$control->onAfterSave = function (Cv $saved) {
 			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
@@ -147,4 +159,9 @@ class CvEditorPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
+}
+
+class CvEditorPresenterException extends Exception
+{
+	
 }

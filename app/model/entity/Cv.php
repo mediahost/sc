@@ -58,17 +58,6 @@ class Cv extends BaseEntity
 	// <editor-fold defaultstate="collapsed" desc="setters">
 
 	/**
-	 * Set candidate and set is default by candidate cvs
-	 * @param Candidate $candidate
-	 * @return self
-	 */
-	public function setCandidate(Candidate $candidate)
-	{
-		$this->candidate = $candidate;
-		return $this;
-	}
-
-	/**
 	 * Add skillKnow or edit existing skillKnow (by ID or SkillID)
 	 * @param SkillKnow $skillKnow
 	 * @param bool $clear Clear all previous skills.

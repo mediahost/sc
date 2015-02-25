@@ -23,6 +23,7 @@ services:
 			- addResource('companies')
 			- addResource('job')
 			- addResource('jobs')
+			- addResource('cvs')
 
 			- addResource('users')
 			- addResource('skills')
@@ -40,7 +41,7 @@ services:
 
 			- allow('candidate', 'candidate', 'default')
 			- allow('candidate', 'cvEditor', ['default', 'skills'])
-			- allow('company', 'company', ['default', 'users', 'editUser'])
+			- allow('company', 'company', ['default', 'users', 'jobs', 'editUser'])
 			- allow('company', 'job', ['default', 'edit'])
 
 			- allow('admin', 'users')
@@ -53,5 +54,6 @@ services:
 			- allow('admin', 'jobs')
 			- allow('admin', 'job')
 			- allow('admin', 'cvEditor')
+			- allow('admin', 'cvs')
 
 			- allow('superadmin') # Full access for superadmin

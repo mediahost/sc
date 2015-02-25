@@ -27,6 +27,9 @@ class Candidate extends BaseEntity
 	
 	/** @ORM\OneToMany(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $cvs;
+
+	/** @ORM\OneToOne(targetEntity="User", mappedBy="candidate", fetch="LAZY") */
+	protected $user;
 	
 	public function __construct($name = NULL)
 	{

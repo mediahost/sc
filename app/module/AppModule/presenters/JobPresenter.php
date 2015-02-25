@@ -2,8 +2,9 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Job\IJobControlFactory;
-use App\Components\Job\JobControl;
+use App\Components\Job\BasicInfoControl;
+use App\Components\Job\IBasicInfoControlFactory;
+use App\Components\Job\ISkillsControlFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use App\TaggedString;
@@ -27,8 +28,11 @@ class JobPresenter extends BasePresenter
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var IJobControlFactory @inject */
-	public $iJobControlFactory;
+	/** @var IBasicInfoControlFactory @inject */
+	public $iJobBasicInfoControlFactory;
+
+	/** @var ISkillsControlFactory @inject */
+	public $iJobSkillsControlFactory;
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
@@ -72,9 +76,10 @@ class JobPresenter extends BasePresenter
 		if ($company) {
 			$this->job = new Job;
 			$this->job->company = $company;
-			$this['jobForm']->setJob($this->job);
+			$this['jobInfoForm']->setJob($this->job);
+			$this['jobSkillsForm']->setJob($this->job);
 		} else {
-			$this->flashMessage('Finded company isn\'t exists.', 'warning');
+			$this->flashMessage('Finded company isn\'t exists.', 'danger');
 			$this->redirect('Dashboard:');
 		}
 		$this->setView('edit');
@@ -89,9 +94,10 @@ class JobPresenter extends BasePresenter
 	{
 		$this->job = $this->jobDao->find($id);
 		if ($this->job) {
-			$this['jobForm']->setJob($this->job);
+			$this['jobInfoForm']->setJob($this->job);
+			$this['jobSkillsForm']->setJob($this->job);
 		} else {
-			$this->flashMessage('Finded job isn\'t exists.', 'warning');
+			$this->flashMessage('Finded job isn\'t exists.', 'danger');
 			$this->redirect('Dashboard:');
 		}
 	}
@@ -117,10 +123,22 @@ class JobPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="forms">
 
-	/** @return JobControl */
-	public function createComponentJobForm()
+	/** @return BasicInfoControl */
+	public function createComponentJobInfoForm()
 	{
-		$control = $this->iJobControlFactory->create();
+		$control = $this->iJobBasicInfoControlFactory->create();
+		$control->onAfterSave = function (Job $job) {
+			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
+			$this->flashMessage($message, 'success');
+			$this->redirect('Jobs:', $job->company->id);
+		};
+		return $control;
+	}
+
+	/** @return BasicInfoControl */
+	public function createComponentJobSkillsForm()
+	{
+		$control = $this->iJobSkillsControlFactory->create();
 		$control->onAfterSave = function (Job $job) {
 			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
 			$this->flashMessage($message, 'success');

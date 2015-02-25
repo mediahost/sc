@@ -77,8 +77,12 @@ services:
 		inject: yes
 
 	# Job
-	IJobControlFactory:
-		implement: App\Components\Job\IJobControlFactory
+	IJobBasicInfoControlFactory:
+		implement: App\Components\Job\IBasicInfoControlFactory
+		inject: yes
+
+	IJobSkillsControlFactory:
+		implement: App\Components\Job\ISkillsControlFactory
 		inject: yes
 
 	# Candidate
@@ -91,8 +95,8 @@ services:
 		implement: App\Components\Cv\IBasicInfoControlFactory
 		inject: yes
 
-	ICvSkillKnowsControlFactory:
-		implement: App\Components\Cv\ISkillKnowsControlFactory
+	ICvSkillsControlFactory:
+		implement: App\Components\Cv\ISkillsControlFactory
 		inject: yes
 
 	ILivePreviewControlFactory:

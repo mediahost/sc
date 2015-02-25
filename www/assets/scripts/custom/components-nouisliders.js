@@ -1,100 +1,299 @@
-var ComponentsNoUiSliders = function () {
+var ComponentsNoUiSliders = function ()
+{
 
-	var handleSkillSlider = function () {
-
-		$('select.noUiSlider').each(function () {
-			var select = $(this);
-			select.hide();
-
-			var options = select.find('option');
-			var optionsObject = {};
-			options.each(function () {
-				optionsObject[parseInt($(this).val())] = $(this).text();
-			});
-
-			var id = select.attr('id') + '_slider';
-			var slider = $('<div id="' + id + '">')
-					.addClass('noUi-control')
-					.addClass(select.attr('data-class'));
-			var isTooltip = (select.attr('data-tooltip')) === 'true';
-			var isTooltipFixed = (select.attr('data-tooltip-fixed')) === 'true';
-			var isPips = (select.attr('data-pips')) === 'true';
-
-			slider.noUiSlider({
-				direction: (Metronic.isRTL() ? "rtl" : "ltr"),
-				start: parseInt(options.filter(':selected').first().val()),
-				connect: "lower",
-				step: 1,
-				range: {
-					'min': 1,
-					'max': options.length
-				}
-			});
-
-			var getSelectedOption = function (options, value) {
-				return options.filter(function () {
-					return parseInt($(this).val()) === parseInt(value);
-				});
-			};
-
-			if (isTooltip) {
-				slider.addClass('hasTooltip');
-				slider.Link('lower').to('-inline-<div class="noUi-tooltip"></div>', function (value) {
-					var selectedOption = getSelectedOption(options, value);
-					$(this).html('<span>' + selectedOption.text() + '</span>');
-				});
-			}
-
-			if (isTooltipFixed) {
-				slider.addClass('hasTooltipFixed');
-				var fixedTooltip = $('<div id="' + id + '_tooltip">')
-						.addClass('noUi-tooltip-fixed');
-				fixedTooltip.text(getSelectedOption(options, select.val()).text());
-				select.after(fixedTooltip);
-			}
-
-			if (isPips) {
-				slider.addClass('hasPips');
-				slider.noUiSlider_pips({
-					mode: 'values',
-					values: Object.keys(optionsObject).map(function (val) {
-						return parseInt(val);
-					}),
-					density: 1,
-					stepped: false,
-					format: {
-						to: function (value) {
-							return optionsObject[value] || value;
-						}
-					}
-				});
-			}
-
-			select.after(slider);
-
-			slider.on({
-				slide: function (e, value) {
-					var selectedOption = getSelectedOption(options, value);
-					selectedOption.prop('selected', true);
-					fixedTooltip.text(selectedOption.text());
-				}
-			});
+	var handleSkillSlider = function () 
+	{
+		$('select.noUiSlider').each(function ()
+		{
+			var slider = new NoUiSlider($(this));
+			slider.buildSlider();
 		});
 	};
 
-	var handleSkillsRange = function () {
-
-
-
+	var handleSkillsRange = function () 
+	{
+		$('select.noUiRanger').each(function ()
+		{
+			var slider = new NoUiSlider($(this));
+			slider.buildRanger();
+		});
 	};
 
 	return {
 		//main function to initiate the module
-		init: function () {
-
+		init: function () 
+		{
 			handleSkillSlider();
 			handleSkillsRange();
+		},
+		'SLIDER': 'slider',
+		'RANGER': 'ranger'
+	};
+
+}();
+
+
+var NoUiSlider = function (select)
+{
+	// constants
+	this.SLIDER = 'slider';
+	this.RANGER = 'ranger';
+
+	// variables
+	this.type;
+	this.select = select;
+	this.selectProperties = {};
+	this.selectOptions = {};
+	this.selectOptionsObject = {};
+	this.selectMinValue = null;
+	this.selectMaxValue = null;
+	this.slider = null;
+	this.sliderOptions = {};
+	this.fixedTooltip;
+
+	this.build = function (type)
+	{
+		this.setType(type);
+
+		this.setSelect();
+		this.select.hide();
+
+		this.createSlider();
+		this.setSliderRange(this.selectMinValue, this.selectMaxValue);
+		this.setSliderStart(this.getStartOptionValue(), this.getEndOptionValue());
+
+		this.slider.noUiSlider(this.sliderOptions);
+		this.select.after(this.slider);
+
+		this.extendTooltips();
+		this.extendPips();
+
+		this.slider.on({
+			slide: this.sliderOnSlide
+		});
+	};
+
+	this.setType = function (type)
+	{
+		switch (type) {
+			case this.SLIDER:
+			case this.RANGER:
+				this.type = type;
+				break;
+		}
+	};
+
+	this.setSelect = function ()
+	{
+		this.setProperties();
+		this.setSelectOptions();
+	};
+
+	this.setProperties = function ()
+	{
+		this.selectProperties.id = this.select.attr('id') + '-slider';
+		this.selectProperties.dataClass = this.select.attr('data-class');
+		this.selectProperties.isTooltip = (this.select.attr('data-tooltip')) === 'true';
+		this.selectProperties.isTooltipFixed = (this.select.attr('data-tooltip-fixed')) === 'true';
+		this.selectProperties.isPips = (this.select.attr('data-pips')) === 'true';
+	};
+
+	this.setSelectOptions = function ()
+	{
+		this.selectOptions = this.select.find('option');
+		var selectOptionsObject = {};
+		this.selectOptions.each(function (key, value) {
+			selectOptionsObject[parseInt($(value).val())] = $(value).text();
+		});
+		this.selectOptionsObject = selectOptionsObject;
+		this.setSelectValues();
+	};
+
+	this.setSelectValues = function ()
+	{
+		this.selectMinValue = parseInt(this.selectOptions.first().val());
+		this.selectMaxValue = parseInt(this.selectOptions.last().val());
+	};
+
+	this.createSlider = function ()
+	{
+		this.slider = $('<div id="' + this.selectProperties.id + '">')
+				.addClass('noUi-control')
+				.addClass(this.selectProperties.dataClass)
+				.attr('data-for', this.select.attr('id'))
+				.attr('data-type', this.type);
+		this.initSliderOptions();
+	};
+
+	this.initSliderOptions = function ()
+	{
+		this.sliderOptions.direction = (Metronic.isRTL() ? "rtl" : "ltr");
+		this.sliderOptions.step = 1;
+		switch (this.type) {
+			case this.SLIDER:
+				this.sliderOptions.connect = 'lower';
+				break;
+			case this.RANGER:
+				this.sliderOptions.handles = 2;
+				this.sliderOptions.connect = true;
+				break;
+		}
+	};
+
+	this.setSliderRange = function (min, max)
+	{
+		this.sliderOptions.range = {
+			'min': min,
+			'max': max
+		};
+	};
+
+	this.setSliderStart = function (start, end)
+	{
+		var startValue = parseInt(start);
+		var endValue = parseInt(end);
+		switch (this.type) {
+			case this.SLIDER:
+				this.sliderOptions.start = startValue;
+				this.selectSliderValue(this.sliderOptions.start);
+				break;
+			case this.RANGER:
+				this.sliderOptions.start = [startValue, endValue];
+				this.selectRangeValue(this.sliderOptions.start);
+				break;
+		}
+	};
+
+	this.getStartOptionValue = function ()
+	{
+		var value = this.selectOptions.filter(':selected').first().val();
+		return value ? value : this.selectMinValue;
+	};
+
+	this.getEndOptionValue = function ()
+	{
+		var value = this.selectOptions.filter(':selected').last().val();
+		return value ? value : this.selectMaxValue;
+	};
+
+	this.getSelectedOptionFromValue = function (value)
+	{
+		return this.selectOptions.filter(function () {
+			return parseInt($(this).val()) === parseInt(value);
+		});
+	};
+
+	this.getSelectedOptionFromValues = function (values)
+	{
+		var firstValue = parseInt(values[0]);
+		var secondValue = parseInt(values[1]);
+		return this.selectOptions.filter(function () {
+			var itemValue = parseInt($(this).val());
+			return itemValue === firstValue || itemValue === secondValue;
+		});
+	};
+
+	this.deselectAllOptions = function ()
+	{
+		this.selectOptions.each(function (key, value) {
+			$(value).prop('selected', false);
+		});
+	};
+
+	this.getPipsValuesFromOptionObject = function ()
+	{
+		return Object.keys(this.selectOptionsObject).map(function (val) {
+			return parseInt(val);
+		});
+	};
+
+	this.selectSliderValue = function (value)
+	{
+		if (this.type === this.SLIDER) {
+			var selectedOption = this.getSelectedOptionFromValue(value);
+			selectedOption.prop('selected', true);
+			if (this.selectProperties.isTooltipFixed) {
+				var fixedTooltip = $('#' + this.selectProperties.id + '-tooltip');
+				fixedTooltip.text(selectedOption.text());
+			}
+		}
+	};
+
+	this.selectRangeValue = function (value)
+	{
+		if (this.type === this.RANGER) {
+			var selectedOptions = this.getSelectedOptionFromValues(value);
+			this.deselectAllOptions();
+			selectedOptions.each(function (key, value) {
+				$(value).prop('selected', true);
+			});
+		}
+	};
+
+	// extends
+	this.extendTooltips = function ()
+	{
+		if (this.selectProperties.isTooltip) {
+			this.slider.addClass('hasTooltip');
+			var instance = this;
+			this.slider.Link('lower').to('-inline-<div class="noUi-tooltip"></div>', function (value) {
+				var selectedOption = instance.getSelectedOptionFromValue(value);
+				$(this).html('<span>' + selectedOption.text() + '</span>');
+			});
+			this.slider.Link('upper').to('-inline-<div class="noUi-tooltip"></div>', function (value) {
+				var selectedOption = instance.getSelectedOptionFromValue(value);
+				$(this).html('<span>' + selectedOption.text() + '</span>');
+			});
 		}
 
+		if (this.selectProperties.isTooltipFixed) {
+			this.slider.addClass('hasTooltipFixed');
+			this.fixedTooltip = $('<div id="' + this.selectProperties.id + '-tooltip">')
+					.addClass('noUi-tooltip-fixed');
+			var selectedOption = this.getSelectedOptionFromValue(this.select.val());
+			this.fixedTooltip.text(selectedOption.text());
+			this.select.after(this.fixedTooltip);
+		}
 	};
-}();
+
+	this.extendPips = function ()
+	{
+		if (this.selectProperties.isPips) {
+			this.slider.addClass('hasPips');
+
+			var instance = this;
+			this.slider.noUiSlider_pips({
+				mode: 'values',
+				values: this.getPipsValuesFromOptionObject(),
+				density: 1,
+				stepped: false,
+				format: {to: function (value) {
+						return instance.selectOptionsObject[value] || value;
+					}}
+			});
+		}
+	};
+
+	// events
+	this.sliderOnSlide = function (e, value)
+	{
+		var selectId = $(this).attr('data-for');
+		var type = $(this).attr('data-type');
+		var sliderInstance = new NoUiSlider($('#' + selectId));
+		sliderInstance.setSelect();
+		sliderInstance.setType(type);
+		sliderInstance.selectSliderValue(value);
+		sliderInstance.selectRangeValue(value);
+	};
+
+};
+
+NoUiSlider.prototype.buildSlider = function ()
+{
+	this.build(this.SLIDER);
+};
+
+NoUiSlider.prototype.buildRanger = function ()
+{
+	this.build(this.RANGER);
+};
