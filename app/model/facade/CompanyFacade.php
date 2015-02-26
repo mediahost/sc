@@ -6,6 +6,7 @@ use App\Model\Entity\Company;
 use App\Model\Entity\CompanyPermission;
 use App\Model\Entity\CompanyRole;
 use App\Model\Entity\User;
+use App\Model\Repository\CompanyPermissionRepository;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
@@ -25,7 +26,7 @@ class CompanyFacade extends Object
 	/** @var EntityDao */
 	private $companyRoleDao;
 
-	/** @var EntityDao */
+	/** @var CompanyPermissionRepository */
 	private $companyPermissionDao;
 
 	/** @var EntityDao */
@@ -217,18 +218,7 @@ class CompanyFacade extends Object
 	{
 		$findedCompany = $this->find($company);
 		$findedRole = $role instanceof CompanyRole ? $role : $this->findRoleByName($role);
-
-		$qb = $this->em->createQueryBuilder();
-		$selection = $onlyIds ? 'IDENTITY(p.user)' : 'p';
-		$permissions = $qb->select($selection)
-				->from(CompanyPermission::getClassName(), 'p')
-				->innerJoin('p.roles', 'r')
-				->where('p.company = :company')
-				->andWhere('r.id = :roleid')
-				->setParameter('company', $findedCompany)
-				->setParameter('roleid', $findedRole->id)
-				->getQuery()
-				->getResult();
+		$permissions = $this->companyPermissionDao->findByCompanyAndRoleId($findedCompany, $findedRole->id, $onlyIds);
 		$users = [];
 		foreach ($permissions as $permission) {
 			$users[] = $onlyIds ? current($permission) : $permission->user;

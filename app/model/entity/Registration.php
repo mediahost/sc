@@ -2,13 +2,14 @@
 
 namespace App\Model\Entity;
 
+use App\Model\Repository\RegistrationRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Security\Passwords;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="RegistrationRepository")
  *
  * @property string $mail
  * @property string $name

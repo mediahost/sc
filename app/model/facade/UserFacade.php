@@ -3,7 +3,6 @@
 namespace App\Model\Facade;
 
 use App\Extensions\Settings\Model\Service\ExpirationService;
-use App\Model\Entity\CompanyPermission;
 use App\Model\Entity\Facebook;
 use App\Model\Entity\PageConfigSettings;
 use App\Model\Entity\PageDesignSettings;
@@ -11,6 +10,7 @@ use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
+use App\Model\Repository\UserRepository;
 use DateTime;
 use InvalidArgumentException;
 use Kdyby\Doctrine\EntityDao;
@@ -33,7 +33,7 @@ class UserFacade extends Object
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
 
-	/** @var EntityDao */
+	/** @var UserRepository */
 	private $userDao;
 
 	/** @var EntityDao */
@@ -147,12 +147,7 @@ class UserFacade extends Object
 	 */
 	private function clearRegistrations($mail)
 	{
-		$qb = $this->em->createQueryBuilder();
-		return $qb->delete(Registration::getClassName(), 'r')
-						->where('r.mail = ?1')
-						->setParameter(1, $mail)
-						->getQuery()
-						->execute();
+		return $this->registrationDao->deleteByMail($mail);
 	}
 
 	// </editor-fold>
@@ -173,17 +168,7 @@ class UserFacade extends Object
 	 */
 	public function getUserMailsInRole(Role $role)
 	{
-		$qb = $this->em->createQueryBuilder();
-		$query = $qb->select('u.mail', 'u.id')
-				->from(User::getClassName(), 'u', 'u.id')
-				->innerJoin('u.roles', 'r')
-				->where('r.id = :roleid')
-				->setParameter('roleid', $role->id)
-				->getQuery();
-
-		return array_map(function ($row) {
-			return reset($row);
-		}, $query->getArrayResult());
+		return $this->userDao->findPairsByRoleId($role->id, 'mail');
 	}
 
 	// </editor-fold>
