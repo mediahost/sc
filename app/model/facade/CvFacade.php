@@ -85,7 +85,7 @@ class CvFacade extends Object
 
 	public function findJobs(Cv $cv)
 	{
-		
+		return [];
 	}
 
 	// </editor-fold>

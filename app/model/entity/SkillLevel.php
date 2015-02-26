@@ -13,6 +13,8 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  */
 class SkillLevel extends BaseEntity
 {
+	
+	const IRELEVANT_ID = 1;
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -33,6 +35,11 @@ class SkillLevel extends BaseEntity
 	public function __toString()
 	{
 		return (string) $this->name;
+	}
+	
+	public function isRelevant()
+	{
+		return (bool) ($this->id !== self::IRELEVANT_ID);
 	}
 
 }

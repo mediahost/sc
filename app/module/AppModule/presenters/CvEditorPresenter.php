@@ -119,6 +119,7 @@ class CvEditorPresenter extends BasePresenter
 	public function actionJobs($id = NULL)
 	{
 		$this->getCv($id);
+		$this->template->matchedJobs = $this->cvFacade->findJobs($this->cv);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="forms">

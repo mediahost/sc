@@ -43,6 +43,11 @@ class SkillKnow extends BaseEntity
 		return $this->skill . ':' . $this->level . ':' . $this->years;
 	}
 	
+	public function isChosen()
+	{
+		return $this->level->isRelevant();
+	}
+	
 	/**
 	 * Import all data (except id) from inserted item
 	 * @param SkillKnow $imported
