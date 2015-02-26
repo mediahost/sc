@@ -56,7 +56,7 @@ class RoleFacade extends Object
 	 */
 	public function getRoles()
 	{
-		return $this->roleDao->findPairs([], 'name', [], 'id');
+		return $this->roleDao->findPairs('name');
 	}
 
 	// </editor-fold>
@@ -79,7 +79,7 @@ class RoleFacade extends Object
 	 */
 	public function findLowerRoles(array $roles, $includeMax = FALSE)
 	{
-		$allRoles = $this->roleDao->findPairs('name', 'id'); // expect roles by priority (first is the lowest)
+		$allRoles = $this->roleDao->findPairs('name'); // expect roles by priority (first is the lowest)
 		$lowerRoles = [];
 		$maxRole = Role::getMaxRole($roles);
 		if (in_array($maxRole->name, $allRoles)) {

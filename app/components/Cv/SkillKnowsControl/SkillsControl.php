@@ -45,7 +45,7 @@ class SkillsControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer);
 
 		$skills = $this->em->getDao(Skill::getClassName())->findAll();
-		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairs([], 'name', [], 'id');
+		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairs('name');
 		$levels = $form->addContainer('skillLevel');
 		$years = $form->addContainer('skillYear');
 		

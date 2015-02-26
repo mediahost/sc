@@ -82,7 +82,7 @@ class CompanyControl extends BaseControl
 		}
 
 		if ($this->canEditUsers) {
-			$users = $this->userFacade->getUsersInRole($this->roleFacade->findByName(Role::COMPANY));
+			$users = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
 			$admins = $form->addMultiSelect2('admins', 'Administrators', $users)
 					->setRequired('Company must have administrator');
 			$managers = $form->addMultiSelect2('managers', 'Managers', $users);

@@ -101,7 +101,7 @@ class CompanyFacade extends Object
 	 */
 	public function getCompanies()
 	{
-		return $this->companyDao->findPairs([], 'name', [], 'id');
+		return $this->companyDao->findPairs('name');
 	}
 
 	/**
@@ -110,7 +110,7 @@ class CompanyFacade extends Object
 	 */
 	public function getRoles()
 	{
-		return $this->companyRoleDao->findPairs([], 'name', [], 'id');
+		return $this->companyRoleDao->findPairs('name');
 	}
 
 	// </editor-fold>

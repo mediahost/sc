@@ -45,7 +45,7 @@ class SkillCategoryControl extends BaseControl
 				->setRequired('Please fill name');
 
 		$skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
-		$parents = $skillCategoryDao->findPairs('name', 'id');
+		$parents = $skillCategoryDao->findPairs('name');
 		if ($this->skillCategory) {
 			unset($parents[$this->skillCategory->id]);
 		}

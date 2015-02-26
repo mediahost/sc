@@ -164,14 +164,14 @@ class UserFacade extends Object
 	 */
 	public function getUsers()
 	{
-		return $this->userDao->findPairs([], 'mail', [], 'id');
+		return $this->userDao->findPairs('mail');
 	}
 
 	/**
 	 * Get all users in inserted role
 	 * @return array
 	 */
-	public function getUsersInRole(Role $role)
+	public function getUserMailsInRole(Role $role)
 	{
 		$qb = $this->em->createQueryBuilder();
 		$query = $qb->select('u.mail', 'u.id')
