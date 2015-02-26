@@ -7,6 +7,7 @@ use App\Components\Job\IBasicInfoControlFactory;
 use App\Components\Job\ISkillsControlFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
+use App\Model\Facade\JobFacade;
 use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
@@ -27,6 +28,9 @@ class JobPresenter extends BasePresenter
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	/** @var JobFacade @inject */
+	public $jobFacade;
 
 	/** @var IBasicInfoControlFactory @inject */
 	public $iJobBasicInfoControlFactory;
@@ -64,6 +68,7 @@ class JobPresenter extends BasePresenter
 		$job = $this->jobDao->find($id);
 		if ($job) {
 			$this->template->job = $job;
+			$this->template->matchedCvs = $this->jobFacade->findCvs($job);
 		} else {
 			$this->flashMessage('Finded job isn\'t exists.', 'danger');
 			$this->redirect('Dashboard:');

@@ -7,13 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Model\Repository\CvRepository")
  *
  * @property string $name
  * @property integer $lastOpenedPreviewPage Get last opened preview page
  * @property integer $lastUsedPreviewScale Get last used preview scale
  * @property boolean $isDefault
- * @property ArrayCollection $skillKnows
+ * @property-read ArrayCollection $skillKnows
  * @property-write SkillKnow $skillKnow
  * @property Candidate $candidate
  */

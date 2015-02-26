@@ -24,9 +24,9 @@ class SkillKnowRequest extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="Job", inversedBy="skillRequests") */
 	protected $job;
 
-	/** 
+	/**
 	 * @ORM\ManyToOne(targetEntity="Skill")
-     * @ORM\JoinColumn(onDelete="CASCADE") 
+	 * @ORM\JoinColumn(onDelete="CASCADE") 
 	 */
 	protected $skill;
 
@@ -53,7 +53,7 @@ class SkillKnowRequest extends BaseEntity
 				$this->levelFrom . '-' . $this->levelTo . ':' .
 				$this->yearsFrom . '-' . $this->yearsTo . ':';
 	}
-	
+
 	/**
 	 * Import all data (except id) from inserted item
 	 * @param SkillKnowRequest $imported
@@ -67,22 +67,27 @@ class SkillKnowRequest extends BaseEntity
 		$this->job = $imported->job;
 		return $this;
 	}
-	
+
 	public function setLevels(SkillLevel $from, SkillLevel $to)
 	{
 		$this->levelFrom = $from;
 		$this->levelTo = $to;
 	}
-	
+
 	public function setYears($from, $to)
 	{
 		$this->yearsFrom = $from ? (int) $from : 0;
 		$this->yearsTo = $to ? (int) $to : 0;
 	}
-	
+
 	public function isYearsMather()
 	{
-		return !$this->yearsFrom && !$this->yearsTo;
+		return (bool) ($this->yearsFrom || $this->yearsTo);
+	}
+
+	public function hasOneLevel()
+	{
+		return (bool) ($this->levelFrom === $this->levelTo);
 	}
 
 }

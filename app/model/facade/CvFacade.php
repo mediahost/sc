@@ -9,7 +9,6 @@ use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
 /**
- * CvFacade
  * TODO: Test it
  */
 class CvFacade extends Object
@@ -42,7 +41,7 @@ class CvFacade extends Object
 		$cv->isDefault = !$cv->candidate->hasDefaultCv();
 		return $this->cvDao->save($cv);
 	}
-	
+
 	/**
 	 * Set Cv as default and reset other default CV
 	 * @param Cv $cv
@@ -83,6 +82,12 @@ class CvFacade extends Object
 
 	// </editor-fold>
 	// <editor-fold defaultstate="expanded" desc="finders">
+
+	public function findJobs(Cv $cv)
+	{
+		
+	}
+
 	// </editor-fold>
 	// <editor-fold defaultstate="expanded" desc="checkers">
 	// </editor-fold>

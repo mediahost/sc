@@ -11,6 +11,8 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property Company $company
  * @property string $name
  * @property string $description
+ * @property-read ArrayCollection $skillRequests
+ * @property-write SkillKnowRequest $skillRequest
  */
 class Job extends BaseEntity
 {
