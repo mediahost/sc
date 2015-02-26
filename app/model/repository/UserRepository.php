@@ -2,6 +2,7 @@
 
 namespace App\Model\Repository;
 
+use Exception;
 use Kdyby\Doctrine\EntityRepository;
 
 class UserRepository extends EntityRepository
@@ -13,13 +14,13 @@ class UserRepository extends EntityRepository
 			$key = $orderBy;
 			$orderBy = [];
 		}
-		
+
 		if (empty($key)) {
 			$key = $this->getClassMetadata()->getSingleIdentifierFieldName();
 		}
-		
-		$qb = $this->getEntityManager()->createQueryBuilder();
-		$query = $qb->select("e.$value", "e.$key")
+
+		$query = $this->createQueryBuilder()
+				->select("e.$value", "e.$key")
 				->from($this->getEntityName(), 'e', 'e.' . $key)
 				->innerJoin('e.roles', 'r')
 				->where('r.id = :roleid')
@@ -30,8 +31,7 @@ class UserRepository extends EntityRepository
 			return array_map(function ($row) {
 				return reset($row);
 			}, $query->getArrayResult());
-
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw $this->handleException($e, $query);
 		}
 	}

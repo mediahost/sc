@@ -10,9 +10,9 @@ class CompanyPermissionRepository extends EntityRepository
 
 	public function findByCompanyAndRoleId(Company $findedCompany, $roleId, $onlyIds = FALSE)
 	{
-		$qb = $this->getEntityManager()->createQueryBuilder();
 		$selection = $onlyIds ? 'IDENTITY(p.user)' : 'p';
-		$permissions = $qb->select($selection)
+		$permissions = $this->createQueryBuilder()
+				->select($selection)
 				->from($this->getEntityName(), 'p')
 				->innerJoin('p.roles', 'r')
 				->where('p.company = :company')
