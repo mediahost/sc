@@ -12,8 +12,9 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property Skill $skill
  * @property SkillLevel $levelFrom
  * @property SkillLevel $levelTo
- * @property int $yearsFrom
- * @property int $yearsTo
+ * @property-read int $yearsFrom
+ * @property-read int $yearsTo
+ * @property-read int $yearsTo
  */
 class SkillKnowRequest extends BaseEntity
 {
@@ -35,10 +36,10 @@ class SkillKnowRequest extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="SkillLevel") */
 	protected $levelTo;
 
-	/** @ORM\Column(type="integer", nullable=true) */
+	/** @ORM\Column(type="integer") */
 	protected $yearsFrom;
 
-	/** @ORM\Column(type="integer", nullable=true) */
+	/** @ORM\Column(type="integer") */
 	protected $yearsTo;
 
 	public function __construct()
@@ -62,17 +63,26 @@ class SkillKnowRequest extends BaseEntity
 	{
 		$this->levelFrom = $imported->levelFrom;
 		$this->levelTo = $imported->levelTo;
-		$this->yearsFrom = $imported->yearsFrom;
-		$this->yearsTo = $imported->yearsTo;
+		$this->setYears($imported->yearsFrom, $imported->yearsTo);
 		$this->job = $imported->job;
 		return $this;
 	}
 	
-	public function yearsDoesntMather()
+	public function setLevels(SkillLevel $from, SkillLevel $to)
 	{
-		$this->yearsFrom = NULL;
-		$this->yearsTo = NULL;
-		return $this;
+		$this->levelFrom = $from;
+		$this->levelTo = $to;
+	}
+	
+	public function setYears($from, $to)
+	{
+		$this->yearsFrom = $from ? (int) $from : 0;
+		$this->yearsTo = $to ? (int) $to : 0;
+	}
+	
+	public function isYearsMather()
+	{
+		return !$this->yearsFrom && !$this->yearsTo;
 	}
 
 }

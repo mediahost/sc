@@ -2,7 +2,6 @@
 
 namespace App\Model\Entity;
 
-use App\Model\Repository\UserRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +10,7 @@ use Nette\Security\IIdentity;
 use Nette\Security\Passwords;
 
 /**
- * @ORM\Entity(repositoryClass="UserRepository")
+ * @ORM\Entity(repositoryClass="App\Model\Repository\UserRepository")
  *
  * @property string $mail
  * @property string $hash

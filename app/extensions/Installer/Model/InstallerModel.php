@@ -67,9 +67,11 @@ class InstallerModel extends Object
 		foreach ($levels as $levelId => $levelName) {
 			$skillLevel = $skillLevelDao->find($levelId);
 			if (!$skillLevel) {
-				$skillLevel = new SkillLevel($levelName);
-				$skillLevelDao->save($skillLevel);
+				$skillLevel = new SkillLevel;
 			}
+			$skillLevel->name = $levelName;
+			$skillLevel->priority = $levelId;
+			$skillLevelDao->save($skillLevel);
 		}
 		return TRUE;
 	}

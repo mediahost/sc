@@ -49,7 +49,7 @@ class SkillsControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer);
 
 		$skills = $this->em->getDao(Skill::getClassName())->findAll();
-		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairs('name');
+		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairsName();
 		$ranges = $form->addContainer('skillRange');
 		$yearsMin = $form->addContainer('skillMinYear');
 		$yearsMax = $form->addContainer('skillMaxYear');
@@ -103,14 +103,9 @@ class SkillsControl extends BaseControl
 			if (isset($values->skillRange->{$skill->id})) {
 				$levelFromId = reset($values->skillRange->{$skill->id});
 				$levelToId = end($values->skillRange->{$skill->id});
-				$newSkillRequest->levelFrom = $skilLevelDao->find($levelFromId);
-				$newSkillRequest->levelTo = $skilLevelDao->find($levelToId);
+				$newSkillRequest->setLevels($skilLevelDao->find($levelFromId), $skilLevelDao->find($levelToId));
 			}
-			$newSkillRequest->yearsFrom = isset($values->skillMinYear->{$skill->id}) ? $values->skillMinYear->{$skill->id} : 0;
-			$newSkillRequest->yearsTo = isset($values->skillMaxYear->{$skill->id}) ? $values->skillMaxYear->{$skill->id} : 0;
-			if (!$newSkillRequest->yearsFrom && !$newSkillRequest->yearsTo) {
-				$newSkillRequest->yearsDoesntMather();
-			}
+			$newSkillRequest->setYears($values->skillMinYear->{$skill->id}, $values->skillMaxYear->{$skill->id});
 
 			$this->job->skillRequest = $newSkillRequest;
 		}
@@ -129,8 +124,8 @@ class SkillsControl extends BaseControl
 				$skillRequest->levelFrom->id,
 				$skillRequest->levelTo->id,
 			];
-			$values['skillMinYear'][$skillRequest->skill->id] = $skillRequest->yearsFrom ? $skillRequest->yearsFrom : 0;
-			$values['skillMaxYear'][$skillRequest->skill->id] = $skillRequest->yearsTo ? $skillRequest->yearsTo : 0;
+			$values['skillMinYear'][$skillRequest->skill->id] = $skillRequest->yearsFrom;
+			$values['skillMaxYear'][$skillRequest->skill->id] = $skillRequest->yearsTo;
 		}
 		return $values;
 	}

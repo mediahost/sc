@@ -2,7 +2,6 @@
 
 namespace App\Model\Entity;
 
-use App\Model\Repository\CompanyPermissionRepository;
 use App\Security\CompanyPermission as Authorizator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +9,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Security\IAuthorizator;
 
 /**
- * @ORM\Entity(repositoryClass="CompanyPermissionRepository")
+ * @ORM\Entity(repositoryClass="App\Model\Repository\CompanyPermissionRepository")
  *
  * @property User $user
  * @property Company $company

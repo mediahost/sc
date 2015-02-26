@@ -6,20 +6,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
- * Skill level entity
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Model\Repository\SkillLevelRepository")
  * 
  * @property string $name
+ * @property int $priority
  */
 class SkillLevel extends BaseEntity
 {
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
-	/**
-	 * @ORM\Column(type="string", nullable=false)
-	 */
+	/** @ORM\Column(type="string")*/
 	protected $name;
+
+	/** @ORM\Column(type="integer")*/
+	protected $priority;
 
 	public function __construct($name = NULL)
 	{
