@@ -6,4 +6,6 @@ interface IFinder
 {
 
 	public function getQuery();
+
+	public function getResult();
 }

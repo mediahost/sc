@@ -78,12 +78,6 @@ class FinderCvsBySkillRequests extends Finder
 		}
 	}
 
-	public function getQuery()
-	{
-		$this->build();
-		return $this->qb->getQuery();
-	}
-
 	protected function build()
 	{
 		$this->buildJoins();
