@@ -40,6 +40,9 @@ class Cv extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="Candidate", inversedBy="cvs") */
 	protected $candidate;
 
+	/** @var ArrayCollection */
+	private $settedSkillKnows;
+
 	public function __construct($name = NULL)
 	{
 		if ($name) {
@@ -60,22 +63,30 @@ class Cv extends BaseEntity
 	/**
 	 * Add skillKnow or edit existing skillKnow (by ID or SkillID)
 	 * @param SkillKnow $skillKnow
-	 * @param bool $clear Clear all previous skills.
 	 * @return self
 	 */
-	public function setSkillKnow(SkillKnow $skillKnow, $clear = FALSE)
+	public function setSkillKnow(SkillKnow $skillKnow)
 	{
-		if ($clear) {
-			$this->skillKnows->clear();
-			$existedSkill = FALSE;
-		} else {
-			$existedSkill = $this->getExistedSkill($skillKnow);
+		if ($skillKnow->isEmpty()) {
+			return $this;
 		}
+
+		$existedSkill = $this->getExistedSkill($skillKnow);
 		if ($existedSkill) {
-			$existedSkill->import($skillKnow);
+			$skillKnow = $existedSkill->import($skillKnow);
 		} else if (!$this->skillKnows->contains($skillKnow)) {
 			$this->skillKnows->add($skillKnow);
 		}
+		$this->addSkillAsSetted($skillKnow);
+		return $this;
+	}
+
+	private function addSkillAsSetted(SkillKnow $skillKnow)
+	{
+		if (!$this->settedSkillKnows) {
+			$this->settedSkillKnows = new ArrayCollection;
+		}
+		$this->settedSkillKnows->add($skillKnow);
 		return $this;
 	}
 
@@ -83,6 +94,17 @@ class Cv extends BaseEntity
 	public function clearSkills()
 	{
 		$this->skillKnows->clear();
+		$this->settedSkillKnows->clear();
+		return $this;
+	}
+
+	public function removeOldSkillKnows()
+	{
+		$this->skillKnows->map(function (SkillKnow $item) {
+			if (!$this->settedSkillKnows->contains($item)) {
+				$this->skillKnows->removeElement($item);
+			}
+		});
 		return $this;
 	}
 

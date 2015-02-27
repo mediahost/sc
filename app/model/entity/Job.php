@@ -2,11 +2,13 @@
 
 namespace App\Model\Entity;
 
+use App\Model\Repository\JobRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="JobRepository")
  *
  * @property Company $company
  * @property string $name
@@ -31,17 +33,16 @@ class Job extends BaseEntity
 	/** @ORM\OneToMany(targetEntity="SkillKnowRequest", mappedBy="job", cascade={"persist", "remove"}, orphanRemoval=true) */
 	protected $skillRequests;
 
+	/** @var ArrayCollection */
+	private $settedSkillRequests;
+
 	public function __construct($name = NULL)
 	{
-		parent::__construct();
 		if ($name) {
 			$this->name = $name;
 		}
-	}
-
-	public function isNew()
-	{
-		return $this->id === NULL;
+		parent::__construct();
+		$this->skillRequests = new ArrayCollection;
 	}
 
 	/** @return string */
@@ -55,22 +56,30 @@ class Job extends BaseEntity
 	/**
 	 * Add skillRequest or edit existing skillRequest (by ID or SkillID)
 	 * @param SkillKnowRequest $skillRequest
-	 * @param bool $clear Clear all previous skills.
 	 * @return self
 	 */
-	public function setSkillRequest(SkillKnowRequest $skillRequest, $clear = FALSE)
+	public function setSkillRequest(SkillKnowRequest $skillRequest)
 	{
-		if ($clear) {
-			$this->skillRequests->clear();
-			$existedSkill = FALSE;
-		} else {
-			$existedSkill = $this->getExistedSkill($skillRequest);
+		if ($skillRequest->isEmpty()) {
+			return $this;
 		}
+		$existedSkill = $this->getExistedSkill($skillRequest);
 		if ($existedSkill) {
-			$existedSkill->import($skillRequest);
+			$skillRequest = $existedSkill->import($skillRequest);
 		} else if (!$this->skillRequests->contains($skillRequest)) {
 			$this->skillRequests->add($skillRequest);
 		}
+		$this->addSkillAsSetted($skillRequest);
+
+		return $this;
+	}
+
+	private function addSkillAsSetted(SkillKnowRequest $skillRequest)
+	{
+		if (!$this->settedSkillRequests) {
+			$this->settedSkillRequests = new ArrayCollection;
+		}
+		$this->settedSkillRequests->add($skillRequest);
 		return $this;
 	}
 
@@ -78,6 +87,17 @@ class Job extends BaseEntity
 	public function clearSkills()
 	{
 		$this->skillRequests->clear();
+		$this->settedSkillRequests->clear();
+		return $this;
+	}
+
+	public function removeOldSkillRequests()
+	{
+		$this->skillRequests->map(function (SkillKnowRequest $item) {
+			if (!$this->settedSkillRequests->contains($item)) {
+				$this->skillRequests->removeElement($item);
+			}
+		});
 		return $this;
 	}
 
@@ -90,6 +110,11 @@ class Job extends BaseEntity
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="getters">
+
+	public function isNew()
+	{
+		return $this->id === NULL;
+	}
 
 	/**
 	 * Return SkillKnowRequest from collection by skill

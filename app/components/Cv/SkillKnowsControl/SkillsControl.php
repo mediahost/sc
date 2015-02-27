@@ -88,6 +88,7 @@ class SkillsControl extends BaseControl
 			$newSkillKnow->cv = $this->cv;
 			$this->cv->skillKnow = $newSkillKnow;
 		}
+		$this->cv->removeOldSkillKnows();
 	}
 
 	/** @return array */

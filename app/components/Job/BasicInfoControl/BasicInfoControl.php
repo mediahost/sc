@@ -58,9 +58,9 @@ class BasicInfoControl extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
-		$jobDao = $this->em->getDao(Job::getClassName());
-		$savedJob = $jobDao->save($this->job);
-		$this->onAfterSave($savedJob);
+		$this->em->persist($this->job);
+		$this->em->flush();
+		$this->onAfterSave($this->job);
 	}
 
 	protected function load(ArrayHash $values)

@@ -109,6 +109,8 @@ class SkillsControl extends BaseControl
 
 			$this->job->skillRequest = $newSkillRequest;
 		}
+		$this->job->removeOldSkillRequests();
+		
 	}
 
 	/** @return array */
