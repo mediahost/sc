@@ -50,6 +50,8 @@ class SkillsControl extends BaseControl
 
 		$skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairsName();
+		$skillLevelsFirstKey = each($skillLevels)['key'];
+		$skillLevelsSecondKey = each($skillLevels)['key'];
 		$ranges = $form->addContainer('skillRange');
 		$yearsMin = $form->addContainer('skillMinYear');
 		$yearsMax = $form->addContainer('skillMaxYear');
@@ -57,15 +59,17 @@ class SkillsControl extends BaseControl
 		foreach ($skills as $skill) {
 			$ranges->addRangeSlider($skill->id, $skill->name, $skillLevels)
 					->setColor('danger')
-					->setPips();
+					->setPips()
+					->setDefaultValue([$skillLevelsFirstKey])
+					->setEmptyValue($skillLevelsFirstKey, $skillLevelsSecondKey);
 			$yearsMinItem = $yearsMin->addTouchSpin($skill->id, $skill->name)
 					->setMin(0)->setMax(100)
 					->setSize(TouchSpin::SIZE_S)
-					->setDefaultValue(0);
+					->setDefaultValue(NULL);
 			$yearsMaxItem = $yearsMax->addTouchSpin($skill->id, $skill->name)
 					->setMin(0)->setMax(100)
 					->setSize(TouchSpin::SIZE_S)
-					->setDefaultValue(0);
+					->setDefaultValue(NULL);
 			
 			$yearsMinItem->setAttribute('data-connected-id', $skill->id)
 					->getControlPrototype()

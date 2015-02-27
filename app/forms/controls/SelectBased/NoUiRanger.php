@@ -49,4 +49,20 @@ class NoUiRanger extends MultiSelectBox
 		return $this;
 	}
 
+	/**
+	 * Set Empty value an value to replace
+	 * @param type $allow
+	 * @return self
+	 */
+	public function setEmptyValue($empty, $replace)
+	{
+		$attr1 = 'data-is-empty-value';
+		$this->control->$attr1 = 'true';
+		$attr2 = 'data-empty-value';
+		$this->control->$attr2 = $empty;
+		$attr3 = 'data-empty-replace';
+		$this->control->$attr3 = $replace;
+		return $this;
+	}
+
 }

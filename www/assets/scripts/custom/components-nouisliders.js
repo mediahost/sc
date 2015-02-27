@@ -1,7 +1,7 @@
 var ComponentsNoUiSliders = function ()
 {
 
-	var handleSkillSlider = function () 
+	var handleSkillSlider = function ()
 	{
 		$('select.noUiSlider').each(function ()
 		{
@@ -10,7 +10,7 @@ var ComponentsNoUiSliders = function ()
 		});
 	};
 
-	var handleSkillsRange = function () 
+	var handleSkillsRange = function ()
 	{
 		$('select.noUiRanger').each(function ()
 		{
@@ -21,7 +21,7 @@ var ComponentsNoUiSliders = function ()
 
 	return {
 		//main function to initiate the module
-		init: function () 
+		init: function ()
 		{
 			handleSkillSlider();
 			handleSkillsRange();
@@ -32,12 +32,13 @@ var ComponentsNoUiSliders = function ()
 
 }();
 
-
 var NoUiSlider = function (select)
 {
 	// constants
 	this.SLIDER = 'slider';
 	this.RANGER = 'ranger';
+	this.LOWER = 'lower';
+	this.UPPER = 'upper';
 
 	// variables
 	this.type;
@@ -69,7 +70,8 @@ var NoUiSlider = function (select)
 		this.extendPips();
 
 		this.slider.on({
-			slide: this.sliderOnSlide
+			slide: this.sliderOnSlide,
+			change: this.sliderOnChange
 		});
 	};
 
@@ -96,6 +98,9 @@ var NoUiSlider = function (select)
 		this.selectProperties.isTooltip = (this.select.attr('data-tooltip')) === 'true';
 		this.selectProperties.isTooltipFixed = (this.select.attr('data-tooltip-fixed')) === 'true';
 		this.selectProperties.isPips = (this.select.attr('data-pips')) === 'true';
+		this.selectProperties.isExtendEmptyValue = (this.select.attr('data-is-empty-value')) === 'true';
+		this.selectProperties.extendEmptyValue = parseInt(this.select.attr('data-empty-value'));
+		this.selectProperties.extendEmptyReplace = parseInt(this.select.attr('data-empty-replace'));
 	};
 
 	this.setSelectOptions = function ()
@@ -162,6 +167,7 @@ var NoUiSlider = function (select)
 				this.selectRangeValue(this.sliderOptions.start);
 				break;
 		}
+		this.saveActualValue(this.sliderOptions.start);
 	};
 
 	this.getStartOptionValue = function ()
@@ -191,6 +197,11 @@ var NoUiSlider = function (select)
 			var itemValue = parseInt($(this).val());
 			return itemValue === firstValue || itemValue === secondValue;
 		});
+	};
+
+	this.getSlider = function ()
+	{
+		return this.slider ? this.slider : $('#' + this.selectProperties.id);
 	};
 
 	this.deselectAllOptions = function ()
@@ -227,6 +238,38 @@ var NoUiSlider = function (select)
 			selectedOptions.each(function (key, value) {
 				$(value).prop('selected', true);
 			});
+			this.getSlider().val(value);
+		}
+	};
+
+	this.saveActualValue = function (value)
+	{
+		this.getSlider().attr('data-actual-value', JSON.stringify(value));
+	};
+
+	this.getPreviousValue = function ()
+	{
+		var previousValue = this.getSlider().attr('data-actual-value');
+		return typeof previousValue === 'undefined' ? null : JSON.parse(previousValue);
+	};
+
+	this.recognizeWhichHandleMoved = function (value)
+	{
+		switch (this.type) {
+			case this.RANGER:
+				var lowerPrevValue = parseInt(this.getPreviousValue()[0]);
+				var upperPrevValue = parseInt(this.getPreviousValue()[1]);
+				var lowerActlValue = parseInt(value[0]);
+				var upperActlValue = parseInt(value[1]);
+				if (lowerPrevValue !== lowerActlValue) {
+					return this.LOWER;
+				}
+				if (upperPrevValue !== upperActlValue) {
+					return this.UPPER;
+				}
+				break;
+			default:
+				return this.LOWER;
 		}
 	};
 
@@ -267,12 +310,14 @@ var NoUiSlider = function (select)
 				values: this.getPipsValuesFromOptionObject(),
 				density: 1,
 				stepped: false,
-				format: {to: function (value) {
+				format: {
+					to: function (value) {
 						return instance.selectOptionsObject[value] || value;
-					}}
+					}
+				}
 			});
 		}
-	};
+	}
 
 	// events
 	this.sliderOnSlide = function (e, value)
@@ -284,6 +329,37 @@ var NoUiSlider = function (select)
 		sliderInstance.setType(type);
 		sliderInstance.selectSliderValue(value);
 		sliderInstance.selectRangeValue(value);
+	};
+
+	this.sliderOnChange = function (e, value)
+	{
+		var selectId = $(this).attr('data-for');
+		var type = $(this).attr('data-type');
+		var sliderInstance = new NoUiSlider($('#' + selectId));
+		sliderInstance.setSelect();
+		sliderInstance.setType(type);
+		if (sliderInstance.selectProperties.isExtendEmptyValue) {
+			var lowerValue = parseInt(value[0]);
+			var upperValue = parseInt(value[1]);
+			var emptyValue = sliderInstance.selectProperties.extendEmptyValue;
+			var replaceValue = sliderInstance.selectProperties.extendEmptyReplace;
+			
+			switch (sliderInstance.recognizeWhichHandleMoved(value)) {
+				case sliderInstance.LOWER:
+					if (lowerValue === emptyValue) {
+						upperValue = emptyValue;
+					}
+					break;
+				case sliderInstance.UPPER:
+					if (lowerValue === emptyValue) {
+						lowerValue = replaceValue;
+					}
+					break;
+			}
+			value = [lowerValue, upperValue];
+			sliderInstance.selectRangeValue(value);
+		}
+		sliderInstance.saveActualValue(value);
 	};
 
 };
