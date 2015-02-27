@@ -100,18 +100,17 @@ class Cv extends BaseEntity
 
 	public function removeOldSkillKnows()
 	{
-		$this->skillKnows->map(function (SkillKnow $item) {
-			if (!$this->settedSkillKnows->contains($item)) {
-				$this->skillKnows->removeElement($item);
+		$mapFunc = function (SkillKnow $skillKnow) {
+			if (!$this->settedSkillKnows->contains($skillKnow)) {
+				$this->removeSkill($skillKnow);
 			}
-		});
+		};
+		if ($this->settedSkillKnows) {
+			$this->skillKnows->map($mapFunc);
+		}
 		return $this;
 	}
 
-	/**
-	 * @param SkillKnow $skillKnow
-	 * @return self
-	 */
 	public function removeSkill(SkillKnow $skillKnow)
 	{
 		$this->skillKnows->removeElement($skillKnow);

@@ -2,13 +2,12 @@
 
 namespace App\Model\Entity;
 
-use App\Model\Repository\JobRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
- * @ORM\Entity(repositoryClass="JobRepository")
+ * @ORM\Entity(repositoryClass="App\Model\Repository\JobRepository")
  *
  * @property Company $company
  * @property string $name
@@ -93,15 +92,17 @@ class Job extends BaseEntity
 
 	public function removeOldSkillRequests()
 	{
-		$this->skillRequests->map(function (SkillKnowRequest $item) {
-			if (!$this->settedSkillRequests->contains($item)) {
-				$this->skillRequests->removeElement($item);
+		$mapFunc = function (SkillKnowRequest $skillRequest) {
+			if (!$this->settedSkillRequests->contains($skillRequest)) {
+				$this->removeSkill($skillRequest);
 			}
-		});
+		};
+		if ($this->settedSkillRequests) {
+			$this->skillRequests->map($mapFunc);
+		}
 		return $this;
 	}
 
-	/** @return self */
 	public function removeSkill(SkillKnowRequest $skillRequest)
 	{
 		$this->skillRequests->removeElement($skillRequest);
