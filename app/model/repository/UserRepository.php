@@ -3,9 +3,8 @@
 namespace App\Model\Repository;
 
 use Exception;
-use Kdyby\Doctrine\EntityRepository;
 
-class UserRepository extends EntityRepository
+class UserRepository extends BaseRepository
 {
 
 	public function findPairsByRoleId($roleId, $value = NULL, $orderBy = array(), $key = NULL)

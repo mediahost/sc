@@ -3,9 +3,8 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Company;
-use Kdyby\Doctrine\EntityRepository;
 
-class CompanyPermissionRepository extends EntityRepository
+class CompanyPermissionRepository extends BaseRepository
 {
 
 	public function findByCompanyAndRoleId(Company $findedCompany, $roleId, $onlyIds = FALSE)

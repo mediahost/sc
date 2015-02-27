@@ -2,9 +2,7 @@
 
 namespace App\Model\Repository;
 
-use Kdyby\Doctrine\EntityRepository;
-
-class RegistrationRepository extends EntityRepository
+class RegistrationRepository extends BaseRepository
 {
 
 	public function deleteByMail($mail)

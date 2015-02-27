@@ -2,9 +2,7 @@
 
 namespace App\Model\Repository;
 
-use Kdyby\Doctrine\EntityRepository;
-
-class SkillLevelRepository extends EntityRepository
+class SkillLevelRepository extends BaseRepository
 {
 
 	public function findPairsName($priorityAsc = TRUE)

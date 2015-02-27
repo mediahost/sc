@@ -3,9 +3,8 @@
 namespace App\Model\Repository;
 
 use App\Model\Repository\Finders\CvRepository\FinderCvsBySkillRequests;
-use Kdyby\Doctrine\EntityRepository;
 
-class CvRepository extends EntityRepository
+class CvRepository extends BaseRepository
 {
 
 	public function findBySkillRequests(array $skillRequests)
