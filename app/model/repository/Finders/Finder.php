@@ -17,15 +17,15 @@ abstract class Finder extends Object implements IFinder
 		$this->init();
 	}
 
-	public function getQuery()
-	{
-		$this->build();
-		return $this->qb->getQuery();
-	}
-
 	public function getResult()
 	{
 		return $this->getQuery()->getResult();
+	}
+
+	protected function getQuery()
+	{
+		$this->build();
+		return $this->qb->getQuery();
 	}
 
 	protected function getExpr()

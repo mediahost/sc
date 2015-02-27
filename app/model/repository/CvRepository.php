@@ -14,9 +14,7 @@ class CvRepository extends BaseRepository
 		foreach ($skillRequests as $skillRequest) {
 			$finder->addRequest($skillRequest);
 		}
-		$query = $finder->getQuery();
-
-		return $query->getResult();
+		return $finder->getResult();
 	}
 
 }
