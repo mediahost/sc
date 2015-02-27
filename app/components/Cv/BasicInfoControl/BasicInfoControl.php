@@ -54,7 +54,7 @@ class BasicInfoControl extends BaseControl
 		$this->load($values);
 		$this->em->persist($this->cv);
 		$this->em->flush();
-
+		// TODO: no AJAX in form
 		$this->redrawControl();
 		$this->onAfterSave($this->cv);
 	}

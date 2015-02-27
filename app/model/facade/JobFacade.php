@@ -18,7 +18,7 @@ class JobFacade extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var EntityDao */
+	/** @var JobRepository */
 	private $jobDao;
 
 	/** @var CvRepository */
