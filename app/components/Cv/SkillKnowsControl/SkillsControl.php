@@ -48,7 +48,7 @@ class SkillsControl extends BaseControl
 		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairsName();
 		$levels = $form->addContainer('skillLevel');
 		$years = $form->addContainer('skillYear');
-		
+
 		foreach ($skills as $skill) {
 			$levels->addSlider($skill->id, $skill->name, $skillLevels)
 					->setColor('success')
@@ -69,8 +69,7 @@ class SkillsControl extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
-		$this->em->persist($this->cv);
-		$this->em->flush();
+		$this->save();
 		$this->onAfterSave($this->cv);
 	}
 
@@ -89,6 +88,14 @@ class SkillsControl extends BaseControl
 			$this->cv->skillKnow = $newSkillKnow;
 		}
 		$this->cv->removeOldSkillKnows();
+		return $this;
+	}
+
+	private function save()
+	{
+		$cvDao = $this->em->getDao(Cv::getClassName());
+		$cvDao->save($this->cv);
+		return $this;
 	}
 
 	/** @return array */

@@ -52,8 +52,7 @@ class BasicInfoControl extends BaseControl
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		$this->load($values);
-		$this->em->persist($this->cv);
-		$this->em->flush();
+		$this->save();
 		// TODO: no AJAX in form
 		$this->redrawControl();
 		$this->onAfterSave($this->cv);
@@ -62,6 +61,14 @@ class BasicInfoControl extends BaseControl
 	private function load(ArrayHash $values)
 	{
 		$this->cv->name = $values->name;
+		return $this;
+	}
+
+	private function save()
+	{
+		$cvDao = $this->em->getDao(Cv::getClassName());
+		$cvDao->save($this->cv);
+		return $this;
 	}
 
 	/** @return array */

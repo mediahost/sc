@@ -89,8 +89,7 @@ class CompanyFacade extends Object
 			$permission->addRole($this->findRoleByName($roleName));
 		}
 
-		$this->companyPermissionDao->save($permission);
-		return $permission;
+		return $this->companyPermissionDao->save($permission);
 	}
 
 	// </editor-fold>
@@ -272,7 +271,7 @@ class CompanyFacade extends Object
 		$this->clearPermissions($company);
 		return $this->companyDao->delete($company);
 	}
-	
+
 	/**
 	 * Delete all permission for this company
 	 * @param Company $company

@@ -59,9 +59,7 @@ class SkillControl extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
-		$entityDao = $this->em->getDao(Skill::getClassName());
-		// TODO: Check on duplicity in skill table
-		$entityDao->save($this->skill);
+		$this->save();
 		$this->onAfterSave($this->skill);
 	}
 
@@ -74,6 +72,15 @@ class SkillControl extends BaseControl
 		if ($values->category && $skillCategory) {
 			$this->skill->category = $skillCategory;
 		}
+		return $this;
+	}
+
+	private function save()
+	{
+		$entityDao = $this->em->getDao(Skill::getClassName());
+		// TODO: Check on duplicity in skill table
+		$entityDao->save($this->skill);
+		return $this;
 	}
 
 	/** @return array */

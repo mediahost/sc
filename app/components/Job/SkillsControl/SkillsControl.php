@@ -85,8 +85,7 @@ class SkillsControl extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
-		$this->em->persist($this->job);
-		$this->em->flush();
+		$this->save();
 		$this->onAfterSave($this->job);
 	}
 
@@ -110,7 +109,14 @@ class SkillsControl extends BaseControl
 			$this->job->skillRequest = $newSkillRequest;
 		}
 		$this->job->removeOldSkillRequests();
-		
+		return $this;
+	}
+
+	private function save()
+	{
+		$cvDao = $this->em->getDao(Job::getClassName());
+		$cvDao->save($this->job);
+		return $this;
 	}
 
 	/** @return array */

@@ -76,7 +76,7 @@ class SetPasswordControl extends BaseControl
 
 		$this->onSuccess($savedUser);
 	}
-	
+
 	public function setUser(Security\User $user)
 	{
 		$this->presenterUser = $user;

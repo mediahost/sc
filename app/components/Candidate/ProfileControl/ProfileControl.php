@@ -17,7 +17,7 @@ class ProfileControl extends BaseControl
 
 	/** @var Candidate */
 	public $candidate;
-	
+
 	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
@@ -29,7 +29,7 @@ class ProfileControl extends BaseControl
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-		
+
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
@@ -50,15 +50,22 @@ class ProfileControl extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
-		$entityDao = $this->em->getDao(Candidate::getClassName());
-		$saved = $entityDao->save($this->candidate);
-		$this->onAfterSave($saved);
+		$this->save();
+		$this->onAfterSave($this->candidate);
 	}
 
 	protected function load(ArrayHash $values)
 	{
 		$this->candidate->name = $values->name;
 		$this->candidate->birthday = $values->birthday;
+		return $this;
+	}
+
+	protected function save()
+	{
+		$entityDao = $this->em->getDao(Candidate::getClassName());
+		$entityDao->save($this->candidate);
+		return $this;
 	}
 
 	/** @return array */

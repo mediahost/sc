@@ -95,11 +95,10 @@ class UserControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		$entity = $this->load($values);
-		$userDao = $this->em->getDao(User::getClassName());
+		$this->load($values);
 		try {
-			$saved = $userDao->save($entity);
-			$this->onAfterSave($saved);
+			$this->save();
+			$this->onAfterSave($this->user);
 		} catch (DuplicateEntryException $exc) {
 			$message = new TaggedString('\'%s\' is already registred', $values->mail);
 			$form['mail']->addError($message);
@@ -122,6 +121,14 @@ class UserControl extends BaseControl
 				$this->user->addRole($item);
 			}
 		}
+		return $this;
+	}
+
+	private function save()
+	{
+		$userDao = $this->em->getDao(User::getClassName());
+		$userDao->save($this->user);
+		return $this;
 	}
 
 	/** @return array */

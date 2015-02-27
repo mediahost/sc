@@ -5,7 +5,6 @@ namespace App\Components\AfterRegistration;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyPermission;
 use App\Model\Entity\CompanyRole;
@@ -143,9 +142,9 @@ class CompleteAccountControl extends BaseControl
 		$user->initCandidate();
 		$user->candidate->name = $values->fullName;
 		$user->candidate->birthday = $values->birthday;
-		$userDao->save($user);
+		$savedUser = $userDao->save($user);
 
-		$this->onCreateCandidate($this, $user->candidate);
+		$this->onCreateCandidate($this, $savedUser->candidate);
 	}
 
 	/** @return Form */
@@ -199,14 +198,14 @@ class CompleteAccountControl extends BaseControl
 		$company->name = $values->name;
 		$company->companyId = $values->companyId;
 		$company->address = $values->address;
-		$companyDao->save($company);
-		
+		$createdCompany = $companyDao->save($company);
+
 		$adminAccess = new CompanyPermission;
 		$adminAccess->user = $this->getUser();
-		$adminAccess->company = $company;
+		$adminAccess->company = $createdCompany;
 		$adminAccess->addRole($this->companyFacade->findRoleByName(CompanyRole::ADMIN));
 		$companyPermissionDao->save($adminAccess);
-		
+
 		// add role to user
 		$requiredRole = $this->roleFacade->findByName(Role::COMPANY);
 		$user = $this->getUser();
@@ -214,7 +213,7 @@ class CompleteAccountControl extends BaseControl
 		$user->removeRole($this->roleFacade->findByName(Role::SIGNED));
 		$userDao->save($user);
 
-		$this->onCreateCompany($this, $company);
+		$this->onCreateCompany($this, $createdCompany);
 	}
 
 }

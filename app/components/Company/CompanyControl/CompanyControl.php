@@ -121,15 +121,8 @@ class CompanyControl extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
-		$companyDao = $this->em->getDao(Company::getClassName());
-		$savedCompany = $companyDao->save($this->company);
-		if ($this->canEditUsers) {
-			$this->companyFacade->clearPermissions($savedCompany);
-			foreach ($this->usersRoles as $userId => $userRoles) {
-				$this->companyFacade->addPermission($savedCompany, $userId, $userRoles);
-			}
-		}
-		$this->onAfterSave($savedCompany);
+		$this->save();
+		$this->onAfterSave($this->company);
 	}
 
 	private function load(ArrayHash $values)
@@ -150,6 +143,20 @@ class CompanyControl extends BaseControl
 				$this->usersRoles[$editorId][] = CompanyRole::EDITOR;
 			}
 		}
+		return $this;
+	}
+
+	private function save()
+	{
+		$companyDao = $this->em->getDao(Company::getClassName());
+		$savedCompany = $companyDao->save($this->company);
+		if ($this->canEditUsers) {
+			$this->companyFacade->clearPermissions($savedCompany);
+			foreach ($this->usersRoles as $userId => $userRoles) {
+				$this->companyFacade->addPermission($savedCompany, $userId, $userRoles);
+			}
+		}
+		return $this;
 	}
 
 	/** @return array */

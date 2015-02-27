@@ -65,12 +65,9 @@ class SkillCategoryControl extends BaseControl
 			$form['parent']->addError('Category can\'t be own parent');
 			return;
 		}
-
 		$this->load($values);
-		$entityDao = $this->em->getDao(SkillCategory::getClassName());
-
-		$saved = $entityDao->save($this->skillCategory);
-		$this->onAfterSave($saved);
+		$this->save();
+		$this->onAfterSave($this->skillCategory);
 	}
 
 	private function load(ArrayHash $values)
@@ -84,6 +81,14 @@ class SkillCategoryControl extends BaseControl
 				$this->skillCategory->parent = $skillParent;
 			}
 		}
+		return $this;
+	}
+	
+	private function save()
+	{
+		$entityDao = $this->em->getDao(SkillCategory::getClassName());
+		$entityDao->save($this->skillCategory);
+		return $this;
 	}
 
 	/** @return array */

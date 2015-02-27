@@ -13,10 +13,11 @@ use Nette\Utils\ArrayHash;
  */
 class ConnectManagerControl extends BaseControl
 {
-	
+
 	const APP = 'App login';
 	const FACEBOOK = 'Facebook';
 	const TWITTER = 'Twitter';
+
 	// <editor-fold defaultstate="expanded" desc="events">
 
 	/** @var array */
@@ -147,8 +148,8 @@ class ConnectManagerControl extends BaseControl
 				break;
 		}
 		if ($disconected) {
-			$userDao->save($user);
-			$this->onDisconnect($user, $disconected);
+			$savedUser = $userDao->save($user);
+			$this->onDisconnect($savedUser, $disconected);
 		} else {
 			$this->onInvalidType($type);
 		}
