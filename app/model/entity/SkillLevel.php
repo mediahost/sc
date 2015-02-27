@@ -14,7 +14,9 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 class SkillLevel extends BaseEntity
 {
 	
-	const IRELEVANT_ID = 1;
+	const FIRST_ID = 1; // TODO: do by facade
+	const LAST_ID = 5; // TODO: do by facade
+	const IRELEVANT_ID = self::FIRST_ID;
 
 	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -35,6 +37,16 @@ class SkillLevel extends BaseEntity
 	public function __toString()
 	{
 		return (string) $this->name;
+	}
+	
+	public function isFirst()
+	{
+		return (bool) ($this->id === self::FIRST_ID);
+	}
+	
+	public function isLast()
+	{
+		return (bool) ($this->id === self::LAST_ID);
 	}
 	
 	public function isRelevant()

@@ -15,6 +15,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property-read int $yearsFrom
  * @property-read int $yearsTo
  * @property-read int $yearsTo
+ * @property-read bool $isEmpty
  */
 class SkillKnowRequest extends BaseEntity
 {
@@ -80,14 +81,24 @@ class SkillKnowRequest extends BaseEntity
 		$this->yearsTo = $to ? (int) $to : 0;
 	}
 
+	public function hasOneLevel()
+	{
+		return (bool) ($this->levelFrom === $this->levelTo);
+	}
+
+	public function isLevelsMather()
+	{
+		return (bool) (!$this->levelFrom->isFirst() || !$this->levelTo->isLast());
+	}
+
 	public function isYearsMather()
 	{
 		return (bool) ($this->yearsFrom || $this->yearsTo);
 	}
-
-	public function hasOneLevel()
+	
+	public function isEmpty()
 	{
-		return (bool) ($this->levelFrom === $this->levelTo);
+		return !$this->isLevelsMather() && !$this->isYearsMather();
 	}
 
 }

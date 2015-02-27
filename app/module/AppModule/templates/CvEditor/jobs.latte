@@ -29,7 +29,7 @@
 					</thead>
 					<tbody>
 						<tr n:foreach="$cv->skillKnows as $skillKnow"
-							n:if="$skillKnow->isChosen()">
+							n:if="!$skillKnow->isEmpty()">
 							<td>
 								{$skillKnow->skill}
 							</td>
