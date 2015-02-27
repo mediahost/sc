@@ -52,7 +52,7 @@ class SkillKnowRequest extends BaseEntity
 	{
 		return $this->skill . ':' .
 				$this->levelFrom . '-' . $this->levelTo . ':' .
-				$this->yearsFrom . '-' . $this->yearsTo . ':';
+				$this->yearsFrom . '-' . $this->yearsTo;
 	}
 
 	/**
