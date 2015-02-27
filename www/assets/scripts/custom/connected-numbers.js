@@ -3,18 +3,27 @@ var ConnectedNumbers = function ()
 
 	var handleConnectedNumbers = function ()
 	{
-		$('.connectedNumber').on('change', function ()
+		$('.connectedNumber').each(function ()
 		{
-			var value = parseInt($(this).val());
 			var isMin = $(this).hasClass('min');
+			var isMax = $(this).hasClass('max');
 			var inversedType = isMin ? 'max' : 'min';
 			var connectedId = $(this).attr('data-connected-id');
 			var connectedItem = $('.connectedNumber.' + inversedType + '[data-connected-id=' + connectedId + ']');
-			var connectedValue = parseInt(connectedItem.val());
-			
-			if ((isMin && value > connectedValue) || (!isMin && value < connectedValue)) {
-				connectedItem.val(value);
-			}
+
+			$(this).on('change', function ()
+			{
+				var value = parseInt($(this).val());
+				var connectedValue = parseInt(connectedItem.val());
+
+				if (isMax && value < connectedValue && parseInt(value) === 1) {
+					value = connectedValue;
+					$(this).val(value);
+				}
+				if ((isMin && value > connectedValue) || (isMax && value < connectedValue)) {
+					connectedItem.val(value);
+				}
+			});
 		});
 	};
 
