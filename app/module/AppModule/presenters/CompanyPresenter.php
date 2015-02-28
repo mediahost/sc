@@ -28,13 +28,22 @@ class CompanyPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
 
-	/** @var CompanyPermission */
-	private $companyPermission;
-
 	/** @var Company */
-	private $company;
+	protected $company;
+
+	/** @var CompanyPermission */
+	protected $companyPermission;
 
 	// </editor-fold>
+
+	protected function startup()
+	{
+		parent::startup();
+		$companyId = $this->getParameter('id');
+		if ($companyId) {
+			$this->setCompany($companyId);
+		}
+	}
 
 	protected function beforeRender()
 	{
@@ -43,25 +52,16 @@ class CompanyPresenter extends BasePresenter
 		$this->template->company = $this->company;
 	}
 
-	/**
-	 * Check if user has any company to show and get company ID
-	 * @param type $id
-	 */
-	private function checkCompanyId($id)
+	private function checkCompany($id)
 	{
 		if (!count($this->user->identity->allowedCompanies)) {
 			$this->flashMessage('You have no company to show', 'info');
 			$this->redirect('wrongCompany');
 		}
-		$this->getCompany($id);
+		$this->setCompany($id);
 	}
 
-	/**
-	 * Get allowed company
-	 * @param type $id
-	 * @return Company
-	 */
-	private function getCompany($id)
+	private function setCompany($id)
 	{
 		if (!$this->company) {
 			$allowedCompaniesCollection = new ArrayCollection($this->user->identity->allowedCompanies);
@@ -75,17 +75,20 @@ class CompanyPresenter extends BasePresenter
 			}
 			$this->company = $this->companyPermission->company;
 		}
-		return $this->company;
+		return $this;
 	}
 
 	/**
 	 * @secured
 	 * @resource('company')
 	 * @privilege('default')
+	 * @companySecured
+	 * @companyResource('info')
+	 * @companyPrivilege('view')
 	 */
 	public function actionDefault($id)
 	{
-		$this->checkCompanyId($id);
+		$this->checkCompany($id);
 		$this['companyForm']->setCompany($this->company);
 		$this['companyForm']->setCanEditInfo($this->companyPermission->isAllowed('info', 'edit'));
 	}
@@ -94,10 +97,13 @@ class CompanyPresenter extends BasePresenter
 	 * @secured
 	 * @resource('company')
 	 * @privilege('users')
+	 * @companySecured
+	 * @companyResource('users')
+	 * @companyPrivilege('view')
 	 */
 	public function actionUsers($id)
 	{
-		$this->checkCompanyId($id);
+		$this->checkCompany($id);
 		$this->template->addFilter('canEditUser', $this->canEditUser);
 	}
 
@@ -105,10 +111,13 @@ class CompanyPresenter extends BasePresenter
 	 * @secured
 	 * @resource('company')
 	 * @privilege('editUser')
+	 * @companySecured
+	 * @companyResource('users')
+	 * @companyPrivilege('edit')
 	 */
 	public function actionEditUser($userId = NULL, $companyId = NULL)
 	{
-		$this->getCompany($companyId);
+		$this->setCompany($companyId);
 		$this['editUserForm']->setCompany($this->company);
 		if ($userId) {
 			$user = $this->em->getDao(User::getClassName())->find($userId);
@@ -122,10 +131,13 @@ class CompanyPresenter extends BasePresenter
 	 * @secured
 	 * @resource('company')
 	 * @privilege('jobs')
+	 * @companySecured
+	 * @companyResource('jobs')
+	 * @companyPrivilege('view')
 	 */
 	public function actionJobs($id)
 	{
-		$this->checkCompanyId($id);
+		$this->checkCompany($id);
 		$this->template->addFilter('canEditUser', $this->canEditUser);
 	}
 

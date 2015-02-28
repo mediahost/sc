@@ -41,8 +41,7 @@ services:
 
 			- allow('candidate', 'candidate', 'default')
 			- allow('candidate', 'cvEditor', ['default', 'skills', 'jobs'])
-			- allow('company', 'company', ['default', 'users', 'jobs', 'editUser'])
-			- allow('company', 'job', ['default', 'edit'])
+			- allow('company', ['company', 'job'])
 
 			- allow('admin', 'users')
 			- allow('admin', 'skills')

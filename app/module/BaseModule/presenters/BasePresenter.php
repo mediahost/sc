@@ -12,8 +12,10 @@ use App\Model\Facade\UserFacade;
 use App\TaggedString;
 use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
+use Kdyby\Doctrine\MemberAccessException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
+use Nette\MemberAccessException as MemberAccessException2;
 use Nette\Security\IUserStorage;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\LoaderFactory;
@@ -99,19 +101,48 @@ abstract class BasePresenter extends Presenter
 		$secured = $element->getAnnotation('secured');
 		$resource = $element->getAnnotation('resource');
 		$privilege = $element->getAnnotation('privilege');
+		$companySecured = $element->getAnnotation('companySecured');
+		$companyResource = $element->getAnnotation('companyResource');
+		$companyPrivilege = $element->getAnnotation('companyPrivilege');
 
 		if ($secured) {
-			if (!$this->user->loggedIn) {
-				if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
-					$this->flashMessage('You have been signed out, because you have been inactive for long time.');
-					$this->redirect(':Front:LockScreen:', ['backlink' => $this->storeRequest()]);
-				} else {
-					$this->flashMessage('You should be logged in!');
-					$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
-				}
-			} elseif (!$this->user->isAllowed($resource, $privilege)) {
+			$this->checkSecured($resource, $privilege);
+		}
+		if ($companySecured) {
+			$this->checkCompanySecured($companyResource, $companyPrivilege);
+		}
+	}
+
+	private function checkSecured($resource, $privilege)
+	{
+		if (!$this->user->loggedIn) {
+			if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
+				$this->flashMessage('You have been signed out, because you have been inactive for long time.');
+				$this->redirect(':Front:LockScreen:', ['backlink' => $this->storeRequest()]);
+			} else {
+				$this->flashMessage('You should be logged in!');
+				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
+			}
+		} elseif (!$this->user->isAllowed($resource, $privilege)) {
+			throw new ForbiddenRequestException;
+		}
+	}
+
+	private function checkCompanySecured($resource, $privilege)
+	{
+		try {
+			if (!$this->companyPermission->isAllowed($resource, $privilege)) {
 				throw new ForbiddenRequestException;
 			}
+		} catch (MemberAccessException2 $e) {
+			$className = $this->getReflection()->getName();
+			$exceptionMessage = 'Must set ' . $className . '::$companyPermission before use @companySecured annotations.';
+			$exceptionMessage .= ' Define it in ' . $className . '::startup().';
+			throw new ForbiddenRequestException($exceptionMessage);
+		} catch (MemberAccessException $e) {
+			$className = $this->getReflection()->getName();
+			$exceptionMessage = 'Variable ' . $className . '::$companyPermission mut be instance of ' . Entity\CompanyPermission::getClassName();
+			throw new ForbiddenRequestException($exceptionMessage);
 		}
 	}
 
