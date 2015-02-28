@@ -95,9 +95,9 @@ class CompaniesPresenter extends BasePresenter
 		}
 	}
 
-	public function renderEdit($id)
+	public function renderEdit()
 	{
-		$this->template->company = $this->companyDao->find($id);
+		$this->template->company = $this->company;
 	}
 
 	/**
