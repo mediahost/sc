@@ -60,8 +60,10 @@ class Job extends BaseEntity
 	public function setSkillRequest(SkillKnowRequest $skillRequest)
 	{
 		if ($skillRequest->isEmpty()) {
+			$this->initSettedSkillRequests();
 			return $this;
 		}
+
 		$existedSkill = $this->getExistedSkill($skillRequest);
 		if ($existedSkill) {
 			$skillRequest = $existedSkill->import($skillRequest);
@@ -75,14 +77,19 @@ class Job extends BaseEntity
 
 	private function addSkillAsSetted(SkillKnowRequest $skillRequest)
 	{
-		if (!$this->settedSkillRequests) {
-			$this->settedSkillRequests = new ArrayCollection;
-		}
+		$this->initSettedSkillRequests();
 		$this->settedSkillRequests->add($skillRequest);
 		return $this;
 	}
 
-	/** @return self */
+	private function initSettedSkillRequests()
+	{
+		if (!$this->settedSkillRequests) {
+			$this->settedSkillRequests = new ArrayCollection;
+		}
+		return $this;
+	}
+
 	public function clearSkills()
 	{
 		$this->skillRequests->clear();

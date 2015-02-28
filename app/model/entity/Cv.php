@@ -68,6 +68,7 @@ class Cv extends BaseEntity
 	public function setSkillKnow(SkillKnow $skillKnow)
 	{
 		if ($skillKnow->isEmpty()) {
+			$this->initSettedSkillKnows();
 			return $this;
 		}
 
@@ -78,15 +79,22 @@ class Cv extends BaseEntity
 			$this->skillKnows->add($skillKnow);
 		}
 		$this->addSkillAsSetted($skillKnow);
+		
 		return $this;
 	}
 
 	private function addSkillAsSetted(SkillKnow $skillKnow)
 	{
+		$this->initSettedSkillKnows();
+		$this->settedSkillKnows->add($skillKnow);
+		return $this;
+	}
+
+	private function initSettedSkillKnows()
+	{
 		if (!$this->settedSkillKnows) {
 			$this->settedSkillKnows = new ArrayCollection;
 		}
-		$this->settedSkillKnows->add($skillKnow);
 		return $this;
 	}
 
