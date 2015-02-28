@@ -4,6 +4,7 @@ namespace App\AjaxModule\Presenters;
 
 use App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
 use Nette\Http\Request;
+use Nette\Utils\Json;
 
 abstract class BasePresenter extends BaseBasePresenter
 {
@@ -25,9 +26,9 @@ abstract class BasePresenter extends BaseBasePresenter
 		parent::beforeRender();
 		$callback = $this->request->getQuery('callback');
 		if ($callback) {
-			$this->template->data = $callback . '(' . json_encode($this->data) . ')';
+			$this->template->data = $callback . '(' . Json::encode($this->data) . ')';
 		} else {
-			$this->template->data = json_encode($this->data);
+			$this->template->data = Json::encode($this->data);
 		}
 		$this->setView('../data');
 	}
