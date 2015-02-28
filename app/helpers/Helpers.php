@@ -2,6 +2,9 @@
 
 namespace App;
 
+/**
+ * TODO: Use Nette\Utils\FileSystem
+ */
 class Helpers
 {
 
