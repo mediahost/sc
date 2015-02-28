@@ -23,7 +23,15 @@
 				</div>
 			</div>
 			<div class="portlet-body">
-				<table class="table table-bordered table-striped">
+				<div n:if="!count($job->skillRequests)" 
+					 class="note note-warning">
+					<h4 class="block">{_'This job has no skill requests'}</h4>
+					<p>
+						{_'Now your job matched to all CVs.'}
+					</p>
+				</div>
+				<table n:if="count($job->skillRequests)"
+					   class="table table-bordered table-striped">
 					<thead>
 						<tr>
 							<th>{_'Skill'}</th>
