@@ -17,7 +17,7 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	protected function startup()
 	{
-//		header('content-type: application/json; charset=utf-8');
+		header('content-type: application/json; charset=utf-8');
 		parent::startup();
 	}
 
