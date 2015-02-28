@@ -21,9 +21,9 @@ class SkillKnow extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="Cv", inversedBy="skillKnows") */
 	protected $cv;
 
-	/** 
+	/**
 	 * @ORM\ManyToOne(targetEntity="Skill")
-     * @ORM\JoinColumn(onDelete="CASCADE") 
+	 * @ORM\JoinColumn(onDelete="CASCADE") 
 	 */
 	protected $skill;
 
@@ -42,7 +42,7 @@ class SkillKnow extends BaseEntity
 	{
 		return $this->skill . ':' . $this->level . ':' . $this->years;
 	}
-	
+
 	/**
 	 * Import all data (except id) from inserted item
 	 * @param SkillKnow $imported
@@ -55,10 +55,29 @@ class SkillKnow extends BaseEntity
 		$this->cv = $imported->cv;
 		return $this;
 	}
-	
+
 	public function isEmpty()
 	{
-		return !$this->level->isRelevant();
+		return (bool) (!$this->level->isRelevant());
+	}
+
+	public function hasYearsInRange($from = NULL, $to = NULL)
+	{
+		if ($this->isFilledValue($from) && $this->isFilledValue($to)) {
+			return $from <= $this->years && $this->years <= $to;
+		}
+		if ($this->isFilledValue($from) && !$this->isFilledValue($to)) {
+			return $from <= $this->years;
+		}
+		if ($this->isFilledValue($to) && !$this->isFilledValue($from)) {
+			return $this->years <= $to;
+		}
+		return TRUE;
+	}
+
+	private function isFilledValue($value)
+	{
+		return (bool) ($value !== NULL);
 	}
 
 }

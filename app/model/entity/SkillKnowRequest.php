@@ -37,10 +37,10 @@ class SkillKnowRequest extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="SkillLevel") */
 	protected $levelTo;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="integer", nullable=true) */
 	protected $yearsFrom;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="integer", nullable=true) */
 	protected $yearsTo;
 
 	public function __construct()
@@ -55,11 +55,6 @@ class SkillKnowRequest extends BaseEntity
 				$this->yearsFrom . '-' . $this->yearsTo;
 	}
 
-	/**
-	 * Import all data (except id) from inserted item
-	 * @param SkillKnowRequest $imported
-	 * @return self
-	 */
 	public function import(SkillKnowRequest $imported)
 	{
 		$this->levelFrom = $imported->levelFrom;
@@ -77,8 +72,8 @@ class SkillKnowRequest extends BaseEntity
 
 	public function setYears($from, $to)
 	{
-		$this->yearsFrom = $from ? (int) $from : 0;
-		$this->yearsTo = $to ? (int) $to : 0;
+		$this->yearsFrom = $from ? (int) $from : NULL;
+		$this->yearsTo = $to ? (int) $to : NULL;
 	}
 
 	public function hasOneLevel()
@@ -88,7 +83,12 @@ class SkillKnowRequest extends BaseEntity
 
 	public function isLevelsMather()
 	{
-		return (bool) (!$this->levelFrom->isFirst() || !$this->levelTo->isLast());
+		return !$this->isNotLevelsMather();
+	}
+
+	public function isNotLevelsMather()
+	{
+		return (bool) ($this->levelFrom->isFirst());
 	}
 
 	public function isYearsMather()
@@ -98,7 +98,21 @@ class SkillKnowRequest extends BaseEntity
 	
 	public function isEmpty()
 	{
-		return !$this->isLevelsMather() && !$this->isYearsMather();
+		return !$this->isNotEmpty();
+	}
+	
+	public function isNotEmpty()
+	{
+		return (bool) ($this->isLevelsMather());
+	}
+	
+	public function isSatisfiedBy(SkillKnow $skillKnow)
+	{
+		$skillFits = $skillKnow->skill->isEqual($this->skill);
+		$levelFits = $this->isLevelsMather() ? $skillKnow->level->isInRange($this->levelFrom, $this->levelTo) : TRUE;
+		$yearsFits = $this->isYearsMather() ? $skillKnow->hasYearsInRange($this->yearsFrom, $this->yearsTo) : TRUE;
+		
+		return $skillFits && $levelFits && $yearsFits;
 	}
 
 }

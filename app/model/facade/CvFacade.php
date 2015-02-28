@@ -4,7 +4,9 @@ namespace App\Model\Facade;
 
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Cv;
-use Kdyby\Doctrine\EntityDao;
+use App\Model\Entity\Job;
+use App\Model\Repository\CvRepository;
+use App\Model\Repository\JobRepository;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
@@ -17,13 +19,17 @@ class CvFacade extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var EntityDao */
+	/** @var CvRepository */
 	private $cvDao;
+
+	/** @var JobRepository */
+	private $jobDao;
 
 	public function __construct(EntityManager $em)
 	{
 		$this->em = $em;
 		$this->cvDao = $this->em->getDao(Cv::getClassName());
+		$this->jobDao = $this->em->getDao(Job::getClassName());
 	}
 
 	// <editor-fold defaultstate="colapsed" desc="create & add & edit">
@@ -75,7 +81,9 @@ class CvFacade extends Object
 			$cv = new Cv;
 			$cv->candidate = $candidate;
 			$cv->isDefault = TRUE;
-			$defaultCv = $this->cvDao->save($cv);
+			$this->em->persist($cv);
+			$this->em->flush();
+			$defaultCv = $cv;
 		}
 		return $defaultCv;
 	}
@@ -85,7 +93,7 @@ class CvFacade extends Object
 
 	public function findJobs(Cv $cv)
 	{
-		return [];
+		return $this->jobDao->findBySkillKnows($cv->skillKnows);
 	}
 
 	// </editor-fold>

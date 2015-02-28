@@ -53,5 +53,10 @@ class SkillLevel extends BaseEntity
 	{
 		return (bool) ($this->id !== self::IRELEVANT_ID);
 	}
+	
+	public function isInRange(SkillLevel $from, SkillLevel $to)
+	{
+		return (bool) ($from->id <= $this->id && $this->id <= $to->id);
+	}
 
 }

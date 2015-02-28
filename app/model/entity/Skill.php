@@ -43,7 +43,12 @@ class Skill extends BaseEntity
 	
 	public function isNew()
 	{
-		return $this->id === NULL;
+		return (bool) ($this->id === NULL);
+	}
+	
+	public function isEqual(Skill $skill)
+	{
+		return (bool) ($this->id === $skill->id);
 	}
 
 }
