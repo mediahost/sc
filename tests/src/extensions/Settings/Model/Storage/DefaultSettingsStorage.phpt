@@ -6,7 +6,7 @@ use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Extensions\Settings\Model\Storage\GuestSettingsStorage;
 use App\Model\Entity\User;
 use Nette\DI\Container;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 use Tester\Assert;
 
 $container = require __DIR__ . '/../../../../bootstrap.php';
@@ -17,7 +17,7 @@ $container = require __DIR__ . '/../../../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class DefaultSettingsStorageTest extends ParentTestCase
+class DefaultSettingsStorageTest extends DbTestCase
 {
 
 	public function __construct(Container $container)

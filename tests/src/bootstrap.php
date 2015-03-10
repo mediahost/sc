@@ -1,40 +1,42 @@
 <?php
 
-// Increase default timeot limit because of locks on DB.
-set_time_limit(180);
+$rootDir = __DIR__ . '/..';
 
-require __DIR__ . '/../../vendor/autoload.php';
+require $rootDir . '/../vendor/autoload.php';
 
 if (!class_exists('Tester\Assert')) {
 	echo "Install Nette Tester using `composer update --dev`\n";
 	exit(1);
 }
 
-define('TEMP_DIR', __DIR__ . '/../temp/');
+// Global from is %wwwDir% taken and is not set when php-cgi (run from cmd)
+$_SERVER['SCRIPT_FILENAME'] = $rootDir . '/../www/index.php';
 
 // Directory for lock files
-define('LOCK_DIR', TEMP_DIR);
+define('LOCK_DIR', $rootDir . '/tmp');
 
-// Global from is %wwwDir% taken and is not set when php-cgi (run from cmd)
-$_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/../../www/index.php';
-
-Tester\Environment::setup();
+// Temp directory
+//\Kdyby\TesterExtras\Bootstrap::setup($rootDir);
+define('TEMP_DIR', $rootDir . '/tmp');
 
 $configurator = new Nette\Configurator;
-if (isset ($_GET['debugger']) && $_GET['debugger']) {
-	$configurator->setDebugMode(TRUE);
-	$configurator->enableDebugger(__DIR__ . '/../../log');
-}
+
 $configurator->setTempDirectory(TEMP_DIR);
-$configurator->addParameters(['appDir' => __DIR__ . '/../../app']); // řeší problém s nefunkčním $this->em->getMetadataFactory()->getAllMetadata()
-$configurator->addParameters(['wwwDir' => __DIR__ . '/../../www']); // potřebné pro správné nastavení webloaderu
+$configurator->addParameters(['appDir' => $rootDir . '/../app']); // řeší problém s nefunkčním $this->em->getMetadataFactory()->getAllMetadata()
+$configurator->addParameters(['wwwDir' => $rootDir . '/../www']); // potřebné pro správné nastavení webloaderu
+
+$configurator->addConfig($rootDir . '/../app/config/config.neon');
+$configurator->addConfig($rootDir . '/../app/config/test/config.test.local.neon');
+
 $configurator->createRobotLoader()
-		->addDirectory(__DIR__ . '/../../app')
-		->addDirectory(__DIR__ . '/../../tests')
-		->addDirectory(__DIR__ . '/../../vendor/others')
+		->addDirectory($rootDir . '/../app')
+		->addDirectory($rootDir . '/../tests')
+		->addDirectory($rootDir . '/../vendor/others')
 		->register();
 
-$configurator->addConfig(__DIR__ . '/../../app/config/config.neon');
-$configurator->addConfig(__DIR__ . '/../../app/config/test/config.test.local.neon');
+if (!getenv(\Tester\Environment::RUNNER) && !getenv("XDEBUG_CONFIG")) {
+	$configurator->setDebugMode(TRUE);
+	$configurator->enableDebugger($rootDir . '/../log/');
+}
 
 return $configurator->createContainer();

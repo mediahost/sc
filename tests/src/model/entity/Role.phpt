@@ -3,8 +3,8 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Role;
+use Test\BaseTestCase;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -14,7 +14,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class RoleTest extends TestCase
+class RoleTest extends BaseTestCase
 {
 
 	const CMP_BIGGER = 1;
@@ -29,27 +29,31 @@ class RoleTest extends TestCase
 		Assert::same(self::R_NAME, (string) $role);
 	}
 
-	public function testStatics()
+	public function testCompare()
 	{
-		Assert::same(self::CMP_EQUAL, Role::cmpRoles(new Role(Role::SUPERADMIN), Role::SUPERADMIN));
-		Assert::same(self::CMP_LOWER, Role::cmpRoles(new Role(Role::ADMIN), new Role(Role::SUPERADMIN)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::SUPERADMIN), new Role(Role::ADMIN)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::ADMIN), new Role(Role::COMPANY)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::COMPANY), new Role(Role::CANDIDATE)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::CANDIDATE), new Role(Role::SIGNED)));
-		Assert::same(self::CMP_BIGGER, Role::cmpRoles(new Role(Role::SIGNED), new Role(Role::GUEST)));
+		Assert::same(self::CMP_EQUAL, Role::compareRoles(new Role(Role::SUPERADMIN), Role::SUPERADMIN));
+		Assert::same(self::CMP_LOWER, Role::compareRoles(new Role(Role::ADMIN), new Role(Role::SUPERADMIN)));
+		Assert::same(self::CMP_BIGGER, Role::compareRoles(new Role(Role::SUPERADMIN), new Role(Role::ADMIN)));
+		Assert::same(self::CMP_BIGGER, Role::compareRoles(new Role(Role::ADMIN), new Role(Role::COMPANY)));
+		Assert::same(self::CMP_BIGGER, Role::compareRoles(new Role(Role::COMPANY), new Role(Role::CANDIDATE)));
+		Assert::same(self::CMP_BIGGER, Role::compareRoles(new Role(Role::CANDIDATE), new Role(Role::SIGNED)));
+		Assert::same(self::CMP_BIGGER, Role::compareRoles(new Role(Role::SIGNED), new Role(Role::GUEST)));
+	}
 
+	public function testMaxRole()
+	{
 		$roles1 = [
-			Role::ADMIN,
-			new Role(Role::COMPANY),
-			new Role(Role::SIGNED),
+				Role::ADMIN,
+				new Role(Role::COMPANY),
+				new Role(Role::SIGNED),
 		];
 		$maxRole1 = new Role(Role::ADMIN);
 		Assert::same((string) $maxRole1, (string) Role::getMaxRole($roles1));
+
 		$roles2 = [
-			new Role(Role::SIGNED),
-			new Role(Role::COMPANY),
-			Role::CANDIDATE,
+				new Role(Role::SIGNED),
+				new Role(Role::COMPANY),
+				Role::CANDIDATE,
 		];
 		$maxRole2 = new Role(Role::COMPANY);
 		Assert::same((string) $maxRole2, (string) Role::getMaxRole($roles2));
@@ -57,5 +61,5 @@ class RoleTest extends TestCase
 
 }
 
-$test = new RoleTest();
+$test = new RoleTest($container);
 $test->run();

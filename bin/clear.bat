@@ -17,7 +17,7 @@ cd /d "%root%/tests"
 del "test.log"
 cd /d "%this%"
 
-cd /d "%root%/tests/temp"
+cd /d "%root%/tests/tmp"
 del "btfj.dat"
 del lock*
 rd /s /q cache

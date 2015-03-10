@@ -12,10 +12,10 @@ use App\Model\Facade\UserFacade;
 use App\TaggedString;
 use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
-use Kdyby\Doctrine\MemberAccessException;
+use Kdyby\Doctrine\MemberAccessException as DoctrineMemberAccessException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
-use Nette\MemberAccessException as MemberAccessException2;
+use Nette\MemberAccessException as NetteMemberAccessException;
 use Nette\Security\IUserStorage;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\LoaderFactory;
@@ -77,11 +77,7 @@ abstract class BasePresenter extends Presenter
 
 	// <editor-fold defaultstate="collapsed" desc="flash messages">
 
-	/**
-	 * Translate flash messages if not HTML
-	 * @param type $message
-	 * @param type $type
-	 */
+	/** Translate flash messages if not HTML */
 	public function flashMessage($message, $type = 'info')
 	{
 		if (is_string($message)) {
@@ -131,15 +127,20 @@ abstract class BasePresenter extends Presenter
 	private function checkCompanySecured($resource, $privilege)
 	{
 		try {
+			if ($this->companyPermission === NULL) {
+				$className = $this->getReflection()->getName();
+				$exceptionMessage = 'Variable ' . $className . '::$companyPermission mut be instance of ' . Entity\CompanyPermission::getClassName();
+				throw new ForbiddenRequestException($exceptionMessage);
+			}
 			if (!$this->companyPermission->isAllowed($resource, $privilege)) {
 				throw new ForbiddenRequestException;
 			}
-		} catch (MemberAccessException2 $e) {
+		} catch (NetteMemberAccessException $e) {
 			$className = $this->getReflection()->getName();
 			$exceptionMessage = 'Must set ' . $className . '::$companyPermission before use @companySecured annotations.';
 			$exceptionMessage .= ' Define it in ' . $className . '::startup().';
 			throw new ForbiddenRequestException($exceptionMessage);
-		} catch (MemberAccessException $e) {
+		} catch (DoctrineMemberAccessException $e) {
 			$className = $this->getReflection()->getName();
 			$exceptionMessage = 'Variable ' . $className . '::$companyPermission mut be instance of ' . Entity\CompanyPermission::getClassName();
 			throw new ForbiddenRequestException($exceptionMessage);

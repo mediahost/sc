@@ -82,7 +82,7 @@ class CvEditorPresenter extends BasePresenter
 				$this->cv = $findedCv;
 			}
 		} else if ($candidate) { // pro kandidáta načti defaultní
-			$this->cv = $this->cvFacade->getDefaultCv($candidate);
+			$this->cv = $this->cvFacade->getDefaultCvOrCreate($candidate);
 		}
 		
 		if (!$this->cv) {

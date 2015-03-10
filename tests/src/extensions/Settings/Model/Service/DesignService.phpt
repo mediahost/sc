@@ -19,7 +19,7 @@ $container = require __DIR__ . '/../../../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class DesignServiceTest extends ParentService
+class DesignServiceTest extends BaseService
 {
 
 	/** @var EntityManager @inject */

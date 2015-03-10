@@ -3,8 +3,8 @@
 namespace Test\Presenters\FotoModule;
 
 use Test\Presenters\BasePresenter;
-use Test\Presenters\Presenter;
 use Tester\Assert;
+use Tracy\Debugger;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -17,18 +17,11 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class FotoPresenterTest extends BasePresenter
 {
 
-	protected function setUp()
-	{
-		parent::setUp();
-		$this->tester->init('Foto:Foto');
-	}
-
 	public function testFoto()
 	{
-		$response = $this->tester->test('default', Presenter::METHOD_GET, ['size' => '200-200', 'name' => 'person/default.png']);
+		$this->openPresenter('Foto:Foto');
+		$response = $this->runPresenterActionGet('default', ['size' => '200-200', 'name' => 'person/default.png']);
 		Assert::same(NULL, $response);
-		// TODO: Why response is NULL when test run, but in browser its print image - resolve it
-		// Todo: after resolving - compare with right image
 	}
 
 }

@@ -3,8 +3,9 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\PageDesignSettings;
+use Kdyby\Doctrine\MemberAccessException;
+use Test\BaseTestCase;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -14,22 +15,22 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class PageDesignSettingsTest extends TestCase
+class PageDesignSettingsTest extends BaseTestCase
 {
 
 	public function testSetAndGet()
 	{
 		$values = [
-			'color' => 'default',
-			'layoutBoxed' => TRUE,
-			'containerBgSolid' => TRUE,
-			'headerFixed' => TRUE,
-			'footerFixed' => FALSE,
-			'sidebarClosed' => FALSE,
-			'sidebarFixed' => TRUE,
-			'sidebarReversed' => TRUE,
-			'sidebarMenuHover' => FALSE,
-			'sidebarMenuLight' => TRUE,
+				'color'            => 'default',
+				'layoutBoxed'      => TRUE,
+				'containerBgSolid' => TRUE,
+				'headerFixed'      => TRUE,
+				'footerFixed'      => FALSE,
+				'sidebarClosed'    => FALSE,
+				'sidebarFixed'     => TRUE,
+				'sidebarReversed'  => TRUE,
+				'sidebarMenuHover' => FALSE,
+				'sidebarMenuLight' => TRUE,
 		];
 
 		$entity1 = new PageDesignSettings;
@@ -49,9 +50,9 @@ class PageDesignSettingsTest extends TestCase
 		Assert::same($values['sidebarMenuHover'], $entity1->sidebarMenuHover);
 		Assert::same($values['sidebarMenuLight'], $entity1->sidebarMenuLight);
 
-		Assert::exception(function() use ($entity1) {
+		Assert::exception(function () use ($entity1) {
 			$entity1->id = 123;
-		}, 'Kdyby\Doctrine\MemberAccessException');
+		}, MemberAccessException::class);
 
 		// init only one value
 		$entity2 = new PageDesignSettings;
@@ -65,7 +66,7 @@ class PageDesignSettingsTest extends TestCase
 		$entity3->append($entity2);
 		Assert::count(1, $entity3->notNullValuesArray);
 		Assert::same($values['color'], $entity3->color);
-		
+
 		// append with rewrite
 		$entity4 = new PageDesignSettings;
 		$newColorValue = 'notDefault';
@@ -78,5 +79,5 @@ class PageDesignSettingsTest extends TestCase
 
 }
 
-$test = new PageDesignSettingsTest();
+$test = new PageDesignSettingsTest($container);
 $test->run();

@@ -4,12 +4,12 @@ namespace Test\Extensions\Settings\Model\Service;
 
 use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use Nette\DI\Container;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 
 /**
  * Parent for all Settings services
  */
-abstract class ParentService extends ParentTestCase
+abstract class BaseService extends DbTestCase
 {
 	
 	/** @var DefaultSettingsStorage */

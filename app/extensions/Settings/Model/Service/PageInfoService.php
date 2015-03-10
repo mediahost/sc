@@ -10,7 +10,6 @@ namespace App\Extensions\Settings\Model\Service;
 class PageInfoService extends BaseService
 {
 
-	/** @return string */
 	public function getProjectName()
 	{
 		if (isset($this->defaultStorage->pageInfo->projectName)) {
@@ -19,7 +18,6 @@ class PageInfoService extends BaseService
 		return NULL;
 	}
 
-	/** @return string */
 	public function getAuthor()
 	{
 		if (isset($this->defaultStorage->pageInfo->author)) {
@@ -28,7 +26,6 @@ class PageInfoService extends BaseService
 		return NULL;
 	}
 
-	/** @return string */
 	public function getDescription()
 	{
 		if (isset($this->defaultStorage->pageInfo->description)) {

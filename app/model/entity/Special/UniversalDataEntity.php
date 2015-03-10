@@ -23,7 +23,7 @@ class UniversalDataEntity
 		}
 		return NULL;
 	}
-	
+
 	public function setData(array $data)
 	{
 		$this->data = $data;

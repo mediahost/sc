@@ -2,6 +2,7 @@
 
 namespace Test\Presenters\AppModule;
 
+use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -13,33 +14,33 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class CompaniesPresenterTest extends BasePresenter
+class CompaniesPresenterTest extends AppBasePresenter
 {
 
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->tester->init('App:Companies');
+		$this->openPresenter('App:Companies');
 	}
 
 	public function testUnlogged()
 	{
-		$response = $this->tester->test('default');
-		Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+		$response = $this->runPresenterActionGet('default');
+		Assert::type(RedirectResponse::class, $response);
 	}
 
 	public function testForbidden()
 	{
 		$this->loginCompany();
 		Assert::exception(function() {
-			$this->tester->test('default');
+			$this->runPresenterActionGet('default');
 		}, 'Nette\Application\ForbiddenRequestException');
 	}
 
 	public function testDefault()
 	{
 		$this->loginAdmin();
-		$response = $this->tester->testActionGet('default');
+		$response = $this->runPresenterActionGet('default');
 
 		$html = (string) $response->getSource();
 		$dom = DomQuery::fromHtml($html);

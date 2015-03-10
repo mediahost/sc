@@ -3,8 +3,9 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Facebook;
+use Kdyby\Doctrine\MemberAccessException;
+use Test\BaseTestCase;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -14,7 +15,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class FacebookTest extends TestCase
+class FacebookTest extends BaseTestCase
 {
 
 	const ID = '123456789';
@@ -33,7 +34,7 @@ class FacebookTest extends TestCase
 		$location = 'czech republic';
 		$locale = 'cs';
 		$username = 'some.nick';
-		
+
 		$entity = new Facebook($id);
 		$entity->accessToken = $accessToken;
 		$entity->mail = $mail;
@@ -45,7 +46,7 @@ class FacebookTest extends TestCase
 		$entity->location = $location;
 		$entity->locale = $locale;
 		$entity->username = $username;
-		
+
 		Assert::same($id, $entity->id);
 		Assert::same($accessToken, $entity->accessToken);
 		Assert::same($mail, $entity->mail);
@@ -57,13 +58,13 @@ class FacebookTest extends TestCase
 		Assert::same($location, $entity->location);
 		Assert::same($locale, $entity->locale);
 		Assert::same($username, $entity->username);
-		
-		Assert::exception(function() use ($entity, $id) {
+
+		Assert::exception(function () use ($entity, $id) {
 			$entity->id = $id;
-		}, 'Kdyby\Doctrine\MemberAccessException');
+		}, MemberAccessException::class);
 	}
 
 }
 
-$test = new FacebookTest();
+$test = new FacebookTest($container);
 $test->run();

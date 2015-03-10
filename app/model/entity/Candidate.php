@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Utils\DateTime;
 
@@ -17,53 +18,42 @@ use Nette\Utils\DateTime;
 class Candidate extends BaseEntity
 {
 
-	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+	use Identifier;
 
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $name;
 
 	/** @ORM\Column(type="date", nullable=true) */
 	protected $birthday;
-	
+
 	/** @ORM\OneToMany(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $cvs;
 
 	/** @ORM\OneToOne(targetEntity="User", mappedBy="candidate", fetch="LAZY") */
 	protected $user;
-	
+
 	public function __construct($name = NULL)
 	{
 		if ($name) {
 			$this->name = $name;
 		}
-		parent::__construct();
 		$this->cvs = new ArrayCollection;
+		parent::__construct();
 	}
 
-	/** @return string */
 	public function __toString()
 	{
 		return (string) $this->name;
 	}
-	
-	/**
-	 * Check if candidate has any default cv
-	 * @return boolean
-	 */
+
 	public function hasDefaultCv()
 	{
-		foreach ($this->cvs as $cv) {
-			if ($cv->isDefault) {
-				return TRUE;
-			}
-		}
-		return FALSE;
+		$isDefault = function (Cv $cv) {
+			return $cv->isDefault;
+		};
+		return $this->cvs->exists($isDefault);
 	}
-	
-	/**
-	 * Return default CV or NULL
-	 * @return Cv|NULL
-	 */
+
 	public function getDefaultCv()
 	{
 		foreach ($this->cvs as $cv) {
@@ -71,7 +61,7 @@ class Candidate extends BaseEntity
 				return $cv;
 			}
 		}
-		return NULL;
+		throw new EntityException('Candidate has no default CV');
 	}
 
 }

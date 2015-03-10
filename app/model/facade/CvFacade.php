@@ -4,15 +4,13 @@ namespace App\Model\Facade;
 
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Cv;
+use App\Model\Entity\EntityException;
 use App\Model\Entity\Job;
 use App\Model\Repository\CvRepository;
 use App\Model\Repository\JobRepository;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
-/**
- * TODO: Test it
- */
 class CvFacade extends Object
 {
 
@@ -32,73 +30,61 @@ class CvFacade extends Object
 		$this->jobDao = $this->em->getDao(Job::getClassName());
 	}
 
-	// <editor-fold defaultstate="colapsed" desc="create & add & edit">
+	public function getDefaultCvOrCreate(Candidate $candidate)
+	{
+		try {
+			$defaultCv = $candidate->defaultCv;
+		} catch (EntityException $e) {
+			$defaultCv = $this->create($candidate);
+			$this->setAsDefault($defaultCv);
+		}
+		return $defaultCv;
+	}
 
-	/**
-	 * Create new Cv for inserted candidate
-	 * @param Candidate $candidate
-	 * @param type $name
-	 * @return Cv
-	 */
 	public function create(Candidate $candidate, $name = NULL)
 	{
 		$cv = new Cv($name);
 		$cv->candidate = $candidate;
 		$cv->isDefault = !$cv->candidate->hasDefaultCv();
-		return $this->cvDao->save($cv);
+		$this->cvDao->save($cv);
+		return $cv;
 	}
 
 	/**
 	 * Set Cv as default and reset other default CV
 	 * @param Cv $cv
+	 * @return self
 	 */
 	public function setAsDefault(Cv $cv)
 	{
 		if (!$cv->isDefault) {
+			return $this;
+		}
+		try {
 			$defaultCv = $cv->candidate->getDefaultCv();
-			if ($cv->id && $defaultCv->id !== $cv->id) {
-				$defaultCv->isDefault = FALSE;
-				$this->em->persist($defaultCv);
+			if ($defaultCv->id !== $cv->id) {
+				$this->switchDefaults($cv, $defaultCv);
 			}
+		} catch (EntityException $e) {
 			$cv->isDefault = TRUE;
-			$this->em->persist($cv);
-			$this->em->flush();
+			$this->cvDao->save($cv);
 		}
+		return $this;
 	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="colapsed" desc="getters">
-
-	/**
-	 * Get default CV or create it
-	 * @param Candidate $candidate
-	 * @return Cv
-	 */
-	public function getDefaultCv(Candidate $candidate)
-	{
-		$defaultCv = $candidate->defaultCv;
-		if (!$defaultCv) {
-			$cv = new Cv;
-			$cv->candidate = $candidate;
-			$cv->isDefault = TRUE;
-			$this->em->persist($cv);
-			$this->em->flush();
-			$defaultCv = $cv;
-		}
-		return $defaultCv;
-	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="finders">
 
 	public function findJobs(Cv $cv)
 	{
 		return $this->jobDao->findBySkillKnows($cv->skillKnows);
 	}
 
-	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="checkers">
-	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="delete">
-	// </editor-fold>
+	private function switchDefaults(Cv $toOn, Cv $toOff)
+	{
+		$toOff->isDefault = FALSE;
+		$toOn->isDefault = TRUE;
+		$this->em->persist($toOn);
+		$this->em->persist($toOff);
+		$this->em->flush();
+		return $this;
+	}
+
 }

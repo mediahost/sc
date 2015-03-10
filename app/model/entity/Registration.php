@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Security\Passwords;
 
@@ -12,8 +13,8 @@ use Nette\Security\Passwords;
  *
  * @property string $mail
  * @property string $name
- * @property string $hash
- * @property string $password
+ * @property-write string $password
+ * @property-read string $hash
  * @property Role $role
  * @property string $facebookId
  * @property string $facebookAccessToken
@@ -21,18 +22,17 @@ use Nette\Security\Passwords;
  * @property string $twitterAccessToken
  * @property string $verificationToken
  * @property DateTime $verificationExpiration
- * @property-write string $password
  */
 class Registration extends BaseEntity
 {
 
-	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+	use Identifier;
 
 	/** @ORM\Column(type="string") */
 	protected $mail;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $hash;
+	private $hash;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
@@ -58,16 +58,15 @@ class Registration extends BaseEntity
 	/** @ORM\Column(type="datetime") */
 	protected $verificationExpiration;
 
-	/**
-	 * Computes salted password hash.
-	 * @param string Password to be hashed.
-	 * @param array with cost (4-31), salt (22 chars)
-	 * @return self
-	 */
 	public function setPassword($password, array $options = NULL)
 	{
 		$this->hash = Passwords::hash($password, $options);
 		return $this;
+	}
+
+	public function getHash()
+	{
+		return $this->hash;
 	}
 
 }

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * 
+ *
  * @property string $accessToken
  * @property string $name
  * @property string $screenName
@@ -18,14 +18,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Twitter extends OAuth
 {
-
-	public function __construct($id = NULL)
-	{
-		if ($id) {
-			$this->id = $id;
-		}
-		parent::__construct();
-	}
 
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $accessToken;
@@ -50,5 +42,18 @@ class Twitter extends OAuth
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $lang;
+
+	public function __construct($id = NULL)
+	{
+		if ($id) {
+			$this->id = $id;
+		}
+		parent::__construct();
+	}
+
+	public function __toString()
+	{
+		return (string) $this->screenName;
+	}
 
 }

@@ -18,9 +18,6 @@ use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 use Nette\Utils\Random;
 
-/**
- * UserFacade
- */
 class UserFacade extends Object
 {
 

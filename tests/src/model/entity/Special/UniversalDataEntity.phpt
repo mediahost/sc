@@ -3,29 +3,29 @@
 namespace Test\Model\Entity\Special;
 
 use App\Model\Entity\Special\UniversalDataEntity;
+use Test\BaseTestCase;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../../bootstrap.php';
 
 /**
- * TEST: Candidate entity
+ * TEST: Universal data entity
  *
  * @testCase
  * @phpVersion 5.4
  */
-class UniversalDataEntityTest extends TestCase
+class UniversalDataEntityTest extends BaseTestCase
 {
 
 	public function testSetAndGet()
 	{
 		$values1 = [
-			'property1' => 'value1',
-			'property2' => TRUE,
-			'property3' => 'value2',
+				'property1' => 'value1',
+				'property2' => TRUE,
+				'property3' => 'value2',
 		];
 		$values2 = [
-			'property' => 'value',
+				'property' => 'value',
 		];
 
 		$entity = new UniversalDataEntity($values1);
@@ -41,5 +41,5 @@ class UniversalDataEntityTest extends TestCase
 
 }
 
-$test = new UniversalDataEntityTest();
+$test = new UniversalDataEntityTest($container);
 $test->run();

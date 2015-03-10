@@ -5,13 +5,15 @@ namespace App\Extensions;
 use App\Helpers;
 use Exception;
 use Nette\Http\FileUpload;
+use Nette\IOException;
 use Nette\Object;
+use Nette\Utils\FileSystem;
 use Nette\Utils\Image;
+use Nette\Utils\UnknownImageFileException;
 use Tracy\Debugger;
 
 class Foto extends Object
 {
-	// <editor-fold defaultstate="collapsed" desc="variables">
 
 	/** @var string */
 	private $rootFolder;
@@ -25,28 +27,17 @@ class Foto extends Object
 	/** @var string */
 	private $defaultFormat;
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="setters">
-
-	/** @return self */
 	public function setFolders($folder, $originalFolderName)
 	{
 		$this->rootFolder = $folder;
-		Helpers::mkDir($folder);
-		if (!is_dir($folder)) {
-			throw new FotoException('Folder \'' . $folder . '\' cannot create.');
-		}
+		FileSystem::createDir($folder);
 
 		$this->originalFolder = Helpers::getPath($folder, $originalFolderName);
-		Helpers::mkDir($this->originalFolder);
-		if (!is_dir($this->originalFolder)) {
-			throw new FotoException('Folder \'' . $this->originalFolder . '\' cannot create.');
-		}
+		FileSystem::createDir($this->originalFolder);
 
 		return $this;
 	}
 
-	/** @return self */
 	public function setDefaultImage($defaultFilename, $defaultFormat = NULL)
 	{
 		if (!$defaultFilename) {
@@ -72,13 +63,11 @@ class Foto extends Object
 		return $this;
 	}
 
-	// </editor-fold>
-
 	/**
 	 * Display requested image
 	 * @param string $name
 	 * @param string $size in format 'width-height'
-	 * @return type
+	 * @return NULL
 	 */
 	public function display($name = NULL, $size = NULL)
 	{
@@ -98,7 +87,7 @@ class Foto extends Object
 
 		if ($sizeX > 0 && $sizeY > 0) {
 			$resizedPath = Helpers::getPath($this->rootFolder, "{$sizeX}-{$sizeY}");
-			Helpers::mkDirForce(Helpers::getPath($resizedPath, self::getFolderFromPath($name)));
+			Helpers::mkDirForce(Helpers::getPath($resizedPath, FotoHelpers::getFolderFromPath($name)));
 			$resized = Helpers::getPath($resizedPath, $name);
 
 			if (!file_exists($resized) || filemtime($filename) > filemtime($resized)) {
@@ -116,13 +105,13 @@ class Foto extends Object
 
 		try {
 			$finishImage = Image::fromFile($filename);
-			$recognizedType = self::recognizeTypeFromName($filename);
+			$recognizedType = FotoHelpers::recognizeTypeFromFileExtension($filename);
 			if ($recognizedType) {
 				$finishImage->send($recognizedType);
 			} else {
 				$finishImage->send($this->defaultFormat);
 			}
-		} catch (\Exception $ex) {
+		} catch (Exception $ex) {
 			Debugger::log($ex->getMessage(), 'image');
 		}
 		return NULL;
@@ -133,11 +122,12 @@ class Foto extends Object
 	 * @param FileUpload|string $source
 	 * @param type $filename filename for save
 	 * @param type $folder set added folder to save image (for ex. products)
-	 * @param type $format
-	 * @return type filename
+	 * @param int $format
+	 * @return string filename
 	 * @throws FotoException
+	 * @throws UnknownImageFileException
 	 */
-	public static function create($source, $filename, $folder = NULL, $format = Image::PNG)
+	public function create($source, $filename, $folder = NULL, $format = Image::PNG)
 	{
 		if ($source instanceof FileUpload) { // uploaded
 			$img = Image::fromString($source->contents);
@@ -160,7 +150,7 @@ class Foto extends Object
 		$filename .= ".{$ext}";
 
 		$folderFullPath = Helpers::getPath($this->originalFolder, $folder);
-		Helpers::mkDirForce($folderFullPath);
+		FileSystem::createDir($folderFullPath);
 
 		$this->delete(Helpers::getPath($folder, $filename));
 
@@ -170,54 +160,48 @@ class Foto extends Object
 		return $fullFilename;
 	}
 
-	/**
-	 * Delete origin and all resized images
-	 * @param string $name
-	 */
 	public function delete($name, $deleteResized = TRUE)
 	{
 		$filename = Helpers::getPath($this->originalFolder, $name);
 		$this->deleteFile($filename);
 		if ($deleteResized) {
-			$this->deleteResized($name);
+			$this->deleteThumbnails($name);
 		}
 	}
 
-	/**
-	 * Delete resized files by origin name
-	 * @param string $name
-	 */
-	public function deleteResized($name)
+	public function deleteThumbnails($name)
 	{
 		foreach (scandir($this->rootFolder) as $dir) {
 			if (preg_match("@^\d+\-\d+$@", $dir)) {
 				$filename = Helpers::getPath($this->originalFolder, $dir, $name);
-				$this->deleteFile($filename);
+				FotoHelpers::deleteFile($filename);
 			}
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="helpers">
+}
+
+class FotoHelpers extends Object
+{
 
 	/**
 	 * Delete file or log it
 	 * @param string $filename
 	 * @return boolean
 	 */
-	private function deleteFile($filename)
+	public static function deleteFile($filename)
 	{
-		if ($filename && file_exists($filename) && !@unlink($filename)) {
+		try {
+			if ($filename) {
+				FileSystem::delete($filename);
+			}
+		} catch (IOException $ex) {
 			Debugger::log($filename . ' wasn\'t deleted.', 'image');
 			return FALSE;
 		}
 		return TRUE;
 	}
-	
-	/**
-	 * Returns folder form path
-	 * @param string $path
-	 * @return string
-	 */
+
 	public static function getFolderFromPath($path)
 	{
 		$splited = preg_split('~/~', $path, -1, PREG_SPLIT_NO_EMPTY);
@@ -228,12 +212,7 @@ class Foto extends Object
 		return NULL;
 	}
 
-	/**
-	 * Return recognized type from file extension
-	 * @param string $filename
-	 * @return string
-	 */
-	public static function recognizeTypeFromName($filename)
+	public static function recognizeTypeFromFileExtension($filename)
 	{
 		if (preg_match('~\.(png|jpg|jpeg|gif)$~i', $filename, $matches)) {
 			switch ($filename) {
@@ -249,7 +228,6 @@ class Foto extends Object
 		return NULL;
 	}
 
-	// </editor-fold>
 }
 
 class FotoException extends Exception

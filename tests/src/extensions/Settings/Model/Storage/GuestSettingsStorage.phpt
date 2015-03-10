@@ -7,7 +7,7 @@ use App\Model\Entity\PageConfigSettings;
 use App\Model\Entity\PageDesignSettings;
 use Nette\DI\Container;
 use Nette\Http\Session;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 use Tester\Assert;
 
 $container = require __DIR__ . '/../../../../bootstrap.php';
@@ -18,7 +18,7 @@ $container = require __DIR__ . '/../../../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class GuestSettingsStorageTest extends ParentTestCase
+class GuestSettingsStorageTest extends DbTestCase
 {
 
 	/** @var Session @inject */

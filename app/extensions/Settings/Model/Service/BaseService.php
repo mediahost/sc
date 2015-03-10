@@ -31,10 +31,6 @@ abstract class BaseService extends Object
 		return NULL;
 	}
 
-	/**
-	 * Saving user
-	 * @return User
-	 */
 	public function saveUser()
 	{
 		if ($this->user instanceof User && $this->user->id) {

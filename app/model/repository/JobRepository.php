@@ -3,11 +3,12 @@
 namespace App\Model\Repository;
 
 use App\Model\Repository\Finders\JobRepository\FinderJobsBySkillKnows;
+use Traversable;
 
 class JobRepository extends BaseRepository
 {
 
-	public function findBySkillKnows(array $skillKnows)
+	public function findBySkillKnows(Traversable $skillKnows)
 	{
 		$qb = $this->createQueryBuilder('e');
 		$finder = new FinderJobsBySkillKnows($qb);

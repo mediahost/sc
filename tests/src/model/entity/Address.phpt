@@ -3,8 +3,9 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Address;
+use Kdyby\Doctrine\MemberAccessException;
+use Test\BaseTestCase;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -14,7 +15,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class AddressTest extends TestCase
+class AddressTest extends BaseTestCase
 {
 
 	public function testSetAndGet()
@@ -24,7 +25,7 @@ class AddressTest extends TestCase
 		$city = 'city under hill';
 		$zipcode = '123 45';
 		$country = 'our country';
-		
+
 		$entity = new Address;
 		$entity->name = $name;
 		$entity->street = $street;
@@ -34,18 +35,19 @@ class AddressTest extends TestCase
 
 		Assert::null($entity->id);
 		Assert::same($name, $entity->name);
-		Assert::same($name, (string) $entity);
 		Assert::same($street, $entity->street);
 		Assert::same($city, $entity->city);
 		Assert::same($zipcode, $entity->zipcode);
 		Assert::same($country, $entity->country);
 
-		Assert::exception(function() use ($entity) {
+		Assert::same($name, (string) $entity);
+
+		Assert::exception(function () use ($entity) {
 			$entity->id = 123;
-		}, 'Kdyby\Doctrine\MemberAccessException');
+		}, MemberAccessException::class);
 	}
 
 }
 
-$test = new AddressTest();
+$test = new AddressTest($container);
 $test->run();

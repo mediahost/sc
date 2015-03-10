@@ -179,7 +179,7 @@ class CompanyUserControl extends BaseControl
 	private function getRoles()
 	{
 		if ($this->roles === NULL) {
-			$this->roles = $this->companyFacade->getRoles();
+			$this->roles = $this->companyFacade->getRolesNames();
 		}
 		return $this->roles;
 	}
@@ -188,7 +188,7 @@ class CompanyUserControl extends BaseControl
 	private function getCompanies()
 	{
 		if ($this->companies === NULL) {
-			$this->companies = $this->companyFacade->getCompanies();
+			$this->companies = $this->companyFacade->getCompaniesNames();
 		}
 		return $this->companies;
 	}

@@ -5,12 +5,12 @@ namespace Test\Examples;
 use App\Extensions\Settings\Model\Service\LanguageService;
 use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use Nette\DI\Container;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 
 /**
  * Parent for example use
  */
-abstract class BaseUse extends ParentTestCase
+abstract class BaseUse extends DbTestCase
 {
 
 	/** @var DefaultSettingsStorage */

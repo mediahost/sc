@@ -4,8 +4,9 @@ namespace Test\Model\Entity;
 
 use App\Model\Entity\PageConfigSettings;
 use App\Model\Entity\User;
+use Kdyby\Doctrine\MemberAccessException;
+use Test\BaseTestCase;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -15,13 +16,13 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class PageConfigSettingsTest extends TestCase
+class PageConfigSettingsTest extends BaseTestCase
 {
 
 	public function testSetAndGet()
 	{
 		$values = [
-			'language' => 'cs_CS',
+				'language' => 'cs_CS',
 		];
 		$user = new User;
 		$user->mail = ('user@mail.com');
@@ -35,9 +36,9 @@ class PageConfigSettingsTest extends TestCase
 		Assert::count(1, $entity1->notNullValuesArray);
 		Assert::same($values['language'], $entity1->language);
 
-		Assert::exception(function() use ($entity1) {
+		Assert::exception(function () use ($entity1) {
 			$entity1->id = 123;
-		}, 'Kdyby\Doctrine\MemberAccessException');
+		}, MemberAccessException::class);
 
 		// init only one value
 		$entity2 = new PageConfigSettings;
@@ -51,7 +52,7 @@ class PageConfigSettingsTest extends TestCase
 		$entity3->append($entity2);
 		Assert::count(1, $entity3->notNullValuesArray);
 		Assert::same($values['language'], $entity3->language);
-		
+
 		// append with rewrite
 		$entity4 = new PageConfigSettings();
 		$newLanguageValue = 'sk_SK';
@@ -64,5 +65,5 @@ class PageConfigSettingsTest extends TestCase
 
 }
 
-$test = new PageConfigSettingsTest();
+$test = new PageConfigSettingsTest($container);
 $test->run();

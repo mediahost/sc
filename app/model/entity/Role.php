@@ -2,9 +2,10 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Tracy\Debugger;
 
 /**
  * @ORM\Entity
@@ -14,7 +15,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 class Role extends BaseEntity
 {
 
-	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+	use Identifier;
 
 	const GUEST = 'guest';
 	const SIGNED = 'signed';
@@ -22,6 +23,9 @@ class Role extends BaseEntity
 	const COMPANY = 'company';
 	const ADMIN = 'admin';
 	const SUPERADMIN = 'superadmin';
+	const ROLE_IS_SAME = 0;
+	const ROLE_IS_UPPER = 1;
+	const ROLE_IS_LOWER = -1;
 
 	/** @ORM\Column(type="string", length=128) */
 	protected $name;
@@ -39,44 +43,28 @@ class Role extends BaseEntity
 		return (string) $this->name;
 	}
 
-	/**
-	 * Get max role from inserted roles
-	 * If collection, then gets only last item
-	 * @param array $roles
-	 * @return Role
-	 */
-	public static function getMaxRole($roles)
+	public static function getMaxRole(array $roles)
 	{
-		$maxRole = new Role;
-		if ($roles instanceof Collection) {
-			return $roles->last();
-		} else if (is_array($roles)) {
-			usort($roles, ['App\Model\Entity\Role', 'cmpRoles']);
-			$max = end($roles);
-			if ($max instanceof Role) {
-				$maxRole = $max;
-			} else {
-				$maxRole->name = (string) end($roles);
-			}
+		usort($roles, [self::getClassName(), 'compareRoles']);
+		$max = end($roles);
+		if ($max instanceof Role) {
+			$maxRole = $max;
+		} else {
+			$maxRole = new Role;
+			$maxRole->name = (string) $max;
 		}
 		return $maxRole;
 	}
 
-	/**
-	 * Compare roles
-	 * @param Role $roleA
-	 * @param Role $roleB
-	 * @return int
-	 */
-	public static function cmpRoles($roleA, $roleB)
+	public static function compareRoles($roleA, $roleB)
 	{
 		$roleOrder = [
-			self::GUEST,
-			self::SIGNED,
-			self::CANDIDATE,
-			self::COMPANY,
-			self::ADMIN,
-			self::SUPERADMIN,
+				self::GUEST,
+				self::SIGNED,
+				self::CANDIDATE,
+				self::COMPANY,
+				self::ADMIN,
+				self::SUPERADMIN,
 		];
 		$roleAName = $roleA instanceof Role ? $roleA->name : (string) $roleA;
 		$roleBName = $roleB instanceof Role ? $roleB->name : (string) $roleB;
@@ -85,9 +73,9 @@ class Role extends BaseEntity
 		$roleBPosition = array_search($roleBName, $roleOrder);
 
 		if ($roleAPosition == $roleBPosition) {
-			return 0;
+			return self::ROLE_IS_SAME;
 		}
-		return ($roleAPosition < $roleBPosition) ? -1 : 1;
+		return ($roleAPosition < $roleBPosition) ? self::ROLE_IS_LOWER : self::ROLE_IS_UPPER;
 	}
 
 }

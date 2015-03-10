@@ -77,7 +77,7 @@ class CompanyFacadeTest extends BaseFacade
 		$company3 = new Company('my company 3');
 		$this->companyDao->save($company3);
 
-		$companies = $this->companyFacade->getCompanies();
+		$companies = $this->companyFacade->getCompaniesNames();
 		Assert::same([1 => 'my company 1', 2 => 'my company 2', 3 => 'my company 3'], $companies);
 
 		$role1 = new CompanyRole(CompanyRole::ADMIN);
@@ -87,7 +87,7 @@ class CompanyFacadeTest extends BaseFacade
 		$role3 = new CompanyRole(CompanyRole::EDITOR);
 		$this->companyRoleDao->save($role3);
 
-		$roles = $this->companyFacade->getRoles();
+		$roles = $this->companyFacade->getRolesNames();
 		Assert::same([1 => CompanyRole::ADMIN, 2 => CompanyRole::MANAGER, 3 => CompanyRole::EDITOR], $roles);
 	}
 
@@ -197,12 +197,12 @@ class CompanyFacadeTest extends BaseFacade
 		Assert::count(1, $this->companyFacade->findPermissions($company));
 		$this->companyFacade->clearPermissions($company);
 		Assert::count(0, $this->companyFacade->findPermissions($company));
-		Assert::count(1, $this->companyFacade->getCompanies());
+		Assert::count(1, $this->companyFacade->getCompaniesNames());
 
 		$this->companyFacade->addPermission($company, $user, [$role1, $role2]);
 		$this->companyFacade->delete($company);
 		Assert::count(0, $this->companyFacade->findPermissions($company));
-		Assert::count(0, $this->companyFacade->getCompanies());
+		Assert::count(0, $this->companyFacade->getCompaniesNames());
 	}
 
 }

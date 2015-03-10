@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Nette\InvalidArgumentException;
 use Nette\Object;
+use Tracy\Debugger;
 
 class InstallerModel extends Object
 {

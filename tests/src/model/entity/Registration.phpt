@@ -5,9 +5,9 @@ namespace Test\Model\Entity;
 use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
 use DateTime;
+use Kdyby\Doctrine\MemberAccessException;
 use Nette\Security\Passwords;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -17,14 +17,13 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class RegistrationTest extends TestCase
+class RegistrationTest extends BaseTestCase
 {
 
 	public function testSetAndGet()
 	{
 		$mail = 'anakin@skywalker.com';
 		$role = new Role('guest');
-		$hash = 'I4M4H4SHbitch!';
 		$password = 'iAmDarthWaderL0053R5';
 		$facebookId = 'FacebookIfThisIsIntCanBeLOngerThan32bit';
 		$facebookAccessToken = 'facebookAccessTokenCanBeToooooooooLongOrLonger';
@@ -34,15 +33,12 @@ class RegistrationTest extends TestCase
 
 		$entity = new Registration();
 		Assert::null($entity->id);
-		Assert::exception(function() use ($entity) {
+		Assert::exception(function () use ($entity) {
 			$entity->id = 123;
-		}, 'Kdyby\Doctrine\MemberAccessException');
+		}, MemberAccessException::class);
 
 		$entity->mail = $mail;
 		Assert::same($mail, $entity->mail);
-
-		$entity->hash = $hash;
-		Assert::same($hash, $entity->hash);
 
 		$entity->setPassword($password);
 		Assert::true(Passwords::verify($password, $entity->hash));
@@ -73,5 +69,5 @@ class RegistrationTest extends TestCase
 
 }
 
-$test = new RegistrationTest();
+$test = new RegistrationTest($container);
 $test->run();

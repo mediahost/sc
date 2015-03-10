@@ -1,6 +1,6 @@
 doctrine:
 	host: localhost
-	user: user
+	user: user # user must have right to create DB
 	password: pasword
 	dbname: dbname
 

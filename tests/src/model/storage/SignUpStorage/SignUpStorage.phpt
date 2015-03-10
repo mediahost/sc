@@ -5,7 +5,7 @@ namespace Test\Model\Storage\SignUpStorage;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Storage\SignUpStorage;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 use Tester\Assert;
 
 $container = require __DIR__ . '/../../../bootstrap.php';
@@ -16,7 +16,7 @@ $container = require __DIR__ . '/../../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class SignUpStorageTest extends ParentTestCase
+class SignUpStorageTest extends DbTestCase
 {
 
 	/** @var \Nette\Http\Session @inject */

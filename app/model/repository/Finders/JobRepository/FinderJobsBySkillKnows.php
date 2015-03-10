@@ -45,7 +45,7 @@ class FinderJobsBySkillKnows extends Finder
 
 	private function isSkillsMatch(Job $job)
 	{
-		$skillRequests = new ArrayCollection($job->skillRequests);
+		$skillRequests = new ArrayCollection((array) $job->skillRequests);
 		$existsSomeKnowWhichFits = function ($k, SkillKnowRequest $request) {
 			return $this->existsSomeKnowWhichFits($request);
 		};

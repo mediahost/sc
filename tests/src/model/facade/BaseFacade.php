@@ -6,12 +6,12 @@ use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 
 /**
  * Parent of facades' tests
  */
-abstract class BaseFacade extends ParentTestCase
+abstract class BaseFacade extends DbTestCase
 {
 
 	/** @var RoleFacade @inject */
@@ -34,8 +34,8 @@ abstract class BaseFacade extends ParentTestCase
 
 	protected function tearDown()
 	{
-		parent::tearDown();
 		$this->dropSchema();
+		parent::tearDown();
 	}
 
 }

@@ -7,7 +7,7 @@ use Exception;
 class UserRepository extends BaseRepository
 {
 
-	public function findPairsByRoleId($roleId, $value = NULL, $orderBy = array(), $key = NULL)
+	public function findPairsByRoleId($roleId, $value = NULL, $orderBy = [], $key = NULL)
 	{
 		if (!is_array($orderBy)) {
 			$key = $orderBy;
@@ -24,12 +24,14 @@ class UserRepository extends BaseRepository
 				->innerJoin('e.roles', 'r')
 				->where('r.id = :roleid')
 				->setParameter('roleid', $roleId)
+				->autoJoinOrderBy((array) $orderBy)
 				->getQuery();
 
 		try {
-			return array_map(function ($row) {
+			$getFirst = function ($row) {
 				return reset($row);
-			}, $query->getArrayResult());
+			};
+			return array_map($getFirst, $query->getArrayResult());
 		} catch (Exception $e) {
 			throw $this->handleException($e, $query);
 		}

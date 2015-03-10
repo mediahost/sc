@@ -43,13 +43,11 @@ class DesignService extends BaseService
 		return $this->user->pageDesignSettings;
 	}
 
-	/** @return bool */
 	public function isAllowedColor($color)
 	{
 		return array_key_exists($color, $this->colors);
 	}
 
-	/** @return self */
 	public function setColor($color)
 	{
 		if ($this->isAllowedColor($color) && $this->user) {
@@ -63,7 +61,6 @@ class DesignService extends BaseService
 		return $this;
 	}
 
-	/** @return self */
 	public function setSidebarClosed($value = TRUE)
 	{
 		if ($this->user) {

@@ -3,8 +3,9 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\Twitter;
+use Kdyby\Doctrine\MemberAccessException;
+use Test\BaseTestCase;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -14,7 +15,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class TwitterTest extends TestCase
+class TwitterTest extends BaseTestCase
 {
 
 	public function testSetAndGet()
@@ -49,12 +50,12 @@ class TwitterTest extends TestCase
 		Assert::same($statusesCount, $entity->statusesCount);
 		Assert::same($lang, $entity->lang);
 
-		Assert::exception(function() use ($entity, $id) {
+		Assert::exception(function () use ($entity, $id) {
 			$entity->id = $id;
-		}, 'Kdyby\Doctrine\MemberAccessException');
+		}, MemberAccessException::class);
 	}
 
 }
 
-$test = new TwitterTest();
+$test = new TwitterTest($container);
 $test->run();

@@ -2,16 +2,18 @@
 ## Log
 #################
 /log/*
+!/log/
 !/log/.htaccess
-!/log/web.config
 
 #################
 ## Temp
 #################
 /temp/*
-/www/webtemp/*
+!/temp/
 !/temp/.htaccess
-!/temp/web.config
+/www/webtemp/*
+!/www/webtemp/
+!/www/webtemp/.htaccess
 
 #################
 ## Nette configs
@@ -34,8 +36,8 @@
 ## Tests
 #################
 /tests/test.log
-/tests/temp/*
-!/tests/temp/.htaccess
+/tests/tmp/*
+!/tests/tmp/
 
 #################
 ## Bin
@@ -52,10 +54,6 @@
 ## PhpStorm
 ################
 .idea
-
-/tmp/*
-/purge/*
-!/www/webtemp/.htaccess
 
 #################
 ## Deployment

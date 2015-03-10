@@ -65,7 +65,7 @@ class FinderCvsBySkillRequests extends Finder
 
 	private function addYearsEq(SkillKnowRequest $request)
 	{
-		if ($request->isYearsMather()) {
+		if ($request->isYearsMatter()) {
 			$keyFrom = $this->getKeyName('yearsFrom');
 			$keyTo = $this->getKeyName('yearsTo');
 

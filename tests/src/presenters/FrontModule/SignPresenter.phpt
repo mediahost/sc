@@ -2,6 +2,7 @@
 
 namespace Test\Presenters\FrontModule;
 
+use Nette\Application\Responses\RedirectResponse;
 use Test\Presenters\BasePresenter;
 use Tester\Assert;
 use Tester\DomQuery;
@@ -20,19 +21,13 @@ class SignPresenterTest extends BasePresenter
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->updateSchema();
-		$this->installer->install();
-		$this->tester->init('Front:Sign');
-	}
-
-	protected function tearDown()
-	{
-		$this->dropSchema();
+		$this->initSystem();
+		$this->openPresenter('Front:Sign');
 	}
 
 	public function testRenderIn()
 	{
-		$response = $this->tester->testActionGet('in');
+		$response = $this->runPresenterActionGet('in');
 
 		$html = (string) $response->getSource();
 		$dom = DomQuery::fromHtml($html);
@@ -64,8 +59,8 @@ class SignPresenterTest extends BasePresenter
 	public function testRenderInLogged()
 	{
 		$this->loginAdmin();
-		$response = $this->tester->test('in');
-		Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+		$response = $this->runPresenterActionGet('in');
+		Assert::type(RedirectResponse::class, $response);
 		$this->logout();
 	}
 

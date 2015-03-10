@@ -14,7 +14,7 @@ $container = require __DIR__ . '/../../../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class ExpirationServiceTest extends ParentService
+class ExpirationServiceTest extends BaseService
 {
 
 	/** @var ExpirationService */

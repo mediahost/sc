@@ -10,7 +10,6 @@ namespace App\Extensions\Settings\Model\Service;
 class PageConfigService extends BaseService
 {
 
-	/** @return string */
 	public function getItemsPerPage()
 	{
 		if (isset($this->defaultStorage->pageConfig->itemsPerPage)) {
@@ -19,7 +18,6 @@ class PageConfigService extends BaseService
 		return NULL;
 	}
 
-	/** @return string */
 	public function getItemsPerRow()
 	{
 		if (isset($this->defaultStorage->pageConfig->itemsPerRow)) {
@@ -28,7 +26,6 @@ class PageConfigService extends BaseService
 		return NULL;
 	}
 
-	/** @return string */
 	public function getRowsPerPage()
 	{
 		if (isset($this->defaultStorage->pageConfig->rowsPerPage)) {

@@ -8,7 +8,7 @@ use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use Nette\DI\Container;
 use Nette\Security\IAuthorizator;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 use Tester\Assert;
 use Tester\Helpers as Helpers2;
 
@@ -20,7 +20,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class InstallerTest extends ParentTestCase
+class InstallerTest extends DbTestCase
 {
 
 	/** @var string */

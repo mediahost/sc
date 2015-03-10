@@ -8,7 +8,7 @@ use Kdyby\Doctrine\MemberAccessException;
 
 /**
  * @ORM\MappedSuperclass
- * 
+ *
  * @property string $id
  */
 class OAuth extends BaseEntity

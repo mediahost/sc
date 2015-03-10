@@ -2,6 +2,7 @@
 
 namespace Test\Presenters\AppModule;
 
+use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -13,25 +14,25 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class ProfilePresenterTest extends BasePresenter
+class ProfilePresenterTest extends AppBasePresenter
 {
 
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->tester->init('App:Profile');
+		$this->openPresenter('App:Profile');
 	}
 
 	public function testUnlogged()
 	{
-		$response = $this->tester->test('default');
-		Assert::type('Nette\Application\Responses\RedirectResponse', $response);
+		$response = $this->runPresenterActionGet('default');
+		Assert::type(RedirectResponse::class, $response);
 	}
 
 	public function testDefault()
 	{
 		$this->loginCandidate();
-		$response = $this->tester->testActionGet('default');
+		$response = $this->runPresenterActionGet('default');
 
 		$html = (string) $response->getSource();
 		$dom = DomQuery::fromHtml($html);

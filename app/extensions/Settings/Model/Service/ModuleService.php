@@ -12,7 +12,7 @@ class ModuleService extends BaseService
 
 	/**
 	 * Check if name of module is allowed
-	 * @param type $name
+	 * @param string $name
 	 * @return boolean
 	 */
 	public function isAllowedModule($name)
@@ -25,7 +25,7 @@ class ModuleService extends BaseService
 
 	/**
 	 * If setting exists then return universal entity else return NULL
-	 * @param type $name
+	 * @param string $name
 	 * @return UniversalDataEntity|NULL
 	 */
 	public function getModuleSettings($name)

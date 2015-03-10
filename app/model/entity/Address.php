@@ -3,6 +3,7 @@
 namespace App\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
@@ -17,7 +18,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 class Address extends BaseEntity
 {
 
-	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+	use Identifier;
 
 	/** @ORM\Column(type="string", length=512, nullable=false) */
 	protected $name;
@@ -33,14 +34,13 @@ class Address extends BaseEntity
 
 	/** @ORM\Column(type="string", length=512, nullable=false) */
 	protected $country;
-	
-	/** @var return self */
+
+	// TODO: do this method
 	public function parseFromText($text)
 	{
 		return $this;
 	}
 
-	/** @return string */
 	public function __toString()
 	{
 		return (string) $this->name;

@@ -3,8 +3,9 @@
 namespace Test\Model\Entity;
 
 use App\Model\Entity\OAuth;
+use Kdyby\Doctrine\MemberAccessException;
+use Test\BaseTestCase;
 use Tester\Assert;
-use Tester\TestCase;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
@@ -14,7 +15,7 @@ $container = require __DIR__ . '/../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class OAuthTest extends TestCase
+class OAuthTest extends BaseTestCase
 {
 
 	public function testSetAndGet()
@@ -23,12 +24,12 @@ class OAuthTest extends TestCase
 
 		Assert::null($entity->id);
 
-		Assert::exception(function() use ($entity) {
+		Assert::exception(function () use ($entity) {
 			$entity->id = '123456789';
-		}, 'Kdyby\Doctrine\MemberAccessException');
+		}, MemberAccessException::class);
 	}
 
 }
 
-$test = new OAuthTest();
+$test = new OAuthTest($container);
 $test->run();

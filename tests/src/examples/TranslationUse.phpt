@@ -50,7 +50,7 @@ class TranslationUseTest extends BaseUse
 		$entity->mergeNewTranslations();
 		
 		$this->articleDao->save($entity);
-		
+
 		$entityFinded = $this->articleDao->find($entity->id);
 		$entityFinded->setCurrentLocale($this->getLanguageService()->language);
 		Assert::same('awesome', $entityFinded->title);

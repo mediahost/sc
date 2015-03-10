@@ -12,7 +12,7 @@ use Test\Examples\Model\Entity\Asociation\OneToManyUnidirectionalWithJoinTable;
 use Test\Examples\Model\Entity\Asociation\OneToOneBidirectional;
 use Test\Examples\Model\Entity\Asociation\OneToOneSelfReferencing;
 use Test\Examples\Model\Entity\Asociation\OneToOneUnidirectional;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 use Tester\Assert;
 use Tester\Environment;
 
@@ -25,7 +25,7 @@ $container = require __DIR__ . '/../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class DoctrineAssociationTest extends ParentTestCase
+class DoctrineAssociationTest extends DbTestCase
 {
 
 	const MAIL = 'mail@domain.com';

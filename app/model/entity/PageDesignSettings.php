@@ -3,12 +3,13 @@
 namespace App\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
  * Page design settings (for Metronic)
  * @ORM\Entity
- * 
+ *
  * @property-read string $color
  * @property-read boolean $layoutBoxed
  * @property-read boolean $containerBgSolid
@@ -24,7 +25,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 class PageDesignSettings extends BaseEntity
 {
 
-	use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+	use Identifier;
 
 	/** @ORM\Column(type="string", length=50, nullable=true) */
 	protected $color;
@@ -56,11 +57,6 @@ class PageDesignSettings extends BaseEntity
 	/** @ORM\Column(type="boolean", nullable=true) */
 	protected $sidebarMenuLight;
 
-	/**
-	 * Set default value for entity
-	 * @param array $values
-	 * @return self
-	 */
 	public function setValues(array $values)
 	{
 		foreach ($values as $property => $value) {
@@ -86,40 +82,35 @@ class PageDesignSettings extends BaseEntity
 		}
 		return $array;
 	}
-	
-	/**
-	 * Append entity data
-	 * @param PageDesignSettings $entity
-	 * @param type $rewriteExisting
-	 */
-	public function append(PageDesignSettings $entity, $rewriteExisting = FALSE)
+
+	public function append(PageDesignSettings $imported, $rewriteExisting = FALSE)
 	{
 		if ($rewriteExisting || $this->color === NULL) {
-			$this->color = $entity->color;
+			$this->color = $imported->color;
 		}
 		if ($rewriteExisting || $this->containerBgSolid === NULL) {
-			$this->containerBgSolid = $entity->containerBgSolid;
+			$this->containerBgSolid = $imported->containerBgSolid;
 		}
 		if ($rewriteExisting || $this->headerFixed === NULL) {
-			$this->headerFixed = $entity->headerFixed;
+			$this->headerFixed = $imported->headerFixed;
 		}
 		if ($rewriteExisting || $this->footerFixed === NULL) {
-			$this->footerFixed = $entity->footerFixed;
+			$this->footerFixed = $imported->footerFixed;
 		}
 		if ($rewriteExisting || $this->sidebarClosed === NULL) {
-			$this->sidebarClosed = $entity->sidebarClosed;
+			$this->sidebarClosed = $imported->sidebarClosed;
 		}
 		if ($rewriteExisting || $this->sidebarFixed === NULL) {
-			$this->sidebarFixed = $entity->sidebarFixed;
+			$this->sidebarFixed = $imported->sidebarFixed;
 		}
 		if ($rewriteExisting || $this->sidebarReversed === NULL) {
-			$this->sidebarReversed = $entity->sidebarReversed;
+			$this->sidebarReversed = $imported->sidebarReversed;
 		}
 		if ($rewriteExisting || $this->sidebarMenuHover === NULL) {
-			$this->sidebarMenuHover = $entity->sidebarMenuHover;
+			$this->sidebarMenuHover = $imported->sidebarMenuHover;
 		}
 		if ($rewriteExisting || $this->sidebarMenuLight === NULL) {
-			$this->sidebarMenuLight = $entity->sidebarMenuLight;
+			$this->sidebarMenuLight = $imported->sidebarMenuLight;
 		}
 		return $this;
 	}

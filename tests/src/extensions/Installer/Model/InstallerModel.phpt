@@ -10,7 +10,7 @@ use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Nette\DI\Container;
 use Nette\Security\IAuthorizator;
-use Test\ParentTestCase;
+use Test\DbTestCase;
 use Tester\Assert;
 use Tester\Environment;
 use Tester\FileMock;
@@ -23,7 +23,7 @@ $container = require __DIR__ . '/../../../bootstrap.php';
  * @testCase
  * @phpVersion 5.4
  */
-class InstallerModelTest extends ParentTestCase
+class InstallerModelTest extends DbTestCase
 {
 	// <editor-fold defaultstate="collapsed" desc="injects">
 
