@@ -35,39 +35,6 @@ class RoleFacadeTest extends BaseFacade
 		Assert::null($this->roleFacade->create(Role::GUEST));
 	}
 
-	private function createAllRoles()
-	{
-		$this->roleFacade->create(Role::GUEST);
-		$this->roleFacade->create(Role::SIGNED);
-		$this->roleFacade->create(Role::CANDIDATE);
-		$this->roleFacade->create(Role::COMPANY);
-		$this->roleFacade->create(Role::ADMIN);
-		$this->roleFacade->create(Role::SUPERADMIN);
-		$this->roleDao->clear();
-	}
-
-	public function testIsUnique()
-	{
-		$this->roleFacade->create(Role::CANDIDATE);
-		$this->roleDao->clear();
-		Assert::false($this->roleFacade->isUnique(Role::CANDIDATE));
-		Assert::true($this->roleFacade->isUnique(Role::GUEST));
-	}
-
-	public function testGetRoles()
-	{
-		$this->createAllRoles();
-		$roles = $this->roleFacade->getRoles();
-		Assert::type('array', $roles);
-		Assert::count(6, $roles);
-		Assert::same(Role::GUEST, $roles[1]);
-		Assert::same(Role::SIGNED, $roles[2]);
-		Assert::same(Role::CANDIDATE, $roles[3]);
-		Assert::same(Role::COMPANY, $roles[4]);
-		Assert::same(Role::ADMIN, $roles[5]);
-		Assert::same(Role::SUPERADMIN, $roles[6]);
-	}
-
 	public function testFinds()
 	{
 		$this->createAllRoles();
@@ -80,6 +47,14 @@ class RoleFacadeTest extends BaseFacade
 		Assert::same($lowers, $this->roleFacade->findLowerRoles($roles));
 		$lowers[] = Role::ADMIN;
 		Assert::same($lowers, $this->roleFacade->findLowerRoles($roles, TRUE));
+	}
+
+	public function testIsUnique()
+	{
+		$this->roleFacade->create(Role::CANDIDATE);
+		$this->roleDao->clear();
+		Assert::false($this->roleFacade->isUnique(Role::CANDIDATE));
+		Assert::true($this->roleFacade->isUnique(Role::GUEST));
 	}
 
 	public function testIsRegistrable()
@@ -95,6 +70,17 @@ class RoleFacadeTest extends BaseFacade
 		Assert::true($this->roleFacade->isRegistrable(Role::CANDIDATE));
 		Assert::true($this->roleFacade->isRegistrable(Role::COMPANY));
 		Assert::false($this->roleFacade->isRegistrable(Role::ADMIN));
+	}
+
+	private function createAllRoles()
+	{
+		$this->roleFacade->create(Role::GUEST);
+		$this->roleFacade->create(Role::SIGNED);
+		$this->roleFacade->create(Role::CANDIDATE);
+		$this->roleFacade->create(Role::COMPANY);
+		$this->roleFacade->create(Role::ADMIN);
+		$this->roleFacade->create(Role::SUPERADMIN);
+		$this->roleDao->clear();
 	}
 
 }

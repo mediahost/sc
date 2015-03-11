@@ -4,13 +4,13 @@ namespace Test\Model\Facade;
 
 use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
 use App\Model\Facade\CompanyFacade;
+use App\Model\Facade\CvFacade;
+use App\Model\Facade\JobFacade;
 use App\Model\Facade\RoleFacade;
+use App\Model\Facade\SkillFacade;
 use App\Model\Facade\UserFacade;
 use Test\DbTestCase;
 
-/**
- * Parent of facades' tests
- */
 abstract class BaseFacade extends DbTestCase
 {
 
@@ -22,6 +22,15 @@ abstract class BaseFacade extends DbTestCase
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
+
+	/** @var JobFacade @inject */
+	public $jobFacade;
+
+	/** @var CvFacade @inject */
+	public $cvFacade;
+
+	/** @var SkillFacade @inject */
+	public $skillFacade;
 
 	/** @var DefaultSettingsStorage @inject */
 	public $defaultSettings;

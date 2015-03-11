@@ -3,6 +3,7 @@
 namespace App\Model\Entity\Traits;
 
 use DateTime;
+use Kdyby\Doctrine\MemberAccessException;
 use Nette\Security\Passwords;
 
 /**
@@ -73,6 +74,24 @@ trait UserPassword
 	public function getRecoveryExpiration()
 	{
 		return $this->recoveryExpiration;
+	}
+
+	/** @return string */
+	public function getHash()
+	{
+		if ($this->isNew()) {
+			return $this->hash;
+		}
+		throw new MemberAccessException('Cannot read saved property ' . self::getClassName() . '::$hash');
+	}
+
+	public function setHash($hash)
+	{
+		if ($this->isNew()) {
+			$this->hash = $hash;
+			return $this;
+		}
+		throw new MemberAccessException('Cannot write saved property ' . self::getClassName() . '::$hash');
 	}
 
 }

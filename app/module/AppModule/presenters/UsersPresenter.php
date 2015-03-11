@@ -122,7 +122,7 @@ class UsersPresenter extends BasePresenter
 		} else if (!$this->canDelete($this->user, $user)) {
 			$this->flashMessage('You can\'t delete this user.', 'danger');
 		} else {
-			$this->userDao->delete($user);
+			$this->userFacade->delete($user);
 			$this->flashMessage('User was deleted.', 'success');
 		}
 		$this->redirect('default');
@@ -178,7 +178,8 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function canDelete(IdentityUser $identityUser, User $user)
 	{
-		return $this->canEdit($identityUser, $user);
+		$isDeletable = $this->userFacade->isDeletable($user);
+		return $this->canEdit($identityUser, $user) && $isDeletable;
 	}
 
 	/**

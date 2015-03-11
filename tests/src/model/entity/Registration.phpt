@@ -7,6 +7,7 @@ use App\Model\Entity\Role;
 use DateTime;
 use Kdyby\Doctrine\MemberAccessException;
 use Nette\Security\Passwords;
+use Test\BaseTestCase;
 use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
@@ -25,6 +26,7 @@ class RegistrationTest extends BaseTestCase
 		$mail = 'anakin@skywalker.com';
 		$role = new Role('guest');
 		$password = 'iAmDarthWaderL0053R5';
+		$hash = 'HashL0053R5';
 		$facebookId = 'FacebookIfThisIsIntCanBeLOngerThan32bit';
 		$facebookAccessToken = 'facebookAccessTokenCanBeToooooooooLongOrLonger';
 		$twitterId = 'TwitterIfThisIsIntCanBeLOngerThan32bit';
@@ -40,7 +42,10 @@ class RegistrationTest extends BaseTestCase
 		$entity->mail = $mail;
 		Assert::same($mail, $entity->mail);
 
-		$entity->setPassword($password);
+		$entity->hash = $hash;
+		Assert::same($hash, $entity->hash);
+
+		$entity->password = $password;
 		Assert::true(Passwords::verify($password, $entity->hash));
 
 		$entity->role = $role;
@@ -59,11 +64,9 @@ class RegistrationTest extends BaseTestCase
 		$entity->twitterAccessToken = $twitterAccessToken;
 		Assert::same($twitterAccessToken, $entity->twitterAccessToken);
 
-		$entity->verificationToken = $verificationToken;
-		Assert::same($verificationToken, $entity->verificationToken);
-
 		$tomorrow = new DateTime('now + 1 day');
-		$entity->verificationExpiration = $tomorrow;
+		$entity->setVerification($verificationToken, $tomorrow);
+		Assert::same($verificationToken, $entity->verificationToken);
 		Assert::equal($tomorrow, $entity->verificationExpiration);
 	}
 

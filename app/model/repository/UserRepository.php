@@ -2,6 +2,8 @@
 
 namespace App\Model\Repository;
 
+use App\Model\Entity\User;
+use Doctrine\ORM\Query\QueryException;
 use Exception;
 
 class UserRepository extends BaseRepository
@@ -33,8 +35,18 @@ class UserRepository extends BaseRepository
 			};
 			return array_map($getFirst, $query->getArrayResult());
 		} catch (Exception $e) {
-			throw $this->handleException($e, $query);
+			throw new QueryException($e, $query);
 		}
+	}
+
+	/**
+	 * @deprecated Use UserFacade instead
+	 * @param User $entity
+	 */
+	public function delete($entity)
+	{
+		$className = UserRepository::getClassName();
+		throw new RepositoryException('Use ' . $className . '::delete() instead.');
 	}
 
 }

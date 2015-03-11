@@ -34,7 +34,7 @@ $configurator->createRobotLoader()
 		->addDirectory($rootDir . '/../vendor/others')
 		->register();
 
-if (!getenv(\Tester\Environment::RUNNER) && !getenv("XDEBUG_CONFIG")) {
+if (!getenv(\Tester\Environment::RUNNER)) {
 	$configurator->setDebugMode(TRUE);
 	$configurator->enableDebugger($rootDir . '/../log/');
 }

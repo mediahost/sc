@@ -20,10 +20,16 @@ class CompanyPermission extends BaseEntity
 	use Identifier;
 	use CompanyPermissionRoles;
 
-	/** @ORM\ManyToOne(targetEntity="User", inversedBy="allowedCompanies") */
+	/**
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="allowedCompanies")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
+	 */
 	protected $user;
 
-	/** @ORM\ManyToOne(targetEntity="Company", inversedBy="acceses") */
+	/**
+	 * @ORM\ManyToOne(targetEntity="Company", inversedBy="acceses")
+	 * @ORM\JoinColumn(onDelete="CASCADE")
+	 */
 	protected $company;
 
 	public function __construct()

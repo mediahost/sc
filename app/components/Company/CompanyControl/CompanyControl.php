@@ -108,13 +108,13 @@ class CompanyControl extends BaseControl
 
 	public function validateCompanyId(IControl $control, $arg = NULL)
 	{
-		$id = $this->entity ? $this->entity->id : NULL;
+		$id = $this->company ? $this->company->id : NULL;
 		return $this->companyFacade->isUniqueId($control->getValue(), $id);
 	}
 
 	public function validateCompanyName(IControl $control, $arg = NULL)
 	{
-		$id = $this->entity ? $this->entity->id : NULL;
+		$id = $this->company ? $this->company->id : NULL;
 		return $this->companyFacade->isUniqueName($control->getValue(), $id);
 	}
 

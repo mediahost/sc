@@ -14,13 +14,13 @@ use Nette\Security\Passwords;
  * @property string $mail
  * @property string $name
  * @property-write string $password
- * @property-read string $hash
+ * @property string $hash
  * @property Role $role
  * @property string $facebookId
  * @property string $facebookAccessToken
  * @property string $twitterId
- * @property string $twitterAccessToken
- * @property string $verificationToken
+ * @property-read string $twitterAccessToken
+ * @property-read string $verificationToken
  * @property DateTime $verificationExpiration
  */
 class Registration extends BaseEntity
@@ -32,7 +32,7 @@ class Registration extends BaseEntity
 	protected $mail;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
-	private $hash;
+	protected $hash;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Role", fetch="EAGER")
@@ -64,9 +64,11 @@ class Registration extends BaseEntity
 		return $this;
 	}
 
-	public function getHash()
+	public function setVerification($token, $expiration)
 	{
-		return $this->hash;
+		$this->verificationToken = $token;
+		$this->verificationExpiration = $expiration;
+		return $this;
 	}
 
 }
