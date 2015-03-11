@@ -10,6 +10,7 @@ return array(
 			.git*
 			.composer*
 			project.pp[jx]
+			/.idea
 			/nbproject
 			/deployment
 			log/*
