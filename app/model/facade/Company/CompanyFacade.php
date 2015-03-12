@@ -46,7 +46,6 @@ class CompanyFacade extends Object
 	}
 
 	/**
-	 * TODO: test it
 	 * Create company with admin permission
 	 * @param Company|string $companyOrCompanyName
 	 * @param User $user

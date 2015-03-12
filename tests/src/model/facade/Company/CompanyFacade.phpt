@@ -4,6 +4,7 @@ namespace Test\Model\Facade;
 
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use Tester\Assert;
 
@@ -11,8 +12,6 @@ $container = require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * TEST: CompanyFacade
- * TODO: for Revision!
- * @skip
  *
  * @testCase
  * @phpVersion 5.4
@@ -22,8 +21,25 @@ class CompanyFacadeTest extends CompanyFacade
 
 	public function testCreate()
 	{
-		// TODO: do it
-		Assert::same(TRUE, TRUE);
+		$companyRole = new CompanyRole(CompanyRole::ADMIN);
+		$this->companyRoleDao->save($companyRole);
+
+		$role = $this->roleFacade->create(Role::ADMIN);
+		$user = $this->userFacade->create('user', 'user', $role);
+
+		$company1 = new Company('company1');
+		$company1->companyId = 'id123';
+		$this->companyFacade->create($company1, $user);
+		$company2 = $this->companyFacade->create('comapany2', $user);
+
+		$permission1 = $this->companyFacade->findPermission($company1, $user);
+		$permission2 = $this->companyFacade->findPermission($company2, $user);
+
+		Assert::same($user->id, $permission1->user->id);
+		Assert::same($user->id, $permission1->user->id);
+
+		Assert::same($company1->id, $permission1->company->id);
+		Assert::same($company2->id, $permission2->company->id);
 	}
 
 	public function testCreateRole()
