@@ -35,8 +35,23 @@ class SkillLevelRepositoryTest extends BaseRepository
 
 	public function testFindPairsName()
 	{
-		// TODO: DO IT!!!
-		Assert::same(TRUE, TRUE);
+		$orderAsc = $this->repository->findPairsName();
+		$orderDesc = $this->repository->findPairsName(FALSE);
+
+		Assert::same([
+				1 => 'N/A',
+				2 => 'Basic',
+				3 => 'Intermediate',
+				4 => 'Advanced',
+				5 => 'Expert',
+		], $orderAsc);
+		Assert::same([
+				5 => 'Expert',
+				4 => 'Advanced',
+				3 => 'Intermediate',
+				2 => 'Basic',
+				1 => 'N/A',
+		], $orderDesc);
 	}
 
 }
