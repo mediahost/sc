@@ -24,7 +24,7 @@ class CompanyFacadeTest extends CompanyFacade
 		$companyRole = new CompanyRole(CompanyRole::ADMIN);
 		$this->companyRoleDao->save($companyRole);
 
-		$role = $this->roleFacade->create(Role::ADMIN);
+		$role = $this->roleFacade->findByName(Role::ADMIN);
 		$user = $this->userFacade->create('user', 'user', $role);
 
 		$company1 = new Company('company1');
@@ -44,57 +44,51 @@ class CompanyFacadeTest extends CompanyFacade
 
 	public function testCreateRole()
 	{
-		Assert::same(CompanyRole::ADMIN, $this->companyFacade->createRole(CompanyRole::ADMIN)->name);
-		Assert::same(CompanyRole::MANAGER, $this->companyFacade->createRole(CompanyRole::MANAGER)->name);
-		Assert::same(CompanyRole::EDITOR, $this->companyFacade->createRole(CompanyRole::EDITOR)->name);
+		Assert::same('new role', $this->companyFacade->createRole('new role')->name);
 		Assert::null($this->companyFacade->createRole(CompanyRole::EDITOR));
 	}
 
 	public function testAddPermission()
 	{
-		$company = new Company('my company');
+		$company = new Company('new company');
 		$this->companyDao->save($company);
-		$user = new User('user@mail.com');
+		$user = new User('new.user@mail.com');
 		$this->userDao->save($user);
-		$role1 = new CompanyRole(CompanyRole::ADMIN);
-		$this->companyRoleDao->save($role1);
-		$role2 = new CompanyRole(CompanyRole::MANAGER);
-		$this->companyRoleDao->save($role2);
-		$role3 = new CompanyRole(CompanyRole::EDITOR);
-		$this->companyRoleDao->save($role3);
+		$roleAdmin = $this->companyFacade->findRoleByName(CompanyRole::ADMIN);
+		$roleManager = $this->companyFacade->findRoleByName(CompanyRole::MANAGER);
+		$roleEditor = $this->companyFacade->findRoleByName(CompanyRole::EDITOR);
 
 		Assert::null($this->companyFacade->addPermission($company, $user, []));
-		$permission1 = $this->companyFacade->addPermission($company, $user, [$role1]);
+		$permission1 = $this->companyFacade->addPermission($company, $user, [$roleAdmin]);
 		Assert::same($company->name, $permission1->company->name);
 		Assert::same($user->mail, $permission1->user->mail);
 		Assert::count(1, $permission1->roles);
 
-		$permission2 = $this->companyFacade->addPermission($company, $user, [$role1, $role2, $role3]);
+		$permission2 = $this->companyFacade->addPermission($company, $user, [$roleAdmin, $roleManager, $roleEditor]);
 		Assert::count(3, $permission2->roles);
 	}
 
 	public function testDelete()
 	{
-		$company = new Company('my company');
+		$company = new Company('new company');
 		$this->companyDao->save($company);
-		$user = new User('user@mail.com');
+		$user = new User('new.user@mail.com');
 		$this->userDao->save($user);
-		$role1 = new CompanyRole(CompanyRole::ADMIN);
-		$this->companyRoleDao->save($role1);
-		$role2 = new CompanyRole(CompanyRole::MANAGER);
-		$this->companyRoleDao->save($role2);
 
-		$permission = $this->companyFacade->addPermission($company, $user, [$role1, $role2]);
+		$roleAdmin = $this->companyFacade->findRoleByName(CompanyRole::ADMIN);
+		$roleManager = $this->companyFacade->findRoleByName(CompanyRole::MANAGER);
+
+		$permission = $this->companyFacade->addPermission($company, $user, [$roleAdmin, $roleManager]);
 		Assert::count(2, $permission->roles);
 		Assert::count(1, $this->companyFacade->findPermissions($company));
 		$this->companyFacade->clearPermissions($company);
 		Assert::count(0, $this->companyFacade->findPermissions($company));
-		Assert::count(1, $this->companyFacade->getCompaniesNames());
+		Assert::count(6, $this->companyFacade->getCompaniesNames());
 
-		$this->companyFacade->addPermission($company, $user, [$role1, $role2]);
+		$this->companyFacade->addPermission($company, $user, [$roleAdmin, $roleManager]);
 		$this->companyFacade->delete($company);
 		Assert::count(0, $this->companyFacade->findPermissions($company));
-		Assert::count(0, $this->companyFacade->getCompaniesNames());
+		Assert::count(5, $this->companyFacade->getCompaniesNames());
 	}
 
 }

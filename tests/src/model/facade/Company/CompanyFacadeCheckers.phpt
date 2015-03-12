@@ -9,8 +9,6 @@ $container = require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * TEST: CompanyFacade Checkers
- * TODO: for Revision!
- * @skip
  *
  * @testCase
  * @phpVersion 5.4

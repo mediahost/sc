@@ -39,7 +39,7 @@ abstract class CompanyFacade extends BaseFacade
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->importDbDataFromFile(__DIR__ . '/sql/users_after_install_and_add_company.sql');
+		$this->importDbDataFromFile(__DIR__ . '/sql/users_after_install_and_add_companies.sql');
 	}
 
 }

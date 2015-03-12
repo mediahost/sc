@@ -10,8 +10,6 @@ $container = require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * TEST: CompanyFacade Getters
- * TODO: for Revision!
- * @skip
  *
  * @testCase
  * @phpVersion 5.4
@@ -19,27 +17,26 @@ $container = require __DIR__ . '/../../../bootstrap.php';
 class CompanyFacadeGettersTest extends CompanyFacade
 {
 
-	public function testGetters()
+	public function testGetCompaniesNames()
 	{
-		$company1 = new Company('my company 1');
-		$this->companyDao->save($company1);
-		$company2 = new Company('my company 2');
-		$this->companyDao->save($company2);
-		$company3 = new Company('my company 3');
-		$this->companyDao->save($company3);
-
 		$companies = $this->companyFacade->getCompaniesNames();
-		Assert::same([1 => 'my company 1', 2 => 'my company 2', 3 => 'my company 3'], $companies);
+		Assert::same([
+				1 => 'company1',
+				2 => 'company2',
+				3 => 'company3',
+				4 => 'company4',
+				5 => 'company5',
+		], $companies);
+	}
 
-		$role1 = new CompanyRole(CompanyRole::ADMIN);
-		$this->companyRoleDao->save($role1);
-		$role2 = new CompanyRole(CompanyRole::MANAGER);
-		$this->companyRoleDao->save($role2);
-		$role3 = new CompanyRole(CompanyRole::EDITOR);
-		$this->companyRoleDao->save($role3);
-
+	public function testGetRolesNames()
+	{
 		$roles = $this->companyFacade->getRolesNames();
-		Assert::same([1 => CompanyRole::ADMIN, 2 => CompanyRole::MANAGER, 3 => CompanyRole::EDITOR], $roles);
+		Assert::same([
+				1 => CompanyRole::EDITOR,
+				2 => CompanyRole::MANAGER,
+				3 => CompanyRole::ADMIN,
+		], $roles);
 	}
 
 }
