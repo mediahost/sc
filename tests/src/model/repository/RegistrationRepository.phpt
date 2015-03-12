@@ -35,8 +35,13 @@ class RegistrationRepositoryTest extends BaseRepository
 
 	public function testDeleteByMail()
 	{
-		// TODO: DO IT!!!
-		Assert::same(TRUE, TRUE);
+		Assert::count(1, $this->repository->findAll());
+
+		Assert::false($this->repository->deleteByMail('nonexisting@mail.com'));
+		Assert::count(1, $this->repository->findAll());
+
+		Assert::true($this->repository->deleteByMail('for.registration@mail.com'));
+		Assert::count(0, $this->repository->findAll());
 	}
 
 }
