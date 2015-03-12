@@ -16,15 +16,16 @@ $container = require __DIR__ . '/../../bootstrap.php';
 class SkillFacadeTest extends BaseFacade
 {
 
-	public function __construct(Container $container)
+	protected function setUp()
 	{
-		parent::__construct($container);
+		parent::setUp();
+		$this->importDbDataFromFile(__DIR__ . '/../../../sql/skills.sql');
 	}
 
 	public function testGetTopCategories()
 	{
-		// TODO: DO IT!!!
-		Assert::same(TRUE, TRUE);
+		$topCategories = $this->skillFacade->getTopCategories();
+		Assert::count(20, $topCategories);
 	}
 
 }
