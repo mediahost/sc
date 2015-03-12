@@ -40,7 +40,7 @@ class UserRepository extends BaseRepository
 	}
 
 	/**
-	 * @deprecated Use UserFacade instead
+	 * @deprecated Use UserFacade::delete() instead
 	 * @param User $entity
 	 */
 	public function delete($entity)
