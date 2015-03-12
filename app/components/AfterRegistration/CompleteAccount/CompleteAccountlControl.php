@@ -191,20 +191,13 @@ class CompleteAccountControl extends BaseControl
 	public function companyFormSucceeded(Form $form, ArrayHash $values)
 	{
 		$userDao = $this->em->getDao(User::getClassName());
-		$companyDao = $this->em->getDao(Company::getClassName());
-		$companyPermissionDao = $this->em->getDao(CompanyPermission::getClassName());
-		
+
+		// create company with admin access
 		$company = new Company;
 		$company->name = $values->name;
 		$company->companyId = $values->companyId;
 		$company->address = $values->address;
-		$createdCompany = $companyDao->save($company);
-
-		$adminAccess = new CompanyPermission;
-		$adminAccess->user = $this->getUser();
-		$adminAccess->company = $createdCompany;
-		$adminAccess->addRole($this->companyFacade->findRoleByName(CompanyRole::ADMIN));
-		$companyPermissionDao->save($adminAccess);
+		$createdCompany = $this->companyFacade->create($company, $this->getUser());
 
 		// add role to user
 		$requiredRole = $this->roleFacade->findByName(Role::COMPANY);

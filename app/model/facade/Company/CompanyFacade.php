@@ -46,6 +46,31 @@ class CompanyFacade extends Object
 	}
 
 	/**
+	 * TODO: test it
+	 * Create company with admin permission
+	 * @param Company|string $companyOrCompanyName
+	 * @param User $user
+	 * @return Company
+	 */
+	public function create($companyOrCompanyName, User $user)
+	{
+		if ($companyOrCompanyName instanceof Company) {
+			$company = $companyOrCompanyName;
+		} else {
+			$company = new Company($companyOrCompanyName);
+		}
+		$createdCompany = $this->companyDao->save($company);
+
+		$adminAccess = new CompanyPermission();
+		$adminAccess->user = $user;
+		$adminAccess->company = $createdCompany;
+		$adminAccess->addRole($this->findRoleByName(CompanyRole::ADMIN));
+		$this->companyPermissionDao->save($adminAccess);
+
+		return $createdCompany;
+	}
+
+	/**
 	 * Create role if isn't exists
 	 * @param string $name
 	 * @return CompanyRole|NULL

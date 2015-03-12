@@ -20,6 +20,12 @@ $container = require __DIR__ . '/../../../bootstrap.php';
 class CompanyFacadeTest extends CompanyFacade
 {
 
+	public function testCreate()
+	{
+		// TODO: do it
+		Assert::same(TRUE, TRUE);
+	}
+
 	public function testCreateRole()
 	{
 		Assert::same(CompanyRole::ADMIN, $this->companyFacade->createRole(CompanyRole::ADMIN)->name);
