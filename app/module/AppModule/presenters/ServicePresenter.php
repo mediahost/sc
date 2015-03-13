@@ -15,7 +15,9 @@ use App\Model\Facade\UserFacade;
 use Doctrine\ORM\Tools\SchemaTool;
 use Kdyby\Doctrine\Connection;
 use Kdyby\Doctrine\Helpers;
+use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
+use Tracy\Debugger;
 
 class ServicePresenter extends BasePresenter
 {
@@ -155,6 +157,7 @@ class ServicePresenter extends BasePresenter
 
 	private function install()
 	{
+		FileSystem::delete(realpath('./../temp/install/'));
 		$this->installer
 				->setInstallAdminer(FALSE)
 				->setInstallComposer(FALSE);
