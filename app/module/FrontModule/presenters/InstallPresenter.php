@@ -4,11 +4,9 @@ namespace App\FrontModule\Presenters;
 
 use App\Extensions\Installer;
 
-/**
- * Install presenter.
- */
 class InstallPresenter extends BasePresenter
 {
+
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var array */
@@ -18,7 +16,7 @@ class InstallPresenter extends BasePresenter
 	public $installer;
 
 	// </editor-fold>
-	
+
 	protected function startup()
 	{
 		if ($this->user->loggedIn) {

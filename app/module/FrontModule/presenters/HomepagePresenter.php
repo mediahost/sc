@@ -7,7 +7,7 @@ class HomepagePresenter extends BasePresenter
 
 	public function actionDefault()
 	{
-		
+
 	}
 
 	public function renderTest1()
