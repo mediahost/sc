@@ -21,14 +21,14 @@ class InstallerListener extends Object implements Subscriber
 	public function successInstall(Installer $installer, $type)
 	{
 		if (Debugger::isEnabled()) {
-			Debugger::log($type . ' was installed', Debugger::INFO);
+			Debugger::log($type . ' was installed', 'install');
 		}
 	}
 
 	public function lockedInstall(Installer $installer, $type)
 	{
 		if (Debugger::isEnabled()) {
-			Debugger::log($type . ' wasn\'t installed - LOCKED', Debugger::WARNING);
+			Debugger::log($type . ' wasn\'t installed - LOCKED', 'install');
 		}
 	}
 
