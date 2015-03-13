@@ -5,7 +5,7 @@ namespace Test\Model\Facade;
 use Nette\DI\Container;
 use Tester\Assert;
 
-$container = require __DIR__ . '/../../bootstrap.php';
+$container = require __DIR__ . '/../../../bootstrap.php';
 
 /**
  * TEST: SkillFacade
@@ -19,7 +19,7 @@ class SkillFacadeTest extends BaseFacade
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->importDbDataFromFile(__DIR__ . '/../../../sql/skills.sql');
+		$this->importDbDataFromFile(__DIR__ . '/sql/skills.sql');
 	}
 
 	public function testGetTopCategories()
