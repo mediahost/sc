@@ -144,8 +144,8 @@ class InstallerModel extends Object
 	public function installComposer($appDir, &$print = NULL)
 	{
 		$oldcwd = getcwd();
-		chdir($oldcwd . "/..");
-		$print = @shell_exec('composer instal');
+		chdir($oldcwd . "/.."); // TODO: remove - by using "-d './../'" as composer param (used in deployment.config.php)
+		$print = @shell_exec('composer instal'); // TODO: use system as FTP-Deployment by DG (with no chdir)
 		chdir($oldcwd);
 		return TRUE;
 	}
