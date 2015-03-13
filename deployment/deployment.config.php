@@ -39,8 +39,12 @@ return array(
 			*.rst
 		',
 		'allowdelete' => TRUE,
+		'before' => array(
+				'local:composer install --no-dev -d ./../'
+		),
 		'after' => array(
-			$domain . '/install?printHtml=0'
+				$domain . '/install?printHtml=0',
+				'local:composer install --dev -d ./../'
 		),
 		'purge' => array(
 			'temp/cache',
