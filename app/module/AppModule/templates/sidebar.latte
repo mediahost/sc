@@ -199,6 +199,27 @@
 					</li>
 				</ul>
 			</li>
+			<li n:if="$user->isAllowed('service', 'tools')"
+				n:class="start, $presenter->isLinkCurrent('Service:*') ? active">
+				<a n:href="Service:">
+					<i class="fa fa-gears"></i>
+					<span class="title">{_'Service'}</span><span class="selected"></span>
+				</a>
+				<ul class="sub-menu">
+					<li n:class="$presenter->isLinkCurrent('Service:tools') ? active">
+						<a n:href="Service:tools">
+							<i class="fa fa-code"></i>
+							{_'Tools'}
+						</a>
+					</li>
+					<li n:class="$presenter->isLinkCurrent('Service:creators') ? active">
+						<a n:href="Service:creators">
+							<i class="fa fa-bolt"></i>
+							{_'Creators'}
+						</a>
+					</li>
+				</ul>
+			</li>
 		{/if}
 		<!-- END SUPERADMIN -->
 
