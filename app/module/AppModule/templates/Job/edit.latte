@@ -28,7 +28,7 @@
 					{if $job->isNew()}{_'Add job'}{else}{_'Edit'} {$job}{/if}
 				</span>
 			</div>
-			<ul class="nav nav-tabs">
+			<ul n:if="!$job->isNew()" class="nav nav-tabs">
 				<li class="active">
 					<a href="#editInfo" data-toggle="tab">{_'Info'}</a>
 				</li>
@@ -42,7 +42,7 @@
 				<div class="tab-pane active" id="editInfo">
 					{control jobInfoForm}
 				</div>
-				<div class="tab-pane" id="editSkills">
+				<div n:if="!$job->isNew()" class="tab-pane" id="editSkills">
 					{control jobSkillsForm}
 				</div>
 			</div>
