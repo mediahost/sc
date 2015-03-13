@@ -15,6 +15,9 @@ abstract class DbTestCase extends BaseTestCase
 	/** @var EntityManager @inject */
 	public $em;
 
+	/** @var Connection @inject */
+	public $connection;
+
 	/** @var SchemaTool */
 	protected $schemaTool;
 
@@ -32,8 +35,7 @@ abstract class DbTestCase extends BaseTestCase
 
 	protected function importDbDataFromFile($file)
 	{
-		$db = $this->getContainer()->getByType(Connection::class);
-		Helpers::loadFromFile($db, $file);
+		Helpers::loadFromFile($this->connection, $file);
 	}
 
 	protected function dropSchema()
