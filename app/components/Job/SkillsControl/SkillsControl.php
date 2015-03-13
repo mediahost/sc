@@ -12,6 +12,7 @@ use App\Model\Entity\SkillKnowRequest;
 use App\Model\Entity\SkillLevel;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\SkillFacade;
+use Kdyby\Doctrine\EmptyValueException;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -89,8 +90,14 @@ class SkillsControl extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
-		$this->save();
-		$this->onAfterSave($this->job);
+		try {
+			$this->save();
+			$this->onAfterSave($this->job);
+		} catch (EmptyValueException $e) {
+			$errorMessage = 'Some mandatory field isn\'t filled. Please go into basic info form and complete all data.';
+			$form->addError($errorMessage);
+			$this->presenter->flashMessage($errorMessage, 'danger');
+		}
 	}
 
 	protected function load(ArrayHash $values)
