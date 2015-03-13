@@ -6,8 +6,6 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Company;
-use App\Model\Entity\CompanyPermission;
-use App\Model\Entity\CompanyRole;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
@@ -20,6 +18,7 @@ use Nette\Utils\ArrayHash;
 
 class CompleteAccountControl extends BaseControl
 {
+
 	// <editor-fold defaultstate="expoanded" desc="events">
 
 	/** @var array */
@@ -139,7 +138,6 @@ class CompleteAccountControl extends BaseControl
 		$requiredRole = $roleDao->find($this->getUser()->requiredRole->id);
 		$user->addRole($requiredRole);
 		$user->removeRole($this->roleFacade->findByName(Role::SIGNED));
-		$user->initCandidate();
 		$user->candidate->name = $values->fullName;
 		$user->candidate->birthday = $values->birthday;
 		$savedUser = $userDao->save($user);
@@ -213,7 +211,7 @@ class CompleteAccountControl extends BaseControl
 
 class CompleteAccountControlException extends Exception
 {
-	
+
 }
 
 interface ICompleteAccountControlFactory
