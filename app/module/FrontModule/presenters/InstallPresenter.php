@@ -7,15 +7,11 @@ use App\Extensions\Installer;
 class InstallPresenter extends BasePresenter
 {
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-
 	/** @var array */
 	private $messages = [];
 
 	/** @var Installer @inject */
 	public $installer;
-
-	// </editor-fold>
 
 	protected function startup()
 	{
