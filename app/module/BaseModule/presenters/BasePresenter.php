@@ -17,6 +17,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\MemberAccessException as NetteMemberAccessException;
 use Nette\Security\IUserStorage;
+use Tracy\Debugger;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\LoaderFactory;
 
@@ -163,6 +164,14 @@ abstract class BasePresenter extends Presenter
 
 	private function setLang()
 	{
+		$presenterExceptions = [
+			'Front:Install',
+		];
+		if (in_array($this->presenter->name, $presenterExceptions)) { // defaultLanguage for some presenters
+			$this->lang = NULL;
+			return;
+		}
+
 		// for identity in session load from settings
 		$this->lang = $this->languageService->userLanguage;
 		// for no identity in session or not setted in identity (detect from browser or default)
