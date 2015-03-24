@@ -7,9 +7,6 @@ use App\Components\Candidate\ProfileControl;
 use App\Model\Entity\Candidate;
 use App\TaggedString;
 
-/**
- * 
- */
 class CandidatePresenter extends BasePresenter
 {
 	// <editor-fold defaultstate="collapsed" desc="inject">

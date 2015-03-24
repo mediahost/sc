@@ -1,0 +1,96 @@
+{block content}
+<div class="container">
+
+	<div class="row">
+		<div class="col-md-12">
+			
+			<h1 class="form-section">{$company}</h1>
+
+			<div class="row">
+				<div id="map" class="gmaps margin-bottom-40" 
+					 data-address="{$company->address}"
+					 data-address-desc="{$company->address|nl2br}"
+					 data-name="{$company}"
+					 data-not-found="{_'Not found'}">
+				</div>
+			</div>
+			
+			<div class="row margin-bottom-20">
+				<div class="col-md-6">
+					<div class="space20">
+					</div>
+					<h3 class="form-section">{_'Contacts'}</h3>
+					<div class="well">
+						<h4>{_'Address'}</h4>
+						<address>
+							<strong>{$company}</strong><br>
+							{!$company->address|nl2br}<br>
+							{ifset $company->phone}<abbr title="Phone">{_'P'}</abbr>: {$company->phone}{/ifset}
+						</address>
+						<address n:ifset="$company->mail">
+							<strong>{_'Email'}</strong><br>
+							<a href="mailto:{$company->mail}">{$company->mail}</a>
+						</address>
+						<ul class="social-icons margin-bottom-10">
+							<li>
+								<a href="#" data-original-title="facebook" class="facebook"></a>
+							</li>
+							<li>
+								<a href="#" data-original-title="github" class="github"></a>
+							</li>
+							<li>
+								<a href="#" data-original-title="Goole Plus" class="googleplus"></a>
+							</li>
+							<li>
+								<a href="#" data-original-title="linkedin" class="linkedin"></a>
+							</li>
+							<li>
+								<a href="#" data-original-title="rss" class="rss"></a>
+							</li>
+							<li>
+								<a href="#" data-original-title="skype" class="skype"></a>
+							</li>
+							<li>
+								<a href="#" data-original-title="twitter" class="twitter"></a>
+							</li>
+							<li>
+								<a href="#" data-original-title="youtube" class="youtube"></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="space20">
+					</div>
+					<!-- BEGIN FORM-->
+					<form action="#">
+						<h3 class="form-section">{_'Write us'}</h3>
+						<div class="form-group">
+							<div class="input-icon">
+								<i class="fa fa-check"></i>
+								<input type="text" class="form-control" placeholder="Subject">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-icon">
+								<i class="fa fa-user"></i>
+								<input type="text" class="form-control" placeholder="Name">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-icon">
+								<i class="fa fa-envelope"></i>
+								<input type="password" class="form-control" placeholder="Email">
+							</div>
+						</div>
+						<div class="form-group">
+							<textarea class="form-control" rows="3=6" placeholder="Message"></textarea>
+						</div>
+						<button type="submit" class="btn green">{_'Submit'}</button>
+					</form>
+					<!-- END FORM-->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

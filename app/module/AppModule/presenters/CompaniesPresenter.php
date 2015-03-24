@@ -13,9 +13,6 @@ use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 
-/**
- * Companies presenter.
- */
 class CompaniesPresenter extends BasePresenter
 {
 
