@@ -50,10 +50,10 @@
 									   data-target="#editUser" 
 									   data-toggle="modal"
 									   title="{_'Edit roles'}">
-										{$access->roles|implode:', '}
+										{$access->roles->toArray()|implode:', '}
 									</a>
 								{else}
-									{$access->roles|implode:', '}
+									{$access->roles->toArray()|implode:', '}
 								{/if}
 							</td>
 						</tr>
