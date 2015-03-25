@@ -8,6 +8,10 @@ var Maps = function () {
 			var address = $(this).attr('data-address');
 			var addressDesc = $(this).attr('data-address-desc');
 			var notFound = $(this).attr('data-not-found');
+			
+			if (!address) {
+				$('#' + id).hide();
+			}
 
 			map = new GMaps({
 				div: '#' + id,
@@ -30,6 +34,7 @@ var Maps = function () {
 								content: '<b>' + name + '</b><br>' + addressDesc
 							}
 						});
+						$('#' + id).show();
 					} else {
 						marker = map.addMarker({
 							title: notFound,
@@ -39,6 +44,7 @@ var Maps = function () {
 								content: '<b>' + name + '</b><br>' + notFound
 							}
 						});
+						$('#' + id).hide();
 					}
 					marker.infoWindow.open(map, marker);
 				}

@@ -14,7 +14,7 @@
 		<div class="row">
 			
 			<div class="col-md-12">
-				<div id="map" class="gmaps margin-bottom-40" 
+				<div id="map" class="gmaps margin-bottom-40"
 					 data-address="{$company->address}"
 					 data-address-desc="{$company->address|nl2br}"
 					 data-name="{$company}"
@@ -59,7 +59,7 @@
 						<abbr title="Phone">{_'P'}</abbr>: {$company->phone}
 					{/ifset}
 				</address>
-				<address n:ifset="$company->mail">
+				<address n:if="$company->mail">
 					<strong>{_'Email'}</strong><br>
 					<a href="mailto:{$company->mail}">{$company->mail}</a>
 				</address>
