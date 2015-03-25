@@ -17,9 +17,6 @@ abstract class BasePresenter extends BaseBasePresenter
 	protected function beforeRender()
 	{
 		parent::beforeRender();
-		$this->template->isCandidate = in_array(Role::CANDIDATE, $this->getUser()->getRoles());
-		$this->template->isCompany = in_array(Role::COMPANY, $this->getUser()->getRoles());
-		$this->template->isAdmin = in_array(Role::ADMIN, $this->getUser()->getRoles());
 		$this->template->isCompleteAccount = !$this->isUncompleteAccount();
 		$this->template->allowedLanguages = $this->languageService->allowedLanguages;
 	}
