@@ -3,9 +3,9 @@
  **/
 var Layout = function () {
 
-	var layoutImgPath = 'img/';
+	var layoutImgPath = 'admin/img/';
 
-	var layoutCssPath = 'css/';
+	var layoutCssPath = 'admin/css/';
 
 	//* BEGIN:CORE HANDLERS *//
 	// this function handles responsive layout on screen size resize or mobile device rotate.

@@ -4,6 +4,12 @@ namespace App\FrontModule\Presenters;
 
 class HomepagePresenter extends BasePresenter
 {
+	
+	protected function beforeRender()
+	{
+		$this->setDemoLayout();
+		parent::beforeRender();
+	}
 
 	public function actionDefault()
 	{

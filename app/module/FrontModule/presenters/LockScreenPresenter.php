@@ -43,6 +43,12 @@ class LockScreenPresenter extends BasePresenter
 	{
 		$this->template->loggedUser = $this->loggedUser;
 	}
+	
+	protected function beforeRender()
+	{
+		$this->setDemoLayout();
+		parent::beforeRender();
+	}
 
 	// <editor-fold defaultstate="collapsed" desc="controls">
 

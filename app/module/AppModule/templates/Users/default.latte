@@ -58,7 +58,7 @@
 								   n:if="$template->canAccess($identity, $user)"><i class="icon-key"></i></a>
 							</td>
 							<td>
-								{$user->roles->toArray()|implode:', '}
+								{$user->roles|implode:', '}
 							</td>
 							<td>
 								<a n:href="Users:edit, $user->id"

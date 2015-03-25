@@ -17,7 +17,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\MemberAccessException as NetteMemberAccessException;
 use Nette\Security\IUserStorage;
-use Tracy\Debugger;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\LoaderFactory;
 
