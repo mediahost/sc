@@ -1,12 +1,19 @@
+{block pageTitle}{$company}{/block}
+
+{block breadcrumbItems}
+<li class="active">{_'Company Profile'}</li>
+	{/block}
+
 {block content}
-<div class="container">
 
-	<div class="row">
-		<div class="col-md-12">
+<div class="col-md-12">
+
+	<h1>{$company}</h1>
+
+	<div class="content-page">
+		<div class="row">
 			
-			<h1 class="form-section">{$company}</h1>
-
-			<div class="row">
+			<div class="col-md-12">
 				<div id="map" class="gmaps margin-bottom-40" 
 					 data-address="{$company->address}"
 					 data-address-desc="{$company->address|nl2br}"
@@ -14,83 +21,63 @@
 					 data-not-found="{_'Not found'}">
 				</div>
 			</div>
-			
-			<div class="row margin-bottom-20">
-				<div class="col-md-6">
-					<div class="space20">
-					</div>
-					<h3 class="form-section">{_'Contacts'}</h3>
-					<div class="well">
-						<h4>{_'Address'}</h4>
-						<address>
-							<strong>{$company}</strong><br>
-							{!$company->address|nl2br}<br>
-							{ifset $company->phone}<abbr title="Phone">{_'P'}</abbr>: {$company->phone}{/ifset}
-						</address>
-						<address n:ifset="$company->mail">
-							<strong>{_'Email'}</strong><br>
-							<a href="mailto:{$company->mail}">{$company->mail}</a>
-						</address>
-						<ul class="social-icons margin-bottom-10">
-							<li>
-								<a href="#" data-original-title="facebook" class="facebook"></a>
-							</li>
-							<li>
-								<a href="#" data-original-title="github" class="github"></a>
-							</li>
-							<li>
-								<a href="#" data-original-title="Goole Plus" class="googleplus"></a>
-							</li>
-							<li>
-								<a href="#" data-original-title="linkedin" class="linkedin"></a>
-							</li>
-							<li>
-								<a href="#" data-original-title="rss" class="rss"></a>
-							</li>
-							<li>
-								<a href="#" data-original-title="skype" class="skype"></a>
-							</li>
-							<li>
-								<a href="#" data-original-title="twitter" class="twitter"></a>
-							</li>
-							<li>
-								<a href="#" data-original-title="youtube" class="youtube"></a>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="space20">
-					</div>
-					<!-- BEGIN FORM-->
-					<form action="#">
-						<h3 class="form-section">{_'Write us'}</h3>
-						<div class="form-group">
-							<div class="input-icon">
-								<i class="fa fa-check"></i>
-								<input type="text" class="form-control" placeholder="Subject">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="input-icon">
-								<i class="fa fa-user"></i>
-								<input type="text" class="form-control" placeholder="Name">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="input-icon">
-								<i class="fa fa-envelope"></i>
-								<input type="password" class="form-control" placeholder="Email">
-							</div>
-						</div>
-						<div class="form-group">
-							<textarea class="form-control" rows="3=6" placeholder="Message"></textarea>
-						</div>
-						<button type="submit" class="btn green">{_'Submit'}</button>
-					</form>
-					<!-- END FORM-->
-				</div>
+
+			<div class="col-md-9 col-sm-9">
+				<h2>{_'Contact Form'}</h2>
+				<p>
+					Lorem ipsum
+				</p>
+
+				<!-- BEGIN FORM-->
+				<form action="#" role="form">
+                    <div class="form-group">
+						<label for="contacts-name">{_'Name'}</label>
+						<input type="text" class="form-control" id="contacts-name">
+                    </div>
+                    <div class="form-group">
+						<label for="contacts-email">{_'Email'}</label>
+						<input type="email" class="form-control" id="contacts-email">
+                    </div>
+                    <div class="form-group">
+						<label for="contacts-message">{_'Message'}</label>
+						<textarea class="form-control" rows="5" id="contacts-message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+						<i class="fa fa-send"></i> 
+						{_'Send'}
+					</button>
+				</form>
+				<!-- END FORM-->
 			</div>
+
+			<div class="col-md-3 col-sm-3 sidebar2">
+				<h2>{_'Our Contacts'}</h2>
+				<address>
+                    <strong>{$company}</strong><br>
+                    {!$company->address|nl2br}<br>
+                    {ifset $company->phone}
+						<abbr title="Phone">{_'P'}</abbr>: {$company->phone}
+					{/ifset}
+				</address>
+				<address n:ifset="$company->mail">
+					<strong>{_'Email'}</strong><br>
+					<a href="mailto:{$company->mail}">{$company->mail}</a>
+				</address>
+				<ul class="social-icons margin-bottom-40">
+                    <li><a href="#" data-original-title="facebook" class="facebook"></a></li>
+                    <li><a href="#" data-original-title="twitter" class="twitter"></a></li>
+                    <li><a href="#" data-original-title="github" class="github"></a></li>
+                    <li><a href="#" data-original-title="Goole Plus" class="googleplus"></a></li>
+                    <li><a href="#" data-original-title="linkedin" class="linkedin"></a></li>
+                    <li><a href="#" data-original-title="rss" class="rss"></a></li>
+				</ul>
+
+				{ifset $company->description}
+				<h2 class="padding-top-30">{_'About Us'}</h2>
+				<p>{$company->description}</p>
+				{/ifset}
+			</div>
+				
 		</div>
 	</div>
 </div>
