@@ -136,7 +136,7 @@
 		<address>
 			<strong>{$company}</strong><br>
 			{!$company->address|nl2br}<br>
-			<a href="#mapBlock">{_'show on map'}</a><br>
+			<a n:if="$company->address" n:href="this#mapBlock">{_'show on map'}</a><br>
 			{ifset $company->phone}
 				<abbr title="Phone">{_'P'}</abbr>: {$company->phone}
 			{/ifset}
