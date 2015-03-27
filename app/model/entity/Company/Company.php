@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Nette\Http\FileUpload;
+use Nette\Utils\Strings;
 
 /**
  * @ORM\Entity
@@ -15,6 +17,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property string $name
  * @property string $companyId
  * @property string $address
+ * @property string $logo
  */
 class Company extends BaseEntity
 {
@@ -35,13 +38,20 @@ class Company extends BaseEntity
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $address;
 
+	/** @ORM\OneToOne(targetEntity="Image", cascade="all") */
+	protected $logo;
+
+	/** @ORM\ManyToMany(targetEntity="Image") */
+	protected $images;
+
 	public function __construct($name = NULL)
 	{
 		if ($name) {
 			$this->name = $name;
 		}
-		$this->accesses = new ArrayCollection;
-		$this->jobs = new ArrayCollection;
+		$this->accesses = new ArrayCollection();
+		$this->jobs = new ArrayCollection();
+		$this->images = new ArrayCollection();
 		parent::__construct();
 	}
 
@@ -53,6 +63,17 @@ class Company extends BaseEntity
 	public function isNew()
 	{
 		return $this->id === NULL;
+	}
+
+	public function setLogo(FileUpload $file)
+	{
+		if (!$this->logo instanceof Image) {
+			$this->logo = new Image($file);
+		} else {
+			$this->logo->setFile($file);
+		}
+		$this->logo->requestedFilename = 'company_logo_' . Strings::webalize(microtime());
+		return $this;
 	}
 
 }

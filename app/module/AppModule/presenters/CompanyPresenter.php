@@ -2,8 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Company\CompanyControl;
-use App\Components\Company\ICompanyControlFactory;
+use App\Components\Company\CompanyInfoControl;
+use App\Components\Company\ICompanyInfoControlFactory;
 use App\Components\User\CompanyUserControl;
 use App\Components\User\ICompanyUserControlFactory;
 use App\Model\Entity\Company;
@@ -19,7 +19,7 @@ class CompanyPresenter extends BasePresenter
 {
 	// <editor-fold defaultstate="collapsed" desc="inject">
 
-	/** @var ICompanyControlFactory @inject */
+	/** @var ICompanyInfoControlFactory @inject */
 	public $iCompanyControlFactory;
 
 	/** @var ICompanyUserControlFactory @inject */
@@ -156,7 +156,7 @@ class CompanyPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="forms">
 
-	/** @return CompanyControl */
+	/** @return CompanyInfoControl */
 	public function createComponentCompanyForm()
 	{
 		$control = $this->iCompanyControlFactory->create();

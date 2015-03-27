@@ -2,8 +2,10 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Company\CompanyControl;
-use App\Components\Company\ICompanyControlFactory;
+use App\Components\Company\CompanyImagesControl;
+use App\Components\Company\CompanyInfoControl;
+use App\Components\Company\ICompanyImagesControlFactory;
+use App\Components\Company\ICompanyInfoControlFactory;
 use App\Components\User\CompanyUserControl;
 use App\Components\User\ICompanyUserControlFactory;
 use App\Model\Entity\Company;
@@ -18,7 +20,7 @@ class CompaniesPresenter extends BasePresenter
 
 	/** @var Company */
 	private $company;
-	
+
 	// <editor-fold defaultstate="expanded" desc="injects">
 
 	/** @var EntityManager @inject */
@@ -27,8 +29,11 @@ class CompaniesPresenter extends BasePresenter
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
 
-	/** @var ICompanyControlFactory @inject */
-	public $iCompanyControlFactory;
+	/** @var ICompanyInfoControlFactory @inject */
+	public $iCompanyInfoControlFactory;
+
+	/** @var ICompanyImagesControlFactory @inject */
+	public $iCompanyImagesControlFactory;
 
 	/** @var ICompanyUserControlFactory @inject */
 	public $iCompanyUserControlFactory;
@@ -70,8 +75,8 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->company = new Company;
-		$this['companyForm']->setCompany($this->company);
+		$this->company = new Company();
+		$this['companyInfoForm']->setCompany($this->company);
 		$this->setView('edit');
 	}
 
@@ -87,14 +92,27 @@ class CompaniesPresenter extends BasePresenter
 			$this->flashMessage('This company wasn\'t found.', 'error');
 			$this->redirect('default');
 		} else {
-			$this['companyForm']->setCompany($this->company);
+			$this['companyInfoForm']->setCompany($this->company);
 			$this['editUserForm']->setCompany($this->company);
+			$this->template->company = $this->company;
 		}
 	}
 
-	public function renderEdit()
+	/**
+	 * @secured
+	 * @resource('companies')
+	 * @privilege('editImages')
+	 */
+	public function actionEditImages($id)
 	{
-		$this->template->company = $this->company;
+		$this->company = $this->companyDao->find($id);
+		if (!$this->company) {
+			$this->flashMessage('This company wasn\'t found.', 'error');
+			$this->redirect('default');
+		} else {
+			$this['companyImagesForm']->setCompany($this->company);
+			$this->template->company = $this->company;
+		}
 	}
 
 	/**
@@ -154,10 +172,10 @@ class CompaniesPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="forms">
 
-	/** @return CompanyControl */
-	public function createComponentCompanyForm()
+	/** @return CompanyInfoControl */
+	public function createComponentCompanyInfoForm()
 	{
-		$control = $this->iCompanyControlFactory->create();
+		$control = $this->iCompanyInfoControlFactory->create();
 		$control->setCanEditInfo($this->user->isAllowed('company', 'edit'));
 		$control->setCanEditUsers($this->user->isAllowed('company', 'edit'));
 		$control->setLinkAddUser($this->link('this#addUser'), ['data-toggle' => 'modal']);
@@ -165,6 +183,19 @@ class CompaniesPresenter extends BasePresenter
 			$message = new TaggedString('Company \'%s\' was successfully saved.', (string) $saved);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
+		};
+		return $control;
+	}
+
+	/** @return CompanyImagesControl */
+	public function createComponentCompanyImagesForm()
+	{
+		$control = $this->iCompanyImagesControlFactory->create();
+		$control->onAfterSave = function (Company $saved) {
+			$message = new TaggedString('Images for company \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('this');
+//			$this->redirect('default');
 		};
 		return $control;
 	}

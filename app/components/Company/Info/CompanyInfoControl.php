@@ -16,10 +16,7 @@ use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
-/**
- * Form with all company settings.
- */
-class CompanyControl extends BaseControl
+class CompanyInfoControl extends BaseControl
 {
 
 	/** @var Company */
@@ -148,12 +145,12 @@ class CompanyControl extends BaseControl
 
 	private function save()
 	{
-		$companyDao = $this->em->getDao(Company::getClassName());
-		$savedCompany = $companyDao->save($this->company);
+		$this->em->persist($this->company);
+		$this->em->flush();
 		if ($this->canEditUsers) {
-			$this->companyFacade->clearPermissions($savedCompany);
+			$this->companyFacade->clearPermissions($this->company);
 			foreach ($this->usersRoles as $userId => $userRoles) {
-				$this->companyFacade->addPermission($savedCompany, $userId, $userRoles);
+				$this->companyFacade->addPermission($this->company, $userId, $userRoles);
 			}
 		}
 		return $this;
@@ -219,14 +216,9 @@ class CompanyControl extends BaseControl
 	// </editor-fold>
 }
 
-class CompanyControlException extends Exception
-{
-	
-}
-
-interface ICompanyControlFactory
+interface ICompanyInfoControlFactory
 {
 
-	/** @return CompanyControl */
+	/** @return CompanyInfoControl */
 	function create();
 }

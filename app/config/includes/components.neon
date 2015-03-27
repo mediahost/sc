@@ -72,8 +72,12 @@ services:
 		inject: yes
 
 	# Company
-	ICompanyControlFactory:
-		implement: App\Components\Company\ICompanyControlFactory
+	ICompanyInfoControlFactory:
+		implement: App\Components\Company\ICompanyInfoControlFactory
+		inject: yes
+
+	ICompanyImagesControlFactory:
+		implement: App\Components\Company\ICompanyImagesControlFactory
 		inject: yes
 
 	# Job

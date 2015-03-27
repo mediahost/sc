@@ -34,80 +34,22 @@
 		<!-- END CAROUSEL -->
 
 		<h2>{_'Our positions'}</h2>
-		<div id="accordion1" class="panel-group">
-			<div class="panel panel-default">
+		<div id="accordionPositions" class="panel-group">
+			<div n:foreach="$company->jobs as $job" 
+				 class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_1">
-							Senior Software Engineer
+						<a class="accordion-toggle collapsed" 
+						   data-toggle="collapse" 
+						   data-parent="#accordionPositions" 
+						   href="#accordionPositions_{$job->id}">
+							{$job}
 						</a>
 					</h4>
 				</div>
-				<div style="height: 0px;" id="accordion1_1" class="panel-collapse collapse">
+				<div style="height: 0px;" id="accordionPositions_{$job->id}" class="panel-collapse collapse">
 					<div class="panel-body">
-						<p class="lead">Source-Code is seeking an experienced.</p>
-						{if $user->isLoggedIn}
-							<h4>Requirements</h4>
-							<ul>
-								<li>Strong background in PHP and Web application development</li>
-								<li>Javascript a plus</li>
-								<li>Bachelor's degree in CS and/or equivalent industry experience</li>
-							</ul>
-							{if $isCandidate}
-								<hr/>
-								<a n:href="this" class="btn green">
-									<i class="fa fa-check"></i>
-									{_'Apply'}
-								</a>
-							{/if}
-						{else}
-							<a n:href="this">{_'Read more after sign in'}</a>
-						{/if}
-					</div>
-				</div>
-			</div>         
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_2">
-							Systems Administrator/Operations Engineer
-						</a>
-					</h4>
-				</div>
-				<div id="accordion1_2" class="panel-collapse collapse">
-					<div class="panel-body">
-						<p class="lead">Source-Code is seeking an experienced.</p>
-						{if $user->isLoggedIn}
-							<h4>Requirements</h4>
-							<ul>
-								<li>Strong background in PHP and Web application development</li>
-								<li>Javascript a plus</li>
-								<li>Bachelor's degree in CS and/or equivalent industry experience</li>
-							</ul>
-							{if $isCandidate}
-								<hr/>
-								<a n:href="this" class="btn green">
-									<i class="fa fa-check"></i>
-									{_'Apply'}
-								</a>
-							{/if}
-						{else}
-							<a n:href="this">{_'Read more after sign in'}</a>
-						{/if}
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_3">
-							Technical Support Engineer
-						</a>
-					</h4>
-				</div>
-				<div style="height: 0px;" id="accordion1_3" class="panel-collapse collapse">
-					<div class="panel-body">
-						<p class="lead">Source-Code is seeking an experienced.</p>
+						<p class="lead">{$job->description}</p>
 						{if $user->isLoggedIn}
 							<h4>Requirements</h4>
 							<ul>

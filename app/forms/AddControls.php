@@ -13,11 +13,13 @@ use App\Forms\Controls\SelectBased\NoUiRanger;
 use App\Forms\Controls\SelectBased\NoUiSlider;
 use App\Forms\Controls\SelectBased\Select2;
 use App\Forms\Controls\SelectBased\ServerValidatedMultiSelectBoxes;
+use App\Forms\Controls\SubmitBased\ImageWithPreview;
 use App\Forms\Controls\TextAreaBased\WysiHtml;
 use App\Forms\Controls\TextInputBased\ServerValidatedTextInput;
 use App\Forms\Controls\TextInputBased\Spinner;
 use App\Forms\Controls\TextInputBased\TagInput;
 use App\Forms\Controls\TextInputBased\TouchSpin;
+use App\Forms\Controls\UploadBased\UploadImageWithPreview;
 
 trait AddControls
 {
@@ -195,6 +197,15 @@ trait AddControls
 	public function addCheckboxList($name, $label = NULL, array $items = NULL)
 	{
 		return $this[$name] = new CheckboxList($label, $items);
+	}
+
+	/**
+	 * Adds file input for image with preview.
+	 * @return UploadImageWithPreview
+	 */
+	public function addUploadImageWithPreview($name, $label = NULL, $multiple = FALSE)
+	{
+		return $this[$name] = new UploadImageWithPreview($label, $multiple);
 	}
 
 	// </editor-fold>

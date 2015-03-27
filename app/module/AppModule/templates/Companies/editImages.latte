@@ -7,7 +7,7 @@
 	<a n:href="Companies:">{_'Companies'}</a>
 </li>
 <li>
-	<a n:href="this">{if $company->isNew()}{_'Add'}{else}{_'Edit'} {$company}{/if}</a>
+	<a n:href="this">{_'Images for'} {$company}</a>
 </li>
 {/block}
 
@@ -19,12 +19,7 @@
 				<div class="caption font-green-sharp">
 					<i class="fa fa-edit font-green-sharp"></i>
 					<span class="caption-subject bold uppercase">
-						{if $company->isNew()}
-							{_'Add'}
-						{else}
-							{_'Edit'}
-						{/if} 
-						{_'company'}
+						{_'Edit company images'}
 					</span>
 				</div>
 				<div class="actions">
@@ -34,21 +29,7 @@
 				</div>
 			</div>
 			<div class="portlet-body form">
-				{control companyInfoForm}
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="addUser" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-				<h4 class="modal-title">{_'Add Company User'}</h4>
-			</div>
-			<div class="modal-body">
-				{control editUserForm}
+				{control companyImagesForm}
 			</div>
 		</div>
 	</div>

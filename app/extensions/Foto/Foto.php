@@ -137,24 +137,14 @@ class Foto extends Object
 			throw new FotoException("This source format isn't supported");
 		}
 
-		switch ($format) {
-			case Image::JPEG:
-				$ext = "jpg";
-				break;
-			case Image::PNG:
-				$ext = "png";
-				break;
-			default:
-				throw new FotoException("This requested format isn't supported");
-		}
-		$filename .= ".{$ext}";
+		$filenameWithExt = FotoHelpers::getExtendedFilename($filename, $format);
 
 		$folderFullPath = Helpers::getPath($this->originalFolder, $folder);
 		FileSystem::createDir($folderFullPath);
 
-		$this->delete(Helpers::getPath($folder, $filename));
+		$this->delete(Helpers::getPath($folder, $filenameWithExt));
 
-		$fullFilename = self::getPath($folderFullPath, $filename);
+		$fullFilename = Helpers::getPath($folderFullPath, $filenameWithExt);
 		$img->save($fullFilename);
 
 		return $fullFilename;
@@ -163,7 +153,7 @@ class Foto extends Object
 	public function delete($name, $deleteResized = TRUE)
 	{
 		$filename = Helpers::getPath($this->originalFolder, $name);
-		$this->deleteFile($filename);
+		FotoHelpers::deleteFile($filename);
 		if ($deleteResized) {
 			$this->deleteThumbnails($name);
 		}
@@ -226,6 +216,21 @@ class FotoHelpers extends Object
 			}
 		}
 		return NULL;
+	}
+
+	public static function getExtendedFilename($filename, $format)
+	{
+		switch ($format) {
+			case Image::JPEG:
+				$ext = "jpg";
+				break;
+			case Image::PNG:
+				$ext = "png";
+				break;
+			default:
+				throw new FotoException("This requested format isn't supported");
+		}
+		return $filename . '.' . $ext;
 	}
 
 }
