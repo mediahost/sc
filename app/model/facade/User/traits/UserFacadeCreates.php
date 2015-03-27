@@ -27,7 +27,7 @@ trait UserFacadeCreates
 					->setPassword($password)
 					->addRole($role);
 
-			return $this->userDao->save($user);
+			return $this->userRepo->save($user);
 		}
 		return NULL;
 	}
@@ -54,9 +54,9 @@ trait UserFacadeCreates
 			$user->twitter->setAccessToken($registration->twitterAccessToken);
 		}
 
-		$this->registrationDao->delete($registration);
+		$this->registrationRepo->delete($registration);
 
-		return $this->userDao->save($user);
+		return $this->userRepo->save($user);
 	}
 
 	/**
@@ -86,7 +86,7 @@ trait UserFacadeCreates
 		$registration->verificationToken = Random::generate(32);
 		$registration->verificationExpiration = new DateTime('now + ' . $this->expirationService->verification);
 
-		$this->registrationDao->save($registration);
+		$this->registrationRepo->save($registration);
 
 		return $registration;
 	}
@@ -98,7 +98,7 @@ trait UserFacadeCreates
 	 */
 	private function deleteRegistrations($mail)
 	{
-		return $this->registrationDao->deleteByMail($mail);
+		return $this->registrationRepo->deleteByMail($mail);
 	}
 
 }

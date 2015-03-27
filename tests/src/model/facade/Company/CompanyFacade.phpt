@@ -22,7 +22,8 @@ class CompanyFacadeTest extends CompanyFacade
 	public function testCreate()
 	{
 		$companyRole = new CompanyRole(CompanyRole::ADMIN);
-		$this->companyRoleDao->save($companyRole);
+		$this->em->persist($companyRole);
+		$this->em->flush();
 
 		$role = $this->roleFacade->findByName(Role::ADMIN);
 		$user = $this->userFacade->create('user', 'user', $role);
@@ -51,9 +52,10 @@ class CompanyFacadeTest extends CompanyFacade
 	public function testAddPermission()
 	{
 		$company = new Company('new company');
-		$this->companyDao->save($company);
+		$this->em->persist($company);
+		$this->em->flush();
 		$user = new User('new.user@mail.com');
-		$this->userDao->save($user);
+		$this->userRepo->save($user);
 		$roleAdmin = $this->companyFacade->findRoleByName(CompanyRole::ADMIN);
 		$roleManager = $this->companyFacade->findRoleByName(CompanyRole::MANAGER);
 		$roleEditor = $this->companyFacade->findRoleByName(CompanyRole::EDITOR);
@@ -71,9 +73,11 @@ class CompanyFacadeTest extends CompanyFacade
 	public function testDelete()
 	{
 		$company = new Company('new company');
+		$this->em->persist($company);
+		$this->em->flush();
 		$this->companyDao->save($company);
 		$user = new User('new.user@mail.com');
-		$this->userDao->save($user);
+		$this->userRepo->save($user);
 
 		$roleAdmin = $this->companyFacade->findRoleByName(CompanyRole::ADMIN);
 		$roleManager = $this->companyFacade->findRoleByName(CompanyRole::MANAGER);

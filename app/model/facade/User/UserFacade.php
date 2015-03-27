@@ -42,13 +42,16 @@ class UserFacade extends Object
 	public $companyFacade;
 
 	/** @var UserRepository */
-	private $userDao;
+	private $userRepo;
+
+	/** @var RegistrationRepository */
+	private $registrationRepo;
+
+	/** @var CompanyPermissionRepository */
+	private $companyPermissionRepo;
 
 	/** @var EntityDao */
 	private $roleDao;
-
-	/** @var RegistrationRepository */
-	private $registrationDao;
 
 	/** @var EntityDao */
 	private $configSettingsDao;
@@ -56,19 +59,16 @@ class UserFacade extends Object
 	/** @var EntityDao */
 	private $designSettingsDao;
 
-	/** @var CompanyPermissionRepository */
-	private $companyPermissionDao;
-
 	public function __construct(EntityManager $em, ExpirationService $expiration)
 	{
 		$this->expirationService = $expiration;
 		$this->em = $em;
-		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->userRepo = $this->em->getRepository(User::getClassName());
+		$this->registrationRepo = $this->em->getRepository(Registration::getClassName());
+		$this->companyPermissionRepo = $this->em->getRepository(CompanyPermission::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
-		$this->registrationDao = $this->em->getDao(Registration::getClassName());
 		$this->configSettingsDao = $this->em->getDao(PageConfigSettings::getClassName());
 		$this->designSettingsDao = $this->em->getDao(PageDesignSettings::getClassName());
-		$this->companyPermissionDao = $this->em->getDao(CompanyPermission::getClassName());
 	}
 
 	public function isUnique($mail)

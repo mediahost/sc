@@ -10,6 +10,7 @@ use App\Model\Facade\Traits\CompanyFacadeCheckers;
 use App\Model\Facade\Traits\CompanyFacadeFinders;
 use App\Model\Facade\Traits\CompanyFacadeGetters;
 use App\Model\Repository\CompanyPermissionRepository;
+use App\Model\Repository\UserRepository;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
@@ -24,25 +25,21 @@ class CompanyFacade extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var EntityDao */
-	private $companyDao;
+	/** @var CompanyPermissionRepository */
+	private $companyPermissionRepo;
+
+	/** @var UserRepository */
+	private $userRepo;
 
 	/** @var EntityDao */
 	private $companyRoleDao;
 
-	/** @var CompanyPermissionRepository */
-	private $companyPermissionDao;
-
-	/** @var EntityDao */
-	private $userDao;
-
 	public function __construct(EntityManager $em)
 	{
 		$this->em = $em;
-		$this->companyDao = $this->em->getDao(Company::getClassName());
+		$this->companyPermissionRepo = $this->em->getRepository(CompanyPermission::getClassName());
+		$this->userRepo = $this->em->getRepository(User::getClassName());
 		$this->companyRoleDao = $this->em->getDao(CompanyRole::getClassName());
-		$this->companyPermissionDao = $this->em->getDao(CompanyPermission::getClassName());
-		$this->userDao = $this->em->getDao(User::getClassName());
 	}
 
 	/**
@@ -58,15 +55,16 @@ class CompanyFacade extends Object
 		} else {
 			$company = new Company($companyOrCompanyName);
 		}
-		$createdCompany = $this->companyDao->save($company);
+		$this->em->persist($company);
+		$this->em->flush();
 
 		$adminAccess = new CompanyPermission();
 		$adminAccess->user = $user;
-		$adminAccess->company = $createdCompany;
+		$adminAccess->company = $company;
 		$adminAccess->addRole($this->findRoleByName(CompanyRole::ADMIN));
-		$this->companyPermissionDao->save($adminAccess);
+		$this->companyPermissionRepo->save($adminAccess);
 
-		return $createdCompany;
+		return $company;
 	}
 
 	/**
@@ -78,7 +76,9 @@ class CompanyFacade extends Object
 	{
 		if (!$this->findRoleByName($name)) {
 			$role = new CompanyRole($name);
-			return $this->companyRoleDao->save($role);
+			$this->em->persist($role);
+			$this->em->flush();
+			return $role;
 		}
 		return NULL;
 	}
@@ -98,7 +98,7 @@ class CompanyFacade extends Object
 		}
 		$findedCompany = $this->find($company);
 		$userId = $user instanceof User ? $user->id : (string) $user;
-		$findedUser = $this->userDao->find($userId);
+		$findedUser = $this->userRepo->find($userId);
 
 		$permission = $this->findPermission($findedCompany, $findedUser);
 		if (!$permission) {
@@ -116,7 +116,7 @@ class CompanyFacade extends Object
 			$permission->addRole($this->findRoleByName($roleName));
 		}
 
-		return $this->companyPermissionDao->save($permission);
+		return $this->companyPermissionRepo->save($permission);
 	}
 
 	/**
@@ -126,14 +126,17 @@ class CompanyFacade extends Object
 	public function delete(Company $company)
 	{
 		$this->clearPermissions($company);
-		return $this->companyDao->delete($company);
+		$this->em->remove($company);
+		$this->em->flush();
+		return $company;
 	}
 
 	public function clearPermissions(Company $company)
 	{
 		foreach ($this->findPermissions($company) as $permission) {
-			$this->companyPermissionDao->delete($permission);
+			$this->em->remove($permission);
 		}
+		$this->em->flush();
 		return TRUE;
 	}
 

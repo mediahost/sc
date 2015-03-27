@@ -64,15 +64,15 @@ class InstallerModel extends Object
 	 */
 	public function installSkillLevels(array $levels)
 	{
-		$skillLevelDao = $this->em->getDao(SkillLevel::getClassName());
+		$skillLevelRepo = $this->em->getRepository(SkillLevel::getClassName());
 		foreach ($levels as $levelId => $levelName) {
-			$skillLevel = $skillLevelDao->find($levelId);
+			$skillLevel = $skillLevelRepo->find($levelId);
 			if (!$skillLevel) {
 				$skillLevel = new SkillLevel;
 			}
 			$skillLevel->name = $levelName;
 			$skillLevel->priority = $levelId;
-			$skillLevelDao->save($skillLevel);
+			$skillLevelRepo->save($skillLevel);
 		}
 		return TRUE;
 	}

@@ -10,17 +10,17 @@ trait UserFacadeFinders
 
 	public function findByMail($mail)
 	{
-		return $this->userDao->findOneBy(['mail' => $mail]);
+		return $this->userRepo->findOneBy(['mail' => $mail]);
 	}
 
 	public function findByFacebookId($id)
 	{
-		return $this->userDao->findOneBy(['facebook.id' => $id]);
+		return $this->userRepo->findOneBy(['facebook.id' => $id]);
 	}
 
 	public function findByTwitterId($id)
 	{
-		return $this->userDao->findOneBy(['twitter.id' => $id]);
+		return $this->userRepo->findOneBy(['twitter.id' => $id]);
 	}
 
 	/**
@@ -31,13 +31,13 @@ trait UserFacadeFinders
 	 */
 	public function findByVerificationToken($token)
 	{
-		$registration = $this->registrationDao->findOneBy(['verificationToken' => $token]);
+		$registration = $this->registrationRepo->findOneBy(['verificationToken' => $token]);
 
 		if ($registration) {
 			if ($registration->verificationExpiration > new DateTime()) {
 				return $registration;
 			} else {
-				$this->registrationDao->delete($registration);
+				$this->registrationRepo->delete($registration);
 			}
 		}
 
@@ -47,7 +47,7 @@ trait UserFacadeFinders
 	public function findByRecoveryToken($token)
 	{
 		if (!empty($token)) {
-			$user = $this->userDao->findOneBy([
+			$user = $this->userRepo->findOneBy([
 					'recoveryToken' => $token
 			]);
 
@@ -56,7 +56,7 @@ trait UserFacadeFinders
 					return $user;
 				} else {
 					$user->removeRecovery();
-					$this->userDao->save($user);
+					$this->userRepo->save($user);
 				}
 			}
 		}

@@ -5,6 +5,7 @@ namespace Test\Model\Facade;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
 use App\Model\Entity\User;
+use App\Model\Repository\UserRepository;
 use Kdyby\Doctrine\EntityDao;
 use Nette\DI\Container;
 
@@ -19,8 +20,8 @@ abstract class CompanyFacade extends BaseFacade
 	const TWITTER_ID = 'tw123456789';
 	const FACEBOOK_ID = 'fb123456789';
 
-	/** @var EntityDao */
-	protected $userDao;
+	/** @var UserRepository */
+	protected $userRepo;
 
 	/** @var EntityDao */
 	protected $companyDao;
@@ -31,7 +32,7 @@ abstract class CompanyFacade extends BaseFacade
 	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->userRepo = $this->em->getRepository(User::getClassName());
 		$this->companyDao = $this->em->getDao(Company::getClassName());
 		$this->companyRoleDao = $this->em->getDao(CompanyRole::getClassName());
 	}

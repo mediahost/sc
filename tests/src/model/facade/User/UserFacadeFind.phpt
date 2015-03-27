@@ -42,7 +42,7 @@ class UserFacadeFindTest extends UserFacade
 
 	public function testVerificationToken()
 	{
-		Assert::count(0, $this->registrationDao->findAll());
+		Assert::count(0, $this->registrationRepo->findAll());
 
 		$role = $this->roleFacade->findByName(Role::COMPANY);
 
@@ -50,9 +50,10 @@ class UserFacadeFindTest extends UserFacade
 				->setMail('user1@mail.com')
 				->setRole($role)
 				->setVerification('verificationToken1', DateTime::from('now +1 hour'));
-		$this->registrationDao->save($registration1);
-		$this->registrationDao->clear();
-		Assert::count(1, $this->registrationDao->findAll());
+		$this->em->persist($registration1);
+		$this->em->flush();
+		$this->registrationRepo->clear();
+		Assert::count(1, $this->registrationRepo->findAll());
 
 		$findedRegistration1 = $this->userFacade->findByVerificationToken($registration1->verificationToken);
 		Assert::type(Registration::getClassName(), $findedRegistration1);
@@ -62,13 +63,14 @@ class UserFacadeFindTest extends UserFacade
 				->setMail('user2@mail.com')
 				->setRole($role)
 		->setVerification('verificationToken2', DateTime::from('now -1 hour'));
-		$this->registrationDao->save($registration2);
-		$this->registrationDao->clear();
-		Assert::count(2, $this->registrationDao->findAll());
+		$this->em->persist($registration2);
+		$this->em->flush();
+		$this->registrationRepo->clear();
+		Assert::count(2, $this->registrationRepo->findAll());
 
 		$findedRegistration2 = $this->userFacade->findByVerificationToken($registration2->verificationToken);
 		Assert::null($findedRegistration2); // expired is deleted
-		Assert::count(1, $this->registrationDao->findAll());
+		Assert::count(1, $this->registrationRepo->findAll());
 
 		Assert::null($this->userFacade->findByVerificationToken('unknown token'));
 	}

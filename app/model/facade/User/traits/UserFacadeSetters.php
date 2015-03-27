@@ -38,21 +38,22 @@ trait UserFacadeSetters
 	 */
 	public function appendSettings($userId, PageConfigSettings $configSettings = NULL, PageDesignSettings $designSettings = NULL)
 	{
-		$user = $this->userDao->find($userId);
+		$user = $this->userRepo->find($userId);
 		if ($user && $configSettings) {
 			if (!$user->pageConfigSettings instanceof PageConfigSettings) {
 				$user->pageConfigSettings = new PageConfigSettings;
 			}
 			$user->pageConfigSettings->append($configSettings);
-			$this->configSettingsDao->save($user->pageConfigSettings);
+			$this->em->persist($user->pageConfigSettings);
 		}
 		if ($user && $designSettings) {
 			if (!$user->pageDesignSettings instanceof PageDesignSettings) {
 				$user->pageDesignSettings = new PageDesignSettings;
 			}
 			$user->pageDesignSettings->append($designSettings);
-			$this->designSettingsDao->save($user->pageDesignSettings);
+			$this->em->persist($user->pageDesignSettings);
 		}
+		$this->em->flush();
 		return $this;
 	}
 

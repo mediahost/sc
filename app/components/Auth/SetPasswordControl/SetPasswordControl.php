@@ -71,8 +71,8 @@ class SetPasswordControl extends BaseControl
 		$user = $this->userFacade->findByMail($this->presenterUser->identity->mail);
 		$user->password = $values->newPassword;
 
-		$userDao = $this->em->getDao(Entity\User::getClassName());
-		$savedUser = $userDao->save($user);
+		$userRepo = $this->em->getRepository(Entity\User::getClassName());
+		$savedUser = $userRepo->save($user);
 
 		$this->onSuccess($savedUser);
 	}

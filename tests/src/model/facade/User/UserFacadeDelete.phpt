@@ -24,17 +24,17 @@ class UserFacadeDeleteTest extends UserFacade
 	public function testDelete()
 	{
 		Assert::count(6, $this->roleDao->findAll());
-		Assert::count(3, $this->userDao->findAll());
+		Assert::count(3, $this->userRepo->findAll());
 		Assert::count(1, $this->facebookDao->findAll());
 		Assert::count(1, $this->twitterDao->findAll());
 		Assert::count(1, $this->pageConfigSettingsDao->findAll());
 		Assert::count(1, $this->pageDesignSettingsDao->findAll());
 
 		$this->userFacade->deleteById(self::ID_NEW);
-		$this->userDao->clear();
+		$this->userRepo->clear();
 
 		Assert::count(6, $this->roleDao->findAll());
-		Assert::count(2, $this->userDao->findAll());
+		Assert::count(2, $this->userRepo->findAll());
 		Assert::count(0, $this->facebookDao->findAll());
 		Assert::count(0, $this->twitterDao->findAll());
 		Assert::count(0, $this->pageConfigSettingsDao->findAll());
@@ -52,19 +52,19 @@ class UserFacadeDeleteTest extends UserFacade
 	public function testDeleteCompanyUsers()
 	{
 		$this->importDbDataFromFile(__DIR__ . '/sql/add_company.sql');
-		Assert::count(1, $this->companyPermissionDao->findAll());
+		Assert::count(1, $this->companyPermissionRepo->findAll());
 
 		$companyUser1 = $this->createCompanyUser('company1@domain.com', CompanyRole::ADMIN);
 		$companyUser2 = $this->createCompanyUser('company2@domain.com', CompanyRole::MANAGER);
 		$companyUser3 = $this->createCompanyUser('company3@domain.com', CompanyRole::EDITOR);
-		Assert::count(4, $this->companyPermissionDao->findAll());
+		Assert::count(4, $this->companyPermissionRepo->findAll());
 
 		$this->userFacade->delete($companyUser1);
-		Assert::count(3, $this->companyPermissionDao->findAll());
+		Assert::count(3, $this->companyPermissionRepo->findAll());
 		$this->userFacade->delete($companyUser2);
-		Assert::count(2, $this->companyPermissionDao->findAll());
+		Assert::count(2, $this->companyPermissionRepo->findAll());
 		$this->userFacade->delete($companyUser3);
-		Assert::count(1, $this->companyPermissionDao->findAll());
+		Assert::count(1, $this->companyPermissionRepo->findAll());
 	}
 
 	private function createCompanyUser($mail, $companyRole)

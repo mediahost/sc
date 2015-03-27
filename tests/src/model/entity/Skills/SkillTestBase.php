@@ -59,7 +59,8 @@ abstract class SkillTestBase extends DbTestCase
 
 	protected function saveSkill()
 	{
-		$this->skillDao->save($this->skill);
+		$this->em->persist($this->skill);
+		$this->em->flush();
 		$this->reloadSkill();
 		return $this;
 	}
@@ -73,7 +74,8 @@ abstract class SkillTestBase extends DbTestCase
 
 	protected function saveCategory()
 	{
-		$this->categoryDao->save($this->category);
+		$this->em->persist($this->category);
+		$this->em->flush();
 		$this->reloadCategory();
 		return $this;
 	}

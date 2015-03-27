@@ -28,7 +28,7 @@ class UserFacadeCreateTest extends UserFacade
 		$password = 'password654321';
 		$role = $this->roleFacade->findByName(Role::CANDIDATE);
 
-		Assert::count(3, $this->userDao->findAll());
+		Assert::count(3, $this->userRepo->findAll());
 
 		Assert::null($this->userFacade->create(self::MAIL, self::PASSWORD, $role)); // Create user with existing e-mail
 
@@ -41,7 +41,7 @@ class UserFacadeCreateTest extends UserFacade
 
 		Assert::same(self::ID_NEW + 1, $user->id);
 
-		Assert::count(4, $this->userDao->findAll());
+		Assert::count(4, $this->userRepo->findAll());
 	}
 
 	public function testCreateRegistration()
@@ -58,12 +58,12 @@ class UserFacadeCreateTest extends UserFacade
 		$user->pageDesignSettings = new PageDesignSettings();
 		$user->requiredRole = $role;
 
-		Assert::count(0, $this->registrationDao->findAll());
+		Assert::count(0, $this->registrationRepo->findAll());
 		$this->userFacade->createRegistration($user);
-		Assert::count(1, $this->registrationDao->findAll());
+		Assert::count(1, $this->registrationRepo->findAll());
 
 		/* @var $registration Registration */
-		$registration = $this->registrationDao->find(1);
+		$registration = $this->registrationRepo->find(1);
 		Assert::same($mail, $registration->mail);
 		Assert::same($role->id, $registration->role->id);
 		Assert::same($user->facebook->id, $registration->facebookId);
@@ -71,13 +71,13 @@ class UserFacadeCreateTest extends UserFacade
 
 		// clear previous with same mail
 		$this->userFacade->createRegistration($user);
-		$this->registrationDao->clear();
-		Assert::count(1, $this->registrationDao->findAll());
+		$this->registrationRepo->clear();
+		Assert::count(1, $this->registrationRepo->findAll());
 
 		$user->mail = 'another.user@domain.com';
 		$this->userFacade->createRegistration($user);
-		$this->registrationDao->clear();
-		Assert::count(2, $this->registrationDao->findAll());
+		$this->registrationRepo->clear();
+		Assert::count(2, $this->registrationRepo->findAll());
 	}
 
 	public function testCreateUserFromRegistration()
@@ -89,15 +89,15 @@ class UserFacadeCreateTest extends UserFacade
 				->setTwitter(new Twitter('twitterID'))
 				->setRequiredRole($this->roleFacade->findByName(Role::CANDIDATE));
 		$registration = $this->userFacade->createRegistration($user);
-		$this->registrationDao->clear();
-		Assert::count(1, $this->registrationDao->findAll());
-		Assert::count(3, $this->userDao->findAll());
+		$this->registrationRepo->clear();
+		Assert::count(1, $this->registrationRepo->findAll());
+		Assert::count(3, $this->userRepo->findAll());
 
 		$initRole = $this->roleFacade->findByName(Role::CANDIDATE);
-		$findedRegistration = $this->registrationDao->find($registration->id);
+		$findedRegistration = $this->registrationRepo->find($registration->id);
 		$this->userFacade->createFromRegistration($findedRegistration, $initRole);
-		$this->userDao->clear();
-		Assert::count(4, $this->userDao->findAll());
+		$this->userRepo->clear();
+		Assert::count(4, $this->userRepo->findAll());
 
 		$newUser = $this->userFacade->findByMail($user->mail);
 		Assert::type(User::getClassName(), $newUser);

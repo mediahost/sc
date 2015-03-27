@@ -125,8 +125,8 @@ class SkillsControl extends BaseControl
 
 	private function save()
 	{
-		$cvDao = $this->em->getDao(Job::getClassName());
-		$cvDao->save($this->job);
+		$cvRepo = $this->em->getRepository(Job::getClassName());
+		$cvRepo->save($this->job);
 		return $this;
 	}
 

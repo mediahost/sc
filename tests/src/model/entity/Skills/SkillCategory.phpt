@@ -44,7 +44,8 @@ class SkillCategoryTest extends SkillTestBase
 	public function testParent()
 	{
 		$parent = new SkillCategory('parent');
-		$this->categoryDao->save($parent);
+		$this->em->persist($parent);
+		$this->em->flush();
 
 		$this->setCategory();
 		$this->category->parent = $parent;
@@ -65,11 +66,12 @@ class SkillCategoryTest extends SkillTestBase
 
 		$child1 = new SkillCategory('bar baz');
 		$child1->parent = $this->category;
-		$this->categoryDao->save($child1);
+		$this->em->persist($child1);
 
 		$child2 = new SkillCategory('baz foo');
 		$child2->parent = $this->category;
-		$this->categoryDao->save($child2);
+		$this->em->persist($child2);
+		$this->em->flush();
 
 		$this->reloadCategory();
 		Assert::count(2, $this->category->childs);
@@ -83,11 +85,12 @@ class SkillCategoryTest extends SkillTestBase
 
 		$skill1 = new Skill('bar baz');
 		$skill1->category = $this->category;
-		$this->skillDao->save($skill1);
+		$this->em->persist($skill1);
 
 		$skill2 = new Skill('baz foo');
 		$skill2->category = $this->category;
-		$this->skillDao->save($skill2);
+		$this->em->persist($skill2);
+		$this->em->flush();
 
 		$this->reloadCategory();
 		Assert::count(2, $this->category->skills);

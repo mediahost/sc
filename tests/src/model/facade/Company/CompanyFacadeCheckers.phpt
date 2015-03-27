@@ -20,7 +20,8 @@ class CompanyFacadeCheckersTest extends CompanyFacade
 	{
 		$company = new Company('my company');
 		$company->companyId = 'myCompany';
-		$this->companyDao->save($company);
+		$this->em->persist($company);
+		$this->em->flush();
 
 		Assert::false($this->companyFacade->isUniqueId($company->companyId));
 		Assert::true($this->companyFacade->isUniqueId($company->companyId, $company->id));

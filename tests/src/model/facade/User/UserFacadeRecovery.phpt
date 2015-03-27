@@ -20,22 +20,22 @@ class UserFacadeRecoveryTest extends UserFacade
 	{
 		// Expired token
 		/* @var $user1 User */
-		$user1 = $this->userDao->find(self::ID_NEW);
+		$user1 = $this->userRepo->find(self::ID_NEW);
 		$user1->setRecovery(self::EXPIRED_TOKEN, 'now - 1 day');
-		$this->userDao->save($user1);
+		$this->userRepo->save($user1);
 
-		$this->userDao->clear();
+		$this->userRepo->clear();
 		Assert::null($this->userFacade->findByRecoveryToken(self::EXPIRED_TOKEN));
 
 		/* @var $user2 User */
-		$user2 = $this->userDao->find(self::ID_NEW);
+		$user2 = $this->userRepo->find(self::ID_NEW);
 		Assert::null($user2->recoveryExpiration);
 		Assert::null($user2->recoveryToken);
 
 		// Valid token
 		$user2->setRecovery(self::VALID_TOKEN, 'now + 1 day');
-		$this->userDao->save($user2);
-		$this->userDao->clear();
+		$this->userRepo->save($user2);
+		$this->userRepo->clear();
 
 		/* @var $user3 User */
 		$user3 = $this->userFacade->findByRecoveryToken(self::VALID_TOKEN);
@@ -46,13 +46,13 @@ class UserFacadeRecoveryTest extends UserFacade
 	public function testSetRecovery()
 	{
 		/* @var $user1 User */
-		$user1 = $this->userDao->find(self::ID_NEW);
+		$user1 = $this->userRepo->find(self::ID_NEW);
 		$this->userFacade->setRecovery($user1);
-		$this->userDao->save($user1);
-		$this->userDao->clear();
+		$this->userRepo->save($user1);
+		$this->userRepo->clear();
 
 		/* @var $user2 User */
-		$user2 = $this->userDao->find(self::ID_NEW);
+		$user2 = $this->userRepo->find(self::ID_NEW);
 		Assert::same($user1->recoveryToken, $user2->recoveryToken);
 		Assert::equal($user1->recoveryExpiration, $user2->recoveryExpiration);
 	}

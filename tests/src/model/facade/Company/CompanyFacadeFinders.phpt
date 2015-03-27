@@ -57,8 +57,8 @@ class CompanyFacadeFindersTest extends CompanyFacade
 	{
 		$company1 = $this->companyDao->find(1);
 		$company2 = $this->companyDao->find(2);
-		$user1 = $this->userDao->find(3);
-		$user2 = $this->userDao->find(4);
+		$user1 = $this->userRepo->find(3);
+		$user2 = $this->userRepo->find(4);
 
 		Assert::same(1, $this->companyFacade->findPermission($company1, $user1)->id);
 		Assert::same(2, $this->companyFacade->findPermission($company2, $user2)->id);
@@ -71,9 +71,9 @@ class CompanyFacadeFindersTest extends CompanyFacade
 	{
 		$company1 = $this->companyDao->find(1);
 		$company2 = $this->companyDao->find(2);
-		$user1 = $this->userDao->find(5);
-		$user2 = $this->userDao->find(6);
-		$user3 = $this->userDao->find(7);
+		$user1 = $this->userRepo->find(5);
+		$user2 = $this->userRepo->find(6);
+		$user3 = $this->userRepo->find(7);
 
 		Assert::same([], $this->companyFacade->findPermissions());
 		Assert::count(1, $this->companyFacade->findPermissions($company1));
@@ -91,9 +91,9 @@ class CompanyFacadeFindersTest extends CompanyFacade
 	{
 		$company1 = $this->companyDao->find(1);
 		$company2 = $this->companyDao->find(2);
-		$user1 = $this->userDao->find(3);
-		$user2 = $this->userDao->find(4);
-		$user3 = $this->userDao->find(5);
+		$user1 = $this->userRepo->find(3);
+		$user2 = $this->userRepo->find(4);
+		$user3 = $this->userRepo->find(5);
 
 		Assert::count(1, $this->companyFacade->findUsersByCompany($company1));
 		Assert::same($user1->id, $this->companyFacade->findUsersByCompany($company1)[0]->id);
@@ -107,8 +107,8 @@ class CompanyFacadeFindersTest extends CompanyFacade
 	public function testFindUsersByCompanyAndRole()
 	{
 		$company1 = $this->companyDao->find(1);
-		$user1 = $this->userDao->find(3);
-		$user2 = $this->userDao->find(4);
+		$user1 = $this->userRepo->find(3);
+		$user2 = $this->userRepo->find(4);
 		$this->companyFacade->addPermission($company1, $user2, [CompanyRole::MANAGER]);
 
 		Assert::count(1, $this->companyFacade->findUsersByCompanyAndRole($company1, CompanyRole::ADMIN));

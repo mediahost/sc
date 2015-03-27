@@ -18,16 +18,16 @@ class CvFacade extends Object
 	public $em;
 
 	/** @var CvRepository */
-	private $cvDao;
+	private $cvRepo;
 
 	/** @var JobRepository */
-	private $jobDao;
+	private $jobRepo;
 
 	public function __construct(EntityManager $em)
 	{
 		$this->em = $em;
-		$this->cvDao = $this->em->getDao(Cv::getClassName());
-		$this->jobDao = $this->em->getDao(Job::getClassName());
+		$this->cvRepo = $this->em->getRepository(Cv::getClassName());
+		$this->jobRepo = $this->em->getRepository(Job::getClassName());
 	}
 
 	public function getDefaultCvOrCreate(Candidate $candidate)
@@ -46,7 +46,7 @@ class CvFacade extends Object
 		$cv = new Cv($name);
 		$cv->candidate = $candidate;
 		$cv->isDefault = !$cv->candidate->hasDefaultCv();
-		$this->cvDao->save($cv);
+		$this->cvRepo->save($cv);
 		return $cv;
 	}
 
@@ -67,14 +67,14 @@ class CvFacade extends Object
 			}
 		} catch (EntityException $e) {
 			$cv->isDefault = TRUE;
-			$this->cvDao->save($cv);
+			$this->cvRepo->save($cv);
 		}
 		return $this;
 	}
 
 	public function findJobs(Cv $cv)
 	{
-		return $this->jobDao->findBySkillKnows($cv->skillKnows);
+		return $this->jobRepo->findBySkillKnows($cv->skillKnows);
 	}
 
 	private function switchDefaults(Cv $toOn, Cv $toOff)

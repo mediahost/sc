@@ -36,7 +36,9 @@ class RoleFacade extends Object
 	{
 		if ($this->isUnique($name)) {
 			$entity = new Role($name);
-			return $this->roleDao->save($entity);
+			$this->em->persist($entity);
+			$this->em->flush();
+			return $entity;
 		}
 		return NULL;
 	}

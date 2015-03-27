@@ -41,8 +41,11 @@ class UserTest extends UserTestBase
 
 	public function testToArray()
 	{
-		$roleA = $this->roleDao->save(new Role('Role A'));
-		$roleB = $this->roleDao->save(new Role('Role B'));
+		$roleA = new Role('Role A');
+		$roleB = new Role('Role B');
+		$this->em->persist($roleA);
+		$this->em->persist($roleB);
+		$this->em->flush();
 
 		$this->user->mail = self::MAIL;
 		$this->user->addRoles([$roleB, $roleA]);
@@ -65,7 +68,7 @@ class UserTest extends UserTestBase
 		Assert::true($this->user->isNew());
 		$this->saveUser();
 		Assert::false($this->user->isNew());
-		$findedUser = $this->userDao->find($this->user->id);
+		$findedUser = $this->userRepo->find($this->user->id);
 		Assert::false($findedUser->isNew());
 	}
 

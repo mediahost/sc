@@ -63,8 +63,8 @@ class ProfileControl extends BaseControl
 
 	protected function save()
 	{
-		$entityDao = $this->em->getDao(Candidate::getClassName());
-		$entityDao->save($this->candidate);
+		$this->em->persist($this->candidate);
+		$this->em->flush();
 		return $this;
 	}
 

@@ -237,7 +237,7 @@ class TreeNodeUseTest extends BaseUse
 	public function testChildrenCount()
 	{
 		$tree = $this->buildTree();
-		
+
 		Assert::same(2, $tree->getChildNodes()->count());
 		Assert::same(1, $tree->getChildNodes()->get(0)->getChildNodes()->count());
 	}
@@ -245,16 +245,16 @@ class TreeNodeUseTest extends BaseUse
 	public function testGetPath()
 	{
 		$tree = $this->buildTree();
-		
+
 		Assert::same('/1', $tree->getRealMaterializedPath());
 		Assert::same('/1/2', $tree->getChildNodes()->get(0)->getRealMaterializedPath());
 		Assert::same('/1/2/4', $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath());
 		Assert::same('/1/2/4/5', $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0)->getRealMaterializedPath());
-		
+
 		$childChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0);
 		$childChildChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0);
 		$childChildItem->setChildNodeOf($tree);
-		
+
 		Assert::same('/1/4', $childChildItem->getRealMaterializedPath()); // The path has been updated to the node
 		Assert::same('/1/4/5', $childChildChildItem->getRealMaterializedPath()); // The path has been updated to the node and all its descendants
 		Assert::true($tree->getChildNodes()->contains($childChildItem)); // The children collection has been updated to reference the moved node
@@ -263,33 +263,33 @@ class TreeNodeUseTest extends BaseUse
 	public function testMoveChildren()
 	{
 		$tree = $this->buildTree();
-		
+
 		$childChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0);
 		$childChildChildItem = $tree->getChildNodes()->get(0)->getChildNodes()->get(0)->getChildNodes()->get(0);
 		Assert::same(4, $childChildChildItem->getNodeLevel(), 'The level is well calcuated');
-		
+
 		$childChildItem->setChildNodeOf($tree);
 		Assert::same('/1/4', $childChildItem->getRealMaterializedPath()); // The path has been updated fo the node
 		Assert::same('/1/4/5', $childChildChildItem->getRealMaterializedPath()); // The path has been updated fo the node and all its descendants
 		Assert::true($tree->getChildNodes()->contains($childChildItem)); // The children collection has been updated to reference the moved node
-		
+
 		Assert::same(3, $childChildChildItem->getNodeLevel()); // The level has been updated
 	}
 
 	public function testGetTree()
 	{
-		$treeNodeDao = $this->em->getDao(TreeNode::getClassName());
-		
 		$entity = new TreeNode(1);
 		$entity[0] = new TreeNode(2);
 		$entity[0][0] = new TreeNode(3);
-		
-		$treeNodeDao->save($entity);
-		$treeNodeDao->save($entity[0]);
-		$treeNodeDao->save($entity[0][0]);
-		
+
+		$this->em->persist($entity);
+		$this->em->persist($entity[0]);
+		$this->em->persist($entity[0][0]);
+		$this->em->flush();
+
+		$treeNodeDao = $this->em->getDao(TreeNode::getClassName());
 		$root = $treeNodeDao->getTree();
-		
+
 		Assert::same($root[0][0], $entity[0][0]);
 	}
 

@@ -126,8 +126,8 @@ class UserControl extends BaseControl
 
 	private function save()
 	{
-		$userDao = $this->em->getDao(User::getClassName());
-		$userDao->save($this->user);
+		$userRepo = $this->em->getRepository(User::getClassName());
+		$userRepo->save($this->user);
 		return $this;
 	}
 

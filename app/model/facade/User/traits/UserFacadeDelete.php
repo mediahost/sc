@@ -15,7 +15,7 @@ trait UserFacadeDelete
 	 */
 	public function deleteById($id)
 	{
-		$user = $this->userDao->find($id);
+		$user = $this->userRepo->find($id);
 		return $this->delete($user);
 	}
 
@@ -39,7 +39,7 @@ trait UserFacadeDelete
 	private function clearPermissions(User $user)
 	{
 		foreach ($this->companyFacade->findPermissions(NULL, $user) as $permission) {
-			$this->companyPermissionDao->delete($permission);
+			$this->companyPermissionRepo->delete($permission);
 		}
 		return TRUE;
 	}

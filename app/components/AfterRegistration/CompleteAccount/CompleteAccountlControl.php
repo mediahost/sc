@@ -125,12 +125,12 @@ class CompleteAccountControl extends BaseControl
 	public function candidateFormSucceeded(Form $form, ArrayHash $values)
 	{
 		$roleDao = $this->em->getDao(Role::getClassName());
-		$userDao = $this->em->getDao(User::getClassName());
+		$userRepo = $this->em->getRepository(User::getClassName());
 
 		if (!$this->getUser()->id) {
 			throw new CompleteAccountControlException('Use setUserId($id) with existed ID');
 		}
-		$user = $userDao->find($this->getUser()->id);
+		$user = $userRepo->find($this->getUser()->id);
 		if ($user->candidate !== NULL) {
 			throw new CompleteAccountControlException('This user is already candidate');
 		}
@@ -140,7 +140,7 @@ class CompleteAccountControl extends BaseControl
 		$user->removeRole($this->roleFacade->findByName(Role::SIGNED));
 		$user->candidate->name = $values->fullName;
 		$user->candidate->birthday = $values->birthday;
-		$savedUser = $userDao->save($user);
+		$savedUser = $userRepo->save($user);
 
 		$this->onCreateCandidate($this, $savedUser->candidate);
 	}

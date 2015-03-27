@@ -27,7 +27,7 @@ trait CompanyFacadeFinders
 
 	public function findPermission(Company $company, User $user)
 	{
-		return $this->companyPermissionDao->findOneBy([
+		return $this->companyPermissionRepo->findOneBy([
 				'company' => $company,
 				'user'    => $user,
 		]);
@@ -36,10 +36,10 @@ trait CompanyFacadeFinders
 	public function findPermissions($company = NULL, $user = NULL)
 	{
 		if ($company instanceof Company) {
-			return $this->companyPermissionDao->findBy(['company' => $company]);
+			return $this->companyPermissionRepo->findBy(['company' => $company]);
 		}
 		if ($user instanceof User) {
-			return $this->companyPermissionDao->findBy(['user' => $user]);
+			return $this->companyPermissionRepo->findBy(['user' => $user]);
 		}
 		return [];
 	}
@@ -57,7 +57,7 @@ trait CompanyFacadeFinders
 	 */
 	public function findUsersByCompany($company, $onlyIds = FALSE)
 	{
-		$permissions = $this->companyPermissionDao->findBy([
+		$permissions = $this->companyPermissionRepo->findBy([
 				'company' => $this->find($company),
 		]);
 		$users = [];
@@ -75,7 +75,7 @@ trait CompanyFacadeFinders
 		$role = $roleOrRoleName instanceof CompanyRole ? $roleOrRoleName : $this->findRoleByName($roleOrRoleName);
 
 		if ($company && $role) {
-			$permissions = $this->companyPermissionDao->findByCompanyAndRoleId($company, $role->id, $onlyIds);
+			$permissions = $this->companyPermissionRepo->findByCompanyAndRoleId($company, $role->id, $onlyIds);
 			foreach ($permissions as $permission) {
 				$users[] = $onlyIds ? current($permission) : $permission->user;
 			}

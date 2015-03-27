@@ -89,12 +89,19 @@ class UserRolesTest extends UserTestBase
 	{
 		$this->updateSchema();
 
-		$roleA = $this->roleDao->save(new Role(Role::GUEST));
-		$roleB = $this->roleDao->save(new Role(Role::SIGNED));
-		$roleC = $this->roleDao->save(new Role(Role::CANDIDATE));
-		$roleD = $this->roleDao->save(new Role(Role::COMPANY));
-		$roleE = $this->roleDao->save(new Role(Role::ADMIN));
-		$roleF = $this->roleDao->save(new Role(Role::SUPERADMIN));
+		$roleA = new Role(Role::GUEST);
+		$roleB = new Role(Role::SIGNED);
+		$roleC = new Role(Role::CANDIDATE);
+		$roleD = new Role(Role::COMPANY);
+		$roleE = new Role(Role::ADMIN);
+		$roleF = new Role(Role::SUPERADMIN);
+		$this->em->persist($roleA);
+		$this->em->persist($roleB);
+		$this->em->persist($roleC);
+		$this->em->persist($roleD);
+		$this->em->persist($roleE);
+		$this->em->persist($roleF);
+		$this->em->flush();
 
 		$this->user->addRoles([$roleB, $roleC, $roleB, $roleA, $roleA, $roleC]);
 		Assert::same([$roleB->id, $roleC->id, $roleA->id], $this->user->rolesKeys);

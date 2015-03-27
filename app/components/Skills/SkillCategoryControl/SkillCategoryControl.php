@@ -86,8 +86,8 @@ class SkillCategoryControl extends BaseControl
 	
 	private function save()
 	{
-		$entityDao = $this->em->getDao(SkillCategory::getClassName());
-		$entityDao->save($this->skillCategory);
+		$this->em->persist($this->skillCategory);
+		$this->em->flush();
 		return $this;
 	}
 

@@ -129,8 +129,8 @@ class ConnectManagerControl extends BaseControl
 			$this->redrawControl();
 		}
 
-		$userDao = $this->em->getDao(User::getClassName());
-		$user = $userDao->find($this->user->id);
+		$userRepo = $this->em->getRepository(User::getClassName());
+		$user = $userRepo->find($this->user->id);
 
 		$disconected = NULL;
 		switch ($type) {
@@ -148,7 +148,7 @@ class ConnectManagerControl extends BaseControl
 				break;
 		}
 		if ($disconected) {
-			$savedUser = $userDao->save($user);
+			$savedUser = $userRepo->save($user);
 			$this->onDisconnect($savedUser, $disconected);
 		} else {
 			$this->onInvalidType($type);

@@ -49,7 +49,8 @@ class TranslationUseTest extends BaseUse
         $entity->translate('cs')->title = 'pecka';
 		$entity->mergeNewTranslations();
 		
-		$this->articleDao->save($entity);
+		$this->em->persist($entity);
+		$this->em->flush();
 
 		$entityFinded = $this->articleDao->find($entity->id);
 		$entityFinded->setCurrentLocale($this->getLanguageService()->language);
@@ -71,7 +72,8 @@ class TranslationUseTest extends BaseUse
         $entity->translate('cs')->title = 'pecka';
 		$entity->mergeNewTranslations();
 		
-		$this->articleDao->save($entity);
+		$this->em->persist($entity);
+		$this->em->flush();
 		
 		$entityFinded = $this->articleDao->find($entity->id);
 		$entityFinded->setCurrentLocale('fr');

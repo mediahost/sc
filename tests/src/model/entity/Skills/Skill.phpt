@@ -20,7 +20,8 @@ class SkillTest extends SkillTestBase
 	private function setSkill()
 	{
 		$this->category = new SkillCategory('category');
-		$this->categoryDao->save($this->category);
+		$this->em->persist($this->category);
+		$this->em->flush();
 
 		$this->skill = new Skill(self::NAME);
 		$this->skill->category = $this->category;

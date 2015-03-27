@@ -11,6 +11,7 @@ use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
+use App\Model\Repository\CompanyPermissionRepository;
 use App\Model\Repository\RegistrationRepository;
 use App\Model\Repository\UserRepository;
 use Kdyby\Doctrine\EntityDao;
@@ -28,13 +29,13 @@ abstract class UserFacade extends BaseFacade
 	const FACEBOOK_ID = 'fb123456789';
 
 	/** @var UserRepository */
-	protected $userDao;
+	protected $userRepo;
 
 	/** @var EntityDao */
 	protected $roleDao;
 
 	/** @var RegistrationRepository */
-	protected $registrationDao;
+	protected $registrationRepo;
 
 	/** @var EntityDao */
 	protected $facebookDao;
@@ -51,21 +52,21 @@ abstract class UserFacade extends BaseFacade
 	/** @var EntityDao */
 	protected $companyDao;
 
-	/** @var EntityDao */
-	protected $companyPermissionDao;
+	/** @var CompanyPermissionRepository */
+	protected $companyPermissionRepo;
 
 	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->userRepo = $this->em->getDao(User::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
-		$this->registrationDao = $this->em->getDao(Registration::getClassName());
+		$this->registrationRepo = $this->em->getDao(Registration::getClassName());
 		$this->facebookDao = $this->em->getDao(Facebook::getClassName());
 		$this->twitterDao = $this->em->getDao(Twitter::getClassName());
 		$this->pageConfigSettingsDao = $this->em->getDao(PageConfigSettings::getClassName());
 		$this->pageDesignSettingsDao = $this->em->getDao(PageDesignSettings::getClassName());
 		$this->companyDao = $this->em->getDao(Company::getClassName());
-		$this->companyPermissionDao = $this->em->getDao(CompanyPermission::getClassName());
+		$this->companyPermissionRepo = $this->em->getDao(CompanyPermission::getClassName());
 	}
 
 	protected function setUp()

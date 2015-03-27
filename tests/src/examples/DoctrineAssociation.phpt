@@ -56,7 +56,8 @@ class DoctrineAssociationTest extends DbTestCase
 		// create owner
 		$newUser1 = new ManyToOneUnidirectional\User;
 		$newUser1->mail = 'mail1';
-		$userDao->save($newUser1);
+		$this->em->persist($newUser1);
+		$this->em->flush();
 		$user1Id = $newUser1->id;
 
 		$userDao->clear();
@@ -66,13 +67,15 @@ class DoctrineAssociationTest extends DbTestCase
 		// create address
 		$newAddress = new ManyToOneUnidirectional\Address;
 		$newAddress->name = self::ADDRESS;
-		$addressDao->save($newAddress);
+		$this->em->persist($newAddress);
+		$this->em->flush();
 		$addressId = $newAddress->id;
 
 		// add address to user
 		$findedAddress = $addressDao->find($addressId);
 		$findedUser1o1->address = $findedAddress;
-		$userDao->save($findedUser1o1);
+		$this->em->persist($findedUser1o1);
+		$this->em->flush();
 
 		$userDao->clear();
 		$findedUser1o2 = $userDao->find($user1Id);
@@ -84,7 +87,8 @@ class DoctrineAssociationTest extends DbTestCase
 		$newUser2 = new ManyToOneUnidirectional\User;
 		$newUser2->mail = 'mail2';
 		$newUser2->address = $findedAddress;
-		$userDao->save($newUser2);
+		$this->em->persist($newUser2);
+		$this->em->flush();
 		$user2Id = $newUser2->id;
 
 		$userDao->clear();
@@ -93,7 +97,8 @@ class DoctrineAssociationTest extends DbTestCase
 
 		// change name in address from user (change from owner side)
 		$findedUser2o1->address->name = 'changed address';
-		$userDao->save($findedUser2o1);
+		$this->em->persist($findedUser2o1);
+		$this->em->flush();
 
 		$userDao->clear();
 		$findedUser1o3 = $userDao->find($user1Id);
@@ -132,7 +137,8 @@ class DoctrineAssociationTest extends DbTestCase
 		// create owner
 		$newProduct = new OneToOneUnidirectional\Product;
 		$newProduct->name = self::NAME;
-		$productDao->save($newProduct);
+		$this->em->persist($newProduct);
+		$this->em->flush();
 		$productId = $newProduct->id;
 
 		$productDao->clear();
@@ -143,14 +149,16 @@ class DoctrineAssociationTest extends DbTestCase
 		// create shipping
 		$newShipping = new OneToOneUnidirectional\Shipping;
 		$newShipping->name = 'shipping 2';
-		$shippingDao->save($newShipping);
+		$this->em->persist($newShipping);
+		$this->em->flush();
 		$shippingId = $newShipping->id;
 
 		// add shipping
 		$shippingDao->clear();
 		$findedShipping1 = $shippingDao->find($shippingId);
 		$findedProduct1->shipping = $findedShipping1;
-		$productDao->save($findedProduct1);
+		$this->em->persist($findedProduct1);
+		$this->em->flush();
 
 		$productDao->clear();
 		$findedProduct2 = $productDao->find($productId);
@@ -158,7 +166,8 @@ class DoctrineAssociationTest extends DbTestCase
 
 		// change shipping name (change from owner side)
 		$findedProduct2->shipping->name = 'changed shipping name';
-		$productDao->save($findedProduct2);
+		$this->em->persist($findedProduct2);
+		$this->em->flush();
 
 		$productDao->clear();
 		$findedProduct3 = $productDao->find($productId);
@@ -197,7 +206,8 @@ class DoctrineAssociationTest extends DbTestCase
 		// create owner
 		$newCart = new OneToOneBidirectional\Cart;
 		$newCart->price = 123.4;
-		$cartDao->save($newCart);
+		$this->em->persist($newCart);
+		$this->em->flush();
 		$cartId = $newCart->id;
 
 		$cartDao->clear();
@@ -207,14 +217,16 @@ class DoctrineAssociationTest extends DbTestCase
 		// create customer
 		$newCustomer = new OneToOneBidirectional\Customer;
 		$newCustomer->name = self::NAME;
-		$customerDao->save($newCustomer);
+		$this->em->persist($newCustomer);
+		$this->em->flush();
 		$customerId = $newCustomer->id;
 
 		// add customer to cart
 		$customerDao->clear();
 		$findedCustomer1 = $customerDao->find($customerId);
 		$findedCart1->customer = $findedCustomer1;
-		$cartDao->save($findedCart1);
+		$this->em->persist($findedCart1);
+		$this->em->flush();
 
 		$cartDao->clear();
 		$findedCart2 = $cartDao->find($cartId);
@@ -222,7 +234,8 @@ class DoctrineAssociationTest extends DbTestCase
 
 		// change customer name from cart
 		$findedCart2->customer->name = 'changed name';
-		$cartDao->save($findedCart2);
+		$this->em->persist($findedCart2);
+		$this->em->flush();
 
 		$cartDao->clear();
 		$findedCart3 = $cartDao->find($cartId);
@@ -345,12 +358,13 @@ class DoctrineAssociationTest extends DbTestCase
 		
 		// init groups
 		$newGroup1 = new ManyToManyBidirectional\Group;
-		$newGroup1->name = 'group 1';
-		$groupDao->save($newGroup1);
-		$group1Id = $newGroup1->id;
 		$newGroup2 = new ManyToManyBidirectional\Group;
+		$newGroup1->name = 'group 1';
 		$newGroup2->name = 'group 2';
-		$groupDao->save($newGroup2);
+		$this->em->persist($newGroup1);
+		$this->em->persist($newGroup2);
+		$this->em->flush();
+		$group1Id = $newGroup1->id;
 		$group2Id = $newGroup2->id;
 		
 		$groupDao->clear();
@@ -363,7 +377,8 @@ class DoctrineAssociationTest extends DbTestCase
 		$newUser->mail = self::MAIL;
 		$newUser->addGroup($findedGroup1);
 		$newUser->addGroup($findedGroup2);
-		$userDao->save($newUser);
+		$this->em->persist($newUser);
+		$this->em->flush();
 		$userId = $newUser->id;
 		
 		$userDao->clear();

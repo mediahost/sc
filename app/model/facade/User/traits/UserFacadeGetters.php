@@ -13,7 +13,7 @@ trait UserFacadeGetters
 	 */
 	public function getUsers()
 	{
-		return $this->userDao->findPairs('mail');
+		return $this->userRepo->findPairs('mail');
 	}
 
 	/**
@@ -23,7 +23,7 @@ trait UserFacadeGetters
 	 */
 	public function getUserMailsInRole(Role $role)
 	{
-		return $this->userDao->findPairsByRoleId($role->id, 'mail');
+		return $this->userRepo->findPairsByRoleId($role->id, 'mail');
 	}
 
 }

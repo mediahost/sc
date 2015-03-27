@@ -8,6 +8,7 @@ use App\Model\Entity\PageDesignSettings;
 use App\Model\Entity\Role;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
+use App\Model\Repository\UserRepository;
 use Kdyby\Doctrine\EntityDao;
 use Nette\DI\Container;
 use Test\DbTestCase;
@@ -24,14 +25,14 @@ abstract class UserTestBase extends DbTestCase
 	/** @var EntityDao */
 	protected $roleDao;
 
-	/** @var EntityDao */
-	protected $userDao;
+	/** @var UserRepository */
+	protected $userRepo;
 
 	public function __construct(Container $container)
 	{
 		parent::__construct($container);
 
-		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->userRepo = $this->em->getRepository(User::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
@@ -54,7 +55,7 @@ abstract class UserTestBase extends DbTestCase
 			$this->em->safePersist($this->user);
 			$this->em->flush();
 		} else {
-			$this->userDao->save($this->user);
+			$this->userRepo->save($this->user);
 		}
 		$this->reloadUser();
 		return $this;
@@ -63,7 +64,7 @@ abstract class UserTestBase extends DbTestCase
 	protected function reloadUser()
 	{
 		$this->em->detach($this->user);
-		$this->user = $this->userDao->find($this->user->id);
+		$this->user = $this->userRepo->find($this->user->id);
 		return $this;
 	}
 

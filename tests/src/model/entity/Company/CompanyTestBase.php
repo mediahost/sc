@@ -43,10 +43,10 @@ abstract class CompanyTestBase extends DbTestCase
 	{
 		if ($safePersist) {
 			$this->em->safePersist($this->user);
-			$this->em->flush();
 		} else {
-			$this->companyDao->save($this->company);
+			$this->em->persist($this->company);
 		}
+		$this->em->flush();
 		$this->reloadCompany();
 		return $this;
 	}

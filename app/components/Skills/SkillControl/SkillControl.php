@@ -77,9 +77,9 @@ class SkillControl extends BaseControl
 
 	private function save()
 	{
-		$entityDao = $this->em->getDao(Skill::getClassName());
 		// TODO: Check on duplicity in skill table
-		$entityDao->save($this->skill);
+		$this->em->persist($this->skill);
+		$this->em->flush();
 		return $this;
 	}
 

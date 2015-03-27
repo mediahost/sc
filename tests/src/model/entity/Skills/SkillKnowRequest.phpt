@@ -218,10 +218,11 @@ class SkillKnowRequestTest extends SkillTestBase
 			return $findedSkill;
 		} else {
 			$category = new SkillCategory('category for ' . $name);
-			$this->categoryDao->save($category);
+			$this->em->persist($category);
 			$skill = new Skill($name);
 			$skill->category = $category;
-			$this->skillDao->save($skill);
+			$this->em->persist($skill);
+			$this->em->flush();
 			return $skill;
 		}
 	}
