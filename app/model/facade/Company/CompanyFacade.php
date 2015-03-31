@@ -32,6 +32,9 @@ class CompanyFacade extends Object
 	private $userRepo;
 
 	/** @var EntityDao */
+	private $companyDao;
+
+	/** @var EntityDao */
 	private $companyRoleDao;
 
 	public function __construct(EntityManager $em)
@@ -39,6 +42,7 @@ class CompanyFacade extends Object
 		$this->em = $em;
 		$this->companyPermissionRepo = $this->em->getRepository(CompanyPermission::getClassName());
 		$this->userRepo = $this->em->getRepository(User::getClassName());
+		$this->companyDao = $this->em->getDao(Company::getClassName());
 		$this->companyRoleDao = $this->em->getDao(CompanyRole::getClassName());
 	}
 
