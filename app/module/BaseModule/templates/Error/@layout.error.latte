@@ -17,9 +17,11 @@
 		<meta content="" name="description"/>
 		<meta content="" name="author"/>
 
+		{include cssAdminFonts}
 		{include cssMetronicCore}
 		{include cssMetronicPlugins}
-		{include cssMetronicTheme}
+		{include cssMetronicGlobalTheme}
+		{include cssMetronicAdminTheme}
 
 		{control cssFront}
 		{control cssPrint}
@@ -39,7 +41,7 @@
 		<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 		{include jsMetronicCore}
 		{include jsMetronicPlugins}
-		{include jsApp}
+		{include jsAdminApp}
 		<!-- END JAVASCRIPTS -->
 		{/block}
 	</body>

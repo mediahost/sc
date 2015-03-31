@@ -34,7 +34,7 @@
 		<!-- END CAROUSEL -->
 
 		<h2>{_'Our positions'}</h2>
-		<div id="accordionPositions" class="panel-group">
+		<div id="accordionPositions" class="panel-group" n:if="count($company->jobs)">
 			<div n:foreach="$company->jobs as $job" 
 				 class="panel panel-default">
 				<div class="panel-heading">
@@ -70,7 +70,12 @@
 					</div>
 				</div>
 			</div>
-		</div>  
+		</div>			
+		<div class="well" n:if="!count($company->jobs)">
+			<h4>{_'We are preparing some jobs for you.'}</h4>
+			{_'Try visit this page in some days.'}
+		</div>
+		
 	</div>
 
 	<div class="col-md-3 col-sm-3 sidebar2">
@@ -97,6 +102,7 @@
 		</ul>
 
 		<h2 class="padding-top-20">{_'About Us'}</h2>
+		<img src="{$basePath}/foto/75-75/{$company->logo}" n:if="$company->logo" alt="logo">
 		<p n:ifset="$company->description">{$company->description}</p> 
 	</div>
 
