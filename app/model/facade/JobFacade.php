@@ -25,7 +25,7 @@ class JobFacade extends Object
 
 	public function findCvs(Job $job)
 	{
-		return $this->cvDao->findBySkillRequests((array) $job->skillRequests);
+		return $this->cvDao->findBySkillRequests($job->skillRequests->toArray());
 	}
 
 }
