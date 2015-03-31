@@ -94,8 +94,12 @@ class CompaniesPresenter extends BasePresenter
 		} else {
 			$this['companyInfoForm']->setCompany($this->company);
 			$this['editUserForm']->setCompany($this->company);
-			$this->template->company = $this->company;
 		}
+	}
+
+	public function renderEdit()
+	{
+		$this->template->company = $this->company;
 	}
 
 	/**
