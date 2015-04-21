@@ -16,7 +16,9 @@ jQuery(document).ready(function () {
 	ComponentsDropdowns.init();
 	ComponentsNoUiSliders.init();
 	PdfPreview.init();
-	Maps.init();
+	
+	// Global components
+	GlobalCustomInit.init();
 
 	AppContent.init();
 });

@@ -5,5 +5,6 @@ jQuery(document).ready(function () {
 	
 	Layout.initTwitter();
 	
-	Maps.init();
+	// Global components
+	GlobalCustomInit.init();
 });
