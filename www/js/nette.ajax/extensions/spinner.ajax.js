@@ -30,12 +30,15 @@
 
 	$.nette.ext('loader', {
 		start: function (jqXHR, settings) {
-			if (settings.nette.form.length) {
+			var parentPortlet = null;
+			if (settings.nette.form && settings.nette.form.length) {
 				this.element = settings.nette.form;
 				var parentPortlet = this.element.closest('.portlet');
-				if (parentPortlet.length) {
-					this.element = parentPortlet;
-				}
+			} else {
+				var parentPortlet = settings.nette.el.closest('.portlet');
+			}
+			if (parentPortlet && parentPortlet.length) {
+				this.element = parentPortlet;
 			}
 			Metronic.blockUI({
 				target: this.element,
