@@ -120,3 +120,8 @@ services:
 	IFormControlFactory:
 		implement: App\Components\Example\Form\IFormControlFactory
 		inject: yes
+
+	# Grids
+	IUsersGridFactory:
+		implement: App\Components\Grids\User\IUsersGridFactory
+		inject: yes

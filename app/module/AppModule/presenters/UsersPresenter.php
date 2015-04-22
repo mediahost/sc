@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Grids\User\IUsersGridFactory;
+use App\Components\Grids\User\UsersGrid;
 use App\Components\User\IUserControlFactory;
 use App\Components\User\UserControl;
 use App\Model\Entity\User;
@@ -12,22 +14,19 @@ use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Security\User as IdentityUser;
 
-/**
- * Users presenter.
- */
 class UsersPresenter extends BasePresenter
 {
 
 	/** @var User */
 	private $userEntity;
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	/** @var EntityDao */
+	private $userDao;
+
+	// <editor-fold defaultstate="collapsed" desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
-
-	/** @var EntityDao */
-	private $userDao;
 
 	/** @var UserFacade @inject */
 	public $userFacade;
@@ -37,6 +36,9 @@ class UsersPresenter extends BasePresenter
 
 	/** @var IUserControlFactory @inject */
 	public $iUserControlFactory;
+
+	/** @var IUsersGridFactory @inject */
+	public $iUsersGridFactory;
 
 	// </editor-fold>
 
@@ -206,6 +208,17 @@ class UsersPresenter extends BasePresenter
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};
+		return $control;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="grids">
+
+	/** @return UsersGrid */
+	public function createComponentUsersGrid()
+	{
+		$control = $this->iUsersGridFactory->create();
+		$control->setIdentity($this->user);
 		return $control;
 	}
 
