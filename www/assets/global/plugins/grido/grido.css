@@ -17,10 +17,25 @@
     text-decoration: none;
 }
 
-.grido .checkbox {
+.grido .checker > .checkbox {
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
-.grido .checkbox input[type=checkbox] {
+.grido .checkbox span input[type=checkbox] {
 	margin-left: -10px;
+}
+.grido td.checker > .checkbox > label > input[type=checkbox] {
+	margin-left: -5px;
+	margin-top: -10px;
+}
+.grido th.checker > .checkbox > input[type=checkbox] {
+	margin-left: -5px;
+}
+
+.grido ul.pagination {
+	margin: 2px 0px;
+}
+.grido .count .text {
+	display: inline-block;
+	vertical-align: middle;
 }

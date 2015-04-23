@@ -3,18 +3,14 @@ jQuery(document).ready(function () {
 	Layout.init(); // init layout
 	$.nette.init(); // https://github.com/vojtech-dobes/nette.ajax.js
 
+	// special for pages
 	Login.init();
 
 	// components
-	ComponentsPickers.init();
 	HtmlEditors.init();
-	ComponentsFormTools.init();
 	UIToastr.init();
 	Fullscreen.init();
-	TableManaged.init();
 	ConnectedNumbers.init();
-	ComponentsDropdowns.init();
-	ComponentsNoUiSliders.init();
 	PdfPreview.init();
 	
 	// Global components
@@ -24,17 +20,14 @@ jQuery(document).ready(function () {
 });
 
 $('.modal.ajax').on('loaded.bs.modal', function (e) {
-	reloadAfterAjax();
+	GlobalCustomInit.onReloadModalEvent();
 });
-
-var reloadAfterAjax = function () {
-	ComponentsDropdowns.init(); // init form components after ajax load
-	Nette.initAllForms(); // reinit all nette forms
-};
 
 $.nette.ext('netteAjax', {
 	complete: function () {
-		reloadAfterAjax();
-		PdfPreview.init();
+		GlobalCustomInit.onReloadGridoEvent();
+		GlobalCustomInit.onReloadModalEvent();
+		GlobalCustomInit.onReloadPdfEvent();
 	}
 });
+
