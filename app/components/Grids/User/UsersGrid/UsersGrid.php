@@ -67,6 +67,8 @@ class UsersGrid extends BaseControl
         $operation = array('print' => 'Print', 'delete' => 'Delete');
         $grid->setOperation($operation, $this->handleOperations)
             ->setConfirm('delete', 'Are you sure you want to delete %i items?');
+		
+		$grid->setExport();
 
 		return $grid;
 	}
