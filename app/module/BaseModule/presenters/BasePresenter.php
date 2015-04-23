@@ -13,6 +13,7 @@ use App\TaggedString;
 use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\MemberAccessException as DoctrineMemberAccessException;
+use Latte\Macros\MacroSet;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\MemberAccessException as NetteMemberAccessException;
@@ -235,4 +236,18 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="macros">
+	protected function createTemplate()
+	{
+		$template = parent::createTemplate();
+        $latte = $template->getLatte();
+
+        $set = new MacroSet($latte->getCompiler());
+        $set->addMacro('scache', '?>?<?php echo strtotime(date(\'Y-m-d hh \')); ?>"<?php');
+
+        $latte->addFilter('scache', $set);
+        return $template;
+	}
+	// </editor-fold>
+	
 }
