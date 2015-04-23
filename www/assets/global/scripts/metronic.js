@@ -199,10 +199,8 @@ var Metronic = function () {
 		var test = $("input[type=checkbox]:not(.toggle, .make-switch, .icheck), input[type=radio]:not(.toggle, .star, .make-switch, .icheck)");
 		if (test.size() > 0) {
 			test.each(function () {
-				if ($(this).parents(".checker").size() === 0) {
-					$(this).show();
-					$(this).uniform();
-				}
+				$(this).show();
+				$(this).uniform();
 			});
 		}
 	};

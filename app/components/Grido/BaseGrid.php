@@ -11,6 +11,10 @@ use Grido\Grid;
 class BaseGrid extends Grid
 {
 
+	const THEME_METRONIC = 'metronic';
+
+	private $templateFile;
+
 	/**
 	 * Custom condition callback for filter birthday.
 	 * @param string $value
@@ -40,6 +44,25 @@ class BaseGrid extends Grid
 		$header->class[] = 'center';
 
 		return $column;
+	}
+
+	public function setTheme($theme = self::THEME_METRONIC)
+	{
+		switch ($theme) {
+			case self::THEME_METRONIC:
+			default:
+				$this->templateFile = self::THEME_METRONIC;
+				$this->getTablePrototype()->class[] = 'table-bordered no-footer';
+				break;
+		}
+	}
+
+	public function render()
+	{
+		if ($this->templateFile) {
+			$this->setTemplateFile(__DIR__ . '/Themes/' . $this->templateFile . '.latte');
+		}
+		parent::render();
 	}
 
 }

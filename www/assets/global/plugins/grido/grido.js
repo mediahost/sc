@@ -263,7 +263,8 @@
                         $(this).prop('checked', !val);
                         that.changeRow($(this).closest('tr'), !val);
                     });
-
+					$.uniform.update();
+					
                     return false;
                 });
         },
