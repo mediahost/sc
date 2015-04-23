@@ -20,14 +20,16 @@ class UsersGrid extends BaseControl
 	protected function createComponentGrid()
 	{
 		$grid = new BaseGrid();
+		$grid->setTheme(BaseGrid::THEME_METRONIC);
 		$repo = $this->em->getRepository(User::class);
 		$qb = $repo->createQueryBuilder('u');
 		$model = new Doctrine($qb);
 		$grid->model = $model;
 
-		$grid->addColumnNumber('id', 'ID')
+		$grid->addColumnNumber('id', 'ID #')
 				->setSortable()
 				->setFilterNumber();
+		$grid->getColumn('id')->headerPrototype->width = '5%';
 
 		$grid->addColumnEmail('mail', 'Mail')
 				->setSortable()
@@ -40,26 +42,31 @@ class UsersGrid extends BaseControl
 				});
 
 		$grid->addActionHref('access', 'Access')
-				->setIcon('icon-key')
-				->setDisable(function($item) {
-					return !$this->presenter->canAccess($this->identity, $item);
-				});
+						->setIcon('fa fa-key')
+						->setDisable(function($item) {
+							return !$this->presenter->canAccess($this->identity, $item);
+						})->elementPrototype->class[] = 'btn-info';
 
 		$grid->addActionHref('edit', 'Edit')
-				->setIcon('icon-pencil')
-				->setDisable(function($item) {
-					return !$this->presenter->canEdit($this->identity, $item);
-				});
+						->setIcon('fa fa-edit')
+						->setDisable(function($item) {
+							return !$this->presenter->canEdit($this->identity, $item);
+						})->elementPrototype->class[] = 'yellow';
 
 		$grid->addActionHref('delete', 'Delete')
-				->setIcon('icon-trash')
-				->setConfirm(function($item) {
-					$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
-					return sprintf($message, (string) $item);
-				})
-				->setDisable(function($item) {
-					return !$this->presenter->canDelete($this->identity, $item);
-				});
+						->setIcon('fa fa-trash-o')
+						->setConfirm(function($item) {
+							$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
+							return sprintf($message, (string) $item);
+						})
+						->setDisable(function($item) {
+							return !$this->presenter->canDelete($this->identity, $item);
+						})->elementPrototype->class[] = 'red';
+						
+						
+        $operation = array('print' => 'Print', 'delete' => 'Delete');
+        $grid->setOperation($operation, $this->handleOperations)
+            ->setConfirm('delete', 'Are you sure you want to delete %i items?');
 
 		return $grid;
 	}
@@ -69,6 +76,23 @@ class UsersGrid extends BaseControl
 		$this->identity = $identity;
 		return $this;
 	}
+	
+    /**
+     * Common handler for grid operations.
+     * @param string $operation
+     * @param array $id
+     */
+    public function handleOperations($operation, $id)
+    {
+//        if ($id) {
+//            $row = implode(', ', $id);
+//            $this->flashMessage("Process operation '$operation' for row with id: $row...", 'info');
+//        } else {
+//            $this->flashMessage('No rows selected.', 'error');
+//        }
+//
+//        $this->redirect($operation, array('id' => $id));
+    }
 
 }
 
