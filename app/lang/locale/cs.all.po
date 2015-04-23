@@ -2,8 +2,8 @@
 # Created: 2014-09-26 18:19:26
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2014-09-26 18:19+0200\n"
-"Project-Id-Version: Sourcecode\n"
+"PO-Revision-Date: 2015-04-23 18:22+0100\n"
+"Project-Id-Version: SourceCode\n"
 "POT-Creation-Date: 2014-08-24 12:34+0100\n"
 "Last-Translator: Petr Poupě <pupe.dupe@gmail.com>\n"
 "Language-Team: \n"
@@ -11,7 +11,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-
+"Language: cs_CZ\n"
+"X-Generator: Poedit 1.6.10\n"
 
 msgid "Login"
 msgstr "Přihlásit se"
@@ -31,111 +32,50 @@ msgstr "Neodhlašovat"
 msgid "Settings"
 msgstr "Nastavení"
 
-msgid "Source-Code"
-msgstr ""
+msgid "Grido.HintNumber"
+msgstr "Můžete použít <, <=, >, >=, <>. Např.: '>= %d'"
 
-msgid "Full Screen"
-msgstr ""
+msgid "Grido.SelectSomeRow"
+msgstr "Vyberte řádek"
 
-msgid "Dashboard"
-msgstr ""
+msgid "Grido.Invert"
+msgstr "Obrátit výběr"
 
-msgid "Users"
-msgstr ""
+msgid "Grido.Items"
+msgstr "Položky %d - %d z %d"
 
-msgid "demo"
-msgstr ""
+msgid "Grido.First"
+msgstr "První"
 
-msgid "Overview"
-msgstr ""
+msgid "Grido.Previous"
+msgstr "Předchozí"
 
-msgid "new"
-msgstr ""
+msgid "Grido.Next"
+msgstr "Další"
 
-msgid "ver 2"
-msgstr ""
+msgid "Grido.Last"
+msgstr "Poslední"
 
-msgid "New"
-msgstr ""
+msgid "Grido.Actions"
+msgstr "Akce"
 
-msgid "User"
-msgstr ""
+msgid "Grido.Search"
+msgstr "Vyhledat"
 
-msgid "Home"
-msgstr ""
+msgid "Grido.Reset"
+msgstr "Resetovat"
 
-msgid "Source-Code by Mediahost"
-msgstr ""
+msgid "Grido.ItemsPerPage"
+msgstr "Položek na stránku"
 
-msgid "Add User"
-msgstr ""
+msgid "Grido.Selected"
+msgstr "Vybrané..."
 
-msgid "ID"
-msgstr ""
+msgid "Grido.EnterPage"
+msgstr "Zadejte stranu:"
 
-msgid "Username"
-msgstr ""
+msgid "Grido.NoResults"
+msgstr "Žádné výsledky."
 
-msgid "Role"
-msgstr ""
-
-msgid "Edit"
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "Personal info"
-msgstr ""
-
-msgid "Personal settings"
-msgstr ""
-
-msgid "Set password"
-msgstr ""
-
-msgid "Connect manager"
-msgstr ""
-
-msgid "Delete account"
-msgstr ""
-
-msgid "Language"
-msgstr ""
-
-msgid "English"
-msgstr ""
-
-msgid "Čeština"
-msgstr ""
-
-msgid "Save"
-msgstr ""
-
-msgid "E-mail"
-msgstr ""
-
-msgid "me@martinsifra.cz"
-msgstr ""
-
-msgid "Password"
-msgstr ""
-
-msgid "Please enter your password"
-msgstr ""
-
-msgid "Re-type Your Password"
-msgstr ""
-
-msgid "Passwords must be equal."
-msgstr ""
-
-msgid "Deactivate"
-msgstr ""
-
-msgid "Activate"
-msgstr ""
-
-msgid "Your settings has been saved."
-msgstr ""
-
+msgid "Grido.ExportAllItems"
+msgstr "Exportovat všechny položky"

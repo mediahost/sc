@@ -20,6 +20,7 @@ class UsersGrid extends BaseControl
 	protected function createComponentGrid()
 	{
 		$grid = new BaseGrid();
+		$grid->setTranslator($this->translator);
 		$grid->setTheme(BaseGrid::THEME_METRONIC);
 		$repo = $this->em->getRepository(User::class);
 		$qb = $repo->createQueryBuilder('u');

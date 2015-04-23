@@ -2,7 +2,7 @@
 # Created: 2014-09-23 23:08:08
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2014-09-23 23:08+0200\n"
+"PO-Revision-Date: 2015-04-23 18:23+0100\n"
 "Project-Id-Version: Sourcecode\n"
 "POT-Creation-Date: 2014-08-24 12:34+0100\n"
 "Last-Translator: Petr Poupě <pupe.dupe@gmail.com>\n"
@@ -10,51 +10,54 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4 ? 1 : 2));\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
+"X-Generator: Poedit 1.6.10\n"
 
+msgid "Grido.HintNumber"
+msgstr "You can use <, <=, >, >=, <>. e.g. '>= %d'"
 
-msgid "Logout"
-msgstr ""
+msgid "Grido.SelectSomeRow"
+msgstr "Select some row"
 
-msgid "Source-Code"
-msgstr ""
+msgid "Grido.Invert"
+msgstr "Invert"
 
-msgid "My Profile"
-msgstr ""
+msgid "Grido.Items"
+msgstr "Items %d - %d of %d"
 
-msgid "Settings"
-msgstr ""
+msgid "Grido.First"
+msgstr "First"
 
-msgid "Full Screen"
-msgstr ""
+msgid "Grido.Previous"
+msgstr "Previous"
 
-msgid "Dashboard"
-msgstr ""
+msgid "Grido.Next"
+msgstr "Next"
 
-msgid "Users"
-msgstr ""
+msgid "Grido.Last"
+msgstr "Last"
 
-msgid "demo"
-msgstr ""
+msgid "Grido.Actions"
+msgstr "Actions"
 
-msgid "Overview"
-msgstr ""
+msgid "Grido.Search"
+msgstr "Search"
 
-msgid "new"
-msgstr ""
+msgid "Grido.Reset"
+msgstr "Reset"
 
-msgid "ver 2"
-msgstr ""
+msgid "Grido.ItemsPerPage"
+msgstr "Items per page"
 
-msgid "New"
-msgstr ""
+msgid "Grido.Selected"
+msgstr "Selected..."
 
-msgid "User"
-msgstr ""
+msgid "Grido.EnterPage"
+msgstr "Enter page:"
 
-msgid "Home"
-msgstr ""
+msgid "Grido.NoResults"
+msgstr "No results."
 
-msgid "Source-Code by Mediahost"
-msgstr ""
-
+msgid "Grido.ExportAllItems"
+msgstr "Export all items"
