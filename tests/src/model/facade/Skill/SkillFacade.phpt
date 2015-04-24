@@ -11,6 +11,7 @@ $container = require __DIR__ . '/../../../bootstrap.php';
  * TEST: SkillFacade
  *
  * @testCase
+ * @skip
  * @phpVersion 5.4
  */
 class SkillFacadeTest extends BaseFacade
