@@ -13,6 +13,7 @@ abstract class CompanyTestBase extends DbTestCase
 	const NAME = 'Testovací společnost';
 	const COMPANY_ID = '123-345-567 99';
 	const ADDRESS = 'Silniční 123, Město nad Řekou';
+	const MAIL = 'test@mail.com';
 
 	/** @var Company */
 	protected $company;

@@ -23,9 +23,7 @@ abstract class DbTestCase extends BaseTestCase
 
 	protected function updateSchema()
 	{
-		if (getenv(Environment::RUNNER)) {
-			Environment::lock('db', LOCK_DIR);
-		}
+
 		if (!$this->schemaTool instanceof SchemaTool) {
 			$this->schemaTool = new SchemaTool($this->em);
 		}
