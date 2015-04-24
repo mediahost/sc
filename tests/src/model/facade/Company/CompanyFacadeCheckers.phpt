@@ -20,6 +20,7 @@ class CompanyFacadeCheckersTest extends CompanyFacade
 	{
 		$company = new Company('my company');
 		$company->companyId = 'myCompany';
+		$company->mail = self::MAIL;
 		$this->em->persist($company);
 		$this->em->flush();
 
