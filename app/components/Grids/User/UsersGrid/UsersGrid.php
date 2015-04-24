@@ -34,13 +34,16 @@ class UsersGrid extends BaseControl
 
 		$grid->addColumnEmail('mail', 'Mail')
 				->setSortable()
-				->setFilterText();
+				->setFilterText()
+				->setSuggestion();
 
 		$grid->addColumnText('roles', 'Roles');
+		$renderRoles = function ($item) {
+			return Helpers::concatStrings(', ', $item->roles);
+		};
 		$grid->getColumn('roles')
-				->setCustomRender(function($item) {
-					return Helpers::concatStrings(', ', $item->roles);
-				});
+				->setCustomRender($renderRoles)
+				->setCustomRenderExport($renderRoles);
 
 		$grid->addActionHref('access', 'Access')
 						->setIcon('fa fa-key')
@@ -63,13 +66,8 @@ class UsersGrid extends BaseControl
 						->setDisable(function($item) {
 							return !$this->presenter->canDelete($this->identity, $item);
 						})->elementPrototype->class[] = 'red';
-						
-						
-        $operation = array('print' => 'Print', 'delete' => 'Delete');
-        $grid->setOperation($operation, $this->handleOperations)
-            ->setConfirm('delete', 'Are you sure you want to delete %i items?');
-		
-		$grid->setExport();
+
+		$grid->setExport('users');
 
 		return $grid;
 	}
@@ -79,23 +77,6 @@ class UsersGrid extends BaseControl
 		$this->identity = $identity;
 		return $this;
 	}
-	
-    /**
-     * Common handler for grid operations.
-     * @param string $operation
-     * @param array $id
-     */
-    public function handleOperations($operation, $id)
-    {
-//        if ($id) {
-//            $row = implode(', ', $id);
-//            $this->flashMessage("Process operation '$operation' for row with id: $row...", 'info');
-//        } else {
-//            $this->flashMessage('No rows selected.', 'error');
-//        }
-//
-//        $this->redirect($operation, array('id' => $id));
-    }
 
 }
 

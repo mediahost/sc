@@ -105,7 +105,7 @@
 						</th>
 					</tr>
 					<tr n:if="$filterRenderType == \Grido\Components\Filters\Filter::RENDER_INNER && $filters" class="filter inner">
-						<th n:if="$filters">&nbsp;</th>
+						<th n:if="$operation">&nbsp;</th>
 							{foreach $columns as $column}
 								{if $column->hasFilter()}
 									{$control->getFilter($column->getName())->getWrapperPrototype()->startTag()|noescape}
