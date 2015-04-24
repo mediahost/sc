@@ -32,6 +32,10 @@
 		{
 			"type": "vcs",
 			"url": "https://github.com/pupitooo/nette-gettext-translator.git"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/mediahost/grido.git"
 		}
 	],
 	"require": {
@@ -59,7 +63,7 @@
 		"jandrabek/nette-mailpanel": "dev-master",
 		"zeleznypa/nette-button-macros": "dev-master",
 		"nextras/forms": "~1.4",
-		"o5/grido": "dev-master",
+		"o5/grido": "@dev",
 		"h4kuna/exchange": "dev-master",
 		"freaz/nette-gettext-translator": "@dev"
 	},
