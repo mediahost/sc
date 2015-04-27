@@ -2,8 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Grids\User\ISkillCategoriesGridFactory;
-use App\Components\Grids\User\SkillCategoriesGrid;
+use App\Components\Grids\Skill\ISkillCategoriesGridFactory;
+use App\Components\Grids\Skill\SkillCategoriesGrid;
 use App\Components\Skills\ISkillCategoryControlFactory;
 use App\Components\Skills\SkillCategoryControl;
 use App\Model\Entity\SkillCategory;

@@ -2,8 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Grids\User\IJobsGridFactory;
-use App\Components\Grids\User\JobsGrid;
+use App\Components\Grids\Job\IJobsGridFactory;
+use App\Components\Grids\Job\JobsGrid;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use Kdyby\Doctrine\EntityDao;

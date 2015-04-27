@@ -127,13 +127,13 @@ services:
 		inject: yes
 
 	IJobsGridFactory:
-		implement: App\Components\Grids\User\IJobsGridFactory
+		implement: App\Components\Grids\Job\IJobsGridFactory
 		inject: yes
 
 	ISkillsGridFactory:
-		implement: App\Components\Grids\User\ISkillsGridFactory
+		implement: App\Components\Grids\Skill\ISkillsGridFactory
 		inject: yes
 
 	ISkillCategoriesGridFactory:
-		implement: App\Components\Grids\User\ISkillCategoriesGridFactory
+		implement: App\Components\Grids\Skill\ISkillCategoriesGridFactory
 		inject: yes
