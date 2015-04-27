@@ -20,6 +20,7 @@ class CompanyTest extends CompanyTestBase
 	{
 		$this->company->companyId = self::COMPANY_ID;
 		$this->company->address = self::ADDRESS;
+		$this->company->mail = self::MAIL;
 
 		Assert::exception(function () {
 			$this->company->id = 123;
@@ -36,6 +37,7 @@ class CompanyTest extends CompanyTestBase
 
 	public function testIsNew()
 	{
+		$this->company->mail = self::MAIL;
 		Assert::TRUE($this->company->isNew());
 		$this->saveCompany();
 		Assert::FALSE($this->company->isNew());

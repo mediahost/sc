@@ -42,7 +42,7 @@ class InstallerTest extends DbTestCase
 	public function __construct(Container $container)
 	{
 		parent::__construct($container);
-		$this->installDir = $this->container->getParameters()['tempDir'] . 'install/';
+		$this->installDir = $this->getContainer()->getParameters()['tempDir'] . 'install/';
 	}
 
 	// <editor-fold defaultstate="expanded" desc="tests">
