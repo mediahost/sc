@@ -53,8 +53,7 @@ class CvsGrid extends BaseControl
         $grid->getColumn('isDefault')->cellPrototype->class[] = 'text-center';
 
 		$grid->addActionHref('edit', 'Edit', 'CvEditor:')
-						->setIcon('fa fa-edit')
-				->elementPrototype->class[] = 'yellow';
+						->setIcon('fa fa-edit');
 
 		$grid->addActionHref('delete', 'Delete')
 						->setIcon('fa fa-trash-o')

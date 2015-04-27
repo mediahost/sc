@@ -61,15 +61,13 @@ class UsersGrid extends BaseControl
 						->setIcon('fa fa-key')
 						->setDisable(function($item) {
 							return !$this->presenter->canAccess($this->identity, $item);
-						})
-				->elementPrototype->class[] = 'btn-info';
+						});
 
 		$grid->addActionHref('edit', 'Edit')
 						->setIcon('fa fa-edit')
 						->setDisable(function($item) {
 							return !$this->presenter->canEdit($this->identity, $item);
-						})
-				->elementPrototype->class[] = 'yellow';
+						});
 
 		$grid->addActionHref('delete', 'Delete')
 						->setIcon('fa fa-trash-o')
