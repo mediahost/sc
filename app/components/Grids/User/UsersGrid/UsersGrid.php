@@ -24,7 +24,7 @@ class UsersGrid extends BaseControl
 		$grid->setTranslator($this->translator);
 		$grid->setTheme(BaseGrid::THEME_METRONIC);
 
-		$repo = $this->em->getRepository(User::class);
+		$repo = $this->em->getRepository(User::getClassName());
 		$qb = $repo->createQueryBuilder('u')
 				->select('u, r')
 				->leftJoin('u.roles', 'r');
