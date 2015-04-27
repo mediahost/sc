@@ -13,7 +13,11 @@ class BaseGrid extends Grid
 
 	const THEME_METRONIC = 'metronic';
 
+	/** @var string */
 	private $templateFile;
+	
+	/** @var string */
+	private $actionWidth;
 
 	/**
 	 * Custom condition callback for filter birthday.
@@ -56,12 +60,19 @@ class BaseGrid extends Grid
 				break;
 		}
 	}
+	
+	public function setActionWidth($width)
+	{
+		$this->actionWidth = $width;
+		return $this;
+	}
 
 	public function render()
 	{
 		if ($this->templateFile) {
 			$this->setTemplateFile(__DIR__ . '/Themes/' . $this->templateFile . '.latte');
 		}
+		$this->template->actionWidth = $this->actionWidth;
 		parent::render();
 	}
 

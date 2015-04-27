@@ -79,6 +79,8 @@ class UsersGrid extends BaseControl
 							return !$this->presenter->canDelete($this->identity, $item);
 						})
 				->elementPrototype->class[] = 'red';
+						
+		$grid->setActionWidth("20%");
 
 		$grid->setExport('users');
 

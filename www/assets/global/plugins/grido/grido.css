@@ -39,3 +39,6 @@
 	display: inline-block;
 	vertical-align: middle;
 }
+.grido th.actions {
+	min-width: 220px;
+}

@@ -64,6 +64,8 @@ class CompaniesGrid extends BaseControl
 							return sprintf($message, (string) $item);
 						})
 				->elementPrototype->class[] = 'red';
+						
+		$grid->setActionWidth("25%");
 
 		return $grid;
 	}
