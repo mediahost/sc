@@ -58,6 +58,8 @@ class SkillCategoriesGrid extends BaseControl
 							return sprintf($message, (string) $item);
 						})
 				->elementPrototype->class[] = 'red';
+						
+		$grid->setActionWidth("15%");
 
 		return $grid;
 	}
