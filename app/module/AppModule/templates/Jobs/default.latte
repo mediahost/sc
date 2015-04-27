@@ -32,54 +32,7 @@
 				</div>
 			</div>
 			<div class="portlet-body">
-				<table class="datatable table table-striped table-bordered table-hover">
-					<thead>
-						<tr>
-							<th>
-								{_'ID'}
-							</th>
-							<th>
-								{_'Name'}
-							</th>
-							<th>
-								{_'Description'}
-							</th>
-							<th>
-								{_'Edit'}
-							</th>
-							<th>
-								{_'Delete'}
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr n:foreach="$company->jobs as $job"
-							class="odd gradeX">
-							<td>
-								{$job->id}
-							</td>
-							<td>
-								<a n:href="Job:view, $job->id">
-									{$job->name}
-								</a>
-							</td>
-							<td>
-								{$job->description|truncate:30}
-							</td>
-							<td>
-								<a n:href="Job:edit, $job->id">
-									{_'Edit'}
-								</a>
-							</td>
-							<td>
-								<a n:href="Job:delete, $job->id"
-								   class="delete-confirm">
-									{_'Delete'}
-								</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				{control jobsGrid}
 			</div>
 		</div>
 	</div>

@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Grids\User\IJobsGridFactory;
+use App\Components\Grids\User\JobsGrid;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use Kdyby\Doctrine\EntityDao;
@@ -16,6 +18,9 @@ class JobsPresenter extends BasePresenter
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	/** @var IJobsGridFactory @inject */
+	public $iJobsGridFactory;
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
@@ -46,6 +51,7 @@ class JobsPresenter extends BasePresenter
 	{
 		$company = $this->companyDao->find($companyId);
 		if ($company) {
+			$this['jobsGrid']->setCompany($company);
 			$this->template->company = $company;
 		} else {
 			$this->flashMessage('Finded company isn\'t exists.', 'danger');
@@ -60,7 +66,17 @@ class JobsPresenter extends BasePresenter
 	 */
 	public function actionShowAll()
 	{
-		$this->template->jobs = $this->jobDao->findAll();
+		
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="grids">
+
+	/** @return JobsGrid */
+	public function createComponentJobsGrid()
+	{
+		$control = $this->iJobsGridFactory->create();
+		return $control;
 	}
 
 	// </editor-fold>

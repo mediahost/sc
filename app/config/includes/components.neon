@@ -126,6 +126,10 @@ services:
 		implement: App\Components\Grids\User\IUsersGridFactory
 		inject: yes
 
+	IJobsGridFactory:
+		implement: App\Components\Grids\User\IJobsGridFactory
+		inject: yes
+
 	ISkillsGridFactory:
 		implement: App\Components\Grids\User\ISkillsGridFactory
 		inject: yes
