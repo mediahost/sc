@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Grids\User\ISkillsGridFactory;
+use App\Components\Grids\User\SkillsGrid;
 use App\Components\Skills\ISkillControlFactory;
 use App\Components\Skills\SkillControl;
 use App\Model\Entity\Skill;
@@ -18,6 +20,9 @@ class SkillsPresenter extends BasePresenter
 
 	/** @var ISkillControlFactory @inject */
 	public $iSkillControlFactory;
+
+	/** @var ISkillsGridFactory @inject */
+	public $iSkillsGridFactory;
 
 	/** @var EntityDao */
 	private $skillDao;
@@ -105,6 +110,16 @@ class SkillsPresenter extends BasePresenter
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};
+		return $control;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="grids">
+
+	/** @return SkillsGrid */
+	public function createComponentSkillsGrid()
+	{
+		$control = $this->iSkillsGridFactory->create();
 		return $control;
 	}
 
