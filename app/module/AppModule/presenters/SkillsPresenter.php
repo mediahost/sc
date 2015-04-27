@@ -12,10 +12,10 @@ use Kdyby\Doctrine\EntityDao;
 
 class SkillsPresenter extends BasePresenter
 {
-	
+
 	/** @var Skill */
 	private $skill;
-	
+
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var ISkillControlFactory @inject */
@@ -44,7 +44,7 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function renderDefault()
 	{
-		$this->template->skills = $this->skillDao->findAll();
+		
 	}
 
 	/**
@@ -74,7 +74,7 @@ class SkillsPresenter extends BasePresenter
 			$this->redirect('default');
 		}
 	}
-	
+
 	public function renderEdit()
 	{
 		$this->template->skill = $this->skill;

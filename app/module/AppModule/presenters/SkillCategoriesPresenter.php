@@ -13,10 +13,10 @@ use Kdyby\Doctrine\EntityDao;
 
 class SkillCategoriesPresenter extends BasePresenter
 {
-	
+
 	/** @var SkillCategory */
 	private $skillCategory;
-	
+
 	// <editor-fold defaultstate="collapsed" desc="constants & variables">
 
 	/** @var ISkillCategoryControlFactory @inject */
@@ -45,7 +45,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function renderDefault()
 	{
-		$this->template->skillCategories = $this->skillCategoryDao->findAll();
+		
 	}
 
 	/**
