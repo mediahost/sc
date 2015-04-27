@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Grids\Cv\CvsGrid;
+use App\Components\Grids\Cv\ICvsGridFactory;
 use App\Model\Entity\Cv;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
@@ -12,6 +14,9 @@ class CvsPresenter extends BasePresenter
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	/** @var ICvsGridFactory @inject */
+	public $iCvsGridFactory;
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
@@ -48,6 +53,16 @@ class CvsPresenter extends BasePresenter
 	{
 		$this->flashMessage('Not implemented yet.', 'warning');
 		$this->redirect('default');
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="grids">
+
+	/** @return CvsGrid */
+	public function createComponentCvsGrid()
+	{
+		$control = $this->iCvsGridFactory->create();
+		return $control;
 	}
 
 	// </editor-fold>

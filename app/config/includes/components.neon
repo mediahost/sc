@@ -130,6 +130,10 @@ services:
 		implement: App\Components\Grids\Job\IJobsGridFactory
 		inject: yes
 
+	ICvsGridFactory:
+		implement: App\Components\Grids\Cv\ICvsGridFactory
+		inject: yes
+
 	ISkillsGridFactory:
 		implement: App\Components\Grids\Skill\ISkillsGridFactory
 		inject: yes
