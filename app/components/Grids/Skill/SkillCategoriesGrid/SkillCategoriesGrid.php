@@ -60,8 +60,6 @@ class SkillCategoriesGrid extends BaseControl
 						})
 				->elementPrototype->class[] = 'red';
 
-		$grid->setExport('users');
-
 		return $grid;
 	}
 
