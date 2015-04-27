@@ -123,7 +123,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	// <editor-fold defaultstate="collapsed" desc="grids">
 
 	/** @return SkillCategoriesGrid */
-	public function createComponentSkillsGrid()
+	public function createComponentSkillCategoriesGrid()
 	{
 		$control = $this->iSkillCategoriesGridFactory->create();
 		return $control;
