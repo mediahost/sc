@@ -55,9 +55,7 @@ class JobsGrid extends BaseControl
 				->setFilterText()
 				->setSuggestion();
 		$grid->getColumn('description')
-				->setCustomRender(function ($item) {
-					return Strings::truncate($item->description, 30);
-				});
+				->setTruncate(30);
 
 		if (!$this->company) {
 			$grid->addColumnText('company', 'Company')
@@ -68,12 +66,10 @@ class JobsGrid extends BaseControl
 
 
 		$grid->addActionHref('view', 'View')
-						->setIcon('fa fa-eye')
-				->elementPrototype->class[] = 'blue';
+						->setIcon('fa fa-eye');
 
 		$grid->addActionHref('edit', 'Edit')
-						->setIcon('fa fa-edit')
-				->elementPrototype->class[] = 'yellow';
+						->setIcon('fa fa-edit');
 
 		$grid->addActionHref('delete', 'Delete')
 						->setIcon('fa fa-trash-o')

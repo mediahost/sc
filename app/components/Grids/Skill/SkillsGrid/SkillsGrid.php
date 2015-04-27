@@ -49,8 +49,7 @@ class SkillsGrid extends BaseControl
 
 		
 		$grid->addActionHref('edit', 'Edit')
-						->setIcon('fa fa-edit')
-				->elementPrototype->class[] = 'yellow';
+						->setIcon('fa fa-edit');
 
 		$grid->addActionHref('delete', 'Delete')
 						->setIcon('fa fa-trash-o')

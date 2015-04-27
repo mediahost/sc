@@ -47,19 +47,15 @@ class CompaniesGrid extends BaseControl
 
 		$grid->addActionHref('view', 'Public Profile', ':Front:CompanyProfile:')
 						->setIcon('fa fa-eye');
-//				->elementPrototype->class[] = 'blue';
 
 		$grid->addActionHref('jobs', 'Jobs', 'Jobs:')
 						->setIcon('fa fa-briefcase');
-//				->elementPrototype->class[] = 'purple';
 
 		$grid->addActionHref('editImages', 'Images')
 						->setIcon('fa fa-image');
-//				->elementPrototype->class[] = 'yellow-crusta';
 
 		$grid->addActionHref('edit', 'Edit')
 						->setIcon('fa fa-edit');
-//				->elementPrototype->class[] = 'yellow';
 
 		$grid->addActionHref('delete', 'Delete')
 						->setIcon('fa fa-trash-o')
