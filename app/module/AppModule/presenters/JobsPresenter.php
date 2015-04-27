@@ -47,9 +47,9 @@ class JobsPresenter extends BasePresenter
 	 * @resource('jobs')
 	 * @privilege('default')
 	 */
-	public function actionDefault($companyId)
+	public function actionDefault($id)
 	{
-		$company = $this->companyDao->find($companyId);
+		$company = $this->companyDao->find($id);
 		if ($company) {
 			$this['jobsGrid']->setCompany($company);
 			$this->template->company = $company;

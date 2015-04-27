@@ -6,6 +6,8 @@ use App\Components\Company\CompanyImagesControl;
 use App\Components\Company\CompanyInfoControl;
 use App\Components\Company\ICompanyImagesControlFactory;
 use App\Components\Company\ICompanyInfoControlFactory;
+use App\Components\Grids\Company\CompaniesGrid;
+use App\Components\Grids\Company\ICompaniesGridFactory;
 use App\Components\User\CompanyUserControl;
 use App\Components\User\ICompanyUserControlFactory;
 use App\Model\Entity\Company;
@@ -37,6 +39,9 @@ class CompaniesPresenter extends BasePresenter
 
 	/** @var ICompanyUserControlFactory @inject */
 	public $iCompanyUserControlFactory;
+
+	/** @var ICompaniesGridFactory @inject */
+	public $iCompaniesGridFactory;
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
@@ -213,6 +218,16 @@ class CompaniesPresenter extends BasePresenter
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};
+		return $control;
+	}
+
+	// </editor-fold>
+	// <editor-fold defaultstate="collapsed" desc="grids">
+
+	/** @return CompaniesGrid */
+	public function createComponentCompaniesGrid()
+	{
+		$control = $this->iCompaniesGridFactory->create();
 		return $control;
 	}
 

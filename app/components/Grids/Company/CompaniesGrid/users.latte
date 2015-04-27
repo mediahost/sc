@@ -1,0 +1,11 @@
+{if $item->accesses}
+    {foreach $item->accesses as $access}
+		{*<a n:href="Companies:editUser, $access->user->id, $access->company->id"*}
+		<a href="{plink editUser, $access->user->id, $access->company->id}"
+		   data-target="#editUser" 
+		   data-toggle="modal">
+			{$access->user}
+		</a>
+		{if !$iterator->last}<br/>{/if}
+    {/foreach}
+{/if}
