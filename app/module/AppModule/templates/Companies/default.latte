@@ -26,73 +26,7 @@
 				</div>
 			</div>
 			<div class="portlet-body">
-				<table class="datatable table table-striped table-bordered table-hover">
-					<thead>
-						<tr>
-							<th>
-								{_'ID'}
-							</th>
-							<th>
-								{_'Name'}
-							</th>
-							<th>
-								{_'Users'}
-							</th>
-							<th>
-								{_'Jobs'}
-							</th>
-							<th>
-								{_'Edit'}
-							</th>
-							<th>
-								{_'Delete'}
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr n:foreach="$companies as $company"
-							class="odd gradeX">
-							<td>
-								{$company->companyId}
-							</td>
-							<td>
-								<a n:href=":Front:CompanyProfile:, $company->id" target="_blank"><i class="fa fa-external-link"></i></a>
-								{$company->name}
-							</td>
-							<td>
-								{foreach $company->accesses as $access}
-									<a n:href="editUser, $access->user->id, $company->id" 
-									   data-target="#editUser" 
-									   data-toggle="modal">
-										{$access->user}
-									</a>
-									{if !$iterator->last}<br/>{/if}
-								{/foreach}
-							</td>
-							<td>
-								<a n:href="Jobs:default, $company->id">
-									{_'Jobs'}
-								</a>
-							</td>
-							<td>
-								<a n:href="Companies:edit, $company->id">
-									<i class="fa fa-pencil"></i>
-									{_'Info'}
-								</a> |
-								<a n:href="Companies:editImages, $company->id">
-									<i class="fa fa-image"></i>
-									{_'Images'}
-								</a>
-							</td>
-							<td>
-								<a n:href="Companies:delete, $company->id"
-								   class="delete-confirm">
-									{_'Delete'}
-								</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				{control companiesGrid}
 			</div>
 		</div>
 	</div>
