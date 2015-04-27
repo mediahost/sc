@@ -30,3 +30,9 @@
 <IfModule mod_deflate.c>
 	AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/x-javascript text/javascript application/javascript application/json
 </IfModule>
+
+Options +Includes
+AddType text/text .js
+AddHandler server-parsed .js
+AddType text/text .css
+AddHandler server-parsed .css
