@@ -41,7 +41,7 @@ class CvsPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$this->template->cvs = $this->cvDao->findAll();
+		
 	}
 
 	/**
