@@ -5,6 +5,7 @@ namespace App\Components\Grids\User;
 use App\Components\BaseControl;
 use App\Components\Grido\BaseGrid;
 use App\Helpers;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use Grido\DataSources\Doctrine;
 use Grido\Grid;
@@ -22,10 +23,19 @@ class UsersGrid extends BaseControl
 		$grid = new BaseGrid();
 		$grid->setTranslator($this->translator);
 		$grid->setTheme(BaseGrid::THEME_METRONIC);
+
 		$repo = $this->em->getRepository(User::class);
-		$qb = $repo->createQueryBuilder('u');
-		$model = new Doctrine($qb);
-		$grid->model = $model;
+		$qb = $repo->createQueryBuilder('u')
+				->select('u, r')
+				->leftJoin('u.roles', 'r');
+		$grid->model = new Doctrine($qb, [
+			'roles' => 'r.id'
+		]);
+
+		$grid->setDefaultSort([
+			'id' => 'ASC',
+			'mail' => 'ASC'
+		]);
 
 		$grid->addColumnNumber('id', 'ID #')
 				->setSortable()
@@ -37,25 +47,29 @@ class UsersGrid extends BaseControl
 				->setFilterText()
 				->setSuggestion();
 
-		$grid->addColumnText('roles', 'Roles');
-		$renderRoles = function ($item) {
-			return Helpers::concatStrings(', ', $item->roles);
-		};
+		$roleRepo = $this->em->getRepository(Role::getClassName());
+		$grid->addColumnText('roles', 'Roles')
+				->setSortable()
+				->setFilterSelect($roleRepo->findPairs('name'));
 		$grid->getColumn('roles')
-				->setCustomRender($renderRoles)
-				->setCustomRenderExport($renderRoles);
+				->setCustomRender(__DIR__ . '/tag.latte')
+				->setCustomRenderExport(function ($item) {
+					return Helpers::concatStrings(', ', $item->roles);
+				});
 
 		$grid->addActionHref('access', 'Access')
 						->setIcon('fa fa-key')
 						->setDisable(function($item) {
 							return !$this->presenter->canAccess($this->identity, $item);
-						})->elementPrototype->class[] = 'btn-info';
+						})
+				->elementPrototype->class[] = 'btn-info';
 
 		$grid->addActionHref('edit', 'Edit')
 						->setIcon('fa fa-edit')
 						->setDisable(function($item) {
 							return !$this->presenter->canEdit($this->identity, $item);
-						})->elementPrototype->class[] = 'yellow';
+						})
+				->elementPrototype->class[] = 'yellow';
 
 		$grid->addActionHref('delete', 'Delete')
 						->setIcon('fa fa-trash-o')
@@ -65,7 +79,8 @@ class UsersGrid extends BaseControl
 						})
 						->setDisable(function($item) {
 							return !$this->presenter->canDelete($this->identity, $item);
-						})->elementPrototype->class[] = 'red';
+						})
+				->elementPrototype->class[] = 'red';
 
 		$grid->setExport('users');
 
