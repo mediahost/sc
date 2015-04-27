@@ -26,51 +26,7 @@
 				</div>
 			</div>
 			<div class="portlet-body">
-				<table class="datatable table table-striped table-bordered table-hover">
-				<thead>
-					<tr>
-						<th>
-							{_'ID'}
-						</th>
-						<th>
-							{_'Name'}
-						</th>
-						<th>
-							{_'Parent Category'}
-						</th>
-						<th>
-							{_'Edit'}
-						</th>
-						<th>
-							{_'Delete'}
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr n:foreach="$skillCategories as $category"
-						class="odd gradeX">
-						<td>
-							{$category->id}
-						</td>
-						<td>
-							{$category->name}
-						</td>
-						<td>
-							{$category->parent}
-						</td>
-						<td>
-							<a n:href="edit, $category->id">
-								{_'Edit'}
-							</a>
-						</td>
-						<td>
-							<a n:href="delete, $category->id" class="delete-confirm">
-								{_'Delete'}
-							</a>
-						</td>
-					</tr>
-					</tbody>
-				</table>
+				{control skillsGrid}
 			</div>
 		</div>
 	</div>

@@ -129,3 +129,7 @@ services:
 	ISkillsGridFactory:
 		implement: App\Components\Grids\User\ISkillsGridFactory
 		inject: yes
+
+	ISkillCategoriesGridFactory:
+		implement: App\Components\Grids\User\ISkillCategoriesGridFactory
+		inject: yes
