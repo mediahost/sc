@@ -6,7 +6,6 @@ use App\FrontModule\Presenters\SignPresenter;
 use Nette\Application\IRouter;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
-use Nette\Utils\Strings;
 
 /**
  * Router factory.
@@ -29,6 +28,7 @@ class RouterFactory
 		$router[] = $frontRouter = new RouteList('Front');
 		
 		// <editor-fold defaultstate="expanded" desc="Foto">
+		
 		$fotoRouter[] = new Route('foto/[<size \d+\-\d+>/]<name .+>', [
             'presenter' => "Foto",
 			'action' => 'default',
