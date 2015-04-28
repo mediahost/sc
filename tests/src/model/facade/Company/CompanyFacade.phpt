@@ -14,7 +14,6 @@ $container = require __DIR__ . '/../../../bootstrap.php';
  * TEST: CompanyFacade
  *
  * @testCase
- * @skip
  * @phpVersion 5.4
  */
 class CompanyFacadeTest extends CompanyFacade
