@@ -32,7 +32,7 @@ class Company extends BaseEntity
 	/** @ORM\Column(type="string", length=100, nullable=true) */
 	protected $companyId;
 
-	/** @ORM\Column(type="string", length=256, nullable=false) */
+	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $mail;
 
 	/** @ORM\Column(type="text", nullable=true) */
