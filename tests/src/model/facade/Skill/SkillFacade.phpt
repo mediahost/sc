@@ -2,7 +2,6 @@
 
 namespace Test\Model\Facade;
 
-use Nette\DI\Container;
 use Tester\Assert;
 
 $container = require __DIR__ . '/../../../bootstrap.php';
@@ -11,7 +10,6 @@ $container = require __DIR__ . '/../../../bootstrap.php';
  * TEST: SkillFacade
  *
  * @testCase
- * @skip
  * @phpVersion 5.4
  */
 class SkillFacadeTest extends BaseFacade
