@@ -23,7 +23,7 @@ abstract class BasePresenter extends PresenterTestCase
 	protected function initSystem()
 	{
 		$this->dropSchema();
-		$this->updateSchema();
+		$this->setOwnDb();
 		$this->installer->install();
 	}
 

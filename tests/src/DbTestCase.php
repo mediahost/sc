@@ -7,7 +7,6 @@ use Kdyby\Doctrine\Connection;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\Helpers;
 use Kdyby\TesterExtras\Bootstrap;
-use Tester\Environment;
 
 abstract class DbTestCase extends BaseTestCase
 {
@@ -23,12 +22,16 @@ abstract class DbTestCase extends BaseTestCase
 
 	protected function updateSchema()
 	{
-
 		if (!$this->schemaTool instanceof SchemaTool) {
 			$this->schemaTool = new SchemaTool($this->em);
 		}
-		Bootstrap::setupDoctrineDatabase($this->getContainer(), [], 'sc');
+		$this->setOwnDb();
 		$this->schemaTool->updateSchema($this->getClasses());
+	}
+
+	protected function setOwnDb()
+	{
+		Bootstrap::setupDoctrineDatabase($this->getContainer(), [], 'sc');
 	}
 
 	protected function importDbDataFromFile($file)
