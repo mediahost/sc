@@ -4,6 +4,7 @@ namespace App\Extensions;
 
 use App\Extensions\Installer\Model\InstallerModel;
 use App\Helpers;
+use App\Security\CompanyPermission;
 use Nette\Object;
 use Nette\Security\IAuthorizator;
 
@@ -144,7 +145,7 @@ class Installer extends Object
 
 	private function getCompanyRoles()
 	{
-		return (new \App\Security\CompanyPermission)->getRoles();
+		return (new CompanyPermission)->getRoles();
 	}
 
 	private function getSkillLevels()

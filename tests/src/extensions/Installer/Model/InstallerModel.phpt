@@ -75,6 +75,8 @@ class InstallerModelTest extends DbTestCase
 
 	public function testInstallerDb()
 	{
+		$this->setOwnDb();
+		
 		$installer = $this->installerModel;
 
 		$userDao = $this->em->getDao(User::getClassName());
@@ -88,7 +90,6 @@ class InstallerModelTest extends DbTestCase
 			$roleDao->find(1);
 		}, 'Kdyby\Doctrine\DBALException');
 
-		Environment::lock('db', LOCK_DIR);
 		Assert::true($installer->installDoctrine());
 
 		Assert::null($userDao->find(1));
