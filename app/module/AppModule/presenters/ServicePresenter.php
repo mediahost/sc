@@ -175,7 +175,7 @@ class ServicePresenter extends BasePresenter
 
 	private function importDbSkills()
 	{
-		$this->importDbDataFromFile(realpath('./../tests/sql/skills.sql'));
+		$this->importDbDataFromFile(realpath('./../sql/skills.sql'));
 		return $this;
 	}
 
@@ -186,7 +186,7 @@ class ServicePresenter extends BasePresenter
 	 */
 	private function importDbCandidates()
 	{
-		$this->importDbDataFromFile(realpath('./../tests/sql/candidates.sql'));
+		$this->importDbDataFromFile(realpath('./../sql/candidates.sql'));
 		return $this;
 	}
 
@@ -197,7 +197,7 @@ class ServicePresenter extends BasePresenter
 	 */
 	private function importDbCompanies()
 	{
-		$this->importDbDataFromFile(realpath('./../tests/sql/companies.sql'));
+		$this->importDbDataFromFile(realpath('./../sql/companies.sql'));
 		return $this;
 	}
 
