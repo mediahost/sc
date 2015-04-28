@@ -61,6 +61,7 @@ class RoleFacadeTest extends BaseFacade
 	{
 		$this->roleFacade->create(Role::CANDIDATE);
 		$this->roleFacade->create(Role::COMPANY);
+		$this->roleFacade->create(Role::ADMIN);
 		$this->roleDao->clear();
 
 		$modules = ['registrableRole' => TRUE];
