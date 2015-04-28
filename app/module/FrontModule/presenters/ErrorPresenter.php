@@ -1,17 +1,15 @@
 <?php
 
-namespace App\BaseModule\Presenters;
+namespace App\FrontModule\Presenters;
 
-use Nette,
-	Nette\Diagnostics\Debugger;
+use Nette;
+use Nette\Diagnostics\Debugger;
 
 /**
  * Error presenter.
  */
 class ErrorPresenter extends BasePresenter
 {
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
-	// </editor-fold>
 
 	/**
 	 * @param  Exception
@@ -19,7 +17,6 @@ class ErrorPresenter extends BasePresenter
 	 */
 	public function renderDefault($exception)
 	{
-		$this->setLayout("layout.error");
 		if ($exception instanceof Nette\Application\BadRequestException) {
 			$code = $exception->getCode();
 			// load template 403.latte or 404.latte or ... 4xx.latte
@@ -30,8 +27,6 @@ class ErrorPresenter extends BasePresenter
 			$this->setView('500'); // load template 500.latte
 			Debugger::log($exception, Debugger::ERROR); // and log exception
 		}
-
-		$this->template->homepage = $this->link(":Front:Homepage:");
 
 		if ($this->isAjax()) { // AJAX request? Note this error in payload.
 			$this->payload->error = TRUE;
