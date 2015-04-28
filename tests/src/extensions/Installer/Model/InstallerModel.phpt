@@ -80,12 +80,13 @@ class InstallerModelTest extends DbTestCase
 		$userDao = $this->em->getDao(User::getClassName());
 		$roleDao = $this->em->getDao(Role::getClassName());
 
-//		Assert::exception(function() use($userDao) {
-//			$userDao->find(1);
-//		}, 'Kdyby\Doctrine\DBALException');
-//		Assert::exception(function() use($roleDao) {
-//			$roleDao->find(1);
-//		}, 'Kdyby\Doctrine\DBALException');
+		// tables do not exist yet
+		Assert::exception(function() use($userDao) {
+			$userDao->find(1);
+		}, 'Kdyby\Doctrine\DBALException');
+		Assert::exception(function() use($roleDao) {
+			$roleDao->find(1);
+		}, 'Kdyby\Doctrine\DBALException');
 
 		Environment::lock('db', LOCK_DIR);
 		Assert::true($installer->installDoctrine());

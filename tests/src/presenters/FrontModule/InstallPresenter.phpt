@@ -31,7 +31,7 @@ class InstallPresenterTest extends BasePresenter
 	protected function setUp()
 	{
 		parent::setUp();
-		$this->updateSchema();
+		$this->setOwnDb();
 
 		$this->openPresenter('Front:Install');
 		FileSystem::createDir($this->installDir);
