@@ -1,0 +1,40 @@
+/**
+ * BEGIN GLOBAL MANDATORY STYLES
+ */
+<!--#include file="global/plugins/font-awesome/css/font-awesome.min.css" -->
+<!--#include file="global/plugins/simple-line-icons/simple-line-icons.min.css" -->
+<!--#include file="global/plugins/bootstrap/css/bootstrap.min.css" -->
+<!--#include file="global/plugins/uniform/css/uniform.default.min.css" -->
+/**
+ * END GLOBAL MANDATORY STYLES
+ */
+
+/**
+ * BEGIN PAGE LEVEL PLUGIN STYLES 
+ */
+<!--#include file="global/plugins/pace/themes/pace-theme-minimal.min.css" -->
+<!--#include file="global/plugins/bootstrap-datepicker/css/datepicker3.min.css" -->
+<!--#include file="global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.min.css" -->
+<!--#include file="global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" -->
+<!--#include file="global/plugins/bootstrap-toastr/toastr.min.css" -->
+<!--#include file="global/plugins/jquery-multi-select/css/multi-select.min.css" -->
+<!--#include file="global/plugins/select2/select2.min.css" -->
+<!--#include file="global/plugins/jquery-tags-input/jquery.tagsinput.min.css" -->
+<!--#include file="global/plugins/nouislider/jquery.nouislider.min.css" -->
+<!--#include file="global/plugins/nouislider/jquery.nouislider.pips.min.css" -->
+<!--#include file="global/plugins/fancybox/source/jquery.fancybox.min.css" -->
+<!--#include file="global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" -->
+<!--#include file="global/plugins/typeahead/typeahead.min.css" -->
+/**
+ * PAGE LEVEL PLUGIN STYLES 
+ */
+
+/**
+ * BEGIN GLOBAL THEME STYLES
+ */
+<!--#include file="global/css/components.css" -->
+<!--#include file="global/css/plugins.css" -->
+<!--#include file="global/plugins/grido/grido.css" -->
+/**
+ * END GLOBAL THEME STYLES
+ */

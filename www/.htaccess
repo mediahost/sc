@@ -31,8 +31,9 @@
 	AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/x-javascript text/javascript application/javascript application/json
 </IfModule>
 
-Options +Includes
-AddType text/javascript .js
-AddHandler server-parsed .js
-AddType text/css .css
-AddHandler server-parsed .css
+# Uncomment for combined.(js|css)
+#Options +Includes
+#AddType text/javascript .js
+#AddHandler server-parsed .js
+#AddType text/css .css
+#AddHandler server-parsed .css
