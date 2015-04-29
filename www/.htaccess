@@ -32,7 +32,7 @@
 </IfModule>
 
 Options +Includes
-AddType text/text .js
+AddType text/javascript .js
 AddHandler server-parsed .js
-AddType text/text .css
+AddType text/css .css
 AddHandler server-parsed .css
