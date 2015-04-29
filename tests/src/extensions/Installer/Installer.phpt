@@ -10,6 +10,7 @@ use Nette\DI\Container;
 use Nette\Security\IAuthorizator;
 use Test\DbTestCase;
 use Tester\Assert;
+use Tester\Environment;
 use Tester\Helpers as Helpers2;
 
 $container = require __DIR__ . '/../../bootstrap.php';
@@ -61,11 +62,10 @@ class InstallerTest extends DbTestCase
 				->setInitUsers([])
 				->install();
 		Assert::count(4, $messages1);
-		Assert::same(['DB_Roles', 'DB_Users', 'DB_Company', 'DB_SkillLevels'], 
-				array_keys($messages1));
+		Assert::same(['DB_Roles', 'DB_Users', 'DB_Company', 'DB_SkillLevels'], array_keys($messages1));
 		Assert::same([[0 => TRUE], [0 => TRUE], [0 => TRUE], [0 => TRUE]], array_values($messages1));
 	}
-	
+
 	public function testInstallerAll()
 	{
 		$this->setOwnDb();
@@ -138,6 +138,7 @@ class InstallerTest extends DbTestCase
 
 	public function setUp()
 	{
+		Environment::lock('installdir', LOCK_DIR);
 		Helpers2::purge($this->installDir);
 	}
 
