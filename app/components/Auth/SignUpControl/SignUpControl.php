@@ -64,7 +64,7 @@ class SignUpControl extends BaseControl
 
 		$form->addPassword('passwordVerify', 'Re-type Your Password')
 				->setAttribute('placeholder', 'Re-type Your Password')
-				->addConditionOn($form['password'], Form::FILLED)
+				->setRequired('Please enter your password')
 				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
 
 		$form->addSubmit('continue', 'Continue');
@@ -97,6 +97,12 @@ class SignUpControl extends BaseControl
 	public function renderLogin()
 	{
 		$this->setTemplateFile('login');
+		parent::render();
+	}
+
+	public function renderSocial()
+	{
+		$this->setTemplateFile('social');
 		parent::render();
 	}
 

@@ -1,8 +1,17 @@
-{block bodyClass}login{/block}
-
+{block breadcrumb}{/block}
 {block content}
-<h3 class="form-title">{_'Password recovery'}</h3>
-<p>
-	{_'Enter a new password to your account.'}:
-</p>
-{control recovery:login}
+
+<div class="col-md-12 col-sm-12">
+	<h1>{_'Password recovery'}</h1>
+
+	<div class="content-form-page">
+		<div class="row">
+			<div class="col-md-6 col-sm-10">
+				<p>
+					{_'Enter a new password to your account.'}:
+				</p>
+				{control recovery:login}
+			</div>
+		</div>
+	</div>
+</div>

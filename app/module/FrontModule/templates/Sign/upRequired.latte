@@ -1,8 +1,18 @@
-{block bodyClass}login{/block}
-
+{block breadcrumb}{/block}
 {block content}
-<h3 class="form-title">
-	{if $role === $roleCandidate}{_'Registration for Candidate'}
-	{elseif $role === $roleCompany}{_'Registration for Company'}{/if}
-</h3>
-{control required:login}
+
+<div class="col-md-12 col-sm-12">
+	<h1>
+		{if $role === $roleCandidate}{_'Registration for Candidate'}
+		{elseif $role === $roleCompany}{_'Registration for Company'}
+		{/if}
+	</h1>
+
+	<div class="content-form-page">
+		<div class="row">
+			<div class="col-md-7 col-sm-7">
+				{control required:login}
+			</div>
+		</div>
+	</div>
+</div>
