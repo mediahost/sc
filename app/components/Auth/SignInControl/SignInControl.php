@@ -109,6 +109,12 @@ class SignInControl extends BaseControl
 		parent::render();
 	}
 
+	public function renderSocial()
+	{
+		$this->setTemplateFile('social');
+		parent::render();
+	}
+
 	public function renderLock()
 	{
 		$this->setTemplateFile('lock');

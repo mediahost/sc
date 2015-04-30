@@ -148,4 +148,20 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 	}
 
 	// </editor-fold>
+
+	public function renderPureLabel(IControl $control)
+	{
+		$suffix = $this->getValue('label suffix') . ($control->isRequired() ? $this->getValue('label requiredsuffix') : '');
+		$label = $control->getLabel();
+		if ($label instanceof Html) {
+			$label->add($suffix);
+			if ($control->isRequired()) {
+				$label->class($this->getValue('control .required'), TRUE);
+			}
+		} elseif ($label != NULL) { // @intentionally ==
+			$label .= $suffix;
+		}
+		return $label;
+	}
+
 }

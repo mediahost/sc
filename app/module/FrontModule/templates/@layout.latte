@@ -57,6 +57,17 @@
 				
 				<!-- CONTENT -->
 				<div class="row margin-bottom-40">
+					
+					<!-- BEGIN FLASH MESSAGES-->
+					<div n:snippet="flashMessages">
+						<div n:foreach="$flashes as $flash"
+							 class="alert alert-{$flash->type} fade in">
+							<button type="button" class="close" data-dismiss="alert"></button>
+							{$flash->message}
+						</div>
+					</div>
+					<!-- END FLASH MESSAGES-->
+					
 					<!-- BEGIN CONTENT -->
 					{include content}
 					<!-- END CONTENT -->
