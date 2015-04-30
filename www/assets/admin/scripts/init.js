@@ -3,15 +3,10 @@ jQuery(document).ready(function () {
 	Layout.init(); // init layout
 	$.nette.init(); // https://github.com/vojtech-dobes/nette.ajax.js
 
-	// special for pages
-	Login.init();
-
 	// components
-	HtmlEditors.init();
-	UIToastr.init();
 	Fullscreen.init();
-	ConnectedNumbers.init();
-	PdfPreview.init();
+	UIToastr.init();
+	HtmlEditors.init();
 	
 	// Global components
 	GlobalCustomInit.init();

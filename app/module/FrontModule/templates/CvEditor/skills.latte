@@ -1,0 +1,16 @@
+{includeblock 'navigation.latte'}
+
+{block content}
+<div class="col-md-12 col-sm-12">
+	<h1>{_'CV'}: {if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}</h1>
+	<div class="row">
+		<div class="col-md-3">
+			{include navigation, cv => $cv}
+		</div>
+		<div class="col-md-9">
+			<div class="content-form-page">
+				{control skillsForm}
+			</div>
+		</div>
+	</div>
+</div>

@@ -25,7 +25,7 @@ var PdfPreview = function () {
 	return {
 		init: function () {
 			if (typeof PDFJS !== 'undefined') {
-				PDFJS.workerSrc = basePath + '/js/pdfjs/pdf.worker.js';
+				PDFJS.workerSrc = basePath + '/assets/js/pdfjs/pdf.worker.js';
 				handlePdfPreview();
 			}
 		}

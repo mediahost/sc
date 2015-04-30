@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AppModule\Presenters;
+namespace App\FrontModule\Presenters;
 
 use App\Components\Candidate\IProfileControlFactory;
 use App\Components\Candidate\ProfileControl;
@@ -24,7 +24,6 @@ class CandidatePresenter extends BasePresenter
 
 	protected function startup()
 	{
-		$this->redirect(':Front:Candidate:');
 		parent::startup();
 	}
 

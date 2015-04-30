@@ -16,8 +16,11 @@
 					<li><a n:href="Sign:in">{_'Sign In'}</a></li>
 					<li><a n:href="Sign:up">{_'Registration'}</a></li>
 				</ul>
-				<ul n:if="$user->isAllowed('dashboard')" class="list-unstyled list-inline pull-right">
-					<li><a n:href=":App:Dashboard:">{_'Dashboard'}</a></li>
+				<ul n:if="$user->loggedIn" class="list-unstyled list-inline pull-right">
+					<li n:if="$user->isAllowed('dashboard')"><a n:href=":App:Dashboard:">{_'Dashboard'}</a></li>
+					<li>
+						<a href="{control signOut}"><i class="fa fa-sign-out"></i> {_'Sign out'}</a>
+					</li>
 				</ul>
 			</div>
 			<!-- END TOP BAR MENU -->
