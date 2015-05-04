@@ -165,6 +165,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iLivePreviewControlFactory->create();
 		$control->setCv($this->cv);
+		$control->setScale(0.6);
 		return $control;
 	}
 
