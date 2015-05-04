@@ -39,7 +39,7 @@ class FacebookControl extends BaseControl
 
 	/**
 	 * @var bool
-	 * @persistent 
+	 * @persistent
 	 */
 	public $remember = FALSE;
 
@@ -89,7 +89,7 @@ class FacebookControl extends BaseControl
 		parent::render();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="load & create">
+	// <editor-fold desc="load & create">
 
 	/**
 	 * @param ArrayHash $me
@@ -157,7 +157,7 @@ class FacebookControl extends BaseControl
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="setters">
+	// <editor-fold desc="setters">
 
 	/**
 	 * Fire onConnect event besides onSuccess
@@ -171,7 +171,7 @@ class FacebookControl extends BaseControl
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
+	// <editor-fold desc="getters">
 
 	/**
 	 * return link to open dialog

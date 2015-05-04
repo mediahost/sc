@@ -18,7 +18,7 @@ class ProfileControl extends BaseControl
 	/** @var Candidate */
 	public $candidate;
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
@@ -85,7 +85,7 @@ class ProfileControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setCandidate(Candidate $candidate)
 	{
@@ -98,7 +98,7 @@ class ProfileControl extends BaseControl
 
 class ProfileControlException extends Exception
 {
-	
+
 }
 
 interface IProfileControlFactory

@@ -37,7 +37,7 @@ class TwitterControl extends BaseControl
 
 	/**
 	 * @var bool
-	 * @persistent 
+	 * @persistent
 	 */
 	public $remember = FALSE;
 
@@ -74,7 +74,7 @@ class TwitterControl extends BaseControl
 		parent::render();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="load & create">
+	// <editor-fold desc="load & create">
 
 	/**
 	 * @param array $data
@@ -129,7 +129,7 @@ class TwitterControl extends BaseControl
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="setters">
+	// <editor-fold desc="setters">
 
 	/**
 	 * Fire onConnect event besides onSuccess
@@ -143,7 +143,7 @@ class TwitterControl extends BaseControl
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
+	// <editor-fold desc="getters">
 
 	/**
 	 * return link to open dialog

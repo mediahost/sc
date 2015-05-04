@@ -17,7 +17,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	/** @var SkillCategory */
 	private $skillCategory;
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// <editor-fold desc="constants & variables">
 
 	/** @var ISkillCategoryControlFactory @inject */
 	public $iSkillCategoryControlFactory;
@@ -36,7 +36,7 @@ class SkillCategoriesPresenter extends BasePresenter
 		$this->skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="actions & renderers">
+	// <editor-fold desc="actions & renderers">
 
 	/**
 	 * @secured
@@ -45,7 +45,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function renderDefault()
 	{
-		
+
 	}
 
 	/**
@@ -105,7 +105,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="forms">
+	// <editor-fold desc="forms">
 
 	/** @return SkillCategoryControl */
 	public function createComponentSkillCategoryForm()
@@ -120,7 +120,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="grids">
+	// <editor-fold desc="grids">
 
 	/** @return SkillCategoriesGrid */
 	public function createComponentSkillCategoriesGrid()

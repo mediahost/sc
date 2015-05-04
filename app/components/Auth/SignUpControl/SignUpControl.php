@@ -15,13 +15,13 @@ use Nette\Utils\ArrayHash;
 
 class SignUpControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onSuccess = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
@@ -46,7 +46,7 @@ class SignUpControl extends BaseControl
 		$form = new Form;
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
-		
+
 		$form->addServerValidatedText('mail', 'E-mail')
 				->setRequired('Please enter your e-mail.')
 				->setAttribute('placeholder', 'E-mail')
@@ -72,7 +72,7 @@ class SignUpControl extends BaseControl
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
-	
+
 	public function validateMail(IControl $control, $arg = NULL)
 	{
 		return $this->userFacade->isUnique($control->getValue());
@@ -106,7 +106,7 @@ class SignUpControl extends BaseControl
 		parent::render();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="controls">
+	// <editor-fold desc="controls">
 
 	/** @return FacebookControl */
 	protected function createComponentFacebook()

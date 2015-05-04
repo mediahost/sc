@@ -34,10 +34,10 @@ class CompleteAccountPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		
+
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="components">
+	// <editor-fold desc="components">
 
 	/** @return CompleteAccountControl */
 	protected function createComponentCompleteAccount()

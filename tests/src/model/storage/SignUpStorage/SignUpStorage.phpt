@@ -22,7 +22,7 @@ class SignUpStorageTest extends DbTestCase
 	/** @var \Nette\Http\Session @inject */
 	public $session;
 
-	// <editor-fold defaultstate="expanded" desc="tests">
+	// <editor-fold desc="tests">
 
 	public function testStorage()
 	{

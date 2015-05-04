@@ -24,18 +24,18 @@ class ExtendedFormRenderer extends DefaultFormRenderer
 		$this->wrappers['control.checkboxlist']['container'] = $this->wrappers['control']['container'];
 	}
 
-	// <editor-fold defaultstate="expanded" desc="customize functions">
+	// <editor-fold desc="customize functions">
 
 	/**
 	 * After initializating form
 	 */
 	protected function customizeInitedForm(Form &$form)
 	{
-		
+
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="overrrides functions">
+	// <editor-fold desc="overrrides functions">
 
 	/**
 	 * Provides complete form rendering.

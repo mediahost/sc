@@ -20,13 +20,13 @@ class SignPresenter extends BasePresenter
 	const REDIRECT_NOT_LOGGED = ':Front:Sign:in';
 	const REDIRECT_IS_LOGGED = ':App:Dashboard:';
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onVerify = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="Injects">
+	// <editor-fold desc="Injects">
 
 	/** @var Auth\IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
@@ -95,7 +95,7 @@ class SignPresenter extends BasePresenter
 		return $role;
 	}
 
-	// <editor-fold defaultstate="expanded" desc="Actions & renders">
+	// <editor-fold desc="Actions & renders">
 
 	/** @param string $role */
 	public function actionIn($role = self::ROLE_DEFAULT)
@@ -159,22 +159,22 @@ class SignPresenter extends BasePresenter
 		return $isLogged;
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="controls">
+	// <editor-fold desc="controls">
 
 	/** @return Auth\ForgottenControl */
 	protected function createComponentForgotten()
 	{
 		$control = $this->iForgottenControlFactory->create();
 		$control->onSuccess[] = function (User $user) {
-			
+
 			// Send e-mail with recovery link
 			$message = $this->forgottenMessage->create();
 			$message->addParameter('link', $this->link('//:Front:Sign:recovery', $user->recoveryToken));
 			$message->addTo($user->mail);
 			$message->send();
-			
+
 			$this->flashMessage('Recovery link has been sent to your mail.');
-			$this->redirect(':Front:Sign:in');	
+			$this->redirect(':Front:Sign:in');
 		};
 		$control->onMissingUser[] = function ($mail) {
 			$message = new TaggedString('We do not register any user with mail \'%s\'.', $mail);

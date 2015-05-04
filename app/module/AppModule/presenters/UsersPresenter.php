@@ -23,7 +23,7 @@ class UsersPresenter extends BasePresenter
 	/** @var EntityDao */
 	private $userDao;
 
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -48,7 +48,7 @@ class UsersPresenter extends BasePresenter
 		$this->userDao = $this->em->getDao(User::getClassName());
 	}
 
-	// <editor-fold defaultstate="expanded" desc="actions & renderers">
+	// <editor-fold desc="actions & renderers">
 
 	/**
 	 * @secured
@@ -152,7 +152,7 @@ class UsersPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="edit/delete priviledges">
+	// <editor-fold desc="edit/delete priviledges">
 
 	/**
 	 * Decides if identity user can edit user
@@ -196,7 +196,7 @@ class UsersPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="forms">
+	// <editor-fold desc="forms">
 
 	/** @return UserControl */
 	public function createComponentUserForm()
@@ -212,7 +212,7 @@ class UsersPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="grids">
+	// <editor-fold desc="grids">
 
 	/** @return UsersGrid */
 	public function createComponentUsersGrid()

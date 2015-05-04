@@ -33,7 +33,7 @@ abstract class BasePresenter extends Presenter
 	/** @persistent */
 	public $backlink = '';
 
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var LoaderFactory @inject */
 	public $webLoader;
@@ -74,13 +74,13 @@ abstract class BasePresenter extends Presenter
 		$this->template->setTranslator($this->translator);
 		$this->template->designSettings = $this->designService->settings;
 		$this->template->designColors = $this->designService->colors;
-		
+
 		$this->template->isCandidate = in_array(Entity\Role::CANDIDATE, $this->getUser()->getRoles());
 		$this->template->isCompany = in_array(Entity\Role::COMPANY, $this->getUser()->getRoles());
 		$this->template->isAdmin = in_array(Entity\Role::ADMIN, $this->getUser()->getRoles());
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="flash messages">
+	// <editor-fold desc="flash messages">
 
 	/** Translate flash messages if not HTML */
 	public function flashMessage($message, $type = 'info')
@@ -95,7 +95,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="requirments">
+	// <editor-fold desc="requirments">
 
 	public function checkRequirements($element)
 	{
@@ -153,7 +153,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="settings">
+	// <editor-fold desc="settings">
 
 	protected function loadUserSettings()
 	{
@@ -164,7 +164,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="language">
+	// <editor-fold desc="language">
 
 	private function setLang()
 	{
@@ -186,7 +186,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="handlers">
+	// <editor-fold desc="handlers">
 
 	public function handleChangeLanguage($newLang)
 	{
@@ -200,7 +200,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="components">
+	// <editor-fold desc="components">
 
 	/** @return SignOutControl */
 	public function createComponentSignOut()
@@ -209,7 +209,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="css webloader">
+	// <editor-fold desc="css webloader">
 
 	/** @return CssLoader */
 	protected function createComponentCssFront()
@@ -236,7 +236,7 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="macros">
+	// <editor-fold desc="macros">
 	protected function createTemplate()
 	{
 		$template = parent::createTemplate();
@@ -249,5 +249,5 @@ abstract class BasePresenter extends Presenter
         return $template;
 	}
 	// </editor-fold>
-	
+
 }

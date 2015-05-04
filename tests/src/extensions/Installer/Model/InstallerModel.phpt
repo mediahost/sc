@@ -25,7 +25,7 @@ $container = require __DIR__ . '/../../../bootstrap.php';
  */
 class InstallerModelTest extends DbTestCase
 {
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var RoleFacade @inject */
 	public $roleFacade;
@@ -46,7 +46,7 @@ class InstallerModelTest extends DbTestCase
 		parent::__construct($container);
 	}
 
-	// <editor-fold defaultstate="expanded" desc="tests">
+	// <editor-fold desc="tests">
 
 	public function testInstallerFiles()
 	{
@@ -76,7 +76,7 @@ class InstallerModelTest extends DbTestCase
 	public function testInstallerDb()
 	{
 		$this->setOwnDb();
-		
+
 		$installer = $this->installerModel;
 
 		$userDao = $this->em->getDao(User::getClassName());

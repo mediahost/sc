@@ -21,7 +21,7 @@ class CheckSwitch extends Checkbox
 		}
 	}
 
-	// <editor-fold defaultstate="expanded" desc="setters">
+	// <editor-fold desc="setters">
 
 	/**
 	 *
@@ -84,7 +84,7 @@ class CheckSwitch extends Checkbox
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
+	// <editor-fold desc="getters">
 
 	/**
 	 * Generates control's HTML element.

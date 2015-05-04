@@ -13,13 +13,13 @@ use Nette\Utils\ArrayHash;
 
 class SignInControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onSuccess = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
@@ -122,7 +122,7 @@ class SignInControl extends BaseControl
 		parent::render();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="controls">
+	// <editor-fold desc="controls">
 
 	/** @return FacebookControl */
 	protected function createComponentFacebook()

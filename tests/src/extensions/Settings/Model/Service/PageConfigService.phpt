@@ -31,7 +31,7 @@ class PageConfigServiceTest extends BaseService
 		$this->service->defaultStorage = $this->defaultSettings;
 	}
 
-	// <editor-fold defaultstate="expanded" desc="tests">
+	// <editor-fold desc="tests">
 
 	public function testService()
 	{

@@ -20,13 +20,13 @@ class SkillControl extends BaseControl
 	/** @var Skill */
 	private $skill;
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var RoleFacade @inject */
 	public $roleFacade;
@@ -100,7 +100,7 @@ class SkillControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setSkill(Skill $skill)
 	{
@@ -113,7 +113,7 @@ class SkillControl extends BaseControl
 
 class SkillControlException extends Exception
 {
-	
+
 }
 
 interface ISkillControlFactory

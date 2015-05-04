@@ -29,7 +29,7 @@ class LanguageServiceTest extends BaseService
 
 	/** @var UserFacade @inject */
 	public $userFacade;
-	
+
 	/** @var LanguageService */
 	private $service;
 
@@ -46,20 +46,20 @@ class LanguageServiceTest extends BaseService
 		$this->service->em = $this->em;
 		$this->service->httpRequest = new Request(new UrlScript, NULL, NULL, NULL, NULL, ['Accept-Language' => 'cs']);
 	}
-	
+
 	protected function setUp()
 	{
 		parent::setUp();
 		$this->updateSchema();
 	}
-	
+
 	protected function tearDown()
 	{
 		parent::tearDown();
 		$this->dropSchema();
 	}
 
-	// <editor-fold defaultstate="expanded" desc="tests">
+	// <editor-fold desc="tests">
 
 	public function testService()
 	{
@@ -76,26 +76,26 @@ class LanguageServiceTest extends BaseService
 		Assert::false($this->service->isAllowed('ru'));
 
 		Assert::same('cs', $this->service->detectedLanguage);
-		
+
 		Assert::same('en', $this->service->language);
 		Assert::null($this->service->userLanguage);
-		
+
 		$this->userFacade->create('user@mail.com', 'user', new Role(Role::CANDIDATE));
 		$userDao = $this->em->getDao(User::getClassName());
 		$user = $userDao->find(1);
 		$this->service->defaultStorage->user = $user;
 		$this->service->defaultStorage->loggedIn = TRUE;
 		Assert::type(User::getClassName(), $this->service->user);
-		
+
 		$this->service->userLanguage = 'de';
 		Assert::same('de', $userDao->find(1)->pageConfigSettings->language);
 		Assert::same('de', $this->service->language);
 		Assert::same('de', $this->service->userLanguage);
-		
+
 		$this->service->userLanguage = 'cs';
 		Assert::same('cs', $userDao->find(1)->pageConfigSettings->language);
 		Assert::same('cs', $this->service->language);
-		
+
 		$this->service->defaultStorage->loggedIn = FALSE;
 		Assert::same('en', $this->service->language);
 		Assert::null($this->service->userLanguage);

@@ -26,9 +26,9 @@ class RouterFactory
 		$router[] = $ajaxRouter = new RouteList('Ajax');
 		$router[] = $adminRouter = new RouteList('App');
 		$router[] = $frontRouter = new RouteList('Front');
-		
-		// <editor-fold defaultstate="expanded" desc="Foto">
-		
+
+		// <editor-fold desc="Foto">
+
 		$fotoRouter[] = new Route('foto/[<size \d+\-\d+>/]<name .+>', [
             'presenter' => "Foto",
 			'action' => 'default',
@@ -37,7 +37,7 @@ class RouterFactory
 		]);
 
 		// </editor-fold>
-		// <editor-fold defaultstate="expanded" desc="Ajax">
+		// <editor-fold desc="Ajax">
 
 		$ajaxRouter[] = new Route('ajax/<presenter>/<action>[/<id>]', [
 			'presenter' => 'Default',
@@ -46,7 +46,7 @@ class RouterFactory
 		]);
 
 		// </editor-fold>
-		// <editor-fold defaultstate="expanded" desc="App">
+		// <editor-fold desc="App">
 
 		$adminRouter[] = new Route('app/<presenter>/<action>[/<id>]', [
 			'presenter' => 'Dashboard',
@@ -55,7 +55,7 @@ class RouterFactory
 		]);
 
 		// </editor-fold>
-		// <editor-fold defaultstate="expanded" desc="Front">
+		// <editor-fold desc="Front">
 
 		$roles = preg_quote(SignPresenter::ROLE_CANDIDATE) . '|' . preg_quote(SignPresenter::ROLE_COMPANY);
 		$frontRouter[] = new Route('<presenter>/<action (in|up)>[/<role (' . $roles . ')>]', [

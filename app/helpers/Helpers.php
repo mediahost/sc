@@ -16,7 +16,7 @@ class Helpers
 		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="strings">
+	// <editor-fold desc="strings">
 
 	/**
 	 * Alias for concatStrings()
@@ -59,7 +59,7 @@ class Helpers
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="date">
+	// <editor-fold desc="date">
 
 	/**
 	 * Matches each symbol of PHP date format standard
@@ -132,7 +132,7 @@ class Helpers
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="transformation">
+	// <editor-fold desc="transformation">
 
 	/**
 	 * Function to translate link in text to HTML format of link
@@ -149,10 +149,10 @@ class Helpers
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="dirs">
+	// <editor-fold desc="dirs">
 
 	/**
-	 * Glob function doesn't return the hidden files, therefore scandir can be more useful, 
+	 * Glob function doesn't return the hidden files, therefore scandir can be more useful,
 	 * when trying to delete recursively a tree.
 	 * @param string $dir
 	 * @return boolean

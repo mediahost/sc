@@ -25,13 +25,13 @@ class CompanyInfoControl extends BaseControl
 	/** @var array */
 	private $usersRoles = [];
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
@@ -43,7 +43,7 @@ class CompanyInfoControl extends BaseControl
 	public $roleFacade;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var bool */
 	private $canEditInfo = FALSE;
@@ -185,7 +185,7 @@ class CompanyInfoControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setCompany(Company $company)
 	{

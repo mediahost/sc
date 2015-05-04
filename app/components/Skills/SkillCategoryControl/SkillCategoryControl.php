@@ -19,13 +19,13 @@ class SkillCategoryControl extends BaseControl
 	/** @var SkillCategory */
 	private $skillCategory;
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var RoleFacade @inject */
 	public $roleFacade;
@@ -83,7 +83,7 @@ class SkillCategoryControl extends BaseControl
 		}
 		return $this;
 	}
-	
+
 	private function save()
 	{
 		$this->em->persist($this->skillCategory);
@@ -108,7 +108,7 @@ class SkillCategoryControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setSkillCategory(SkillCategory $skillCategory)
 	{
@@ -121,7 +121,7 @@ class SkillCategoryControl extends BaseControl
 
 class SkillCategoryControlException extends Exception
 {
-	
+
 }
 
 interface ISkillCategoryControlFactory

@@ -18,7 +18,7 @@ class ConnectManagerControl extends BaseControl
 	const FACEBOOK = 'Facebook';
 	const TWITTER = 'Twitter';
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onConnect = [];
@@ -36,7 +36,7 @@ class ConnectManagerControl extends BaseControl
 	public $onUsingConnection = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var IFacebookControlFactory @inject */
 	public $iFacebookControlFactory;
@@ -156,7 +156,7 @@ class ConnectManagerControl extends BaseControl
 		$this->redrawControl();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="controls">
+	// <editor-fold desc="controls">
 
 	/** @return FacebookControl */
 	protected function createComponentFacebook()

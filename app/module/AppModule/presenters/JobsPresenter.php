@@ -14,7 +14,7 @@ use Kdyby\Doctrine\EntityManager;
  */
 class JobsPresenter extends BasePresenter
 {
-	// <editor-fold defaultstate="expanded" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -23,7 +23,7 @@ class JobsPresenter extends BasePresenter
 	public $iJobsGridFactory;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var EntityDao */
 	private $companyDao;
@@ -40,7 +40,7 @@ class JobsPresenter extends BasePresenter
 		$this->jobDao = $this->em->getDao(Job::getClassName());
 	}
 
-	// <editor-fold defaultstate="expanded" desc="actions & renderers">
+	// <editor-fold desc="actions & renderers">
 
 	/**
 	 * @secured
@@ -66,11 +66,11 @@ class JobsPresenter extends BasePresenter
 	 */
 	public function actionShowAll()
 	{
-		
+
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="grids">
+	// <editor-fold desc="grids">
 
 	/** @return JobsGrid */
 	public function createComponentJobsGrid()

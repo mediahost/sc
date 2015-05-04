@@ -11,7 +11,7 @@ use Nette\Security\IAuthorizator;
 class Installer extends Object
 {
 
-	// <editor-fold defaultstate="collapsed" desc="constants & variables">
+	// <editor-fold desc="constants & variables">
 
 	const LOCK_FILE_CONTENT = '1';
 	const LOCK_UNNAMED = '_UNNAMED_';
@@ -49,7 +49,7 @@ class Installer extends Object
 	private $messages = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var InstallerModel @inject */
 	public $model;
@@ -58,7 +58,7 @@ class Installer extends Object
 	public $permissions;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onSuccessInstall = [];
@@ -67,7 +67,7 @@ class Installer extends Object
 	public $onLockedInstall = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="setters">
+	// <editor-fold desc="setters">
 
 	/**
 	 * Set nested pathes
@@ -136,7 +136,7 @@ class Installer extends Object
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
+	// <editor-fold desc="getters">
 
 	private function getRoles()
 	{
@@ -173,7 +173,7 @@ class Installer extends Object
 		return $this->messages;
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="subinstallers">
+	// <editor-fold desc="subinstallers">
 
 	/**
 	 * Run Composer
@@ -311,10 +311,10 @@ class Installer extends Object
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="lock functions">
+	// <editor-fold desc="lock functions">
 
 	/**
-	 * Lock file if locking is set AND lock is unused 
+	 * Lock file if locking is set AND lock is unused
 	 * Return TRUE if lock is FREE, return FALSE if lock is used
 	 * @param string $name
 	 * @return boolean

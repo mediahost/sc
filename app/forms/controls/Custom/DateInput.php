@@ -22,7 +22,7 @@ class DateInput extends BaseControl
 		$this->addRule(__CLASS__ . '::validateDate', 'Date is invalid.');
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters">
+	// <editor-fold desc="setters">
 
 	/**
 	 *
@@ -43,7 +43,7 @@ class DateInput extends BaseControl
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
+	// <editor-fold desc="getters">
 
 	/**
 	 * @return DateTime|NULL

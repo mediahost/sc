@@ -13,11 +13,11 @@ use App\TaggedString;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * 
+ *
  */
 class CompanyPresenter extends BasePresenter
 {
-	// <editor-fold defaultstate="collapsed" desc="inject">
+	// <editor-fold desc="inject">
 
 	/** @var ICompanyInfoControlFactory @inject */
 	public $iCompanyControlFactory;
@@ -26,7 +26,7 @@ class CompanyPresenter extends BasePresenter
 	public $iCompanyUserControlFactory;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var Company */
 	protected $company;
@@ -141,7 +141,7 @@ class CompanyPresenter extends BasePresenter
 		$this->template->addFilter('canEditUser', $this->canEditUser);
 	}
 
-	// <editor-fold defaultstate="expanded" desc="edit/delete priviledges">
+	// <editor-fold desc="edit/delete priviledges">
 
 	/**
 	 * Decides if user can edit roles for user
@@ -154,7 +154,7 @@ class CompanyPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="forms">
+	// <editor-fold desc="forms">
 
 	/** @return CompanyInfoControl */
 	public function createComponentCompanyForm()

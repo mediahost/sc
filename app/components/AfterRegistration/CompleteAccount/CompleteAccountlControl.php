@@ -19,7 +19,7 @@ use Nette\Utils\ArrayHash;
 class CompleteAccountControl extends BaseControl
 {
 
-	// <editor-fold defaultstate="expoanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onCreateCandidate = [];
@@ -31,7 +31,7 @@ class CompleteAccountControl extends BaseControl
 	public $onMissingUser = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;

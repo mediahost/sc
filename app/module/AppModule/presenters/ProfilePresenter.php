@@ -30,7 +30,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		
+
 	}
 
 	/**
@@ -50,7 +50,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionConnectManager()
 	{
-		
+
 	}
 
 	/**
@@ -60,7 +60,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionSetPassword()
 	{
-		
+
 	}
 
 	/**
@@ -70,7 +70,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDelete()
 	{
-		
+
 	}
 
 	/**
@@ -91,7 +91,7 @@ class ProfilePresenter extends BasePresenter
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="components">
+	// <editor-fold desc="components">
 
 	/** @return SetPasswordControl */
 	protected function createComponentSetPassword()

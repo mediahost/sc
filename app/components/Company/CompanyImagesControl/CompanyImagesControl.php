@@ -17,13 +17,13 @@ class CompanyImagesControl extends BaseControl
 	/** @var Company */
 	private $company;
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
@@ -96,7 +96,7 @@ class CompanyImagesControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setCompany(Company $company)
 	{

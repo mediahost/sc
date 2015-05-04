@@ -10,7 +10,7 @@ use Kdyby\Doctrine\EntityManager;
 
 class CvsPresenter extends BasePresenter
 {
-	// <editor-fold defaultstate="expanded" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -19,7 +19,7 @@ class CvsPresenter extends BasePresenter
 	public $iCvsGridFactory;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var EntityDao */
 	private $cvDao;
@@ -32,7 +32,7 @@ class CvsPresenter extends BasePresenter
 		$this->cvDao = $this->em->getDao(Cv::getClassName());
 	}
 
-	// <editor-fold defaultstate="expanded" desc="actions & renderers">
+	// <editor-fold desc="actions & renderers">
 
 	/**
 	 * @secured
@@ -41,7 +41,7 @@ class CvsPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		
+
 	}
 
 	/**
@@ -56,7 +56,7 @@ class CvsPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="grids">
+	// <editor-fold desc="grids">
 
 	/** @return CvsGrid */
 	public function createComponentCvsGrid()

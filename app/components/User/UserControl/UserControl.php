@@ -24,13 +24,13 @@ class UserControl extends BaseControl
 	/** @var User */
 	private $user;
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var array */
 	private $identityRoles = [];
@@ -148,7 +148,7 @@ class UserControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setUser(User $user)
 	{
@@ -174,7 +174,7 @@ class UserControl extends BaseControl
 
 class UserControlException extends Exception
 {
-	
+
 }
 
 interface IUserControlFactory

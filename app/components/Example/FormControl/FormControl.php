@@ -14,7 +14,7 @@ use App\Forms\Renderers\MetronicHorizontalFormRenderer;
  */
 class FormControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
@@ -27,7 +27,7 @@ class FormControl extends BaseControl
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
-		
+
 		$values = [1 => 'test1', 2 => 'test2'];
 
 		$form->addText('text', 'Text');
@@ -99,7 +99,7 @@ class FormControl extends BaseControl
 		$values = [];
 		return $values;
 	}
-	
+
 	public function renderHorizontal($labelWidth = MetronicHorizontalFormRenderer::DEFAULT_LABEL_WIDTH, $inputWidth = MetronicHorizontalFormRenderer::DEFAULT_INPUT_WIDTH)
 	{
 		$this['form']->setRenderer(new MetronicHorizontalFormRenderer($labelWidth, $inputWidth));

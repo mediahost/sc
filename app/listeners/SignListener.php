@@ -25,7 +25,7 @@ class SignListener extends Object implements Subscriber
 	const REDIRECT_SIGNIN_PAGE = ':Front:Sign:in';
 	const REDIRECT_SIGN_UP_REQUIRED = ':Front:Sign:upRequired';
 
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var SignUpStorage @inject */
 	public $session;
@@ -145,7 +145,7 @@ class SignListener extends Object implements Subscriber
 			$message->addTo($user->mail);
 			$message->send();
 
-			
+
 			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE, ['role' => $redirectRole]);
 		}

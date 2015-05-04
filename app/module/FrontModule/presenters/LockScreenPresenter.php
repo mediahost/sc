@@ -15,7 +15,7 @@ class LockScreenPresenter extends BasePresenter
 	/** @var User */
 	private $loggedUser;
 
-	// <editor-fold defaultstate="collapsed" desc="Injects">
+	// <editor-fold desc="Injects">
 
 	/** @var Auth\ISignInControlFactory @inject */
 	public $iSignInControlFactory;
@@ -43,14 +43,14 @@ class LockScreenPresenter extends BasePresenter
 	{
 		$this->template->loggedUser = $this->loggedUser;
 	}
-	
+
 	protected function beforeRender()
 	{
 		$this->setDemoLayout();
 		parent::beforeRender();
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="controls">
+	// <editor-fold desc="controls">
 
 	/** @return Auth\SignInControl */
 	protected function createComponentSignIn()

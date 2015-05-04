@@ -17,7 +17,7 @@ class InstallerModel extends Object
 
 	const ADMINER_FILENAME = '/adminer/database-log.sql';
 
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -32,7 +32,7 @@ class InstallerModel extends Object
 	public $companyFacade;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="installers">
+	// <editor-fold desc="installers">
 
 	/**
 	 * Create all nested roles

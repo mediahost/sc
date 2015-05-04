@@ -26,7 +26,7 @@ class ImageListener extends Object implements Subscriber
 		);
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="listeners redirectors">
+	// <editor-fold desc="listeners redirectors">
 
 	public function prePersist($params)
 	{
@@ -58,7 +58,7 @@ class ImageListener extends Object implements Subscriber
 	private function removeImage(Image $image)
 	{
 		if ($image->filename) {
-			
+
 		}
 	}
 

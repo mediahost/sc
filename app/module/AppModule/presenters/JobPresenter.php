@@ -24,7 +24,7 @@ class JobPresenter extends BasePresenter
 	/** @var Job */
 	private $job;
 
-	// <editor-fold defaultstate="expanded" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -39,7 +39,7 @@ class JobPresenter extends BasePresenter
 	public $iJobSkillsControlFactory;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var EntityDao */
 	private $jobDao;
@@ -56,7 +56,7 @@ class JobPresenter extends BasePresenter
 		$this->companyDao = $this->em->getDao(Company::getClassName());
 	}
 
-	// <editor-fold defaultstate="expanded" desc="actions & renderers">
+	// <editor-fold desc="actions & renderers">
 
 	/**
 	 * @secured
@@ -129,9 +129,9 @@ class JobPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="edit/delete priviledges">
+	// <editor-fold desc="edit/delete priviledges">
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="forms">
+	// <editor-fold desc="forms">
 
 	/** @return BasicInfoControl */
 	public function createComponentJobInfoForm()

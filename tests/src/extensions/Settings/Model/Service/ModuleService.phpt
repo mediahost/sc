@@ -36,14 +36,14 @@ class ModuleServiceTest extends BaseService
 		$this->service->defaultStorage = $this->defaultSettings;
 	}
 
-	// <editor-fold defaultstate="expanded" desc="tests">
+	// <editor-fold desc="tests">
 
 	public function testService()
 	{
 		Assert::true($this->service->isAllowedModule('myModule'));
 		Assert::false($this->service->isAllowedModule('disabledModule'));
 		Assert::false($this->service->isAllowedModule('unknownModule'));
-		
+
 		Assert::type('App\Model\Entity\Special\UniversalDataEntity', $this->service->getModuleSettings('myModule'));
 		Assert::same(1, $this->service->getModuleSettings('myModule')->one);
 		Assert::same(2, $this->service->getModuleSettings('myModule')->two);

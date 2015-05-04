@@ -9,13 +9,13 @@ use App\TaggedString;
 
 class CandidatePresenter extends BasePresenter
 {
-	// <editor-fold defaultstate="collapsed" desc="inject">
+	// <editor-fold desc="inject">
 
 	/** @var IProfileControlFactory @inject */
 	public $iProfileControlFactory;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var Candidate */
 	private $candidate;
@@ -42,7 +42,7 @@ class CandidatePresenter extends BasePresenter
 		$this->template->candidate = $this->candidate;
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="forms">
+	// <editor-fold desc="forms">
 
 	/** @return ProfileControl */
 	public function createComponentProfileForm()

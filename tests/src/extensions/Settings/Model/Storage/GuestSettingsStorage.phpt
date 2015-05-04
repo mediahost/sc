@@ -29,7 +29,7 @@ class GuestSettingsStorageTest extends DbTestCase
 		parent::__construct($container);
 	}
 
-	// <editor-fold defaultstate="expanded" desc="tests">
+	// <editor-fold desc="tests">
 
 	public function testSetAndGet()
 	{

@@ -22,7 +22,7 @@ class Spinner extends MetronicTextInputBase
 		parent::__construct($label);
 	}
 
-	// <editor-fold defaultstate="expanded" desc="setters">
+	// <editor-fold desc="setters">
 
 	/**
 	 * Set size of main element
@@ -170,7 +170,7 @@ class Spinner extends MetronicTextInputBase
 						->addAttributes($this->attributes);
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="controls for buttons">
+	// <editor-fold desc="controls for buttons">
 
 	private function getInput()
 	{

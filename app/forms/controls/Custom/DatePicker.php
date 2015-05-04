@@ -42,7 +42,7 @@ class DatePicker extends BaseControl
 		$this->addRule(__CLASS__ . '::validateDate', 'Date is invalid.');
 	}
 
-	// <editor-fold defaultstate="expanded" desc="setters">
+	// <editor-fold desc="setters">
 
 	public function setValue($value)
 	{
@@ -146,7 +146,7 @@ class DatePicker extends BaseControl
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="getters">
+	// <editor-fold desc="getters">
 
 	/**
 	 * @return DateTime|string|NULL
@@ -183,7 +183,7 @@ class DatePicker extends BaseControl
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="private getters">
+	// <editor-fold desc="private getters">
 
 	private function getInput($picker = TRUE)
 	{

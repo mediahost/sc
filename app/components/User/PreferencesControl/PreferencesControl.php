@@ -11,7 +11,7 @@ use App\Forms\Renderers\MetronicFormRenderer;
  */
 class PreferencesControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];

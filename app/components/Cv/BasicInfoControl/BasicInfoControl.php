@@ -13,13 +13,13 @@ use Nette\Utils\ArrayHash;
  */
 class BasicInfoControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var Cv */
 	private $cv;
@@ -87,7 +87,7 @@ class BasicInfoControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setCv(Cv $cv)
 	{

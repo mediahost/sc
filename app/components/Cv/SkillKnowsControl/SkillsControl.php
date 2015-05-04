@@ -22,13 +22,13 @@ class SkillsControl extends BaseControl
 	/** @var Cv */
 	private $cv;
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var SkillFacade @inject */
 	public $skillFacade;
@@ -119,7 +119,7 @@ class SkillsControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setCv(Cv $cv)
 	{

@@ -63,7 +63,7 @@ class DesignServiceTest extends BaseService
 		$this->dropSchema();
 	}
 
-	// <editor-fold defaultstate="expanded" desc="tests">
+	// <editor-fold desc="tests">
 
 	public function testService()
 	{

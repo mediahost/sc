@@ -18,19 +18,19 @@ class BasicInfoControl extends BaseControl
 	/** @var Job */
 	private $job;
 
-	// <editor-fold defaultstate="expanded" desc="events">
+	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="expanded" desc="variables">
+	// <editor-fold desc="variables">
 	// </editor-fold>
 
 	/** @return Form */
@@ -93,7 +93,7 @@ class BasicInfoControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
+	// <editor-fold desc="setters & getters">
 
 	public function setJob(Job $job)
 	{

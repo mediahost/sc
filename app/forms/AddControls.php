@@ -23,7 +23,7 @@ use App\Forms\Controls\UploadBased\UploadImageWithPreview;
 
 trait AddControls
 {
-	// <editor-fold defaultstate="expanded" desc="Special controls">
+	// <editor-fold desc="Special controls">
 
 	/**
 	 * Adds text Input with server validation

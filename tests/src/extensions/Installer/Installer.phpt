@@ -27,7 +27,7 @@ class InstallerTest extends DbTestCase
 	/** @var string */
 	private $installDir;
 
-	// <editor-fold defaultstate="collapsed" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var UserFacade @inject */
 	public $userFacade;
@@ -46,13 +46,13 @@ class InstallerTest extends DbTestCase
 		$this->installDir = $this->getContainer()->getParameters()['tempDir'] . 'install/';
 	}
 
-	// <editor-fold defaultstate="expanded" desc="tests">
+	// <editor-fold desc="tests">
 
 	public function testInstallerEmptyValues()
 	{
 		// This setting needs created schema
 		$this->updateSchema();
-		
+
 		// install empty values
 		$messages1 = $this->installer->setPathes(NULL, NULL, NULL, NULL)
 				->setLock(FALSE)

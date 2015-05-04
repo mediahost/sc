@@ -23,7 +23,7 @@ class CompaniesPresenter extends BasePresenter
 	/** @var Company */
 	private $company;
 
-	// <editor-fold defaultstate="expanded" desc="injects">
+	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -44,7 +44,7 @@ class CompaniesPresenter extends BasePresenter
 	public $iCompaniesGridFactory;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var EntityDao */
 	private $companyDao;
@@ -61,7 +61,7 @@ class CompaniesPresenter extends BasePresenter
 		$this->userDao = $this->em->getDao(User::getClassName());
 	}
 
-	// <editor-fold defaultstate="expanded" desc="actions & renderers">
+	// <editor-fold desc="actions & renderers">
 
 	/**
 	 * @secured
@@ -179,7 +179,7 @@ class CompaniesPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="forms">
+	// <editor-fold desc="forms">
 
 	/** @return CompanyInfoControl */
 	public function createComponentCompanyInfoForm()
@@ -222,7 +222,7 @@ class CompaniesPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="grids">
+	// <editor-fold desc="grids">
 
 	/** @return CompaniesGrid */
 	public function createComponentCompaniesGrid()

@@ -14,7 +14,7 @@ class ExamplesPresenter extends BasePresenter
 
 	/** @var IFormControlFactory @inject */
 	public $iFormControlFactory;
-	
+
 	/**
 	 * @secured
 	 * @resource('examples')
@@ -32,10 +32,10 @@ class ExamplesPresenter extends BasePresenter
 	 */
 	public function actionForm()
 	{
-		
+
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="components">
+	// <editor-fold desc="components">
 
 	/** @return FormControl */
 	protected function createComponentForm()

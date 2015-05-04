@@ -14,7 +14,7 @@ use App\TaggedString;
 use Exception;
 
 /**
- * 
+ *
  */
 class CvEditorPresenter extends BasePresenter
 {
@@ -22,7 +22,7 @@ class CvEditorPresenter extends BasePresenter
 	/** @persistent int */
 	public $id = NULL;
 
-	// <editor-fold defaultstate="collapsed" desc="inject">
+	// <editor-fold desc="inject">
 
 	/** @var CvFacade @inject */
 	public $cvFacade;
@@ -37,7 +37,7 @@ class CvEditorPresenter extends BasePresenter
 	public $iLivePreviewControlFactory;
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
+	// <editor-fold desc="variables">
 
 	/** @var Cv */
 	private $cv;
@@ -72,7 +72,7 @@ class CvEditorPresenter extends BasePresenter
 			return;
 		}
 		$candidate = $this->user->identity->candidate;
-		
+
 		if ($id) {
 			$cvDao = $this->em->getDao(Cv::getClassName());
 			$findedCv = $cvDao->find($id);
@@ -84,7 +84,7 @@ class CvEditorPresenter extends BasePresenter
 		} else if ($candidate) { // pro kandidáta načti defaultní
 			$this->cv = $this->cvFacade->getDefaultCvOrCreate($candidate);
 		}
-		
+
 		if (!$this->cv) {
 			throw new CvEditorPresenterException('Requested CV wasn\'t found.');
 		}
@@ -122,7 +122,7 @@ class CvEditorPresenter extends BasePresenter
 		$this->template->matchedJobs = $this->cvFacade->findJobs($this->cv);
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="forms">
+	// <editor-fold desc="forms">
 
 	/** @return BasicInfoControl */
 	public function createComponentBasicInfoForm()
@@ -158,7 +158,7 @@ class CvEditorPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="preview">
+	// <editor-fold desc="preview">
 
 	/** @return LivePreviewControl */
 	public function createComponentCvPreview()
@@ -173,5 +173,5 @@ class CvEditorPresenter extends BasePresenter
 
 class CvEditorPresenterException extends Exception
 {
-	
+
 }
