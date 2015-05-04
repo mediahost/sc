@@ -128,7 +128,7 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentBasicInfoForm()
 	{
 		$control = $this->iBasicInfoControlFactory->create();
-		$control->setAjax(TRUE, TRUE);
+//		$control->setAjax(TRUE, TRUE);
 		$control->setCv($this->cv);
 		$control->onAfterSave = function (Cv $saved) {
 			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);

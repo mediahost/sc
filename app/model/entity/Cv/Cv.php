@@ -3,7 +3,6 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\Traits\CvSkillsUsing;
-use CvSkillKnowsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -11,6 +10,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Model\Repository\CvRepository")
+ * @ORM\EntityListeners({"App\Listeners\Model\Entity\CvListener"})
  *
  * @property string $name
  * @property integer $lastOpenedPreviewPage Get last opened preview page
@@ -19,6 +19,9 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property-read ArrayCollection $skillKnows
  * @property-write SkillKnow $skillKnow
  * @property Candidate $candidate
+ * @property-read string $pdfFolder
+ * @property-read string $pdfFilename
+ * @property-read string $pdf
  */
 class Cv extends BaseEntity
 {
@@ -48,6 +51,21 @@ class Cv extends BaseEntity
 		}
 		$this->skillKnows = new ArrayCollection;
 		parent::__construct();
+	}
+
+	public function getPdfFolder()
+	{
+		return 'candidate/' . $this->candidate->id . '/cv';
+	}
+
+	public function getPdfFilename()
+	{
+		return $this->id . '.pdf';
+	}
+
+	public function getPdf()
+	{
+		return $this->pdfFolder . '/' . $this->pdfFilename;
 	}
 
 	public function __toString()
