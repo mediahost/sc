@@ -1,0 +1,30 @@
+<div class="portlet light ">
+	<div class="portlet-body" id="chats">
+		<div class="scroller" style="height: 341px;" data-always-visible="1" data-rail-visible1="1">
+			<ul class="chats">
+				<li n:foreach="$communication->messages as $message" n:class="$message->sender->user->id == $viewer->id ? in : out">
+					<img class="avatar" alt="" src="{$basePath}/assets/admin/img/avatar1.jpg"/>
+					<div class="message">
+						<span class="arrow"></span>
+						<a href="#" class="name">{$message->sender->getName()}</a>
+						<span class="datetime">{$message->time|date:'j. n. Y'}</span>
+						<span class="body">{$message->text}</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="chat-form">
+			{form form}
+			<div class="input-cont">
+				<input n:name="text" class="form-control" type="text" placeholder="{_"Type a message here..."}"/>
+			</div>
+			<div class="btn-cont">
+				<span class="arrow"></span>
+				<button n:name="send" class="btn blue icn-only">
+					<i class="fa fa-check icon-white"></i>
+				</button>
+			</div>
+			{/form}
+		</div>
+	</div>
+</div>

@@ -1,0 +1,28 @@
+{block pageTitle}
+	{_'Messages'}
+{/block}
+
+{block breadcrumbItems}
+	<li>
+		<a n:href="Messages:">{_'Messages'}</a>
+	</li>
+{/block}
+
+{block content}
+<div class="row">
+	<div class="col-md-6">
+		<h3>{_'Start communication with'}</h3>
+		{control starCommunicationForm}
+	</div>
+	<div class="col-md-6">
+		<h3>{_'Communications'}</h3>
+		<ul>
+			<li n:foreach="$communications as $communication">
+				<a n:href="communication $communication->id">{$communication->getOppositeName($userEntity)}</a>
+				- {_'Last message by'}
+				<b>{$communication->getLastMessage()->sender->getName()}</b>:
+				"{$communication->getLastMessage()->text}"
+			</li>
+		</ul>
+	</div>
+</div>
