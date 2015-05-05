@@ -13,9 +13,6 @@ use App\Model\Facade\CvFacade;
 use App\TaggedString;
 use Exception;
 
-/**
- * 
- */
 class CvEditorPresenter extends BasePresenter
 {
 
@@ -43,11 +40,6 @@ class CvEditorPresenter extends BasePresenter
 	private $cv;
 
 	// </editor-fold>
-
-	protected function startup()
-	{
-		parent::startup();
-	}
 
 	protected function beforeRender()
 	{
@@ -128,7 +120,7 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentBasicInfoForm()
 	{
 		$control = $this->iBasicInfoControlFactory->create();
-//		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(TRUE, TRUE);
 		$control->setCv($this->cv);
 		$control->onAfterSave = function (Cv $saved) {
 			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);

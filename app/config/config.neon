@@ -57,4 +57,3 @@ extensions:
 	installer: App\Extensions\Installer\DI\InstallerExtension
 	settings: App\Extensions\Settings\DI\SettingsExtension
 	foto: App\Extensions\Foto\DI\FotoExtension
-	cvToPdf: App\Extensions\CvToPdf\DI\CvToPdfExtension

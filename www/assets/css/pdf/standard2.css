@@ -1,0 +1,29 @@
+/**
+ * STANDARD2
+ */
+table.main tr th.headline,
+table.main tr th.headlineBig, 
+table.header td.middle {
+    color: black;
+}
+
+table.header td.left {
+    background-image: none;
+}
+table.header td.right1,
+table.header td.right3, 
+table.main tr.separator td table.block tr td {
+    background-color: white;
+}
+table.main tr.separator td {
+    border-color: black;
+}
+
+table.footer td.left1,
+table.footer td.left3,
+table.footer td.right {
+    background-color: white;
+}
+
+
+

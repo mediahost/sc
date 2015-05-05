@@ -19,9 +19,6 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property-read ArrayCollection $skillKnows
  * @property-write SkillKnow $skillKnow
  * @property Candidate $candidate
- * @property-read string $pdfFolder
- * @property-read string $pdfFilename
- * @property-read string $pdf
  */
 class Cv extends BaseEntity
 {
@@ -44,6 +41,12 @@ class Cv extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="Candidate", inversedBy="cvs") */
 	protected $candidate;
 
+	/** @ORM\Column(type="boolean", nullable=false) */
+	protected $isPublic = FALSE;
+
+	/** @ORM\Column(type="string", length=20, nullable=true) */
+	protected $theme;
+
 	public function __construct($name = NULL)
 	{
 		if ($name) {
@@ -53,19 +56,10 @@ class Cv extends BaseEntity
 		parent::__construct();
 	}
 
-	public function getPdfFolder()
+	public function setIsPublic($value = TRUE)
 	{
-		return 'candidate/' . $this->candidate->id . '/cv';
-	}
-
-	public function getPdfFilename()
-	{
-		return $this->id . '.pdf';
-	}
-
-	public function getPdf()
-	{
-		return $this->pdfFolder . '/' . $this->pdfFilename;
+		// TODO: set URL for public access
+		return $this->isPublic = (bool) $value;
 	}
 
 	public function __toString()

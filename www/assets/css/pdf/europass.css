@@ -1,0 +1,18 @@
+/**
+ * EUROPASS
+ */
+table.header td.left {
+    background-image: url("title_europass.png");
+    background-image-resolution: 700dpi;
+}
+
+table.header td.right1, 
+table.header td.right3 {
+    background-color: white;
+}
+
+table.footer td.left1,
+table.footer td.left3,
+table.footer td.right {
+    background-color: white;
+}

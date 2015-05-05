@@ -2,17 +2,16 @@
 
 namespace App\Listeners\Model\Entity;
 
-use App\Extensions\CvToPdf;
 use App\Model\Entity\Cv;
 use Doctrine\ORM\Events;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
 
+/**
+ * Inicializovaný listener, bez využití
+ */
 class CvListener extends Object implements Subscriber
 {
-
-	/** @var CvToPdf @inject */
-	public $cvTopdf;
 
 	public function getSubscribedEvents()
 	{
@@ -44,7 +43,7 @@ class CvListener extends Object implements Subscriber
 
 	private function savePdf(Cv $cv)
 	{
-		$this->cvTopdf->save($cv);
+		
 	}
 
 	private function removePdf(Cv $cv)
