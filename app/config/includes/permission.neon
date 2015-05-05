@@ -24,6 +24,7 @@ services:
 			- addResource('job')
 			- addResource('jobs')
 			- addResource('cvs')
+			- addResource('messages')
 
 			- addResource('users')
 			- addResource('skills')
@@ -42,6 +43,7 @@ services:
 			- allow('candidate', 'candidate', 'default')
 			- allow('candidate', 'cvEditor', ['default', 'skills', 'jobs'])
 			- allow('company', ['company', 'job'])
+			- allow(['candidate', 'company'], 'messages')
 
 			- allow('admin', 'users')
 			- allow('admin', 'skills')

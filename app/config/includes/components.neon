@@ -1,4 +1,4 @@
-# Components 
+# Components
 # !!!must have "crete:" for components with events!!!
 
 services:
@@ -57,7 +57,7 @@ services:
 		create: App\Components\AfterRegistration\CompleteAccountControl
 		implement: App\Components\AfterRegistration\ICompleteAccountControlFactory
 		inject: yes
-	
+
 	# User
 	IPreferencesControlFactory:
 		implement: App\Components\User\IPreferencesControlFactory
@@ -144,4 +144,9 @@ services:
 
 	ISkillCategoriesGridFactory:
 		implement: App\Components\Grids\Skill\ISkillCategoriesGridFactory
+		inject: yes
+
+	# Communication
+	ICommunicationFactorz:
+		implement: App\Components\ICommunicationFactory
 		inject: yes

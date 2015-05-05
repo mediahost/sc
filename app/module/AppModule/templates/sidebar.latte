@@ -9,7 +9,7 @@
 					$designSettings->sidebarMenuHover ? page-sidebar-menu-hover-submenu,
 					$designSettings->sidebarMenuLight ? page-sidebar-menu-light,
 					$designSettings->sidebarFixed ? page-sidebar-menu-fixed : page-sidebar-menu-default"
-			data-auto-scroll="true" 
+			data-auto-scroll="true"
 			data-slide-speed="200">
 			<li class="sidebar-toggler-wrapper">
 				<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
@@ -37,12 +37,22 @@
 			<li n:if="$user->isAllowed('dashboard', 'default')"
 				n:class="start, $presenter->isLinkCurrent('Dashboard:*') ? active">
 				<a n:href="Dashboard:">
-					<i class="fa fa-dashboard"></i> 
+					<i class="fa fa-dashboard"></i>
 					<span class="title">{_'Dashboard'}</span><span class="selected"></span>
 					<span class="badge badge-info badge-roundless">{_'demo'}</span>
 				</a>
 			</li>
 			<!-- END DASHBOARD -->
+
+			{if $user->isAllowed('messages')}
+				<li n:if="$user->isAllowed('messages')"
+				    n:class="$presenter->isLinkCurrent('Messages:*') ? active">
+					<a n:href="Messages:">
+						<i class="fa fa-envelope-o"></i>
+						<span class="title">{_'Messages'}</span><span class="selected"></span>
+					</a>
+				</li>
+			{/if}
 
 			<!-- BEGIN CANDIDATE -->
 			{if $user->isInRole('candidate')}
@@ -65,27 +75,27 @@
 					</a>
 					<ul class="sub-menu" n:if="count($user->identity->candidate->cvs)">
 						<li n:foreach="$user->identity->candidate->cvs as $cv"
-							n:class="($presenter->isLinkCurrent('CvEditor:', $cv->id) 
+							n:class="($presenter->isLinkCurrent('CvEditor:', $cv->id)
 								|| $presenter->isLinkCurrent('CvEditor:skills', $cv->id)) ? active">
 							<a n:href="CvEditor:, $cv->id">
 								<i n:class="fa, $cv->isDefault ? fa-star : fa-star-o"></i>
 							{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
-						</a>
-					</li>
-				</ul>
-			</li>
-		{/if}
-		<!-- END CANDIDATE -->
+							</a>
+						</li>
+					</ul>
+				</li>
+			{/if}
+			<!-- END CANDIDATE -->
 
 		<!-- BEGIN COMPANY -->
 		{if $user->isInRole('company') && count($user->identity->allowedCompanies)}
 			<li class="heading">
 				<h3 class="uppercase">{_'Company'}</h3>
-			</li>		
+			</li>
 			<li n:foreach="$user->identity->allowedCompanies as $allowedPermission"
 				n:if="$user->isAllowed('company', 'default')"
-				n:class="$presenter->isLinkCurrent('Company:default', $allowedPermission->company->id) || 
-						 $presenter->isLinkCurrent('Company:users', $allowedPermission->company->id) || 
+				n:class="$presenter->isLinkCurrent('Company:default', $allowedPermission->company->id) ||
+						 $presenter->isLinkCurrent('Company:users', $allowedPermission->company->id) ||
 						 $presenter->isLinkCurrent('Company:jobs', $allowedPermission->company->id) ? active">
 				<a n:href="Company:default, $allowedPermission->company->id">
 					<i class="fa fa-building-o"></i>
@@ -187,7 +197,7 @@
 			<li n:if="$user->isAllowed('examples', 'default')"
 				n:class="start, $presenter->isLinkCurrent('Examples:*') ? active">
 				<a n:href="Examples:">
-					<i class="fa fa-life-ring"></i> 
+					<i class="fa fa-life-ring"></i>
 					<span class="title">{_'Examples'}</span><span class="selected"></span>
 				</a>
 				<ul class="sub-menu">
