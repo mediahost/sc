@@ -58,8 +58,16 @@ class MessagesPresenter extends BasePresenter
 
 	public function createComponentStarCommunicationForm()
 	{
+		$users = $this->userFacade->getUsers();
+		foreach ($users as $id => $user) {
+			if ($id == $this->user->id) {
+			    unset($users[$id]);
+				break;
+			}
+		}
+
 	    $form = new Form();
-		$form->addSelect('user', 'User', $this->userFacade->getUsers());
+		$form->addSelect('user', 'User', $users);
 		$form->addTextArea('message', 'Message');
 		$form->addSubmit('send', 'Send');
 		$form->onSuccess[] = $this->processForm;

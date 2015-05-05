@@ -60,7 +60,8 @@ class Message extends BaseEntity
 	}
 
 	/**
-	 * TODO: implement
+	 * @param Sender $sender
+	 * @return bool
 	 */
 	public function isReadsBy(Sender $sender)
 	{
