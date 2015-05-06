@@ -1,4 +1,4 @@
-{includeblock 'navigation.latte'}
+{includeblock 'blocks.latte'}
 
 {block content}
 
@@ -24,40 +24,7 @@
 			</div>
 		</div>
 		<div class="col-md-4">
-			<div class="portlet">
-				<div class="portlet-title">
-					<div class="caption font-green-sharp">
-						<i class="icon-eye font-green-sharp"></i>
-						<span class="caption-subject"> {_'Live Preview'}</span>
-					</div>
-					<div class="actions">
-						<a class="btn btn-circle btn-icon-only btn-default" 
-						   n:href="CvViewer: $cv->id" target="_blank"
-						   title="{_'Download'}">
-							<i class="icon-cloud-download"></i>
-						</a>
-						<a class="btn btn-circle btn-icon-only btn-default" 
-						   n:href="CvViewer: $cv->id, 'print' => TRUE" target="_blank"
-						   title="{_'Print'}">
-							<i class="icon-printer"></i>
-						</a>
-						<a class="btn btn-circle btn-icon-only btn-default" 
-						   n:href="this#" title="{_'Share'}">
-							<i class="icon-share"></i>
-						</a>
-						<a class="btn btn-circle btn-icon-only btn-default" 
-						   n:href="this#" title="{_'Send by e-mail'}">
-							<i class="icon-paper-plane"></i>
-						</a>
-						<a class="btn btn-circle btn-icon-only btn-default fullscreen" 
-						   href="#" title="{_'Fullscreen'}">
-						</a>
-					</div>
-				</div>
-				<div class="portlet-body" style="height: auto;">
-					{control cvPreview}
-				</div>
-			</div>
+			{include preview, cv => $cv}
 		</div>
 	</div>
 </div>

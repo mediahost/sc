@@ -1,10 +1,24 @@
+/* form select */
 .content-form-page select.form-control {
 	border-color: #DBDBDB;
 	color: #AAA;
 	font: 14px Arial, sans-serif;
 }
 
+/* portlet icony */
 .portlet > .portlet-title > .actions .btn-icon-only {
   height: 28px;
   width: 28px;
+}
+
+/* tags input border */
+div.tagsinput {
+	border: 1px solid #E5E5E5;
+}
+div.tagsinput.active {
+	border-color: #999;
+}
+
+.page-spinner-bar > div, .block-spinner-bar > div {
+  background: #29D;
 }

@@ -1,0 +1,82 @@
+{block title}
+{if $cv->candidate->user->id === $user->id}
+	{_'My Cv'}
+{else}
+	{_"%s's CV", 1, $cv->candidate}
+{/if}
+{/block}
+
+{block breadcrumbItems}
+{if $cv->candidate->user->id === $user->id}
+	<li>
+		<a n:href="Candidate:">{_'Candidate'}</a>
+	</li>
+	<li class="active">
+		{if $cv->name}{_'CV'} {$cv}{else}<i>{_'unnamed CV'}</i>{/if}
+	</li>
+{else}
+	<li>
+		<a n:href="Users:">{_'Users'}</a>
+	</li>
+	<li>
+		<a n:href="Users:edit, $cv->candidate->user->id">{$cv->candidate->user}</a>
+	</li>
+	<li>
+		<a n:href="Cvs:">{_'CVs'}</a>
+	</li>
+	<li>
+		<a n:href="Users:view, $cv->candidate->user->id">{$cv->candidate}</a>
+	</li>
+{/if}
+{/block}
+
+{define navigation}
+<ul class="faq-tabbable">
+	<li {ifCurrent default}class="active"{/ifCurrent}>
+		<a n:href="default">{_'Main'}</a>
+	</li>
+	<li {ifCurrent skills}class="active"{/ifCurrent}>
+		<a n:href="skills">{_'IT Skills'}</a>
+	</li>
+	<li {ifCurrent jobs}class="active"{/ifCurrent}>
+		<a n:href="jobs">{_'Matched jobs'}</a>
+	</li>
+</ul>
+{/define}
+
+{define preview}
+<div class="portlet">
+	<div class="portlet-title">
+		<div class="caption font-green-sharp">
+			<i class="icon-eye font-green-sharp"></i>
+			<span class="caption-subject"> {_'Live Preview'}</span>
+		</div>
+		<div class="actions">
+			<a class="btn btn-circle btn-icon-only btn-default" 
+			   n:href="CvViewer: $cv->id" target="_blank"
+			   title="{_'Download'}">
+				<i class="icon-cloud-download"></i>
+			</a>
+			<a class="btn btn-circle btn-icon-only btn-default" 
+			   n:href="CvViewer: $cv->id, 'print' => TRUE" target="_blank"
+			   title="{_'Print'}">
+				<i class="icon-printer"></i>
+			</a>
+			<a class="btn btn-circle btn-icon-only btn-default" 
+			   n:href="this#" title="{_'Share'}">
+				<i class="icon-share"></i>
+			</a>
+			<a class="btn btn-circle btn-icon-only btn-default" 
+			   n:href="this#" title="{_'Send by e-mail'}">
+				<i class="icon-paper-plane"></i>
+			</a>
+			<a class="btn btn-circle btn-icon-only btn-default fullscreen" 
+			   href="#" title="{_'Fullscreen'}">
+			</a>
+		</div>
+	</div>
+	<div class="portlet-body" style="height: auto;">
+		{control cvPreview}
+	</div>
+</div>
+{/define}

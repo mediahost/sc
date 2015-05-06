@@ -37,7 +37,7 @@ class BasicInfoControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer);
 
 		$form->addText('name', 'Name');
-		$form->addSelect2('theme', 'Theme', [
+		$form->addSelect('theme', 'Theme', [
 			'default' => 'Default',
 			'europass' => 'Euro Pass',
 			'standard1' => 'Standard 1',
@@ -59,8 +59,9 @@ class BasicInfoControl extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		// TODO: no AJAX in form
-		$this->redrawControl();
+		if ($this->presenter->isAjax()) {
+			$this->redrawControl();
+		}
 		$this->onAfterSave($this->cv);
 	}
 
