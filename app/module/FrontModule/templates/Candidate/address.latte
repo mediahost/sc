@@ -17,12 +17,6 @@
 				<table class="table table-bordered table-striped">
 					<tbody>
 						<tr>
-							<td>{_'Nationality'}</td>
-							<td>
-								{$candidate->nationalityName}
-							</td>
-						</tr>
-						<tr>
 							<td>{_'House no.'}</td>
 							<td>
 								{$candidate->address->house}
@@ -49,7 +43,13 @@
 						<tr>
 							<td>{_'Country'}</td>
 							<td>
-								{$candidate->address->country}
+								{$candidate->address->countryName}
+							</td>
+						</tr>
+						<tr>
+							<td>{_'Nationality'}</td>
+							<td>
+								{$candidate->nationalityName}
 							</td>
 						</tr>
 						<tr>

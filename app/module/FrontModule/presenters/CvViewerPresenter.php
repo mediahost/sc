@@ -70,8 +70,10 @@ class CvViewerPresenter extends BasePresenter
 		
 		$templateParams = [
 			'cv' => $this->cv,
+			'candidate' => $this->cv->candidate,
 			'theme' => $theme,
 			'basePath' => $this->httpRequest->url->basePath,
+			'lang' => $this->lang,
 		];
 
 		$latte = new Engine;

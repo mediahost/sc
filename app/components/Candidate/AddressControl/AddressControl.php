@@ -35,7 +35,8 @@ class AddressControl extends BaseControl
 		$form->addText('street', 'Street address');
 		$form->addText('zipcode', 'Postal code');
 		$form->addText('city', 'City');
-		$form->addText('country', 'Country');
+		$form->addSelect2('country', 'Country', Address::getCountriesList())
+				->setPrompt('Not disclosed');
 		$form->addSelect2('nationality', 'Nationality', Candidate::getNationalityList())
 				->setPrompt('Not disclosed');
 		$form->addText('phone', 'Contact number');
@@ -89,7 +90,7 @@ class AddressControl extends BaseControl
 				'street' => $this->candidate->address->street,
 				'zipcode' => $this->candidate->address->zipcode,
 				'city' => $this->candidate->address->city,
-				'country' => $this->candidate->address->country,
+				'country' => ($this->candidate->address->countryName) ? $this->candidate->address->country : NULL,
 			];
 		}
 		return $values;
