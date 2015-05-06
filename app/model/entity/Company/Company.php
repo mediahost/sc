@@ -17,7 +17,7 @@ use Nette\Utils\Strings;
  * @property string $name
  * @property string $companyId
  * @property string $address
- * @property string $logo
+ * @property Image $logo
  */
 class Company extends BaseEntity
 {
@@ -73,6 +73,7 @@ class Company extends BaseEntity
 			$this->logo->setFile($file);
 		}
 		$this->logo->requestedFilename = 'company_logo_' . Strings::webalize(microtime());
+		$this->logo->setFolder(Image::FOLDER_COMPANY_LOGO);
 		return $this;
 	}
 

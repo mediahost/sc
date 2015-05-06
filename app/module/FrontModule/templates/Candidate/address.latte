@@ -1,0 +1,66 @@
+{includeblock 'blocks.latte'}
+
+{block content}
+<div class="col-md-3">
+	{include navigation}
+</div>
+
+<div class="col-md-9">
+	<h1>{_'Address'}</h1>
+	
+	<div class="content-form-page">
+		<div class="row">
+			<div class="col-md-7">
+				{control addressForm}
+			</div>
+			<div class="col-md-5" n:if="$candidate->address">
+				<table class="table table-bordered table-striped">
+					<tbody>
+						<tr>
+							<td>{_'Nationality'}</td>
+							<td>
+								{$candidate->nationalityName}
+							</td>
+						</tr>
+						<tr>
+							<td>{_'House no.'}</td>
+							<td>
+								{$candidate->address->house}
+							</td>
+						</tr>
+						<tr>
+							<td>{_'Street address'}</td>
+							<td>
+								{$candidate->address->street}
+							</td>
+						</tr>
+						<tr>
+							<td>{_'Postal code'}</td>
+							<td>
+								{$candidate->address->zipcode}
+							</td>
+						</tr>
+						<tr>
+							<td>{_'City'}</td>
+							<td>
+								{$candidate->address->city}
+							</td>
+						</tr>
+						<tr>
+							<td>{_'Country'}</td>
+							<td>
+								{$candidate->address->country}
+							</td>
+						</tr>
+						<tr>
+							<td>{_'Contact number'}</td>
+							<td>
+								{$candidate->phone}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

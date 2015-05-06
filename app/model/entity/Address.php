@@ -20,19 +20,22 @@ class Address extends BaseEntity
 
 	use Identifier;
 
-	/** @ORM\Column(type="string", length=512, nullable=false) */
+	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $name;
 
-	/** @ORM\Column(type="string", length=512, nullable=false) */
+	/** @ORM\Column(type="string", length=512, nullable=true) */
+	protected $house;
+
+	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $street;
 
-	/** @ORM\Column(type="string", length=512, nullable=false) */
+	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $city;
 
-	/** @ORM\Column(type="string", length=512, nullable=false) */
+	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $zipcode;
 
-	/** @ORM\Column(type="string", length=512, nullable=false) */
+	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $country;
 
 	// TODO: do this method

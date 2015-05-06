@@ -1,0 +1,41 @@
+{block title}
+{_'Candidate'}
+{/block}
+
+{block breadcrumbItems}
+{if $candidate->user->id === $user->id}
+	<li>
+		<a n:href="Candidate:">{_'Candidate'}</a>
+	</li>
+{else}
+	<li>
+		<a n:href="Users:">{_'Users'}</a>
+	</li>
+	<li>
+		<a n:href="Users:edit, $cv->candidate->user->id">{$cv->candidate->user}</a>
+	</li>
+	<li>
+		<a n:href="Candidates:">{_'Candidates'}</a>
+	</li>
+	<li>
+		<a n:href="Users:view, $cv->candidate->user->id">{$cv->candidate}</a>
+	</li>
+{/if}
+	<li class="active">
+		{_'Personal Info'}
+	</li>
+{/block}
+
+{define navigation}
+<ul class="faq-tabbable">
+	<li {ifCurrent default}class="active"{/ifCurrent}>
+		<a n:href="default">{_'Personal Details'}</a>
+	</li>
+	<li {ifCurrent address}class="active"{/ifCurrent}>
+		<a n:href="address">{_'Address'}</a>
+	</li>
+	<li {ifCurrent photo}class="active"{/ifCurrent}>
+		<a n:href="photo">{_'Photo'}</a>
+	</li>
+</ul>
+{/define}

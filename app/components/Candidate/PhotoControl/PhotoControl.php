@@ -6,10 +6,9 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
-use Exception;
 use Nette\Utils\ArrayHash;
 
-class ProfileControl extends BaseControl
+class PhotoControl extends BaseControl
 {
 
 	/** @var Candidate */
@@ -31,19 +30,11 @@ class ProfileControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('degreebefore', 'Degree in front of name', NULL, 50);
-//				->getControlPrototype()->class[] = 'input-small';
-
-		$form->addText('name', 'Name', NULL, 100)
-				->setAttribute('placeholder', 'name and surename')
-				->setRequired('Please enter your name.');
-
-		$form->addText('degreeafter', 'Degree after name', NULL, 50);
-//				->getControlPrototype()->class[] = 'input-small';
-
-		$form->addDateInput('birthday', 'Birthday');
-
-		$form->addRadioList('gender', 'Gender', Candidate::getGenderList());
+		$form->addUploadImageWithPreview('photo', 'Photo')
+				->setPreview('/foto/200-200/' . $this->candidate->photo, $this->candidate->name)
+				->setSize(200, 200)
+				->addCondition(Form::FILLED)
+				->addRule(Form::IMAGE, 'Photo must be valid image');
 
 		$form->addSubmit('save', 'Save');
 
@@ -61,11 +52,9 @@ class ProfileControl extends BaseControl
 
 	protected function load(ArrayHash $values)
 	{
-		$this->candidate->name = $values->name;
-		$this->candidate->birthday = $values->birthday;
-		$this->candidate->gender = $values->gender;
-		$this->candidate->degreeBefore = $values->degreebefore;
-		$this->candidate->degreeAfter = $values->degreeafter;
+		if ($values->photo->isImage()) {
+			$this->candidate->photo = $values->photo;
+		}
 		return $this;
 	}
 
@@ -80,11 +69,7 @@ class ProfileControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'name' => $this->candidate->name,
-			'birthday' => $this->candidate->birthday,
-			'gender' => $this->candidate->gender,
-			'degreebefore' => $this->candidate->degreeBefore,
-			'degreeafter' => $this->candidate->degreeAfter,
+			'photo' => $this->candidate->photo,
 		];
 		return $values;
 	}
@@ -107,9 +92,9 @@ class ProfileControl extends BaseControl
 	// </editor-fold>
 }
 
-interface IProfileControlFactory
+interface IPhotoControlFactory
 {
 
-	/** @return ProfileControl */
+	/** @return PhotoControl */
 	function create();
 }

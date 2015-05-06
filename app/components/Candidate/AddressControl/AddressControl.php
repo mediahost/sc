@@ -5,11 +5,11 @@ namespace App\Components\Candidate;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Entity\Address;
 use App\Model\Entity\Candidate;
-use Exception;
 use Nette\Utils\ArrayHash;
 
-class ProfileControl extends BaseControl
+class AddressControl extends BaseControl
 {
 
 	/** @var Candidate */
@@ -31,19 +31,14 @@ class ProfileControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('degreebefore', 'Degree in front of name', NULL, 50);
-//				->getControlPrototype()->class[] = 'input-small';
-
-		$form->addText('name', 'Name', NULL, 100)
-				->setAttribute('placeholder', 'name and surename')
-				->setRequired('Please enter your name.');
-
-		$form->addText('degreeafter', 'Degree after name', NULL, 50);
-//				->getControlPrototype()->class[] = 'input-small';
-
-		$form->addDateInput('birthday', 'Birthday');
-
-		$form->addRadioList('gender', 'Gender', Candidate::getGenderList());
+		$form->addText('house', 'House No.');
+		$form->addText('street', 'Street address');
+		$form->addText('zipcode', 'Postal code');
+		$form->addText('city', 'City');
+		$form->addText('country', 'Country');
+		$form->addSelect2('nationality', 'Nationality', Candidate::getNationalityList())
+				->setPrompt('Not disclosed');
+		$form->addText('phone', 'Contact number');
 
 		$form->addSubmit('save', 'Save');
 
@@ -61,11 +56,16 @@ class ProfileControl extends BaseControl
 
 	protected function load(ArrayHash $values)
 	{
-		$this->candidate->name = $values->name;
-		$this->candidate->birthday = $values->birthday;
-		$this->candidate->gender = $values->gender;
-		$this->candidate->degreeBefore = $values->degreebefore;
-		$this->candidate->degreeAfter = $values->degreeafter;
+		if (!$this->candidate->address) {
+			$this->candidate->address = new Address();
+		}
+		$this->candidate->address->house = $values->house;
+		$this->candidate->address->street = $values->street;
+		$this->candidate->address->zipcode = $values->zipcode;
+		$this->candidate->address->city = $values->city;
+		$this->candidate->address->country = $values->country;
+		$this->candidate->phone = $values->phone;
+		$this->candidate->nationality = $values->nationality;
 		return $this;
 	}
 
@@ -80,12 +80,18 @@ class ProfileControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'name' => $this->candidate->name,
-			'birthday' => $this->candidate->birthday,
-			'gender' => $this->candidate->gender,
-			'degreebefore' => $this->candidate->degreeBefore,
-			'degreeafter' => $this->candidate->degreeAfter,
+			'phone' => $this->candidate->phone,
+			'nationality' => $this->candidate->nationality,
 		];
+		if ($this->candidate->address) {
+			$values += [
+				'house' => $this->candidate->address->house,
+				'street' => $this->candidate->address->street,
+				'zipcode' => $this->candidate->address->zipcode,
+				'city' => $this->candidate->address->city,
+				'country' => $this->candidate->address->country,
+			];
+		}
 		return $values;
 	}
 
@@ -107,9 +113,9 @@ class ProfileControl extends BaseControl
 	// </editor-fold>
 }
 
-interface IProfileControlFactory
+interface IAddressControlFactory
 {
 
-	/** @return ProfileControl */
+	/** @return AddressControl */
 	function create();
 }

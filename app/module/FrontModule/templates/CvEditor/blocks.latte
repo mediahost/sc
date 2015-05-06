@@ -11,9 +11,6 @@
 	<li>
 		<a n:href="Candidate:">{_'Candidate'}</a>
 	</li>
-	<li class="active">
-		{if $cv->name}{_'CV'} {$cv}{else}<i>{_'unnamed CV'}</i>{/if}
-	</li>
 {else}
 	<li>
 		<a n:href="Users:">{_'Users'}</a>
@@ -28,6 +25,9 @@
 		<a n:href="Users:view, $cv->candidate->user->id">{$cv->candidate}</a>
 	</li>
 {/if}
+	<li class="active">
+		{if $cv->name}{_'CV'} {$cv}{else}<i>{_'unnamed CV'}</i>{/if}
+	</li>
 {/block}
 
 {define navigation}
