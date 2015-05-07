@@ -87,9 +87,10 @@ class CvEditorPresenter extends BasePresenter
 	 * @resource('cvEditor')
 	 * @privilege('default')
 	 */
-	public function actionDefault($id = NULL)
+	public function actionDefault($id = NULL, $showTips = FALSE)
 	{
 		$this->getCv($id);
+		$this->template->showWalkThrough = $showTips;
 	}
 
 	/**
