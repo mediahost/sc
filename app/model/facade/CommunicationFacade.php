@@ -169,7 +169,9 @@ class CommunicationFacade extends Object
 			->from(Communication::getClassName(), 'c')
 			->join('c.contributors', 's')
 			->where('s.user = ?0')
-			->setParameter(0, $user);
+			->orWhere('s.company IN (?1)')
+			->setParameter(0, $user)
+			->setParameter(1, $user->getCompanies());
 		$query = $queryBuilder->getQuery();
 		return $query->getResult();
 	}
