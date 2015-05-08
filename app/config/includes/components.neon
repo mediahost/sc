@@ -103,12 +103,48 @@ services:
 		inject: yes
 
 	# Cv
+	ICvAdditionalControlFactory:
+		implement: App\Components\Cv\IAdditionalControlFactory
+		inject: yes
+
+	ICvEducationsControlFactory:
+		implement: App\Components\Cv\IEducationsControlFactory
+		inject: yes
+
+	ICvEmploymentControlFactory:
+		implement: App\Components\Cv\IEmploymentControlFactory
+		inject: yes
+
+	ICvExperienceControlFactory:
+		implement: App\Components\Cv\IExperienceControlFactory
+		inject: yes
+
+	ICvLanguageControlFactory:
+		implement: App\Components\Cv\ILanguageControlFactory
+		inject: yes
+
+	ICvObjectiveControlFactory:
+		implement: App\Components\Cv\IObjectiveControlFactory
+		inject: yes
+
+	ICvPersonalControlFactory:
+		implement: App\Components\Cv\IPersonalControlFactory
+		inject: yes
+
 	ICvBasicInfoControlFactory:
 		implement: App\Components\Cv\IBasicInfoControlFactory
 		inject: yes
 
 	ICvSkillsControlFactory:
 		implement: App\Components\Cv\ISkillsControlFactory
+		inject: yes
+
+	ICvSummaryControlFactory:
+		implement: App\Components\Cv\ISummaryControlFactory
+		inject: yes
+
+	ICvWorksControlFactory:
+		implement: App\Components\Cv\IWorksControlFactory
 		inject: yes
 
 	ILivePreviewControlFactory:

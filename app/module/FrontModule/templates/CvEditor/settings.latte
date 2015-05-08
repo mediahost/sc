@@ -3,7 +3,10 @@
 {block content}
 
 <div class="col-md-12 col-sm-12">
-	<h1>{_'CV'}: {if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}</h1>
+	<h1>
+		{_'CV'}: {if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
+		<small><a n:href="default showTips => TRUE">{_'show tips'}</a></small>
+	</h1>
 	<div class="row">
 		<div class="col-md-2 left-column">
 			{include navigation, cv => $cv}
@@ -14,12 +17,12 @@
 					<div class="caption">
 						<i class="icon-notebook font-green-sharp"></i>
 						<span class="caption-subject font-green-sharp">
-							{_'Edit'}
+							{_'Settings'}
 						</span>
 					</div>
 				</div>
 				<div class="portlet-body content-form-page">
-					{control basicInfoForm}
+					{control settingsForm}
 				</div>
 			</div>
 		</div>

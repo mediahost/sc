@@ -30,6 +30,9 @@ class Cv extends BaseEntity
 	protected $name;
 
 	/** @ORM\Column(type="integer", nullable=true) */
+	protected $lastStep;
+
+	/** @ORM\Column(type="integer", nullable=true) */
 	protected $lastOpenedPreviewPage;
 
 	/** @ORM\Column(type="float", nullable=true) */

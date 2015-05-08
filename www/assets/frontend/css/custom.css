@@ -22,3 +22,7 @@ div.tagsinput.active {
 .page-spinner-bar > div, .block-spinner-bar > div {
   background: #29D;
 }
+
+.content-form-page .control-label {
+	margin-left: 0px;
+}

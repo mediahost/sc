@@ -8,10 +8,7 @@ use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
-/**
- * Cv data edit
- */
-class BasicInfoControl extends BaseControl
+class ExperienceControl extends BaseControl
 {
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -31,24 +28,14 @@ class BasicInfoControl extends BaseControl
 	{
 		$this->checkEntityExistsBeforeRender();
 
-		$form = new Form;
+		$form = new Form();
 
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer);
+		$form->setRenderer(new MetronicFormRenderer());
 
 		$form->addText('name', 'Name');
-		$form->addSelect('theme', 'Theme', [
-			'default' => 'Default',
-			'europass' => 'Euro Pass',
-			'standard1' => 'Standard 1',
-			'standard2' => 'Standard 2',
-		]);
 
-		if ($this->isAjax && $this->isSendOnChange) {
-			$form->getElementPrototype()->class('ajax sendOnChange');
-		} else {
-			$form->addSubmit('save', 'Save');
-		}
+		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
@@ -65,7 +52,6 @@ class BasicInfoControl extends BaseControl
 	private function load(ArrayHash $values)
 	{
 		$this->cv->name = $values->name;
-		$this->cv->theme = $values->theme;
 		return $this;
 	}
 
@@ -81,7 +67,6 @@ class BasicInfoControl extends BaseControl
 	{
 		$values = [
 			'name' => $this->cv->name,
-			'theme' => $this->cv->theme,
 		];
 		return $values;
 	}
@@ -104,9 +89,9 @@ class BasicInfoControl extends BaseControl
 	// </editor-fold>
 }
 
-interface IBasicInfoControlFactory
+interface IExperienceControlFactory
 {
 
-	/** @return BasicInfoControl */
+	/** @return ExperienceControl */
 	function create();
 }

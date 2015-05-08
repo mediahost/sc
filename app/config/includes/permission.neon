@@ -41,8 +41,8 @@ services:
 			- allow('signed', 'profile', ['default', 'settings', 'delete'])
 
 			- allow('candidate', 'candidate', ['default', 'address', 'photo'])
-			- allow('candidate', 'cvViewer', 'default')
-			- allow('candidate', 'cvEditor', ['default', 'skills', 'jobs'])
+			- allow('candidate', 'cvViewer')
+			- allow('candidate', 'cvEditor')
 			- allow('company', ['company', 'job'])
 
 			- allow('admin', 'users')
