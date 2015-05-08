@@ -3,6 +3,8 @@
 namespace App\Model\Entity\Traits;
 
 use App\Model\Entity\Candidate;
+use App\Model\Entity\Company;
+use App\Model\Entity\CompanyPermission;
 use App\Model\Entity\Role;
 
 /**
@@ -96,6 +98,19 @@ trait UserRoles
 	public function getMaxRole()
 	{
 		return Role::getMaxRole($this->roles->toArray());
+	}
+
+	/**
+	 * @return Company[]
+	 */
+	public function getCompanies()
+	{
+		$companies = [];
+		/** @var CompanyPermission $companyPermission */
+		foreach ($this->allowedCompanies as $companyPermission) {
+			$companies[$companyPermission->company->id] = $companyPermission->company;
+		}
+		return $companies;
 	}
 
 }

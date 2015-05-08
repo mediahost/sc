@@ -3,11 +3,14 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\ICommunicationFactory;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Communication;
+use App\Model\Entity\Company;
 use App\Model\Entity\User;
 use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Repository\UserRepository;
+use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Form;
 
@@ -35,7 +38,7 @@ class MessagesPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$userRepository = $this->em->getDao(User::getClassName());
+		$userRepository = $this->em->getDao(User::getClassName()); // TODO: odstarnit volanie nad repository
 		$user = $userRepository->find($this->user->id);
 		$this->template->userEntity = $user;
 		$this->template->communications = $this->communicationFacade->getUserCommunications($user);
@@ -43,44 +46,91 @@ class MessagesPresenter extends BasePresenter
 
 	public function actionCommunication($id)
 	{
-		$userRepository = $this->em->getDao(User::getClassName());
-		$user = $userRepository->find($this->user->id);
-
 		$this->communication = $this->communicationFacade->get($id);
 		if (!$this->communication) {
 		    $this->error();
 		}
-		if (!$this->communication->isSender($user)) {
-			$this->error();
+
+		$userRepository = $this->em->getDao(User::getClassName()); // TODO: odstarnit volanie nad repository
+		/** @var User $user */
+		$user = $userRepository->find($this->user->id);
+
+		if (!$this->communication->isUserAllowed($user)) {
+		    $this->error();
 		}
+
 		$this->template->communiation = $this->communication;
 	}
 
 	public function createComponentStarCommunicationForm()
 	{
+		/** @var  EntityDao $companyRepository */
+		$companyRepository = $this->em->getDao(Company::getClassName()); // TODO: odstarnit volanie nad repository
+		$companies = $companyRepository->findPairs('name', 'id');
+
 		$users = $this->userFacade->getUsers();
-		foreach ($users as $id => $user) {
-			if ($id == $this->user->id) {
-			    unset($users[$id]);
-				break;
-			}
-		}
 
 	    $form = new Form();
-		$form->addSelect('user', 'User', $users);
+		if ($this->user->isInRole('company')) {
+			$userRepository = $this->em->getDao(User::getClassName()); // TODO: odstarnit volanie nad repository
+			/** @var User $user */
+			$user = $userRepository->find($this->user->id);
+			$selectItems = [
+				'User' => [
+					'user' => $this->user->identity->mail,
+				],
+				'Company' => [],
+			];
+			foreach ($user->getCompanies() as $company) {
+				$selectItems['Company'][$company->id] = $company->name;
+			}
+		    $form->addSelect('me', 'as', $selectItems);
+		}
+		$select = $form->addSelect('type', 'with', ['user' => 'User', 'company' => 'Company'])
+			->setDefaultValue('user');
+		$userSelect = $form->addSelect('user', 'User', $users);
+		$companySelect = $form->addSelect('company', 'Company', $companies);
 		$form->addTextArea('message', 'Message');
 		$form->addSubmit('send', 'Send');
+
+		$select->addCondition(Form::EQUAL, 'user')
+			->toggle($userSelect->getHtmlId().'-pair');
+		$select->addCondition(Form::EQUAL, 'company')
+			->toggle($companySelect->getHtmlId().'-pair');
+
 		$form->onSuccess[] = $this->processForm;
 		return $form;
 	}
 
 	public function processForm(Form $form, $values)
 	{
+
 		/** @var UserRepository $userRepository */
-		$userRepository = $this->em->getDao(User::getClassName());
+		$userRepository = $this->em->getDao(User::getClassName()); // TODO: odstarnit volanie nad repository
+		/** @var EntityDao $userRepository */
+		$companyRepository = $this->em->getDao(Company::getClassName()); // TODO: odstarnit volanie nad repository
+
+
+		/** @var User $sender */
 		$sender = $userRepository->find($this->user->id);
-		$receiver = $userRepository->find($values->user);
-		$communication = $this->communicationFacade->startCommunication($sender, $receiver, $values->message);
+		$senderCompany = NULL;
+		if ($this->user->isInRole('company') && $values->me != 'user') {
+			/** @var Company $senderCompany */
+		    $senderCompany = $companyRepository->find($values->me);
+		}
+
+		$receiver = NULL;
+		$receiverCompany = NULL;
+		if ($values->type == 'user') {
+			/** @var User $receiver */
+			$receiver = $userRepository->find($values->user);
+		} else {
+			$receiverCompany = $companyRepository->find($values->company);
+		}
+
+
+		$communication = $this->communicationFacade
+			->startCommunication($values->message, $sender, $receiver, $senderCompany, $receiverCompany);
 		$this->redirect('communication', $communication->id);
 	}
 

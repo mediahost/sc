@@ -68,7 +68,7 @@ class Communication extends BaseControl
 
 	public function processForm(Form $form, $values)
 	{
-		$this->communicationFacade->addMessage($this->communication, $this->getViewer(), $values->text);
+		$this->communicationFacade->addMessage($this->communication, $values->text, $this->getViewer());
 		$this->redirect('this');
 	}
 

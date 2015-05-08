@@ -11,14 +11,46 @@
 {block content}
 <div class="row">
 	<div class="col-md-6">
-		<h3>{_'Start communication with'}</h3>
-		{control starCommunicationForm}
+		<h3>{_'Start communication'}</h3>
+		{form starCommunicationForm class => form-horizontal}
+			{if $form->getComponent('me', FALSE)}
+			<div class="form-group">
+				<div class="col-sm-3 control-label">{label me/}</div>
+				<div class="col-sm-9">
+					{input me class => form-control}
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<div class="col-sm-3 control-label">{label type/}</div>
+				<div class="col-sm-9">
+					{input type class => form-control}
+				</div>
+			</div>
+			<div class="form-group" id="{$form['user']->getHtmlId()}-pair">
+				<div class="col-sm-3 control-label">{label user/}</div>
+				<div class="col-sm-9">{input user class => form-control}</div>
+			</div>
+			<div class="form-group" id="{$form['company']->getHtmlId()}-pair">
+				<div class="col-sm-3 control-label">{label company/}</div>
+				<div class="col-sm-9">{input company class => form-control}</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">{label message/}</div>
+				<div class="col-sm-9">{input message class => form-control}</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-9">
+					{input send class => 'btn btn-primary'}
+				</div>
+			</div>
+		{/form}
 	</div>
 	<div class="col-md-6">
 		<h3>{_'Communications'}</h3>
 		<ul>
 			<li n:foreach="$communications as $communication">
-				<a n:href="communication $communication->id">{$communication->getOppositeName($userEntity)}</a>
+				<a n:href="communication $communication->id">{$communication->subject ?: 'empty subject'}</a>
 				- {_'Last message by'}
 				<b>{$communication->getLastMessage()->sender->getName()}</b>:
 				"{$communication->getLastMessage()->text}"

@@ -58,7 +58,7 @@ class Communication extends BaseEntity
 	/**
 	 * @param Sender $sender
 	 */
-	public function addSender(Sender $sender)
+	public function addContributor(Sender $sender)
 	{
 		$this->contributors->add($sender);
 	}
@@ -75,7 +75,7 @@ class Communication extends BaseEntity
 	 * @param User $user
 	 * @return Sender|FALSE
 	 */
-	public function getSender(User $user)
+	public function getContributor(User $user)
 	{
 		/** @var Sender $sender */
 		foreach ($this->contributors as $sender) {
@@ -86,11 +86,66 @@ class Communication extends BaseEntity
 		return FALSE;
 	}
 
-	public function isSender(User $user)
+	/**
+	 * Is User or one of User Companies contributor?
+	 *
+	 * @param User $user
+	 * @return bool
+	 */
+	public function isUserAllowed(User $user)
+	{
+		if ($this->isUserContributor($user)) {
+		    return TRUE;
+		}
+		foreach ($user->getCompanies() as $company) {
+			if ($this->isCompanyContributor($company)) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	/**
+	 * TRUE only for Senders without Company
+	 *
+	 * @param User $user
+	 * @return bool
+	 */
+	public function isUserContributor(User $user)
 	{
 		/** @var Sender $sender */
 		foreach ($this->contributors as $sender) {
-			if ($sender->user->id == $user->id) {
+			if ($sender->user === $user && $sender->company === NULL) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	/**
+	 * @param Company $company
+	 * @return bool
+	 */
+	public function isCompanyContributor(Company $company)
+	{
+		/** @var Sender $sender */
+		foreach ($this->contributors as $sender) {
+			if ($sender->company === $company) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	/**
+	 * @param Sender $contributor
+	 * @return bool
+	 */
+	public function isContributor(Sender $contributor)
+	{
+		/** @var Sender $sender */
+		foreach ($this->contributors as $sender) {
+			if ($sender === $contributor) {
 				return TRUE;
 			}
 		}
@@ -130,6 +185,6 @@ class Communication extends BaseEntity
 	public function getLastMessage()
 	{
 		return $this->messages->first();
-}
+	}
 
 }
