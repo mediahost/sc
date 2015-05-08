@@ -6,6 +6,8 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Cv;
+use App\Model\Entity\Referee;
+use App\Model\Entity\Work;
 use Nette\Utils\ArrayHash;
 
 class ExperienceControl extends BaseControl
@@ -21,6 +23,9 @@ class ExperienceControl extends BaseControl
 	/** @var Cv */
 	private $cv;
 
+	/** @var Work */
+	private $experience;
+
 	// </editor-fold>
 
 	/** @return Form */
@@ -33,7 +38,21 @@ class ExperienceControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('name', 'Name');
+		$form->addText('company', 'Company name')
+				->setRequired('Must be filled');
+		$form->addText('position', 'Position held');
+		$form->addDatePicker('date_from', 'Date from');
+		$form->addDatePicker('date_to', 'Date to');
+		$form->addTextArea('activities', 'Main activities and responsibilities');
+		$form->addTextArea('achievments', 'Achievement');
+		
+		$form->addCheckSwitch('show_refree', 'Show Referee in CV')
+				->setOffText('No')
+				->setOnText('Yes');
+		$form->addText('referee_name', 'Referee name');
+		$form->addText('referee_position', 'Position');
+		$form->addText('referee_phone', 'Phone');
+		$form->addText('referee_mail', 'Email');
 
 		$form->addSubmit('save', 'Save');
 
@@ -51,7 +70,21 @@ class ExperienceControl extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		$this->cv->name = $values->name;
+		if (!$this->experience) {
+			$this->experience = new Work();
+		}
+		$this->experience->company = $values->company;
+		$this->experience->position = $values->position;
+		$this->experience->dateStart = $values->date_from;
+		$this->experience->dateEnd = $values->date_to;
+		$this->experience->refereeIsPublic = (bool) $values->show_refree;
+		$this->experience->referee = new Referee();
+		$this->experience->referee->name = $values->referee_name;
+		$this->experience->referee->position = $values->referee_position;
+		$this->experience->referee->phone = $values->referee_phone;
+		$this->experience->referee->mail = $values->referee_mail;
+		
+		$this->cv->addExperience($this->experience);
 		return $this;
 	}
 
@@ -65,9 +98,23 @@ class ExperienceControl extends BaseControl
 	/** @return array */
 	protected function getDefaults()
 	{
-		$values = [
-			'name' => $this->cv->name,
-		];
+		$values = [];
+		if ($this->experience) {
+			$values = [
+				'company' => $this->experience->company,
+				'position' => $this->experience->position,
+				'date_from' => $this->experience->dateStart,
+				'date_to' => $this->experience->dateEnd,
+				'activities' => $this->experience->activities,
+				'achievments' => $this->experience->achievment,
+				
+				'show_refree' => $this->experience->refereeIsPublic,
+				'referee_name' => $this->experience->referee->name,
+				'referee_position' => $this->experience->referee->position,
+				'referee_phone' => $this->experience->referee->phone,
+				'referee_mail' => $this->experience->referee->mail,
+			];
+		}
 		return $values;
 	}
 
@@ -83,6 +130,12 @@ class ExperienceControl extends BaseControl
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
+		return $this;
+	}
+
+	public function setExperience(Work $experience)
+	{
+		$this->experience = $experience;
 		return $this;
 	}
 

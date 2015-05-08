@@ -6,6 +6,8 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Cv;
+use App\Model\Entity\Referee;
+use App\Model\Entity\Work;
 use Nette\Utils\ArrayHash;
 
 class WorksControl extends BaseControl
@@ -21,6 +23,9 @@ class WorksControl extends BaseControl
 	/** @var Cv */
 	private $cv;
 
+	/** @var Work */
+	private $work;
+
 	// </editor-fold>
 
 	/** @return Form */
@@ -33,7 +38,21 @@ class WorksControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('name', 'Name');
+		$form->addText('company', 'Company name')
+				->setRequired('Must be filled');
+		$form->addText('position', 'Position held');
+		$form->addDatePicker('date_from', 'Date from');
+		$form->addDatePicker('date_to', 'Date to');
+		$form->addTextArea('activities', 'Main activities and responsibilities');
+		$form->addTextArea('achievments', 'Achievement');
+		
+		$form->addCheckSwitch('show_refree', 'Show Referee in CV')
+				->setOffText('No')
+				->setOnText('Yes');
+		$form->addText('referee_name', 'Referee name');
+		$form->addText('referee_position', 'Position');
+		$form->addText('referee_phone', 'Phone');
+		$form->addText('referee_mail', 'Email');
 
 		$form->addSubmit('save', 'Save');
 
@@ -51,7 +70,21 @@ class WorksControl extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		$this->cv->name = $values->name;
+		if (!$this->work) {
+			$this->work = new Work();
+		}
+		$this->work->company = $values->company;
+		$this->work->position = $values->position;
+		$this->work->dateStart = $values->date_from;
+		$this->work->dateEnd = $values->date_to;
+		$this->work->refereeIsPublic = (bool) $values->show_refree;
+		$this->work->referee = new Referee();
+		$this->work->referee->name = $values->referee_name;
+		$this->work->referee->position = $values->referee_position;
+		$this->work->referee->phone = $values->referee_phone;
+		$this->work->referee->mail = $values->referee_mail;
+		
+		$this->cv->addWork($this->work);
 		return $this;
 	}
 
@@ -65,9 +98,23 @@ class WorksControl extends BaseControl
 	/** @return array */
 	protected function getDefaults()
 	{
-		$values = [
-			'name' => $this->cv->name,
-		];
+		$values = [];
+		if ($this->work) {
+			$values = [
+				'company' => $this->work->company,
+				'position' => $this->work->position,
+				'date_from' => $this->work->dateStart,
+				'date_to' => $this->work->dateEnd,
+				'activities' => $this->work->activities,
+				'achievments' => $this->work->achievment,
+				
+				'show_refree' => $this->work->refereeIsPublic,
+				'referee_name' => $this->work->referee->name,
+				'referee_position' => $this->work->referee->position,
+				'referee_phone' => $this->work->referee->phone,
+				'referee_mail' => $this->work->referee->mail,
+			];
+		}
 		return $values;
 	}
 
@@ -83,6 +130,12 @@ class WorksControl extends BaseControl
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
+		return $this;
+	}
+
+	public function setWork(Work $work)
+	{
+		$this->work = $work;
 		return $this;
 	}
 

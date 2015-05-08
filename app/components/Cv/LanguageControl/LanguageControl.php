@@ -6,6 +6,7 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Cv;
+use App\Model\Entity\Language;
 use Nette\Utils\ArrayHash;
 
 class LanguageControl extends BaseControl
@@ -33,9 +34,14 @@ class LanguageControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('name', 'Name');
+		$form->addSelect2('motherTongue', 'Mother tongue', Language::getLanguagesList())
+				->setPrompt('Not Disclosed');
 
-		$form->addSubmit('save', 'Save');
+		if ($this->isAjax && $this->isSendOnChange) {
+			$form->getElementPrototype()->class('ajax sendOnChange');
+		} else {
+			$form->addSubmit('save', 'Save');
+		}
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
@@ -51,7 +57,7 @@ class LanguageControl extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		$this->cv->name = $values->name;
+		$this->cv->motherLanguage = $values->motherTongue;
 		return $this;
 	}
 
@@ -66,7 +72,7 @@ class LanguageControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'name' => $this->cv->name,
+			'motherTongue' => $this->cv->motherLanguage,
 		];
 		return $values;
 	}

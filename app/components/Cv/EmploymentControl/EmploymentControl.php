@@ -33,9 +33,35 @@ class EmploymentControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('name', 'Name');
+		$form->addGroup();
+		$form->addCheckSwitch('show_job', 'Include to CV')
+				->setOnText('Yes')
+				->setOffText('No');
+		$form->addDatePicker('available', 'Available from');
+		$form->addTextArea('position', 'Desired job position');
+		
+		$form->addGroup('Salary expectations');
+		$form->addCheckSwitch('show_salary', 'Mention salary')
+				->setOnText('Yes')
+				->setOffText('No');
+		$form->addTouchSpin('salary_from', 'From')
+				->setStep(1000)
+				->setMin(3000)
+				->setMax(200000)
+				->setPostfix('€')
+				->setOption('description', '€ per annum');
+		$form->addTouchSpin('salary_to', 'To')
+				->setStep(1000)
+				->setMin(3000)
+				->setMax(200000)
+				->setPostfix('€')
+				->setOption('description', '€ per annum');
 
-		$form->addSubmit('save', 'Save');
+		if ($this->isAjax && $this->isSendOnChange) {
+			$form->getElementPrototype()->class('ajax sendOnChange');
+		} else {
+			$form->addSubmit('save', 'Save');
+		}
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
@@ -51,7 +77,12 @@ class EmploymentControl extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		$this->cv->name = $values->name;
+		$this->cv->desiredEmploymentIsPublic = $values->show_job;
+		$this->cv->desiredPosition = $values->position;
+		$this->cv->availableFrom = $values->available;
+		$this->cv->salaryIsPublic = $values->show_salary;
+		$this->cv->salaryFrom = $values->salary_from;
+		$this->cv->salaryTo = $values->salary_to;
 		return $this;
 	}
 
@@ -66,7 +97,12 @@ class EmploymentControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'name' => $this->cv->name,
+			'show_job' => $this->cv->desiredEmploymentIsPublic,
+			'position' => $this->cv->desiredPosition,
+			'available' => $this->cv->availableFrom,
+			'show_salary' => $this->cv->salaryIsPublic,
+			'salary_from' => $this->cv->salaryFrom,
+			'salary_to' => $this->cv->salaryTo,
 		];
 		return $values;
 	}

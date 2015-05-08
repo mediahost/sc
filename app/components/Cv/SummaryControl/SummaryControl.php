@@ -33,9 +33,18 @@ class SummaryControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('name', 'Name');
+		$form->addCheckSwitch('show', 'Include to CV')
+				->setOnText('Yes')
+				->setOffText('No');
+		$form->addTextArea('summary', 'Career summary')
+				->getControlPrototype()
+				->style = 'height: 200px;';
 
-		$form->addSubmit('save', 'Save');
+		if ($this->isAjax && $this->isSendOnChange) {
+			$form->getElementPrototype()->class('ajax sendOnChange');
+		} else {
+			$form->addSubmit('save', 'Save');
+		}
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
@@ -51,7 +60,8 @@ class SummaryControl extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		$this->cv->name = $values->name;
+		$this->cv->careerSummary = $values->summary;
+		$this->cv->careerSummaryIsPublic = $values->show;
 		return $this;
 	}
 
@@ -66,7 +76,8 @@ class SummaryControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'name' => $this->cv->name,
+			'summary' => $this->cv->careerSummary,
+			'show' => $this->cv->careerSummaryIsPublic,
 		];
 		return $values;
 	}

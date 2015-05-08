@@ -5,6 +5,7 @@ namespace App\Components\Cv;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Entity\Competences;
 use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
@@ -33,9 +34,18 @@ class PersonalControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('name', 'Name');
+		$form->addTextArea('social', 'Social skills and competences');
+		$form->addTextArea('organisation', 'Organisational skills and competences');
+		$form->addTextArea('technical', 'Technical skills and competences');
+		$form->addTextArea('artictic', 'Artistic skills and competences');
+		$form->addTextArea('other', 'Other skills and competences');
+		$form->addMultiSelect2('licenses', 'Driving licenses', Competences::getDrivingLicensesList());
 
-		$form->addSubmit('save', 'Save');
+		if ($this->isAjax && $this->isSendOnChange) {
+			$form->getElementPrototype()->class('ajax sendOnChange');
+		} else {
+			$form->addSubmit('save', 'Save');
+		}
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
@@ -51,7 +61,15 @@ class PersonalControl extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		$this->cv->name = $values->name;
+		if (!$this->cv->competence) {
+			$this->cv->competence = new Competences();
+		}
+		$this->cv->competence->social = $values->social;
+		$this->cv->competence->organisation = $values->organisation;
+		$this->cv->competence->technical = $values->technical;
+		$this->cv->competence->artictic = $values->artictic;
+		$this->cv->competence->other = $values->other;
+		$this->cv->competence->drivingLicenses = $values->licenses;
 		return $this;
 	}
 
@@ -65,9 +83,17 @@ class PersonalControl extends BaseControl
 	/** @return array */
 	protected function getDefaults()
 	{
-		$values = [
-			'name' => $this->cv->name,
-		];
+		$values = [];
+		if ($this->cv->competence) {
+			$values = [
+				'social' => $this->cv->competence->social,
+				'organisation' => $this->cv->competence->organisation,
+				'technical' => $this->cv->competence->technical,
+				'artictic' => $this->cv->competence->artictic,
+				'other' => $this->cv->competence->other,
+				'licenses' => $this->cv->competence->drivingLicenses,
+			];
+		}
 		return $values;
 	}
 

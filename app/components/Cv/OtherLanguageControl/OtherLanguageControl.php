@@ -5,12 +5,11 @@ namespace App\Components\Cv;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Address;
 use App\Model\Entity\Cv;
-use App\Model\Entity\Education;
+use App\Model\Entity\Language;
 use Nette\Utils\ArrayHash;
 
-class EducationsControl extends BaseControl
+class OtherLanguageControl extends BaseControl
 {
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -23,8 +22,8 @@ class EducationsControl extends BaseControl
 	/** @var Cv */
 	private $cv;
 
-	/** @var Education */
-	private $education;
+	/** @var Language */
+	private $language;
 
 	// </editor-fold>
 
@@ -38,15 +37,15 @@ class EducationsControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('institution', 'Institution')
-				->setRequired('Must be filled');
-		$form->addText('city', 'City');
-		$form->addText('country', 'Country');
-		$form->addDatePicker('date_from', 'Date from');
-		$form->addDatePicker('date_to', 'Date to');
-		$form->addText('title', 'Title of qualification awarded');
-		$form->addTextArea('subjects', 'Principal subjects / occupational skills covered');
-
+		$form->addSelect2('language', 'Language', Language::getLanguagesList())
+				->setRequired('Please select language');
+		
+		$form->addSlider('listening', 'Listening', Language::getLanguageLevelList());
+		$form->addSlider('reading', 'Reading', Language::getLanguageLevelList());
+		$form->addSlider('interaction', 'Spoken Interaction', Language::getLanguageLevelList());
+		$form->addSlider('production', 'Spoken Production', Language::getLanguageLevelList());
+		$form->addSlider('writing', 'Writing', Language::getLanguageLevelList());
+		
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
@@ -63,19 +62,17 @@ class EducationsControl extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		if (!$this->education) {
-			$this->education = new Education();
+		if (!$this->language) {
+			$this->language = new Language();
 		}
-		$this->education->institution = $values->institution;
-		$this->education->title = $values->title;
-		$this->education->dateStart = $values->date_from;
-		$this->education->dateEnd = $values->date_to;
-		$this->education->subjects = $values->subjects;
-		$this->education->address = new Address();
-		$this->education->address->city = $values->city;
-		$this->education->address->country = $values->country;
+		$this->language->language = $values->language;
+		$this->language->listening = $values->listening;
+		$this->language->reading = $values->reading;
+		$this->language->spokenInteraction = $values->interaction;
+		$this->language->spokenProduction = $values->production;
+		$this->language->writing = $values->writing;
 		
-		$this->cv->addEducation($this->education);
+		$this->cv->addLanguage($this->language);
 		return $this;
 	}
 
@@ -90,16 +87,14 @@ class EducationsControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [];
-		if ($this->education) {
+		if ($this->language) {
 			$values = [
-				'institution' => $this->education->institution,
-				'title' => $this->education->title,
-				'date_from' => $this->education->dateStart,
-				'date_to' => $this->education->dateEnd,
-				'subjects' => $this->education->subjects,
-				
-				'city' => $this->education->address->city,
-				'country' => $this->education->address->country,
+				'language' => $this->language->language,
+				'listening' => $this->language->listening,
+				'reading' => $this->language->reading,
+				'interaction' => $this->language->spokenInteraction,
+				'production' => $this->language->spokenProduction,
+				'writing' => $this->language->writing,
 			];
 		}
 		return $values;
@@ -120,18 +115,18 @@ class EducationsControl extends BaseControl
 		return $this;
 	}
 
-	public function setEducation(Education $education)
+	public function setLanguage(Language $lang)
 	{
-		$this->education = $education;
+		$this->language = $lang;
 		return $this;
 	}
 
 	// </editor-fold>
 }
 
-interface IEducationsControlFactory
+interface IOtherLanguageControlFactory
 {
 
-	/** @return EducationsControl */
+	/** @return OtherLanguageControl */
 	function create();
 }

@@ -37,7 +37,7 @@ class BasicInfoControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer);
 
 		$form->addText('name', 'Name');
-		$form->addSelect('theme', 'Theme', [
+		$form->addSelect2('theme', 'Theme', [
 			'default' => 'Default',
 			'europass' => 'Euro Pass',
 			'standard1' => 'Standard 1',

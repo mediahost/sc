@@ -123,6 +123,10 @@ services:
 		implement: App\Components\Cv\ILanguageControlFactory
 		inject: yes
 
+	ICvOtherLanguageControlFactory:
+		implement: App\Components\Cv\IOtherLanguageControlFactory
+		inject: yes
+
 	ICvObjectiveControlFactory:
 		implement: App\Components\Cv\IObjectiveControlFactory
 		inject: yes

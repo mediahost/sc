@@ -33,9 +33,15 @@ class AdditionalControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('name', 'Name');
+		$form->addTextArea('additional', 'Additional information')
+				->getControlPrototype()
+				->style = 'height: 250px;';
 
-		$form->addSubmit('save', 'Save');
+		if ($this->isAjax && $this->isSendOnChange) {
+			$form->getElementPrototype()->class('ajax sendOnChange');
+		} else {
+			$form->addSubmit('save', 'Save');
+		}
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
@@ -51,7 +57,7 @@ class AdditionalControl extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		$this->cv->name = $values->name;
+		$this->cv->additionalInfo = $values->additional;
 		return $this;
 	}
 
@@ -66,7 +72,7 @@ class AdditionalControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'name' => $this->cv->name,
+			'additional' => $this->cv->additionalInfo,
 		];
 		return $values;
 	}

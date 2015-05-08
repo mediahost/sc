@@ -13,6 +13,7 @@ use App\Components\Cv\IEducationsControlFactory;
 use App\Components\Cv\IEmploymentControlFactory;
 use App\Components\Cv\IExperienceControlFactory;
 use App\Components\Cv\ILanguageControlFactory;
+use App\Components\Cv\IOtherLanguageControlFactory;
 use App\Components\Cv\ILivePreviewControlFactory;
 use App\Components\Cv\IObjectiveControlFactory;
 use App\Components\Cv\IPersonalControlFactory;
@@ -20,6 +21,7 @@ use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\ISummaryControlFactory;
 use App\Components\Cv\IWorksControlFactory;
 use App\Components\Cv\LanguageControl;
+use App\Components\Cv\OtherLanguageControl;
 use App\Components\Cv\LivePreviewControl;
 use App\Components\Cv\ObjectiveControl;
 use App\Components\Cv\PersonalControl;
@@ -27,6 +29,9 @@ use App\Components\Cv\SkillsControl;
 use App\Components\Cv\SummaryControl;
 use App\Components\Cv\WorksControl;
 use App\Model\Entity\Cv;
+use App\Model\Entity\Education;
+use App\Model\Entity\Language;
+use App\Model\Entity\Work;
 use App\Model\Facade\CvFacade;
 use App\TaggedString;
 use Exception;
@@ -56,6 +61,9 @@ class CvEditorPresenter extends BasePresenter
 
 	/** @var ILanguageControlFactory @inject */
 	public $iLanguageControlFactory;
+
+	/** @var IOtherLanguageControlFactory @inject */
+	public $iOtherLanguageControlFactory;
 
 	/** @var IObjectiveControlFactory @inject */
 	public $iObjectiveControlFactory;
@@ -103,14 +111,20 @@ class CvEditorPresenter extends BasePresenter
 		$this->template->cv = $this->cv;
 		$this->changeLastStep($this->action);
 	}
-	
+
+	private function saveCv()
+	{
+		$cvRepo = $this->em->getRepository(Cv::getClassName());
+		$cvRepo->save($this->cv);
+		return $this;
+	}
+
 	private function changeLastStep($action)
 	{
 		$allowedActions = $this->getAllowedActions();
 		if ($searched = array_search($action, $allowedActions)) {
 			$this->cv->lastStep = $searched;
-			$cvRepo = $this->em->getRepository(Cv::getClassName());
-			$cvRepo->save($this->cv);
+			$this->saveCv();
 		}
 	}
 
@@ -205,6 +219,33 @@ class CvEditorPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('cvEditor')
+	 * @privilege('editEducation')
+	 */
+	public function actionEditEducation($id = NULL, $eduId = NULL)
+	{
+		$eduDao = $this->em->getDao(Education::getClassName());
+		$edu = $eduDao->find($eduId);
+		$this['educationsForm']->setEducation($edu);
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
+	 * @privilege('deleteEducation')
+	 */
+	public function handleDeleteEducation($eduId = NULL)
+	{
+		if ($this->cv->existsEducationId($eduId)) {
+			$eduDao = $this->em->getDao(Education::getClassName());
+			$edu = $eduDao->find($eduId);
+			$eduDao->delete($edu);
+		}
+		$this->redirect('this');
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
 	 * @privilege('employment')
 	 */
 	public function actionEmployment($id = NULL)
@@ -225,11 +266,65 @@ class CvEditorPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('cvEditor')
+	 * @privilege('editExperience')
+	 */
+	public function actionEditExperience($id = NULL, $expId = NULL)
+	{
+		$expDao = $this->em->getDao(Work::getClassName());
+		$exp = $expDao->find($expId);
+		$this['experienceForm']->setExperience($exp);
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
+	 * @privilege('deleteExperience')
+	 */
+	public function handleDeleteExperience($expId = NULL)
+	{
+		if ($this->cv->existsExperienceId($expId)) {
+			$expDao = $this->em->getDao(Work::getClassName());
+			$exp = $expDao->find($expId);
+			$expDao->delete($exp);
+		}
+		$this->redirect('this');
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
 	 * @privilege('language')
 	 */
 	public function actionLanguage($id = NULL)
 	{
 		
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
+	 * @privilege('editLanguage')
+	 */
+	public function actionEditLanguage($id = NULL, $langId = NULL)
+	{
+		$langDao = $this->em->getDao(Language::getClassName());
+		$lang = $langDao->find($langId);
+		$this['languageForm']->setLanguage($lang);
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
+	 * @privilege('deleteLanguage')
+	 */
+	public function handleDeleteLanguage($langId = NULL)
+	{
+		if ($this->cv->existsLanguageId($langId)) {
+			$langDao = $this->em->getDao(Language::getClassName());
+			$lang = $langDao->find($langId);
+			$langDao->delete($lang);
+		}
+		$this->redirect('this');
 	}
 
 	/**
@@ -295,6 +390,33 @@ class CvEditorPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('cvEditor')
+	 * @privilege('editWork')
+	 */
+	public function actionEditWork($id = NULL, $workId = NULL)
+	{
+		$workDao = $this->em->getDao(Work::getClassName());
+		$work = $workDao->find($workId);
+		$this['worksForm']->setWork($work);
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
+	 * @privilege('deleteWork')
+	 */
+	public function handleDeleteWork($workId = NULL)
+	{
+		if ($this->cv->existsWorkId($workId)) {
+			$workDao = $this->em->getDao(Work::getClassName());
+			$work = $workDao->find($workId);
+			$workDao->delete($work);
+		}
+		$this->redirect('this');
+	}
+
+	/**
+	 * @secured
+	 * @resource('cvEditor')
 	 * @privilege('jobs')
 	 */
 	public function actionJobs($id = NULL)
@@ -309,6 +431,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iAdditionalControlFactory->create();
 		$control->setCv($this->cv);
+		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
@@ -318,7 +441,11 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iEducationsControlFactory->create();
 		$control->setCv($this->cv);
-		$control->onAfterSave = $this->standardOnAfterSave;
+		$control->onAfterSave = function (Cv $saved) {
+			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('educations');
+		};
 		return $control;
 	}
 
@@ -336,16 +463,34 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iExperienceControlFactory->create();
 		$control->setCv($this->cv);
-		$control->onAfterSave = $this->standardOnAfterSave;
+		$control->onAfterSave = function (Cv $saved) {
+			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('experience');
+		};
 		return $control;
 	}
 
 	/** @return LanguageControl */
-	public function createComponentLanguageForm()
+	public function createComponentMotherLanguageForm()
 	{
 		$control = $this->iLanguageControlFactory->create();
 		$control->setCv($this->cv);
+		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
+		return $control;
+	}
+
+	/** @return OtherLanguageControl */
+	public function createComponentLanguageForm()
+	{
+		$control = $this->iOtherLanguageControlFactory->create();
+		$control->setCv($this->cv);
+		$control->onAfterSave = function (Cv $saved) {
+			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('language');
+		};
 		return $control;
 	}
 
@@ -354,6 +499,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iObjectiveControlFactory->create();
 		$control->setCv($this->cv);
+		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
@@ -363,6 +509,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iPersonalControlFactory->create();
 		$control->setCv($this->cv);
+		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
@@ -371,7 +518,7 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentSettingsForm()
 	{
 		$control = $this->iSettingsControlFactory->create();
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax();
 		$control->setCv($this->cv);
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
@@ -391,6 +538,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iSummaryControlFactory->create();
 		$control->setCv($this->cv);
+		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
@@ -400,7 +548,11 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iWorksControlFactory->create();
 		$control->setCv($this->cv);
-		$control->onAfterSave = $this->standardOnAfterSave;
+		$control->onAfterSave = function (Cv $saved) {
+			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('works');
+		};
 		return $control;
 	}
 
