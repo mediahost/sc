@@ -180,7 +180,7 @@ class CommunicationFacade extends Object
 	 * @param $id
 	 * @return null|Communication
 	 */
-	public function get($id)
+	public function getCommunication($id)
 	{
 		return $this->communicationRepository->find($id);
 	}

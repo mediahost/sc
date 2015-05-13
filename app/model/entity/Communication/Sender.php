@@ -2,13 +2,12 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 
 /**
- * @Entity
+ * @ORM\Entity
  * @property User $user
  * @property Company $company
  * @property Communication $communication
@@ -19,19 +18,19 @@ class Sender extends BaseEntity
 	use Identifier;
 
 	/**
-	 * @ManyToOne(targetEntity="User")
+	 * @ORM\ManyToOne(targetEntity="User")
 	 * @var User
 	 */
 	protected $user;
 
 	/**
-	 * @ManyToOne(targetEntity="Company")
+	 * @ORM\ManyToOne(targetEntity="Company")
 	 * @var Company
 	 */
 	protected $company;
 
 	/**
-	 * @ManyToOne(targetEntity="Communication", inversedBy="contributors")
+	 * @ORM\ManyToOne(targetEntity="Communication", inversedBy="contributors")
 	 * @var Communication
 	 */
 	protected $communication;
@@ -41,7 +40,7 @@ class Sender extends BaseEntity
 	 */
 	public function getImage()
 	{
-
+		
 	}
 
 	public function getName()

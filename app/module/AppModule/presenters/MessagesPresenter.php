@@ -3,28 +3,19 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\ICommunicationFactory;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Company;
 use App\Model\Entity\User;
-use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Repository\UserRepository;
 use Kdyby\Doctrine\EntityDao;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Form;
 
 class MessagesPresenter extends BasePresenter
 {
 
-	/** @var CommunicationFacade @inject */
-	public $communicationFacade;
-
 	/** @var UserFacade @inject */
 	public $userFacade;
-
-	/** @var EntityManager @inject */
-	public $em;
 
 	/** @var ICommunicationFactory @inject */
 	public $communicationFactory;
@@ -35,31 +26,18 @@ class MessagesPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('messages')
+	 * @privilege('default')
 	 */
-	public function actionDefault()
+	public function actionDefault($id = NULL)
 	{
-		$userRepository = $this->em->getDao(User::getClassName()); // TODO: odstarnit volanie nad repository
-		$user = $userRepository->find($this->user->id);
-		$this->template->userEntity = $user;
-		$this->template->communications = $this->communicationFacade->getUserCommunications($user);
-	}
-
-	public function actionCommunication($id)
-	{
-		$this->communication = $this->communicationFacade->get($id);
-		if (!$this->communication) {
-		    $this->error();
+		if ($id) {
+			$this->communication = $this->communicationFacade->getCommunication($id);
+			if (!$this->communication || !$this->communication->isUserAllowed($this->user->identity)) {
+				$this->flashMessage('Requested conversation was\'t find.', 'danger');
+				$this->redirect('this', NULL);
+			}
+			$this->template->conversation = $this->communication;
 		}
-
-		$userRepository = $this->em->getDao(User::getClassName()); // TODO: odstarnit volanie nad repository
-		/** @var User $user */
-		$user = $userRepository->find($this->user->id);
-
-		if (!$this->communication->isUserAllowed($user)) {
-		    $this->error();
-		}
-
-		$this->template->communiation = $this->communication;
 	}
 
 	public function createComponentStarCommunicationForm()
@@ -131,7 +109,7 @@ class MessagesPresenter extends BasePresenter
 
 		$communication = $this->communicationFacade
 			->startCommunication($values->message, $sender, $receiver, $senderCompany, $receiverCompany);
-		$this->redirect('communication', $communication->id);
+		$this->redirect('default', $communication->id);
 	}
 
 	public function createComponentCommunication()

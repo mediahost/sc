@@ -4,9 +4,13 @@ namespace App\AppModule\Presenters;
 
 use App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
 use App\Model\Entity\Role;
+use App\Model\Facade\CommunicationFacade;
 
 abstract class BasePresenter extends BaseBasePresenter
 {
+
+	/** @var CommunicationFacade @inject */
+	public $communicationFacade;
 
 	protected function startup()
 	{
@@ -15,10 +19,12 @@ abstract class BasePresenter extends BaseBasePresenter
 	}
 
 	protected function beforeRender()
-	{
+	{	
 		parent::beforeRender();
 		$this->template->isCompleteAccount = !$this->isUncompleteAccount();
 		$this->template->allowedLanguages = $this->languageService->allowedLanguages;
+		$this->template->communications = $this->communicationFacade->getUserCommunications($this->user->identity);
+		$this->template->unreadMessagesCount = 2;
 	}
 
 	/**

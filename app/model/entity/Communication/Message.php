@@ -2,16 +2,13 @@
 
 namespace App\Model\Entity;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Utils\DateTime;
 
 /**
- * @Entity
+ * @ORM\Entity
  * @property Sender $sender
  * @property DateTime $time
  * @property Read[] $reads
@@ -24,31 +21,31 @@ class Message extends BaseEntity
 	use Identifier;
 
 	/**
-	 * @ManyToOne(targetEntity="Sender")
+	 * @ORM\ManyToOne(targetEntity="Sender")
 	 * @var Sender
 	 */
 	protected $sender;
 
 	/**
-	 * @Column(type="datetime")
+	 * @ORM\Column(type="datetime")
 	 * @var DateTime
 	 */
 	protected $time;
 
 	/**
-	 * @OneToMany(targetEntity="Read", mappedBy="message", cascade={"persist"}, orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="Read", mappedBy="message", cascade={"persist"}, orphanRemoval=true)
 	 * @var Read[]
 	 */
 	protected $reads;
 
 	/**
-	 * @ManyToOne(targetEntity="Communication", inversedBy="messages")
+	 * @ORM\ManyToOne(targetEntity="Communication", inversedBy="messages")
 	 * @var Communication
 	 */
 	protected $communication;
 
 	/**
-	 * @Column(type="text")
+	 * @ORM\Column(type="text")
 	 * @var string
 	 */
 	protected $text;

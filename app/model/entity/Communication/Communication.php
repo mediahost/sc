@@ -3,16 +3,13 @@
 namespace App\Model\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\OrderBy;
+use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Utils\DateTime;
 
 /**
- * @Entity
+ * @ORM\Entity
  * @property string $subject
  * @property ArrayCollection $messages
  * @property DateTime $created
@@ -24,25 +21,25 @@ class Communication extends BaseEntity
 	use Identifier;
 
 	/**
-	 * @Column(type="string", length=512, nullable=true)
+	 * @ORM\Column(type="string", length=512, nullable=true)
 	 */
 	protected $subject;
 
 	/**
-	 * @OneToMany(targetEntity="Message", mappedBy="communication", cascade={"persist"}, orphanRemoval=true)
-	 * @OrderBy({"id" = "DESC"})
+	 * @ORM\OneToMany(targetEntity="Message", mappedBy="communication", cascade={"persist"}, orphanRemoval=true)
+	 * @ORM\OrderBy({"id" = "DESC"})
 	 * @var Message[]
 	 */
 	protected $messages;
 
 	/**
-	 * @Column(type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 * @var DateTime
 	 */
 	protected $created;
 
 	/**
-	 * @OneToMany(targetEntity="Sender", mappedBy="communication", cascade={"persist"}, orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="Sender", mappedBy="communication", cascade={"persist"}, orphanRemoval=true)
 	 * @var ArrayCollection
 	 */
 	protected $contributors;

@@ -1,60 +1,97 @@
 {block pageTitle}
-	{_'Messages'}
+{_'Messages'}
 {/block}
 
 {block breadcrumbItems}
-	<li>
-		<a n:href="Messages:">{_'Messages'}</a>
-	</li>
+<li>
+	<a n:href="Messages:">{_'Messages'}</a>
+</li>
 {/block}
 
 {block content}
 <div class="row">
-	<div class="col-md-6">
-		<h3>{_'Start communication'}</h3>
-		{form starCommunicationForm class => form-horizontal}
-			{if $form->getComponent('me', FALSE)}
-			<div class="form-group">
-				<div class="col-sm-3 control-label">{label me/}</div>
-				<div class="col-sm-9">
-					{input me class => form-control}
-				</div>
-			</div>
-			{/if}
-			<div class="form-group">
-				<div class="col-sm-3 control-label">{label type/}</div>
-				<div class="col-sm-9">
-					{input type class => form-control}
-				</div>
-			</div>
-			<div class="form-group" id="{$form['user']->getHtmlId()}-pair">
-				<div class="col-sm-3 control-label">{label user/}</div>
-				<div class="col-sm-9">{input user class => form-control}</div>
-			</div>
-			<div class="form-group" id="{$form['company']->getHtmlId()}-pair">
-				<div class="col-sm-3 control-label">{label company/}</div>
-				<div class="col-sm-9">{input company class => form-control}</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-3 control-label">{label message/}</div>
-				<div class="col-sm-9">{input message class => form-control}</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-3 col-sm-9">
-					{input send class => 'btn btn-primary'}
-				</div>
-			</div>
-		{/form}
+	<div class="col-md-5 col-sm-4">
+		<div class="messages-list">
+			{foreach $communications as $communication}
+				<a n:href="Messages: $communication->id">
+					<div n:class="messages-list-item, 
+						isset($conversation) && $communication->id == $conversation->id ? 'active messages-list-item-border-red' : 'messages-list-item-border-blue'">
+
+						<img class="message-userpic pull-left" 
+							 src="{$basePath}/assets/admin/img/avatar4.jpg" 
+							 width="27px" height="27px" />
+						<div class="messages-list-item-title">
+							{$communication->lastMessage->sender->name}
+						</div>
+						<div class="messages-list-item-text">
+							{$communication->lastMessage->text|truncate:50}
+						</div>
+						<div class="messages-list-controls pull-left">
+							<span class="messages-list-date">
+								<i class="fa fa-calendar"></i>
+								{$communication->lastMessage->time|date:'H:i:s d.m.Y'}
+							</span>
+							<span class="messages-list-badge badge badge-roundless">{_'Unread'}</span>
+						</div>
+					</div>
+				</a>
+			{/foreach}
+		</div>
+		<p></p>
+		<a class="btn blue" n:href="this#newMessage" data-toggle="modal">
+			<i class="fa fa-edit"></i>
+			{_'New Message'}
+		</a>
 	</div>
-	<div class="col-md-6">
-		<h3>{_'Communications'}</h3>
-		<ul>
-			<li n:foreach="$communications as $communication">
-				<a n:href="communication $communication->id">{$communication->subject ?: 'empty subject'}</a>
-				- {_'Last message by'}
-				<b>{$communication->getLastMessage()->sender->getName()}</b>:
-				"{$communication->getLastMessage()->text}"
-			</li>
-		</ul>
+	<div class="col-md-7 col-sm-8" n:ifset="$conversation">
+		{control communication}
 	</div>
 </div>
+
+
+<div class="modal fade" id="newMessage" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+				<h4 class="modal-title">{_'Start communication'}</h4>
+			</div>
+			<div class="modal-body">
+				{form starCommunicationForm class => form-horizontal}
+					{if $form->getComponent('me', FALSE)}
+						<div class="form-group">
+							<div class="col-sm-3 control-label">{label me/}</div>
+							<div class="col-sm-9">
+								{input me class => form-control}
+							</div>
+						</div>
+					{/if}
+					<div class="form-group">
+						<div class="col-sm-3 control-label">{label type/}</div>
+						<div class="col-sm-9">
+							{input type class => form-control}
+						</div>
+					</div>
+					<div class="form-group" id="{$form['user']->getHtmlId()}-pair">
+						<div class="col-sm-3 control-label">{label user/}</div>
+						<div class="col-sm-9">{input user class => form-control}</div>
+					</div>
+					<div class="form-group" id="{$form['company']->getHtmlId()}-pair">
+						<div class="col-sm-3 control-label">{label company/}</div>
+						<div class="col-sm-9">{input company class => form-control}</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3 control-label">{label message/}</div>
+						<div class="col-sm-9">{input message class => form-control}</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-9">
+							{input send class => 'btn btn-primary'}
+						</div>
+					</div>
+				{/form}
+			</div>
+		</div>
+	</div>
+</div>
+

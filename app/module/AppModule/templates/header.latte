@@ -20,6 +20,37 @@
         <div class="top-menu">
             <ul class="nav navbar-nav pull-right">
 				
+				<!-- BEGIN INBOX DROPDOWN -->
+				<li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+						<i class="icon-envelope-open"></i>
+						<span class="badge badge-default">{$unreadMessagesCount}</span>
+					</a>
+					<ul class="dropdown-menu">
+						<li class="external">
+							<h3>{_'You have'} <span class="bold">{_'%s New', NULL, $unreadMessagesCount}</span> {_'Messages'}</h3>
+							<a n:href="Messages:">{_'view all'}</a>
+						</li>
+						<li>
+							<ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
+								<li n:foreach="$communications as $communication">
+									<a n:href="Messages: $communication->id">
+										<span class="photo">
+											<img src="{$basePath}/assets/admin/img/avatar2.jpg" class="img-circle" alt="photo" />
+										</span>
+										<span class="subject">
+											<span class="from">{$communication->lastMessage->sender->name}</span>
+											<span class="time">{$communication->lastMessage->time|date:'H:i:s d.m.Y'}</span>
+										</span>
+										<span class="message">{$communication->lastMessage->text|truncate:30}</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<!-- END INBOX DROPDOWN -->
+				
 				<!-- BEGIN LANGUAGE BAR -->
 				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
 				<li class="dropdown dropdown-language" n:if="$user->loggedIn">
