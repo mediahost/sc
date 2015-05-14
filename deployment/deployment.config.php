@@ -23,6 +23,8 @@ return array(
 			!www/webtemp/.htaccess
 			www/foto/*
 			!www/foto/
+			www/pdf/*
+			!www/pdf/
 			*.local.neon
 			*.server.neon
 			*.server_dev.neon
