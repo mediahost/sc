@@ -9,7 +9,7 @@ class CommunicationList extends BaseControl
 {
 
 	/** @var Entity\Communication[] */
-	protected $communications;
+	protected $communications = [];
 
 	/** @var array */
 	protected $links = [];
