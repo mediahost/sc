@@ -50,7 +50,7 @@ class Sender extends BaseEntity
 		} elseif ($this->user->candidate) {
 			return $this->user->candidate->name;
 		} else {
-			return 'no name';
+			return $this->user->mail;
 		}
 	}
 
