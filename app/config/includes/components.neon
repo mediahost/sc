@@ -150,3 +150,6 @@ services:
 	ICommunicationFactorz:
 		implement: App\Components\ICommunicationFactory
 		inject: yes
+
+	ICommunicationListFactory:
+		implement: App\Components\ICommunicationListFactory

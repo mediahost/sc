@@ -3,6 +3,7 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\ICommunicationFactory;
+use App\Components\ICommunicationListFactory;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Company;
 use App\Model\Entity\User;
@@ -19,6 +20,9 @@ class MessagesPresenter extends BasePresenter
 
 	/** @var ICommunicationFactory @inject */
 	public $communicationFactory;
+
+	/** @var ICommunicationListFactory @inject */
+	public $communicationListFactory;
 
 	/** @var Communication */
 	protected $communication;
@@ -116,6 +120,17 @@ class MessagesPresenter extends BasePresenter
 	{
 	    $control = $this->communicationFactory->create();
 		$control->setCommunication($this->communication);
+		return $control;
+	}
+
+	public function createComponentCommunicationList()
+	{
+		$communications = $this->getUserCommunications();
+	    $control = $this->communicationListFactory->create();
+		foreach ($communications as $communication) {
+			$control->addCommunication($communication, $this->link('default', $communication->id));
+		}
+		$control->setActiveCommunication($this->communication);
 		return $control;
 	}
 
