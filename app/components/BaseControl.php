@@ -22,6 +22,9 @@ abstract class BaseControl extends UI\Control
 	/** @var PasswordService @inject */
 	public $passwordService;
 
+	/** @var ITranslator @inject */
+	public $translator;
+
 	/** @var string */
 	private $templateFile = self::DEFAULT_TEMPLATE;
 
