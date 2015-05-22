@@ -48,7 +48,9 @@ services:
 	urlScript:
 		factory: @httpRequest::getUrl()
 
-	nette.templateFactory: App\Templating\TemplateFactory
+	nette.templateFactory:
+		class: App\Templating\TemplateFactory
+		inject: yes
 	security.userStorage: Majkl578\NetteAddons\Doctrine2Identity\Http\UserStorage
 
 extensions:

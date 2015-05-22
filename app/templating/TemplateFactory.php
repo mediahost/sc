@@ -4,12 +4,21 @@ namespace App\Templating;
 
 use Latte\Engine;
 use Latte\Macros\MacroSet;
+use Nette\Localization\ITranslator;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Bridges\ApplicationLatte\TemplateFactory as ParentTemplateFactory;
 
 class TemplateFactory extends ParentTemplateFactory
 {
+
+	/** @var ITranslator */
+	protected $translator;
+
+	public function injectTranslator(ITranslator $translator)
+	{
+		$this->translator = $translator;
+	}
 
 	/**
 	 * @param Control $control
@@ -20,6 +29,7 @@ class TemplateFactory extends ParentTemplateFactory
 		$template = parent::createTemplate($control);
 		$latte = $template->getLatte();
 		$latte->onCompile[] = $this->addMacros;
+		$template->setTranslator($this->translator);
 		return $template;
 	}
 
