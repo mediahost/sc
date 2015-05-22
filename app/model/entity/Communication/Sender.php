@@ -40,7 +40,7 @@ class Sender extends BaseEntity
 	 */
 	public function getImage()
 	{
-		
+		return 'assets/admin/img/avatar4.jpg';
 	}
 
 	public function getName()

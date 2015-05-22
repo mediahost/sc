@@ -14,11 +14,11 @@
 		<div class="messages-list">
 			{foreach $communications as $communication}
 				<a n:href="Messages: $communication->id">
-					<div n:class="messages-list-item, 
+					<div n:class="messages-list-item,
 						isset($conversation) && $communication->id == $conversation->id ? 'active messages-list-item-border-red' : 'messages-list-item-border-blue'">
 
-						<img class="message-userpic pull-left" 
-							 src="{$basePath}/assets/admin/img/avatar4.jpg" 
+						<img class="message-userpic pull-left"
+							 src="{$basePath}/{$communication->lastMessage->sender->image}"
 							 width="27px" height="27px" />
 						<div class="messages-list-item-title">
 							{$communication->lastMessage->sender->name}
