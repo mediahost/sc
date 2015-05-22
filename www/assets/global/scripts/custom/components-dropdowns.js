@@ -2,7 +2,7 @@ var ComponentsDropdowns = function () {
 
 	var handleSelect2 = function () {
 
-		$(".select2").each(function () {
+		$("select.select2").each(function () {
 			var params = {};
 			for (var i = 0, attrs = this.attributes, l = attrs.length; i < l; i++) {
 				var attr = attrs.item(i).nodeName;
@@ -27,7 +27,7 @@ var ComponentsDropdowns = function () {
 	};
 
 	var handleMultiSelect = function () {
-		$('.multi-select').multiSelect({
+		$('select.multi-select').multiSelect({
 			selectableOptgroup: true
 		});
 	};

@@ -283,10 +283,12 @@ var NoUiSlider = function (select)
 				var selectedOption = instance.getSelectedOptionFromValue(value);
 				$(this).html('<span>' + selectedOption.text() + '</span>');
 			});
-			this.slider.Link('upper').to('-inline-<div class="noUi-tooltip"></div>', function (value) {
-				var selectedOption = instance.getSelectedOptionFromValue(value);
-				$(this).html('<span>' + selectedOption.text() + '</span>');
-			});
+			if (this.type === this.RANGER) {
+				this.slider.Link('upper').to('-inline-<div class="noUi-tooltip"></div>', function (value) {
+					var selectedOption = instance.getSelectedOptionFromValue(value);
+					$(this).html('<span>' + selectedOption.text() + '</span>');
+				});
+			}
 		}
 
 		if (this.selectProperties.isTooltipFixed) {
