@@ -18,7 +18,8 @@
 								<i class="fa fa-calendar"></i>
 								{$communication->lastMessage->time|date:'H:i:s d.m.Y'}
 							</span>
-					<span class="messages-list-badge badge badge-roundless">{_'Unread'}</span>
+					<span n:if="!$communication->lastMessage->isReadByUser($user->identity)"
+						class="messages-list-badge badge badge-roundless">{_'Unread'}</span>
 				</div>
 			</div>
 		</a>

@@ -4,6 +4,7 @@ namespace App\Components;
 
 
 use App\Model\Entity;
+use Nette\Security\User;
 
 class CommunicationList extends BaseControl
 {

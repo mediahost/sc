@@ -212,7 +212,7 @@ class CommunicationFacade extends Object
 	{
 		$sender = $communication->getContributor($user, $company);
 		if (!$sender) {
-		    $sender = $this->addContributor($communication, $user, $communication);
+		    $sender = $this->addContributor($communication, $user, $company);
 		}
 		foreach ($communication->messages as $message) {
 			if (!$message->isReadBySender($sender)) {
