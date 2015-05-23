@@ -11,9 +11,9 @@ use Nette\Utils\DateTime;
 /**
  * @ORM\Entity
  * @property string $subject
- * @property ArrayCollection $messages
+ * @property ArrayCollection|Message[] $messages
  * @property DateTime $created
- * @property ArrayCollection $contributors
+ * @property ArrayCollection|Sender[] $contributors
  */
 class Communication extends BaseEntity
 {

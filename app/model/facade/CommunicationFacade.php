@@ -208,4 +208,19 @@ class CommunicationFacade extends Object
 		return $this->communicationRepository->find($id);
 	}
 
+	public function markCommunicationAsRead(Communication $communication, User $user, Company $company = NULL)
+	{
+		$sender = $communication->getContributor($user, $company);
+		if (!$sender) {
+		    $sender = $this->addContributor($communication, $user, $communication);
+		}
+		foreach ($communication->messages as $message) {
+			if (!$message->isReadBySender($sender)) {
+			    $message->addRead(new Read($sender));
+			}
+		}
+		$this->em->flush();
+
+	}
+
 }

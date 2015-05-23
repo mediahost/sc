@@ -9,6 +9,7 @@ use Nette\Utils\DateTime;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="`read`")
  * @property Sender $sender
  * @property Message $message
  * @property DateTime $time
@@ -35,5 +36,12 @@ class Read extends BaseEntity
 	 * @var DateTime
 	 */
 	protected $time;
+
+	public function __construct(Sender $sender = NULL)
+	{
+		$this->sender = $sender;
+		$this->time = new DateTime();
+		parent::__construct();
+	}
 
 }

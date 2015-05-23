@@ -49,6 +49,7 @@ class Communication extends BaseControl
 		$this->template->communication = $this->communication;
 		$this->template->viewer = $this->user->identity;
 		parent::render();
+		$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity, $this->company);
 	}
 
 	public function createComponentForm()
