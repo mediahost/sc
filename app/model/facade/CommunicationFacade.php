@@ -167,9 +167,13 @@ class CommunicationFacade extends Object
 		$queryBuilder = $this->em->createQueryBuilder();
 		$queryBuilder->select('c')
 			->from(Communication::getClassName(), 'c')
+			->addSelect('MAX(m.time) as HIDDEN last_message_time')
 			->join('c.contributors', 's')
+			->join('c.messages', 'm')
 			->where('s.user = ?0')
 			->andWhere('s.company IS NULL')
+			->orderBy('last_message_time', 'DESC')
+			->groupBy('c')
 			->setParameter(0, $user);
 		$query = $queryBuilder->getQuery();
 		return $query->getResult();
@@ -184,8 +188,12 @@ class CommunicationFacade extends Object
 		$queryBuilder = $this->em->createQueryBuilder();
 		$queryBuilder->select('c')
 			->from(Communication::getClassName(), 'c')
+			->addSelect('MAX(m.time) as HIDDEN last_message_time')
 			->join('c.contributors', 's')
-			->orWhere('s.company = ?0')
+			->join('c.messages', 'm')
+			->where('s.company = ?0')
+			->orderBy('last_message_time', 'DESC')
+			->groupBy('c')
 			->setParameter(0, $company);
 		$query = $queryBuilder->getQuery();
 		return $query->getResult();
