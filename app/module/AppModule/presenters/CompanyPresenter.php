@@ -4,11 +4,15 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Company\CompanyInfoControl;
 use App\Components\Company\ICompanyInfoControlFactory;
+use App\Components\ICommunicationFactory;
+use App\Components\ICommunicationListFactory;
 use App\Components\User\CompanyUserControl;
 use App\Components\User\ICompanyUserControlFactory;
+use App\Model\Entity\Communication;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyPermission;
 use App\Model\Entity\User;
+use App\Model\Facade\CommunicationFacade;
 use App\TaggedString;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -25,6 +29,15 @@ class CompanyPresenter extends BasePresenter
 	/** @var ICompanyUserControlFactory @inject */
 	public $iCompanyUserControlFactory;
 
+	/** @var ICommunicationListFactory @inject */
+	public $communicationListFactory;
+
+	/** @var ICommunicationFactory @inject */
+	public $communicationFactory;
+
+	/** @var CommunicationFacade @inject */
+	public $communicationFacade;
+
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
@@ -34,12 +47,21 @@ class CompanyPresenter extends BasePresenter
 	/** @var CompanyPermission */
 	protected $companyPermission;
 
+	/** @var Communication */
+	protected $communication;
+
+	/** @var Communication[] */
+	protected $companyCommunications;
+
 	// </editor-fold>
 
 	protected function startup()
 	{
 		parent::startup();
 		$companyId = $this->getParameter('id');
+		if (!$companyId) {
+		    $companyId = $this->getParameter('companyId');
+		}
 		if ($companyId) {
 			$this->setCompany($companyId);
 		}
@@ -76,6 +98,14 @@ class CompanyPresenter extends BasePresenter
 			$this->company = $this->companyPermission->company;
 		}
 		return $this;
+	}
+
+	public function getCompanyCommunications()
+	{
+		if (!$this->companyCommunications) {
+			$this->companyCommunications = $this->communicationFacade->getCompanyCommunications($this->company);
+		}
+		return $this->companyCommunications;
 	}
 
 	/**
@@ -141,6 +171,32 @@ class CompanyPresenter extends BasePresenter
 		$this->template->addFilter('canEditUser', $this->canEditUser);
 	}
 
+	/**
+	 * @secured
+	 * @resource('company')
+	 * @privilege('messages')
+	 * @companySecured
+	 * @companyResource('messages')
+	 * @companyPrivilege('view')
+	 */
+	public function actionMessages($id, $communicationId)
+	{
+		if ($communicationId) {
+			$this->communication = $this->communicationFacade->getCommunication($communicationId);
+			if (!$this->communication || !$this->communication->isCompanyContributor($this->company)) {
+				$this->flashMessage('Requested conversation was\'t find.', 'danger');
+				$this->redirect('this', ['id' => $id, 'communicationId' => NULL]);
+			}
+		}
+	}
+
+	public function renderMessages($id, $communicationId)
+	{
+		if ($communicationId) {
+			$this->template->conversation = $this->communication;
+		}
+	}
+
 	// <editor-fold desc="edit/delete priviledges">
 
 	/**
@@ -181,4 +237,27 @@ class CompanyPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
+
+	public function createComponentCommunication()
+	{
+		$control = $this->communicationFactory->create();
+		$control->setCommunication($this->communication);
+		$control->comunicateAsCompany($this->company);
+		return $control;
+	}
+
+	public function createComponentCommunicationList()
+	{
+		$communications = $this->getCompanyCommunications();
+		$control = $this->communicationListFactory->create();
+		foreach ($communications as $communication) {
+			$control->addCommunication($communication, $this->link('messages', [
+				'id' => $this->company->id,
+				'communicationId' => $communication->id,
+			]));
+		}
+		$control->setActiveCommunication($this->communication);
+		return $control;
+	}
+
 }

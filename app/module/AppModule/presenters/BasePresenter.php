@@ -19,7 +19,7 @@ abstract class BasePresenter extends BaseBasePresenter
 	public function getUserCommunications()
 	{
 		if (!$this->userCommunications) {
-		    $this->userCommunications = $this->communicationFacade->getUserCommunications($this->user->identity);
+			$this->userCommunications = $this->communicationFacade->getUserCommunications($this->user->identity);
 		}
 		return $this->userCommunications;
 	}

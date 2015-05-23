@@ -2,6 +2,8 @@
 
 namespace App\Components;
 
+use App\Model\Entity\Company;
+use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Form;
@@ -23,8 +25,8 @@ class Communication extends BaseControl
 	/** @var User @inject */
 	public $user;
 
-	/** @var \App\Model\Entity\User */
-	protected $viewer;
+	/** @var Company */
+	protected $company;
 
 	/** @var ITranslator @inject */
 	public $translator;
@@ -37,23 +39,16 @@ class Communication extends BaseControl
 		$this->communication = $communication;
 	}
 
+	public function comunicateAsCompany(Company $company)
+	{
+		$this->company = $company;
+	}
+
 	public function render()
 	{
 		$this->template->communication = $this->communication;
-		$this->template->viewer = $this->getViewer();
+		$this->template->viewer = $this->user->identity;
 		parent::render();
-	}
-
-	/**
-	 * @return \App\Model\Entity\User
-	 */
-	public function getViewer()
-	{
-		if (!$this->viewer) {
-			$userRepository = $this->em->getDao(\App\Model\Entity\User::getClassName());
-			$this->viewer = $userRepository->find($this->user->id);
-		}
-		return $this->viewer;
 	}
 
 	public function createComponentForm()
@@ -68,8 +63,24 @@ class Communication extends BaseControl
 
 	public function processForm(Form $form, $values)
 	{
-		$this->communicationFacade->addMessage($this->communication, $values->text, $this->getViewer());
+		$this->communicationFacade->addMessage($this->communication, $values->text, $this->user->identity, $this->company);
 		$this->redirect('this');
+	}
+
+	public function isViewer(Sender $sender)
+	{
+		if ($sender->user->id == $this->user->id) {
+			if ($this->company) {
+			    if ($sender->company && $sender->company->id == $this->company->id) {
+			        return TRUE;
+			    }
+			} else {
+				if ($sender->company === NULL) {
+				    return TRUE;
+				}
+			}
+		}
+		return FALSE;
 	}
 
 }

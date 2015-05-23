@@ -98,6 +98,7 @@
 				n:if="$user->isAllowed('company', 'default')"
 				n:class="$presenter->isLinkCurrent('Company:default', $allowedPermission->company->id) ||
 						 $presenter->isLinkCurrent('Company:users', $allowedPermission->company->id) ||
+						 $presenter->isLinkCurrent('Company:messages', $allowedPermission->company->id) ||
 						 $presenter->isLinkCurrent('Company:jobs', $allowedPermission->company->id) ? active">
 				<a n:href="Company:default, $allowedPermission->company->id">
 					<i class="fa fa-building-o"></i>
@@ -105,7 +106,11 @@
 					<span class="selected"></span>
 					<span class="badge badge-danger badge-roundless">{_'new'}</span>
 				</a>
-				<ul n:if="$allowedPermission->isAllowed('info', 'view') && $allowedPermission->isAllowed('users', 'view')"
+				<ul n:if="$allowedPermission->isAllowed('info', 'view') && (
+							$allowedPermission->isAllowed('users', 'view') ||
+							$allowedPermission->isAllowed('jobs', 'view') ||
+							$allowedPermission->isAllowed('messages', 'view')
+						)"
 					class="sub-menu">
 					<li n:if="$allowedPermission->isAllowed('info', 'view')"
 						class="{ifCurrent Company:default, $allowedPermission->company->id} active{/ifCurrent}">
@@ -126,6 +131,13 @@
 						<a n:href="Company:jobs, $allowedPermission->company->id">
 							<i class="icon-briefcase"></i>
 							{_'Jobs'}
+						</a>
+					</li>
+					<li n:if="$allowedPermission->isAllowed('messages', 'view')"
+						class="{ifCurrent Company:messages, $allowedPermission->company->id} active{/ifCurrent}">
+						<a n:href="Company:messages, $allowedPermission->company->id">
+							<i class="fa fa-envelope-o"></i>
+							{_'Messages'}
 						</a>
 					</li>
 				</ul>

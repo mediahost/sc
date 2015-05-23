@@ -27,11 +27,6 @@ class MessagesPresenter extends BasePresenter
 	/** @var Communication */
 	protected $communication;
 
-	/**
-	 * @secured
-	 * @resource('messages')
-	 * @privilege('default')
-	 */
 	public function actionDefault($id = NULL)
 	{
 		if ($id) {

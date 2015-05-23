@@ -91,7 +91,7 @@ class CommunicationFacade extends Object
 	 */
 	public function addMessage(Communication $communication, $text, User $user, Company $company = NULL, $flush = TRUE)
 	{
-		$sender = $communication->getContributor($user);
+		$sender = $communication->getContributor($user, $company);
 		if (!$sender) {
 			$sender = $this->addContributor($communication, $user, $company, FALSE);
 		}
@@ -169,9 +169,24 @@ class CommunicationFacade extends Object
 			->from(Communication::getClassName(), 'c')
 			->join('c.contributors', 's')
 			->where('s.user = ?0')
-			->orWhere('s.company IN (?1)')
-			->setParameter(0, $user)
-			->setParameter(1, $user->getCompanies());
+			->andWhere('s.company IS NULL')
+			->setParameter(0, $user);
+		$query = $queryBuilder->getQuery();
+		return $query->getResult();
+	}
+
+	/**
+	 * @param Company $company
+	 * @return Communication[]
+	 */
+	public function getCompanyCommunications(Company $company)
+	{
+		$queryBuilder = $this->em->createQueryBuilder();
+		$queryBuilder->select('c')
+			->from(Communication::getClassName(), 'c')
+			->join('c.contributors', 's')
+			->orWhere('s.company = ?0')
+			->setParameter(0, $company);
 		$query = $queryBuilder->getQuery();
 		return $query->getResult();
 	}
