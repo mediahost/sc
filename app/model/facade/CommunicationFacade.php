@@ -231,21 +231,30 @@ class CommunicationFacade extends Object
 	/**
 	 * @param $communications
 	 * @param User $user
-	 * @param Company $company
 	 * @return int
 	 */
-	public function getUnreadCount($communications, User $user, Company $company = NULL)
+	public function getUserUnreadCount($communications, User $user)
 	{
 		$count = 0;
 		foreach ($communications as $communication) {
-			if ($company) {
-				if (!$communication->getLastMessage()->isReadByCompany($company)) {
-					$count++;
-				}
-			} else {
-				if (!$communication->getLastMessage()->isReadByUser($user)) {
-					$count++;
-				}
+			if (!$communication->getLastMessage()->isReadByUser($user)) {
+				$count++;
+			}
+		}
+		return $count;
+	}
+
+	/**
+	 * @param Company $company
+	 * @return int
+	 */
+	public function getCompanyUnreadCount(Company $company)
+	{
+		$communications = $this->getCompanyCommunications($company);
+		$count = 0;
+		foreach ($communications as $communication) {
+			if (!$communication->getLastMessage()->isReadByCompany($company)) {
+				$count++;
 			}
 		}
 		return $count;

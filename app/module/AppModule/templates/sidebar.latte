@@ -45,47 +45,47 @@
 			<!-- END DASHBOARD -->
 
 			{if $user->isAllowed('messages')}
-				<li n:if="$user->isAllowed('messages')"
-				    n:class="$presenter->isLinkCurrent('Messages:*') ? active">
-					<a n:href="Messages:">
-						<i class="fa fa-envelope-o"></i>
-						<span class="title">{_'Messages'}</span>
-						<span n:if="$unreadMessagesCount" class="badge badge-danger">{$unreadMessagesCount}</span>
-						<span class="selected"></span>
-					</a>
-				</li>
+			<li n:if="$user->isAllowed('messages')"
+			    n:class="$presenter->isLinkCurrent('Messages:*') ? active">
+				<a n:href="Messages:">
+					<i class="fa fa-envelope-o"></i>
+					<span class="title">{_'Messages'}</span>
+					<span n:if="$unreadMessagesCount" class="badge badge-danger">{$unreadMessagesCount}</span>
+					<span class="selected"></span>
+				</a>
+			</li>
 			{/if}
 
 			<!-- BEGIN CANDIDATE -->
 			{if $user->isInRole('candidate')}
-				<li class="heading">
-					<h3 class="uppercase">{_'Candidate'}</h3>
-				</li>
-				<li n:if="$user->isAllowed('candidate', 'default')"
-					n:class="$presenter->isLinkCurrent('Candidate:*') ? active">
-					<a n:href="Candidate:">
-						<i class="fa fa-mortar-board"></i>
-						<span class="title">{_'Candidate'}</span><span class="selected"></span>
-					</a>
-				</li>
-				<li n:if="$user->isAllowed('cvEditor', 'default') && $user->identity->candidate"
-					n:class="$presenter->isLinkCurrent('CvEditor:*') ? active">
-					<a n:href="CvEditor:">
-						<i class="fa fa-edit"></i>
-						<span class="title">{_'Cv Editor'}</span><span class="selected"></span>
-						<span class="badge badge-success badge-roundless">{_'new'}</span>
-					</a>
-					<ul class="sub-menu" n:if="count($user->identity->candidate->cvs)">
-						<li n:foreach="$user->identity->candidate->cvs as $cv"
-							n:class="($presenter->isLinkCurrent('CvEditor:', $cv->id)
-								|| $presenter->isLinkCurrent('CvEditor:skills', $cv->id)) ? active">
-							<a n:href="CvEditor:, $cv->id">
-								<i n:class="fa, $cv->isDefault ? fa-star : fa-star-o"></i>
-							{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
-							</a>
-						</li>
-					</ul>
-				</li>
+			<li class="heading">
+				<h3 class="uppercase">{_'Candidate'}</h3>
+			</li>
+			<li n:if="$user->isAllowed('candidate', 'default')"
+				n:class="$presenter->isLinkCurrent('Candidate:*') ? active">
+				<a n:href="Candidate:">
+					<i class="fa fa-mortar-board"></i>
+					<span class="title">{_'Candidate'}</span><span class="selected"></span>
+				</a>
+			</li>
+			<li n:if="$user->isAllowed('cvEditor', 'default') && $user->identity->candidate"
+				n:class="$presenter->isLinkCurrent('CvEditor:*') ? active">
+				<a n:href="CvEditor:">
+					<i class="fa fa-edit"></i>
+					<span class="title">{_'Cv Editor'}</span><span class="selected"></span>
+					<span class="badge badge-success badge-roundless">{_'new'}</span>
+				</a>
+				<ul class="sub-menu" n:if="count($user->identity->candidate->cvs)">
+					<li n:foreach="$user->identity->candidate->cvs as $cv"
+						n:class="($presenter->isLinkCurrent('CvEditor:', $cv->id)
+							|| $presenter->isLinkCurrent('CvEditor:skills', $cv->id)) ? active">
+						<a n:href="CvEditor:, $cv->id">
+							<i n:class="fa, $cv->isDefault ? fa-star : fa-star-o"></i>
+						{if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
+						</a>
+					</li>
+				</ul>
+			</li>
 			{/if}
 			<!-- END CANDIDATE -->
 
@@ -135,8 +135,10 @@
 					</li>
 					<li n:if="$allowedPermission->isAllowed('messages', 'view')"
 						class="{ifCurrent Company:messages, $allowedPermission->company->id} active{/ifCurrent}">
+						{var $companyUnreadMessagesCount = $communicationFacade->getCompanyUnreadCount($allowedPermission->company)}
 						<a n:href="Company:messages, $allowedPermission->company->id">
 							<i class="fa fa-envelope-o"></i>
+							<span n:if="$companyUnreadMessagesCount" class="badge badge-danger">{$companyUnreadMessagesCount}</span>
 							{_'Messages'}
 						</a>
 					</li>
