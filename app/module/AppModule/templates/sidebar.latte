@@ -50,7 +50,7 @@
 					<a n:href="Messages:">
 						<i class="fa fa-envelope-o"></i>
 						<span class="title">{_'Messages'}</span>
-						<span class="badge badge-danger">{$unreadMessagesCount}</span>
+						<span n:if="$unreadMessagesCount" class="badge badge-danger">{$unreadMessagesCount}</span>
 						<span class="selected"></span>
 					</a>
 				</li>

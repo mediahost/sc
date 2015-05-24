@@ -1,6 +1,6 @@
 {block header}
 <!-- BEGIN HEADER -->
-<div n:class="page-header, navbar, 
+<div n:class="page-header, navbar,
 			$designSettings->headerFixed ? navbar-fixed-top : navbar-static-top">
     <!-- BEGIN TOP NAVIGATION BAR -->
     <div n:class="page-header-inner, $designSettings->layoutBoxed ? container">
@@ -19,12 +19,12 @@
         <!-- BEGIN TOP NAVIGATION MENU -->
         <div class="top-menu">
             <ul class="nav navbar-nav pull-right">
-				
+
 				<!-- BEGIN INBOX DROPDOWN -->
 				<li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 						<i class="icon-envelope-open"></i>
-						<span class="badge badge-default">{$unreadMessagesCount}</span>
+						<span n:if="$unreadMessagesCount" class="badge badge-default">{$unreadMessagesCount}</span>
 					</a>
 					<ul class="dropdown-menu">
 						<li class="external">
@@ -50,7 +50,7 @@
 					</ul>
 				</li>
 				<!-- END INBOX DROPDOWN -->
-				
+
 				<!-- BEGIN LANGUAGE BAR -->
 				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
 				<li class="dropdown dropdown-language" n:if="$user->loggedIn">

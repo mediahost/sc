@@ -209,6 +209,11 @@ class CommunicationFacade extends Object
 		return $this->communicationRepository->find($id);
 	}
 
+	/**
+	 * @param Communication $communication
+	 * @param User $user
+	 * @param Company $company
+	 */
 	public function markCommunicationAsRead(Communication $communication, User $user, Company $company = NULL)
 	{
 		$sender = $communication->getContributor($user, $company);
@@ -221,7 +226,29 @@ class CommunicationFacade extends Object
 			}
 		}
 		$this->em->flush();
+	}
 
+	/**
+	 * @param $communications
+	 * @param User $user
+	 * @param Company $company
+	 * @return int
+	 */
+	public function getUnreadCount($communications, User $user, Company $company = NULL)
+	{
+		$count = 0;
+		foreach ($communications as $communication) {
+			if ($company) {
+				if (!$communication->getLastMessage()->isReadByCompany($company)) {
+					$count++;
+				}
+			} else {
+				if (!$communication->getLastMessage()->isReadByUser($user)) {
+					$count++;
+				}
+			}
+		}
+		return $count;
 	}
 
 }
