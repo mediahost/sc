@@ -54,6 +54,7 @@ class Message extends BaseEntity
 	public function __construct()
 	{
 		$this->time = new DateTime();
+		$this->reads = new ArrayCollection();
 		parent::__construct();
 	}
 
