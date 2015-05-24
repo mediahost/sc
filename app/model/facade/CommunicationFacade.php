@@ -100,6 +100,7 @@ class CommunicationFacade extends Object
 		$message->text = $text;
 		$message->sender = $sender;
 		$message->communication = $communication;
+		$message->addRead(new Read($sender));
 		$communication->addMessage($message);
 		if ($flush) $this->em->flush();
 		return $message;
