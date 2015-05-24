@@ -6,7 +6,13 @@
 					<img class="avatar" alt="" src="{$basePath}/{$message->sender->image}"/>
 					<div class="message">
 						<span class="arrow"></span>
-						<a href="#" class="name">{$message->sender->getName()}</a>
+						<span n:if="!$control->isMessageUnread($message)" class="badge badge-default badge-roundless">Unread</span>
+						<a href="#" class="name">
+							{$message->sender->getName()}
+							{if $control->isViewer($message->sender) && $control->isViewedByCompany()}
+								({$message->sender->getUserName()})
+							{/if}
+						</a>
 						<span class="datetime">{$message->time|date:'j. n. Y'}</span>
 						<span class="body">{$message->text}</span>
 					</div>

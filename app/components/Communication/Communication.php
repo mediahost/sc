@@ -3,6 +3,7 @@
 namespace App\Components;
 
 use App\Model\Entity\Company;
+use App\Model\Entity\Message;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
 use Kdyby\Doctrine\EntityManager;
@@ -70,18 +71,27 @@ class Communication extends BaseControl
 
 	public function isViewer(Sender $sender)
 	{
-		if ($sender->user->id == $this->user->id) {
-			if ($this->company) {
-			    if ($sender->company && $sender->company->id == $this->company->id) {
-			        return TRUE;
-			    }
-			} else {
-				if ($sender->company === NULL) {
-				    return TRUE;
-				}
-			}
+		if ($this->company) {
+		    return $sender->company && $sender->company->id == $this->company->id;
+		} else {
+			return $sender->user->id == $this->user->id;
 		}
-		return FALSE;
+	}
+
+	public function isMessageUnread(Message $message)
+	{
+		if ($this->company && $message->isReadByCompany($this->company)) {
+		    return TRUE;
+		} elseif (!$this->company && $message->isReadByUser($this->user->identity)) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
+	public function isViewedByCompany()
+	{
+		return (bool) $this->company;
 	}
 
 }

@@ -54,6 +54,15 @@ class Sender extends BaseEntity
 		}
 	}
 
+	public function getUserName()
+	{
+		if ($this->user->candidate) {
+			return $this->user->candidate->name;
+		} else {
+			return $this->user->mail;
+		}
+	}
+
 	/**
 	 * TODO: implement - vrací odkaz na veřejný profil společnosti nebo uživatele (veřejný profil uživatele, zatím neexistuje, takže bude stačit, když bude vracet odkaz na editaci uživatele
 	 */
