@@ -153,3 +153,7 @@ services:
 
 	ICommunicationListFactory:
 		implement: App\Components\ICommunicationListFactory
+
+	IStartCommunicationModalFactory:
+		implement: App\Components\IStartCommunicationModalFactory
+		inject: yes

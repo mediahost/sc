@@ -6,6 +6,7 @@ use App\Components\Company\CompanyInfoControl;
 use App\Components\Company\ICompanyInfoControlFactory;
 use App\Components\ICommunicationFactory;
 use App\Components\ICommunicationListFactory;
+use App\Components\IStartCommunicationModalFactory;
 use App\Components\User\CompanyUserControl;
 use App\Components\User\ICompanyUserControlFactory;
 use App\Model\Entity\Communication;
@@ -37,6 +38,9 @@ class CompanyPresenter extends BasePresenter
 
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
+
+	/** @var IStartCommunicationModalFactory @inject */
+	public $startCommunicationModalFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -257,6 +261,16 @@ class CompanyPresenter extends BasePresenter
 			]));
 		}
 		$control->setActiveCommunication($this->communication);
+		return $control;
+	}
+
+	public function createComponentStartCommunicationModal()
+	{
+		$control = $this->startCommunicationModalFactory->create();
+		$control->communicateAsCompany($this->company);
+		$control->onSuccess[] = function (Communication $communication) {
+			$this->redirect('messages', $this->getParameter('id'), $communication->id);
+		};
 		return $control;
 	}
 
