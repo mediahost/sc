@@ -59,5 +59,6 @@ services:
 			- allow('admin', 'cvViewer')
 			- allow('admin', 'cvEditor')
 			- allow('admin', 'cvs')
+			- allow('admin', 'messages')
 
 			- allow('superadmin') # Full access for superadmin
