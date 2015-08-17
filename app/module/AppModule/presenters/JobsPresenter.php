@@ -62,11 +62,22 @@ class JobsPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('jobs')
+	 * @privilege('edit')
+	 */
+	public function actionEdit($id)
+	{
+		$this->flashMessage('Not implemented yet', 'warning');
+		$this->redirect('Dashboard:');
+	}
+
+	/**
+	 * @secured
+	 * @resource('jobs')
 	 * @privilege('showAll')
 	 */
 	public function actionShowAll()
 	{
-
+		
 	}
 
 	// </editor-fold>
