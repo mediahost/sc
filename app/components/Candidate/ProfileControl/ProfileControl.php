@@ -107,11 +107,6 @@ class ProfileControl extends BaseControl
 	// </editor-fold>
 }
 
-class ProfileControlException extends Exception
-{
-
-}
-
 interface IProfileControlFactory
 {
 
