@@ -1,17 +1,12 @@
-{block title}
-{_'Candidate'}
-{/block}
-
-{block breadcrumbItems}
-<li class="active">
-	{_'Candidate'}
-</li>
-{/block}
+{includeblock 'blocks.latte'}
 
 {block content}
+<div class="col-md-3">
+	{include navigation}
+</div>
 
-<div class="col-md-12 col-sm-12">
-	<h1>{_'Personal Info'}</h1>
+<div class="col-md-9">
+	<h1>{_'Personal Details'}</h1>
 	
 	<div class="content-form-page">
 		<div class="row">
@@ -19,22 +14,31 @@
 				{control profileForm}
 			</div>
 			<div class="col-md-5">
+				<div class="thumbnail">
+					<img alt="{_'Profile Image'}" src="{$basePath}/foto/304-304/{$candidate->photo}" class="hoverZoomLink">
+					<h3 class="text-center padding-top-10">
+						<small>{$candidate->degreeBefore}</small>
+						<strong>{$candidate->name}</strong> 
+						<small>{$candidate->degreeAfter}</small>
+					</h3>
+				</div>
+				
 				<table class="table table-bordered table-striped">
 					<tbody>
-						<tr>
-							<td>
-								{_'Name'}
-							</td>
-							<td>
-								{$candidate->name}
-							</td>
-						</tr>
 						<tr>
 							<td>
 								{_'Birthday'}
 							</td>
 							<td>
 								{$candidate->birthday|date:'d/m/Y'}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								{_'Gender'}
+							</td>
+							<td>
+								{$candidate->genderName}
 							</td>
 						</tr>
 					</tbody>

@@ -9,9 +9,6 @@ use App\Model\Entity\Candidate;
 use Exception;
 use Nette\Utils\ArrayHash;
 
-/**
- * Form with skills settings.
- */
 class ProfileControl extends BaseControl
 {
 
@@ -30,15 +27,23 @@ class ProfileControl extends BaseControl
 	{
 		$this->checkEntityExistsBeforeRender();
 
-		$form = new Form;
+		$form = new Form();
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer);
+		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('name', 'Name')
+		$form->addText('degreebefore', 'Degree in front of name', NULL, 50);
+//				->getControlPrototype()->class[] = 'input-small';
+
+		$form->addText('name', 'Name', NULL, 100)
 				->setAttribute('placeholder', 'name and surename')
 				->setRequired('Please enter your name.');
 
+		$form->addText('degreeafter', 'Degree after name', NULL, 50);
+//				->getControlPrototype()->class[] = 'input-small';
+
 		$form->addDateInput('birthday', 'Birthday');
+
+		$form->addRadioList('gender', 'Gender', Candidate::getGenderList());
 
 		$form->addSubmit('save', 'Save');
 
@@ -58,6 +63,9 @@ class ProfileControl extends BaseControl
 	{
 		$this->candidate->name = $values->name;
 		$this->candidate->birthday = $values->birthday;
+		$this->candidate->gender = $values->gender;
+		$this->candidate->degreeBefore = $values->degreebefore;
+		$this->candidate->degreeAfter = $values->degreeafter;
 		return $this;
 	}
 
@@ -74,6 +82,9 @@ class ProfileControl extends BaseControl
 		$values = [
 			'name' => $this->candidate->name,
 			'birthday' => $this->candidate->birthday,
+			'gender' => $this->candidate->gender,
+			'degreebefore' => $this->candidate->degreeBefore,
+			'degreeafter' => $this->candidate->degreeAfter,
 		];
 		return $values;
 	}
@@ -81,7 +92,7 @@ class ProfileControl extends BaseControl
 	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->candidate) {
-			throw new ProfileControlException('Use setJob(\App\Model\Entity\Job) before render');
+			throw new ProfileControlException('Use setCandidate(\App\Model\Entity\Candidate) before render');
 		}
 	}
 

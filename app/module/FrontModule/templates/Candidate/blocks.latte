@@ -1,18 +1,11 @@
 {block title}
-{if $cv->candidate->user->id === $user->id}
-	{_'My Cv'}
-{else}
-	{_"%s's CV", 1, $cv->candidate}
-{/if}
+{_'Candidate'}
 {/block}
 
 {block breadcrumbItems}
-{if $cv->candidate->user->id === $user->id}
+{if $candidate->user->id === $user->id}
 	<li>
 		<a n:href="Candidate:">{_'Candidate'}</a>
-	</li>
-	<li class="active">
-		{if $cv->name}{_'CV'} {$cv}{else}<i>{_'unnamed CV'}</i>{/if}
 	</li>
 {else}
 	<li>
@@ -22,24 +15,27 @@
 		<a n:href="Users:edit, $cv->candidate->user->id">{$cv->candidate->user}</a>
 	</li>
 	<li>
-		<a n:href="Cvs:">{_'CVs'}</a>
+		<a n:href="Candidates:">{_'Candidates'}</a>
 	</li>
 	<li>
 		<a n:href="Users:view, $cv->candidate->user->id">{$cv->candidate}</a>
 	</li>
 {/if}
+	<li class="active">
+		{_'Personal Info'}
+	</li>
 {/block}
 
 {define navigation}
 <ul class="faq-tabbable">
 	<li {ifCurrent default}class="active"{/ifCurrent}>
-		<a n:href="default">{_'Main'}</a>
+		<a n:href="default">{_'Personal Details'}</a>
 	</li>
-	<li {ifCurrent skills}class="active"{/ifCurrent}>
-		<a n:href="skills">{_'IT Skills'}</a>
+	<li {ifCurrent address}class="active"{/ifCurrent}>
+		<a n:href="address">{_'Address'}</a>
 	</li>
-	<li {ifCurrent jobs}class="active"{/ifCurrent}>
-		<a n:href="jobs">{_'Matched jobs'}</a>
+	<li {ifCurrent photo}class="active"{/ifCurrent}>
+		<a n:href="photo">{_'Photo'}</a>
 	</li>
 </ul>
 {/define}

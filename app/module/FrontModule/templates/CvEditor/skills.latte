@@ -1,16 +1,33 @@
-{includeblock 'navigation.latte'}
+{includeblock 'blocks.latte'}
 
 {block content}
 <div class="col-md-12 col-sm-12">
-	<h1>{_'CV'}: {if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}</h1>
+	{include headline}
 	<div class="row">
-		<div class="col-md-3">
-			{include navigation, cv => $cv}
+		<div class="col-md-2">
+			{include navigation}
 		</div>
-		<div class="col-md-9">
-			<div class="content-form-page">
-				{control skillsForm}
+		<div class="col-md-6">
+			<div class="portlet">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-notebook font-green-sharp"></i>
+						<span class="caption-subject font-green-sharp">
+							{_'IT Skills'}
+						</span>
+					</div>
+					<div class="actions">
+						<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
+						</a>
+					</div>
+				</div>
+				<div class="portlet-body content-form-page">
+					{control skillsForm}
+				</div>
 			</div>
+		</div>
+		<div class="col-md-4">
+			{include preview}
 		</div>
 	</div>
 </div>

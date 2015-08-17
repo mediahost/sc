@@ -7,8 +7,20 @@ jQuery(document).ready(function () {
 	Layout.initTwitter();
 
 	// special for pages
-	Login.init();
+	Login.init(); // remember me
 	
 	// Global components
 	GlobalCustomInit.init();
+});
+
+$('.modal.ajax').on('loaded.bs.modal', function (e) {
+	GlobalCustomInit.onReloadModalEvent();
+});
+
+$.nette.ext('netteAjax', {
+	complete: function () {
+		GlobalCustomInit.onReloadGridoEvent();
+		GlobalCustomInit.onReloadModalEvent();
+		GlobalCustomInit.onReloadPdfEvent();
+	}
 });

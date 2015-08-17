@@ -37,6 +37,12 @@ class BasicInfoControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer);
 
 		$form->addText('name', 'Name');
+		$form->addSelect2('theme', 'Theme', [
+			'default' => 'Default',
+			'europass' => 'Euro Pass',
+			'standard1' => 'Standard 1',
+			'standard2' => 'Standard 2',
+		]);
 
 		if ($this->isAjax && $this->isSendOnChange) {
 			$form->getElementPrototype()->class('ajax sendOnChange');
@@ -53,14 +59,13 @@ class BasicInfoControl extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		// TODO: no AJAX in form
-		$this->redrawControl();
 		$this->onAfterSave($this->cv);
 	}
 
 	private function load(ArrayHash $values)
 	{
 		$this->cv->name = $values->name;
+		$this->cv->theme = $values->theme;
 		return $this;
 	}
 
@@ -76,6 +81,7 @@ class BasicInfoControl extends BaseControl
 	{
 		$values = [
 			'name' => $this->cv->name,
+			'theme' => $this->cv->theme,
 		];
 		return $values;
 	}

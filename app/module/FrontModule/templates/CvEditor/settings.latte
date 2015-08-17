@@ -1,0 +1,108 @@
+{includeblock 'blocks.latte'}
+
+{block content}
+
+<div class="col-md-12 col-sm-12">
+	<h1>
+		{_'CV'}: {if $cv->name}{$cv}{else}<i>{_'unnamed'}</i>{/if}
+		<small><a n:href="default showTips => TRUE">{_'show tips'}</a></small>
+	</h1>
+	<div class="row">
+		<div class="col-md-2 left-column">
+			{include navigation, cv => $cv}
+		</div>
+		<div class="col-md-6 middle-column">
+			<div class="portlet">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-notebook font-green-sharp"></i>
+						<span class="caption-subject font-green-sharp">
+							{_'Settings'}
+						</span>
+					</div>
+				</div>
+				<div class="portlet-body content-form-page">
+					{control settingsForm}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 right-column">
+			{include preview, cv => $cv}
+		</div>
+	</div>
+</div>
+
+
+<div id="walkthrough-content" style="display:none;" n:if="$showWalkThrough">
+	<div id="walkthrough-1">
+        <h1>{_'What can I do here?'}</h1>
+
+        <p>{_'CV page is a easy system for designing your CV, share it, send it or get new job offers.'}</p>
+        <p>{_'Click next to continue the tour'}</p>
+	</div>
+
+	<div id="walkthrough-2">
+        <h1>{_'Live preview'}</h1>
+        <p>{_'Our new helper for your better editation.'}</p>
+        <p>{_'If you change some data, we will show you changed PDF.'}</p>
+	</div>
+
+	<div id="walkthrough-3">
+        <h1>{_'Edit part'}</h1>
+        <p>{_'Data, whitch you can edit is always direct in front of you.'}</p>
+	</div>
+
+	<div id="walkthrough-4">
+        <p>{_'Each part of your CV is easy categorised to better overview.'}</p>
+        <p>{_'You can try create your first CV right now!'}</p>
+	</div>
+</div>
+		
+		
+{define jsAppPost}
+{include parent}
+<script type="text/javascript" n:if="$showWalkThrough">
+	$(document).ready(function() {
+		// Set up tour
+		$('body').pagewalkthrough({
+			name: 'introduction',
+			buttons: {
+				jpwFinish: {
+					i18n: 'Try it &#10004;'
+				}
+			},
+			steps: [
+				{
+			   popup: {
+				   content: '#walkthrough-1',
+				   type: 'modal'
+			   }
+			}, {
+				wrapper: '.right-column',
+				popup: {
+					content: '#walkthrough-2',
+					type: 'tooltip',
+					position: 'left'
+				}
+			}, {
+				wrapper: '.middle-column',
+				popup: {
+					content: '#walkthrough-3',
+					type: 'tooltip',
+					position: 'right',
+				}
+			}, {
+				wrapper: '.left-column',
+				popup: {
+					content: '#walkthrough-4',
+					type: 'tooltip',
+					position: 'right'
+				}
+			}]
+		});
+
+		// Show the tour
+		$('body').pagewalkthrough('show');
+	});
+</script>
+{/define}

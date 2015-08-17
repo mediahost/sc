@@ -19,6 +19,7 @@ services:
 			- addResource('candidate')
 			- addResource('candidates')
 			- addResource('cvEditor')
+			- addResource('cvViewer')
 			- addResource('company')
 			- addResource('companies')
 			- addResource('job')
@@ -40,8 +41,9 @@ services:
 			- allow('signed', 'registration')
 			- allow('signed', 'profile', ['default', 'settings', 'delete'])
 
-			- allow('candidate', 'candidate', 'default')
-			- allow('candidate', 'cvEditor', ['default', 'skills', 'jobs'])
+			- allow('candidate', 'candidate', ['default', 'address', 'photo'])
+			- allow('candidate', 'cvViewer')
+			- allow('candidate', 'cvEditor')
 			- allow('company', ['company', 'job'])
 			- allow(['candidate', 'company'], 'messages')
 
@@ -54,6 +56,7 @@ services:
 			- allow('admin', 'companies')
 			- allow('admin', 'jobs')
 			- allow('admin', 'job')
+			- allow('admin', 'cvViewer')
 			- allow('admin', 'cvEditor')
 			- allow('admin', 'cvs')
 

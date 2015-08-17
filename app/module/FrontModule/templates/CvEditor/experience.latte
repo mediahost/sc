@@ -1,0 +1,88 @@
+{includeblock 'blocks.latte'}
+
+{block content}
+<div class="col-md-12 col-sm-12">
+	{include headline}
+	<div class="row">
+		<div class="col-md-2">
+			{include navigation}
+		</div>
+		<div class="col-md-6">
+			<div class="portlet">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-notebook font-green-sharp"></i>
+						<span class="caption-subject font-green-sharp">
+							{_'Other experience'}
+						</span>
+					</div>
+					<div class="actions">
+						<a n:href="this#addExperience"
+						   data-toggle="modal"
+						   class="btn btn-circle green-sharp">
+							<i class="fa fa-plus"></i> {_'Add Experience'}
+						</a>
+					</div>
+				</div>
+				<div class="portlet-body content-form-page">
+					<div class="panel panel-default"
+						 n:if="count($cv->experiences)">
+						<div class="panel-heading">
+							<h3 class="panel-title">{_'Other experiences history'}</h3>
+						</div>
+						<ul class="list-group">
+							<li class="list-group-item" n:foreach="$cv->experiences as $exp">
+								<div class="row">
+									<div class="col-md-8">
+										{$exp}
+									</div>
+									<div class="col-md-4">
+										<div class="text-right">
+											<a n:href="editExperience expId => $exp->id" 
+											   data-target="#editExperience"
+											   data-toggle="modal">
+												<i class="icon-pencil"></i>
+											</a>
+											<a n:href="deleteExperience! $exp->id"><i class="icon-trash"></i></a>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="alert alert-info" n:if="!count($cv->experiences)">
+						{_'You have empty other experience history.'}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			{include preview}
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="addExperience" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+				<h4 class="modal-title">{_'Add Experience'}</h4>
+			</div>
+			<div class="modal-body">
+				{control experienceForm}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade ajax" id="editExperience" aria-hidden="true">
+	<div class="page-loading page-loading-boxed">
+		<img src="{$basePath}/assets/global/img/loading-spinner-grey.gif" alt="" class="loading">
+		<span>&nbsp;&nbsp;{_'Loading...'} </span>
+	</div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+		</div>
+	</div>
+</div>

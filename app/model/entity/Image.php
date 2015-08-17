@@ -19,7 +19,9 @@ use Nette\Utils\DateTime;
 class Image extends BaseEntity
 {
 
+	const FOLDER_DEFAULT = 'others';
 	const FOLDER_COMPANY_LOGO = 'companies/logos';
+	const FOLDER_CANDIDATE_IMAGE = 'candidates/images';
 
 	use Identifier;
 
@@ -34,6 +36,9 @@ class Image extends BaseEntity
 
 	/** string */
 	public $requestedFilename;
+
+	/** string */
+	private $folderToSave = self::FOLDER_DEFAULT;
 
 	public function __construct($file)
 	{
@@ -56,6 +61,26 @@ class Image extends BaseEntity
 		$this->requestedFilename = $requestedFilename;
 		$this->lastChange = new DateTime();
 		return $this;
+	}
+	
+	public function setFolder($folder = self::FOLDER_DEFAULT)
+	{
+		switch ($folder) {
+			case self::FOLDER_COMPANY_LOGO:
+			case self::FOLDER_CANDIDATE_IMAGE:
+			case self::FOLDER_DEFAULT:
+				$this->folderToSave = $folder;
+				break;
+			default:
+				$this->folderToSave = self::FOLDER_DEFAULT;
+				break;
+		}
+		return $this;
+	}
+	
+	public function getFolder()
+	{
+		return $this->folderToSave;
 	}
 
 	public function isChanged()
