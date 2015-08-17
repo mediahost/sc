@@ -80,23 +80,35 @@ class Foto extends Object
 
 		$sizeX = 0;
 		$sizeY = 0;
-		if (preg_match("@^(\d+)\-(\d+)$@", $size, $matches)) {
+		$resizeMethod = Image::FIT;
+		if (preg_match('@^(\d+)' . preg_quote(FotoHelpers::getSizeSeparator()) . '(\d+)$@', $size, $matches)) {
 			$sizeX = $matches[1];
 			$sizeY = $matches[2];
+			if ((int) $sizeY === 0) {
+				$resizeMethod = Image::EXACT;
+			}
 		}
 
-		if ($sizeX > 0 && $sizeY > 0) {
-			$resizedPath = Helpers::getPath($this->rootFolder, "{$sizeX}-{$sizeY}");
-			Helpers::mkDirForce(Helpers::getPath($resizedPath, FotoHelpers::getFolderFromPath($name)));
+		if ($sizeX > 0) {
+			$resizedPath = Helpers::getPath($this->rootFolder, $sizeX . FotoHelpers::getSizeSeparator() . $sizeY);
+			FileSystem::createDir(Helpers::getPath($resizedPath, FotoHelpers::getFolderFromPath($name)));
 			$resized = Helpers::getPath($resizedPath, $name);
 
 			if (!file_exists($resized) || filemtime($filename) > filemtime($resized)) {
 				$img = Image::fromFile($filename);
 
-				$sizeX = $sizeX < $img->width ? $sizeX : $img->width;
-				$sizeY = $sizeY < $img->height ? $sizeY : $img->height;
+				switch ($resizeMethod) {
+					case Image::EXACT:
+						$sizeY = $sizeX;
+						break;
+					case Image::FIT:
+					default:
+						$sizeX = min($sizeX, $img->width);
+						$sizeY = min($sizeY, $img->height);
+						break;
+				}
 
-				$img->resize($sizeX, $sizeY);
+				$img->resize($sizeX, $sizeY, $resizeMethod);
 				$img->save($resized);
 			}
 
@@ -122,29 +134,41 @@ class Foto extends Object
 	 * @param FileUpload|string $source
 	 * @param type $filename filename for save
 	 * @param type $folder set added folder to save image (for ex. products)
-	 * @param int $format
+	 * @param int $defaultFormat when format not loaded from source
 	 * @return string filename
 	 * @throws FotoException
 	 * @throws UnknownImageFileException
 	 */
-	public function create($source, $filename, $folder = NULL, $format = Image::PNG)
+	public function create($source, &$filename, $folder = NULL, $defaultFormat = Image::PNG)
 	{
-		if ($source instanceof FileUpload) { // uploaded
+		$format = NULL;
+		if ($source instanceof Image) { // image
+			$img = $source;
+		} else if ($source instanceof FileUpload) { // uploaded
+			$format = FotoHelpers::getFormatFromString($source->contents);
 			$img = Image::fromString($source->contents);
 		} else if (is_string($source)) { // filename or string
-			$img = file_exists($source) ? Image::fromFile($source) : Image::fromString($source);
+			if (file_exists($source)) {
+				$img = Image::fromFile($source, $format);
+			} else {
+				$format = FotoHelpers::getFormatFromString($source->contents);
+				$img = Image::fromString($source);
+			}
 		} else {
-			throw new FotoException("This source format isn't supported");
+			throw new FotoException('This source format isn\'t supported');
+		}
+		if ($format === NULL) {
+			$format = $defaultFormat;
 		}
 
-		$filenameWithExt = FotoHelpers::getExtendedFilename($filename, $format);
+		$filename = FotoHelpers::getExtendedFilename($filename, $format);
 
 		$folderFullPath = Helpers::getPath($this->originalFolder, $folder);
 		FileSystem::createDir($folderFullPath);
 
-		$this->delete(Helpers::getPath($folder, $filenameWithExt));
+		$this->delete(Helpers::getPath($folder, $filename));
 
-		$fullFilename = Helpers::getPath($folderFullPath, $filenameWithExt);
+		$fullFilename = Helpers::getPath($folderFullPath, $filename);
 		$img->save($fullFilename);
 
 		return $fullFilename;
@@ -162,8 +186,8 @@ class Foto extends Object
 	public function deleteThumbnails($name)
 	{
 		foreach (scandir($this->rootFolder) as $dir) {
-			if (preg_match("@^\d+\-\d+$@", $dir)) {
-				$filename = Helpers::getPath($this->originalFolder, $dir, $name);
+			if (preg_match('@^\d+' . preg_quote(FotoHelpers::getSizeSeparator()) . '\d+$@', $dir)) {
+				$filename = Helpers::getPath($this->rootFolder, $dir, $name);
 				FotoHelpers::deleteFile($filename);
 			}
 		}
@@ -202,35 +226,58 @@ class FotoHelpers extends Object
 		return NULL;
 	}
 
+	public static function getFormatFromString($s)
+	{
+		$types = [
+			'image/jpeg' => Image::JPEG,
+			'image/gif' => Image::GIF,
+			'image/png' => Image::PNG
+		];
+		$type = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $s);
+		return isset($types[$type]) ? $types[$type] : NULL;
+	}
+
 	public static function recognizeTypeFromFileExtension($filename)
 	{
-		if (preg_match('~\.(png|jpg|jpeg|gif)$~i', $filename, $matches)) {
-			switch ($filename) {
-				case 'jpeg':
-				case 'jpg':
-					return Image::JPEG;
-				case 'png':
-					return Image::PNG;
-				case 'gif':
-					return Image::GIF;
-			}
+		switch (strtolower(pathinfo($filename, PATHINFO_EXTENSION))) {
+			case 'jpg':
+			case 'jpeg':
+				return Image::JPEG;
+			case 'png':
+				return Image::PNG;
+			case 'gif':
+				return Image::GIF;
+			default:
+				return NULL;
 		}
-		return NULL;
 	}
 
 	public static function getExtendedFilename($filename, $format)
 	{
 		switch ($format) {
 			case Image::JPEG:
-				$ext = "jpg";
+				$ext = 'jpg';
 				break;
 			case Image::PNG:
-				$ext = "png";
+				$ext = 'png';
+				break;
+			case Image::GIF:
+				$ext = 'gif';
 				break;
 			default:
-				throw new FotoException("This requested format isn't supported");
+				throw new FotoException('This requested format isn\'t supported');
 		}
 		return $filename . '.' . $ext;
+	}
+
+	public static function getFilenameWithoutExt($filenameWithExt)
+	{
+		return preg_replace('/\.(\w+)$/', '', $filenameWithExt);
+	}
+
+	public static function getSizeSeparator()
+	{
+		return '-';
 	}
 
 }

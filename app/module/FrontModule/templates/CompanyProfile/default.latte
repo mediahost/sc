@@ -102,7 +102,7 @@
 		</ul>
 
 		<h2 class="padding-top-20">{_'About Us'}</h2>
-		<img src="{$basePath}/foto/75-75/{$company->logo}" n:if="$company->logo" alt="logo">
+		<img src="{$basePath}/foto/{$company->logo|size:75,75}" n:if="$company->logo" alt="logo">
 		<p n:ifset="$company->description">{$company->description}</p> 
 	</div>
 

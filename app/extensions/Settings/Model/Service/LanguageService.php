@@ -46,7 +46,7 @@ class LanguageService extends BaseService
 	 */
 	public function setUserLanguage($lang)
 	{
-		if ($this->user->id && $this->isAllowed($lang)) {
+		if ($this->user && $this->user->id && $this->isAllowed($lang)) {
 			if (!$this->user->pageConfigSettings instanceof PageConfigSettings) {
 				$this->user->pageConfigSettings = new PageConfigSettings;
 			}

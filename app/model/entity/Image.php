@@ -2,11 +2,14 @@
 
 namespace App\Model\Entity;
 
+use App\Extensions\FotoHelpers;
+use App\Helpers;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
+use Nette\Utils\Random;
 
 /**
  * @ORM\Entity
@@ -22,47 +25,60 @@ class Image extends BaseEntity
 	const FOLDER_DEFAULT = 'others';
 	const FOLDER_COMPANY_LOGO = 'companies/logos';
 	const FOLDER_CANDIDATE_IMAGE = 'candidates/images';
+	const DEFAULT_IMAGE = 'default.png';
 
 	use Identifier;
 
 	/** @ORM\Column(type="string", length=256, nullable=false) */
 	protected $filename;
 
-	/** @ORM\Column(type="date") */
+	/** @ORM\Column(type="datetime") */
 	protected $lastChange;
 
-	/** FileUpload */
+	/** @var FileUpload */
 	public $file;
 
-	/** string */
-	public $requestedFilename;
+	/** @var string */
+	protected $requestedFilename;
 
-	/** string */
+	/** @var string */
 	private $folderToSave = self::FOLDER_DEFAULT;
 
-	public function __construct($file)
+	public function __construct($source)
 	{
-		if ($file instanceof FileUpload) {
-			$this->setFile($file);
-		} else if (is_string($file)) {
-			$this->filename = $file;
-		}
+		$this->setSource($source);
 		parent::__construct();
 	}
 
 	public function __toString()
 	{
-		return (string) $this->filename;
+		return (string) $this->filename ? $this->filename : Image::DEFAULT_IMAGE;
+	}
+
+	public function setSource($source)
+	{
+		if ($source instanceof FileUpload) {
+			$this->setFile($source);
+		} else if (is_string($source)) {
+			$this->filename = $source;
+		}
+		return $this;
 	}
 
 	public function setFile(FileUpload $file, $requestedFilename = NULL)
 	{
 		$this->file = $file;
 		$this->requestedFilename = $requestedFilename;
+		$this->actualizeLastChange();
+		return $this;
+	}
+
+	private function actualizeLastChange()
+	{
 		$this->lastChange = new DateTime();
 		return $this;
 	}
-	
+
 	public function setFolder($folder = self::FOLDER_DEFAULT)
 	{
 		switch ($folder) {
@@ -77,7 +93,18 @@ class Image extends BaseEntity
 		}
 		return $this;
 	}
-	
+
+	public function getRequestedFilename()
+	{
+		if ($this->requestedFilename) {
+			return $this->requestedFilename;
+		} else if ($this->file instanceof FileUpload && $this->file->name) {
+			return FotoHelpers::getFilenameWithoutExt($this->file->name);
+		} else if ($this->file->name) {
+			return Random::generate();
+		}
+	}
+
 	public function getFolder()
 	{
 		return $this->folderToSave;
@@ -85,7 +112,24 @@ class Image extends BaseEntity
 
 	public function isChanged()
 	{
-		return (bool) $this->file->isImage();
+		if ($this->file instanceof FileUpload) {
+			return (bool) $this->file->isImage();
+		}
+		return FALSE;
+	}
+
+	public static function returnSizedFilename($image, $sizeX = NULL, $sizeY = NULL)
+	{
+		$size = NULL;
+		if ($sizeX) {
+			$sizeY = $sizeY ? $sizeY : '0';
+			$size = $sizeX . FotoHelpers::getSizeSeparator() . $sizeY;
+		}
+		$filename = Image::DEFAULT_IMAGE;
+		if ($image instanceof Image) {
+			$filename = (string) $image;
+		}
+		return Helpers::getPath($size, $filename);
 	}
 
 }

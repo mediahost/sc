@@ -6,6 +6,7 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
+use App\Model\Entity\Image;
 use Nette\Utils\ArrayHash;
 
 class PhotoControl extends BaseControl
@@ -31,7 +32,7 @@ class PhotoControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 
 		$form->addUploadImageWithPreview('photo', 'Photo')
-				->setPreview('/foto/200-200/' . $this->candidate->photo, $this->candidate->name)
+				->setPreview('/foto/200-200/' . ($this->candidate->photo ? $this->candidate->photo : Image::DEFAULT_IMAGE), $this->candidate->name)
 				->setSize(200, 200)
 				->addCondition(Form::FILLED)
 				->addRule(Form::IMAGE, 'Photo must be valid image');

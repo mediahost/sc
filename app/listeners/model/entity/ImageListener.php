@@ -3,13 +3,12 @@
 namespace App\Listeners\Model\Entity;
 
 use App\Extensions\Foto;
-use App\Extensions\FotoHelpers;
 use App\Helpers;
 use App\Model\Entity\Image;
-use Nette\Utils\Image as ImageUtils;
 use Doctrine\ORM\Events;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
+use Nette\Utils\Image as ImageUtils;
 
 class ImageListener extends Object implements Subscriber
 {
@@ -59,21 +58,16 @@ class ImageListener extends Object implements Subscriber
 	private function removeImage(Image $image)
 	{
 		if ($image->filename) {
-
+			$this->fotoService->delete($image->filename);
 		}
 	}
 
 	private function createNewImage(Image $image, $folder)
 	{
-		$format = ImageUtils::PNG;
-		if ($image->requestedFilename) {
-			$filename = $image->requestedFilename;
-			$realFilename = FotoHelpers::getExtendedFilename($filename, $format);
-		} else {
-			$filename = $realFilename = $image->file->name;
-		}
-		$this->fotoService->create($image->file, $filename, $folder, $format);
-		return $realFilename;
+		$requestedFormat = ImageUtils::PNG;
+		$filename = $image->requestedFilename;
+		$this->fotoService->create($image->file, $filename, $folder, $requestedFormat);
+		return $filename;
 	}
 
 }

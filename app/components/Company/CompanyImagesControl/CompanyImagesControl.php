@@ -6,6 +6,7 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Company;
+use App\Model\Entity\Image;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
@@ -46,7 +47,7 @@ class CompanyImagesControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 
 		$form->addUploadImageWithPreview('logo', 'Logo')
-				->setPreview('/foto/200-150/' . $this->company->logo, $this->company->name)
+				->setPreview('/foto/200-150/' . ($this->company->logo ? $this->company->logo : Image::DEFAULT_IMAGE), $this->company->name)
 				->setSize(200, 150)
 				->addCondition(Form::FILLED)
 				->addRule(Form::IMAGE, 'Logo must be valid image');

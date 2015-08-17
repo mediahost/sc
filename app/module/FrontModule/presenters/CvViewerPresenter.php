@@ -78,6 +78,7 @@ class CvViewerPresenter extends BasePresenter
 
 		$latte = new Engine;
 		$latte->addFilter('translate', $this->translator === NULL ? NULL : array($this->translator, 'translate'));
+		$latte->addFilter('size', ['App\Model\Entity\Image', 'returnSizedFilename']);
 		
 		$templatePath = realpath(__DIR__ . '/../templates/' . $this->pureName . '/@pdf.layout.latte');
 		$html = $latte->renderToString($templatePath, $templateParams);
