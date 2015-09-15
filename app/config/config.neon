@@ -59,3 +59,11 @@ extensions:
 	installer: App\Extensions\Installer\DI\InstallerExtension
 	settings: App\Extensions\Settings\DI\SettingsExtension
 	foto: App\Extensions\Foto\DI\FotoExtension
+
+settings:
+	modules:
+		notifications: TRUE
+	modulesSettings:
+		notifications:
+			from: info@source-code.com
+			newMessage: TRUE

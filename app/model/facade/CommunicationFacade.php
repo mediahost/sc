@@ -2,6 +2,7 @@
 
 namespace App\Model\Facade;
 
+use App\Extensions\Settings\Model\Service\ModuleService;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Company;
 use App\Model\Entity\Message;
@@ -30,13 +31,19 @@ class CommunicationFacade extends Object
 	/** @var EntityDao */
 	protected $senderRepository;
 
-	function __construct(EntityManager $em)
+	/** @var ModuleService */
+	protected $moduleService;
+
+	public $onNewMessage = [];
+
+	function __construct(EntityManager $em, ModuleService $moduleService)
 	{
 		$this->em = $em;
 		$this->communicationRepository = $this->em->getDao(Communication::getClassName());
 		$this->messageRepository = $this->em->getDao(Message::getClassName());
 		$this->readRepository = $this->em->getDao(Read::getClassName());
 		$this->senderRepository = $this->em->getDao(Sender::getClassName());
+		$this->moduleService = $moduleService;
 	}
 
 	/**
@@ -103,6 +110,7 @@ class CommunicationFacade extends Object
 		$message->addRead(new Read($sender));
 		$communication->addMessage($message);
 		if ($flush) $this->em->flush();
+		$this->onNewMessage($message);
 		return $message;
 	}
 

@@ -11,6 +11,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property User $user
  * @property Company $company
  * @property Communication $communication
+ * @property bool|null $beNotified
  */
 class Sender extends BaseEntity
 {
@@ -34,6 +35,12 @@ class Sender extends BaseEntity
 	 * @var Communication
 	 */
 	protected $communication;
+
+	/**
+	 * @ORM\Column(type="boolean", nullable=true)
+	 * @var bool|NULL
+	 */
+	protected $beNotified;
 
 	/**
 	 * TODO: implement
