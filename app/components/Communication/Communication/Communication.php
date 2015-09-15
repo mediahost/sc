@@ -107,6 +107,8 @@ class Communication extends BaseControl
 	{
 		if (is_numeric($bool)) {
 		    $bool = (bool) $bool;
+		} else {
+			$bool = NULL;
 		}
 		$viewer = $this->getViewerContributor();
 		$viewer->beNotified = $bool;

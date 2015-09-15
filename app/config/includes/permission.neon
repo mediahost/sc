@@ -38,7 +38,7 @@ services:
 
 			- allow('signed', 'dashboard', 'default')
 			- allow('signed', 'registration')
-			- allow('signed', 'profile', ['default', 'settings', 'delete'])
+			- allow('signed', 'profile', ['default', 'settings', 'notifications', 'delete'])
 
 			- allow('candidate', 'candidate', 'default')
 			- allow('candidate', 'cvEditor', ['default', 'skills', 'jobs'])
