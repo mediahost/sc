@@ -48,7 +48,7 @@ class Communication extends BaseControl
 	public function render()
 	{
 		$this->template->communication = $this->communication;
-		$this->template->viewer = $this->user->identity;
+		$this->template->viewer = $this->getViewerContributor();
 		parent::render();
 		$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity, $this->company);
 	}
@@ -92,6 +92,25 @@ class Communication extends BaseControl
 	public function isViewedByCompany()
 	{
 		return (bool) $this->company;
+	}
+
+	public function getViewerContributor()
+	{
+		foreach ($this->communication->contributors as $contributor) {
+			if ($contributor->user && $contributor->user->id == $this->user->id) {
+			    return $contributor;
+			}
+		}
+	}
+
+	public function handleNotifyChange($bool)
+	{
+		if (is_numeric($bool)) {
+		    $bool = (bool) $bool;
+		}
+		$viewer = $this->getViewerContributor();
+		$viewer->beNotified = $bool;
+		$this->redrawControl('notifiButtons');
 	}
 
 }
