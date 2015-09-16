@@ -11,9 +11,9 @@ use Nette\Utils\DateTime;
 /**
  * @ORM\Entity
  * @property string $subject
- * @property ArrayCollection $messages
+ * @property ArrayCollection|Message[] $messages
  * @property DateTime $created
- * @property ArrayCollection $contributors
+ * @property ArrayCollection|Sender[] $contributors
  */
 class Communication extends BaseEntity
 {
@@ -69,15 +69,25 @@ class Communication extends BaseEntity
 	}
 
 	/**
+	 * Get Sender with exact $user and $company
+	 *
 	 * @param User $user
 	 * @return Sender|FALSE
 	 */
-	public function getContributor(User $user)
+	public function getContributor(User $user, Company $company = NULL)
 	{
 		/** @var Sender $sender */
 		foreach ($this->contributors as $sender) {
-			if ($sender->user->id == $user->id) {
-			    return $sender;
+			if ($sender->user && $sender->user->id == $user->id) {
+				if ($company === NULL) {
+					if ($sender->company === NULL) {
+						return $sender;
+					}
+				} else {
+					if ($sender->company && $sender->company->id == $company->id) {
+						return $sender;
+					}
+				}
 			}
 		}
 		return FALSE;

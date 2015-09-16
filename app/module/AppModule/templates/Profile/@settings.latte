@@ -29,6 +29,14 @@
 		<span class="after" n:ifCurrent="setPassword">
 		</span>
 	</li>
+	<li {ifCurrent notifications}class="active"{/ifCurrent}>
+		<a n:href="notifications">
+			<i class="icon-envelope-letter"></i>
+			{_'Notifications'}
+		</a>
+		<span class="after" n:ifCurrent="notifications">
+		</span>
+	</li>
 	<li {ifCurrent delete}class="active"{/ifCurrent}>
 		<a n:href="delete">
 			<i class="icon-shield"></i>

@@ -39,13 +39,13 @@ services:
 
 			- allow('signed', 'dashboard', 'default')
 			- allow('signed', 'registration')
-			- allow('signed', 'profile', ['default', 'settings', 'delete'])
+			- allow('signed', 'profile', ['default', 'settings', 'notifications', 'delete'])
 
 			- allow('candidate', 'candidate', ['default', 'address', 'photo'])
 			- allow('candidate', 'cvViewer')
 			- allow('candidate', 'cvEditor')
 			- allow('company', ['company', 'job'])
-			- allow(['candidate', 'company'], 'messages')
+			- allow(['candidate', 'company', 'admin'], 'messages')
 
 			- allow('admin', 'users')
 			- allow('admin', 'skills')

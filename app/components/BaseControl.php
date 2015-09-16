@@ -10,7 +10,7 @@ use Nette\Localization\ITranslator;
 
 abstract class BaseControl extends UI\Control
 {
-	
+
 	const DEFAULT_TEMPLATE = 'default';
 
 	/** @var EntityManager @inject */
@@ -24,27 +24,27 @@ abstract class BaseControl extends UI\Control
 
 	/** @var ITranslator @inject */
 	public $translator;
-	
+
 	/** @var string */
 	private $templateFile = self::DEFAULT_TEMPLATE;
-	
+
 	/** @var bool */
 	protected $isAjax = FALSE;
-	
+
 	/** @var bool */
 	protected $isSendOnChange = FALSE;
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 	}
-	
+
 	protected function setTemplateFile($name)
 	{
 		$this->templateFile = $name;
 		return $this;
 	}
-	
+
 	/**
 	 * Set ajax for form
 	 */
@@ -53,13 +53,6 @@ abstract class BaseControl extends UI\Control
 		$this->isAjax = $isAjax;
 		$this->isSendOnChange = $sendOnChange;
 		return $this;
-	}
-
-	public function getTemplate()
-	{
-		$template = parent::getTemplate();
-		$template->setTranslator($this->translator);
-		return $template;
 	}
 
 	public function render()

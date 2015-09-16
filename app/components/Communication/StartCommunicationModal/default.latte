@@ -1,0 +1,50 @@
+<a class="btn blue" n:href="this#newMessage" data-toggle="modal">
+	<i class="fa fa-edit"></i>
+	{_'New Message'}
+</a>
+
+<div class="modal fade" id="newMessage" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+				<h4 class="modal-title">{_'Start communication'}</h4>
+			</div>
+			<div class="modal-body">
+				{form form class => form-horizontal}
+				{if $form->getComponent('me', FALSE)}
+					<div class="form-group">
+						<div class="col-sm-3 control-label">{label me/}</div>
+						<div class="col-sm-9">
+							{input me class => form-control}
+						</div>
+					</div>
+				{/if}
+					<div class="form-group">
+						<div class="col-sm-3 control-label">{label type/}</div>
+						<div class="col-sm-9">
+							{input type class => form-control}
+						</div>
+					</div>
+					<div class="form-group" id="{$form['user']->getHtmlId()}-pair">
+						<div class="col-sm-3 control-label">{label user/}</div>
+						<div class="col-sm-9">{input user class => form-control}</div>
+					</div>
+					<div class="form-group" id="{$form['company']->getHtmlId()}-pair">
+						<div class="col-sm-3 control-label">{label company/}</div>
+						<div class="col-sm-9">{input company class => form-control}</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3 control-label">{label message/}</div>
+						<div class="col-sm-9">{input message class => form-control}</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-9">
+							{input send class => 'btn btn-primary'}
+						</div>
+					</div>
+				{/form}
+			</div>
+		</div>
+	</div>
+</div>

@@ -19,6 +19,7 @@ class CompanyRole extends BaseEntity
 	const EDITOR = 'editor';
 	const MANAGER = 'manager';
 	const ADMIN = 'admin';
+	const MESSENGER = 'messenger';
 
 	/** @ORM\Column(type="string", length=50) */
 	protected $name;

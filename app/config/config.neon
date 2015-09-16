@@ -48,7 +48,9 @@ services:
 	urlScript:
 		factory: @httpRequest::getUrl()
 
-	nette.templateFactory: App\Templating\TemplateFactory
+	nette.templateFactory:
+		class: App\Templating\TemplateFactory
+		inject: yes
 	security.userStorage: Majkl578\NetteAddons\Doctrine2Identity\Http\UserStorage
 
 extensions:
@@ -57,3 +59,11 @@ extensions:
 	installer: App\Extensions\Installer\DI\InstallerExtension
 	settings: App\Extensions\Settings\DI\SettingsExtension
 	foto: App\Extensions\Foto\DI\FotoExtension
+
+settings:
+	modules:
+		notifications: TRUE
+	modulesSettings:
+		notifications:
+			from: info@source-code.com
+			newMessage: TRUE

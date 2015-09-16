@@ -19,6 +19,7 @@ use Nette\Security\IIdentity;
  * @method self setMail(string $mail)
  * @property PageConfigSettings $pageConfigSettings
  * @property PageDesignSettings $pageDesignSettings
+ * @property bool|null $beNotified
  */
 class User extends BaseEntity implements IIdentity, IUserSocials
 {
@@ -36,6 +37,12 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 
 	/** @ORM\OneToOne(targetEntity="PageDesignSettings", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $pageDesignSettings;
+
+	/**
+	 * @ORM\Column(type="boolean", nullable=true)
+	 * @var bool|NULL
+	 */
+	protected $beNotified;
 
 	public function __construct($mail = NULL)
 	{

@@ -1,0 +1,27 @@
+<div class="messages-list">
+	{foreach $communications as $communication}
+		<a href="{$control->getCommunicationLink($communication)}">
+			<div n:class="messages-list-item,
+						$activeCommunication && $communication->id == $activeCommunication->id ? 'active messages-list-item-border-red' : 'messages-list-item-border-blue'">
+
+				<img class="message-userpic pull-left"
+				     src="{$basePath}/{$communication->lastMessage->sender->image}"
+				     width="27px" height="27px" />
+				<div class="messages-list-item-title">
+					{$communication->lastMessage->sender->name}
+				</div>
+				<div class="messages-list-item-text">
+					{$communication->lastMessage->text|truncate:50}
+				</div>
+				<div class="messages-list-controls pull-left">
+							<span class="messages-list-date">
+								<i class="fa fa-calendar"></i>
+								{$communication->lastMessage->time|date:'H:i:s d.m.Y'}
+							</span>
+					<span n:if="!$communication->lastMessage->isReadByUser($user->identity)"
+						class="messages-list-badge badge badge-roundless">{_'Unread'}</span>
+				</div>
+			</div>
+		</a>
+	{/foreach}
+</div>

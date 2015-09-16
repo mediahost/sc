@@ -198,3 +198,10 @@ services:
 	ICommunicationFactorz:
 		implement: App\Components\ICommunicationFactory
 		inject: yes
+
+	ICommunicationListFactory:
+		implement: App\Components\ICommunicationListFactory
+
+	IStartCommunicationModalFactory:
+		implement: App\Components\IStartCommunicationModalFactory
+		inject: yes

@@ -9,7 +9,15 @@ services:
 	- {class: App\Model\Facade\SkillFacade, inject: yes}
 	- {class: App\Model\Facade\CvFacade, inject: yes}
 	- {class: App\Model\Facade\JobFacade, inject: yes}
-	- App\Model\Facade\CommunicationFacade
+	-
+		class: App\Model\Facade\CommunicationFacade
+		setup:
+			- $onNewMessage([@App\Model\Service\NotificationService::processNewMessageNotifications])
+
+	# Services
+	-
+		class: App\Model\Service\NotificationService
+		arguments: [@App\Extensions\Settings\Model\Service\ModuleService::getModuleSettings('notifications')]
 
 	# Storages
 	- {class: App\Model\Storage\SignUpStorage, inject: yes}

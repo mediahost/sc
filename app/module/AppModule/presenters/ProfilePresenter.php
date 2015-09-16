@@ -91,6 +91,35 @@ class ProfilePresenter extends BasePresenter
 		}
 	}
 
+	/**
+	 * @secured
+	 * @resource('profile')
+	 * @privilege('notifications')
+	 */
+	public function actionNotifications()
+	{
+
+	}
+
+	/**
+	 * @secured
+	 * @resource('profile')
+	 * @privilege('notifications')
+	 */
+	public function handleNotifyChange($bool)
+	{
+		if (is_numeric($bool)) {
+			$bool = (bool) $bool;
+		} else {
+			$bool = NULL;
+		}
+		$userDao = $this->em->getDao(Entity\User::getClassName());
+		$user = $userDao->find($this->user->id);
+		$user->beNotified = $bool;
+		$this->em->flush();
+		$this->redrawControl('notifiButtons');
+	}
+
 	// <editor-fold desc="components">
 
 	/** @return SetPasswordControl */

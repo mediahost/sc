@@ -3,13 +3,10 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\ICommunicationFactory;
+use App\Components\ICommunicationListFactory;
+use App\Components\IStartCommunicationModalFactory;
 use App\Model\Entity\Communication;
-use App\Model\Entity\Company;
-use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
-use App\Model\Repository\UserRepository;
-use Kdyby\Doctrine\EntityDao;
-use Nette\Application\UI\Form;
 
 class MessagesPresenter extends BasePresenter
 {
@@ -20,14 +17,15 @@ class MessagesPresenter extends BasePresenter
 	/** @var ICommunicationFactory @inject */
 	public $communicationFactory;
 
+	/** @var ICommunicationListFactory @inject */
+	public $communicationListFactory;
+
+	/** @var IStartCommunicationModalFactory @inject */
+	public $startCommunicationModalFactory;
+
 	/** @var Communication */
 	protected $communication;
 
-	/**
-	 * @secured
-	 * @resource('messages')
-	 * @privilege('default')
-	 */
 	public function actionDefault($id = NULL)
 	{
 		if ($id) {
@@ -40,82 +38,31 @@ class MessagesPresenter extends BasePresenter
 		}
 	}
 
-	public function createComponentStarCommunicationForm()
+	public function createComponentStartCommunicationModal()
 	{
-		/** @var  EntityDao $companyRepository */
-		$companyRepository = $this->em->getDao(Company::getClassName()); // TODO: odstarnit volanie nad repository
-		$companies = $companyRepository->findPairs('name', 'id');
-
-		$users = $this->userFacade->getUsers();
-
-	    $form = new Form();
-		if ($this->user->isInRole('company')) {
-			$userRepository = $this->em->getDao(User::getClassName()); // TODO: odstarnit volanie nad repository
-			/** @var User $user */
-			$user = $userRepository->find($this->user->id);
-			$selectItems = [
-				'User' => [
-					'user' => $this->user->identity->mail,
-				],
-				'Company' => [],
-			];
-			foreach ($user->getCompanies() as $company) {
-				$selectItems['Company'][$company->id] = $company->name;
-			}
-		    $form->addSelect('me', 'as', $selectItems);
-		}
-		$select = $form->addSelect('type', 'with', ['user' => 'User', 'company' => 'Company'])
-			->setDefaultValue('user');
-		$userSelect = $form->addSelect('user', 'User', $users);
-		$companySelect = $form->addSelect('company', 'Company', $companies);
-		$form->addTextArea('message', 'Message');
-		$form->addSubmit('send', 'Send');
-
-		$select->addCondition(Form::EQUAL, 'user')
-			->toggle($userSelect->getHtmlId().'-pair');
-		$select->addCondition(Form::EQUAL, 'company')
-			->toggle($companySelect->getHtmlId().'-pair');
-
-		$form->onSuccess[] = $this->processForm;
-		return $form;
+	    $control = $this->startCommunicationModalFactory->create();
+		$control->onSuccess[] = function (Communication $communication) {
+			$this->redirect('default', $communication->id);
+		};
+		return $control;
 	}
 
-	public function processForm(Form $form, $values)
-	{
-
-		/** @var UserRepository $userRepository */
-		$userRepository = $this->em->getDao(User::getClassName()); // TODO: odstarnit volanie nad repository
-		/** @var EntityDao $userRepository */
-		$companyRepository = $this->em->getDao(Company::getClassName()); // TODO: odstarnit volanie nad repository
-
-
-		/** @var User $sender */
-		$sender = $userRepository->find($this->user->id);
-		$senderCompany = NULL;
-		if ($this->user->isInRole('company') && $values->me != 'user') {
-			/** @var Company $senderCompany */
-		    $senderCompany = $companyRepository->find($values->me);
-		}
-
-		$receiver = NULL;
-		$receiverCompany = NULL;
-		if ($values->type == 'user') {
-			/** @var User $receiver */
-			$receiver = $userRepository->find($values->user);
-		} else {
-			$receiverCompany = $companyRepository->find($values->company);
-		}
-
-
-		$communication = $this->communicationFacade
-			->startCommunication($values->message, $sender, $receiver, $senderCompany, $receiverCompany);
-		$this->redirect('default', $communication->id);
-	}
 
 	public function createComponentCommunication()
 	{
 	    $control = $this->communicationFactory->create();
 		$control->setCommunication($this->communication);
+		return $control;
+	}
+
+	public function createComponentCommunicationList()
+	{
+		$communications = $this->getUserCommunications();
+	    $control = $this->communicationListFactory->create();
+		foreach ($communications as $communication) {
+			$control->addCommunication($communication, $this->link('default', $communication->id));
+		}
+		$control->setActiveCommunication($this->communication);
 		return $control;
 	}
 

@@ -2,6 +2,7 @@
 
 namespace App\Model\Facade;
 
+use App\Extensions\Settings\Model\Service\ModuleService;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Company;
 use App\Model\Entity\Message;
@@ -30,13 +31,19 @@ class CommunicationFacade extends Object
 	/** @var EntityDao */
 	protected $senderRepository;
 
-	function __construct(EntityManager $em)
+	/** @var ModuleService */
+	protected $moduleService;
+
+	public $onNewMessage = [];
+
+	function __construct(EntityManager $em, ModuleService $moduleService)
 	{
 		$this->em = $em;
 		$this->communicationRepository = $this->em->getDao(Communication::getClassName());
 		$this->messageRepository = $this->em->getDao(Message::getClassName());
 		$this->readRepository = $this->em->getDao(Read::getClassName());
 		$this->senderRepository = $this->em->getDao(Sender::getClassName());
+		$this->moduleService = $moduleService;
 	}
 
 	/**
@@ -91,7 +98,7 @@ class CommunicationFacade extends Object
 	 */
 	public function addMessage(Communication $communication, $text, User $user, Company $company = NULL, $flush = TRUE)
 	{
-		$sender = $communication->getContributor($user);
+		$sender = $communication->getContributor($user, $company);
 		if (!$sender) {
 			$sender = $this->addContributor($communication, $user, $company, FALSE);
 		}
@@ -100,8 +107,10 @@ class CommunicationFacade extends Object
 		$message->text = $text;
 		$message->sender = $sender;
 		$message->communication = $communication;
+		$message->addRead(new Read($sender));
 		$communication->addMessage($message);
 		if ($flush) $this->em->flush();
+		$this->onNewMessage($message);
 		return $message;
 	}
 
@@ -167,11 +176,34 @@ class CommunicationFacade extends Object
 		$queryBuilder = $this->em->createQueryBuilder();
 		$queryBuilder->select('c')
 			->from(Communication::getClassName(), 'c')
+			->addSelect('MAX(m.time) as HIDDEN last_message_time')
 			->join('c.contributors', 's')
+			->join('c.messages', 'm')
 			->where('s.user = ?0')
-			->orWhere('s.company IN (?1)')
-			->setParameter(0, $user)
-			->setParameter(1, $user->getCompanies());
+			->andWhere('s.company IS NULL')
+			->orderBy('last_message_time', 'DESC')
+			->groupBy('c')
+			->setParameter(0, $user);
+		$query = $queryBuilder->getQuery();
+		return $query->getResult();
+	}
+
+	/**
+	 * @param Company $company
+	 * @return Communication[]
+	 */
+	public function getCompanyCommunications(Company $company)
+	{
+		$queryBuilder = $this->em->createQueryBuilder();
+		$queryBuilder->select('c')
+			->from(Communication::getClassName(), 'c')
+			->addSelect('MAX(m.time) as HIDDEN last_message_time')
+			->join('c.contributors', 's')
+			->join('c.messages', 'm')
+			->where('s.company = ?0')
+			->orderBy('last_message_time', 'DESC')
+			->groupBy('c')
+			->setParameter(0, $company);
 		$query = $queryBuilder->getQuery();
 		return $query->getResult();
 	}
@@ -183,6 +215,57 @@ class CommunicationFacade extends Object
 	public function getCommunication($id)
 	{
 		return $this->communicationRepository->find($id);
+	}
+
+	/**
+	 * @param Communication $communication
+	 * @param User $user
+	 * @param Company $company
+	 */
+	public function markCommunicationAsRead(Communication $communication, User $user, Company $company = NULL)
+	{
+		$sender = $communication->getContributor($user, $company);
+		if (!$sender) {
+		    $sender = $this->addContributor($communication, $user, $company);
+		}
+		foreach ($communication->messages as $message) {
+			if (!$message->isReadBySender($sender)) {
+			    $message->addRead(new Read($sender));
+			}
+		}
+		$this->em->flush();
+	}
+
+	/**
+	 * @param $communications
+	 * @param User $user
+	 * @return int
+	 */
+	public function getUserUnreadCount($communications, User $user)
+	{
+		$count = 0;
+		foreach ($communications as $communication) {
+			if (!$communication->getLastMessage()->isReadByUser($user)) {
+				$count++;
+			}
+		}
+		return $count;
+	}
+
+	/**
+	 * @param Company $company
+	 * @return int
+	 */
+	public function getCompanyUnreadCount(Company $company)
+	{
+		$communications = $this->getCompanyCommunications($company);
+		$count = 0;
+		foreach ($communications as $communication) {
+			if (!$communication->getLastMessage()->isReadByCompany($company)) {
+				$count++;
+			}
+		}
+		return $count;
 	}
 
 }

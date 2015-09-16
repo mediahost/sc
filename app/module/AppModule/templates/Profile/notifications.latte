@@ -1,0 +1,20 @@
+{includeblock '@settings.latte'}
+{block content}
+<div class="row profile-account">
+	<div class="col-md-3">
+		{include settingsMenu}
+	</div>
+	<div class="col-md-6">
+		<div class="btn-group" n:snippet="notifiButtons">
+			<a n:class="btn, btn-default, ajax, $user->identity->beNotified === TRUE ? active" n:href="notifyChange! 1">
+				Yes
+			</a>
+			<a n:class="btn, btn-default, ajax, $user->identity->beNotified === FALSE ? active" n:href="notifyChange! 0">
+				No
+			</a>
+			<a n:class="btn, btn-default, ajax, $user->identity->beNotified === NULL ? active" n:href="notifyChange!">
+				By your global settings
+			</a>
+		</div>
+	</div>
+</div>

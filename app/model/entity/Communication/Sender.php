@@ -11,6 +11,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property User $user
  * @property Company $company
  * @property Communication $communication
+ * @property bool|null $beNotified
  */
 class Sender extends BaseEntity
 {
@@ -36,11 +37,17 @@ class Sender extends BaseEntity
 	protected $communication;
 
 	/**
+	 * @ORM\Column(type="boolean", nullable=true)
+	 * @var bool|NULL
+	 */
+	protected $beNotified;
+
+	/**
 	 * TODO: implement
 	 */
 	public function getImage()
 	{
-		
+		return 'assets/admin/img/avatar4.jpg';
 	}
 
 	public function getName()
@@ -50,7 +57,16 @@ class Sender extends BaseEntity
 		} elseif ($this->user->candidate) {
 			return $this->user->candidate->name;
 		} else {
-			return 'no name';
+			return $this->user->mail;
+		}
+	}
+
+	public function getUserName()
+	{
+		if ($this->user->candidate) {
+			return $this->user->candidate->name;
+		} else {
+			return $this->user->mail;
 		}
 	}
 

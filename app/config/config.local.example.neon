@@ -38,9 +38,13 @@ nette:
 settings:
 	modules: # default FALSE for all
 		registrableRole: TRUE # for definition whitch role is registrable in RoleFacade
+		notifications: TRUE
 	modulesSettings:
 		registrableRole:
 			roles: ['candidate', 'company'] # role names
+		notifications:
+			from: info@source-code.com
+			newMessage: TRUE
 	pageInfo:
 		projectName: My Project
 		author: author
