@@ -27,7 +27,7 @@ class Communication extends BaseEntity
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Message", mappedBy="communication", cascade={"persist"}, orphanRemoval=true)
-	 * @ORM\OrderBy({"id" = "DESC"})
+	 * @ORM\OrderBy({"id" = "ASC"})
 	 * @var Message[]
 	 */
 	protected $messages;
@@ -191,7 +191,7 @@ class Communication extends BaseEntity
 	 */
 	public function getLastMessage()
 	{
-		return $this->messages->first();
+		return $this->messages->last();
 	}
 
 }
