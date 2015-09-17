@@ -35,6 +35,7 @@ class MessagesPresenter extends BasePresenter
 				$this->redirect('this', NULL);
 			}
 			$this->template->conversation = $this->communication;
+			$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity);
 		}
 	}
 

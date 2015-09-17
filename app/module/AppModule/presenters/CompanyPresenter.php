@@ -198,6 +198,7 @@ class CompanyPresenter extends BasePresenter
 	{
 		if ($communicationId) {
 			$this->template->conversation = $this->communication;
+			$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity, $this->company);
 		}
 	}
 
