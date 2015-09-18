@@ -1,1 +1,16 @@
 @import "../definitions.less";
+
+.form-horizontal, .form-inline {
+	.form-group {
+		&.has-error {
+			.error-message {
+				color: #ed7a53;
+				font-weight: bold;
+				font-size: 13px;
+				i {
+					color: #ed7a53;
+				}
+			}
+		}
+	}
+}

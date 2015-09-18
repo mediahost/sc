@@ -1,6 +1,5 @@
 {form form}
 	<div class="alert alert-danger" n:if="$form->errors">
-		<button class="close" data-close="alert"></button>
 		{foreach $form->errors as $error}
 			<span>{$error}</span><br/>
 		{/foreach}

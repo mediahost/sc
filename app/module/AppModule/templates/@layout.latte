@@ -1,96 +1,126 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="{$lang}" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="{$lang}" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
+<!--[if lt IE 8]><html lang="{$lang}" class="no-js lt-ie8"> <![endif]-->
 <html lang="{$lang}" class="no-js">
-	<!--<![endif]-->
 	{includeblock '../../BaseModule/templates/metronic.defines.latte'}
 
 	<!-- BEGIN HEAD -->
 	<head>
+		<meta charset="utf-8"/>
 		<title>{block title|striptags}{_'Source-Code'}{/block}</title>
 
-		<meta charset="utf-8"/>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<!--[if IE]><meta http-equiv="x-ua-compatible" content="IE=9" /><![endif]-->
+		
 		<meta name="robots" content="noindex,nofollow">
-		<meta content="" name="description"/>
 		<meta content="" name="author"/>
+		<meta content="" name="description"/>
+        <meta content="" name="keywords"/>
+        <meta content="" name="application-name"/>
 
-		{include cssMetronicCore}
-		{include cssMetronicAdminTheme}
+		<meta property="og:type" content="website">
+		<meta property="og:site_name" content="{_'Source-Code'}">
+		<meta property="og:title" content="{include title}">
+		<meta property="og:description" content="">
+		<meta property="og:image" content="{link //:Foto:Foto:}">
+		<meta property="og:url" content="{link //this}">
 
-		{control cssApp}
-		{control cssPrint}
+		{include cssSuprFonts}
+		{control cssSupr}
+		{control cssFront}
 
 		<link href="{$basePath}/favicon.ico" rel="shortcut icon">
-
-		{block head}{/block}
 	</head>
 	<!-- END HEAD -->
 
 	<!-- BEGIN BODY -->
-	<body n:class="$designSettings->headerFixed ? page-header-fixed,
-					$designSettings->layoutBoxed ? page-boxed,
-					$designSettings->sidebarClosed ? 'page-sidebar-closed page-sidebar-menu-closed',
-					$designSettings->sidebarFixed ? page-sidebar-fixed,
-					$designSettings->footerFixed ? page-footer-fixed,
-					$designSettings->sidebarReversed ? page-sidebar-reversed,
-					$designSettings->containerBgSolid ? page-container-bg-solid">
-		<script> document.documentElement.className += ' js'</script>
+	<body class="{block bodyClass}{/block}">
+        <!--[if lt IE 9]>
+		<p class="browsehappy">
+			{_'You are using an <strong>outdated</strong> browser.'} 
+			{_'Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.'}
+		</p>
+		<![endif]-->
 
 		{include 'header.latte'}
 
-		<!-- BEGIN CONTAINER -->
-		{if $designSettings->layoutBoxed}<div class="container">{/if}
-		<div class="page-container">
-
+		<!-- BEGIN WRAPPER -->
+        <div id="wrapper">
+			
+            <!--Sidebar background-->
+            <div id="sidebarbg" class="hidden-lg hidden-md hidden-sm hidden-xs"></div>
+            <!--Sidebar content-->
 			{include 'sidebar.latte'}
-
-			<!-- BEGIN CONTENT -->
-			<div class="page-content-wrapper">
-				<!-- BEGIN PAGE -->
-				<div class="page-content">
+            <!-- End #sidebar -->
+			
+            <!--Sidebar background-->
+            <div id="right-sidebarbg" class="hidden-lg hidden-md hidden-sm hidden-xs"></div>
+            <!-- Start #right-sidebar -->
+			{include 'rightSidebar.latte'}
+			
+            <!--Body content-->
+            <div id="content" class="page-content clearfix">
+				<!--Content wrapper-->
+                <div class="contentwrapper">
 					
-					{include 'styleCustomizer.latte'}
-					
-					{includeblock 'pageHeader.latte'}
-					{include pageHeader}
+					<!-- BEGIN PAGE HEADER-->
+					<div class="heading">
+						<h3>{block pageTitle}{_'Source Code'}{/block}</h3>
 
-					<!-- BEGIN FLASH MESSAGES-->
-					<div n:snippet="flashMessages">
-						<div n:foreach="$flashes as $flash"
-							 class="alert alert-{$flash->type} fade in">
-							<button type="button" class="close" data-dismiss="alert"></button>
-							{$flash->message}
+						<div class="resBtnSearch">
+							<a href="#"><span class="s16 icomoon-icon-search-3"></span></a>
 						</div>
+						<div class="search">
+							<form id="searchform" class="form-horizontal" action="{link this}">
+								<input type="text" class="top-search from-control" placeholder="Search here ..." />
+								<input type="submit" class="search-btn" value="" />
+							</form>
+						</div>
+
+						<ul class="breadcrumb">
+							<li>{_'You are here'}:</li>
+							<li class="active">{_'Source Code'}</li>
+						</ul>
 					</div>
-					<!-- END FLASH MESSAGES-->
-
-					<!-- CONTENT BODY-->
+					<!-- END PAGE HEADER-->
+					
 					{include content}
-					<!-- END CONTENT BODY-->
-
-				</div>
-				<!-- END PAGE -->
-			</div>
-			<!-- END CONTENT -->
-
+                </div>
+                <!-- End contentwrapper -->
+            </div>
+            <!-- End #content -->
+			
+			<!-- Start #footer  -->
+			{include 'footer.latte'}
+			<!-- End #footer  -->
 		</div>
-		{if $designSettings->layoutBoxed && $designSettings->footerFixed}</div>{/if}
-		<!-- END CONTAINER -->
+		<!-- END WRAPPER -->
+					
+        <!-- Back to top -->
+        <div id="back-to-top">
+			<a n:href="this#">{_'Back to Top'}</a>
+        </div>
 
-		{if $designSettings->layoutBoxed && $designSettings->footerFixed}<div class="container">{/if}
-		{include 'footer.latte'}
-		{if $designSettings->layoutBoxed && $designSettings->footerFixed}</div>{/if}
-		
-		{if $designSettings->layoutBoxed && !$designSettings->footerFixed}</div>{/if}
+        <!-- Javascripts -->
+        <!-- Load pace first -->
+        <script src="{$basePath}/assets/js/supr/plugins/core/pace/pace.min.js"></script>
 
-		{block scripts}
-		<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-		{include jsMetronicCore}
-		{include jsAdminApp}
-		<!-- END JAVASCRIPTS -->
-		{/block}
+		{control jsSuprCore}
+		{include jsSuprCore}
+
+		{control jsLibs}
+		{control jsCustomScripts}	
 	</body>
 </html>
+
+{define flashMessage}
+<!-- BEGIN FLASH MESSAGES-->
+<div n:snippet="flashMessages">
+	<div n:foreach="$flashes as $flash" 
+		 class="alert alert-{$flash->type} fade in">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		{$flash->message}
+	</div>
+</div>
+<!-- END FLASH MESSAGES-->
+{/define}

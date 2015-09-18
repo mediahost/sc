@@ -1,102 +1,154 @@
 {block header}
 <!-- BEGIN HEADER -->
-<div n:class="page-header, navbar,
-			$designSettings->headerFixed ? navbar-fixed-top : navbar-static-top">
-    <!-- BEGIN TOP NAVIGATION BAR -->
-    <div n:class="page-header-inner, $designSettings->layoutBoxed ? container">
-
-        <!-- BEGIN LOGO -->
-        <div class="page-logo">
-            <a n:href="this"><img src="{$basePath}/assets/admin/img/logo.png" alt="logo" class="logo-default"/></a>
-            <div class="menu-toggler sidebar-toggler" data-url="{link :Ajax:Design:setSidebarClosed}"></div>
-        </div>
-        <!-- END LOGO -->
-
-        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"></a>
-        <!-- END RESPONSIVE MENU TOGGLER -->
-
-        <!-- BEGIN TOP NAVIGATION MENU -->
-        <div class="top-menu">
-            <ul class="nav navbar-nav pull-right">
-
-				<!-- BEGIN INBOX DROPDOWN -->
-				<li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-						<i class="icon-envelope-open"></i>
-						<span n:if="$unreadMessagesCount" class="badge badge-default">{$unreadMessagesCount}</span>
+<div id="header">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="index.html">
+                {_'Source-Code'}
+            </a>
+		</div>
+		<div id="navbar-no-collapse" class="navbar-no-collapse">
+			<ul class="nav navbar-nav">
+				<li>
+					<a href="#" class="collapseBtn leftbar">
+						<i class="s16 minia-icon-list-3"></i>
 					</a>
-					<ul class="dropdown-menu">
-						<li class="external">
-							<h3>{_'You have'} <span class="bold">{_'%s New', NULL, $unreadMessagesCount}</span> {_'Messages'}</h3>
-							<a n:href="Messages:">{_'view all'}</a>
+				</li>
+				<li>
+					<a href="#" class="tipB reset-layout" title="{_'Reset panel postions'}">
+						<i class="s16 icomoon-icon-history"></i>
+					</a>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<i class="s16 icomoon-icon-cog-2"></i>
+						<span class="txt">
+							{_'Settings'}
+						</span>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu left dropdown-form template-settings">
+						<li class="menu">
+							<ul role="menu">
+								<li>
+									<strong>{_'Template settings'}</strong>
+								</li>
+								<li>
+									<div class="toggle-custom">
+										<label class="toggle" data-on="{_'ON'}" data-off="{_'OFF'}">
+											<input type="checkbox" id="fixed-header-toggle" name="fixed-header-toggle" checked>
+											<span class="button-checkbox"></span>
+										</label>
+										<label for="fixed-header-toggle">{_'Fixed header'}</label>
+									</div>
+								</li>
+								<li>
+									<div class="toggle-custom">
+										<label class="toggle" data-on="{_'ON'}" data-off="{_'OFF'}">
+											<input type="checkbox" id="fixed-left-sidebar" name="fixed-left-sidebar" checked>
+											<span class="button-checkbox"></span>
+										</label>
+										<label for="fixed-left-sidebar">{_'Fixed Left Sidebar'}</label>
+									</div>
+								</li>
+								<li>
+									<div class="toggle-custom">
+										<label class="toggle" data-on="{_'ON'}" data-off="{_'OFF'}">
+											<input type="checkbox" id="fixed-right-sidebar" name="fixed-right-sidebar" checked>
+											<span class="button-checkbox"></span>
+										</label>
+										<label for="fixed-right-sidebar">{_'Fixed Right Sidebar'}</label>
+									</div>
+								</li>
+							</ul>
 						</li>
-						<li>
-							<ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
-								<li n:foreach="$communications as $communication">
-									<a n:href="Messages: $communication->id">
-										<span class="photo">
-											<img src="{$basePath}/assets/admin/img/avatar2.jpg" class="img-circle" alt="photo" />
-										</span>
-										<span class="subject">
-											<span class="from">{$communication->lastMessage->sender->name}</span>
-											<span class="time">{$communication->lastMessage->time|date:'H:i:s d.m.Y'}</span>
-										</span>
-										<span class="message">{$communication->lastMessage->text|truncate:30}</span>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<i class="s16 minia-icon-envelope"></i>
+						<span class="txt">{_'Messages'}</span>
+						<span class="notification" n:if="$unreadMessagesCount">
+							{$unreadMessagesCount}
+						</span>
+					</a>
+					<ul class="dropdown-menu left">
+						<li class="menu">
+							{include messageViewer}
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle avatar" data-toggle="dropdown">
+						<img src="{$basePath}/assets/img/avatar3.jpeg" alt="" class="image" />
+						<span class="txt">{$user->getIdentity()->mail}</span>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu right">
+						<li class="menu">
+							<ul>
+								<li n:if="$user->isAllowed('profile', 'default') && $isCompleteAccount">
+									<a n:href="Profile:">
+										<i class="s16 fa fa-user"></i>
+										{_'My Profile'}
+									</a>
+								</li>
+								<li n:if="$user->isAllowed('profile', 'settings') && $isCompleteAccount">
+									<a n:href="Profile:settings">
+										<i class="s16 fa fa-gears"></i>
+										{_'Settings'}
 									</a>
 								</li>
 							</ul>
 						</li>
 					</ul>
 				</li>
-				<!-- END INBOX DROPDOWN -->
-
-				<!-- BEGIN LANGUAGE BAR -->
-				<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-				<li class="dropdown dropdown-language" n:if="$user->loggedIn">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-						<img alt="{_$allowedLanguages[$lang]}" src="{$basePath}/assets/global/img/flags/{$lang}.png">
-						<span class="langname">{_$allowedLanguages[$lang]}</span> <i class="fa fa-angle-down"></i>
+				<li>
+					<a href="{control signOut}">
+						<i class="s16 icomoon-icon-exit"></i>
+						<span class="txt">
+							{_'Sign out'}
+						</span>
 					</a>
-					<ul class="dropdown-menu dropdown-menu-default">
-						<li n:foreach="$allowedLanguages as $langCode => $langName" n:if="$langCode !== $lang">
-							<a n:href="changeLanguage! $langCode">
-							<img alt="{_$langName}" src="{$basePath}/assets/global/img/flags/{$langCode}.png">{_$langName}</a>
-						</li>
-					</ul>
 				</li>
-				<!-- END LANGUAGE BAR -->
-
-                <!-- BEGIN USER LOGIN DROPDOWN -->
-                <li class="dropdown dropdown-user" n:if="$user->loggedIn">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <img alt="avatar" src="{$basePath}/assets/admin/img/avatar_small.png"/>
-                        <span class="username">{$user->getIdentity()->mail}</span> <i class="fa fa-angle-down"></i>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li n:if="$user->isAllowed('profile', 'default') && $isCompleteAccount">
-                            <a n:href="Profile:"><i class="icon-user"></i> {_'My Profile'}</a>
-                        </li>
-                        <li n:if="$user->isAllowed('profile', 'settings') && $isCompleteAccount">
-                            <a n:href="Profile:settings"><i class="icon-settings"></i> {_'Settings'}</a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" id="trigger_fullscreen"><i class="icon-size-fullscreen"></i> {_'Full Screen'}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="{control signOut}"><i class="fa fa-sign-out"></i> {_'Sign out'}</a>
-                        </li>
-                    </ul>
-
-                </li>
-                <!-- END USER LOGIN DROPDOWN -->
-            </ul>
-        </div>
-        <!-- END TOP NAVIGATION MENU -->
-    </div>
-    <!-- END TOP NAVIGATION BAR -->
+				<li>
+					<a id="toggle-right-sidebar" href="#">
+						<i class="s16 icomoon-icon-indent-increase"></i>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
 </div>
 <!-- END HEADER -->
-<div class="clearfix"></div>
+{/block}
+
+{define messageViewer}
+<ul class="messages">
+	<li class="header">
+		{_'You have'} <strong>{_'%s New', NULL, $unreadMessagesCount}</strong> {_'Messages'}
+	</li>
+	<li n:foreach="$communications as $communication">
+		<span class="icon">
+			<img src="{$basePath}/assets/img/avatar1.jpg" alt="photo" />
+		</span>
+		<span class="name">
+			<a n:href="Messages: $communication->id">
+				<strong>{$communication->lastMessage->sender->name}</strong>
+			</a>
+			<span class="time">{$communication->lastMessage->time|date:'H:i:s d.m.Y'}</span>
+		</span>
+		<span class="msg">
+			{$communication->lastMessage->text|truncate:30}
+		</span>
+	</li>
+	<li class="view-all">
+		<a n:href="Messages:">
+			{_'View all messages'}
+			<i class="s16 fa fa-angle-double-right"></i>
+		</a>
+	</li>
+</ul>
+{/define}

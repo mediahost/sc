@@ -118,7 +118,7 @@ abstract class BasePresenter extends Presenter
 		if (!$this->user->loggedIn) {
 			if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
 				$this->flashMessage('You have been signed out, because you have been inactive for long time.');
-				$this->redirect(':Front:LockScreen:', ['backlink' => $this->storeRequest()]);
+				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]); // Can be lock screen
 			} else {
 				$this->flashMessage('You should be logged in!');
 				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
@@ -213,16 +213,21 @@ abstract class BasePresenter extends Presenter
 	/** @return CssLoader */
 	protected function createComponentCssFront()
 	{
-		$css = $this->webLoader->createCssLoader('front')
-				->setMedia('screen,projection,tv');
+		$css = $this->webLoader->createCssLoader('front');
 		return $css;
 	}
 
 	/** @return CssLoader */
 	protected function createComponentCssApp()
 	{
-		$css = $this->webLoader->createCssLoader('app')
-				->setMedia('screen,projection,tv');
+		$css = $this->webLoader->createCssLoader('app');
+		return $css;
+	}
+
+	/** @return CssLoader */
+	protected function createComponentCssSupr()
+	{
+		$css = $this->webLoader->createCssLoader('supr');
 		return $css;
 	}
 
@@ -234,19 +239,37 @@ abstract class BasePresenter extends Presenter
 		return $css;
 	}
 
+	public function createComponentJsSuprCore()
+	{
+		$js = $this->webLoader->createJavaScriptLoader('suprCore');
+		return $js;
+	}
+
+	public function createComponentJsLibs()
+	{
+		$js = $this->webLoader->createJavaScriptLoader('libs');
+		return $js;
+	}
+
+	public function createComponentJsCustomScripts()
+	{
+		$js = $this->webLoader->createJavaScriptLoader('customScripts');
+		return $js;
+	}
+
 	// </editor-fold>
 	// <editor-fold desc="macros">
 	protected function createTemplate()
 	{
 		$template = parent::createTemplate();
-        $latte = $template->getLatte();
+		$latte = $template->getLatte();
 
-        $set = new MacroSet($latte->getCompiler());
-        $set->addMacro('scache', '?>?<?php echo strtotime(date(\'Y-m-d hh \')); ?>"<?php');
+		$set = new MacroSet($latte->getCompiler());
+		$set->addMacro('scache', '?>?<?php echo strtotime(date(\'Y-m-d hh \')); ?>"<?php');
 
-        $latte->addFilter('scache', $set);
-        return $template;
+		$latte->addFilter('scache', $set);
+		return $template;
 	}
-	// </editor-fold>
 
+	// </editor-fold>
 }

@@ -1,30 +1,33 @@
-{block breadcrumb}{/block}
 {block content}
+<div class="container login-container">
+	<div class="login-panel panel panel-default plain animated bounceIn">
+		<div class="panel-body">
+			{include flashMessage}
 
-<div class="col-md-12 col-sm-12">
-	<h1>
-		{if $role === $roleCandidate}{_'Registration for Candidate'}
-		{elseif $role === $roleCompany}{_'Registration for Company'}
-		{/if}
-	</h1>
+			<h3>
+				{if $role === $roleCandidate}{_'Registration for Candidate'}
+				{elseif $role === $roleCompany}{_'Registration for Company'}
+				{/if}
+			</h3>
+			<p>&nbsp;</p>
 
-	<div class="content-form-page">
-		<div class="row">
-			<div class="col-md-7 col-sm-7">
-				{control signUp:login}
-				<div class="row">
-					<div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-10 padding-right-30">
-						<hr>
-						{control signUp:social}
-					</div>
-				</div>
+			{control signUp:login}
+
+			<div class="seperator">
+				<strong>{_'or'}</strong>
+				<hr>
 			</div>
-			<div class="col-md-4 col-sm-4 pull-right">
-				<div class="form-info">
-                    <h2>{_'Easy to create...'}</h2>
-                    <p>{_'Create it and gain an advantage over the other job seekers just like you.'}</p>
-				</div>
-			</div>
+			{control signUp:social}
+		</div>
+		<div class="panel-footer gray-lighter-bg">
+			<h4 class="text-center">
+				<strong>{_'Already have an account?'}</strong>
+			</h4>
+			<p class="text-center">
+				<a n:href="in" class="btn btn-primary">
+					{_'Sign in'}
+				</a>
+			</p>
 		</div>
 	</div>
 </div>

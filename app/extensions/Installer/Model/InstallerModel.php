@@ -139,14 +139,11 @@ class InstallerModel extends Object
 	 * @param string $appDir
 	 * @param string $print
 	 * @return boolean
-	 * @deprecated using shell_exec
+	 * @deprecated no function - https://github.com/composer/composer/issues/1906
 	 */
 	public function installComposer($appDir, &$print = NULL)
 	{
-		$oldcwd = getcwd();
-		chdir($oldcwd . "/.."); // TODO: remove - by using "-d './../'" as composer param (used in deployment.config.php)
-		$print = @shell_exec('composer instal'); // TODO: use system as FTP-Deployment by DG (with no chdir)
-		chdir($oldcwd);
+		@system('composer install -n -q --dev -d ./..');
 		return TRUE;
 	}
 

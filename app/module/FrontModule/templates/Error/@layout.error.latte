@@ -1,48 +1,35 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="{$lang}" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="{$lang}" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
+{includeblock '../../../BaseModule/templates/metronic.defines.latte'}
 <html lang="{$lang}">
-	<!--<![endif]-->
-	{includeblock '../metronic.defines.latte'}
-
-	<!-- BEGIN HEAD -->
-	<head>
-		<title>{block title}{_'Error'}{/block}</title>
-
-		<meta charset="utf-8"/>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-		<meta name="robots" content="noindex,nofollow">
-		<meta content="" name="description"/>
-		<meta content="" name="author"/>
-
-		{include cssAdminFonts}
-		{include cssMetronicCore}
-		{include cssMetronicPlugins}
-		{include cssMetronicGlobalTheme}
-		{include cssMetronicAdminTheme}
-
-		{control cssFront}
-		{control cssPrint}
-
-		<link href="{$basePath}/favicon.ico" rel="shortcut icon">
-
-		{block head}{/block}
-	</head>
-	<!-- END HEAD -->
-
-	<!-- BEGIN BODY -->
-	<body class="{block bodyClass}{/block}">
+    <head>
+        <meta charset="utf-8">
+        <title>{block title}{_'Error'}{/block}</title>
 		
-		{include #content}
-
-		{block scripts}
-		<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-		{include jsMetronicCore}
-		{include jsMetronicPlugins}
-		{include jsAdminApp}
-		<!-- END JAVASCRIPTS -->
-		{/block}
-	</body>
+        <!-- Mobile specific metas -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <!--[if IE]><meta http-equiv="x-ua-compatible" content="IE=9" /><![endif]-->
+		
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="application-name" content="" />
+		<meta name="robots" content="noindex,nofollow">
+		
+		{include cssSuprFonts}
+		{control cssSupr}
+		
+        <link rel="icon" href="{$basePath}/favicon.ico" type="image/png">		
+    </head>
+    <body class="error-page">
+        <div class="container error-container">
+            <div class="error-panel panel panel-default plain animated bounceIn">
+                <div class="panel-body">
+					{include content}
+                </div>
+            </div>
+        </div>
+		
+		{control jsSuprCore}
+		{include jsSuprCore}
+    </body>
 </html>

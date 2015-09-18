@@ -1,43 +1,38 @@
-{form form, class => 'form-horizontal form-without-legend'}
-	<div class="row" n:if="$form->errors">
-		<div class="col-md-offset-4 col-lg-8 alert alert-danger">
-			<button class="close" data-close="alert"></button>
-			{foreach $form->errors as $error}
-				<span>{$error}</span><br/>
-			{/foreach}
-		</div>
+{form form, class => 'form-horizontal mt0'}
+	<div n:if="$form->errors" class="alert alert-danger">
+		{foreach $form->errors as $error}
+			<span>{$error}</span><br/>
+		{/foreach}
 	</div>
-		
+	
 	<div class="form-group">
-		{var label = $form->renderer->renderPureLabel($form['mail'])}
-		{var label->class[] = 'col-lg-4 control-label'}
-		{$label}
-		<div class="col-lg-8">
+		<div class="col-md-12">
+			{$form->renderer->renderPureLabel($form['mail'])}
+		</div>
+		<div class="col-lg-12">
 			{input mail, class=>'form-control', placeholder=>''}
 		</div>
 	</div>
-		
+				
 	<div class="form-group">
-		{var label = $form->renderer->renderPureLabel($form['password'])}
-		{var label->class[] = 'col-lg-4 control-label'}
-		{$label}
-		<div class="col-lg-8">
-			{input password, class=>'form-control', placeholder=>''}
+		<div class="col-md-12">
+			{$form->renderer->renderPureLabel($form['password'])}
+		</div>
+		<div class="col-lg-12">
+			<div style="margin-bottom: 10px;">
+				{input password, class=>'form-control'}
+			</div>
+			<div>
+				{input passwordVerify, class=>'form-control'}
+			</div>
 		</div>
 	</div>
 		
-	<div class="form-group">
-		{var label = $form->renderer->renderPureLabel($form['passwordVerify'])}
-		{var label->class[] = 'col-lg-4 control-label'}
-		{$label}
-		<div class="col-lg-8">
-			{input passwordVerify, class=>'form-control', placeholder=>''}
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-lg-8 col-md-offset-4 padding-left-0">
-			{button continue, class=>'btn btn-primary'}{caption}{/button}
+	<div class="form-group mb0">
+		<div class="col-md-12">
+			{button continue, class=>'btn btn-default'}{caption}{/button}
 		</div>
 	</div>
 {/form}
+
+	

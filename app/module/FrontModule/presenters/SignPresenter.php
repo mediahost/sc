@@ -71,6 +71,7 @@ class SignPresenter extends BasePresenter
 
 	protected function beforeRender()
 	{
+		$this->setLayout('supr');
 		parent::beforeRender();
 		$this->template->roleCandidate = self::ROLE_CANDIDATE;
 		$this->template->roleCompany = self::ROLE_COMPANY;
@@ -97,7 +98,6 @@ class SignPresenter extends BasePresenter
 
 	// <editor-fold desc="Actions & renders">
 
-	/** @param string $role */
 	public function actionIn($role = self::ROLE_DEFAULT)
 	{
 		$this->session->wipe();
@@ -106,9 +106,6 @@ class SignPresenter extends BasePresenter
 		$this->template->role = $this->session->role;
 	}
 
-	/**
-	 * @param string $role
-	 */
 	public function actionUp($role = self::ROLE_DEFAULT)
 	{
 		$this->session->wipe();

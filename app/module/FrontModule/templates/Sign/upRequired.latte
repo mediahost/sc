@@ -1,18 +1,15 @@
-{block breadcrumb}{/block}
-{block content}
-
-<div class="col-md-12 col-sm-12">
-	<h1>
-		{if $role === $roleCandidate}{_'Registration for Candidate'}
-		{elseif $role === $roleCompany}{_'Registration for Company'}
-		{/if}
-	</h1>
-
-	<div class="content-form-page">
-		<div class="row">
-			<div class="col-md-7 col-sm-7">
-				{control required:login}
-			</div>
+{block content}		
+<div class="container login-container">
+	<div class="login-panel panel panel-default plain animated bounceIn">
+		<div class="panel-body">
+			{include flashMessage}
+			<h4>
+				{if $role === $roleCandidate}{_'Registration for Candidate'}
+				{elseif $role === $roleCompany}{_'Registration for Company'}
+				{/if}
+			</h4>
+			<p>&nbsp;</p>
+			{control required:login}
 		</div>
 	</div>
 </div>

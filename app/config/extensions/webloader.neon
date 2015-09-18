@@ -9,15 +9,6 @@ services:
 
 webloader:
 	css:
-		demo:
-			files:
-				- {files: ["*.less"], from: %wwwDir%/less/demo/includes}
-			filters:
-				- @cssUrlFilter
-				- @cssMinFilter
-			fileFilters:
-				- @lessFilter
-
 		front:
 			files:
 				- {files: ["*.less"], from: %wwwDir%/less/front/includes}
@@ -44,3 +35,51 @@ webloader:
 				- @cssMinFilter
 			fileFilters:
 				- @lessFilter
+
+		supr:
+			files:
+				- %wwwDir%/assets/css/supr/icons.css
+				- %wwwDir%/assets/css/supr/bootstrap.css
+				- %wwwDir%/assets/css/supr/plugins.css
+				- %wwwDir%/assets/css/supr/main.css
+				- %wwwDir%/assets/css/supr/custom.css
+			filters:
+				- @cssMinFilter
+
+	js:
+		suprCore:
+			files:
+				- %wwwDir%/assets/js/supr/libs/jquery-2.1.1.min.js
+				- %wwwDir%/assets/js/supr/libs/jquery-ui-1.10.4.min.js
+				- %wwwDir%/assets/js/supr/libs/jquery-migrate-1.2.1.min.js
+			filters:
+				- @varFilter
+
+		libs:
+			files:
+				- %wwwDir%/assets/js/supr/bootstrap/bootstrap.js
+				- %wwwDir%/assets/js/supr/libs/modernizr.custom.js
+				- %wwwDir%/assets/js/supr/jRespond.min.js
+				- %wwwDir%/assets/js/supr/plugins/core/slimscroll/jquery.slimscroll.min.js
+				- %wwwDir%/assets/js/supr/plugins/core/slimscroll/jquery.slimscroll.horizontal.min.js
+				- %wwwDir%/assets/js/supr/plugins/core/fastclick/fastclick.js
+				- %wwwDir%/assets/js/supr/plugins/core/velocity/jquery.velocity.min.js
+				- %wwwDir%/assets/js/supr/plugins/ui/bootbox/bootbox.js
+				- %wwwDir%/assets/js/supr/plugins/ui/waypoint/waypoints.js
+				- %wwwDir%/assets/js/supr/plugins/forms/autosize/jquery.autosize.js
+				- %wwwDir%/assets/js/supr/jquery.supr.js
+				- %wwwDir%/assets/js/nette.ajax/nette.ajax.min.js
+				- %wwwDir%/assets/js/live-form-validation.js
+				- %wwwDir%/assets/js/nette.serversidevalidation.js
+				- %wwwDir%/assets/js/supr/main.js
+			filters:
+				- @varFilter
+
+		customScripts:
+			files:
+				- %wwwDir%/assets/js/scripts/config.js
+				- %wwwDir%/assets/js/scripts/custom/login.js
+				- %wwwDir%/assets/js/scripts/custom/custom-init.js
+				- %wwwDir%/assets/js/scripts/init.js
+			filters:
+				- @varFilter
