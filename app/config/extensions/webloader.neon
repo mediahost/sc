@@ -68,6 +68,7 @@ webloader:
 				- %wwwDir%/assets/js/supr/plugins/ui/waypoint/waypoints.js
 				- %wwwDir%/assets/js/supr/plugins/forms/autosize/jquery.autosize.js
 				- %wwwDir%/assets/js/supr/jquery.supr.js
+				- %wwwDir%/assets/js/addones/bootstrap-rating.js
 				- %wwwDir%/assets/js/nette.ajax/nette.ajax.min.js
 				- %wwwDir%/assets/js/live-form-validation.js
 				- %wwwDir%/assets/js/nette.serversidevalidation.js
