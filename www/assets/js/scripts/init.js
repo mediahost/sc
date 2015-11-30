@@ -1,10 +1,10 @@
 jQuery(document).ready(function () {
 	$.nette.init();
 	
+	Global.init();
 	Login.init();
-	
+	PdfPreview.init();
 	// Global components
-//	GlobalCustomInit.init();
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {

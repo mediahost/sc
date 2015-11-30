@@ -1,40 +1,41 @@
 {snippet livePreview}
-<div class="pdf-preview-box">
-	<div class="pdf-preview-navigation" data-for="cv-{$cv->id}">
-		<button class="pdf-preview-navigation-button btn btn-icon-only btn-default" 
-				data-navigation="zoomOut">
-			<i class="fa fa-search-minus"></i>
-		</button>
-		<button class="pdf-preview-navigation-button btn btn-icon-only btn-default" 
-				data-navigation="zoomIn">
-			<i class="fa fa-search-plus"></i>
-		</button>
-		<button class="pdf-preview-navigation-button btn btn-icon-only btn-default" 
-				data-navigation="prev">
-			<i class="fa fa-arrow-left"></i>
-		</button>
-		<button class="pdf-preview-navigation-paginator loading btn btn-default disabled">
-			<span class="pdf-preview-navigation-paginator-actualPage">{$startPage}</span>
-			<span class="pdf-preview-navigation-paginator-separator">{_'from'}</span>
-			<span class="pdf-preview-navigation-paginator-totalPage"></span>
-			<span class="pdf-preview-navigation-paginator-loading"><i>{_'Loading...'}</i></span>
-		</button>
-		<button class="pdf-preview-navigation-button btn btn-icon-only btn-default" 
-				data-navigation="next">
-			<i class="fa fa-arrow-right"></i>
-		</button>
+	<div class="pdf-preview-box">
+		<canvas
+			id="cv-{$cv->id}"
+			class="pdf-preview"
+			data-source="{plink :Front:CvViewer: $cv->id}"
+			data-page="{$startPage}"
+			data-scale="{$scale}"
+			data-max-scale="{$scaleMax}"
+			data-min-scale="{$scaleMin}"
+			data-scale-step="{$scaleStep}"
+			data-error-class="note note-danger"
+			data-error-message="{_"We couldn't find requested PDF."}"
+			/>
+		<div class="pdf-preview-navigation" data-for="cv-{$cv->id}">
+			<button class="pdf-preview-navigation-button btn btn-icon-only btn-default" 
+					data-navigation="zoomOut">
+				<i class="fa fa-search-minus"></i>
+			</button>
+			<button class="pdf-preview-navigation-button btn btn-icon-only btn-default" 
+					data-navigation="zoomIn">
+				<i class="fa fa-search-plus"></i>
+			</button>
+			<button class="pdf-preview-navigation-button btn btn-icon-only btn-default" 
+					data-navigation="prev">
+				<i class="fa fa-arrow-left"></i>
+			</button>
+			<button class="pdf-preview-navigation-paginator loading btn btn-default disabled">
+				<span class="pdf-preview-navigation-paginator-actualPage">{$startPage}</span>
+				<span class="pdf-preview-navigation-paginator-separator">{_'from'}</span>
+				<span class="pdf-preview-navigation-paginator-totalPage"></span>
+				<span class="pdf-preview-navigation-paginator-loading"><i>{_'Loading...'}</i></span>
+			</button>
+			<button class="pdf-preview-navigation-button btn btn-icon-only btn-default" 
+					data-navigation="next">
+				<i class="fa fa-arrow-right"></i>
+			</button>
+		</div>
 	</div>
-	<canvas
-		id="cv-{$cv->id}"
-		class="pdf-preview"
-		data-source="{plink :Front:CvViewer: $cv->id}"
-		data-page="{$startPage}"
-		data-scale="{$scale}"
-		data-scale-step="{$scaleStep}"
-		data-error-class="note note-danger"
-		data-error-message="{_"We couldn't find requested PDF."}"
-		/>
-
-</div>
-<script src="{$basePath}/assets/js/pdfjs/pdf.js" type="text/javascript"></script>
+	<script src="{$basePath}/assets/js/pdfjs/pdf.js" type="text/javascript"></script>
 {/snippet}

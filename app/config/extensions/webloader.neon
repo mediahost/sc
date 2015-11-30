@@ -73,13 +73,16 @@ webloader:
 				- %wwwDir%/assets/js/live-form-validation.js
 				- %wwwDir%/assets/js/nette.serversidevalidation.js
 				- %wwwDir%/assets/js/supr/main.js
+				- %wwwDir%/assets/js/phpjs/functions/filesystem/file_exists.js
 			filters:
 				- @varFilter
 
 		customScripts:
 			files:
 				- %wwwDir%/assets/js/scripts/config.js
+				- %wwwDir%/assets/js/scripts/custom/global.js
 				- %wwwDir%/assets/js/scripts/custom/login.js
+				- %wwwDir%/assets/js/scripts/custom/pdf-preview.js
 				- %wwwDir%/assets/js/scripts/custom/custom-init.js
 				- %wwwDir%/assets/js/scripts/init.js
 			filters:

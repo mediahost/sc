@@ -8,10 +8,12 @@ var PdfPreview = function () {
 			var source = preview.attr('data-source');
 			var startPage = parseInt(preview.attr('data-page')) > 1 ? parseInt(preview.attr('data-page')) : 1;
 			var startScale = parseFloat(preview.attr('data-scale')) > 0 ? parseFloat(preview.attr('data-scale')) : 1;
+			var minScale = parseFloat(preview.attr('data-min-scale')) > 0 ? parseFloat(preview.attr('data-min-scale')) : 0.8;
+			var maxScale = parseFloat(preview.attr('data-max-scale')) > 0 ? parseFloat(preview.attr('data-max-scale')) : 1.2;
 			var scalestep = parseFloat(preview.attr('data-scale-step')) > 0 ? parseFloat(preview.attr('data-scale-step')) : 0.2;
 
 			if (file_exists(source)) {
-				PdfViewer.init(id, source, startPage, startScale, scalestep);
+				PdfViewer.init(id, source, startPage, startScale, scalestep, minScale, maxScale);
 			} else {
 				var errClass = preview.attr('data-error-class') ? preview.attr('data-error-class') : 'note note-danger';
 				var errMsg = preview.attr('data-error-message') ? preview.attr('data-error-message') : 'We couldn\'t find requested PDF.';
@@ -42,7 +44,8 @@ var PdfViewer = function () {
 		page: 1,
 		scale: 1,
 		scaleStep: 0.2,
-		scaleMax: 1.3,
+		scaleMax: 1.4,
+		scaleMin: 0.6,
 		rendering: false,
 		pending: null,
 		canvas: null,
@@ -53,12 +56,14 @@ var PdfViewer = function () {
 	/**
 	 * Set start data
 	 */
-	var setStartData = function (id, source, startPage, startScale, scaleStep) {
+	var setStartData = function (id, source, startPage, startScale, scaleStep, minScale, maxScale) {
 		data.id = id;
 		data.source = source;
 		data.page = startPage;
 		data.scale = startScale;
 		data.scaleStep = scaleStep;
+		data.scaleMin = minScale;
+		data.scaleMax = maxScale;
 		data.pdf = null;
 		data.canvas = null;
 		data.context = null;
@@ -140,10 +145,11 @@ var PdfViewer = function () {
 	 * Zoom IN
 	 */
 	var onZoomIn = function () {
-		if (data.scale + data.scaleStep >= data.scaleMax + data.scaleStep) {
+		data.scale = round(data.scale, 1);
+		if (round(data.scale + data.scaleStep, 1) >= round(data.scaleMax + data.scaleStep, 1)) {
 			return;
 		}
-		data.scale += data.scaleStep;
+		data.scale = round(data.scale + data.scaleStep, 1);
 		queueRenderPage(data.page, data.scale);
 	};
 
@@ -151,10 +157,11 @@ var PdfViewer = function () {
 	 * Zoom OUT
 	 */
 	var onZoomOut = function () {
-		if (data.scale - data.scaleStep < data.scaleStep) {
+		data.scale = round(data.scale, 1);
+		if (round(data.scale - data.scaleStep, 1) < data.scaleMin) {
 			return;
 		}
-		data.scale -= data.scaleStep;
+		data.scale = round(data.scale - data.scaleStep, 1);
 		queueRenderPage(data.page, data.scale);
 	};
 
@@ -200,10 +207,6 @@ var PdfViewer = function () {
 	 * Do it once before first load document
 	 */
 	var beforeLoadingPdf = function () {
-		Metronic.blockUI({
-			target: navigation.parent,
-			animate: true
-		});
 		navigation.paginator.text.main.addClass('loading');
 		navigation.paginator.text.actualPage.hide();
 		navigation.paginator.text.separator.hide();
@@ -221,7 +224,6 @@ var PdfViewer = function () {
 		navigation.paginator.text.separator.show();
 		navigation.paginator.text.totalPage.show();
 		navigation.paginator.text.loading.hide();
-		Metronic.unblockUI(navigation.parent);
 	};
 
 	/**
@@ -231,12 +233,12 @@ var PdfViewer = function () {
 	var setScaleNumber = function (scaleNum) {
 		data.scale = scaleNum;
 
-		if (scaleNum + data.scaleStep >= data.scaleMax) {
+		if (round(scaleNum + data.scaleStep, 1) >= round(data.scaleMax + data.scaleStep, 1)) {
 			navigation.zoomIn.addClass('disabled');
 		} else {
 			navigation.zoomIn.removeClass('disabled');
 		}
-		if (scaleNum - data.scaleStep <= data.scaleStep) {
+		if (round(scaleNum - data.scaleStep, 1) <= round(data.scaleMin - data.scaleStep, 1)) {
 			navigation.zoomOut.addClass('disabled');
 		} else {
 			navigation.zoomOut.removeClass('disabled');
@@ -318,8 +320,8 @@ var PdfViewer = function () {
 	};
 
 	return {
-		init: function (id, source, startPage, startScale, scaleStep) {
-			setStartData(id, source, startPage, startScale, scaleStep);
+		init: function (id, source, startPage, startScale, scaleStep, minScale, maxScale) {
+			setStartData(id, source, startPage, startScale, scaleStep, minScale, maxScale);
 			setNavigation(id);
 			beforeLoadingPdf();
 			renderPage(startPage, startScale);
@@ -327,3 +329,8 @@ var PdfViewer = function () {
 	};
 
 }();
+
+
+function round(num, precision) {
+	return +(Math.round(num + "e+" + precision) + "e-" + precision);
+}

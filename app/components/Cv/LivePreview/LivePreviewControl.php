@@ -19,18 +19,30 @@ class LivePreviewControl extends BaseControl
 	private $startPage = 1;
 
 	/** @var float */
-	private $scale = 0.7;
+	private $scale = 0.8;
 
 	/** @var float */
 	private $scaleStep = 0.1;
+
+	/** @var float */
+	private $scaleMin = 0.6;
+
+	/** @var float */
+	private $scaleMax = 1;
 
 	// </editor-fold>
 	// <editor-fold desc="setters & getters">
 
 	/** @return self */
-	public function setScale($scale)
+	public function setScale($scale, $scaleMin = NULL, $scaleMax = NULL)
 	{
 		$this->scale = $scale;
+		if ($scaleMin) {
+			$this->scaleMin = $scaleMin;
+		}
+		if ($scaleMax) {
+			$this->scaleMax = $scaleMax;
+		}
 		return $this;
 	}
 
@@ -64,6 +76,8 @@ class LivePreviewControl extends BaseControl
 		$this->template->startPage = $this->cv->lastOpenedPreviewPage ? $this->cv->lastOpenedPreviewPage : $this->startPage;
 		$this->template->scale = $this->cv->lastUsedPreviewScale ? $this->cv->lastUsedPreviewScale : $this->scale;
 		$this->template->scaleStep = $this->scaleStep;
+		$this->template->scaleMin = $this->scaleMin;
+		$this->template->scaleMax = $this->scaleMax;
 		parent::render();
 	}
 

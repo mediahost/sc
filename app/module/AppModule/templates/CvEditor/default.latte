@@ -1,58 +1,397 @@
-{includeblock 'navigation.latte'}
+{block pageTitle}
+{_'CV Editor'}
+{/block}
+
+{block bodyClass}
+hide-righ-sidebar
+{/block}
 
 {block content}
-
-{var colMd => $showPreview ? 12 : 6}
-{include navigation, colMd => $colMd, cv => $cv}
-
 <div class="row">
-
-	<div class="col-md-6">
-		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption">
-					<i class="icon-notebook font-green-sharp"></i>
-					<span class="caption-subject font-green-sharp">
-						{_'Edit'}
-					</span>
+	<div class="col-lg-6">
+		<div class="tabs tabs-left mb20">
+			<ul id="myTab8" class="nav nav-tabs">
+				<li class="active">
+					<a href="#home8" data-toggle="tab">Work Experience</a>
+				</li>
+				<li>
+					<a href="#profile8" data-toggle="tab">Education &amp; Training</a>
+				</li>
+				<li class="">
+					<a href="#settings8" data-toggle="tab">IT Skills</a>
+				</li>
+				<li class="">
+					<a href="#settings8" data-toggle="tab">Other Experience</a>
+				</li>
+				<li class="">
+					<a href="#settings8" data-toggle="tab">Personal Skills and<br /> Competence</a>
+				</li>
+				<li class="">
+					<a href="#settings8" data-toggle="tab">Language Skills</a>
+				</li>
+				<li class="">
+					<a href="#settings8" data-toggle="tab">Career Objective</a>
+				</li>
+				<li class="">
+					<a href="#settings8" data-toggle="tab">Desired Employment</a>
+				</li>
+				<li class="">
+					<a href="#settings8" data-toggle="tab">Career Summary</a>
+				</li>
+			</ul>
+			<div id="myTabContent8" class="tab-content">
+				<div class="tab-pane fade active in" id="home8">
+					<form class="form-horizontal group-border stripped">
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">Default input</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" name="default">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3  control-label" for="">Password field</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="password" class="form-control" id="passwordfield" placeholder="Type your password">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">Disabled</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" name="disabled" disabled placeholder="This is disabled filed">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">Read only</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" name="readonly" readonly placeholder="Read only field">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">Predefined value</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" name="predefined" value="http://">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">Placeholder</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" name="placeholder" placeholder="This is placeholder text">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">With tooltip</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control tip" title="Shine new tooltip" name="tooltip" placeholder="Hover for tooltip action">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">Static control</label>
+							<div class="col-lg-10 col-md-9">
+								<p class="form-control-static">Jonh Doe</p>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">Rounded input</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control input-rounded" name="default">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">Help block</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="row">
+									<div class="col-lg-4 col-md-4">
+										<input type="text" class="form-control">
+										<span class="help-block">Left help block</span>
+									</div>
+									<div class="col-lg-4 col-md-4">
+										<input type="text" class="form-control">
+										<span class="help-block text-center">Center help block</span>
+									</div>
+									<div class="col-lg-4 col-md-4">
+										<input type="text" class="form-control">
+										<span class="help-block text-right">Right help block</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3  control-label" for="">With icons</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+										<div class="input-group input-icon">
+											<span class="input-group-addon"><i class="icomoon-icon-user s16"></i></span>
+											<input type="text" class="form-control" placeholder="Icon on left">
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+										<div class="input-group input-icon">
+											<input type="text" class="form-control" placeholder="Icon on right">
+											<span class="input-group-addon"><i class="icomoon-icon-key s16"></i> </span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group has-success">
+							<label class="col-lg-2 col-md-3 control-label">Success input</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" placeholder="Success Field">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group has-warning">
+							<label class="col-lg-2 col-md-3 control-label">Warning input</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" placeholder="Warning Field">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group has-error">
+							<label class="col-lg-2 col-md-3 control-label">Error input</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" placeholder="Error Field">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label" for="">File upload</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="file" class="filestyle" data-buttonText="Find file" data-buttonName="btn-default" data-iconName="fa fa-plus">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group form-group-vertical">
+							<label class="col-lg-2 col-md-3 control-label" for="">Vertical form group</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control" name="default" placeholder="Your Name">
+								<input type="email" class="form-control" name="email" placeholder="Your Email">
+								<input type="password" class="form-control" name="password" placeholder="Your Password">
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Grid input sizes</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="row">
+									<div class="col-lg-6 col-md-6">
+										<input type="text" class="form-control" placeholder=".col-lg-6">
+									</div>
+									<div class="col-lg-3 col-md-3">
+										<input type="text" class="form-control" placeholder=".col-lg-3">
+									</div>
+									<div class="col-lg-3 col-md-3">
+										<input type="text" class="form-control" placeholder=".col-lg-3">
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+					</form>
 				</div>
-			</div>
-			<div class="portlet-body">
-				{control basicInfoForm}
+				<div class="tab-pane fade" id="profile8">
+					<form class="form-horizontal group-border stripped">
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Checkboxes</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="checkbox-custom">
+									<input type="checkbox" value="option1" id="checkbox1">
+									<label for="checkbox1">Unchecked</label>
+								</div>
+								<div class="checkbox-custom">
+									<input type="checkbox" value="option2" checked="checked" id="checkbox2">
+									<label for="checkbox2">Checked</label>
+								</div>
+								<div class="checkbox-custom">
+									<input type="checkbox" value="option3" disabled="disabled" id="checkbox3">
+									<label for="checkbox3">Disabled</label>
+								</div>
+								<div class="checkbox-custom">
+									<input type="checkbox" value="option4" checked="checked" disabled="disabled" id="checkbox4">
+									<label for="checkbox4">Checked and disabled</label>
+								</div>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Inline Checkboxes</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="checkbox-custom checkbox-inline">
+									<input type="checkbox" value="option1" id="checkbox5">
+									<label for="checkbox5">Unchecked</label>
+								</div>
+								<div class="checkbox-custom checkbox-inline">
+									<input type="checkbox" value="option2" checked="checked" id="checkbox6">
+									<label for="checkbox6">Checked</label>
+								</div>
+								<div class="checkbox-custom checkbox-inline">
+									<input type="checkbox" value="option3" disabled="disabled" id="checkbox7">
+									<label for="checkbox7">Disabled</label>
+								</div>
+								<div class="checkbox-custom checkbox-inline">
+									<input type="checkbox" value="option4" checked="checked" disabled="disabled" id="checkbox8">
+									<label for="checkbox8">Checked and disabled</label>
+								</div>
+							</div>
+						</div>
+						<!-- End .form-group div -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Check all</label>
+							<div id="checkAllExample" class="col-lg-10 col-md-9">
+								<div class="checkbox-custom">
+									<input class="check-all" type="checkbox" value="option1" id="checkbox9">
+									<label for="checkbox9">Check all</label>
+								</div>
+								<div class="children">
+									<div class="checkbox-custom">
+										<input class="check" type="checkbox" value="option2" id="checkbox10">
+										<label for="checkbox10">Option 1</label>
+									</div>
+									<div class="checkbox-custom">
+										<input class="check" type="checkbox" value="option3" id="checkbox11">
+										<label for="checkbox11">Option 2</label>
+									</div>
+									<div class="checkbox-custom">
+										<input class="check" type="checkbox" value="option4" id="checkbox12">
+										<label for="checkbox12">Option 3</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Radios</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="radio-custom">
+									<input type="radio" name="radio" value="option1" id="radio1">
+									<label for="radio1">Unchecked</label>
+								</div>
+								<div class="radio-custom">
+									<input type="radio" name="radio" value="option2" checked="checked" id="radio2">
+									<label for="radio2">Checked</label>
+								</div>
+								<div class="radio-custom">
+									<input type="radio" name="radio" value="option3" disabled="disabled" id="radio3">
+									<label for="radio3">Disabled</label>
+								</div>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Inline radios</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="radio-custom radio-inline">
+									<input type="radio" name="radio1" value="option1" id="radio4">
+									<label for="radio4">Unchecked</label>
+								</div>
+								<div class="radio-custom radio-inline">
+									<input type="radio" name="radio1" value="option2" checked="checked" id="radio5">
+									<label for="radio5">Checked</label>
+								</div>
+								<div class="radio-custom radio-inline">
+									<input type="radio" name="radio1" value="option3" disabled="disabled" id="radio6">
+									<label for="radio6">Disabled</label>
+								</div>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Simple select</label>
+							<div class="col-lg-10 col-md-9">
+								<select class="form-control">
+									<optgroup label="Alaskan/Hawaiian Time Zone">
+										<option value="AK">Alaska</option>
+										<option value="HI">Hawaii</option>
+									</optgroup>
+									<optgroup label="Pacific Time Zone">
+										<option value="CA">California</option>
+										<option value="NV">Nevada</option>
+										<option value="OR">Oregon</option>
+										<option value="WA">Washington</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Multiple select</label>
+							<div class="col-lg-10 col-md-9">
+								<select style="height:200px;" class="form-control" multiple>
+									<optgroup label="Alaskan/Hawaiian Time Zone">
+										<option value="AK">Alaska</option>
+										<option value="HI">Hawaii</option>
+									</optgroup>
+									<optgroup label="Pacific Time Zone">
+										<option value="CA">California</option>
+										<option value="NV">Nevada</option>
+										<option value="OR">Oregon</option>
+										<option value="WA">Washington</option>
+									</optgroup>
+								</select>
+								<span class="help-block color-red">Multiple select (Hold CTRL key )</span>
+							</div>
+						</div>
+						<!-- End .form-group  -->
+					</form>
+				</div>
+				<div class="tab-pane fade" id="settings8">
+					{control basicInfoForm}
+				</div>
 			</div>
 		</div>
 	</div>
-
-	<div n:if="$showPreview" class="col-md-6">
-		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption font-green-sharp">
-					<i class="icon-eye font-green-sharp"></i>
-					<span class="caption-subject"> {_'Live Preview'}</span>
-					<span class="caption-helper">{_'of your CV'}</span>
+	
+	<div class="col-lg-6 col-md-6 visible-lg">
+		<div class="tabs mb20">
+			<ul id="profileTab" class="nav nav-tabs">
+				<li class="dropdown pull-right tabdrop">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+						<i class="fa fa-align-justify"></i>
+						<span class="display-tab"></span>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu right">
+						<li class="">
+							<a href="#" data-toggle="tab">Print</a>
+						</li>
+						<li class="">
+							<a href="#" data-toggle="tab">Share</a>
+						</li>
+						<li class="">
+							<a href="#" data-toggle="tab">Send by e-mail</a>
+						</li>
+					</ul>
+				</li>
+				<li class="active">
+					<a href="#sourceCode"  data-toggle="tab">Source-Code format</a>
+				</li>
+				<li>
+					<a href="#europass" data-toggle="tab">Europass</a>
+				</li>
+				<li>
+					<a href="#standard1" data-toggle="tab">Standard 1</a>
+				</li>
+				<li>
+					<a href="#standard2" data-toggle="tab">Standard 2</a>
+				</li>
+			</ul>
+			<div id="myTabContent" class="tab-content">
+				<div class="tab-pane fade active in" id="sourceCode">
+					{control cvPreview}
 				</div>
-				<div class="actions">
-					<a class="btn btn-circle btn-icon-only btn-default" 
-					   n:href="this">
-						<i class="icon-printer"></i>
-					</a>
-					<a class="btn btn-circle btn-icon-only btn-default" 
-					   n:href="this">
-						<i class="icon-cloud-upload"></i>
-					</a>
-					<a class="btn btn-circle btn-icon-only btn-default" 
-					   n:href="this">
-						<i class="icon-paper-plane"></i>
-					</a>
-					<a class="btn btn-circle btn-icon-only btn-default fullscreen" 
-					   href="#" data-original-title="" title="">
-					</a>
-				</div>
-			</div>
-			<div class="portlet-body" style="height: auto;">
-				{control cvPreview}
 			</div>
 		</div>
 	</div>
-
 </div>

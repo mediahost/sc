@@ -164,6 +164,7 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentCvPreview()
 	{
 		$control = $this->iLivePreviewControlFactory->create();
+		$control->setScale(1, 0.8, 1);
 		$control->setCv($this->cv);
 		return $control;
 	}

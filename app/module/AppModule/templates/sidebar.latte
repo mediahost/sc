@@ -43,6 +43,13 @@
 							</a>
 						</li>
 						
+						<li n:if="$isCandidate">
+							<a n:href="CvEditor:" n:class="$presenter->isLinkCurrent('CvEditor:*') ? active">
+								<i class="s16 icomoon-icon-clipboard"></i>
+								<span class="txt">{_'CV Editor'}</span>
+							</a>
+						</li>
+						
 						<!-- BEGIN ADMIN -->
 						<li n:if="$user->isAllowed('users', 'default')">
 							<a n:href="Users:" n:class="$presenter->isLinkCurrent('Users:*') ? active">
