@@ -1,0 +1,110 @@
+{**
+ * Skils template
+ *
+*}
+
+<form class="form-horizontal">
+	<div class="panel-group accordion" id="skills">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#skills" href="#skillGroup1">
+						Programming languages
+					</a>
+				</h4>
+			</div>
+			<div id="skillGroup1" class="panel-collapse collapse">
+				<div class="panel-body">
+					<h5>Category</h5>
+					{var skills => [
+						'PHP' => 5,
+						'Java' => 1,
+						'CSS' => 5,
+						'JavaScript' => 3,
+						'SQL' => 4,
+					]}
+					<div class="row" n:foreach="$skills as $skill => $rate">
+						<div class="col-md-3">
+							{$skill}
+						</div>
+						<div class="col-md-3">
+							<input type="hidden" class="rating" value="{$rate}"
+								   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
+						</div>
+						<div class="col-md-3">
+							<div class="input-group">
+								<input type="text" class="form-control">
+								<span class="input-group-addon">years</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#skills" href="#skillGroup2">
+						Operating Systems
+					</a>
+				</h4>
+			</div>
+			<div id="skillGroup2" class="panel-collapse collapse">
+				<div class="panel-body">
+					{var skills => [
+						'iOS' => 5,
+						'Android' => 1,
+						'Linux' => 0,
+					]}
+					<div class="row" n:foreach="$skills as $skill => $rate">
+						<div class="col-md-3">
+							{$skill}
+						</div>
+						<div class="col-md-3">
+							<input type="hidden" class="rating" value="{$rate}"
+								   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
+						</div>
+						<div class="col-md-3">
+							<div class="input-group">
+								<input type="text" class="form-control">
+								<span class="input-group-addon">years</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#skills" href="#skillGroup3">
+						Graphic
+					</a>
+				</h4>
+			</div>
+			<div id="skillGroup3" class="panel-collapse collapse">
+				<div class="panel-body">
+					{var skills => [
+						'PhotoShop' => 5,
+						'Zoner' => 1,
+					]}
+					<div class="row" n:foreach="$skills as $skill => $rate">
+						<div class="col-md-3">
+							{$skill}
+						</div>
+						<div class="col-md-3">
+							<input type="hidden" class="rating" value="{$rate}"
+								   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
+						</div>
+						<div class="col-md-3">
+							<div class="input-group">
+								<input type="text" class="form-control">
+								<span class="input-group-addon">years</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

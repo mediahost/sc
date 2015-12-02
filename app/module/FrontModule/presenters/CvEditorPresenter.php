@@ -39,7 +39,7 @@ use Exception;
 /**
  *
  */
-class CvEditorPresenter extends BasePresenter
+class CvEditorPresenter1 extends BasePresenter
 {
 
 	/** @persistent int */
