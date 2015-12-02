@@ -27,13 +27,26 @@ class WorksControl extends BaseControl
 	private $work;
 
 	// </editor-fold>
+	
+	
+	/**
+	 * Renders control
+	 * @param Cv $cv
+	 */
+	public function render() {
+		$this->template->cv = $this->cv;
+		parent::render();
+	}
 
+
+	
 	/** @return Form */
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
 
 		$form = new Form();
+		$form->getElementPrototype()->setClass('form-horizontal group-border stripped');
 
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());

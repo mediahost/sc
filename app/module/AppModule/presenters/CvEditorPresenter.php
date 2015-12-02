@@ -5,8 +5,10 @@ namespace App\AppModule\Presenters;
 use App\Components\Cv\IBasicInfoControlFactory;
 use App\Components\Cv\ILivePreviewControlFactory;
 use App\Components\Cv\ISkillsControlFactory;
+use App\Components\Cv\IWorksControlFactory;
 use App\Components\Cv\LivePreviewControl;
 use App\Components\Cv\SkillsControl;
+use App\Components\Cv\WorksControl;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Skill;
 use App\Model\Facade\CvFacade;
@@ -35,6 +37,9 @@ class CvEditorPresenter extends BasePresenter
 
 	/** @var ILivePreviewControlFactory @inject */
 	public $iLivePreviewControlFactory;
+	
+	/** @var IWorksControlFactory @inject */
+	public $iWorksControlFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -148,6 +153,19 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentSkillsForm()
 	{
 		$control = $this->iSkillsControlFactory->create();
+		$control->setCv($this->cv);
+		$control->onAfterSave = function (Cv $saved) {
+			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redirect('this');
+		};
+		return $control;
+	}
+	
+	/** @return WorksControl */
+	public function createComponentWorksForm()
+	{
+		$control = $this->iWorksControlFactory->create();
 		$control->setCv($this->cv);
 		$control->onAfterSave = function (Cv $saved) {
 			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);

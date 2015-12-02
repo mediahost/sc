@@ -1,3 +1,9 @@
+{**
+ * CvEditor presenter template
+ * 
+ * @param   Cv	$cv
+*}
+
 {block pageTitle}
 {_'CV Editor'}
 {/block}
@@ -44,7 +50,7 @@ hide-righ-sidebar
 			</ul>
 			<div class="tab-content col-lg-9 col-md-9 col-sm-9 col-xs-9">
 				<div class="tab-pane fade active in" id="work-exp">
-					{include 'works.latte'}
+					{control worksForm}
 				</div>
 				<div class="tab-pane fade in" id="education">
 					{include 'education.latte'}
