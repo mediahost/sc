@@ -1,0 +1,35 @@
+.preview-tab {
+	padding: 0px !important;
+}
+
+.cv-tab.tabs {
+	margin-left: 0px;
+	.tab-content {
+		padding: 0px;
+		.list-group {
+			margin: 0px -15px;
+			margin-bottom: -15px;
+			.list-group-item {
+				border-width: 1px 0px;
+				&:first-child {
+					border-top-right-radius: 0px;
+					border-top-left-radius: 0px; 
+				}
+				&:last-child {
+					border-bottom-right-radius: 0px;
+					border-bottom-left-radius: 0px;
+					border-bottom-width: 0px;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 1499px) {
+	.col-editor {
+		width: 100%;
+	}
+	.col-preview {
+		display: none;
+	}
+}

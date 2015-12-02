@@ -1,16 +1,21 @@
 var Global = function () {
 
+	var handleInitPickers = function () {
+		$('.input-daterange').datepicker();
+	};
+
 	var handleHideRightbar = function () {
-		$(document).ready(function () {
-			if ($('body').hasClass('hide-righ-sidebar')) {
-				$('#toggle-right-sidebar').click();
-			}
-		});
+		if ($('body').hasClass('hide-righ-sidebar') && ($('#toggle-right-sidebar').hasClass('hide-right-sidebar') || $('#toggle-right-sidebar i').hasClass('icomoon-icon-indent-increase'))) {
+			$('#toggle-right-sidebar').click();
+		}
 	};
 
 	return {
 		init: function () {
-			handleHideRightbar();
+			$(document).ready(function () {
+				handleInitPickers();
+				handleHideRightbar();
+			});
 		}
 	};
 

@@ -8,352 +8,610 @@ hide-righ-sidebar
 
 {block content}
 <div class="row">
-	<div class="col-lg-6">
-		<div class="tabs tabs-left mb20">
-			<ul id="myTab8" class="nav nav-tabs">
+	<div class="col-lg-7 col-md-12 col-editor">
+		<div class="tabs tabs-left cv-tab mb20 row">
+			<ul class="nav nav-tabs col-lg-3 col-md-3 col-sm-3 col-xs-3">
 				<li class="active">
-					<a href="#home8" data-toggle="tab">Work Experience</a>
+					<a href="#work-exp" data-toggle="tab">Work Experience</a>
 				</li>
 				<li>
-					<a href="#profile8" data-toggle="tab">Education &amp; Training</a>
+					<a href="#education" data-toggle="tab">Education &amp; Training</a>
 				</li>
-				<li class="">
-					<a href="#settings8" data-toggle="tab">IT Skills</a>
+				<li>
+					<a href="#it-skills" data-toggle="tab">IT Skills</a>
 				</li>
-				<li class="">
-					<a href="#settings8" data-toggle="tab">Other Experience</a>
+				<li>
+					<a href="#other-exp" data-toggle="tab">Other Experience</a>
 				</li>
-				<li class="">
-					<a href="#settings8" data-toggle="tab">Personal Skills and<br /> Competence</a>
+				<li>
+					<a href="#personal-skills" data-toggle="tab">Personal Skills and<br /> Competence</a>
 				</li>
-				<li class="">
-					<a href="#settings8" data-toggle="tab">Language Skills</a>
+				<li>
+					<a href="#languages" data-toggle="tab">Language Skills</a>
 				</li>
-				<li class="">
-					<a href="#settings8" data-toggle="tab">Career Objective</a>
+				<li>
+					<a href="#career" data-toggle="tab">Career Objective</a>
 				</li>
-				<li class="">
-					<a href="#settings8" data-toggle="tab">Desired Employment</a>
+				<li>
+					<a href="#employments" data-toggle="tab">Desired Employment</a>
 				</li>
-				<li class="">
-					<a href="#settings8" data-toggle="tab">Career Summary</a>
+				<li>
+					<a href="#summary" data-toggle="tab">Career Summary</a>
+				</li>
+				<li>
+					<a href="#additional" data-toggle="tab">Additional Information</a>
 				</li>
 			</ul>
-			<div id="myTabContent8" class="tab-content">
-				<div class="tab-pane fade active in" id="home8">
+			<div class="tab-content col-lg-9 col-md-9 col-sm-9 col-xs-9">
+				<div class="tab-pane fade active in" id="work-exp">
 					<form class="form-horizontal group-border stripped">
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">Default input</label>
+							<label class="col-lg-2 col-md-3 control-label">Company name</label>
 							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" name="default">
+								<input type="text" class="form-control">
 							</div>
 						</div>
-						<!-- End .form-group  -->
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3  control-label" for="">Password field</label>
+							<label class="col-lg-2 col-md-3  control-label">Date</label>
 							<div class="col-lg-10 col-md-9">
-								<input type="password" class="form-control" id="passwordfield" placeholder="Type your password">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">Disabled</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" name="disabled" disabled placeholder="This is disabled filed">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">Read only</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" name="readonly" readonly placeholder="Read only field">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">Predefined value</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" name="predefined" value="http://">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">Placeholder</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" name="placeholder" placeholder="This is placeholder text">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">With tooltip</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control tip" title="Shine new tooltip" name="tooltip" placeholder="Hover for tooltip action">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">Static control</label>
-							<div class="col-lg-10 col-md-9">
-								<p class="form-control-static">Jonh Doe</p>
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">Rounded input</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control input-rounded" name="default">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">Help block</label>
-							<div class="col-lg-10 col-md-9">
-								<div class="row">
-									<div class="col-lg-4 col-md-4">
-										<input type="text" class="form-control">
-										<span class="help-block">Left help block</span>
-									</div>
-									<div class="col-lg-4 col-md-4">
-										<input type="text" class="form-control">
-										<span class="help-block text-center">Center help block</span>
-									</div>
-									<div class="col-lg-4 col-md-4">
-										<input type="text" class="form-control">
-										<span class="help-block text-right">Right help block</span>
-									</div>
+								<div class="input-daterange input-group">
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									<input type="text" class="form-control" name="start" />
+									<span class="input-group-addon">to</span>
+									<input type="text" class="form-control" name="end" />
 								</div>
 							</div>
 						</div>
-						<!-- End .form-group  -->
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3  control-label" for="">With icons</label>
+							<label class="col-lg-2 col-md-3 control-label">Position held</label>
 							<div class="col-lg-10 col-md-9">
-								<div class="row">
-									<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-										<div class="input-group input-icon">
-											<span class="input-group-addon"><i class="icomoon-icon-user s16"></i></span>
-											<input type="text" class="form-control" placeholder="Icon on left">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Main activities and responsibilities</label>
+							<div class="col-lg-10 col-md-9">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Achievement</label>
+							<div class="col-lg-10 col-md-9">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label"></label>
+							<div class="col-lg-10 col-md-9">
+								<div class="checkbox-custom">
+									<input type="checkbox" value="show" checked="checked" id="showReferee">
+									<label for="showReferee">Show Referee in CV</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Referee name</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Position</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Phone</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Email</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-lg-offset-2">
+								<button class="btn btn-primary ml15" type="submit">Save</button>
+							</div>
+						</div>
+					</form>
+					<div class="list-group">
+						<a href="#" class="list-group-item">Company 1</a>
+						<a href="#" class="list-group-item active">Company 2</a>
+						<a href="#" class="list-group-item">Company 3</a>
+						<a href="#" class="list-group-item">Company 4</a>
+						<a href="#" class="list-group-item">Company 5</a>
+					</div>
+				</div>
+				<div class="tab-pane fade in" id="education">
+					<form class="form-horizontal group-border stripped">
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Institution</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">City</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Country</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3  control-label">Date</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="input-daterange input-group">
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									<input type="text" class="form-control" name="start" />
+									<span class="input-group-addon">to</span>
+									<input type="text" class="form-control" name="end" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Title of qualification awarded</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Principal subjects / occupational skills covered</label>
+							<div class="col-lg-10 col-md-9">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-lg-offset-2">
+								<button class="btn btn-primary ml15" type="submit">Save</button>
+							</div>
+						</div>
+					</form>
+					<div class="list-group">
+						<a href="#" class="list-group-item">Education 1</a>
+						<a href="#" class="list-group-item active">Education 2</a>
+						<a href="#" class="list-group-item">Education 3</a>
+						<a href="#" class="list-group-item">Education 4</a>
+						<a href="#" class="list-group-item">Education 5</a>
+					</div>
+				</div>
+				<div class="tab-pane fade in" id="it-skills">
+					<form class="form-horizontal">
+						<div class="panel-group accordion" id="skills">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#skills" href="#skillGroup1">
+											Programming languages
+										</a>
+									</h4>
+								</div>
+								<div id="skillGroup1" class="panel-collapse collapse">
+									<div class="panel-body">
+										<h5>Category</h5>
+										{var skills => [
+											'PHP' => 5,
+											'Java' => 1,
+											'CSS' => 5,
+											'JavaScript' => 3,
+											'SQL' => 4,
+										]}
+										<div class="row" n:foreach="$skills as $skill => $rate">
+											<div class="col-md-3">
+												{$skill}
+											</div>
+											<div class="col-md-3">
+												<input type="hidden" class="rating" value="{$rate}"
+													   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
+											</div>
+											<div class="col-md-3">
+												<div class="input-group">
+                                                    <input type="text" class="form-control">
+                                                    <span class="input-group-addon">years</span>
+                                                </div>
+											</div>
 										</div>
 									</div>
-									<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-										<div class="input-group input-icon">
-											<input type="text" class="form-control" placeholder="Icon on right">
-											<span class="input-group-addon"><i class="icomoon-icon-key s16"></i> </span>
+								</div>
+							</div>
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#skills" href="#skillGroup2">
+											Operating Systems
+										</a>
+									</h4>
+								</div>
+								<div id="skillGroup2" class="panel-collapse collapse">
+									<div class="panel-body">
+										{var skills => [
+											'iOS' => 5,
+											'Android' => 1,
+											'Linux' => 0,
+										]}
+										<div class="row" n:foreach="$skills as $skill => $rate">
+											<div class="col-md-3">
+												{$skill}
+											</div>
+											<div class="col-md-3">
+												<input type="hidden" class="rating" value="{$rate}"
+													   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
+											</div>
+											<div class="col-md-3">
+												<div class="input-group">
+                                                    <input type="text" class="form-control">
+                                                    <span class="input-group-addon">years</span>
+                                                </div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#skills" href="#skillGroup3">
+											Graphic
+										</a>
+									</h4>
+								</div>
+								<div id="skillGroup3" class="panel-collapse collapse">
+									<div class="panel-body">
+										{var skills => [
+											'PhotoShop' => 5,
+											'Zoner' => 1,
+										]}
+										<div class="row" n:foreach="$skills as $skill => $rate">
+											<div class="col-md-3">
+												{$skill}
+											</div>
+											<div class="col-md-3">
+												<input type="hidden" class="rating" value="{$rate}"
+													   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
+											</div>
+											<div class="col-md-3">
+												<div class="input-group">
+                                                    <input type="text" class="form-control">
+                                                    <span class="input-group-addon">years</span>
+                                                </div>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<!-- End .form-group  -->
-						<div class="form-group has-success">
-							<label class="col-lg-2 col-md-3 control-label">Success input</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" placeholder="Success Field">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group has-warning">
-							<label class="col-lg-2 col-md-3 control-label">Warning input</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" placeholder="Warning Field">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group has-error">
-							<label class="col-lg-2 col-md-3 control-label">Error input</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" placeholder="Error Field">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label" for="">File upload</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="file" class="filestyle" data-buttonText="Find file" data-buttonName="btn-default" data-iconName="fa fa-plus">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group form-group-vertical">
-							<label class="col-lg-2 col-md-3 control-label" for="">Vertical form group</label>
-							<div class="col-lg-10 col-md-9">
-								<input type="text" class="form-control" name="default" placeholder="Your Name">
-								<input type="email" class="form-control" name="email" placeholder="Your Email">
-								<input type="password" class="form-control" name="password" placeholder="Your Password">
-							</div>
-						</div>
-						<!-- End .form-group  -->
-						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label">Grid input sizes</label>
-							<div class="col-lg-10 col-md-9">
-								<div class="row">
-									<div class="col-lg-6 col-md-6">
-										<input type="text" class="form-control" placeholder=".col-lg-6">
-									</div>
-									<div class="col-lg-3 col-md-3">
-										<input type="text" class="form-control" placeholder=".col-lg-3">
-									</div>
-									<div class="col-lg-3 col-md-3">
-										<input type="text" class="form-control" placeholder=".col-lg-3">
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- End .form-group  -->
 					</form>
 				</div>
-				<div class="tab-pane fade" id="profile8">
+				<div class="tab-pane fade in" id="other-exp">
 					<form class="form-horizontal group-border stripped">
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label">Checkboxes</label>
+							<label class="col-lg-2 col-md-3 control-label">Company name</label>
 							<div class="col-lg-10 col-md-9">
-								<div class="checkbox-custom">
-									<input type="checkbox" value="option1" id="checkbox1">
-									<label for="checkbox1">Unchecked</label>
-								</div>
-								<div class="checkbox-custom">
-									<input type="checkbox" value="option2" checked="checked" id="checkbox2">
-									<label for="checkbox2">Checked</label>
-								</div>
-								<div class="checkbox-custom">
-									<input type="checkbox" value="option3" disabled="disabled" id="checkbox3">
-									<label for="checkbox3">Disabled</label>
-								</div>
-								<div class="checkbox-custom">
-									<input type="checkbox" value="option4" checked="checked" disabled="disabled" id="checkbox4">
-									<label for="checkbox4">Checked and disabled</label>
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3  control-label">Date</label>
+							<div class="col-lg-10 col-md-9">
+								<div class="input-daterange input-group">
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									<input type="text" class="form-control" name="start" />
+									<span class="input-group-addon">to</span>
+									<input type="text" class="form-control" name="end" />
 								</div>
 							</div>
 						</div>
-						<!-- End .form-group  -->
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label">Inline Checkboxes</label>
+							<label class="col-lg-2 col-md-3 control-label">Position held</label>
 							<div class="col-lg-10 col-md-9">
-								<div class="checkbox-custom checkbox-inline">
-									<input type="checkbox" value="option1" id="checkbox5">
-									<label for="checkbox5">Unchecked</label>
-								</div>
-								<div class="checkbox-custom checkbox-inline">
-									<input type="checkbox" value="option2" checked="checked" id="checkbox6">
-									<label for="checkbox6">Checked</label>
-								</div>
-								<div class="checkbox-custom checkbox-inline">
-									<input type="checkbox" value="option3" disabled="disabled" id="checkbox7">
-									<label for="checkbox7">Disabled</label>
-								</div>
-								<div class="checkbox-custom checkbox-inline">
-									<input type="checkbox" value="option4" checked="checked" disabled="disabled" id="checkbox8">
-									<label for="checkbox8">Checked and disabled</label>
-								</div>
+								<input type="text" class="form-control">
 							</div>
 						</div>
-						<!-- End .form-group div -->
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label">Check all</label>
-							<div id="checkAllExample" class="col-lg-10 col-md-9">
+							<label class="col-lg-2 col-md-3 control-label">Main activities and responsibilities</label>
+							<div class="col-lg-10 col-md-9">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Achievement</label>
+							<div class="col-lg-10 col-md-9">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label"></label>
+							<div class="col-lg-10 col-md-9">
 								<div class="checkbox-custom">
-									<input class="check-all" type="checkbox" value="option1" id="checkbox9">
-									<label for="checkbox9">Check all</label>
-								</div>
-								<div class="children">
-									<div class="checkbox-custom">
-										<input class="check" type="checkbox" value="option2" id="checkbox10">
-										<label for="checkbox10">Option 1</label>
-									</div>
-									<div class="checkbox-custom">
-										<input class="check" type="checkbox" value="option3" id="checkbox11">
-										<label for="checkbox11">Option 2</label>
-									</div>
-									<div class="checkbox-custom">
-										<input class="check" type="checkbox" value="option4" id="checkbox12">
-										<label for="checkbox12">Option 3</label>
-									</div>
+									<input type="checkbox" value="show" checked="checked" id="showReferee">
+									<label for="showReferee">Show Referee in CV</label>
 								</div>
 							</div>
 						</div>
-						<!-- End .form-group  -->
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label">Radios</label>
+							<label class="col-lg-2 col-md-3 control-label">Referee name</label>
 							<div class="col-lg-10 col-md-9">
-								<div class="radio-custom">
-									<input type="radio" name="radio" value="option1" id="radio1">
-									<label for="radio1">Unchecked</label>
-								</div>
-								<div class="radio-custom">
-									<input type="radio" name="radio" value="option2" checked="checked" id="radio2">
-									<label for="radio2">Checked</label>
-								</div>
-								<div class="radio-custom">
-									<input type="radio" name="radio" value="option3" disabled="disabled" id="radio3">
-									<label for="radio3">Disabled</label>
-								</div>
+								<input type="text" class="form-control">
 							</div>
 						</div>
-						<!-- End .form-group  -->
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label">Inline radios</label>
+							<label class="col-lg-2 col-md-3 control-label">Position</label>
 							<div class="col-lg-10 col-md-9">
-								<div class="radio-custom radio-inline">
-									<input type="radio" name="radio1" value="option1" id="radio4">
-									<label for="radio4">Unchecked</label>
-								</div>
-								<div class="radio-custom radio-inline">
-									<input type="radio" name="radio1" value="option2" checked="checked" id="radio5">
-									<label for="radio5">Checked</label>
-								</div>
-								<div class="radio-custom radio-inline">
-									<input type="radio" name="radio1" value="option3" disabled="disabled" id="radio6">
-									<label for="radio6">Disabled</label>
-								</div>
+								<input type="text" class="form-control">
 							</div>
 						</div>
-						<!-- End .form-group  -->
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label">Simple select</label>
+							<label class="col-lg-2 col-md-3 control-label">Phone</label>
 							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Email</label>
+							<div class="col-lg-10 col-md-9">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-lg-offset-2">
+								<button class="btn btn-primary ml15" type="submit">Save</button>
+							</div>
+						</div>
+					</form>
+					<div class="list-group">
+						<a href="#" class="list-group-item">Company 1</a>
+						<a href="#" class="list-group-item active">Company 2</a>
+						<a href="#" class="list-group-item">Company 3</a>
+						<a href="#" class="list-group-item">Company 4</a>
+						<a href="#" class="list-group-item">Company 5</a>
+					</div>
+				</div>
+				<div class="tab-pane fade in" id="personal-skills">
+					<form class="form-horizontal group-border stripped">
+						<div class="form-group">
+							<label class="col-lg-3 col-md-4 control-label">Social skills and competences</label>
+							<div class="col-lg-9 col-md-8">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-4 control-label">Organisational skills and competences</label>
+							<div class="col-lg-9 col-md-8">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-4 control-label">Technical skills and competences</label>
+							<div class="col-lg-9 col-md-8">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-4 control-label">Artistic skills and competences</label>
+							<div class="col-lg-9 col-md-8">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-4 control-label">Other skills and competences</label>
+							<div class="col-lg-9 col-md-8">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-4 control-label">Driving licenses</label>
+							<div class="col-lg-9 col-md-8">
+								<select rows="4" class="form-control" multiple="">
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+									<option value="D">D</option>
+									<option value="E">E</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="tab-pane fade in" id="languages">
+					<form class="form-horizontal group-border stripped">
+						<h5>Mother Tongue</h5>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label">Mother Tongue</label>
+							<div class="col-lg-9 col-md-9">
 								<select class="form-control">
-									<optgroup label="Alaskan/Hawaiian Time Zone">
-										<option value="AK">Alaska</option>
-										<option value="HI">Hawaii</option>
-									</optgroup>
-									<optgroup label="Pacific Time Zone">
-										<option value="CA">California</option>
-										<option value="NV">Nevada</option>
-										<option value="OR">Oregon</option>
-										<option value="WA">Washington</option>
-									</optgroup>
+									<option>Language 1</option>
+									<option>Language 2</option>
+									<option>Language 3</option>
 								</select>
 							</div>
 						</div>
-						<!-- End .form-group  -->
+					</form>
+					<form class="form-horizontal group-border stripped">
+						<h5>Other Languages</h5>
 						<div class="form-group">
-							<label class="col-lg-2 col-md-3 control-label">Multiple select</label>
-							<div class="col-lg-10 col-md-9">
-								<select style="height:200px;" class="form-control" multiple>
-									<optgroup label="Alaskan/Hawaiian Time Zone">
-										<option value="AK">Alaska</option>
-										<option value="HI">Hawaii</option>
-									</optgroup>
-									<optgroup label="Pacific Time Zone">
-										<option value="CA">California</option>
-										<option value="NV">Nevada</option>
-										<option value="OR">Oregon</option>
-										<option value="WA">Washington</option>
-									</optgroup>
+							<label class="col-lg-3 col-md-3 control-label">Language</label>
+							<div class="col-lg-9 col-md-9">
+								<select class="form-control">
+									<option>Language 1</option>
+									<option>Language 2</option>
+									<option>Language 3</option>
 								</select>
-								<span class="help-block color-red">Multiple select (Hold CTRL key )</span>
 							</div>
 						</div>
-						<!-- End .form-group  -->
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label">Listening</label>
+							<div class="col-lg-9 col-md-9">
+								<input type="hidden" class="rating" value="5"
+													   data-filled="fa fa-circle green-circle" 
+													   data-empty="fa fa-circle green-circle-o"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label">Reading</label>
+							<div class="col-lg-9 col-md-9">
+								<input type="hidden" class="rating" value="2"
+													   data-filled="fa fa-circle green-circle" 
+													   data-empty="fa fa-circle green-circle-o"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label">Spoken interaction</label>
+							<div class="col-lg-9 col-md-9">
+								<input type="hidden" class="rating" value="5"
+													   data-filled="fa fa-circle green-circle" 
+													   data-empty="fa fa-circle green-circle-o"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label">Spoken production</label>
+							<div class="col-lg-9 col-md-9">
+								<input type="hidden" class="rating" value="2"
+													   data-filled="fa fa-circle green-circle" 
+													   data-empty="fa fa-circle green-circle-o"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label">Writing</label>
+							<div class="col-lg-9 col-md-9">
+								<input type="hidden" class="rating" value="5"
+													   data-filled="fa fa-circle green-circle" 
+													   data-empty="fa fa-circle green-circle-o"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-lg-offset-2">
+								<button class="btn btn-primary ml15" type="submit">Save</button>
+							</div>
+						</div>
+					</form>
+					<div class="list-group">
+						<a href="#" class="list-group-item">Language 1</a>
+						<a href="#" class="list-group-item active">Language 2</a>
+						<a href="#" class="list-group-item">Language 3</a>
+						<a href="#" class="list-group-item">Language 4</a>
+						<a href="#" class="list-group-item">Language 5</a>
+					</div>
+				</div>
+				<div class="tab-pane fade in" id="career">
+					<form class="form-horizontal group-border stripped">
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label"></label>
+							<div class="col-lg-10 col-md-9">
+								<div class="checkbox-custom">
+									<input type="checkbox" value="show" checked="checked" id="showReferee">
+									<label for="showReferee">Include in CV</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Your career objective</label>
+							<div class="col-lg-10 col-md-9">
+								<textarea class="form-control" rows="8"></textarea>
+							</div>
+						</div>
 					</form>
 				</div>
-				<div class="tab-pane fade" id="settings8">
-					{control basicInfoForm}
+				<div class="tab-pane fade in" id="employments">
+					<form class="form-horizontal group-border stripped">
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label"></label>
+							<div class="col-lg-9 col-md-9">
+								<div class="checkbox-custom">
+									<input type="checkbox" value="show" checked="checked" id="showReferee">
+									<label for="showReferee">Include in CV</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3  control-label">Available from</label>
+							<div class="col-lg-5 col-md-5">
+								<div class="input-daterange input-group">
+									<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									<input type="text" class="form-control" name="start" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label">Desired job position</label>
+							<div class="col-lg-9 col-md-9">
+								<textarea class="form-control" rows="4"></textarea>
+							</div>
+						</div>
+						<h5>Salary expectations</h5>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3 control-label"></label>
+							<div class="col-lg-9 col-md-9">
+								<div class="checkbox-custom">
+									<input type="checkbox" value="show" checked="checked" id="showReferee">
+									<label for="showReferee">Mention salary</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-3 col-md-3  control-label">€ per annum</label>
+							<div class="col-lg-9 col-md-9">
+								<div class="input-group">
+									<span class="input-group-addon">from</span>
+									<input type="text" class="form-control" name="start" />
+									<span class="input-group-addon">to</span>
+									<input type="text" class="form-control" name="end" />
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="tab-pane fade in" id="summary">
+					<form class="form-horizontal group-border stripped">
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label"></label>
+							<div class="col-lg-10 col-md-9">
+								<div class="checkbox-custom">
+									<input type="checkbox" value="show" checked="checked" id="showReferee">
+									<label for="showReferee">Include in CV</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Career summary</label>
+							<div class="col-lg-10 col-md-9">
+								<textarea class="form-control" rows="12"></textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="tab-pane fade in" id="additional">
+					<form class="form-horizontal group-border stripped">
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label"></label>
+							<div class="col-lg-10 col-md-9">
+								<div class="checkbox-custom">
+									<input type="checkbox" value="show" checked="checked" id="showReferee">
+									<label for="showReferee">Include in CV</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 col-md-3 control-label">Additional information</label>
+							<div class="col-lg-10 col-md-9">
+								<textarea class="form-control" rows="12"></textarea>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-	
-	<div class="col-lg-6 col-md-6 visible-lg">
+
+	<div class="col-lg-5 col-preview">
 		<div class="tabs mb20">
 			<ul id="profileTab" class="nav nav-tabs">
 				<li class="dropdown pull-right tabdrop">
@@ -388,10 +646,11 @@ hide-righ-sidebar
 				</li>
 			</ul>
 			<div id="myTabContent" class="tab-content">
-				<div class="tab-pane fade active in" id="sourceCode">
+				<div class="tab-pane fade active in preview-tab" id="sourceCode">
 					{control cvPreview}
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
