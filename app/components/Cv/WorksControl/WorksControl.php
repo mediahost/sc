@@ -60,8 +60,7 @@ class WorksControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 
 		$form->addText('company', 'Company name')
-				->setRequired('Must be filled')
-				->getControlPrototype()->class('form-control');
+				->setRequired('Must be filled');
 		$form->addText('position', 'Position held');
 		$form->addDatePicker('date_from', 'Date from');
 		$form->addDatePicker('date_to', 'Date to');
