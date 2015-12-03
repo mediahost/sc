@@ -31,14 +31,21 @@ class WorksControl extends BaseControl
 	
 	/**
 	 * Renders control
-	 * @param Cv $cv
 	 */
 	public function render() {
 		$this->template->cv = $this->cv;
 		parent::render();
 	}
 
-
+	/**
+	 * Edit work
+	 * @param int $workId
+	 */
+	public function handleEdit($workId) {
+		$workDao = $this->em->getDao(Work::getClassName());
+		$work = $workDao->find($workId);
+		$this->setWork($work);
+	}
 	
 	/** @return Form */
 	protected function createComponentForm()
@@ -46,13 +53,15 @@ class WorksControl extends BaseControl
 		$this->checkEntityExistsBeforeRender();
 
 		$form = new Form();
+		$form->addHidden('id', 0);
 		$form->getElementPrototype()->setClass('form-horizontal group-border stripped');
 
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
 		$form->addText('company', 'Company name')
-				->setRequired('Must be filled');
+				->setRequired('Must be filled')
+				->getControlPrototype()->class('form-control');
 		$form->addText('position', 'Position held');
 		$form->addDatePicker('date_from', 'Date from');
 		$form->addDatePicker('date_to', 'Date to');
@@ -76,6 +85,11 @@ class WorksControl extends BaseControl
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
+		if(isset($values['id'])) {
+			$workDao = $this->em->getDao(Work::getClassName());
+			$work = $workDao->find($values['id']);
+			$this->setWork($work);
+		}
 		$this->load($values);
 		$this->save();
 		$this->onAfterSave($this->cv);
@@ -114,6 +128,7 @@ class WorksControl extends BaseControl
 		$values = [];
 		if ($this->work) {
 			$values = [
+				'id' => $this->work->id,
 				'company' => $this->work->company,
 				'position' => $this->work->position,
 				'date_from' => $this->work->dateStart,

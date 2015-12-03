@@ -163,7 +163,7 @@ class CvEditorPresenter extends BasePresenter
 	}
 	
 	/** @return WorksControl */
-	public function createComponentWorksForm()
+	public function createComponentWorksControl()
 	{
 		$control = $this->iWorksControlFactory->create();
 		$control->setCv($this->cv);
