@@ -5,6 +5,7 @@
  * @param   Work	$work
  * @param	int		$activeId
 *}
+{snippet worksControl}
 {control form}
 		
 <div n:if="count($cv->works)" class="list-group">
@@ -13,8 +14,9 @@
 		
 		<div class="col-lg-11">{$work->company}</div>
 		<span class="">
-			<a href="{link edit! workId => $work->id}" ><i class="glyphicon glyphicon-pencil"></i></a>
-			<a href="{link delete! workId => $work->id}"><i class="glyphicon glyphicon-trash"></i></a>
+			<a href="{link edit! workId => $work->id}" class="ajax"><i class="glyphicon glyphicon-pencil"></i></a>
+			<a href="{link delete! workId => $work->id}" class="ajax"><i class="glyphicon glyphicon-trash"></i></a>
 		</span>
 	</div>
 </div>
+{/snippet}

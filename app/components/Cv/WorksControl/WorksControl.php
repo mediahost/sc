@@ -48,6 +48,7 @@ class WorksControl extends BaseControl
 		$workDao = $this->em->getDao(Work::getClassName());
 		$work = $workDao->find($workId);
 		$this->setWork($work);
+		$this->invalidateControl('worksControl');
 	}
 	
 	/**
@@ -59,6 +60,7 @@ class WorksControl extends BaseControl
 			$workDao = $this->em->getDao(Work::getClassName());
 			$work = $workDao->find($workId);
 			$workDao->delete($work);
+			$this->invalidateControl('worksControl');
 		}
 	}
 
@@ -69,7 +71,7 @@ class WorksControl extends BaseControl
 
 		$form = new Form();
 		$form->addHidden('id', 0);
-		$form->getElementPrototype()->setClass('form-horizontal group-border stripped');
+		$form->getElementPrototype()->setClass('ajax form-horizontal group-border stripped');
 
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
