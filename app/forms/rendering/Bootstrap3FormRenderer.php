@@ -26,11 +26,13 @@ class Bootstrap3FormRenderer extends ExtendedFormRenderer
 		$this->wrappers['controls']['container'] = NULL;
 		$this->wrappers['pair']['container'] = 'div class=form-group';
 		$this->wrappers['pair']['.error'] = 'has-error';
-		$this->wrappers['control']['container'] = 'div class=col-sm-9';
-		$this->wrappers['label']['container'] = 'div class="col-sm-3 control-label"';
+		$this->wrappers['control']['container'] = 'div class="col-lg-10 col-md-9"';
+		$this->wrappers['label']['container'] = '';
 		$this->wrappers['label']['requiredsuffix'] = Html::el('span class=required')->setText('*');
 		$this->wrappers['control']['description'] = 'span class=help-block';
 		$this->wrappers['control']['errorcontainer'] = 'span class=help-block';
+		$this->wrappers['control.submit']['container'] = 'div class="col-md-offset-2 col-lg-10 col-md-9"';
+		$this->wrappers['control.checkbox']['container'] = 'div class="col-md-offset-2 col-lg-10 col-md-9"';
 	}
 
 	protected function customizeInitedForm(Form &$form)
@@ -51,4 +53,18 @@ class Bootstrap3FormRenderer extends ExtendedFormRenderer
 		}
 	}
 
+	public function renderLabel(\Nette\Forms\IControl $control) {
+		$suffix = $this->getValue('label suffix') . ($control->isRequired() ? $this->getValue('label requiredsuffix') : '');
+		$label = $control->getLabel();
+		if ($label instanceof Html) {
+			$label->add($suffix);
+			if ($control->isRequired()) {
+				$label->class($this->getValue('control .required'), TRUE);
+			}
+			$label->addClass('col-lg-2 col-md-3 control-label');
+		} elseif ($label != NULL) { // @intentionally ==
+			$label .= $suffix;
+		}
+		return $this->getWrapper('label container')->setHtml($label);
+	}
 }

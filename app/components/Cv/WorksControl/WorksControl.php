@@ -9,6 +9,7 @@ use App\Model\Entity\Cv;
 use App\Model\Entity\Referee;
 use App\Model\Entity\Work;
 use Nette\Utils\ArrayHash;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 
 class WorksControl extends BaseControl
 {
@@ -34,6 +35,7 @@ class WorksControl extends BaseControl
 	 */
 	public function render() {
 		$this->template->cv = $this->cv;
+		$this->template->work = $this->work;
 		parent::render();
 	}
 
@@ -57,19 +59,18 @@ class WorksControl extends BaseControl
 		$form->getElementPrototype()->setClass('form-horizontal group-border stripped');
 
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$form->addText('company', 'Company name')
+		$form->addText('company', 'Company')
 				->setRequired('Must be filled');
-		$form->addText('position', 'Position held');
-		$form->addDatePicker('date_from', 'Date from');
-		$form->addDatePicker('date_to', 'Date to');
-		$form->addTextArea('activities', 'Main activities and responsibilities');
-		$form->addTextArea('achievments', 'Achievement');
 		
-		$form->addCheckSwitch('show_refree', 'Show Referee in CV')
-				->setOffText('No')
-				->setOnText('Yes');
+		$form->addDatePicker('start', 'Date from')->getControlPrototype()->class('form-control');
+		$form->addDatePicker('end', 'Date to')->getControlPrototype()->class('form-control');
+		
+		$form->addText('position', 'Position held');
+		$form->addTextArea('activities', 'Main activities and responsibilities');
+		$form->addTextArea('achievment', 'Achievement');
+		$form->addCheckBox('show_refree', 'Show Referee in CV');
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
 		$form->addText('referee_phone', 'Phone');
@@ -79,12 +80,13 @@ class WorksControl extends BaseControl
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
+	
 		return $form;
 	}
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		if(isset($values['id'])) {
+		if($values['id'] != 0) {
 			$workDao = $this->em->getDao(Work::getClassName());
 			$work = $workDao->find($values['id']);
 			$this->setWork($work);
@@ -101,8 +103,10 @@ class WorksControl extends BaseControl
 		}
 		$this->work->company = $values->company;
 		$this->work->position = $values->position;
-		$this->work->dateStart = $values->date_from;
-		$this->work->dateEnd = $values->date_to;
+		$this->work->dateStart = $values->start;
+		$this->work->dateEnd = $values->end;
+		$this->work->activities = $values->activities;
+		$this->work->achievment = $values->achievment;
 		$this->work->refereeIsPublic = (bool) $values->show_refree;
 		$this->work->referee = new Referee();
 		$this->work->referee->name = $values->referee_name;
@@ -130,10 +134,10 @@ class WorksControl extends BaseControl
 				'id' => $this->work->id,
 				'company' => $this->work->company,
 				'position' => $this->work->position,
-				'date_from' => $this->work->dateStart,
-				'date_to' => $this->work->dateEnd,
+				'start' => $this->work->dateStart,
+				'end' => $this->work->dateEnd,
 				'activities' => $this->work->activities,
-				'achievments' => $this->work->achievment,
+				'achievment' => $this->work->achievment,
 				
 				'show_refree' => $this->work->refereeIsPublic,
 				'referee_name' => $this->work->referee->name,
