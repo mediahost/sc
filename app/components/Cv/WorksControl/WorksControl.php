@@ -44,11 +44,24 @@ class WorksControl extends BaseControl
 	 * @param int $workId
 	 */
 	public function handleEdit($workId) {
+		$this->template->activeId = $workId;
 		$workDao = $this->em->getDao(Work::getClassName());
 		$work = $workDao->find($workId);
 		$this->setWork($work);
 	}
 	
+	/**
+	 * Delete work
+	 * @param int $workId
+	 */
+	public function handleDelete($workId) {
+		if ($this->cv->existsWorkId($workId)) {
+			$workDao = $this->em->getDao(Work::getClassName());
+			$work = $workDao->find($workId);
+			$workDao->delete($work);
+		}
+	}
+
 	/** @return Form */
 	protected function createComponentForm()
 	{
