@@ -4,7 +4,7 @@ namespace App\Components\Cv;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Address;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Education;
@@ -12,13 +12,8 @@ use Nette\Utils\ArrayHash;
 
 class EducationsControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
-
 	/** @var array */
 	public $onAfterSave = [];
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
 
 	/** @var Cv */
 	private $cv;
@@ -26,29 +21,58 @@ class EducationsControl extends BaseControl
 	/** @var Education */
 	private $education;
 
-	// </editor-fold>
-
+	/**
+	 * Renders control
+	 */
+	public function render() {
+		$this->template->cv = $this->cv;
+		$this->template->education = $this->education;
+		parent::render();
+	}
+	
+	/**
+	 * Edit education
+	 * @param int $eduId
+	 */
+	public function handleEdit($eduId) {
+		$this->template->activeId = $eduId;
+		$eduDao = $this->em->getDao(Education::getClassName());
+		$edu = $eduDao->find($eduId);
+		$this->setEducation($edu);
+		$this->invalidateControl();
+	}
+	
+	/**
+	 * Delete education
+	 * @param int $eduId
+	 */
+	public function handleDelete($eduId) {
+		$eduDao = $this->em->getDao(Education::getClassName());
+		$edu = $eduDao->find($eduId);
+		$eduDao->delete($edu);
+		$this->cv->deleteEducation($edu);
+		$this->invalidateControl();
+	}
+	
 	/** @return Form */
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
 
 		$form = new Form();
-
+		$form->getElementPrototype()->addClass('ajax');
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$form->addText('institution', 'Institution')
-				->setRequired('Must be filled');
+		$form->addHidden('id', 0);
+		$form->addText('institution', 'Institution')->setRequired('Must be filled');
 		$form->addText('city', 'City');
 		$form->addText('country', 'Country');
-		$form->addDatePicker('date_from', 'Date from');
-		$form->addDatePicker('date_to', 'Date to');
+		$form->addDateRangePicker('season', 'Date from');
 		$form->addText('title', 'Title of qualification awarded');
 		$form->addTextArea('subjects', 'Principal subjects / occupational skills covered');
 
 		$form->addSubmit('save', 'Save');
-
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
@@ -56,9 +80,13 @@ class EducationsControl extends BaseControl
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
+		if($values['id'] != 0) {
+			$edu = $this->em->getDao(Education::getClassName())->find($values['id']);
+			$this->setEducation($edu);
+		}
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->cv);
+		$this->invalidateControl();
 	}
 
 	private function load(ArrayHash $values)
@@ -68,8 +96,8 @@ class EducationsControl extends BaseControl
 		}
 		$this->education->institution = $values->institution;
 		$this->education->title = $values->title;
-		$this->education->dateStart = $values->date_from;
-		$this->education->dateEnd = $values->date_to;
+		$this->education->dateStart = $values->season['start'];
+		$this->education->dateEnd = $values->season['end'];
 		$this->education->subjects = $values->subjects;
 		$this->education->address = new Address();
 		$this->education->address->city = $values->city;
@@ -92,12 +120,11 @@ class EducationsControl extends BaseControl
 		$values = [];
 		if ($this->education) {
 			$values = [
+				'id' => $this->education->id,
 				'institution' => $this->education->institution,
 				'title' => $this->education->title,
-				'date_from' => $this->education->dateStart,
-				'date_to' => $this->education->dateEnd,
+				'season' => array('start' => $this->education->dateStart, 'end' => $this->education->dateEnd),
 				'subjects' => $this->education->subjects,
-				
 				'city' => $this->education->address->city,
 				'country' => $this->education->address->country,
 			];
@@ -112,8 +139,6 @@ class EducationsControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
@@ -125,8 +150,6 @@ class EducationsControl extends BaseControl
 		$this->education = $education;
 		return $this;
 	}
-
-	// </editor-fold>
 }
 
 interface IEducationsControlFactory

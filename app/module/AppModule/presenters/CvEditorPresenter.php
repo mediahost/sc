@@ -6,6 +6,7 @@ use App\Components\Cv\IBasicInfoControlFactory;
 use App\Components\Cv\ILivePreviewControlFactory;
 use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\IWorksControlFactory;
+use App\Components\Cv\IEducationsControlFactory;
 use App\Components\Cv\LivePreviewControl;
 use App\Components\Cv\SkillsControl;
 use App\Components\Cv\WorksControl;
@@ -40,6 +41,9 @@ class CvEditorPresenter extends BasePresenter
 	
 	/** @var IWorksControlFactory @inject */
 	public $iWorksControlFactory;
+	
+	/** @var IEducationsControlFactory @inject */
+	public $iEducationsControlFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -172,6 +176,14 @@ class CvEditorPresenter extends BasePresenter
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};
+		return $control;
+	}
+	
+	/** @return EducationsControl */
+	public function createComponentEducationsControl() 
+	{
+		$control = $this->iEducationsControlFactory->create();
+		$control->setCv($this->cv);
 		return $control;
 	}
 

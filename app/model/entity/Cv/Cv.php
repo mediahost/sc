@@ -158,6 +158,12 @@ class Cv extends BaseEntity
 		return $this;
 	}
 	
+	public function deleteEducation(Education $edu) {
+		$this->educations->removeElement($edu);
+		return $this;
+	}
+
+
 	public function existsWorkId($id)
 	{
 		$exists = function ($key, Work $work) use ($id) {
