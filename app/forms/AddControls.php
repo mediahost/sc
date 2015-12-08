@@ -66,6 +66,11 @@ trait AddControls
 	{
 		return $this[$name] = new DatePicker($caption);
 	}
+	
+	public function addDateRangePicker($name, $caption = NULL)
+	{
+		return $this[$name] = new Controls\Custom\DateRangePicker($caption);
+	}
 
 	/**
 	 * Add WysiHtml
