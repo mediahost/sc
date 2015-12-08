@@ -78,10 +78,7 @@ class WorksControl extends BaseControl
 
 		$form->addText('company', 'Company')
 				->setRequired('Must be filled');
-		
-		$form->addDatePicker('start', 'Date from')->getControlPrototype()->class('form-control');
-		$form->addDatePicker('end', 'Date to')->getControlPrototype()->class('form-control');
-		
+		$form->addDateRangePicker('season', 'Date from');
 		$form->addText('position', 'Position held');
 		$form->addTextArea('activities', 'Main activities and responsibilities');
 		$form->addTextArea('achievment', 'Achievement');
@@ -119,8 +116,8 @@ class WorksControl extends BaseControl
 		}
 		$this->work->company = $values->company;
 		$this->work->position = $values->position;
-		$this->work->dateStart = $values->start;
-		$this->work->dateEnd = $values->end;
+		$this->work->dateStart = $values->season['start'];
+		$this->work->dateEnd = $values->season['end'];
 		$this->work->activities = $values->activities;
 		$this->work->achievment = $values->achievment;
 		$this->work->refereeIsPublic = (bool) $values->show_refree;
@@ -150,11 +147,9 @@ class WorksControl extends BaseControl
 				'id' => $this->work->id,
 				'company' => $this->work->company,
 				'position' => $this->work->position,
-				'start' => $this->work->dateStart,
-				'end' => $this->work->dateEnd,
+				'season' => array('start' => $this->work->dateStart, 'end' => $this->work->dateEnd),
 				'activities' => $this->work->activities,
 				'achievment' => $this->work->achievment,
-				
 				'show_refree' => $this->work->refereeIsPublic,
 				'referee_name' => $this->work->referee->name,
 				'referee_position' => $this->work->referee->position,
