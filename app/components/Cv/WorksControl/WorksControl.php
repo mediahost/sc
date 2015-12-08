@@ -56,12 +56,12 @@ class WorksControl extends BaseControl
 	 * @param int $workId
 	 */
 	public function handleDelete($workId) {
-		if ($this->cv->existsWorkId($workId)) {
-			$workDao = $this->em->getDao(Work::getClassName());
-			$work = $workDao->find($workId);
-			$workDao->delete($work);
-			$this->invalidateControl('worksControl');
-		}
+		$workDao = $this->em->getDao(Work::getClassName());
+		$cvRepo = $this->em->getRepository(Cv::getClassName());
+		$work = $workDao->find($workId);
+		$workDao->delete($work);
+		$this->cv->deleteWork($work);
+		$this->invalidateControl('worksControl');
 	}
 
 	/** @return Form */
@@ -71,7 +71,7 @@ class WorksControl extends BaseControl
 
 		$form = new Form();
 		$form->addHidden('id', 0);
-		$form->getElementPrototype()->setClass('ajax form-horizontal group-border stripped');
+		$form->getElementPrototype()->addClass('ajax');
 
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
@@ -108,7 +108,8 @@ class WorksControl extends BaseControl
 		}
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->cv);
+		$this->invalidateControl();
+		//$this->onAfterSave($this->cv);
 	}
 
 	private function load(ArrayHash $values)

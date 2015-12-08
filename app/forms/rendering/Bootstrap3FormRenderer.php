@@ -39,7 +39,7 @@ class Bootstrap3FormRenderer extends ExtendedFormRenderer
 	{
 		parent::customizeInitedForm($form);
 
-		$form->getElementPrototype()->class('form-horizontal group-border stripped');
+		$form->getElementPrototype()->addClass('form-horizontal group-border stripped');
 
 		foreach ($form->getControls() as $control) {
 			if ($control instanceof Button) {
