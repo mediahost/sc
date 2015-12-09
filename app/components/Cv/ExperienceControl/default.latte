@@ -1,1 +1,21 @@
+{**
+ * ExperienceControl control template
+ *
+ * @param   Cv		$cv
+ * @param	int		$activeId
+*}
+{snippet experienceControl}
 {control form}
+
+<div n:if="count($cv->experiences)" class="list-group">
+	<div n:foreach="$cv->experiences as $experience"
+	   class="list-group-item {(isset($activeId)  &&  $experience->id == $activeId)  ?  'active' : ''}">
+		
+		<div class="col-lg-11">{$experience->company}</div>
+		<span>
+			<a href="{link edit! workId => $experience->id}" class="ajax"><i class="glyphicon glyphicon-pencil"></i></a>
+			<a href="{link delete! workId => $experience->id}" class="ajax"><i class="glyphicon glyphicon-trash"></i></a>
+		</span>
+	</div>
+</div>
+{/snippet}

@@ -4,21 +4,21 @@ namespace App\Components\Cv;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Referee;
 use App\Model\Entity\Work;
 use Nette\Utils\ArrayHash;
 
+
+/**
+ * ExperienceControl class
+ * 
+ */
 class ExperienceControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
-
 	/** @var array */
 	public $onAfterSave = [];
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
 
 	/** @var Cv */
 	private $cv;
@@ -26,48 +26,90 @@ class ExperienceControl extends BaseControl
 	/** @var Work */
 	private $experience;
 
-	// </editor-fold>
 
-	/** @return Form */
+	/**
+	 * Renders control
+	 */
+	public function render() {
+		$this->template->cv = $this->cv;
+		parent::render();
+	}
+	
+	/**
+	 * Edits Work entity
+	 * @param int $workId
+	 */
+	public function handleEdit($workId) {
+		$this->template->activeId = $workId;
+		$work = $this->em->getDao(Work::getClassName())->find($workId);
+		$this->setExperience($work);
+		$this->invalidateControl();
+	}
+	
+	/**
+	 * Deletes Work entity
+	 * @param int $workId
+	 */
+	public function handleDelete($workId) {
+		$workDao = $this->em->getDao(Work::getClassName());
+		$work = $workDao->find($workId);
+		$workDao->delete($work);
+		$this->cv->deleteWork($work);
+		$this->invalidateControl();
+	}
+
+	/**
+	 * Creates component Form
+	 * @return Form
+	 */
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
 
 		$form = new Form();
-
+		$form->getElementPrototype()->addClass('ajax');
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$form->addText('company', 'Company name')
-				->setRequired('Must be filled');
+		$form->addHidden('id', 0);
+		$form->addText('company', 'Company name')->setRequired('Must be filled');
+		$form->addDateRangePicker('season', 'Date from');
 		$form->addText('position', 'Position held');
-		$form->addDatePicker('date_from', 'Date from');
-		$form->addDatePicker('date_to', 'Date to');
 		$form->addTextArea('activities', 'Main activities and responsibilities');
 		$form->addTextArea('achievments', 'Achievement');
-		
-		$form->addCheckSwitch('show_refree', 'Show Referee in CV')
-				->setOffText('No')
-				->setOnText('Yes');
+		$form->addCheckBox('show_refree', 'Show Referee in CV');
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
 		$form->addText('referee_phone', 'Phone');
 		$form->addText('referee_mail', 'Email');
 
 		$form->addSubmit('save', 'Save');
-
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
+	/**
+	 * Handler for onSuccess form's event
+	 * @param Form $form
+	 * @param ArrayHash $values
+	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
+		if($values['id'] != 0) {
+			$work = $this->em->getDao(Work::getClassName())->find($values['id']);
+			$this->setWork($work);
+		}
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->cv);
+		$this->invalidateControl();
 	}
 
+	/**
+	 * Fills Work entity by form's values
+	 * @param ArrayHash $values
+	 * @return \App\Components\Cv\ExperienceControl
+	 */
 	private function load(ArrayHash $values)
 	{
 		if (!$this->experience) {
@@ -75,8 +117,8 @@ class ExperienceControl extends BaseControl
 		}
 		$this->experience->company = $values->company;
 		$this->experience->position = $values->position;
-		$this->experience->dateStart = $values->date_from;
-		$this->experience->dateEnd = $values->date_to;
+		$this->experience->dateStart = $values->season['start'];
+		$this->experience->dateEnd = $values->season['end'];
 		$this->experience->refereeIsPublic = (bool) $values->show_refree;
 		$this->experience->referee = new Referee();
 		$this->experience->referee->name = $values->referee_name;
@@ -88,6 +130,10 @@ class ExperienceControl extends BaseControl
 		return $this;
 	}
 
+	/**
+	 * Saves Cv entity
+	 * @return \App\Components\Cv\ExperienceControl
+	 */
 	private function save()
 	{
 		$cvRepo = $this->em->getRepository(Cv::getClassName());
@@ -95,19 +141,21 @@ class ExperienceControl extends BaseControl
 		return $this;
 	}
 
-	/** @return array */
+	/**
+	 * Gets default values from entity
+	 * @return array
+	 */
 	protected function getDefaults()
 	{
 		$values = [];
 		if ($this->experience) {
 			$values = [
+				'id' => $this->experience->id,
 				'company' => $this->experience->company,
 				'position' => $this->experience->position,
-				'date_from' => $this->experience->dateStart,
-				'date_to' => $this->experience->dateEnd,
+				'season' => array('start' => $this->experience->dateStart, 'end' => $this->experience->dateEnd),
 				'activities' => $this->experience->activities,
 				'achievments' => $this->experience->achievment,
-				
 				'show_refree' => $this->experience->refereeIsPublic,
 				'referee_name' => $this->experience->referee->name,
 				'referee_position' => $this->experience->referee->position,
@@ -118,6 +166,10 @@ class ExperienceControl extends BaseControl
 		return $values;
 	}
 
+	/**
+	 * Checks if Cv entity exists
+	 * @throws CvControlException
+	 */
 	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->cv) {
@@ -125,21 +177,27 @@ class ExperienceControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
+	/**
+	 * Seter for Cv entity
+	 * @param Cv $cv
+	 * @return \App\Components\Cv\ExperienceControl
+	 */
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
 		return $this;
 	}
 
+	/**
+	 * Seter for Work entity
+	 * @param Work $work
+	 * @return \App\Components\Cv\ExperienceControl
+	 */
 	public function setExperience(Work $experience)
 	{
 		$this->experience = $experience;
 		return $this;
 	}
-
-	// </editor-fold>
 }
 
 interface IExperienceControlFactory
