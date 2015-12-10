@@ -41,8 +41,12 @@ class DateRangePicker extends BaseControl  {
 	 * @param array $value
 	 */
 	public function setValue($value) {
-		$this->date_start = $value['start'];
-		$this->date_end = $value['end'];
+		if($value['start']) {
+			$this->date_start = DateTime::from($value['start']);
+		}
+		if($value['end']) {
+			$this->date_end = DateTime::from($value['end']);
+		}
 	}
 	
 	/**
@@ -56,13 +60,13 @@ class DateRangePicker extends BaseControl  {
 		$end = $this->date_end instanceof \DateTime ?
 				$this->date_end : DateTime::createFromFormat($this->format, $this->date_end);
 		
-		if(!self::validateDate($this)  ||  !$start  ||  !$end) {
+		if(!self::validateDate($this)) {
 			return NULL;
 		}
 		
 		return [
-			'start' => $formated ?  $start->format($this->format) : $start, 
-			'end' => $formated ?  $end->format($this->format) : $end
+			'start' => $start  ?  ($formated  ?  $start->format($this->format) : $start)  :  NULL, 
+			'end' => $end  ?  ($formated  ?  $end->format($this->format) : $end)   :   NULL
 		];
 	}
 	
@@ -128,16 +132,17 @@ class DateRangePicker extends BaseControl  {
 	 */
 	public static function validateDate(IControl $control)
 	{
-		if (!$control->isRequired() && empty($control->date)) {
-			return TRUE;
-		} else {
-			$start = $control->date_start instanceof \DateTime ?
-					$control->date_start : DateTime::createFromFormat($control->format, $control->date_start);
-			$end = $control->date_end instanceof \DateTime ?
-					$control->date_end : DateTime::createFromFormat($control->format, $control->date_end);
-			
-			return $start && $start->format($control->format) == DateTime::from($control->date_start)->format($control->format)
-				&&  $end && $start->format($control->format) == DateTime::from($control->date_end)->format($control->format);
-		}
+		$start = $control->date_start instanceof \DateTime ?
+			$control->date_start : DateTime::createFromFormat($control->format, $control->date_start);
+		$end = $control->date_end instanceof \DateTime ?
+			$control->date_end : DateTime::createFromFormat($control->format, $control->date_end);
+
+		$validStart = $control->date_start == null  ||  $control->date_start == ''  ||
+			($start && $start->format($control->format) == DateTime::from($control->date_start)->format($control->format));
+
+		$validEnd = $control->date_end == null  ||  $control->date_end == ''  ||
+			($end && $end->format($control->format) == DateTime::from($control->date_end)->format($control->format));
+
+		return $validStart && $validEnd;
 	}
 }
