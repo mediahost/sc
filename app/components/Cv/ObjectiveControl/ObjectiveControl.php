@@ -4,60 +4,61 @@ namespace App\Components\Cv;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
 class ObjectiveControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
-
 	/** @var array */
 	public $onAfterSave = [];
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
-
 	/** @var Cv */
 	private $cv;
+	
 
-	// </editor-fold>
-
-	/** @return Form */
+	/**
+	 * Creates component Form
+	 * @return Form
+	 */
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
 
 		$form = new Form();
-
+		$form->getElementPrototype()->addClass('ajax sendOnChange');
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$form->addCheckSwitch('show', 'Include to CV')
+		$form->addCheckSwitch('show', 'Include in CV')
 				->setOnText('Yes')
 				->setOffText('No');
 		$form->addTextArea('objective', 'Your career objective')
 				->getControlPrototype()
 				->style = 'height: 200px;';
 
-		if ($this->isAjax && $this->isSendOnChange) {
-			$form->getElementPrototype()->class('ajax sendOnChange');
-		} else {
-			$form->addSubmit('save', 'Save');
-		}
-
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
+	/**
+	 * Handler for onSuccess form's event
+	 * @param Form $form
+	 * @param ArrayHash $values
+	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->cv);
+		$this->invalidateControl();
 	}
 
+	/**
+	 * Fills Cv entity by form's values
+	 * @param ArrayHash $values
+	 * @return \App\Components\Cv\ObjectiveControl
+	 */
 	private function load(ArrayHash $values)
 	{
 		$this->cv->careerObjective = $values->objective;
@@ -65,6 +66,10 @@ class ObjectiveControl extends BaseControl
 		return $this;
 	}
 
+	/**
+	 * Saves Cv entity
+	 * @return \App\Components\Cv\EducationsControl
+	 */
 	private function save()
 	{
 		$cvRepo = $this->em->getRepository(Cv::getClassName());
@@ -72,7 +77,10 @@ class ObjectiveControl extends BaseControl
 		return $this;
 	}
 
-	/** @return array */
+	/**
+	 * Gets default values from entity
+	 * @return array
+	 */
 	protected function getDefaults()
 	{
 		$values = [
@@ -82,6 +90,10 @@ class ObjectiveControl extends BaseControl
 		return $values;
 	}
 
+	/**
+	 * Checks if Cv entity exists
+	 * @throws CvControlException
+	 */
 	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->cv) {
@@ -89,17 +101,22 @@ class ObjectiveControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
+	/**
+	 * Seter for Cv entity
+	 * @param Cv $cv
+	 * @return \App\Components\Cv\WorksControl
+	 */
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
 		return $this;
 	}
-
-	// </editor-fold>
 }
 
+/**
+ * Definition IObjectiveControlFactory
+ * 
+ */
 interface IObjectiveControlFactory
 {
 

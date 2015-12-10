@@ -10,6 +10,7 @@ use App\Components\Cv\IEducationsControlFactory;
 use App\Components\Cv\IExperienceControlFactory;
 use App\Components\Cv\IPersonalControlFactory;
 use App\Components\Cv\ILanguageControlFactory;
+use App\Components\Cv\IObjectiveControlFactory;
 use App\Components\Cv\LivePreviewControl;
 use App\Components\Cv\SkillsControl;
 use App\Components\Cv\WorksControl;
@@ -56,6 +57,9 @@ class CvEditorPresenter extends BasePresenter
 	
 	/** @var ILanguageControlFactory @inject */
 	public $iLanguageControlFactory;
+	
+	/** @var IObjectiveControlFactory @inject */
+	public $iObjectiveControlFactory;
 
 
 	// </editor-fold>
@@ -217,6 +221,13 @@ class CvEditorPresenter extends BasePresenter
 	/** @return LanguageControl */
 	public function createComponentLanguageControl() {
 		$control = $this->iLanguageControlFactory->create();
+		$control->setCv($this->cv);
+		return $control;
+	}
+	
+	/** @return ObjectiveControl */
+	public function createComponentObjectiveControl() {
+		$control = $this->iObjectiveControlFactory->create();
 		$control->setCv($this->cv);
 		return $control;
 	}
