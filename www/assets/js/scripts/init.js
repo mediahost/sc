@@ -5,6 +5,12 @@ jQuery(document).ready(function () {
 	Login.init();
 	PdfPreview.init();
 	// Global components
+	
+	$.nette.ext('netteAjax', {
+		complete: function () {
+			Global.init();
+		}
+	});
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {
