@@ -215,6 +215,11 @@ class Cv extends BaseEntity
 		return $this;
 	}
 	
+	public function deleteLanguage(Language $language) {
+		$this->languages->removeElement($language);
+		return $this;
+	}
+	
 	public function existsLanguageId($id)
 	{
 		$exists = function ($key, Language $language) use ($id) {
