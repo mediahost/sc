@@ -18,22 +18,30 @@ use Nette\Utils\ArrayHash;
  */
 class SkillsControl extends BaseControl
 {
-
-	/** @var Cv */
-	private $cv;
-
-	// <editor-fold desc="events">
-
 	/** @var array */
 	public $onAfterSave = [];
 
-	// </editor-fold>
-	// <editor-fold desc="injects">
-
 	/** @var SkillFacade @inject */
 	public $skillFacade;
+	
+	/** @var Cv */
+	private $cv;
+	
+	
+	/**
+	 * Renders control
+	 */
+	public function render()
+	{
+		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
+		$this->template->categories = $this->skillFacade->getTopCategories();
+		parent::render();
+	}
+	
+	public function handleInputChange($name, $value) {
+		//TODO handle only one field
+	}
 
-	// </editor-fold>
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -41,6 +49,7 @@ class SkillsControl extends BaseControl
 		$this->checkEntityExistsBeforeRender();
 
 		$form = new Form;
+		$form->getElementPrototype()->class('ajax sendOnChange');
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
 
@@ -50,17 +59,11 @@ class SkillsControl extends BaseControl
 		$years = $form->addContainer('skillYear');
 
 		foreach ($skills as $skill) {
-			$levels->addSlider($skill->id, $skill->name, $skillLevels)
-					->setColor('success')
-					->setTooltipFixed();
-			$years->addTouchSpin($skill->id, $skill->name)
-					->setMin(0)->setMax(100)
-					->setSize(TouchSpin::SIZE_S)
-					->setDefaultValue(0);
+			$levels->addHidden($skill->id);	
+			$years->addText($skill->id);
 		}
 
 		$form->addSubmit('save', 'Save');
-
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
@@ -70,12 +73,15 @@ class SkillsControl extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->cv);
+		$this->invalidateControl();
 	}
 
 	private function load(ArrayHash $values)
 	{
 		foreach ($values->skillLevel as $skillId => $levelId) {
+			if($levelId == '') {
+				continue;
+			}
 			$skill = $this->em->getDao(Skill::getClassName())->find($skillId);
 			$level = $this->em->getDao(SkillLevel::getClassName())->find($levelId);
 			$years = isset($values->skillYear[$skillId]) ? $values->skillYear[$skillId] : 0;
@@ -129,12 +135,7 @@ class SkillsControl extends BaseControl
 
 	// </editor-fold>
 
-	public function render()
-	{
-		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
-		$this->template->categories = $this->skillFacade->getTopCategories();
-		parent::render();
-	}
+	
 
 }
 
