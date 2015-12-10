@@ -9,11 +9,16 @@ var Global = function () {
 			$('#toggle-right-sidebar').click();
 		}
 	};
+	
+	var handleRating = function() {
+		$('input.rating').rating();
+	};
 
 	return {
 		init: function () {
 			$(document).ready(function () {
 				handleInitPickers();
+				handleRating();
 				handleHideRightbar();
 			});
 		}
