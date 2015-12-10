@@ -4,35 +4,32 @@ namespace App\Components\Cv;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Competences;
 use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
 class PersonalControl extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
-
 	/** @var array */
 	public $onAfterSave = [];
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
 
 	/** @var Cv */
 	private $cv;
 
-	// </editor-fold>
 
-	/** @return Form */
+	/**
+	 * Creates component Form
+	 * @return Form
+	 */
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
 
 		$form = new Form();
-
+		$form->getElementPrototype()->addClass('ajax sendOnChange');
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
 		$form->addTextArea('social', 'Social skills and competences');
 		$form->addTextArea('organisation', 'Organisational skills and competences');
@@ -41,24 +38,28 @@ class PersonalControl extends BaseControl
 		$form->addTextArea('other', 'Other skills and competences');
 		$form->addMultiSelect2('licenses', 'Driving licenses', Competences::getDrivingLicensesList());
 
-		if ($this->isAjax && $this->isSendOnChange) {
-			$form->getElementPrototype()->class('ajax sendOnChange');
-		} else {
-			$form->addSubmit('save', 'Save');
-		}
-
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
+	/**
+	 * Handler for onSuccess form's event
+	 * @param Form $form
+	 * @param ArrayHash $values
+	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->cv);
+		$this->invalidateControl();
 	}
 
+	/**
+	 * Fills Competences entity by form's values
+	 * @param ArrayHash $values
+	 * @return \App\Components\Cv\PersonalControl
+	 */
 	private function load(ArrayHash $values)
 	{
 		if (!$this->cv->competence) {
@@ -73,6 +74,10 @@ class PersonalControl extends BaseControl
 		return $this;
 	}
 
+	/**
+	 * Saves Cv entity
+	 * @return \App\Components\Cv\PersonalControl
+	 */
 	private function save()
 	{
 		$cvRepo = $this->em->getRepository(Cv::getClassName());
@@ -80,7 +85,10 @@ class PersonalControl extends BaseControl
 		return $this;
 	}
 
-	/** @return array */
+	/**
+	 * Gets default values from entity
+	 * @return array
+	 */
 	protected function getDefaults()
 	{
 		$values = [];
@@ -97,6 +105,10 @@ class PersonalControl extends BaseControl
 		return $values;
 	}
 
+	/**
+	 * Checks if Cv entity exists
+	 * @throws CvControlException
+	 */
 	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->cv) {
@@ -104,17 +116,22 @@ class PersonalControl extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
+	/**
+	 * Seter for Cv entity
+	 * @param Cv $cv
+	 * @return \App\Components\Cv\WorksControl
+	 */
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
 		return $this;
 	}
-
-	// </editor-fold>
 }
 
+/**
+ * Definition IPersonalControlFactory
+ * 
+ */
 interface IPersonalControlFactory
 {
 

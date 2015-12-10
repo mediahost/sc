@@ -8,6 +8,7 @@ use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\IWorksControlFactory;
 use App\Components\Cv\IEducationsControlFactory;
 use App\Components\Cv\IExperienceControlFactory;
+use App\Components\Cv\IPersonalControlFactory;
 use App\Components\Cv\LivePreviewControl;
 use App\Components\Cv\SkillsControl;
 use App\Components\Cv\WorksControl;
@@ -48,6 +49,9 @@ class CvEditorPresenter extends BasePresenter
 	
 	/** @var IExperienceControlFactory @inject */
 	public $iExperienceControlFactory;
+	
+	/** @var IPersonalControlFactory @inject */
+	public $iPersonalControlFactory;
 
 
 	// </editor-fold>
@@ -195,6 +199,13 @@ class CvEditorPresenter extends BasePresenter
 	/** @return ExperienceControl */
 	public function createComponentExperienceControl() {
 		$control = $this->iExperienceControlFactory->create();
+		$control->setCv($this->cv);
+		return $control;
+	}
+	
+	/** @return PersonalControl */
+	public function createComponentPersonalControl() {
+		$control = $this->iPersonalControlFactory->create();
 		$control->setCv($this->cv);
 		return $control;
 	}
