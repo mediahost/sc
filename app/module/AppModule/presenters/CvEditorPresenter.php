@@ -11,6 +11,7 @@ use App\Components\Cv\IExperienceControlFactory;
 use App\Components\Cv\IPersonalControlFactory;
 use App\Components\Cv\ILanguageControlFactory;
 use App\Components\Cv\IObjectiveControlFactory;
+use App\Components\Cv\IEmploymentControlFactory;
 use App\Components\Cv\ISummaryControlFactory;
 use App\Components\Cv\IAdditionalControlFactory;
 use App\Components\Cv\LivePreviewControl;
@@ -63,6 +64,9 @@ class CvEditorPresenter extends BasePresenter
 	/** @var IObjectiveControlFactory @inject */
 	public $iObjectiveControlFactory;
 	
+	/** @var IEmploymentControlFactory @inject */
+	public $iEmploymentControlFactory;
+
 	/** @var ISummaryControlFactory @inject */
 	public $iSummaryControlFactory;
 	
@@ -236,6 +240,13 @@ class CvEditorPresenter extends BasePresenter
 	/** @return ObjectiveControl */
 	public function createComponentObjectiveControl() {
 		$control = $this->iObjectiveControlFactory->create();
+		$control->setCv($this->cv);
+		return $control;
+	}
+	
+	/** @return EmploymentControl */
+	public function createComponentEmploymentControl() {
+		$control = $this->iEmploymentControlFactory->create();
 		$control->setCv($this->cv);
 		return $control;
 	}

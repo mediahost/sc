@@ -163,6 +163,7 @@ class DatePicker extends BaseControl
 	 */
 	public function getControl()
 	{
+		return $this->getInput(FALSE);
 		$input = $this->getInput(!$this->readOnly);
 		$icon = $this->getIcon();
 		$button = $this->getButton();
