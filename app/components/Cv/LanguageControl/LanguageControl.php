@@ -67,6 +67,7 @@ class LanguageControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
+		$form->addHidden('id', 0);
 		$form->addSelect2('motherTongue', 'Mother tongue', Language::getLanguagesList())
 				->setPrompt('Not Disclosed');
 		$form->addSelect2('language', 'Language', Language::getLanguagesList())
@@ -89,6 +90,10 @@ class LanguageControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
+		if($values['id'] != 0) {
+			$lang = $this->em->getDao(Language::getClassName())->find($values['id']);
+			$this->setLanguage($lang);
+		}
 		$this->load($values);
 		$this->save();
 		$this->invalidateControl();
@@ -136,6 +141,7 @@ class LanguageControl extends BaseControl
 		$values = [];
 		if ($this->language) {
 			$values = [
+				'id' => $this->language->id,
 				'language' => $this->language->language,
 				'listening' => $this->language->listening,
 				'reading' => $this->language->reading,
