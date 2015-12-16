@@ -57,6 +57,7 @@ class EducationsControl extends BaseControl
 		$eduDao->delete($edu);
 		$this->cv->deleteEducation($edu);
 		$this->invalidateControl();
+		$this->onAfterSave();
 	}
 	
 	/**
@@ -100,6 +101,7 @@ class EducationsControl extends BaseControl
 		$this->load($values);
 		$this->save();
 		$this->invalidateControl();
+		$this->onAfterSave();
 	}
 
 	/**

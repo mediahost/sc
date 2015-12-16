@@ -7,8 +7,11 @@ jQuery(document).ready(function () {
 	// Global components
 	
 	$.nette.ext('netteAjax', {
-		complete: function () {
+		complete: function (data) {
 			Global.init();
+			if(data.reloadPreview) {
+				PdfPreview.init();
+			}
 		}
 	});
 });

@@ -74,6 +74,7 @@ class SkillsControl extends BaseControl
 		$this->load($values);
 		$this->save();
 		$this->invalidateControl();
+		$this->onAfterSave();
 	}
 
 	private function load(ArrayHash $values)

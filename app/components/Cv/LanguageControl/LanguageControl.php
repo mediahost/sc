@@ -52,6 +52,7 @@ class LanguageControl extends BaseControl
 		$langDao->delete($lang);
 		$this->cv->deleteLanguage($lang);
 		$this->invalidateControl();
+		$this->onAfterSave();
 	}
 	
 	/**
@@ -91,6 +92,7 @@ class LanguageControl extends BaseControl
 		$this->load($values);
 		$this->save();
 		$this->invalidateControl();
+		$this->onAfterSave();
 	}
 
 	/**

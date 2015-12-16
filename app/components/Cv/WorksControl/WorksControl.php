@@ -56,6 +56,7 @@ class WorksControl extends BaseControl
 		$workDao->delete($work);
 		$this->cv->deleteWork($work);
 		$this->invalidateControl();
+		$this->onAfterSave();
 	}
 
 	/**
@@ -103,6 +104,7 @@ class WorksControl extends BaseControl
 		$this->load($values);
 		$this->save();
 		$this->invalidateControl();
+		$this->onAfterSave();
 	}
 
 	/**

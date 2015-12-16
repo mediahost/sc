@@ -53,6 +53,7 @@ class PersonalControl extends BaseControl
 		$this->load($values);
 		$this->save();
 		$this->invalidateControl();
+		$this->onAfterSave();
 	}
 
 	/**
