@@ -41,6 +41,10 @@ class DateRangePicker extends BaseControl  {
 	 * @param array $value
 	 */
 	public function setValue($value) {
+		if($value == NULL) {
+			$this->date_start = NULL;
+			$this->date_end = NULL;
+		}
 		if($value['start']) {
 			$this->date_start = DateTime::from($value['start']);
 		}
