@@ -100,6 +100,7 @@ class EducationsControl extends BaseControl
 		}
 		$this->load($values);
 		$this->save();
+		$form->setValues(array(), true);
 		$this->invalidateControl();
 		$this->onAfterSave();
 	}

@@ -96,6 +96,7 @@ class LanguageControl extends BaseControl
 		}
 		$this->load($values);
 		$this->save();
+		$form->setValues(array('motherTongue' => $this->cv->motherLanguage), true);
 		$this->invalidateControl();
 		$this->onAfterSave();
 	}
