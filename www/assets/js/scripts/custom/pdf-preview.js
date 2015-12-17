@@ -26,6 +26,18 @@ var PdfPreview = function () {
 
 	return {
 		init: function () {
+			var source = $('.pdf-preview').attr('data-source');
+			var theme = 'default';
+			var print = true;
+			
+			$('#profileTab').on('click', '[href="#sourceCode"], [href="#europass"], [href="#standard1"], [href="#standard2"]', function() {
+				theme = $(this).attr('href').substring(1);
+				source += '&theme=' + theme;
+				$('.pdf-preview').attr('data-source', source);
+				handlePdfPreview();
+			});
+			
+			
 			if (typeof PDFJS !== 'undefined') {
 				PDFJS.workerSrc = basePath + '/assets/js/pdfjs/pdf.worker.js';
 				handlePdfPreview();
