@@ -10,7 +10,7 @@ jQuery(document).ready(function () {
 		complete: function (data) {
 			Global.init();
 			if(data.reloadPreview) {
-				PdfPreview.init();
+				PdfViewer.renderPage();
 			}
 		}
 	});

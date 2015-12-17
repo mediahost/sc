@@ -2,7 +2,7 @@ var PdfPreview = function () {
 
 	var handlePdfPreview = function () {
 		$('.pdf-preview').each(function () {
-
+			
 			var preview = $(this);
 			var id = preview.attr('id');
 			var source = preview.attr('data-source');
@@ -11,7 +11,7 @@ var PdfPreview = function () {
 			var minScale = parseFloat(preview.attr('data-min-scale')) > 0 ? parseFloat(preview.attr('data-min-scale')) : 0.8;
 			var maxScale = parseFloat(preview.attr('data-max-scale')) > 0 ? parseFloat(preview.attr('data-max-scale')) : 1.2;
 			var scalestep = parseFloat(preview.attr('data-scale-step')) > 0 ? parseFloat(preview.attr('data-scale-step')) : 0.2;
-
+			
 			if (file_exists(source)) {
 				PdfViewer.init(id, source, startPage, startScale, scalestep, minScale, maxScale);
 			} else {
@@ -28,21 +28,19 @@ var PdfPreview = function () {
 		init: function () {
 			var source = $('.pdf-preview').attr('data-source');
 			var theme = 'default';
-			var print = true;
 			
 			$('#profileTab').on('click', '[href="#sourceCode"], [href="#europass"], [href="#standard1"], [href="#standard2"]', function() {
 				theme = $(this).attr('href').substring(1);
 				source += '&theme=' + theme;
-				$('.pdf-preview').attr('data-source', source);
-				handlePdfPreview();
+				PdfViewer.renderPage(source);
 			});
-			
-			
+
 			if (typeof PDFJS !== 'undefined') {
 				PDFJS.workerSrc = basePath + '/assets/js/pdfjs/pdf.worker.js';
 				handlePdfPreview();
 			}
-		}
+		},
+		
 	};
 
 }();
@@ -276,7 +274,7 @@ var PdfViewer = function () {
 			navigation.prev.removeClass('disabled');
 		}
 	};
-
+	
 	/**
 	 * Render PDF page
 	 * @param {int} pageNum
@@ -337,6 +335,13 @@ var PdfViewer = function () {
 			setNavigation(id);
 			beforeLoadingPdf();
 			renderPage(startPage, startScale);
+		},
+		renderPage: function(source) {
+			if(source != undefined) {
+				data.source = source;
+			}
+			data.pdf = null;
+			renderPage(data.page, data.scale);
 		}
 	};
 
