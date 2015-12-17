@@ -99,7 +99,7 @@ class ExperienceControl extends BaseControl
 	{
 		if($values['id'] != 0) {
 			$work = $this->em->getDao(Work::getClassName())->find($values['id']);
-			$this->setWork($work);
+			$this->setExperience($work);
 		}
 		$this->load($values);
 		$this->save();
