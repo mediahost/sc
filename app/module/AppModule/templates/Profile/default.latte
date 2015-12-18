@@ -29,7 +29,7 @@
 	</div>
 </div>
 <div class="row" n:if="$candidate">
-	<div class="col-lg-12">
+	<div class="col-lg-6">
 		{include cvPanel}
 	</div>
 </div>
@@ -40,11 +40,14 @@
 	<div class="panel-heading">
 		<h4 class="panel-title">Personal Details</h4>
 	</div>
-	<div class="panel-body">
+	<div class="panel-body personal-detail-editor">
 		<div class="row profile">
 			<div class="col-md-4">
 				<div class="profile-avatar">
-					<img src="{$basePath}/assets/img/avatar3.jpeg" alt="profile">
+					<a href="#edit-photo" class="edit">
+						<img src="{$basePath}/assets/img/avatar3.jpeg" alt="profile" class="responsive">
+						<i class="fa fa-edit"></i>
+					</a>
 				</div>
 			</div>
 			<div class="col-md-8">
@@ -55,9 +58,18 @@
 						{else}
 							{$user->getIdentity()->mail}
 						{/if}
+						<a href="#edit-personal" class="edit">
+							<i class="fa fa-edit"></i>
+						</a>
 					</h3>
 					{if $candidate}
-						<p class="job-title mb0"><i class="fa fa-building"></i> Address 123, City 05, My Country</p>
+						<p class="job-title mb0">
+							<i class="fa fa-building"></i>
+							Address 123, City 05, My Country
+							<a href="#edit-address" class="edit">
+								<i class="fa fa-edit"></i>
+							</a>
+						</p>
 						<p class="balance">
 							Wanted <span>146$</span>
 						</p>
@@ -66,6 +78,164 @@
 					{/if}
 				</div>
 			</div>
+		</div>
+		<div class="row profile-edit" id="edit-photo">
+			<form class="form-horizontal group-border stripped">
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Photo</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="file" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label"></label>
+					<div class="col-lg-9 col-md-9">
+						<div class="checkbox-custom">
+							<input type="checkbox" value="show" checked="checked" id="showPhoto">
+							<label for="showPhoto">Show photo in CV</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-3">
+						<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save" />
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="row profile-edit" id="edit-personal">
+			<form class="form-horizontal group-border stripped">
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Title</label>
+					<div class="col-lg-9 col-md-9">
+						<select class="form-control input-small">
+							<option value="1">Mr.</option>
+							<option value="2">Mrs.</option>
+							<option value="3">Ms.</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Degree in fron of name</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control input-small">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">First Name(s)</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Middle Name</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Surname(s)</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Degree in fron of name</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control input-small">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Gender</label>
+					<div class="col-lg-9 col-md-9">
+						<div class="radio-custom radio-inline">
+							<input type="radio" name="gender" value="1" id="radio1">
+							<label for="radio1">Male</label>
+						</div>
+						<div class="radio-custom radio-inline">
+							<input type="radio" name="gender" value="2" id="radio2">
+							<label for="radio2">Female</label>
+						</div>
+						<div class="radio-custom radio-inline">
+							<input type="radio" name="gender" value="3" id="radio3" checked="checked">
+							<label for="radio3">Not disclosed</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3  control-label">Date of Birth</label>
+					<div class="col-lg-9 col-md-9">
+						<div class="input-daterange input-group">
+							<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							<input type="text" class="form-control" name="start" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-3">
+						<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save" />
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="row profile-edit" id="edit-address">
+			<form class="form-horizontal group-border stripped">
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Nationality</label>
+					<div class="col-lg-9 col-md-9">
+						<select class="form-control">
+							<option value="1">Czech</option>
+							<option value="2">Slovak</option>
+							<option value="3">Irish</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">House No.</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Street address</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Postal code</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">City</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Country</label>
+					<div class="col-lg-9 col-md-9">
+						<select class="form-control">
+							<option value="1">Czech</option>
+							<option value="2">Slovak</option>
+							<option value="3">Irish</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-3 col-md-3 control-label">Contact number</label>
+					<div class="col-lg-9 col-md-9">
+						<input type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-3">
+						<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save" />
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -76,47 +246,50 @@
 	<div class="panel-heading">
 		<h4 class="panel-title">IT Skills</h4>
 	</div>
-	<div class="panel-body">
-		<div class="row">
-			<div class="col-md-4">
+	<div class="panel-body pb0">
+		<div class="row skills-changer">
+			<div class="col-xs-4">
 				<h5>Programing languages</h5>
 				{var skills => [
-					'PHP' => 5,
-					'Java' => 1,
-					'CSS' => 5,
-					'JavaScript' => 3,
-					'SQL' => 4,
-				]}
+			'PHP' => 5,
+			'Java' => 1,
+			'CSS' => 5,
+			'JavaScript' => 3,
+			'SQL' => 4,
+		]}
 				<p class="rate-line" n:foreach="$skills as $skill => $rate">
-					<input type="hidden" class="rating" value="{$rate}" data-readonly 
+					<input type="hidden" class="rating" value="{$rate}" 
 						   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
 					<span class="rate-name">{$skill}</span>
 				</p>
 			</div>
-			<div class="col-md-4">
+			<div class="col-xs-4">
 				<h5>Frameworks</h5>
 				{var skills => [
-					'Nette' => 3,
-					'.NET' => 1,
-				]}
+			'Nette' => 3,
+			'.NET' => 1,
+		]}
 				<p class="rate-line" n:foreach="$skills as $skill => $rate">
-					<input type="hidden" class="rating" value="{$rate}" data-readonly 
+					<input type="hidden" class="rating" value="{$rate}" 
 						   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
 					<span class="rate-name">{$skill}</span>
 				</p>
 			</div>
-			<div class="col-md-4">
+			<div class="col-xs-4">
 				<h5>Design</h5>
 				{var skills => [
-					'Photoshop' => 3,
-				]}
+			'Photoshop' => 3,
+		]}
 				<p class="rate-line" n:foreach="$skills as $skill => $rate">
-					<input type="hidden" class="rating" value="{$rate}" data-readonly 
+					<input type="hidden" class="rating" value="{$rate}" 
 						   data-filled="fa fa-circle green-circle" data-empty="fa fa-circle green-circle-o"/>
 					<span class="rate-name">{$skill}</span>
 				</p>
 			</div>
 		</div>
+		<p class="text-right p10 mb0">
+			<a href="#">More skills</a>
+		</p>
 	</div>
 </div>
 {/define}
@@ -127,7 +300,9 @@
 		<h4 class="panel-title">Interested in</h4>
 	</div>
 	<div class="panel-body">
-
+		<p>
+			content
+		</p>
 	</div>
 </div>
 {/define}
@@ -137,52 +312,112 @@
 	<div class="panel-heading">
 		<h4 class="panel-title">Social Links</h4>
 	</div>
-	<div class="panel-body profile">
-		<div class="social">
-			<dl class="dl-horizontal mb0">
-				<dt>
-				<span class="text-muted">
-					<i class="fa fa-facebook-square"></i>
-					Facebook:
-				</span>
-				</dt>
-				<dd>
-					<a href="#">facebook.com/1231</a>
-				</dd>
-				<dt>
-				<span class="text-muted">
-					<i class="fa fa-twitter"></i>
-					Twitter:
-				</span>
-				</dt>
-				<dd><a href="#">twitter.com/profile/3234.html</a>
-				</dd>
-				<dt>
-				<span class="text-muted">
-					<i class="fa fa-google-plus"></i>
-					Google+:
-				</span>
-				</dt>
-				<dd><a href="#">plus.google.com/jonathansmith</a>
-				</dd>
-				<dt>
-				<span class="text-muted">
-					<i class="fa fa-linkedin"></i>
-					LinkedIn:
-				</span>
-				</dt>
-				<dd><a href="#">linkd.in/123123</a>
-				</dd>
-				<dt>
-				<span class="text-muted">
-					<i class="fa fa-pinterest"></i>
-					Pinterest:
-				</span>
-				</dt>
-				<dd><a href="#">pinterst.com/profile/3234.html</a>
-				</dd>
-			</dl>
-		</div>
+	<div class="panel-body social-editor">
+		<form>
+			<table>
+				<tr>
+					<th>
+						<i class="fa fa-facebook-square"></i>
+						Facebook:
+					</th>
+					<td>
+						<div class="data">
+							<a href="#">
+								facebook.com/1231
+							</a>
+							<a href="#" class="edit">
+								<i class="fa fa-edit"></i>
+							</a>
+						</div>
+						<div class="editor">
+							<input type="text" class="form-control" value="facebook.com/1231" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<i class="fa fa-twitter"></i>
+						Twitter:
+					</th>
+					<td>
+						<div class="data">
+							<a href="#">
+								twitter.com/profile/3234.html
+							</a>
+							<a href="#" class="edit">
+								<i class="fa fa-edit"></i>
+							</a>
+						</div>
+						<div class="editor">
+							<input type="text" class="form-control" value="twitter.com/profile/3234.html" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<i class="fa fa-google-plus"></i>
+						Google+:
+					</th>
+					<td>
+						<div class="data">
+							<a href="#">
+								plus.google.com/jonathansmith
+							</a>
+							<a href="#" class="edit">
+								<i class="fa fa-edit"></i>
+							</a>
+						</div>
+						<div class="editor">
+							<input type="text" class="form-control" value="plus.google.com/jonathansmith" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<i class="fa fa-linkedin"></i>
+						LinkedIn:
+					</th>
+					<td>
+						<div class="data">
+							<a href="#">
+								linkd.in/123123
+							</a>
+							<a href="#" class="edit">
+								<i class="fa fa-edit"></i>
+							</a>
+						</div>
+						<div class="editor">
+							<input type="text" class="form-control" value="linkd.in/123123" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<i class="fa fa-pinterest"></i>
+						Pinterest:
+					</th>
+					<td>
+						<div class="data">
+							<a href="#" class="edit empty">
+								<em>add link</em>
+								<i class="fa fa-edit"></i>
+							</a>
+						</div>
+						<div class="editor">
+							<input type="text" class="form-control" value="pinterst.com/profile/3234.html" />
+						</div>
+					</td>
+				</tr>
+				<tr class="editor">
+					<th></th>
+					<td>
+						<div>
+							<input type="submit" class="form-control btn btn-primary input-small" value="Save" />
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
 	</div>
 </div>
 {/define}
