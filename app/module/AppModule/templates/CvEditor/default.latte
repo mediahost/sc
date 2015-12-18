@@ -100,7 +100,7 @@ hide-righ-sidebar
 							<a href="#" data-toggle="tab">Share</a>
 						</li>
 						<li class="">
-							<a href="#" data-toggle="tab">Send by e-mail</a>
+							<a href="#sendEmail" data-toggle="modal">{_'Send by e-mail'}</a>
 						</li>
 					</ul>
 				</li>
@@ -126,3 +126,16 @@ hide-righ-sidebar
 	</div>
 </div>
 
+<div class="modal fade" id="sendEmail" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">{_'Send by e-mail'}</h4>
+			</div>
+			<div class="modal-body">
+				{control sendEmail}
+			</div>
+		</div>
+	</div>
+</div>

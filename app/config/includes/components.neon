@@ -155,6 +155,10 @@ services:
 		implement: App\Components\Cv\ILivePreviewControlFactory
 		inject: yes
 
+	ISendEmailFactory:
+		implement: App\Components\Cv\ISendEmailFactory
+		inject: yes
+
 	# Skills
 	ISkillControlFactory:
 		implement: App\Components\Skills\ISkillControlFactory

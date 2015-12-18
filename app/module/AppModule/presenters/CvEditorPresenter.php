@@ -4,6 +4,7 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Cv\IBasicInfoControlFactory;
 use App\Components\Cv\ILivePreviewControlFactory;
+use App\Components\Cv\ISendEmailFactory;
 use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\IWorksControlFactory;
 use App\Components\Cv\IEducationsControlFactory;
@@ -42,6 +43,9 @@ class CvEditorPresenter extends BasePresenter
 	/** @var ILivePreviewControlFactory @inject */
 	public $iLivePreviewControlFactory;
 	
+	/** @var ISendEmailFactory @inject */
+	public $iSendEmailFactory;
+
 	/** @var IWorksControlFactory @inject */
 	public $iWorksControlFactory;
 	
@@ -292,6 +296,13 @@ class CvEditorPresenter extends BasePresenter
 		$control = $this->iLivePreviewControlFactory->create();
 		$control->setScale(0.8, 0.8, 1);
 		$control->setCv($this->cv);
+		return $control;
+	}
+	
+	/** @return SendEmail */
+	public function createComponentSendEmail()
+	{
+		$control = $this->iSendEmailFactory->create();
 		return $control;
 	}
 }
