@@ -34,6 +34,11 @@ var PdfPreview = function () {
 				source += '&theme=' + theme;
 				PdfViewer.renderPage(source);
 			});
+			
+			$('#profileTab').on('click', '[href="#print"]', function() {
+				source += '&theme=' + theme + '&print=1';
+				window.open(source);
+			});
 
 			if (typeof PDFJS !== 'undefined') {
 				PDFJS.workerSrc = basePath + '/assets/js/pdfjs/pdf.worker.js';
