@@ -13,6 +13,15 @@ var Global = function () {
 	var handleRating = function() {
 		$('input.rating').rating();
 	};
+	
+	var handleFBSharer = function() {
+		$('[href="#share"]').on('click', function() {
+			var fburl = 'https://source-code.com/';
+			var sharerURL = "http://www.facebook.com/sharer/sharer.php?s=100&p[url]=" + encodeURI(fburl);
+			window.open(sharerURL, 'facebook-share-dialog', 'width=600,height=400'); 
+			return  false;
+		})
+	};
 
 	return {
 		init: function () {
@@ -20,6 +29,7 @@ var Global = function () {
 				handleInitPickers();
 				handleRating();
 				handleHideRightbar();
+				handleFBSharer();
 			});
 		}
 	};
