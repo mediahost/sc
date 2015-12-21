@@ -118,6 +118,7 @@ class ExperienceControl extends BaseControl
 		if (!$this->experience) {
 			$this->experience = new Work();
 		}
+		$this->experience->isExperience = 1;
 		$this->experience->company = $values->company;
 		$this->experience->position = $values->position;
 		$this->experience->dateStart = $values->season['start'];

@@ -8,7 +8,7 @@
 {control form}
 
 <div n:if="count($cv->experiences)" class="list-group">
-	<div n:foreach="$cv->experiences as $experience"
+	<div n:foreach="$cv->experiences as $experience" n:if="$experience->isExperience"
 	   class="list-group-item {(isset($activeId)  &&  $experience->id == $activeId)  ?  'active' : ''}">
 		
 		<div class="col-lg-11">{$experience->company}</div>

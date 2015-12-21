@@ -45,6 +45,9 @@ class Work extends BaseEntity
 
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $achievment;
+	
+	/** @ORM\Column(type="boolean") */
+	protected $isExperience=0;
 
 	/** @ORM\OneToOne(targetEntity="Referee", cascade="all") */
 	protected $referee;
