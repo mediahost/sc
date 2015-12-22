@@ -123,7 +123,7 @@
 		<td colspan="2"></td>
 	</tr>
 	{foreach $cv->works as $work}
-	{include #workItem, item => $work}
+	{if !$work->isExperience  &&  $work->refereeIsPublic}{include #workItem, item => $work}{/if}
 	{/foreach}
 	{/if}
 	
@@ -184,7 +184,7 @@
 		<td colspan="2"></td>
 	</tr>
 	{foreach $cv->experiences as $work}
-	{include #workItem, item => $work}
+	{if $work->isExperience  &&  $work->refereeIsPublic}{include #workItem, item => $work}{/if}
 	{/foreach}
 	{/if}
 	
