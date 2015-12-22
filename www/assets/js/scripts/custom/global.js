@@ -22,6 +22,10 @@ var Global = function () {
 			return  false;
 		})
 	};
+	
+	var initAccordion = function() {
+		$('.expandAll').find('.panel-collapse').removeClass('collapse');
+	};
 
 	return {
 		init: function () {
@@ -30,6 +34,7 @@ var Global = function () {
 				handleRating();
 				handleHideRightbar();
 				handleFBSharer();
+				initAccordion();
 			});
 		}
 	};

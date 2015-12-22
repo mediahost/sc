@@ -44,9 +44,17 @@
 						</li>
 						
 						<li n:if="$isCandidate">
-							<a n:href="CvEditor:" n:class="$presenter->isLinkCurrent('CvEditor:*') ? active">
+							<a n:href="CvEditor:" 
+							   n:class="$presenter->isLinkCurrent('CvEditor:*') && !$presenter->isLinkCurrent('CvEditor:Skills') ? active">
 								<i class="s16 icomoon-icon-clipboard"></i>
 								<span class="txt">{_'CV Editor'}</span>
+							</a>
+						</li>
+						
+						<li n:if="$isCandidate">
+							<a n:href="CvEditor:Skills" n:class="$presenter->isLinkCurrent('CvEditor:Skills') ? active">
+								<i class="s16 icomoon-icon-clipboard"></i>
+								<span class="txt">{_'IT Skills'}</span>
 							</a>
 						</li>
 						
