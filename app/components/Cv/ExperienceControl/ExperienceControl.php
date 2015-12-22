@@ -82,7 +82,8 @@ class ExperienceControl extends BaseControl
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
 		$form->addText('referee_phone', 'Phone');
-		$form->addText('referee_mail', 'Email');
+		$form->addText('referee_mail', 'Email')
+			->addRule(Form::EMAIL, 'Entered value is not email!');
 
 		$form->addSubmit('save', 'Save');
 		$form->setDefaults($this->getDefaults());
