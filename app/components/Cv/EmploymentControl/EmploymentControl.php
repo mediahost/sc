@@ -37,10 +37,8 @@ class EmploymentControl extends BaseControl
 		
 		$form->addGroup('Salary expectations');
 		$form->addCheckbox('show_salary', 'Mention salary');
-		$form->addText('salary_from', 'From')
-			->addRule(Form::RANGE, 'Enter positive number', array(0, NULL));
-		$form->addText('salary_to', 'To')
-			->addRule(Form::RANGE, 'Enter positive number', array(0, NULL));
+		$form->addText('salary_from', 'From');
+		$form->addText('salary_to', 'To');
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
