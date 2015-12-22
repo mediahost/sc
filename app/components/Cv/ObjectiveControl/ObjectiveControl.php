@@ -30,12 +30,8 @@ class ObjectiveControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$form->addCheckSwitch('show', 'Include in CV')
-				->setOnText('Yes')
-				->setOffText('No');
-		$form->addTextArea('objective', 'Your career objective')
-				->getControlPrototype()
-				->style = 'height: 200px;';
+		$form->addCheckbox('show', 'Include in CV');
+		$form->addTextArea('objective', 'Your career objective');
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;

@@ -3,5 +3,21 @@
  *
 *}
 {snippet AdditionalControl}
-{control form}
+{form form class => "ajax sendOnChange form-horizontal group-border stripped"}
+	<div class="form-group">
+		<label class="col-lg-2 col-md-3 control-label"></label>
+		<div class="col-lg-10 col-md-9">
+			<div class="checkbox-custom">
+				{input show: class=>"form-control"}
+				<label for="showReferee">{_'Include in CV'}</label>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-2 col-md-3 control-label">{_'Additional information'}</label>
+		<div class="col-lg-10 col-md-9">
+			<textarea n:name="additional" class="form-control" rows="12"></textarea>
+		</div>
+	</div>
+{/form}
 {/snippet}

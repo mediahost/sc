@@ -30,12 +30,8 @@ class SummaryControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$form->addCheckSwitch('show', 'Include in CV')
-				->setOnText('Yes')
-				->setOffText('No');
-		$form->addTextArea('summary', 'Career summary')
-				->getControlPrototype()
-				->style = 'height: 200px;';
+		$form->addCheckSwitch('show', 'Include in CV');
+		$form->addTextArea('summary', 'Career summary');
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;

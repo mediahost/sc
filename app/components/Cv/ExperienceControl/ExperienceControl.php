@@ -77,7 +77,7 @@ class ExperienceControl extends BaseControl
 		$form->addDateRangePicker('season', 'Date from');
 		$form->addText('position', 'Position held');
 		$form->addTextArea('activities', 'Main activities and responsibilities');
-		$form->addTextArea('achievments', 'Achievement');
+		$form->addTextArea('achievment', 'Achievement');
 		$form->addCheckBox('show_refree', 'Show Referee in CV');
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
@@ -123,6 +123,8 @@ class ExperienceControl extends BaseControl
 		$this->experience->position = $values->position;
 		$this->experience->dateStart = $values->season['start'];
 		$this->experience->dateEnd = $values->season['end'];
+		$this->experience->activities = $values->activities;
+		$this->experience->achievment = $values->achievment;
 		$this->experience->refereeIsPublic = (bool) $values->show_refree;
 		$this->experience->referee = new Referee();
 		$this->experience->referee->name = $values->referee_name;
@@ -159,7 +161,7 @@ class ExperienceControl extends BaseControl
 				'position' => $this->experience->position,
 				'season' => array('start' => $this->experience->dateStart, 'end' => $this->experience->dateEnd),
 				'activities' => $this->experience->activities,
-				'achievments' => $this->experience->achievment,
+				'achievment' => $this->experience->achievment,
 				'show_refree' => $this->experience->refereeIsPublic,
 				'referee_name' => $this->experience->referee->name,
 				'referee_position' => $this->experience->referee->position,
