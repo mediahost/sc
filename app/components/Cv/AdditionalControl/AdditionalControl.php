@@ -30,7 +30,7 @@ class AdditionalControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$form->addCheckSwitch('show', 'Include in CV');
+		$form->addCheckbox('show', 'Include in CV');
 		$form->addTextArea('additional', 'Additional information');
 
 		$form->setDefaults($this->getDefaults());

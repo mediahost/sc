@@ -31,16 +31,12 @@ class EmploymentControl extends BaseControl
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
 		$form->addGroup();
-		$form->addCheckSwitch('show_job', 'Include to CV')
-				->setOnText('Yes')
-				->setOffText('No');
+		$form->addCheckbox('show_job', 'Include to CV');
 		$form->addDatePicker('available', 'Available from');
 		$form->addTextArea('position', 'Desired job position');
 		
 		$form->addGroup('Salary expectations');
-		$form->addCheckSwitch('show_salary', 'Mention salary')
-				->setOnText('Yes')
-				->setOffText('No');
+		$form->addCheckbox('show_salary', 'Mention salary');
 		$form->addText('salary_from', 'From');
 		$form->addText('salary_to', 'To');
 
