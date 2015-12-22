@@ -39,6 +39,7 @@ use Nette\Utils\DateTime;
  * @property integer $salaryTo
  * @property boolean $salaryIsPublic
  * @property string $additionalInfo
+ * @property boolean $additionalIsPublic
  */
 class Cv extends BaseEntity
 {
@@ -120,6 +121,9 @@ class Cv extends BaseEntity
 
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $additionalInfo;
+	
+	/** @ORM\Column(type="boolean") */
+	protected $additionalIsPublic = FALSE;
 
 	public function __construct($name = NULL)
 	{

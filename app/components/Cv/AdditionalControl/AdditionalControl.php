@@ -60,6 +60,7 @@ class AdditionalControl extends BaseControl
 	private function load(ArrayHash $values)
 	{
 		$this->cv->additionalInfo = $values->additional;
+		$this->cv->additionalIsPublic = $values->show;
 		return $this;
 	}
 
@@ -82,6 +83,7 @@ class AdditionalControl extends BaseControl
 	{
 		$values = [
 			'additional' => $this->cv->additionalInfo,
+			'show' => $this->cv->additionalIsPublic
 		];
 		return $values;
 	}
