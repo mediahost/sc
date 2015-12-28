@@ -47,14 +47,18 @@ class Sender extends BaseEntity
 	 */
 	public function getImage()
 	{
-		return 'assets/admin/img/avatar4.jpg';
+		if ($this->company) {
+			return 'assets/img/avatar2.jpeg';
+		} elseif (TRUE) {
+			return 'assets/img/avatar3.jpeg';
+		}
 	}
 
 	public function getName()
 	{
 		if ($this->company) {
 		    return $this->company->name;
-		} elseif ($this->user->candidate) {
+		} elseif ($this->user->candidate && $this->user->candidate->name) {
 			return $this->user->candidate->name;
 		} else {
 			return $this->user->mail;

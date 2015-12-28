@@ -44,6 +44,12 @@ var Global = function () {
 		});
 	};
 
+	var handleMessages = function () {
+		$(document).on('click', '.recent-comments li.list-group-item', function (e) {
+			window.location.href = $(this).find('a').attr('href');
+		});
+	};
+
 	return {
 		init: function () {
 			$(document).ready(function () {
@@ -51,6 +57,7 @@ var Global = function () {
 				handleHideRightbar();
 				handleSocialLinks();
 				handlePersonalDetails();
+				handleMessages();
 			});
 		}
 	};

@@ -9,18 +9,20 @@
 		<ul class="list-group recent-comments">
 			<li n:foreach="$communications as $communication" 
 				n:class="list-group-item, clearfix, $activeCommunication && $communication->id == $activeCommunication->id ? comment-info : (!$communication->lastMessage->isReadByUser($user->identity) ? comment-danger : comment-default)">
-				<div class="avatar pull-left mr15">
-					<img src="{$basePath}/{$communication->lastMessage->sender->image}" alt="sender">
-				</div>
 				<a href="{$control->getCommunicationLink($communication)}">
+					<div class="avatar pull-left mr15">
+						<img src="{$basePath}/{$communication->getOpposite($user->identity)->image}" width="50" alt="sender">
+					</div>
 					<p class="text-ellipsis">
-						<span class="name strong">{$communication->lastMessage->sender->name}: </span>
-						{$communication->lastMessage->text|truncate:50}
+						<span class="name strong">
+							{$communication->getOppositeName($user->identity)}
+						</span>
+						| {$communication->lastMessage->text|truncate:50}
 					</p>
+					<span class="date text-muted small pull-left">
+						{$communication->lastMessage->time|date:'H:i:s d.m.Y'}
+					</span>
 				</a>
-				<span class="date text-muted small pull-left">
-					{$communication->lastMessage->time|date:'H:i:s d.m.Y'}
-				</span>
 			</li>
 		</ul>
 	</div>
