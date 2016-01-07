@@ -3719,6 +3719,13 @@ body #wrapper {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffec693c', endColorstr='#ffec8765', GradientType=0);
 }
+.list-group-item.active a {
+  color: #ffffff;
+  text-decoration: none;
+}
+.list-group-item a {
+  text-decoration: none;
+}
 /* -----------------------------------------
    Circfull progress bars
 ----------------------------------------- */

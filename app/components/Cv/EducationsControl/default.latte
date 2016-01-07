@@ -11,7 +11,7 @@
 	<div n:foreach="$cv->educations as $education"
 	   class="list-group-item {(isset($activeId)  &&  $education->id == $activeId)  ?  'active' : ''}">
 		
-		<div class="col-lg-11">{$education->institution}</div>
+		<a href="{link edit! eduId => $education->id}" class="ajax col-lg-11">{$education->institution}</a>
 		<span>
 			<a href="{link edit! eduId => $education->id}" class="ajax"><i class="glyphicon glyphicon-pencil"></i></a>
 			<a href="{link delete! eduId => $education->id}" class="ajax"><i class="glyphicon glyphicon-trash"></i></a>

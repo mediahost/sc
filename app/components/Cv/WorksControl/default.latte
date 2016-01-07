@@ -83,7 +83,7 @@
 	<div n:foreach="$cv->works as $work" n:if="!$work->isExperience"
 	   class="list-group-item {(isset($activeId)  &&  $work->id == $activeId)  ?  'active' : ''}">
 		
-		<div class="col-lg-11">{$work->company}</div>
+		<a href="{link edit! workId => $work->id}" class="ajax col-lg-11">{$work->company}</a>
 		<span class="">
 			<a href="{link edit! workId => $work->id}" class="ajax"><i class="glyphicon glyphicon-pencil"></i></a>
 			<a href="{link delete! workId => $work->id}" class="ajax"><i class="glyphicon glyphicon-trash"></i></a>

@@ -76,7 +76,7 @@
 	<div n:foreach="$cv->languages as $language"
 	   class="list-group-item {(isset($activeId)  &&  $language->id == $activeId)  ?  'active' : ''}">
 		
-		<div class="col-lg-11">{$language}</div>
+		<a href="{link edit! langId => $language->id}" class="ajax col-lg-11">{$language}</a>
 		<span class="">
 			<a href="{link edit! langId => $language->id}" class="ajax"><i class="glyphicon glyphicon-pencil"></i></a>
 			<a href="{link delete! langId => $language->id}" class="ajax"><i class="glyphicon glyphicon-trash"></i></a>
