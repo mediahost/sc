@@ -1,0 +1,90 @@
+.social-editor {
+	padding: 10px 25px;
+	padding-top: 15px;
+	table {
+		width: 100%;
+		tr {
+			th, td {
+				height: 35px;
+			}
+			th {
+				width: 120px;
+			}
+			td {
+			}
+		}
+	}
+	.data {
+		a {
+			&.edit:not(.empty) {
+				display: none;
+			}
+		}
+	}
+	.editor {
+		display: none;
+	}
+}
+
+.skills-changer {
+	& > div {
+		min-width: 190px;
+	}
+}
+
+.personal-detail-editor {
+	.profile-edit {
+		display: none;
+	}
+	a {
+		&.edit {
+			/*display: none;*/
+		}
+	}
+	.profile-avatar {
+		img {
+			width: 100%;
+			max-width: 170px;
+		}
+		a {
+			position: relative;
+			display: block;
+			max-width: 170px;
+			margin: 0px auto;
+			&.edit {
+				display: block;
+			}
+			&:hover {
+				i {
+					display: inline;
+				}
+			}
+			i {
+				display: none;
+				margin: 0px;
+				position: absolute;
+				top: 0px;
+				right: 0px;
+			}
+		}
+	}
+	.profile-name {
+		h3, .job-title {
+			&:hover {
+				a {
+					&.edit {
+						display: inline;
+					}
+				}
+			}
+			a {
+				&.edit {
+					display: none;
+				}
+			}
+		}
+	}
+	.profile-edit {
+		padding: 15px;
+	}
+}

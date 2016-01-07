@@ -35,11 +35,10 @@ class StartCommunicationModal extends BaseControl
 
 	public function createComponentForm()
 	{
-		/** @var  EntityDao $companyRepository */
-		$companyRepository = $this->em->getDao(Company::getClassName()); // TODO: odstarnit volanie nad repository
+		$companyRepository = $this->em->getRepository(Company::getClassName());
 		$companies = $companyRepository->findPairs('name', 'id');
 
-		$users = $this->userFacade->getUsers();
+		$users = array_diff($this->userFacade->getUsers(), [$this->user->identity->mail]);
 
 		$form = new Form();
 		if ($this->company) {
@@ -55,7 +54,7 @@ class StartCommunicationModal extends BaseControl
 			->setDefaultValue('user');
 		$userSelect = $form->addSelect('user', 'User', $users);
 		$companySelect = $form->addSelect('company', 'Company', $companies);
-		$form->addTextArea('message', 'Message');
+		$form->addTextArea('message', 'Message', NULL, 5);
 		$form->addSubmit('send', 'Send');
 
 		$select->addCondition(Form::EQUAL, 'user')

@@ -174,16 +174,27 @@ class Communication extends BaseEntity
 	{
 		$this->messages->removeElement($message);
 	}
+	
+	public function getOpposite(User $user)
+	{
+		foreach ($this->contributors as $sender) {
+			if ($sender->user && $user->id != $sender->user->id) {
+			    return $sender;
+			} else if ($sender->company) {
+				return $sender;
+			}
+		}
+		return NULL;
+	}
 
 	public function getOppositeName(User $user)
 	{
-		/** @var Sender $sender */
-		foreach ($this->contributors as $sender) {
-			if ($user->id != $sender->user->id) {
-			    return $sender->getName();
-			}
+		$opposite = $this->getOpposite($user);
+		if ($opposite) {
+			return $opposite->name;
+		} else {
+			return NULL;
 		}
-		return '';
 	}
 
 	/**

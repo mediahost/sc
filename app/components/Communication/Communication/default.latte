@@ -2,41 +2,53 @@
 	<div class="panel-heading">
 		<h4 class="panel-title">
 			<i class="s16 icomoon-icon-bubbles-6"></i>
-			{$communication->subject}
+			{if $communication->subject}
+				{$communication->subject}
+			{elseif $opposite}
+				Communication with {$opposite->name}
+			{/if}
 		</h4>
 	</div>
 	<div class="panel-body">
-		<ul class="messages">
-			<li n:foreach="$communication->messages as $message" 
-				n:class="$control->isViewer($message->sender) ? user : admin, clearfix">
-				<a href="#" class="avatar">
-					<img src="{$basePath}/{$message->sender->image}" alt="" />
-				</a>
-				<div class="message">
-					<div class="head clearfix">
-						<span class="name">
-							<strong>
-								{$message->sender->getName()}
-								{if $control->isViewer($message->sender) && $control->isViewedByCompany()}
-									({$message->sender->getUserName()})
-								{/if}
-							</strong>:
-						</span>
-						<span class="time">{$message->time|date:'j. n. Y'}</span>
+		<div class="showMoreMessage" n:if="$messageCount < count($communication->messages)">
+			<a n:href="this, count => $messageCount + $messagesPerPage" class="btn btn-default">
+				{_'Show older'} ({!= count($communication->messages) - $messageCount})
+			</a>
+		</div>
+		<ul class="messages" n:snippet="messages">
+			{var skipCount => count($communication->messages) - $messageCount}
+			{foreach $communication->messages as $message}
+				{continueIf $iterator->counter <= $skipCount}
+				<li n:class="$control->isViewer($message->sender) ? user : admin, clearfix">
+					<a href="#" class="avatar">
+						<img src="{$basePath}/{$message->sender->image}" alt="" />
+					</a>
+					<div class="message">
+						<div class="head clearfix">
+							<span class="name">
+								<strong>
+									{$message->sender->getName()}
+									{if $control->isViewer($message->sender) && $control->isViewedByCompany()}
+										({$message->sender->getUserName()})
+									{/if}
+								</strong>
+							</span>
+							<span class="time">{$message->time|date:'j. n. Y'}</span>
+						</div>
+						<p>
+							{$message->text}
+						</p>
 					</div>
-					<p>
-						{$message->text}
-					</p>
-				</div>
-			</li>
+				</li>
+			{/foreach}
 			<li class="sendMsg">
-				{form form}
+				{form form, class => 'ajax'}
 					<textarea n:name="text" class="elastic form-control" rows="3" placeholder="{_"Type a message here..."}"></textarea>
-					<button n:name="send" type="submit" class="btn btn-info mt10">Send message</button>
+					<input n:name="send" type="submit" class="btn btn-info mt10" value="Send message" />
 				{/form}
 			</li>
 		</ul>
-		<div style="margin-top: 15px">
+		<div class="notification-settings">
 			Notifications:
 			<div class="btn-group" n:snippet="notifiButtons">
 				<a n:class="btn, btn-default, ajax, $viewer->beNotified === TRUE ? active" n:href="notifyChange 1">
