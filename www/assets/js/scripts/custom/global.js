@@ -32,7 +32,7 @@ var Global = function () {
 			$(document).ready(function () {
 				handleInitPickers();
 				handleRating();
-				handleHideRightbar();
+				//handleHideRightbar();
 				handleFBSharer();
 				initAccordion();
 			});
