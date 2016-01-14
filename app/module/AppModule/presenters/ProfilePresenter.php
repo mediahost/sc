@@ -6,9 +6,13 @@ use App\Components\Auth\ConnectManagerControl;
 use App\Components\Auth\IConnectManagerControlFactory;
 use App\Components\Auth\ISetPasswordControlFactory;
 use App\Components\Auth\SetPasswordControl;
+use App\Components\Cv\ISkillsControlFactory;
+use App\Components\Cv\SkillsControl;
 use App\Model\Entity;
+use App\Model\Entity\Cv;
 use App\Model\Facade\CantDeleteUserException;
 use App\Model\Facade\UserFacade;
+use App\Model\Facade\CvFacade;
 use App\TaggedString;
 
 class ProfilePresenter extends BasePresenter
@@ -22,6 +26,25 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var IConnectManagerControlFactory @inject */
 	public $iConnectManagerControlFactory;
+	
+	/** @var ISkillsControlFactory @inject */
+	public $iSkillsControlFactory;
+	
+	/** @var CvFacade @inject */
+	public $cvFacade;
+	
+	/** @var Cv */
+	private $cv;
+	
+	
+	
+	private function getCv() {
+		if(!isset($this->cv)) {
+			$candidate = $this->user->identity->candidate;
+			$this->cv = $this->cvFacade->getDefaultCvOrCreate($candidate);
+		}
+		return $this->cv;
+	}
 
 	/**
 	 * @secured
@@ -177,6 +200,23 @@ class ProfilePresenter extends BasePresenter
 		};
 		return $control;
 	}
+	
+	/** @return SkillsControl */
+	public function createComponentSkillsForm()
+	{
+		$control = $this->iSkillsControlFactory->create();
+		$control->setTemplateFile('overview');
+		$control->onlyFilledSkills = true;
+		$control->setCv($this->getCv());
+		$control->setAjax(TRUE, TRUE);
+		return $control;
+	}
 
 	// </editor-fold>
+}
+
+
+class ProfilePresenterException
+{
+	
 }

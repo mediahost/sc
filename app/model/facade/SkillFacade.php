@@ -28,5 +28,32 @@ class SkillFacade extends Object
 				'parent' => NULL,
 		]);
 	}
+	
+	/**
+	 * Filters only categories with filled skills
+	 * @param ArrayCollection $categories
+	 * @param ArrayCollection $skillKnows
+	 * @return ArrayCollection
+	 */
+	public function filterFilledCategories($categories, $skillKnows) {
+		$knowsId = array();
+		foreach($skillKnows as $know) {
+			$knowsId[] = $know->skill->id;
+		}
+		foreach($categories as $key => $category) {
+			$empty = true;
+			foreach ($category->childs as $child) {
+				foreach ($child->skills as $skill) {
+					if(in_array($skill->id, $knowsId)) {
+						$empty = false;
+					}
+				}
+			}
+			if($empty) {
+				unset($categories[$key]);
+			}
+		}
+		return $categories;
+	}
 
 }

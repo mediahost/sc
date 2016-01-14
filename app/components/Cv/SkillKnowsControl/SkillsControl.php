@@ -24,17 +24,29 @@ class SkillsControl extends BaseControl
 	/** @var SkillFacade @inject */
 	public $skillFacade;
 	
+	public  $onlyFilledSkills = false;
+	
 	/** @var Cv */
 	private $cv;
 	
+	public function setTemplateFile($name)
+	{
+		return parent::setTemplateFile($name);
+	}
 	
 	/**
 	 * Renders control
 	 */
 	public function render()
 	{
-		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
-		$this->template->categories = $this->skillFacade->getTopCategories();
+		$skillKnows = $this->cv->skillKnows;
+		$categories = $this->skillFacade->getTopCategories();
+		$skills = $this->em->getDao(Skill::getClassName())->findAll();
+		if($this->onlyFilledSkills) {
+			$categories = $this->skillFacade->filterFilledCategories($categories, $skillKnows);
+		}
+		$this->template->skills = $skills;
+		$this->template->categories = $categories; 
 		parent::render();
 	}
 	
