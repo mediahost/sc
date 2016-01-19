@@ -8,8 +8,10 @@ use App\Components\Auth\ISetPasswordControlFactory;
 use App\Components\Auth\SetPasswordControl;
 use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\SkillsControl;
+use App\Components\Candidate\IPhotoControlFactory;
 use App\Model\Entity;
 use App\Model\Entity\Cv;
+use App\Model\Entity\Candidate;
 use App\Model\Facade\CantDeleteUserException;
 use App\Model\Facade\UserFacade;
 use App\Model\Facade\CvFacade;
@@ -30,12 +32,17 @@ class ProfilePresenter extends BasePresenter
 	/** @var ISkillsControlFactory @inject */
 	public $iSkillsControlFactory;
 	
+	/** @var IPhotoControlFactory @inject */
+	public $iPhotoControlFactory;
+	
 	/** @var CvFacade @inject */
 	public $cvFacade;
 	
 	/** @var Cv */
 	private $cv;
 	
+	/** @var Candidate */
+	private $candidate;
 	
 	
 	private function getCv() {
@@ -45,6 +52,12 @@ class ProfilePresenter extends BasePresenter
 		}
 		return $this->cv;
 	}
+	
+	protected function startup()
+	{
+		parent::startup();
+		$this->candidate = $this->user->identity->candidate;
+	}
 
 	/**
 	 * @secured
@@ -53,7 +66,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-
+		
 	}
 
 	/**
@@ -209,6 +222,19 @@ class ProfilePresenter extends BasePresenter
 		$control->onlyFilledSkills = true;
 		$control->setCv($this->getCv());
 		$control->setAjax(TRUE, TRUE);
+		return $control;
+	}
+	
+	/** @return PhotoControl */
+	public function createComponentPhotoControl()
+	{
+		$control = $this->iPhotoControlFactory->create();
+		$control->setCandidate($this->candidate);
+		$control->onAfterSave = function (Candidate $saved) {
+			$message = new TaggedString('Photo for \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->invalidateControl('personalDetails');
+		};
 		return $control;
 	}
 

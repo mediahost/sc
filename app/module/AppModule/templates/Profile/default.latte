@@ -14,7 +14,9 @@
 {var candidate => $user->getIdentity()->candidate}
 <div class="row">
 	<div class="col-lg-6 col-md-12">
+		{snippet personalDetails}
 		{include personalDetailsPanel}
+		{/snippet}
 	</div>
 	<div class="col-lg-6 col-md-12" n:if="$candidate">
 		{include itSkillsPanel}
@@ -38,14 +40,14 @@
 {var candidate => $user->getIdentity()->candidate}
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h4 class="panel-title">Personal Details</h4>
+		<h4 class="panel-title">{_'Personal Details'}</h4>
 	</div>
 	<div class="panel-body personal-detail-editor">
 		<div class="row profile">
 			<div class="col-md-4">
 				<div class="profile-avatar">
 					<a href="#edit-photo" class="edit">
-						<img src="{$basePath}/assets/img/avatar3.jpeg" alt="profile" class="responsive">
+						<img src="{$basePath}/foto/original/{$candidate->photo}" alt="profile" class="responsive">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>
@@ -80,28 +82,7 @@
 			</div>
 		</div>
 		<div class="row profile-edit" id="edit-photo">
-			<form class="form-horizontal group-border stripped">
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label">Photo</label>
-					<div class="col-lg-9 col-md-9">
-						<input type="file" class="form-control">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label"></label>
-					<div class="col-lg-9 col-md-9">
-						<div class="checkbox-custom">
-							<input type="checkbox" value="show" checked="checked" id="showPhoto">
-							<label for="showPhoto">Show photo in CV</label>
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-lg-offset-3">
-						<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save" />
-					</div>
-				</div>
-			</form>
+			{control photoControl}
 		</div>
 		<div class="row profile-edit" id="edit-personal">
 			<form class="form-horizontal group-border stripped">

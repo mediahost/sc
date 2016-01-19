@@ -125,6 +125,14 @@ class Candidate extends BaseEntity
 		$this->photo->setFolder(Image::FOLDER_CANDIDATE_IMAGE);
 		return $this;
 	}
+	
+	public function getPhoto()
+	{
+		if ($this->photo == NULL) {
+			return Image::DEFAULT_IMAGE;
+		}
+		return $this->photo;
+	}
 
 	public static function getGenderList()
 	{
