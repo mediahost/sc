@@ -9,6 +9,7 @@ use App\Components\Auth\SetPasswordControl;
 use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\SkillsControl;
 use App\Components\Candidate\IPhotoControlFactory;
+use App\Components\Candidate\IProfileControlFactory;
 use App\Model\Entity;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Candidate;
@@ -35,6 +36,9 @@ class ProfilePresenter extends BasePresenter
 	/** @var IPhotoControlFactory @inject */
 	public $iPhotoControlFactory;
 	
+	/** @var IProfileControlFactory @inject */
+	public $iProfileControlFactory;
+
 	/** @var CvFacade @inject */
 	public $cvFacade;
 	
@@ -233,6 +237,17 @@ class ProfilePresenter extends BasePresenter
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = new TaggedString('Photo for \'%s\' was successfully saved.', (string) $saved);
 			$this->flashMessage($message, 'success');
+			$this->invalidateControl('personalDetails');
+		};
+		return $control;
+	}
+	
+	/** @return ProfileControl */
+	public function createComponentProfileControl()
+	{
+		$control = $this->iProfileControlFactory->create();
+		$control->setCandidate($this->candidate);
+		$control->onAfterSave = function (Candidate $saved) {
 			$this->invalidateControl('personalDetails');
 		};
 		return $control;

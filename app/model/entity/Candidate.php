@@ -13,8 +13,12 @@ use Nette\Utils\Strings;
 /**
  * @ORM\Entity
  *
- * @property string $name
+ * @property string $firstname
+ * @property string $middlename
+ * @property string $surname
  * @property DateTime $birthday
+ * @property string $title
+ * @property-read array $titles
  * @property string $gender
  * @property-read array $genders
  * @property string $degreeBefore
@@ -33,8 +37,17 @@ class Candidate extends BaseEntity
 	use Identifier;
 
 	/** @ORM\Column(type="string", length=512, nullable=true) */
-	protected $name;
+	protected $firstname;
+		
+	/** @ORM\Column(type="string", length=512, nullable=true) */
+	protected $middlename;
+	
+	/** @ORM\Column(type="string", length=512, nullable=true) */
+	protected $surname;
 
+	/** @ORM\Column(type="date", nullable=true) */
+	protected $title;
+	
 	/** @ORM\Column(type="date", nullable=true) */
 	protected $birthday;
 
@@ -102,6 +115,12 @@ class Candidate extends BaseEntity
 		$genders = self::getGenderList();
 		return array_key_exists($this->gender, $genders) ? $genders[$this->gender] : NULL;
 	}
+	
+	public function getTitleName()
+	{
+		$titles = self::getTitleList();
+		return array_key_exists($this->title, $titles)  ?  $titles[$this->title] : NULL;
+	}
 
 	public function getNationalityName()
 	{
@@ -133,6 +152,11 @@ class Candidate extends BaseEntity
 		}
 		return $this->photo;
 	}
+	
+	public function getName()
+	{
+		return sprintf('%s %s %s', $this->firstname, $this->middlename, $this->surname);
+	}
 
 	public static function getGenderList()
 	{
@@ -141,6 +165,11 @@ class Candidate extends BaseEntity
 			'f' => 'Female',
 			'x' => 'Not disclosed',
 		];
+	}
+	
+	public static function getTitleList()
+	{
+		return ['Mr.', 'Mrs.', 'Ms.'];
 	}
 
 	public static function getNationalityList()

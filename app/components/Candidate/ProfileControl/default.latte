@@ -1,1 +1,68 @@
-{control form}
+{**
+ * ProfileControl control template
+ *
+*}
+
+{form form class => "ajax form-horizontal group-border stripped"}
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Title'}</label>
+		<div class="col-lg-9 col-md-9">
+			<select n:name="title" class="form-control input-small"></select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Degree in front of name'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="degreebefore" type="text" class="form-control input-small">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'First Name(s)'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="firstname" type="text" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Middle Name'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="middlename" type="text" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Surname(s)'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="surname" type="text" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Degree after name'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="degreeafter" type="text" class="form-control input-small">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Gender'}</label>
+		<div class="col-lg-9 col-md-9">
+			{foreach $genderList as $key=>$value}
+				<div class="radio-custom radio-inline">
+					{$form['gender']->getControlPart($key)}
+					<label for="radio1">{$value}</label>
+				</div>
+			{/foreach}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3  control-label">{_'Date of Birth'}</label>
+		<div class="col-lg-9 col-md-9">
+			<div class="input-daterange input-group" data-date-format="dd.mm.yyyy">
+				<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+				{input $form['birthday']}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-lg-offset-3">
+			<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save" />
+		</div>
+	</div>
+{/form}

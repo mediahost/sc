@@ -21,7 +21,13 @@ class ProfileControl extends BaseControl
 	public $onAfterSave = [];
 
 	// </editor-fold>
-
+	
+	public function render() {
+		$this->template->genderList = Candidate::getGenderList();
+		parent::render();
+	}
+	
+	
 	/** @return Form */
 	protected function createComponentForm()
 	{
@@ -30,20 +36,28 @@ class ProfileControl extends BaseControl
 		$form = new Form();
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
+		
+		$form->addSelect('title', 'Title', Candidate::getTitleList());
 
-		$form->addText('degreebefore', 'Degree in front of name', NULL, 50);
-//				->getControlPrototype()->class[] = 'input-small';
+		$form->addText('degreebefore', 'Degree in front of name', NULL, 50)
+				->getControlPrototype()->class[] = 'input-small';
 
-		$form->addText('name', 'Name', NULL, 100)
-				->setAttribute('placeholder', 'name and surename')
-				->setRequired('Please enter your name.');
+		$form->addText('firstname', 'First Name(s)', NULL, 100)
+				->setRequired('Please enter your First Name(s).');
+		
+		$form->addText('middlename', 'Middle Name', NULL, 100)
+				->setRequired('Please enter your Middle Name.');
+		
+		$form->addText('surname', 'Surname(s)', NULL, 100)
+				->setRequired('Please enter your Surname(s).');
 
-		$form->addText('degreeafter', 'Degree after name', NULL, 50);
-//				->getControlPrototype()->class[] = 'input-small';
+		$form->addText('degreeafter', 'Degree after name', NULL, 50)
+				->getControlPrototype()->class[] = 'input-small';
 
-		$form->addDateInput('birthday', 'Birthday');
+		$form->addDatePicker('birthday', 'Birthday');
 
-		$form->addRadioList('gender', 'Gender', Candidate::getGenderList());
+		$form->addRadioList('gender', 'Gender', Candidate::getGenderList())
+			->setDefaultValue('x');
 
 		$form->addSubmit('save', 'Save');
 
@@ -61,7 +75,10 @@ class ProfileControl extends BaseControl
 
 	protected function load(ArrayHash $values)
 	{
-		$this->candidate->name = $values->name;
+		//$this->candidate->title = $values->title;
+		$this->candidate->firstname = $values->firstname;
+		$this->candidate->middlename = $values->middlename;
+		$this->candidate->surname = $values->surname;
 		$this->candidate->birthday = $values->birthday;
 		$this->candidate->gender = $values->gender;
 		$this->candidate->degreeBefore = $values->degreebefore;
@@ -80,7 +97,10 @@ class ProfileControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'name' => $this->candidate->name,
+			'title' => $this->candidate->title,
+			'firstname' => $this->candidate->firstname,
+			'middlename' => $this->candidate->middlename,
+			'surname' => $this->candidate->surname,
 			'birthday' => $this->candidate->birthday,
 			'gender' => $this->candidate->gender,
 			'degreebefore' => $this->candidate->degreeBefore,
