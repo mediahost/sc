@@ -67,7 +67,7 @@
 					{if $candidate}
 						<p class="job-title mb0">
 							<i class="fa fa-building"></i>
-							{$candidate->address->format()}
+							{if $candidate->address}{$candidate->address->format()}{/if}
 							<a href="#edit-address" class="edit">
 								<i class="fa fa-edit"></i>
 							</a>
