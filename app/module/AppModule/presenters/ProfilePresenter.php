@@ -10,6 +10,7 @@ use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\SkillsControl;
 use App\Components\Candidate\IPhotoControlFactory;
 use App\Components\Candidate\IProfileControlFactory;
+use App\Components\Candidate\IAddressControlFactory;
 use App\Model\Entity;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Candidate;
@@ -38,6 +39,9 @@ class ProfilePresenter extends BasePresenter
 	
 	/** @var IProfileControlFactory @inject */
 	public $iProfileControlFactory;
+	
+	/** @var IAddressControlFactory @inject */
+	public $iAddressControlFactory;
 
 	/** @var CvFacade @inject */
 	public $cvFacade;
@@ -253,6 +257,16 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
+	/** @return AddressControl */
+	public function createComponentAddressControl()
+	{
+		$control = $this->iAddressControlFactory->create();
+		$control->setCandidate($this->candidate);
+		$control->onAfterSave = function (Candidate $saved) {
+			$this->invalidateControl('personalDetails');
+		};
+		return $control;
+	}
 	// </editor-fold>
 }
 

@@ -67,7 +67,7 @@
 					{if $candidate}
 						<p class="job-title mb0">
 							<i class="fa fa-building"></i>
-							Address 123, City 05, My Country
+							{$candidate->address->format()}
 							<a href="#edit-address" class="edit">
 								<i class="fa fa-edit"></i>
 							</a>
@@ -88,63 +88,7 @@
 			{control profileControl}
 		</div>
 		<div class="row profile-edit" id="edit-address">
-			<form class="form-horizontal group-border stripped">
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label">Nationality</label>
-					<div class="col-lg-9 col-md-9">
-						<select class="form-control">
-							<option value="1">Czech</option>
-							<option value="2">Slovak</option>
-							<option value="3">Irish</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label">House No.</label>
-					<div class="col-lg-9 col-md-9">
-						<input type="text" class="form-control">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label">Street address</label>
-					<div class="col-lg-9 col-md-9">
-						<input type="text" class="form-control">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label">Postal code</label>
-					<div class="col-lg-9 col-md-9">
-						<input type="text" class="form-control">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label">City</label>
-					<div class="col-lg-9 col-md-9">
-						<input type="text" class="form-control">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label">Country</label>
-					<div class="col-lg-9 col-md-9">
-						<select class="form-control">
-							<option value="1">Czech</option>
-							<option value="2">Slovak</option>
-							<option value="3">Irish</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 col-md-3 control-label">Contact number</label>
-					<div class="col-lg-9 col-md-9">
-						<input type="text" class="form-control">
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-lg-offset-3">
-						<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save" />
-					</div>
-				</div>
-			</form>
+			{control addressControl}
 		</div>
 	</div>
 </div>
