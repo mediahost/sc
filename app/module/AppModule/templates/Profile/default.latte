@@ -27,7 +27,9 @@
 		{include interestedInPanel}
 	</div>
 	<div class="col-lg-6 col-md-12">
+		{snippet socialLinks}
 		{include socialLinksPanel}
+		{/snippet}
 	</div>
 </div>
 <div class="row" n:if="$candidate">
@@ -124,114 +126,10 @@
 {define socialLinksPanel}
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h4 class="panel-title">Social Links</h4>
+		<h4 class="panel-title">{_'Social Links'}</h4>
 	</div>
 	<div class="panel-body social-editor">
-		<form>
-			<table>
-				<tr>
-					<th>
-						<i class="fa fa-facebook-square"></i>
-						Facebook:
-					</th>
-					<td>
-						<div class="data">
-							<a href="#">
-								facebook.com/1231
-							</a>
-							<a href="#" class="edit">
-								<i class="fa fa-edit"></i>
-							</a>
-						</div>
-						<div class="editor">
-							<input type="text" class="form-control" value="facebook.com/1231" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<i class="fa fa-twitter"></i>
-						Twitter:
-					</th>
-					<td>
-						<div class="data">
-							<a href="#">
-								twitter.com/profile/3234.html
-							</a>
-							<a href="#" class="edit">
-								<i class="fa fa-edit"></i>
-							</a>
-						</div>
-						<div class="editor">
-							<input type="text" class="form-control" value="twitter.com/profile/3234.html" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<i class="fa fa-google-plus"></i>
-						Google+:
-					</th>
-					<td>
-						<div class="data">
-							<a href="#">
-								plus.google.com/jonathansmith
-							</a>
-							<a href="#" class="edit">
-								<i class="fa fa-edit"></i>
-							</a>
-						</div>
-						<div class="editor">
-							<input type="text" class="form-control" value="plus.google.com/jonathansmith" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<i class="fa fa-linkedin"></i>
-						LinkedIn:
-					</th>
-					<td>
-						<div class="data">
-							<a href="#">
-								linkd.in/123123
-							</a>
-							<a href="#" class="edit">
-								<i class="fa fa-edit"></i>
-							</a>
-						</div>
-						<div class="editor">
-							<input type="text" class="form-control" value="linkd.in/123123" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<i class="fa fa-pinterest"></i>
-						Pinterest:
-					</th>
-					<td>
-						<div class="data">
-							<a href="#" class="edit empty">
-								<em>add link</em>
-								<i class="fa fa-edit"></i>
-							</a>
-						</div>
-						<div class="editor">
-							<input type="text" class="form-control" value="pinterst.com/profile/3234.html" />
-						</div>
-					</td>
-				</tr>
-				<tr class="editor">
-					<th></th>
-					<td>
-						<div>
-							<input type="submit" class="form-control btn btn-primary input-small" value="Save" />
-						</div>
-					</td>
-				</tr>
-			</table>
-		</form>
+		{control socialControl}
 	</div>
 </div>
 {/define}

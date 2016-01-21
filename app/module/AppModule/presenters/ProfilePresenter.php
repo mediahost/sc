@@ -11,6 +11,7 @@ use App\Components\Cv\SkillsControl;
 use App\Components\Candidate\IPhotoControlFactory;
 use App\Components\Candidate\IProfileControlFactory;
 use App\Components\Candidate\IAddressControlFactory;
+use App\Components\Candidate\ISocialControlFactory;
 use App\Model\Entity;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Candidate;
@@ -42,6 +43,9 @@ class ProfilePresenter extends BasePresenter
 	
 	/** @var IAddressControlFactory @inject */
 	public $iAddressControlFactory;
+	
+	/** @var ISocialControlFactory @inject */
+	public $iSocialControlFactory;
 
 	/** @var CvFacade @inject */
 	public $cvFacade;
@@ -264,6 +268,17 @@ class ProfilePresenter extends BasePresenter
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$this->invalidateControl('personalDetails');
+		};
+		return $control;
+	}
+	
+	/** @return SocialControl */
+	public function createComponentSocialControl()
+	{
+		$control = $this->iSocialControlFactory->create();
+		$control->setCandidate($this->candidate);
+		$control->onAfterSave = function (Candidate $saved) {
+			$this->invalidateControl('socialLinks');
 		};
 		return $control;
 	}

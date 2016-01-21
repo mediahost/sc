@@ -102,6 +102,10 @@ services:
 		implement: App\Components\Candidate\IPhotoControlFactory
 		inject: yes
 
+	ISocialControlFactory:
+		implement: App\Components\Candidate\ISocialControlFactory
+		inject: yes
+
 	# Cv
 	ICvAdditionalControlFactory:
 		implement: App\Components\Cv\IAdditionalControlFactory
