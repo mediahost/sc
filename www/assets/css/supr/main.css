@@ -995,6 +995,9 @@ body #wrapper {
   transition: all;
   transition-duration: 0.3s;
 }
+.nav-padding {
+	padding-right: 0px;
+}
 #header.shrink .navbar {
   min-height: 40px;
   transition: all;
