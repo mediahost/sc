@@ -34,6 +34,7 @@ class DateRangePicker extends BaseControl  {
 		$this->format = $format;
 		$this->attributes['data-date-format'] = Helpers::dateformatPHP2JS($this->format);
 		$this->addRule(__CLASS__ . '::validateDate', 'Date is invalid.');
+		$this->addRule(__CLASS__ . '::validateRange', 'Start date must be less.');
 	}
 	
 	/**
@@ -148,5 +149,17 @@ class DateRangePicker extends BaseControl  {
 			($end && $end->format($control->format) == DateTime::from($control->date_end)->format($control->format));
 
 		return $validStart && $validEnd;
+	}
+	
+	public static function validateRange(IControl $control) {
+		if(!self::validateDate($control)) {
+			return false;
+		}
+		$start = $control->date_start instanceof \DateTime ?
+			$control->date_start : DateTime::createFromFormat($control->format, $control->date_start);
+		$end = $control->date_end instanceof \DateTime ?
+			$control->date_end : DateTime::createFromFormat($control->format, $control->date_end);
+
+		return $start < $end;
 	}
 }
