@@ -45,8 +45,7 @@ class ProfileControl extends BaseControl
 		$form->addText('firstname', 'First Name(s)', NULL, 100)
 				->setRequired('Please enter your First Name(s).');
 		
-		$form->addText('middlename', 'Middle Name', NULL, 100)
-				->setRequired('Please enter your Middle Name.');
+		$form->addText('middlename', 'Middle Name', NULL, 100);
 		
 		$form->addText('surname', 'Surname(s)', NULL, 100)
 				->setRequired('Please enter your Surname(s).');

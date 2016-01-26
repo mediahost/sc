@@ -80,6 +80,7 @@ class SocialControl extends BaseControl
 	/** @return array */
 	protected function getDefaults()
 	{
+		$values = array();
 		if($this->candidate->user->facebook) {
 			$values['facebook'] = $this->candidate->user->facebook->link;
 		}
