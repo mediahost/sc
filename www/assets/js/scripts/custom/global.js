@@ -2,6 +2,9 @@ var Global = function () {
 
 	var handleInitPickers = function () {
 		$('.input-daterange').datepicker();
+		$('.input-daterange span').on('click', function() {
+			$(this).next('input').datepicker('show');
+		})
 	};
 
 	var handleHideRightbar = function () {
