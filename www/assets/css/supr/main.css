@@ -1869,7 +1869,7 @@ body #wrapper {
   margin-left: 212px;
 }
 #content.right-sidebar-page {
-  margin-right: 212px;
+  /*margin-right: 212px;*/
 }
 #content.full-page {
   margin-left: 0;
