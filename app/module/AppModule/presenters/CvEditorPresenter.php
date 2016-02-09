@@ -83,6 +83,7 @@ class CvEditorPresenter extends BasePresenter
 	protected function startup()
 	{
 		parent::startup();
+		$this->hideRightSidebar();
 	}
 
 	/**

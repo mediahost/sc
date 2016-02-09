@@ -7,9 +7,9 @@ var Global = function () {
 		})
 	};
 
-	var handleHideRightbar = function () {
-		if ($('body').hasClass('hide-righ-sidebar') && ($('#toggle-right-sidebar').hasClass('hide-right-sidebar') || $('#toggle-right-sidebar i').hasClass('icomoon-icon-indent-increase'))) {
-			$('#toggle-right-sidebar').click();
+	var handleRightbar = function () {
+		if(!$('#right-sidebarbg').attr('data-show')) {
+			$('body').data('supr').hideRightSidebar();
 		}
 	};
 	
@@ -75,14 +75,14 @@ var Global = function () {
 			$(document).ready(function () {
 				handleInitPickers();
 				handleRating();
-				//handleHideRightbar();
 				handleFBSharer();
 				initAccordion();
 				handleSocialLinks();
 				handlePersonalDetails();
 				handleMessages();
 			});
-		}
+		},
+		handleRightbar: handleRightbar
 	};
 
 }();

@@ -1,6 +1,7 @@
 jQuery(document).ready(function () {
 	$.nette.init();
 	
+	Global.handleRightbar();
 	Global.init();
 	Login.init();
 	PdfPreview.init();

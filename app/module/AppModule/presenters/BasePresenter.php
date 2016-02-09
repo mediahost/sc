@@ -15,6 +15,9 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	/** @var Communication[] */
 	private $userCommunications;
+	
+	private $showRightSideBar = true;
+	
 
 	public function getUserCommunications()
 	{
@@ -38,6 +41,7 @@ abstract class BasePresenter extends BaseBasePresenter
 		$this->template->communications = $this->getUserCommunications();
 		$this->template->unreadMessagesCount = $this->communicationFacade->getUserUnreadCount($this->getUserCommunications(), $this->user->identity);
 		$this->template->communicationFacade = $this->communicationFacade;
+		$this->template->showRightSidebar = $this->showRightSideBar;
 	}
 
 	/**
@@ -59,4 +63,7 @@ abstract class BasePresenter extends BaseBasePresenter
 		return $this->user->isInRole(Role::SIGNED) && count($this->user->roles) === 1;
 	}
 
+	protected function hideRightSidebar() {
+		$this->showRightSideBar = false;
+	}
 }
