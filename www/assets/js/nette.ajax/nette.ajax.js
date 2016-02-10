@@ -178,7 +178,7 @@ var nette = function () {
 			if (!settings.type) {
 				settings.type = analyze.form ? analyze.form.attr('method') : 'get';
 			}
-
+			
 			if ($el.is('[data-ajax-off]')) {
 				var rawOff = $el.attr('data-ajax-off');
 				if (rawOff.indexOf('[') === 0) {
@@ -231,7 +231,7 @@ var nette = function () {
 	 */
 	this.handleXHR = function (xhr, settings) {
 		settings = settings || {};
-
+			
 		if (xhr && (typeof xhr.statusText === 'undefined' || xhr.statusText !== 'canceled')) {
 			xhr.done(function (payload, status, xhr) {
 				inner.fire({

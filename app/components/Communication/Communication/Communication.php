@@ -60,13 +60,16 @@ class Communication extends BaseControl
 		parent::render();
 	}
 
-	public function createComponentForm()
+	public function createComponentMessageForm()
 	{
 		$form = new Form();
+		$form->getElementPrototype()->class('ajax');
 		$form->setTranslator($this->translator);
-		$form->addText('text')
+		
+		$form->addTextArea('text')
 				->addRule(Form::FILLED, 'Must be filled');
 		$form->addSubmit('send');
+		
 		$form->onSuccess[] = $this->processForm;
 		return $form;
 	}
@@ -74,7 +77,12 @@ class Communication extends BaseControl
 	public function processForm(Form $form, $values)
 	{
 		$this->communicationFacade->addMessage($this->communication, $values->text, $this->user->identity, $this->company);
-		$this->redirect('this');
+		$form['text']->setValue('');
+		if ($this->presenter->isAjax) {
+			$this->redrawControl();
+		} else {
+			$this->redirect('this');
+		}
 	}
 
 	public function isViewer(Sender $sender)

@@ -7,6 +7,8 @@ use App\Model\Entity;
 class CommunicationList extends BaseControl
 {
 
+	const COMMUNICATIONS_PER_PAGE = 2;
+
 	/** @var Entity\Communication[] */
 	protected $communications = [];
 
@@ -15,6 +17,9 @@ class CommunicationList extends BaseControl
 
 	/** @var Entity\Communication|NULL */
 	protected $activeCommunication;
+
+	/** @var int @persistent */
+	public $count = self::COMMUNICATIONS_PER_PAGE;
 
 	/**
 	 * @param Entity\Communication $communication
@@ -44,6 +49,8 @@ class CommunicationList extends BaseControl
 	{
 		$this->template->communications = $this->communications;
 		$this->template->activeCommunication = $this->activeCommunication;
+		$this->template->communicationCount = $this->count;
+		$this->template->communicationsPerPage = self::COMMUNICATIONS_PER_PAGE;
 		parent::render();
 	}
 
