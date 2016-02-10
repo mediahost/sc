@@ -3,7 +3,7 @@
 		<th class="headlineBig">
 			{_'Personal Information'}
 		</th>
-		<td class="info">
+		<td class="info" colspan="6">
 			<table class="address">
 				<tr>
 					<td class="name">{$candidate->degreeName}</td>
@@ -28,27 +28,27 @@
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 
 
 	{if $cv->careerObjectiveIsPublic && $cv->careerObjective}
 	<tr class="separator">
 		<th class="headlineBig">{_'Career Objective'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 
 	<tr>
 		<td></td>
-		<td>{$cv->careerObjective|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->careerObjective|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 
@@ -56,20 +56,20 @@
 	{if $cv->careerSummaryIsPublic && $cv->careerSummary}
 	<tr class="separator">
 		<th class="headlineBig">{_'Career Summary'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 
 	<tr>
 		<td></td>
-		<td>{$cv->careerSummary|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->careerSummary|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 
@@ -77,36 +77,36 @@
 	{if $cv->desiredEmploymentIsPublic}
 	<tr class="separator">
 		<th class="headlineBig">{_'Desired Employment'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 
 	<tr>
 		<th class="headline">{_'Availability from'}</th>
-		<td>{$cv->availableFrom|date:'d. m. Y'}</td>
+		<td colspan="6">{$cv->availableFrom|date:'d. m. Y'}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 
 	<tr>
 		<th class="headline">{_'Job position'}</th>
-		<td>{$cv->desiredPosition|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->desiredPosition|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{if $cv->salaryIsPublic}
 	<tr>
 		<th class="headline">{_'Salary expectation'}</th>
-		<td>{$cv->salaryFrom}€ - {$cv->salaryTo}€ {_'per annum'}</td>
+		<td colspan="6">{$cv->salaryFrom}€ - {$cv->salaryTo}€ {_'per annum'}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 	{/if}
@@ -115,12 +115,12 @@
 	{if count($cv->works)}
 	<tr class="separator">
 		<th class="headlineBig">{_'Work Experience'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{foreach $cv->works as $work}
 	{if !$work->isExperience  &&  $work->refereeIsPublic}{include #workItem, item => $work}{/if}
@@ -131,12 +131,12 @@
 	{if count($cv->educations)}
 	<tr class="separator">
 		<th class="headlineBig">{_'Education & Training'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{foreach $cv->educations as $edu}
 	{include #eduItem, item => $edu}
@@ -147,12 +147,12 @@
 	{if count($cv->skillKnows)}
 	<tr class="separator">
 		<th class="headlineBig">{_'IT Skills'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	
 	{var itSkills = []}
@@ -164,10 +164,10 @@
 	{foreach $itSkills as $categoryName => $itSkill}
 	<tr>
 		<th class="headline">{$categoryName}</th>
-		<td>{$itSkill|implode:'<br/>'|noescape}</td>
+		<td colspan="6">{$itSkill|implode:'<br/>'|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/foreach}
 	{/if}
@@ -176,12 +176,12 @@
 	{if count($cv->experiences)}
 	<tr class="separator">
 		<th class="headlineBig">{_'Other Experience'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{foreach $cv->experiences as $work}
 	{if $work->isExperience  &&  $work->refereeIsPublic}{include #workItem, item => $work}{/if}
@@ -192,21 +192,21 @@
 	{if $cv->competence || $cv->motherLanguage}
 	<tr class="separator">
 		<th class="headlineBig">{_'Personal Skills'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 
 	{if $cv->motherLanguage}
 	<tr>
 		<th class="headline">{_'Mother tongue'}</th>
-		<td>{$cv->motherLanguageName}</td>
+		<td colspan="6">{$cv->motherLanguageName}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 	
@@ -237,73 +237,73 @@
 		{/foreach}
 		<tr class="notice">
 			<td></td>
-			<td>
+			<td colspan="6">
 				{_'Levels'}: A1/2: {_'Basic user'} - B1/2: {_'Independent user'} - C1/2: {_'Proficient user'}<br />
 				{_'Common European Framework of Reference for Languages'}
 			</td>
 		</tr>
 		<tr class="emptySeparator">
-			<td colspan="2"></td>
+			<td colspan="7"></td>
 		</tr>
 	{/if}
 
 	{if !empty($cv->competence->social)}
 	<tr>
 		<th class="headline">{_'Social skills'}</th>
-		<td>{$cv->competence->social|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->competence->social|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 
 	{if !empty($cv->competence->organisation)}
 	<tr>
 		<th class="headline">{_'Organisational skills'}</th>
-		<td>{$cv->competence->organisation|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->competence->organisation|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 
 	{if !empty($cv->competence->technical)}
 	<tr>
 		<th class="headline">{_'Technical skills'}</th>
-		<td>{$cv->competence->technical|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->competence->technical|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 
 	{if !empty($cv->competence->artictic)}
 	<tr>
 		<th class="headline">{_'Artistic skills'}</th>
-		<td>{$cv->competence->artictic|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->competence->artictic|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 
 	{if !empty($cv->competence->other)}
 	<tr>
 		<th class="headline">{_'Other skills'}</th>
-		<td>{$cv->competence->other|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->competence->other|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
         
 	{if !empty($cv->competence->drivingLicenses)}
 	<tr>
 		<th class="headline">{_'Driving licenses'}</th>
-		<td>{$cv->competence->drivingLicensesNames|implode:', '}</td>
+		<td colspan="6">{$cv->competence->drivingLicensesNames|implode:', '}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 	
@@ -313,20 +313,20 @@
 	{if $cv->additionalIsPublic}
 	<tr class="separator">
 		<th class="headlineBig">{_'Additional Information'}</th>
-		<td>
+		<td colspan="6">
 			<table class="block"><tr><td></td></tr></table>
 		</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 
 	<tr>
 		<td></td>
-		<td>{$cv->additionalInfo|escape|nl2br|noescape}</td>
+		<td colspan="6">{$cv->additionalInfo|escape|nl2br|noescape}</td>
 	</tr>
 	<tr class="emptySeparator">
-		<td colspan="2"></td>
+		<td colspan="7"></td>
 	</tr>
 	{/if}
 	
@@ -337,7 +337,7 @@
 {define #workItem, $item}
 <tr>
 	<th class="headline">{$item->dateStart|date:'d.m.Y'} - {$item->dateEnd|date:'d.m.Y'}</th>
-	<td>
+	<td colspan="6">
 		<table class="company">
 			<tr>
 				<td class="position">{$item->position}</td>
@@ -357,7 +357,7 @@
 {if $item->referee->name && $item->refereeIsPublic}
 	<tr>
 		<th class="headline">Referee</th>
-		<td>
+		<td colspan="6">
 			<table class="address">
 				<tr n:if="$item->referee->name">
 					<td class="nameSmall">{$item->referee->name}</td>
@@ -376,14 +376,14 @@
 	</tr>
 {/if}
 <tr class="emptySeparator">
-	<td colspan="2"></td>
+	<td colspan="7"></td>
 </tr>
 {/define}
 
 {define #eduItem, $item}
 <tr>
 	<th class="headline">{$item->dateStart|date:'d.m.Y'} - {$item->dateEnd|date:'d.m.Y'}</th>
-	<td>
+	<td colspan="6">
 		<table class="company">
 			<tr>
 				<td class="position">{$item->title}</td>
@@ -398,6 +398,6 @@
 	</td>
 </tr>
 <tr class="emptySeparator">
-	<td colspan="2"></td>
+	<td colspan="7"></td>
 </tr>
 {/define}
