@@ -1032,17 +1032,17 @@
                 //get previous
                 navel1 = navsub.prev('a.active-state');
                 link = navel1.attr('href');
-                text1 = navel1.children('.notification').remove().end().text().trim();
+                text1 = navel1.text().trim();
 
                 breadcrumb.append('<li><a href="'+link+'">'+text1+'</a></li>');
 
                 //icon = navel.children('i').prop('outerHTML');
-                text = navel.children('.notification').remove().end().text();
+                text = navel.text();
                 breadcrumb.append('<span class="divider"><i class="'+plugin.settings.breadcrumbs.dividerIcon+'"></i></span>');
                 breadcrumb.append('<li>'+ text +'</li>');
 
             } else {
-                text = navel.children('.notification').remove().end().text();
+                text = navel.text();
                 breadcrumb.append('<li>'+ text +'</li>');
             }         
 

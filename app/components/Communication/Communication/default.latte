@@ -36,13 +36,13 @@
 							<span class="time">{$message->time|date:'j. n. Y'}</span>
 						</div>
 						<p>
-							{$message->text}
+							{!$message->text|escape|nl2br}
 						</p>
 					</div>
 				</li>
 			{/foreach}
 			<li class="sendMsg">
-				{form form, class => 'ajax'}
+				{form messageForm}
 					<textarea n:name="text" class="elastic form-control" rows="3" placeholder="{_"Type a message here..."}"></textarea>
 					<input n:name="send" type="submit" class="btn btn-info mt10" value="Send message" />
 				{/form}
