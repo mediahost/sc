@@ -12,7 +12,10 @@
 			</th>
 			<td>
 				<div class="data">
-					<a href="{$links['facebook']['url']}" target="_blank">{$links['facebook']['title']}</a>
+					<a n:if="!$links['facebook']" href="#" class="edit empty">
+						<em>{_'add link'}</em>
+					</a>
+					<a n:if="$links['facebook']" href="{$links['facebook']}" target="_blank">{$links['facebook']}</a>
 					<a href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
@@ -29,7 +32,10 @@
 			</th>
 			<td>
 				<div class="data">
-					<a href="{$links['twitter']['url']}">{$links['twitter']['title']}</a>
+					<a n:if="!$links['twitter']" href="#" class="edit empty">
+						<em>{_'add link'}</em>
+					</a>
+					<a n:if="$links['twitter']" href="{$links['twitter']}" target="_blank">{$links['twitter']}</a>
 					<a href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
@@ -46,7 +52,10 @@
 			</th>
 			<td>
 				<div class="data">
-					<a href="#">{$links['google']['title']}</a>
+					<a n:if="!$links['google']" href="#" class="edit empty">
+						<em>{_'add link'}</em>
+					</a>
+					<a  n:if="$links['google']" href="{$links['google']}" target="_blank">{$links['google']}</a>
 					<a href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
@@ -63,7 +72,10 @@
 			</th>
 			<td>
 				<div class="data">
-					<a href="#">{$links['linkedin']['title']}</a>
+					<a n:if="!$links['linkedin']" href="#" class="edit empty">
+						<em>{_'add link'}</em>
+					</a>
+					<a  n:if="$links['linkedin']" href="{$links['linkedin']}" target="_blank">{$links['linkedin']}</a>
 					<a href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
@@ -80,8 +92,11 @@
 			</th>
 			<td>
 				<div class="data">
-					<a href="#" class="edit empty">
-						<em>add link</em>
+					<a n:if="!$links['pinterest']" href="" class="edit empty">
+						<em>{_'add link'}</em>
+					</a>
+					<a  n:if="$links['pinterest']" href="{$links['pinterest']}" target="_blank">{$links['pinterest']}</a>
+					<a href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>

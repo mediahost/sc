@@ -62,12 +62,11 @@ class SocialControl extends BaseControl
 	
 	protected function load(ArrayHash $values)
 	{
-		if($this->candidate->user->facebook) {
-			$this->candidate->user->facebook->link = $values['facebook'];
-		}
-		if($this->candidate->user->twitter) {
-			$this->candidate->user->twitter->url = $values['twitter'];
-		}
+		$this->candidate->user->facebookLink = $values['facebook'];
+		$this->candidate->user->twitterLink = $values['twitter'];
+		$this->candidate->user->googleLink = $values['google'];
+		$this->candidate->user->linkedinLink = $values['linkedin'];
+		$this->candidate->user->pinterestLink = $values['pinterest'];
 	}
 	
 	protected function save()
@@ -81,12 +80,11 @@ class SocialControl extends BaseControl
 	protected function getDefaults()
 	{
 		$values = array();
-		if($this->candidate->user->facebook) {
-			$values['facebook'] = $this->candidate->user->facebook->link;
-		}
-		if($this->candidate->user->twitter) {
-			$values['twitter'] = $this->candidate->user->twitter->url;
-		}
+		$values['facebook'] = $this->candidate->user->facebookLink;
+		$values['twitter'] = $this->candidate->user->twitterLink;
+		$values['google'] = $this->candidate->user->googleLink;
+		$values['linkedin'] = $this->candidate->user->linkedinLink;
+		$values['pinterest'] = $this->candidate->user->pinterestLink;
 		return $values;
 	}
 	
@@ -100,21 +98,12 @@ class SocialControl extends BaseControl
 	private function getLinks() 
 	{
 		$links = [
-			'facebook' => ['url' => 'facebook.com', 'title' => 'facebook.com'],
-			'twitter' => ['url' => 'twitter.com', 'title' => 'twitter.com'],
-			'google' => ['url' => 'plus.google.com', 'title' => 'plus.google.com'],
-			'linkedin' => ['url' => 'linkd.in', 'title' => 'linkd.in'],
-			'pinterst' => ['url' => 'pinterst.com', 'title' => 'pinterst.com']
+			'facebook' => $this->candidate->user->facebookLink,
+			'twitter' => $this->candidate->user->twitterLink,
+			'google' => $this->candidate->user->googleLink,
+			'linkedin' => $this->candidate->user->linkedinLink,
+			'pinterest' => $this->candidate->user->pinterestLink
 		];
-		
-		if($this->candidate->user->facebook) {
-			$links['facebook']['url'] = $this->candidate->user->facebook->link;
-			$links['facebook']['title'] = $this->candidate->user->facebook;
-		}
-		if($this->candidate->user->twitter) {
-			$links['twitter']['url'] = $this->candidate->user->twitter->url;
-			$links['twitter']['title'] = $this->candidate->user->twitter;
-		}
 		return $links;
 	}
 	

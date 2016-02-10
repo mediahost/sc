@@ -23,6 +23,11 @@ interface IUserSocials
  * @property string $socialName
  * @property string $socialBirthday
  * @property int $connectionCount
+ * @property string $facebookLink
+ * @property string $twitterLink
+ * @property string $googleLink
+ * @property string $linkedinLink
+ * @property string $pinterestLink
  */
 trait UserSocials
 {
@@ -32,6 +37,22 @@ trait UserSocials
 
 	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"persist", "remove"}) */
 	protected $twitter;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $facebookLink;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $twitterLink;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $googleLink;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $linkedinLink;
+	
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $pinterestLink;
+	
 
 	public function clearFacebook()
 	{
