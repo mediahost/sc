@@ -18,7 +18,24 @@ class SendEmail extends BaseControl
 	
 	/** @var IShareMessageFactory @inject */
 	public $shareMessageFactory;
+	
+	/** @var ICvDocumentFactory @inject */
+	public $cvDocumentFaktory;
+	
+	/** @var Cv */
+	private $cv;
 
+	
+	/**
+	 * Seter for Cv entity
+	 * @param Cv $cv
+	 * @return \App\Components\Cv\CvDocument
+	 */
+	public function setCv(\App\Model\Entity\Cv $cv)
+	{
+		$this->cv = $cv;
+		return $this;
+	}
 
 	protected function createComponentForm() 
 	{
@@ -38,11 +55,20 @@ class SendEmail extends BaseControl
 	
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
+		$file = $this['cvDocument']->generatePdf();
 		$message = $this->shareMessageFactory->create();
 		$message->addTo($values->email);
 		$message->setHtmlBody($values->message);
+		$message->addAttachment($file);
 		$message->send();
 		$this->flashMessage('CV has been sent to your mail.');
+	}
+	
+	public function createComponentCvDocument()
+	{
+		$control = $this->cvDocumentFaktory->create();
+		$control->setCv($this->cv);
+		return $control;
 	}
 }
 

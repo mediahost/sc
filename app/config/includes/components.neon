@@ -163,6 +163,10 @@ services:
 		implement: App\Components\Cv\ISendEmailFactory
 		inject: yes
 
+	ICvDocumentFactory:
+		implement: App\Components\Cv\ICvDocumentFactory
+		inject: yes
+
 	# Skills
 	ISkillControlFactory:
 		implement: App\Components\Skills\ISkillControlFactory

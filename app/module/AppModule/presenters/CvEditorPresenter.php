@@ -304,6 +304,7 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentSendEmail()
 	{
 		$control = $this->iSendEmailFactory->create();
+		$control->setCv($this->cv);
 		return $control;
 	}
 }
