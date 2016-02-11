@@ -15,6 +15,14 @@ jQuery(document).ready(function () {
 			}
 		}
 	});
+	
+	$.nette.ext('closePopup', {
+		complete: function (data) {
+			if(data.closePopup) {
+				$('.bootbox-close-button').click();
+			}
+		}
+	});
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {

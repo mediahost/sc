@@ -55,13 +55,17 @@ class SendEmail extends BaseControl
 	
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$file = $this['cvDocument']->generatePdf();
+		$fileName = 'webtemp/'.time().".pdf";
+		$this['cvDocument']->generatePdf($fileName);
 		$message = $this->shareMessageFactory->create();
 		$message->addTo($values->email);
 		$message->setHtmlBody($values->message);
-		$message->addAttachment($file);
+		$message->addAttachment($fileName);
 		$message->send();
+		unlink($fileName);
 		$this->flashMessage('CV has been sent to your mail.');
+		$this->presenter->payload->closePopup = true;
+		$this->presenter->invalidateControl('sendEmail');
 	}
 	
 	public function createComponentCvDocument()

@@ -22,7 +22,7 @@ class CvDocument extends \App\Components\BaseControl {
 		return $this;
 	}
 	
-	public function generatePdf() 
+	public function generatePdf($fileName) 
 	{
 		$theme = $this->cv->theme;
 		if ($theme === NULL) {
@@ -47,10 +47,11 @@ class CvDocument extends \App\Components\BaseControl {
 		$pdf->pageMargins = "23,15,26,15,9,9";
 		$pdf->documentTitle = $this->cv->name;
 		$pdf->documentAuthor = 'Source-Code.com';
-		$pdf->outputName = 'webtemp/'.time().".pdf";
+		$pdf->outputName = $fileName;
 		$pdf->outputDestination = \PdfResponse\PdfResponse::OUTPUT_FILE;
-		$this->presenter->sendResponse($pdf);
-		return $pdf->outputName;
+		$response = $this->presenter->context->getByType('Nette\Http\Response');
+		$request = $this->presenter->context->getByType('Nette\Http\Request');
+		$pdf->send($request, $response);
 	}
 }
 
