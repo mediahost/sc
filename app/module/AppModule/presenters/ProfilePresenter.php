@@ -6,6 +6,8 @@ use App\Components\Auth\ConnectManagerControl;
 use App\Components\Auth\IConnectManagerControlFactory;
 use App\Components\Auth\ISetPasswordControlFactory;
 use App\Components\Auth\SetPasswordControl;
+use App\Components\Cv\ILivePreviewControlFactory;
+use App\Components\Cv\LivePreviewControl;
 use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Cv\SkillsControl;
 use App\Components\Candidate\IPhotoControlFactory;
@@ -46,6 +48,9 @@ class ProfilePresenter extends BasePresenter
 	
 	/** @var ISocialControlFactory @inject */
 	public $iSocialControlFactory;
+	
+	/** @var ILivePreviewControlFactory @inject */
+	public $iLivePreviewControlFactory;
 
 	/** @var CvFacade @inject */
 	public $cvFacade;
@@ -282,6 +287,16 @@ class ProfilePresenter extends BasePresenter
 		};
 		return $control;
 	}
+	
+	/** @return LivePreviewControl */
+	public function createComponentCvPreview()
+	{
+		$control = $this->iLivePreviewControlFactory->create();
+		$control->setScale(0.8, 0.8, 1);
+		$control->setCv($this->cv);
+		return $control;
+	}
+	
 	// </editor-fold>
 }
 
