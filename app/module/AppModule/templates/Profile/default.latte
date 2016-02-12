@@ -49,7 +49,11 @@
 			<div class="col-md-4">
 				<div class="profile-avatar">
 					<a href="#edit-photo" class="edit">
-						<img src="{$basePath}/foto/{$candidate->photo|size:150,150}" alt="profile" class="responsive">
+						<img n:if="$candidate->photo" alt="{$candidate->degreeName}" class="responsive"
+							 src="{$basePath}/foto/{$candidate->photo|size:150,150}">
+						{var defaultImage = \App\Model\Entity\Image::DEFAULT_IMAGE}
+						<img n:if="!$candidate->photo" alt="{$candidate->degreeName}" class="responsive"
+							 src="{$basePath}/foto/{$defaultImage|size:150,150}">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>

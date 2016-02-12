@@ -145,14 +145,6 @@ class Candidate extends BaseEntity
 		return $this;
 	}
 	
-	public function getPhoto()
-	{
-		if ($this->photo == NULL) {
-			return Image::DEFAULT_IMAGE;
-		}
-		return $this->photo;
-	}
-	
 	public function getName()
 	{
 		return sprintf('%s %s %s', $this->firstname, $this->middlename, $this->surname);
