@@ -104,6 +104,21 @@ class SocialControl extends BaseControl
 			'linkedin' => $this->candidate->user->linkedinLink,
 			'pinterest' => $this->candidate->user->pinterestLink
 		];
+		$links = $this->normalizeLinks($links);
+		return $links;
+	}
+	
+	/**
+	 * Add http protocol
+	 * @param array $links
+	 * @return array
+	 */
+	private function normalizeLinks($links) {
+		foreach ($links as &$link) {
+			if(strpos($link, 'http') === false) {
+				$link = 'http://' . $link;
+			}
+		}
 		return $links;
 	}
 	
