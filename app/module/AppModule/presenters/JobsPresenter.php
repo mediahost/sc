@@ -3,6 +3,7 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\Grids\Job\IJobsGridFactory;
+use App\Components\Job\IJobDataViewFactory;
 use App\Components\Grids\Job\JobsGrid;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
@@ -22,6 +23,9 @@ class JobsPresenter extends BasePresenter
 	/** @var IJobsGridFactory @inject */
 	public $iJobsGridFactory;
 
+	/** @var IJobDataViewFactory @inject */
+	public $iJobDataViewFactory;
+	
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
@@ -87,6 +91,12 @@ class JobsPresenter extends BasePresenter
 	public function createComponentJobsGrid()
 	{
 		$control = $this->iJobsGridFactory->create();
+		return $control;
+	}
+	
+	public function createComponentJobsDataView()
+	{
+		$control = $this->iJobDataViewFactory->create();
 		return $control;
 	}
 

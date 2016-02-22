@@ -1,0 +1,26 @@
+{**
+ * JobDataView control template
+ *
+ * @param   ArrayList	$jobs	Job
+*}
+
+<table id="jobTable" class="table table-bordered table-striped table-hover dt-responsive non-responsive">
+	<thead>
+		<tr>
+			<th>{_'ID'}</th>
+			<th>{_'Name'}</th>
+			<th>{_'Description'}</th>
+			<th>{_'Company'}</th>
+			<th>{_'Action'}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr n:foreach="$jobs as $job">
+			<td>{$job->id}</td>
+			<td>{$job->name}</td>
+			<td>{$job->description}</td>
+			<td>{$job->company->name}</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>

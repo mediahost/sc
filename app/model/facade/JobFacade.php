@@ -28,4 +28,9 @@ class JobFacade extends Object
 		return $this->cvDao->findBySkillRequests($job->skillRequests->toArray());
 	}
 
+	public function findAll() 
+	{
+		$repo = $this->em->getRepository(Job::getClassName());
+		return $repo->findAll();
+	}
 }

@@ -23,8 +23,29 @@
 				</div>
 			</div>
 			<div class="portlet-body">
-				{control jobsGrid}
+				{control jobsDataView}
 			</div>
 		</div>
 	</div>
 </div>
+{/block content}
+			
+			
+{block jsPage}
+<script>
+	$(document).ready(function() {
+		$('#jobTable').DataTable({
+			sDom: "T<'row'<'col-md-6 col-xs-12 'l><'col-md-6 col-xs-12'f>r>t<'row'<'col-md-4 col-xs-12'i><'col-md-8 col-xs-12'p>>",
+			tableTools: {
+				"aButtons": [
+					"csv",
+					"xls",
+					"print",
+					"select_all",
+					"select_none"
+				]
+			}
+		});
+	});
+</script>
+{/block jsPage}
