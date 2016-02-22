@@ -1,0 +1,28 @@
+{**
+ * CompanyDataView control template
+ *
+ * @param   ArrayList	$companies	Company
+*}
+
+<table id="companyTable" class="table table-bordered table-striped table-hover dt-responsive non-responsive">
+	<thead>
+		<tr>
+			<th>{_'ID'}</th>
+			<th>{_'Name'}</th>
+			<th>{_'Users'}</th>
+			<th>{_'Action'}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr n:foreach="$companies as $company">
+			<td>{$company->id}</td>
+			<td>{$company->name}</td>
+			<td><a n:foreach="$company->accesses as $access" data-target="#editUser" data-toggle="modal"
+				   href="{plink editUser, $access->user->id, $access->company->id}">
+					{$access->user}
+				</a></td>
+			<td>{$company->name}</td>
+		</tr>
+	</tbody>
+</table>
+

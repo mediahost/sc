@@ -6,6 +6,7 @@ use App\Components\Company\CompanyImagesControl;
 use App\Components\Company\CompanyInfoControl;
 use App\Components\Company\ICompanyImagesControlFactory;
 use App\Components\Company\ICompanyInfoControlFactory;
+use App\Components\Company\ICompanyDataViewFactory;
 use App\Components\Grids\Company\CompaniesGrid;
 use App\Components\Grids\Company\ICompaniesGridFactory;
 use App\Components\User\CompanyUserControl;
@@ -42,6 +43,9 @@ class CompaniesPresenter extends BasePresenter
 
 	/** @var ICompaniesGridFactory @inject */
 	public $iCompaniesGridFactory;
+	
+	/** @var ICompanyDataViewFactory @inject */
+	public $iCompanyDataViewFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -228,6 +232,13 @@ class CompaniesPresenter extends BasePresenter
 	public function createComponentCompaniesGrid()
 	{
 		$control = $this->iCompaniesGridFactory->create();
+		return $control;
+	}
+	
+	/** @return CompanyDataView */
+	public function createComponentCompanyDataView()
+	{
+		$control = $this->iCompanyDataViewFactory->create();
 		return $control;
 	}
 

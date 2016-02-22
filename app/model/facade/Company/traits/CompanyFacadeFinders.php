@@ -9,6 +9,16 @@ use App\Model\Entity\User;
 trait CompanyFacadeFinders
 {
 
+	public function findAll() 
+	{
+		return $this->companyDao->findAll();
+	}
+	
+	public function findByUser($userIdOrEntity) 
+	{
+		return [];
+	}
+	
 	public function find($companyIdOrEntity)
 	{
 		$id = $companyIdOrEntity instanceof Company ? $companyIdOrEntity->id : (string) $companyIdOrEntity;

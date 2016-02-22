@@ -80,6 +80,10 @@ services:
 		implement: App\Components\Company\ICompanyImagesControlFactory
 		inject: yes
 
+	ICompanyDataViewFactory:
+		implement: App\Components\Company\ICompanyDataViewFactory
+		inject: yes
+
 	# Job
 	IJobBasicInfoControlFactory:
 		implement: App\Components\Job\IBasicInfoControlFactory

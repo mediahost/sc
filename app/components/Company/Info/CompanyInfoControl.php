@@ -4,7 +4,7 @@ namespace App\Components\Company;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
 use App\Model\Entity\Role;
@@ -63,7 +63,7 @@ class CompanyInfoControl extends BaseControl
 
 		$form = new Form;
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer);
+		$form->setRenderer(new Bootstrap3FormRenderer);
 
 		if ($this->canEditInfo) {
 			$form->addServerValidatedText('companyId', 'Company ID')

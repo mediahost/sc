@@ -12,6 +12,7 @@ class BaseGrid extends Grid
 {
 
 	const THEME_METRONIC = 'metronic';
+	const THEME_SUPR = 'supr';
 
 	/** @var string */
 	private $templateFile;

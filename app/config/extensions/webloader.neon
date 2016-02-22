@@ -68,6 +68,10 @@ webloader:
 				- %wwwDir%/assets/js/supr/plugins/ui/waypoint/waypoints.js
 				- %wwwDir%/assets/js/supr/plugins/forms/autosize/jquery.autosize.js
 				- %wwwDir%/assets/js/supr/plugins/forms/bootstrap-datepicker/bootstrap-datepicker.js
+				- %wwwDir%/assets/js/supr/plugins/tables/datatables/jquery.dataTables.js
+				- %wwwDir%/assets/js/supr/plugins/tables/datatables/dataTables.tableTools.js
+				- %wwwDir%/assets/js/supr/plugins/tables/datatables/dataTables.bootstrap.js
+				- %wwwDir%/assets/js/supr/plugins/tables/datatables/dataTables.responsive.js
 				- %wwwDir%/assets/js/supr/jquery.supr.js
 				- %wwwDir%/assets/js/addones/bootstrap-rating.js
 				- %wwwDir%/assets/js/nette.ajax/nette.ajax.min.js
