@@ -21,7 +21,13 @@
 				   href="{plink editUser, $access->user->id, $access->company->id}">
 					{$access->user}
 				</a></td>
-			<td></td>
+			<td>
+				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Companies:view $company->id}"><i class="fa fa-eye"></i> View</a>
+				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Jobs: $company->id}"><i class="fa fa-briefcase"></i> Jobs</a>
+				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Companies:editImages $company->id}"><i class="fa fa-image"></i> Images</a>
+				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Companies:edit $company->id}"><i class="fa fa-edit"></i> Edit</a>
+				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Companies:delete $company->id}"><i class="fa fa-trash-o"></i> Delete</a>
+			</td>
 		</tr>
 	</tbody>
 </table>

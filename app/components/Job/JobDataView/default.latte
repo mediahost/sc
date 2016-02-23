@@ -20,7 +20,11 @@
 			<td>{$job->name}</td>
 			<td>{$job->description}</td>
 			<td>{$job->company->name}</td>
-			<td></td>
+			<td>
+				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Job:view $job->id}"><i class="fa fa-eye"></i> View</a>
+				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Job:edit $job->id}"><i class="fa fa-edit"></i> Edit</a>
+				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Job:delete $job->id}"><i class="fa fa-trash-o"></i> Delete</a>
+			</td>
 		</tr>
 	</tbody>
 </table>
