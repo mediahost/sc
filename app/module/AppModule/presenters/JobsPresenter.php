@@ -58,9 +58,9 @@ class JobsPresenter extends BasePresenter
 	{
 		$company = $this->companyDao->find($id);
 		if ($company) {
-			//$this['jobsGrid']->setCompany($company);
 			$jobs = $this->jobFacade->findByCompany($company);
 			$this['jobsDataView']->setJobs($jobs);
+			$this['jobsDataView']->setCompany($company);
 			$this->template->company = $company;
 		} else {
 			$this->flashMessage('Finded company isn\'t exists.', 'danger');

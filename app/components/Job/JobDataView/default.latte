@@ -2,10 +2,11 @@
  * JobDataView control template
  *
  * @param   ArrayList	$jobs	Job
+ * @param   Company	$company
 *}
 
 <div class="DTTT btn-group">
-	<a href="{plink Job:add}" class="btn btn-default DTTT_button_copy">
+	<a n:if="$company" href="{plink Job:add $company->id}" class="btn btn-default DTTT_button_copy">
 		<span>{_'Add job'}</span>
 	</a>
 	<a class="btn btn-default DTTT_button_copy">
