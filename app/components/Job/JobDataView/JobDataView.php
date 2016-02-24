@@ -6,26 +6,28 @@ namespace App\Components\Job;
  * Description of JobDataView
  *
  */
-class JobDataView extends \App\Components\BaseControl {
-	
-	/** @var \App\Model\Facade\JobFacade */
-	private $jobFacade;
-	
-	
-	/**
-	 * @param \App\Model\Facade\JobFacade $jobFacade
-	 */
-	public function __construct(\App\Model\Facade\JobFacade $jobFacade) {
-		parent::__construct();
-		$this->jobFacade = $jobFacade;
-	}
+class JobDataView extends \App\Components\BaseControl 
+{
+	/** @var type */
+	private $jobs;
 	
 	/**
 	 * @inheritdoc
 	 */
 	public function render() {
-		$this->template->jobs = $this->jobFacade->findAll();
+		$this->template->jobs = $this->jobs;
 		parent::render();
+	}
+	
+	/**
+	 * 
+	 * @param \Doctrine\Common\Collections\ArrayCollection $jobs
+	 * @return \App\Components\Job\JobDataView
+	 */
+	public function setJobs(\Doctrine\Common\Collections\ArrayCollection $jobs) 
+	{
+		$this->jobs = $jobs;
+		return $this;
 	}
 }
 

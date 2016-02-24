@@ -6,6 +6,7 @@ use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
 use App\Model\Repository\CvRepository;
 use Kdyby\Doctrine\EntityManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Object;
 
 class JobFacade extends Object
@@ -16,11 +17,16 @@ class JobFacade extends Object
 
 	/** @var CvRepository */
 	private $cvDao;
+	
+	/** @var JobRepository */
+	private $jobDao;
 
+	
 	public function __construct(EntityManager $em)
 	{
 		$this->em = $em;
 		$this->cvDao = $this->em->getDao(Cv::getClassName());
+		$this->jobDao = $this->em->getDao(Job::getClassName());
 	}
 
 	public function findCvs(Job $job)
@@ -28,9 +34,41 @@ class JobFacade extends Object
 		return $this->cvDao->findBySkillRequests($job->skillRequests->toArray());
 	}
 
+	/**
+	 * @return ArrayCollection
+	 */
 	public function findAll() 
 	{
-		$repo = $this->em->getRepository(Job::getClassName());
-		return $repo->findAll();
+		$jobs = $this->jobDao->findAll();
+		return new ArrayCollection($jobs);
+	}
+	
+	/**
+	 * @param \App\Model\Entity\Company $company
+	 * @return ArrayCollection
+	 */
+	public function findByCompany(\App\Model\Entity\Company $company) 
+	{
+		$jobs = $this->jobDao->findBy(['company.id' => $company->id]);
+		return new ArrayCollection($jobs);
+	}
+	
+	/**
+	 * @param \Nette\Security\User $user
+	 * @return ArrayCollection
+	 */
+	public function findByUser(\Nette\Security\User $user)
+	{
+		$jobs = new ArrayCollection;
+		$alowedCompanies = new ArrayCollection($user->identity->allowedCompanies);
+		$alowedCompanies = $alowedCompanies->filter(function($permission) use($user) {
+			return $permission->user->id == $user->id;
+		});
+		foreach ($alowedCompanies as $permission) {
+			foreach ($permission->company->getJobs() as $job) {
+				$jobs->add($job);
+			}
+		}
+		return $jobs;
 	}
 }

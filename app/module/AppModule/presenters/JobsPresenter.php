@@ -26,6 +26,9 @@ class JobsPresenter extends BasePresenter
 	/** @var IJobDataViewFactory @inject */
 	public $iJobDataViewFactory;
 	
+	/** @var \App\Model\Facade\JobFacade @inject */
+	public $jobFacade;
+	
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
@@ -55,7 +58,9 @@ class JobsPresenter extends BasePresenter
 	{
 		$company = $this->companyDao->find($id);
 		if ($company) {
-			$this['jobsGrid']->setCompany($company);
+			//$this['jobsGrid']->setCompany($company);
+			$jobs = $this->jobFacade->findByCompany($company);
+			$this['jobsDataView']->setJobs($jobs);
 			$this->template->company = $company;
 		} else {
 			$this->flashMessage('Finded company isn\'t exists.', 'danger');
@@ -81,7 +86,12 @@ class JobsPresenter extends BasePresenter
 	 */
 	public function actionShowAll()
 	{
-		
+		if(in_array(\App\Model\Entity\Role::COMPANY, $this->getUser()->getRoles())) {
+			$jobs = $this->jobFacade->findByUser($this->getUser());
+		} else {
+			$jobs = $this->jobFacade->findAll();
+		}
+		$this['jobsDataView']->setJobs($jobs);
 	}
 
 	// </editor-fold>
