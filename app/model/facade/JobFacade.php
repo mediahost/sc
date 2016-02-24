@@ -61,9 +61,6 @@ class JobFacade extends Object
 	{
 		$jobs = new ArrayCollection;
 		$alowedCompanies = new ArrayCollection($user->identity->allowedCompanies);
-		$alowedCompanies = $alowedCompanies->filter(function($permission) use($user) {
-			return $permission->user->id == $user->id;
-		});
 		foreach ($alowedCompanies as $permission) {
 			foreach ($permission->company->getJobs() as $job) {
 				$jobs->add($job);
