@@ -2,42 +2,34 @@
 
 namespace App\Components\Company;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Description of CompanyDataView
  *
  */
 class CompanyDataView extends \App\Components\BaseControl 
 {
-	/** @var \App\Model\Facade\CompanyFacade */
-	private $companyFacade;
+	/** @var ArrayCollection */
+	private $companies;
 	
-	/** @var int */
-	private $userId;
-	
-	
-	/**
-	 * 
-	 * @param \App\Model\Facade\CompanyFacade $companyFacade
-	 */
-	public function __construct(\App\Model\Facade\CompanyFacade $companyFacade) {
-		parent::__construct();
-		$this->companyFacade = $companyFacade;
-	}
 	
 	/**
 	 * @inheritdoc
 	 */
 	public function render() {
-		$this->template->companies = $this->loadData();
+		$this->companies = ($this->companies)  ?  $this->companies  :  new ArrayCollection();
+		$this->template->companies = $this->companies;
 		parent::render();
 	}
 	
-	private function loadData() {
-		if($this->userId) {
-			return $this->companyFacade->findByUser($this->userId);
-		} else {
-			return $this->companyFacade->findAll();
-		}
+	/**
+	 * @param ArrayCollection $companies
+	 * @return \App\Components\Company\CompanyDataView
+	 */
+	public function setCompanies(ArrayCollection $companies) {
+		$this->companies = $companies;
+		return $this;
 	}
 }
 

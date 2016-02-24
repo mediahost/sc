@@ -5,18 +5,32 @@ namespace App\Model\Facade\Traits;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
 use App\Model\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 
 trait CompanyFacadeFinders
 {
 
+	/**
+	 * @return ArrayCollection
+	 */
 	public function findAll() 
 	{
-		return $this->companyDao->findAll();
+		$companies = $this->companyDao->findAll();
+		return new ArrayCollection($companies);
 	}
 	
-	public function findByUser($userIdOrEntity) 
+	/**
+	 * @param \Nette\Security\User $user
+	 * @return ArrayCollection
+	 */
+	public function findByUser(\Nette\Security\User $user) 
 	{
-		return [];
+		$companies = new ArrayCollection();
+		$alowedCompanies = new ArrayCollection($user->identity->allowedCompanies);
+		foreach ($alowedCompanies as $permission) {
+			$companies->add($permission->company);
+		}
+		return $companies;
 	}
 	
 	public function find($companyIdOrEntity)

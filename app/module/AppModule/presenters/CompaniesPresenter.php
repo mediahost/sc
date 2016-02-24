@@ -74,7 +74,12 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$this->template->companies = $this->companyDao->findAll();
+		if(in_array(\App\Model\Entity\Role::COMPANY, $this->getUser()->getRoles())) {
+			$companies = $this->companyFacade->findByUser($this->getUser());
+		} else {
+			$companies = $this->companyFacade->findAll();
+		}
+		$this['companyDataView']->setCompanies($companies);
 	}
 
 	/**
