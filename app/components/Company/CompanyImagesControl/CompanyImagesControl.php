@@ -5,6 +5,7 @@ namespace App\Components\Company;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Company;
 use App\Model\Entity\Image;
 use App\Model\Facade\CompanyFacade;
@@ -36,6 +37,11 @@ class CompanyImagesControl extends BaseControl
 	public $roleFacade;
 
 	// </editor-fold>
+	
+	public function render() {
+		$this->template->company = $this->company;
+		parent::render();
+	}
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -44,11 +50,11 @@ class CompanyImagesControl extends BaseControl
 
 		$form = new Form();
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$form->addUploadImageWithPreview('logo', 'Logo')
-				->setPreview('/foto/200-150/' . ($this->company->logo ? $this->company->logo : Image::DEFAULT_IMAGE), $this->company->name)
-				->setSize(200, 150)
+		$form->addUpload('logo', 'Logo')
+//				->setPreview('/foto/200-150/' . ($this->company->logo ? $this->company->logo : Image::DEFAULT_IMAGE), $this->company->name)
+//				->setSize(200, 150)
 				->addCondition(Form::FILLED)
 				->addRule(Form::IMAGE, 'Logo must be valid image');
 
