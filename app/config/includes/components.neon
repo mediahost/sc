@@ -89,6 +89,10 @@ services:
 		implement: App\Components\Job\IBasicInfoControlFactory
 		inject: yes
 
+	IOffersControlFactory:
+		implement: App\Components\Job\IOffersControlFactory
+		inject: yes
+
 	IJobSkillsControlFactory:
 		implement: App\Components\Job\ISkillsControlFactory
 		inject: yes

@@ -4,6 +4,7 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Job\BasicInfoControl;
 use App\Components\Job\IBasicInfoControlFactory;
+use App\Components\Job\IOffersControlFactory;
 use App\Components\Job\ISkillsControlFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
@@ -34,6 +35,9 @@ class JobPresenter extends BasePresenter
 
 	/** @var IBasicInfoControlFactory @inject */
 	public $iJobBasicInfoControlFactory;
+	
+	/** @var IOffersControlFactory @inject */
+	public $iIOffersControlFactory;
 
 	/** @var ISkillsControlFactory @inject */
 	public $iJobSkillsControlFactory;
@@ -144,8 +148,20 @@ class JobPresenter extends BasePresenter
 		};
 		return $control;
 	}
+	
+	/** @return OffersControl */
+	public function createComponentJobOffersForm()
+	{
+		$control = $this->iIOffersControlFactory->create();
+		$control->onAfterSave = function (Job $job) {
+			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
+			$this->flashMessage($message, 'success');
+			$this->redirect('Jobs:', $job->company->id);
+		};
+		return $control;
+	}
 
-	/** @return BasicInfoControl */
+	/** @return SkillsControl */
 	public function createComponentJobSkillsForm()
 	{
 		$control = $this->iJobSkillsControlFactory->create();
