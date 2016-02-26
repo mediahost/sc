@@ -3,6 +3,7 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\Traits\JobSkillsUsing;
+use App\Model\Entity\Traits\JobTagsUsing;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -16,12 +17,16 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property string $description
  * @property-read ArrayCollection $skillRequests
  * @property-write SkillKnowRequest $skillRequest
+ * @property-read ArrayCollection $tags
+ * @property-write TagJob $tag
  */
 class Job extends BaseEntity
 {
 
 	use Identifier;
 	use JobSkillsUsing;
+	use JobTagsUsing;
+	
 
 	/** @ORM\ManyToOne(targetEntity="Company", inversedBy="jobs") * */
 	protected $company;
