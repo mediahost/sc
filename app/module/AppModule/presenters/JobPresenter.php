@@ -109,6 +109,7 @@ class JobPresenter extends BasePresenter
 		$this->job = $this->jobDao->find($id);
 		if ($this->job) {
 			$this['jobInfoForm']->setJob($this->job);
+			$this['jobOffersForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
 		} else {
 			$this->flashMessage('Finded job isn\'t exists.', 'danger');
