@@ -98,6 +98,36 @@ class InstallerModel extends Object
 		}
 		return TRUE;
 	}
+	
+	/**
+	 * Create job types
+	 * @param array $types
+	 * @return boolean
+	 */
+	public function installJobTypes(array $types)
+	{
+		$rep = $this->em->getRepository(\App\Model\Entity\JobType::getClassName());
+		foreach ($types as $type) {
+			$entityType = new \App\Model\Entity\JobType($type);
+			$rep->save($entityType);
+		}
+		return TRUE;
+	}
+	
+	/**
+	 * Create job categories
+	 * @param array $categories
+	 * @return boolean
+	 */
+	public function installJobCategories(array $categories)
+	{
+		$rep = $this->em->getRepository(\App\Model\Entity\JobCategory::getClassName());
+		foreach ($categories as $category) {
+			$entityCategory = new \App\Model\Entity\JobCategory($category);
+			$rep->save($entityCategory);
+		}
+		return TRUE;
+	}
 
 	/**
 	 * Update database

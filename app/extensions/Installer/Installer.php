@@ -158,6 +158,33 @@ class Installer extends Object
 			5 => 'Expert',
 		];
 	}
+	
+	private function getJobTypes()
+	{
+		return [
+			'Full-Time',
+			'Part-Time',
+			'Contract'
+		];
+	}
+	
+	private function getJobCategories()
+	{
+		return [
+			'Database Admin',
+			'Games Developer',
+			'App Developer',
+			'Programmer',
+			'TOP',
+			'IT Consultant',
+			'IT Project Mngr',
+			'Web Designer',
+			'Mainframe Devel',
+			'Data Science',
+			'Dig. Marketing',
+			'SAP Manager'
+		];
+	}
 
 	// </editor-fold>
 
@@ -225,6 +252,8 @@ class Installer extends Object
 		$this->installUsers($prefix);
 		$this->installCompany($prefix);
 		$this->installSkillLevels($prefix);
+		$this->installJobTypes($prefix);
+		$this->installJobCategories($prefix);
 	}
 
 	private function installDoctrine($lockPrefix = NULL)
@@ -302,6 +331,40 @@ class Installer extends Object
 		$name = $lockPrefix . $this->getLockName(__METHOD__);
 		if ($this->lock($name)) {
 			$this->model->installSkillLevels($this->getSkillLevels());
+			$this->onSuccessInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_SUCCESS];
+		} else {
+			$this->onLockedInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_LOCKED];
+		}
+	}
+	
+	/**
+	 * Install job types
+	 * @param string $lockPrefix
+	 */
+	private function installJobTypes($lockPrefix = NULL)
+	{
+		$name = $lockPrefix . $this->getLockName(__METHOD__);
+		if ($this->lock($name)) {
+			$this->model->installJobTypes($this->getJobTypes());
+			$this->onSuccessInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_SUCCESS];
+		} else {
+			$this->onLockedInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_LOCKED];
+		}
+	}
+	
+	/**
+	 * Install job categories
+	 * @param string $lockPrefix
+	 */
+	private function installJobCategories($lockPrefix = NULL)
+	{
+		$name = $lockPrefix . $this->getLockName(__METHOD__);
+		if ($this->lock($name)) {
+			$this->model->installJobCategories($this->getJobCategories());
 			$this->onSuccessInstall($this, $name);
 			$this->messages[$name] = [self::INSTALL_SUCCESS];
 		} else {

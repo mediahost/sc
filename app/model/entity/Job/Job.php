@@ -15,6 +15,8 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property Company $company
  * @property string $name
  * @property string $description
+ * @property JobType $type
+ * @property JobCategory $category
  * @property-read ArrayCollection $skillRequests
  * @property-write SkillKnowRequest $skillRequest
  * @property-read ArrayCollection $tags
@@ -28,7 +30,7 @@ class Job extends BaseEntity
 	use JobTagsUsing;
 	
 
-	/** @ORM\ManyToOne(targetEntity="Company", inversedBy="jobs") * */
+	/** @ORM\ManyToOne(targetEntity="Company", inversedBy="jobs") */
 	protected $company;
 
 	/** @ORM\Column(type="string", length=512, nullable=false) */
@@ -36,6 +38,14 @@ class Job extends BaseEntity
 
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $description;
+	
+	/** @ORM\OneToOne(targetEntity="JobType") */
+	protected $type;
+	
+	/** @ORM\OneToOne(targetEntity="JobCategory") */
+	protected $category;
+
+	
 
 	public function __construct($name = NULL)
 	{
