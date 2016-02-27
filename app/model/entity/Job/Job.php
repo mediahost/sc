@@ -17,6 +17,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property string $description
  * @property JobType $type
  * @property JobCategory $category
+ * @property Location $location 
  * @property-read ArrayCollection $skillRequests
  * @property-write SkillKnowRequest $skillRequest
  * @property-read ArrayCollection $tags
@@ -44,6 +45,9 @@ class Job extends BaseEntity
 	
 	/** @ORM\OneToOne(targetEntity="JobCategory") */
 	protected $category;
+	
+	/** @ORM\OneToOne(targetEntity="Location") */
+	protected $location;
 
 	
 
