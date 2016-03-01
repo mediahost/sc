@@ -44,6 +44,7 @@
 			<div class="tab-content">
 				<div class="tab-pane active" id="editInfo">
 					{control jobInfoForm}
+					{control mapView}
 				</div>
 				<div class="tab-pane" id="editOffers">
 					{control jobOffersForm}
@@ -56,3 +57,13 @@
 	</div>
 </div>
 </div>
+{/block content}
+
+
+{block jsPage}
+<script>
+	$(document).ready(function() {
+		$('#mapView').mapView();
+	});
+</script>
+{/block jsPage}

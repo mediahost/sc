@@ -46,7 +46,7 @@ class Job extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="JobCategory") */
 	protected $category;
 	
-	/** @ORM\OneToOne(targetEntity="Location") */
+	/** @ORM\OneToOne(targetEntity="Location", cascade="all") */
 	protected $location;
 
 	
