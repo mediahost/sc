@@ -25,6 +25,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property-write SkillKnowRequest $skillRequest
  * @property-read ArrayCollection $tags
  * @property-write TagJob $tag
+ * @property string $questions
  */
 class Job extends BaseEntity
 {
@@ -60,6 +61,9 @@ class Job extends BaseEntity
 	
 	/** @ORM\OneToOne(targetEntity="Location", cascade="all") */
 	protected $location;
+	
+	/** @ORM\Column(type="text", nullable=true) */
+	protected $questions;
 
 	
 

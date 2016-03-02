@@ -41,6 +41,9 @@
 				<li>
 					<a href="#editSkills" data-toggle="tab">{_'Skills'}</a>
 				</li>
+				<li>
+					<a href="#editQuestins" data-toggle="tab">{_'Pre-Screening Questions'}</a>
+				</li>
 			</ul>
 		</div>
 		<div class="portlet-body form">
@@ -57,6 +60,9 @@
 				</div>
 				<div n:if="!$job->isNew()" class="tab-pane" id="editSkills">
 					{control jobSkillsForm}
+				</div>
+				<div class="tab-pane" id="editQuestins">
+					{control jobQuestionsForm}
 				</div>
 			</div>
 		</div>

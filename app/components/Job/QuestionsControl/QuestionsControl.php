@@ -9,11 +9,13 @@ use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Job;
 
 /**
- * Description of DescriptionsControl
+ * Description of QuestionsControl
  *
  */
-class DescriptionsControl extends BaseControl
+class QuestionsControl extends BaseControl
 {
+	const SEPARATOR = '|';
+	
 	/** @var Job */
 	private $job;
 	
@@ -29,13 +31,12 @@ class DescriptionsControl extends BaseControl
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer);
-
-		$form->addTextArea('description', 'Description')
-			->setAttribute('placeholder', 'Job description')
-			->setAttribute('class', 'editor');
-		$form->addTextArea('summary', 'Summary')
-			->setAttribute('placeholder', 'Job summary')
-			->setAttribute('class', 'editor');
+		
+		$form->addText('question1', 'Question 1');
+		$form->addText('question2', 'Question 2');
+		$form->addText('question3', 'Question 3');
+		$form->addText('question4', 'Question 4');
+		$form->addText('question5', 'Question 5');
 		
 		$form->addSubmit('save', 'Save');
 
@@ -53,8 +54,8 @@ class DescriptionsControl extends BaseControl
 	
 	protected function load(ArrayHash $values)
 	{
-		$this->job->description = $values->description;
-		$this->job->summary = $values->summary;
+		$questions = implode(self::SEPARATOR, (array)$values);
+		$this->job->questions = $questions;
 		return $this;
 	}
 	
@@ -68,9 +69,13 @@ class DescriptionsControl extends BaseControl
 	/** @return array */
 	protected function getDefaults()
 	{
+		$questions = explode(self::SEPARATOR, $this->job->questions);
 		$values = [
-			'description' => $this->job->description,
-			'summary' => $this->job->summary,
+			'question1' => isset($questions[0])  ?  $questions[0] : '',
+			'question2' => isset($questions[1])  ?  $questions[1] : '',
+			'question3' => isset($questions[2])  ?  $questions[2] : '',
+			'question4' => isset($questions[3])  ?  $questions[3] : '',
+			'question5' => isset($questions[4])  ?  $questions[4] : '',
 		];
 		return $values;
 	}
@@ -90,8 +95,9 @@ class DescriptionsControl extends BaseControl
 }
 
 
-Interface IDescriptionsControlFactory
+
+Interface IQuestionsControlFactory
 {
-	/** @return DescriptionsControl */
+	/** @return QuestionsControl */
 	function create();
 }

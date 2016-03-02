@@ -101,6 +101,10 @@ services:
 		implement: App\Components\Job\ISkillsControlFactory
 		inject: yes
 
+	IQuestionsControlFactory:
+		implement: App\Components\Job\IQuestionsControlFactory
+		inject: yes
+
 	IJobDataViewFactory:
 		implement: App\Components\Job\IJobDataViewFactory
 		inject: yes

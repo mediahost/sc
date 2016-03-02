@@ -8,6 +8,7 @@ use App\Components\IMapViewFactory;
 use App\Components\Job\IOffersControlFactory;
 use App\Components\Job\IDescriptionsControlFactory;
 use App\Components\Job\ISkillsControlFactory;
+use App\Components\Job\IQuestionsControlFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use App\Model\Facade\JobFacade;
@@ -49,6 +50,9 @@ class JobPresenter extends BasePresenter
 
 	/** @var ISkillsControlFactory @inject */
 	public $iJobSkillsControlFactory;
+	
+	/** @var IQuestionsControlFactory @inject */
+	public $iQuestionsControlFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -120,6 +124,7 @@ class JobPresenter extends BasePresenter
 			$this['jobOffersForm']->setJob($this->job);
 			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
+			$this['jobQuestionsForm']->setJob($this->job);
 			$this['mapView']->setJob($this->job);
 		} else {
 			$this->flashMessage('Finded job isn\'t exists.', 'danger');
@@ -194,6 +199,18 @@ class JobPresenter extends BasePresenter
 	public function createComponentJobSkillsForm()
 	{
 		$control = $this->iJobSkillsControlFactory->create();
+		$control->onAfterSave = function (Job $job) {
+			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
+			$this->flashMessage($message, 'success');
+			$this->redirect('Jobs:', $job->company->id);
+		};
+		return $control;
+	}
+	
+	/** @return QuestionsControl */
+	public function createComponentJobQuestionsForm()
+	{
+		$control = $this->iQuestionsControlFactory->create();
 		$control->onAfterSave = function (Job $job) {
 			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
 			$this->flashMessage($message, 'success');
