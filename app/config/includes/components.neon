@@ -93,6 +93,10 @@ services:
 		implement: App\Components\Job\IOffersControlFactory
 		inject: yes
 
+	IDescriptionsControlFactory:
+		implement: App\Components\Job\IDescriptionsControlFactory
+		inject: yes
+
 	IJobSkillsControlFactory:
 		implement: App\Components\Job\ISkillsControlFactory
 		inject: yes

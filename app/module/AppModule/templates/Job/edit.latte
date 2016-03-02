@@ -36,6 +36,9 @@
 					<a href="#editOffers" data-toggle="tab">{_'Offers & Requirments'}</a>
 				</li>
 				<li>
+					<a href="#editDescriptions" data-toggle="tab">{_'Descriptions'}</a>
+				</li>
+				<li>
 					<a href="#editSkills" data-toggle="tab">{_'Skills'}</a>
 				</li>
 			</ul>
@@ -48,6 +51,9 @@
 				</div>
 				<div class="tab-pane" id="editOffers">
 					{control jobOffersForm}
+				</div>
+				<div class="tab-pane" id="editDescriptions">
+					{control jobDescriptionsForm}
 				</div>
 				<div n:if="!$job->isNew()" class="tab-pane" id="editSkills">
 					{control jobSkillsForm}
@@ -64,6 +70,10 @@
 <script>
 	$(document).ready(function() {
 		$('#mapView').mapView();
+		
+		$('.editor').summernote({
+			height: 200
+		});
 	});
 </script>
 {/block jsPage}

@@ -4,40 +4,22 @@ namespace App\Components\Job;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Job;
-use App\Model\Facade\CompanyFacade;
-use App\Model\Facade\JobFacade;
-use Nette\Utils\ArrayHash;
 
 /**
- * Job info form
+ * Description of DescriptionsControl
+ *
  */
-class BasicInfoControl extends BaseControl
+class DescriptionsControl extends BaseControl
 {
-
 	/** @var Job */
 	private $job;
-
-	// <editor-fold desc="events">
-
+	
 	/** @var array */
 	public $onAfterSave = [];
-
-	// </editor-fold>
-	// <editor-fold desc="injects">
-
-	/** @var CompanyFacade @inject */
-	public $companyFacade;
 	
-	/** @var JobFacade @inject */
-	public $jobFacade;
-
-	// </editor-fold>
-	// <editor-fold desc="variables">
-	// </editor-fold>
-
+	
 	/** @return Form */
 	protected function createComponentForm()
 	{
@@ -47,72 +29,68 @@ class BasicInfoControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer);
 
-		$form->addText('name', 'Name')
-				->setAttribute('placeholder', 'Job title')
-				->setRequired('Please enter job\'s name.');
-		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes());
-		$form->addSelect('category', 'Category', $this->jobFacade->getJobCategories());
+		$form->addTextArea('description', 'Description')
+			->setAttribute('placeholder', 'Job description')
+			->setAttribute('class', 'editor');
+		$form->addTextArea('summary', 'Summary')
+			->setAttribute('placeholder', 'Job summary')
+			->setAttribute('class', 'editor');
 		
-
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
-
+	
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
 		$this->save();
 		$this->onAfterSave($this->job);
 	}
-
+	
 	protected function load(ArrayHash $values)
 	{
-		$this->job->name = $values->name;
 		$this->job->description = $values->description;
+		$this->job->summary = $values->summary;
 		return $this;
 	}
-
+	
 	private function save()
 	{
 		$cvRepo = $this->em->getRepository(Job::getClassName());
 		$cvRepo->save($this->job);
 		return $this;
 	}
-
+	
 	/** @return array */
 	protected function getDefaults()
 	{
 		$values = [
-			'name' => $this->job->name,
 			'description' => $this->job->description,
+			'summary' => $this->job->summary,
 		];
 		return $values;
 	}
-
+	
 	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->job) {
 			throw new JobControlException('Use setJob(\App\Model\Entity\Job) before render');
 		}
 	}
-
-	// <editor-fold desc="setters & getters">
-
+	
 	public function setJob(Job $job)
 	{
 		$this->job = $job;
 		return $this;
 	}
-
-	// </editor-fold>
 }
 
-interface IBasicInfoControlFactory
-{
 
-	/** @return BasicInfoControl */
+Interface IDescriptionsControlFactory
+{
+	/** @return DescriptionsControl */
 	function create();
 }

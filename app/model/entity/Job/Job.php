@@ -14,7 +14,10 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  *
  * @property Company $company
  * @property string $name
+ * @property integer $salaryFrom
+ * @property integer $salaryTo
  * @property string $description
+ * @property string $summary
  * @property JobType $type
  * @property JobCategory $category
  * @property Location $location 
@@ -36,9 +39,18 @@ class Job extends BaseEntity
 
 	/** @ORM\Column(type="string", length=512, nullable=false) */
 	protected $name;
+	
+	/** @ORM\Column(type="integer", nullable=true) */
+	protected $salaryFrom;
+
+	/** @ORM\Column(type="integer", nullable=true) */
+	protected $salaryTo;
 
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $description;
+	
+	/** @ORM\Column(type="text", nullable=true) */
+	protected $summary;
 	
 	/** @ORM\OneToOne(targetEntity="JobType") */
 	protected $type;
