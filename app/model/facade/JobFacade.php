@@ -69,6 +69,18 @@ class JobFacade extends Object
 		return $jobs;
 	}
 	
+	public function findJobType($idType) 
+	{
+		$typeRepo = $this->em->getDao(\App\Model\Entity\JobType::getClassName());
+		return $typeRepo->find($idType);
+	}
+	
+	public function findJobCategory($idCategory)
+	{
+		$categoryRepo = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
+		return $categoryRepo->find($idCategory);
+	}
+	
 	public function getJobTypes()
 	{
 		$typeRepo = $this->em->getDao(\App\Model\Entity\JobType::getClassName());

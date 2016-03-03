@@ -16,6 +16,9 @@ use Nette\Utils\ArrayHash;
  */
 class BasicInfoControl extends BaseControl
 {
+	const SALARY_FROM = 0;
+	const SALARY_TO = 10000;
+	const SALARY_STEP = 10;
 
 	/** @var Job */
 	private $job;
@@ -41,6 +44,7 @@ class BasicInfoControl extends BaseControl
 	/** @return Form */
 	protected function createComponentForm()
 	{
+		$defaultValues = $this->getDefaults();
 		$this->checkEntityExistsBeforeRender();
 
 		$form = new Form;
@@ -52,11 +56,16 @@ class BasicInfoControl extends BaseControl
 				->setRequired('Please enter job\'s name.');
 		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes());
 		$form->addSelect('category', 'Category', $this->jobFacade->getJobCategories());
-		
+		$form->addText('salary', 'Salary')
+			->setAttribute('class', 'slider')
+			->setAttribute('data-slider-min', self::SALARY_FROM)
+			->setAttribute('data-slider-max', self::SALARY_TO)
+			->setAttribute('data-slider-step', self::SALARY_STEP)
+			->setAttribute('data-slider-value', $defaultValues['salary']);
 
 		$form->addSubmit('save', 'Save');
 
-		$form->setDefaults($this->getDefaults());
+		$form->setDefaults($defaultValues);
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
@@ -70,8 +79,12 @@ class BasicInfoControl extends BaseControl
 
 	protected function load(ArrayHash $values)
 	{
+		sscanf($values['salary'], '%d,%d', $salaryFrom, $salaryTo);
 		$this->job->name = $values->name;
-		$this->job->description = $values->description;
+		$this->job->type = $this->jobFacade->findJobType($values->type);
+		$this->job->category = $this->jobFacade->findJobCategory($values->category);
+		$this->job->salaryFrom = $salaryFrom;
+		$this->job->salaryTo = $salaryTo;
 		return $this;
 	}
 
@@ -85,9 +98,14 @@ class BasicInfoControl extends BaseControl
 	/** @return array */
 	protected function getDefaults()
 	{
+		$salaryFrom = isset($this->job->salaryFrom)  ?  $this->job->salaryFrom : self::SALARY_FROM;
+		$salaryTo = isset($this->job->salaryTo)  ?  $this->job->salaryTo : self::SALARY_TO;
+		$salary = sprintf('[%d,%d]', $salaryFrom, $salaryTo);
 		$values = [
 			'name' => $this->job->name,
-			'description' => $this->job->description,
+			'type' => $this->job->type  ?  $this->job->type->id : NULL,
+			'category' => $this->job->category  ?  $this->job->category->id : NULL,
+			'salary' => $salary,
 		];
 		return $values;
 	}
