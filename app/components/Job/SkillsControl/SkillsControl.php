@@ -20,6 +20,12 @@ use Nette\Utils\ArrayHash;
  */
 class SkillsControl extends BaseControl
 {
+	const SKILL_MIN = 1;
+	const SKILL_MAX = 5;
+	const SKILL_STEP = 1;
+	const YEARS_MIN = 0;
+	const YEARS_MAX = 50;
+	const YEARS_STEP = 1;
 
 	/** @var Job */
 	private $job;
@@ -49,40 +55,47 @@ class SkillsControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
 
+		$defaultValues = $this->getDefaults();
 		$skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairsName();
-		$skillLevelsFirstKey = each($skillLevels)['key'];
-		$skillLevelsSecondKey = each($skillLevels)['key'];
 		$ranges = $form->addContainer('skillRange');
-		$yearsMin = $form->addContainer('skillMinYear');
-		$yearsMax = $form->addContainer('skillMaxYear');
-
+		$yearRange = $form->addContainer('yearRange');
+		reset($skillLevels); $levelFromId = key($skillLevels);
+		end($skillLevels); $levelToId = key($skillLevels);
+		
 		foreach ($skills as $skill) {
-			$ranges->addRangeSlider($skill->id, $skill->name, $skillLevels)
-					->setColor('danger')
-					->setPips()
-					->setDefaultValue([$skillLevelsFirstKey])
-					->setEmptyValue($skillLevelsFirstKey, $skillLevelsSecondKey);
-			$yearsMinItem = $yearsMin->addTouchSpin($skill->id, $skill->name)
-					->setMin(0)->setMax(100)
-					->setSize(TouchSpin::SIZE_S)
-					->setDefaultValue(NULL);
-			$yearsMaxItem = $yearsMax->addTouchSpin($skill->id, $skill->name)
-					->setMin(0)->setMax(100)
-					->setSize(TouchSpin::SIZE_S)
-					->setDefaultValue(NULL);
-
-			$yearsMinItem->setAttribute('data-connected-id', $skill->id)
-					->getControlPrototype()
-					->class('connectedNumber min', TRUE);
-			$yearsMaxItem->setAttribute('data-connected-id', $skill->id)
-					->getControlPrototype()
-					->class('connectedNumber max', TRUE);
+			if(isset($defaultValues['skillRange'][$skill->id])) {
+				$from = $defaultValues['skillRange'][$skill->id][0];
+				$to = $defaultValues['skillRange'][$skill->id][1];
+				$skil_range = sprintf('[%d,%d]', $from, $to);
+			} else {
+				$skil_range = sprintf('[%d,%d]', $levelFromId, $levelToId);
+			}
+			
+			$ranges->addText($skill->id, $skill->name)
+				->setAttribute('class', 'slider')
+				->setAttribute('data-slider-min', $levelFromId)
+				->setAttribute('data-slider-max', $levelToId)
+				->setAttribute('data-slider-step', self::SKILL_STEP)
+				->setAttribute('data-slider-value', $skil_range)
+				->setAttribute('data-slider-id', 'slider-primary');
+			
+			$minYear = isset($defaultValues['skillMinYear'][$skill->id]) ?
+				$defaultValues['skillMinYear'][$skill->id] : self::YEARS_MIN;
+			$maxYear = isset($defaultValues['skillMaxYear'][$skill->id]) ?
+				$defaultValues['skillMaxYear'][$skill->id] : self::YEARS_MAX;
+			$year_range = sprintf('[%d,%d]', $minYear, $maxYear);
+			
+			$yearRange->addText($skill->id, $skill->name)
+				->setAttribute('class', 'slider')
+				->setAttribute('data-slider-min', self::YEARS_MIN)
+				->setAttribute('data-slider-max', self::YEARS_MAX)
+				->setAttribute('data-slider-step', self::YEARS_STEP)
+				->setAttribute('data-slider-value', $year_range)
+				->setAttribute('data-slider-id', 'slider-primary');
 		}
 
 		$form->addSubmit('save', 'Save');
-
-		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
@@ -111,11 +124,11 @@ class SkillsControl extends BaseControl
 			$newSkillRequest->job = $this->job;
 
 			if (isset($values->skillRange->{$skill->id})) {
-				$levelFromId = reset($values->skillRange->{$skill->id});
-				$levelToId = end($values->skillRange->{$skill->id});
+				sscanf($values->skillRange->{$skill->id}, '%d,%d', $levelFromId, $levelToId);
 				$newSkillRequest->setLevels($skilLevelDao->find($levelFromId), $skilLevelDao->find($levelToId));
 			}
-			$newSkillRequest->setYears($values->skillMinYear->{$skill->id}, $values->skillMaxYear->{$skill->id});
+			sscanf($values->yearRange->{$skill->id}, '%d,%d', $yearMin, $yearMax);
+			$newSkillRequest->setYears($yearMin, $yearMax);
 
 			$this->job->skillRequest = $newSkillRequest;
 		}

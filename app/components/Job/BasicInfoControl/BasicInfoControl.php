@@ -61,7 +61,8 @@ class BasicInfoControl extends BaseControl
 			->setAttribute('data-slider-min', self::SALARY_FROM)
 			->setAttribute('data-slider-max', self::SALARY_TO)
 			->setAttribute('data-slider-step', self::SALARY_STEP)
-			->setAttribute('data-slider-value', $defaultValues['salary']);
+			->setAttribute('data-slider-value', $defaultValues['salary'])
+			->setAttribute('data-slider-id', 'slider-primary');
 
 		$form->addSubmit('save', 'Save');
 

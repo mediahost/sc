@@ -24,14 +24,13 @@
 							<thead>
 								<tr>
 									<th>{$child}</th>
-									<th style="width: 45%;">{_'Level Range'}</th>
-									<th style="width: 15%;">{_'Minimum Years'}</th>
-									<th style="width: 15%;">{_'Maximum Years'}</th>
+									<th style="width: 30%;">{_'Level Range'}</th>
+									<th style="width: 30%;">{_'Years Range'}</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr n:foreach="$child->skills as $skill" 
-									n:ifset="$form['skillRange'][$skill->id], $form['skillMinYear'][$skill->id]">
+									n:ifset="$form['skillRange'][$skill->id], $form['yearRange'][$skill->id]">
 									<td>
 										{label $form['skillRange'][$skill->id]/}
 									</td>
@@ -39,10 +38,7 @@
 										{input $form['skillRange'][$skill->id]}
 									</td>
 									<td>
-										{input $form['skillMinYear'][$skill->id]}
-									</td>
-									<td>
-										{input $form['skillMaxYear'][$skill->id]}
+										{input $form['yearRange'][$skill->id]}
 									</td>
 								</tr>
 							</tbody>
