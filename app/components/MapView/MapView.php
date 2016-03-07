@@ -2,123 +2,74 @@
 
 namespace App\Components;
 
-use App\Components\BaseControl;
+use Nette\Utils\Html;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
+use App\Model\Entity\Location;
 
 /**
  * MapView component
  *
  */
-class MapView extends BaseControl 
+class MapView extends \Nette\Forms\Controls\BaseControl 
 {
-	/** @var Job */
-	private $job;
-	
-	/** @var array */
-	public $onAfterSave = [];
+	/** @var Location */
+	private $location;
 	
 	
-	/**
-	 * Renders control
-	 */
-	public function render() {
-		
-		$this->template->render(__DIR__ . '/MapView.latte');
+	public function __construct($caption = NULL) {
+		parent::__construct($caption);
 	}
 	
-	public function createComponentForm() {
-		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form;
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer);
-		
-		$form->addText('googleSearch');
-		$form->addHidden('placeId');
-		$form->addHidden('placeName');
-		$form->addHidden('placeType');
-		$form->addHidden('placeIcon');
-		$form->addHidden('lat');
-		$form->addHidden('lng');
-		$form->addHidden('placeLocation');
-		$form->addHidden('placeViewPort');
-		
-		
-		$form->addSubmit('save', 'Save');
-		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
-		return $form;
-	}
-	
-	public function formSucceeded(Form $form, $values)
+	public function setValue($value) 
 	{
-		$this->load($values);
-		$this->save();
-		$this->onAfterSave($this->job);
-	}
-	
-	protected function load(\Nette\Utils\ArrayHash $values)
-	{
-		if(!$this->job->location) {
-			$this->job->location = new \App\Model\Entity\Location();
+		if($value == NULL) {
+			$value = new Location;
 		}
-		$this->job->location->placeId = $values->placeId;
-		$this->job->location->placeName = $values->placeName;
-		$this->job->location->placeType = $values->placeType;
-		$this->job->location->placeIcon = $values->placeIcon;
-		$this->job->location->placeLocation = $values->placeLocation;
-		//$this->job->location->placeViewPort = $values->placeViewPort;
-		return $this;
+		$this->location = $value;
 	}
 	
-	private function save()
+	public function getValue()
 	{
-		$cvRepo = $this->em->getRepository(\App\Model\Entity\Job::getClassName());
-		$cvRepo->save($this->job);
-		return $this;
+		return $this->location;
 	}
 	
-	/** @return array */
-	protected function getDefaults()
+	public function getControl()
 	{
-		if(!$this->job->location) {
-			return [];
-		}
-		$values = [
-			'placeId' => $this->job->location->placeId,
-			'placeName' => $this->job->location->placeName,
-			'placeType' => $this->job->location->placeType,
-			'placeIcon' => $this->job->location->placeIcon,
-			'lat' => $this->job->location->lat,
-			'lng' => $this->job->location->lng,
-			'placeLocation' => $this->job->location->placeLocation,
-			//'placeViewPort' => $this->location->placeViewPort
-		];
-		return $values;
+		$name = $this->getHtmlName();
+		$block = Html::el('div');
+		$block->add($this->getInput())
+			->add($this->getMapDiv())
+			->add(Html::el('input type="hidden"')->name($name.'[placeId]')->value($this->location->placeId))
+			->add(Html::el('input type="hidden"')->name($name.'[placeName]')->value($this->location->placeName))
+			->add(Html::el('input type="hidden"')->name($name.'[placeType]')->value($this->location->placeType))
+			->add(Html::el('input type="hidden"')->name($name.'[placeIcon]')->value($this->location->placeIcon))
+			->add(Html::el('input type="hidden"')->name($name.'[lat]')->value($this->location->lat))
+			->add(Html::el('input type="hidden"')->name($name.'[lng]')->value($this->location->lng))
+			->add(Html::el('input type="hidden"')->name($name.'[placeLocation]')->value($this->location->placeLocation))
+			->add(Html::el('input type="hidden"')->name($name.'[placeViewport]')->value($this->location->placeViewport));
+		return $block;
 	}
 	
-	private function checkEntityExistsBeforeRender()
+	private function getInput()
 	{
-		if (!$this->job) {
-			throw new JobControlException('Use setJob(\App\Model\Entity\Job) before render');
-		}
+		$input = Html::el('input class="form-control googleSearch"')->name($this->getHtmlName().'[googleSearch]')
+			->value($this->location->placeName);
+		return $input;
 	}
 	
-	public function setJob(\App\Model\Entity\Job $job)
+	private function getMapDiv()
 	{
-		$this->job = $job;
-		return $this;
+		$div = Html::el('div')->id('mapView')->class('mapView');
+		return $div;
 	}
-}
-
-//==============================================================================
-/**
- * Description of IMapViewFactory
- *
- */
-interface IMapViewFactory {
 	
-	/** @return \App\Components\MapView */
-	public function create();
+	public function loadHttpData() 
+	{
+		$this->location->placeId = $this->getHttpData(Form::DATA_LINE, '[placeId]');
+		$this->location->placeName = $this->getHttpData(Form::DATA_LINE, '[placeName]');
+		$this->location->placeType = $this->getHttpData(Form::DATA_LINE, '[placeType]');
+		$this->location->placeIcon = $this->getHttpData(Form::DATA_LINE, '[placeIcon]');
+		$this->location->placeLocation = $this->getHttpData(Form::DATA_LINE, '[placeLocation]');
+		$this->location->placeViewport = $this->getHttpData(Form::DATA_LINE, '[placeViewport]');
+	}
 }

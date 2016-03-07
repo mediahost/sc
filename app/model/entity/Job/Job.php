@@ -53,13 +53,13 @@ class Job extends BaseEntity
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $summary;
 	
-	/** @ORM\OneToOne(targetEntity="JobType") */
+	/** @ORM\ManyToOne(targetEntity="JobType") */
 	protected $type;
 	
-	/** @ORM\OneToOne(targetEntity="JobCategory") */
+	/** @ORM\ManyToOne(targetEntity="JobCategory") */
 	protected $category;
 	
-	/** @ORM\OneToOne(targetEntity="Location", cascade="all") */
+	/** @ORM\ManyToOne(targetEntity="Location", cascade="all") */
 	protected $location;
 	
 	/** @ORM\Column(type="text", nullable=true) */

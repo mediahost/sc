@@ -13,6 +13,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property string $placeName
  * @property string $placeIcon
  * @property-read string $placeLocation
+ * @property string $placeViewport
  * @property float $lat
  * @property float $lng
  */
@@ -39,6 +40,9 @@ class Location extends BaseEntity
 	
 	/** @ORM\Column(type="string", length=64, nullable=false) */
 	protected $placeLocation;
+	
+	/** @ORM\Column(type="string", length=64, nullable=false) */
+	protected $placeViewport;
 	
 	/** @ORM\Column(type="float", nullable=false) */
 	protected $lat;

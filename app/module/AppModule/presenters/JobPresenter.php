@@ -4,7 +4,6 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Job\BasicInfoControl;
 use App\Components\Job\IBasicInfoControlFactory;
-use App\Components\IMapViewFactory;
 use App\Components\Job\IOffersControlFactory;
 use App\Components\Job\IDescriptionsControlFactory;
 use App\Components\Job\ISkillsControlFactory;
@@ -38,9 +37,6 @@ class JobPresenter extends BasePresenter
 
 	/** @var IBasicInfoControlFactory @inject */
 	public $iJobBasicInfoControlFactory;
-	
-	/** @var IMapViewFactory @inject */
-	public $iMapViewFactory;
 	
 	/** @var IOffersControlFactory @inject */
 	public $iIOffersControlFactory;
@@ -125,7 +121,6 @@ class JobPresenter extends BasePresenter
 			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
-			$this['mapView']->setJob($this->job);
 		} else {
 			$this->flashMessage('Finded job isn\'t exists.', 'danger');
 			$this->redirect('Dashboard:');
@@ -162,12 +157,6 @@ class JobPresenter extends BasePresenter
 			$this->flashMessage($message, 'success');
 			$this->redirect('Jobs:', $job->company->id);
 		};
-		return $control;
-	}
-	
-	public function createComponentMapView()
-	{
-		$control = $this->iMapViewFactory->create();
 		return $control;
 	}
 	

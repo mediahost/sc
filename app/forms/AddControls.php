@@ -212,6 +212,11 @@ trait AddControls
 	{
 		return $this[$name] = new UploadImageWithPreview($label, $multiple);
 	}
+	
+	public function addMapView($name, $label = NULL)
+	{
+		return $this[$name] = new \App\Components\MapView($label);
+	}
 
 	// </editor-fold>
 }

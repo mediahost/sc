@@ -9,18 +9,18 @@
 
 		var map;
 		var mapDiv = $('#mapView')[0];
-		var input = $('[name="googleSearch"]')[0];
+		var input = $('.googleSearch')[0];
 		var form = input.closest('form');
 		var options = {
 			types: ['(regions)']
 		};
 		var setFormValues = function (place) {
-			form.placeId.value = place.id;
-			form.placeName.value = place.formatted_address;
-			form.placeType.value = place.types[0];
-			form.placeIcon.value = place.icon;
-			form.placeLocation.value = place.geometry.location;
-			form.placeViewPort.value = place.geometry.viewport;
+			form['location[placeId]'].value = place.id;
+			form['location[placeName]'].value = place.formatted_address;
+			form['location[placeType]'].value = place.types[0];
+			form['location[placeIcon]'].value = place.icon;
+			form['location[placeLocation]'].value = place.geometry.location;
+			form['location[placeViewport]'].value = place.geometry.viewport;
 		}
 
 		Global.initMap = function () {
@@ -28,11 +28,10 @@
 				zoom: 8,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			});
-
-			if (form.placeId.value !== '') {
+			if (form['location[placeId]'].value !== '') {
 				map.setCenter({
-					lat: parseFloat(form.lat.value),
-					lng: parseFloat(form.lng.value)
+					lat: parseFloat(form['location[lat]'].value),
+					lng: parseFloat(form['location[lng]'].value)
 				});
 			}
 

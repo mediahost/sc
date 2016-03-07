@@ -237,8 +237,3 @@ services:
 	IStartCommunicationModalFactory:
 		implement: App\Components\IStartCommunicationModalFactory
 		inject: yes
-
-	# MapView
-	IMapViewFactory:
-		implement: App\Components\IMapViewFactory
-		inject: yes

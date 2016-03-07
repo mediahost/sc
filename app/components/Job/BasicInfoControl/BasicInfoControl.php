@@ -63,6 +63,7 @@ class BasicInfoControl extends BaseControl
 			->setAttribute('data-slider-step', self::SALARY_STEP)
 			->setAttribute('data-slider-value', $defaultValues['salary'])
 			->setAttribute('data-slider-id', 'slider-primary');
+		$form->addMapView('location', 'Location')->setRequired('Select location!');
 
 		$form->addSubmit('save', 'Save');
 
@@ -73,12 +74,12 @@ class BasicInfoControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		$this->load($values);
+		$this->load($values, $form);
 		$this->save();
 		$this->onAfterSave($this->job);
 	}
 
-	protected function load(ArrayHash $values)
+	protected function load(ArrayHash $values, Form $form)
 	{
 		sscanf($values['salary'], '%d,%d', $salaryFrom, $salaryTo);
 		$this->job->name = $values->name;
@@ -86,6 +87,7 @@ class BasicInfoControl extends BaseControl
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
 		$this->job->salaryFrom = $salaryFrom;
 		$this->job->salaryTo = $salaryTo;
+		$this->job->location = $form['location']->getValue();
 		return $this;
 	}
 
@@ -107,6 +109,7 @@ class BasicInfoControl extends BaseControl
 			'type' => $this->job->type  ?  $this->job->type->id : NULL,
 			'category' => $this->job->category  ?  $this->job->category->id : NULL,
 			'salary' => $salary,
+			'location' => $this->job->location
 		];
 		return $values;
 	}
