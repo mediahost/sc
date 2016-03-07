@@ -99,7 +99,10 @@ class JobPresenter extends BasePresenter
 			$this->job = new Job;
 			$this->job->company = $company;
 			$this['jobInfoForm']->setJob($this->job);
+			$this['jobOffersForm']->setJob($this->job);
+			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
+			$this['jobQuestionsForm']->setJob($this->job);
 		} else {
 			$this->flashMessage('Finded company isn\'t exists.', 'danger');
 			$this->redirect('Dashboard:');

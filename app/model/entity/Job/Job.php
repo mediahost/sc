@@ -73,6 +73,7 @@ class Job extends BaseEntity
 			$this->name = $name;
 		}
 		$this->skillRequests = new ArrayCollection;
+		$this->tags = new ArrayCollection;
 		parent::__construct();
 	}
 
