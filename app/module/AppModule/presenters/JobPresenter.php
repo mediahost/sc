@@ -139,8 +139,8 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$this->flashMessage('Not implemented yet.', 'warning');
-		$this->redirect('default');
+		$this->jobFacade->delete($id);
+		$this->redirect('Jobs:showAll');
 	}
 
 	// </editor-fold>

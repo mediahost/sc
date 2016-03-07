@@ -130,6 +130,7 @@ class CompanyFacade extends Object
 	public function delete(Company $company)
 	{
 		$this->clearPermissions($company);
+		$this->clearJobs($company);
 		$this->em->remove($company);
 		$this->em->flush();
 		return $company;
@@ -144,4 +145,12 @@ class CompanyFacade extends Object
 		return TRUE;
 	}
 
+	public function clearJobs(Company $company) 
+	{
+		foreach ($company->jobs as $job) {
+			$this->em->remove($job);
+		}
+		$this->em->flush();
+		return true;
+	}
 }

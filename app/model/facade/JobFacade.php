@@ -92,4 +92,10 @@ class JobFacade extends Object
 		$categoryRepo = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
 		return $categoryRepo->findPairs('name');
 	}
+	
+	public function delete($id)
+	{
+		$job = $this->jobDao->find($id);
+		$this->jobDao->delete($job);
+	}
 }
