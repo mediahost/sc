@@ -75,10 +75,30 @@ class JobFacade extends Object
 		return $typeRepo->find($idType);
 	}
 	
+	public function findOrCreateJobType($type) 
+	{
+		$typeRepo = $this->em->getDao(\App\Model\Entity\JobType::getClassName());
+		$entity = $typeRepo->findOneBy(['name' => $type]);
+		if(!$entity) {
+			$entity = new \App\Model\Entity\JobType();
+		}
+		return $entity;
+	}
+	
 	public function findJobCategory($idCategory)
 	{
 		$categoryRepo = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
 		return $categoryRepo->find($idCategory);
+	}
+	
+	public function findOrCreateCategory($category)
+	{
+		$categoryRepo = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
+		$entity = $categoryRepo->findOneBy(['name' => $category]);
+		if(!$entity) {
+			$entity = new \App\Model\Entity\JobCategory();
+		}
+		return $entity;
 	}
 	
 	public function getJobTypes()

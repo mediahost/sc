@@ -6,6 +6,7 @@ use App\Model\Entity\SkillLevel;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
+use App\Model\Facade\JobFacade;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Nette\InvalidArgumentException;
@@ -30,6 +31,9 @@ class InstallerModel extends Object
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
+	
+	/** @var JobFacade @inject */
+	public $jobFacade;
 
 	// </editor-fold>
 	// <editor-fold desc="installers">
@@ -108,7 +112,7 @@ class InstallerModel extends Object
 	{
 		$rep = $this->em->getRepository(\App\Model\Entity\JobType::getClassName());
 		foreach ($types as $type) {
-			$entityType = new \App\Model\Entity\JobType($type);
+			$entityType = $this->jobFacade->findOrCreateJobType($type);
 			$rep->save($entityType);
 		}
 		return TRUE;
@@ -123,7 +127,7 @@ class InstallerModel extends Object
 	{
 		$rep = $this->em->getRepository(\App\Model\Entity\JobCategory::getClassName());
 		foreach ($categories as $category) {
-			$entityCategory = new \App\Model\Entity\JobCategory($category);
+			$entityCategory = $this->jobFacade->findOrCreateCategory($category);
 			$rep->save($entityCategory);
 		}
 		return TRUE;
