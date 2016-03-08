@@ -132,7 +132,7 @@ class DateRangePicker extends BaseControl  {
 	
 	/**
 	 * Validate control (date_start and date_end)
-	 * @param \App\Forms\Controls\Custom\IControl $control
+	 * @param IControl $control
 	 * @return boolean
 	 */
 	public static function validateDate(IControl $control)
@@ -160,6 +160,6 @@ class DateRangePicker extends BaseControl  {
 		$end = $control->date_end instanceof \DateTime ?
 			$control->date_end : DateTime::createFromFormat($control->format, $control->date_end);
 
-		return $start < $end;
+		return $start <= $end;
 	}
 }
