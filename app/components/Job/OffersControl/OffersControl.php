@@ -37,7 +37,6 @@ class OffersControl extends \App\Components\BaseControl
 		$form->addText('requirements', 'Requirements')
 			->setAttribute('data-role', 'tagsinput')
 			->setAttribute('placeholder', 'add a tag');
-		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;

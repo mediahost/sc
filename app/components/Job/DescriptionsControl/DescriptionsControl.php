@@ -29,7 +29,7 @@ class DescriptionsControl extends BaseControl
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer);
-		$form->getElementPrototype()->addClass('ajax');
+		//$form->getElementPrototype()->addClass('ajax');
 
 		$form->addTextArea('description', 'Description')
 			->setAttribute('placeholder', 'Job description')
