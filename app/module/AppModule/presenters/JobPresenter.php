@@ -145,6 +145,12 @@ class JobPresenter extends BasePresenter
 		$this->jobFacade->delete($id);
 		$this->redirect('Jobs:showAll');
 	}
+	
+	public function afterJobSave(Job $job)
+	{
+		$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
+		$this->flashMessage($message, 'success');
+	}
 
 	// </editor-fold>
 	// <editor-fold desc="edit/delete priviledges">
@@ -155,11 +161,8 @@ class JobPresenter extends BasePresenter
 	public function createComponentJobInfoForm()
 	{
 		$control = $this->iJobBasicInfoControlFactory->create();
-		$control->onAfterSave = function (Job $job) {
-			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
-			$this->flashMessage($message, 'success');
-			$this->redirect('Jobs:', $job->company->id);
-		};
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 	
@@ -167,11 +170,8 @@ class JobPresenter extends BasePresenter
 	public function createComponentJobOffersForm()
 	{
 		$control = $this->iIOffersControlFactory->create();
-		$control->onAfterSave = function (Job $job) {
-			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
-			$this->flashMessage($message, 'success');
-			$this->redirect('Jobs:', $job->company->id);
-		};
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 	
@@ -179,11 +179,8 @@ class JobPresenter extends BasePresenter
 	public function createComponentJobDescriptionsForm()
 	{
 		$control = $this->iDescriptionsControlFactory->create();
-		$control->onAfterSave = function (Job $job) {
-			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
-			$this->flashMessage($message, 'success');
-			$this->redirect('Jobs:', $job->company->id);
-		};
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 
@@ -191,11 +188,8 @@ class JobPresenter extends BasePresenter
 	public function createComponentJobSkillsForm()
 	{
 		$control = $this->iJobSkillsControlFactory->create();
-		$control->onAfterSave = function (Job $job) {
-			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
-			$this->flashMessage($message, 'success');
-			$this->redirect('Jobs:', $job->company->id);
-		};
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 	
@@ -203,11 +197,8 @@ class JobPresenter extends BasePresenter
 	public function createComponentJobQuestionsForm()
 	{
 		$control = $this->iQuestionsControlFactory->create();
-		$control->onAfterSave = function (Job $job) {
-			$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
-			$this->flashMessage($message, 'success');
-			$this->redirect('Jobs:', $job->company->id);
-		};
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 

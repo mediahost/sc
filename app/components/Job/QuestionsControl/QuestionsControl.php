@@ -31,6 +31,7 @@ class QuestionsControl extends BaseControl
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer);
+		$form->getElementPrototype()->addClass('ajax sendOnChange');
 		
 		$form->addText('question1', 'Question 1');
 		$form->addText('question2', 'Question 2');
@@ -38,8 +39,6 @@ class QuestionsControl extends BaseControl
 		$form->addText('question4', 'Question 4');
 		$form->addText('question5', 'Question 5');
 		
-		$form->addSubmit('save', 'Save');
-
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
@@ -49,6 +48,7 @@ class QuestionsControl extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
+		$this->invalidateControl();
 		$this->onAfterSave($this->job);
 	}
 	

@@ -29,13 +29,14 @@ class DescriptionsControl extends BaseControl
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer);
+		$form->getElementPrototype()->addClass('ajax');
 
 		$form->addTextArea('description', 'Description')
 			->setAttribute('placeholder', 'Job description')
-			->setAttribute('class', 'editor');
+			->setAttribute('id', 'jobDescription');
 		$form->addTextArea('summary', 'Summary')
 			->setAttribute('placeholder', 'Job summary')
-			->setAttribute('class', 'editor');
+			->setAttribute('id', 'jobSummary');
 		
 		$form->addSubmit('save', 'Save');
 
@@ -48,6 +49,7 @@ class DescriptionsControl extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
+		//$this->invalidateControl();
 		$this->onAfterSave($this->job);
 	}
 	
@@ -62,7 +64,6 @@ class DescriptionsControl extends BaseControl
 	{
 		$cvRepo = $this->em->getRepository(Job::getClassName());
 		$cvRepo->save($this->job);
-		return $this;
 	}
 	
 	/** @return array */

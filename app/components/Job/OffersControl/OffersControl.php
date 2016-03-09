@@ -29,6 +29,7 @@ class OffersControl extends \App\Components\BaseControl
 		$form = new \App\Forms\Form();
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer);
+		$form->getElementPrototype()->addClass('ajax sendOnChange');
 		
 		$form->addText('offers', 'Offers')
 			->setAttribute('data-role', 'tagsinput')
@@ -47,6 +48,7 @@ class OffersControl extends \App\Components\BaseControl
 	{
 		$this->load($values);
 		$this->save();
+		//$this->invalidateControl();
 		$this->onAfterSave($this->job);
 	}
 	
