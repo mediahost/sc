@@ -8,7 +8,7 @@
 {form form}
 	{? $form->errors}
 	{var existSkills => count($categories) && count($skills)}
-	<div n:if="$existSkills" class="panel-group accordion" id="skills">
+	<div n:if="$existSkills" class="panel-group accordion expandFirst" id="skills">
 		<div n:foreach="$categories as $key=>$category" class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">
