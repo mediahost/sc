@@ -81,13 +81,16 @@
 		
 <div n:if="count($cv->works)" class="list-group">
 	<div n:foreach="$cv->works as $work" n:if="!$work->isExperience"
-	   class="list-group-item {(isset($activeId)  &&  $work->id == $activeId)  ?  'active' : ''}">
+	   class="list-group-item {(isset($activeId)  &&  $work->id == $activeId)  ?  'active'}">
 		
-		<a href="{link edit! workId => $work->id}" class="ajax col-lg-11">{$work->company}</a>
-		<span class="">
-			<a href="{link edit! workId => $work->id}" class="ajax"><i class="glyphicon glyphicon-pencil"></i></a>
-			<a href="{link delete! workId => $work->id}" class="ajax"><i class="glyphicon glyphicon-trash"></i></a>
-		</span>
+		<div class="row">
+			<a href="{link edit! workId => $work->id}" class="ajax col-lg-10">{$work->company}</a>
+			<div class="col-lg-2 text-right">
+				<a href="{link edit! workId => $work->id}" class="ajax"><i class="glyphicon glyphicon-pencil"></i></a>
+				<i class="glyphicon">&nbsp;</i>
+				<a href="{link delete! workId => $work->id}" class="ajax"><i class="glyphicon glyphicon-trash"></i></a>
+			</div>
+		</div>
 	</div>
 </div>
 {/snippet}
