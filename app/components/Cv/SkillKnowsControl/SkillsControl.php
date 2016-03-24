@@ -72,7 +72,9 @@ class SkillsControl extends BaseControl
 
 		foreach ($skills as $skill) {
 			$levels->addHidden($skill->id);	
-			$years->addText($skill->id);
+			$years->addText($skill->id)
+				->setType('number')
+				->setAttribute('min', 0);
 		}
 
 		$form->addSubmit('save', 'Save');
