@@ -28,7 +28,7 @@ var Global = function () {
 	
 	var initAccordion = function() {
 		$('.expandAll').find('.panel-collapse').removeClass('collapse');
-		$('.expandFirst').find('.panel-collapse').first().removeClass('collapse');
+		$('.expandFirst').find('.accordion-toggle').first().click();
 	};
 
 	var handleSocialLinks = function () {
