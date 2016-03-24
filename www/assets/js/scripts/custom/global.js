@@ -77,13 +77,13 @@ var Global = function () {
 				handleInitPickers();
 				handleRating();
 				handleFBSharer();
-				initAccordion();
 				handleSocialLinks();
 				handlePersonalDetails();
 				handleMessages();
 			});
 		},
-		handleRightbar: handleRightbar
+		handleRightbar: handleRightbar,
+		initAccordion: initAccordion
 	};
 
 }();

@@ -1,13 +1,8 @@
 jQuery(document).ready(function () {
-	$.nette.init();
-	
-	Global.handleRightbar();
-	Global.init();
-	Login.init();
-	PdfPreview.init();
-	// Global components
-	
 	$.nette.ext('netteAjax', {
+		init: function() {
+			Global.initAccordion();
+		},
 		complete: function (data) {
 			Global.init();
 			if(data.reloadPreview) {
@@ -23,6 +18,14 @@ jQuery(document).ready(function () {
 			}
 		}
 	});
+	
+	$.nette.init();
+	
+	Global.handleRightbar();
+	Global.init();
+	Login.init();
+	PdfPreview.init();
+	// Global components
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {
