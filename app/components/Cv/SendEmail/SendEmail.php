@@ -48,7 +48,7 @@ class SendEmail extends BaseControl
 			->addRule(Form::EMAIL, 'Entered value is not email!');
 		$form->addTextArea('message', 'E-mail text');
 		
-		$form->addSubmit('save', 'Save');
+		$form->addSubmit('save', 'Send');
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
