@@ -73,6 +73,8 @@
 {/form}
 
 <div n:if="count($cv->languages)" class="list-group">
+	<div class="list-group-item">{_'Saved other languages: '}</div>
+	
 	<div n:foreach="$cv->languages as $language"
 	   class="list-group-item {(isset($activeId)  &&  $language->id == $activeId)  ?  'active' : ''}">
 		
