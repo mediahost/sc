@@ -211,6 +211,7 @@
 	{/if}
 	
 	{if count($cv->languages)}
+		<tbody class="breakPage">
 		<tr class="mainGrid">
 			<th class="headline">{_'Other languages', count($cv->languages)}</th>
 			<td colspan="2" class="left">{_'Understanding'}</td>
@@ -245,6 +246,7 @@
 		<tr class="emptySeparator">
 			<td colspan="7"></td>
 		</tr>
+		</tbody>
 	{/if}
 
 	{if !empty($cv->competence->social)}
