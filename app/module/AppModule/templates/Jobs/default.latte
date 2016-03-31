@@ -29,7 +29,14 @@
 {block jsPage}
 <script>
 	$(document).ready(function() {
-		$('#jobTable').DataTable({});
+		$('#jobTable').DataTable({
+			aoColumns: [
+				null, null, null, null,
+				{
+					bSortable: false
+				}
+			]
+		});
 	});
 </script>
 {/block jsPage}

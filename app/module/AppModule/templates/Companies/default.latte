@@ -34,7 +34,14 @@
 {block jsPage}
 <script>
 	$(document).ready(function() {
-		$('#companyTable').DataTable();
+		$('#companyTable').DataTable({
+			aoColumns: [
+				null, null, null, 
+				{
+					bSortable: false
+				}
+			]
+		});
 	});
 </script>
 {/block jsPage}
