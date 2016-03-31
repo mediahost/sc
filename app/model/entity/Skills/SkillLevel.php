@@ -20,7 +20,7 @@ class SkillLevel extends BaseEntity
 
 	const FIRST_PRIORITY = 1;
 	const LAST_PRIORITY = 5;
-	const IRELEVANT_PRIORITY = self::FIRST_PRIORITY;
+	const IRELEVANT_PRIORITY = -1; //self::FIRST_PRIORITY;
 
 	use Identifier;
 
