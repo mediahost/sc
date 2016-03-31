@@ -63,7 +63,7 @@ class BasicInfoControl extends BaseControl
 			->setAttribute('data-slider-step', self::SALARY_STEP)
 			->setAttribute('data-slider-value', $defaultValues['salary'])
 			->setAttribute('data-slider-id', 'slider-primary');
-		$form->addMapView('location', 'Location')->setRequired('Select location!');
+		$form->addMapView('location', 'Location');
 
 		$form->addSubmit('save', 'Save');
 

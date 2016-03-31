@@ -30,7 +30,7 @@ class MapView extends \Nette\Forms\Controls\BaseControl
 	
 	public function getValue()
 	{
-		return $this->location;
+		return $this->location->placeId  ?  $this->location : null;
 	}
 	
 	public function getControl()
