@@ -150,6 +150,7 @@ class JobPresenter extends BasePresenter
 	{
 		$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
 		$this->flashMessage($message, 'success');
+		$this->redirect('Jobs:showAll');
 	}
 
 	// </editor-fold>
