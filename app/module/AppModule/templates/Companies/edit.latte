@@ -27,7 +27,7 @@
 						{_'company'}
 					</span>
 				</div>
-				<div class="actions">
+				<div n:if="!$company->isNew()" class="actions">
 					{includeblock 'blocks.defines.latte'}
 					{include editActions}
 					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title=""></a>
