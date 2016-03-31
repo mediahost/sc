@@ -76,6 +76,13 @@
 			<button name="save" class="btn btn-primary ml15" type="submit">{_'Save'}</button>
 		</div>
 	</div>
+			
+	<div  class="form-group" n:if="$form->hasErrors()">
+		<label class="col-lg-2 col-md-3 control-label"></label>
+		<div n:foreach="$form->errors as $error" class="col-lg-10 col-md-9">
+			<span class="error-message">{$error}</span>
+		</div>
+	</div>
 {/form}
 
 		

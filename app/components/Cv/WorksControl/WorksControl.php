@@ -88,6 +88,9 @@ class WorksControl extends BaseControl
 		$form->addSubmit('save', 'Save');
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
+		$form->onError[] = function() {
+			$this->invalidateControl();
+		};
 		return $form;
 	}
 
