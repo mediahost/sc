@@ -31,7 +31,7 @@
 							<tbody>
 								<tr n:foreach="$child->skills as $skill" 
 									n:ifset="$form['skillRange'][$skill->id], $form['yearRange'][$skill->id]">
-									<td>
+									<td class="slider-height">
 										{label $form['skillRange'][$skill->id]/}
 									</td>
 									<td style="padding-right: 25px;">
