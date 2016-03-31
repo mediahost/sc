@@ -40,7 +40,7 @@
 
 {define personalDetailsPanel}
 {var candidate => $user->getIdentity()->candidate}
-<div class="panel panel-default">
+<div n:if="$candidate" class="panel panel-default">
 	<div class="panel-heading">
 		<h4 class="panel-title">{_'Personal Details'}</h4>
 	</div>
