@@ -27,6 +27,7 @@ class LanguageControl extends BaseControl
 	public function render() {
 		$this->template->cv = $this->cv;
 		$this->template->language = $this->language;
+		$this->setDisabled();
 		parent::render();
 	}
 	
@@ -70,14 +71,14 @@ class LanguageControl extends BaseControl
 		$form->addHidden('id', 0);
 		$form->addSelect2('motherTongue', 'Mother tongue', Language::getLanguagesList())
 				->setPrompt('Not Disclosed');
-		$form->addSelect2('language', 'Language', Language::getLanguagesList())
+		$form->addSelect('language', 'Language', Language::getLanguagesList())
 				->setRequired('Please select language');
 		$form->addHidden('listening', 'Listening');
 		$form->addHidden('reading', 'Reading');
 		$form->addHidden('interaction', 'Spoken Interaction');
 		$form->addHidden('production', 'Spoken Production');
 		$form->addHidden('writing', 'Writing');
-		
+	
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
@@ -153,6 +154,21 @@ class LanguageControl extends BaseControl
 		}
 		$values['motherTongue'] = $this->cv->motherLanguage;
 		return $values;
+	}
+	
+	private function setDisabled() 
+	{
+		if($this->language) {
+			$this['form']['language']->setDisabled();
+			$this['form']['language']->setDefaultValue($this->language->language);
+			return;
+		}
+		
+		$disabledLang = [];
+		foreach ($this->cv->languages as $lng) {
+			$disabledLang[] = $lng->language;
+		}
+		$this['form']['language']->setDisabled($disabledLang);
 	}
 
 	/**
