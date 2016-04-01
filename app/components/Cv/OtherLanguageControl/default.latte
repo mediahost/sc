@@ -1,1 +1,81 @@
-{control form}
+{**
+ * OtherLanguageControl control template
+ *
+ * @param   Cv		$cv
+ * @param	int		$activeId
+*}
+
+{snippet otherLanguageControl}
+{form form class => "ajax form-horizontal group-border stripped"}
+	{? $form->errors}
+	
+	<h5>Other Languages</h5>
+	<div class="form-group">
+		{label language class=>"col-lg-3 col-md-3 control-label" /}
+		<div class="col-lg-9 col-md-9">
+			{input $form['language'] class => "form-control"}
+		</div>
+	</div>
+		
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Listening'}</label>
+		<div class="col-lg-9 col-md-9">
+			{input $form['listening'] class => "rating", 
+				data-filled=>"fa fa-circle green-circle",
+				data-empty=>"fa fa-circle green-circle-o"}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Reading'}</label>
+		<div class="col-lg-9 col-md-9">
+			{input $form['reading'] class => "rating", 
+				data-filled=>"fa fa-circle green-circle",
+				data-empty=>"fa fa-circle green-circle-o"}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Spoken Interaction'}</label>
+		<div class="col-lg-9 col-md-9">
+			{input $form['interaction'] class => "rating", 
+				data-filled=>"fa fa-circle green-circle",
+				data-empty=>"fa fa-circle green-circle-o"}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Spoken Production'}</label>
+		<div class="col-lg-9 col-md-9">
+			{input $form['production'] class => "rating", 
+				data-filled=>"fa fa-circle green-circle",
+				data-empty=>"fa fa-circle green-circle-o"}
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Writing'}</label>
+		<div class="col-lg-9 col-md-9">
+			{input $form['writing'] class => "rating", 
+				data-filled=>"fa fa-circle green-circle",
+				data-empty=>"fa fa-circle green-circle-o"}
+		</div>
+	</div>
+		
+	<div class="form-group">
+		<div class="col-lg-offset-2">
+			<button class="btn btn-primary ml15" type="submit">Save</button>
+		</div>
+	</div>
+{/form}
+
+<div n:if="count($cv->languages)" class="list-group">
+	<div class="list-group-item">{_'Saved other languages: '}</div>
+	
+	<div n:foreach="$cv->languages as $language"
+	   class="list-group-item {(isset($activeId)  &&  $language->id == $activeId)  ?  'active' : ''}">
+		
+		<a href="{link edit! langId => $language->id}" class="ajax col-lg-11">{$language}</a>
+		<span class="">
+			<a href="{link edit! langId => $language->id}" class="ajax"><i class="glyphicon glyphicon-pencil"></i></a>
+			<a href="{link delete! langId => $language->id}" class="ajax"><i class="glyphicon glyphicon-trash"></i></a>
+		</span>
+	</div>
+</div>
+{/snippet}

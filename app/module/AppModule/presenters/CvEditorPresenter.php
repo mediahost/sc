@@ -11,6 +11,7 @@ use App\Components\Cv\IEducationsControlFactory;
 use App\Components\Cv\IExperienceControlFactory;
 use App\Components\Cv\IPersonalControlFactory;
 use App\Components\Cv\ILanguageControlFactory;
+use App\Components\Cv\IOtherLanguageControlFactory;
 use App\Components\Cv\IObjectiveControlFactory;
 use App\Components\Cv\IEmploymentControlFactory;
 use App\Components\Cv\ISummaryControlFactory;
@@ -60,6 +61,9 @@ class CvEditorPresenter extends BasePresenter
 	
 	/** @var ILanguageControlFactory @inject */
 	public $iLanguageControlFactory;
+	
+	/** @var IOtherLanguageControlFactory @inject */
+	public $iOtherLanguageControlFactory;
 	
 	/** @var IObjectiveControlFactory @inject */
 	public $iObjectiveControlFactory;
@@ -249,6 +253,15 @@ class CvEditorPresenter extends BasePresenter
 	/** @return LanguageControl */
 	public function createComponentLanguageControl() {
 		$control = $this->iLanguageControlFactory->create();
+		$control->setCv($this->cv);
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSave = $this->afterCvSave;
+		return $control;
+	}
+	
+	/** @return OtherLanguageControl */
+	public function createComponentOtherLanguageControl() {
+		$control = $this->iOtherLanguageControlFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;

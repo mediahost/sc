@@ -26,6 +26,41 @@ class OtherLanguageControl extends BaseControl
 	private $language;
 
 	// </editor-fold>
+	
+	/**
+	 * Renders control
+	 */
+	public function render() {
+		$this->template->cv = $this->cv;
+		$this->template->language = $this->language;
+		$this->setDisabled();
+		parent::render();
+	}
+	
+	/**
+	 * Edits Language entity
+	 * @param int $langId
+	 */
+	public function handleEdit($langId) {
+		$this->template->activeId = $langId;
+		$langDao = $this->em->getDao(Language::getClassName());
+		$lang = $langDao->find($langId);
+		$this->setLanguage($lang);
+		$this->invalidateControl();
+	}
+	
+	/**
+	 * Deletes Language entity
+	 * @param int $langId
+	 */
+	public function handleDelete($langId) {
+		$langDao = $this->em->getDao(Language::getClassName());
+		$lang = $langDao->find($langId);
+		$langDao->delete($lang);
+		$this->cv->deleteLanguage($lang);
+		$this->invalidateControl();
+		$this->onAfterSave();
+	}
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -37,26 +72,34 @@ class OtherLanguageControl extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addSelect2('language', 'Language', Language::getLanguagesList())
-				->setRequired('Please select language');
-		
-		$form->addSlider('listening', 'Listening', Language::getLanguageLevelList());
-		$form->addSlider('reading', 'Reading', Language::getLanguageLevelList());
-		$form->addSlider('interaction', 'Spoken Interaction', Language::getLanguageLevelList());
-		$form->addSlider('production', 'Spoken Production', Language::getLanguageLevelList());
-		$form->addSlider('writing', 'Writing', Language::getLanguageLevelList());
-		
-		$form->addSubmit('save', 'Save');
+		$form->addHidden('id', 0);
+		$form->addSelect2('language', 'Language', Language::getLanguagesList());
+
+		$form->addHidden('listening', 'Listening');
+		$form->addHidden('reading', 'Reading');
+		$form->addHidden('interaction', 'Spoken Interaction');
+		$form->addHidden('production', 'Spoken Production');
+		$form->addHidden('writing', 'Writing');
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
+		$form->onError[] = function() {
+			var_dump($this['form']->errors);
+			echo 'ccccc';exit;
+		};
 		return $form;
 	}
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
+		if($values['id'] != 0) {
+			$lang = $this->em->getDao(Language::getClassName())->find($values['id']);
+			$this->setLanguage($lang);
+		}
 		$this->load($values);
 		$this->save();
+		$form->setValues([], true);
+		$this->invalidateControl();
 		$this->onAfterSave($this->cv);
 	}
 
@@ -89,17 +132,33 @@ class OtherLanguageControl extends BaseControl
 		$values = [];
 		if ($this->language) {
 			$values = [
+				'id' => $this->language->id,
 				'language' => $this->language->language,
 				'listening' => $this->language->listening,
 				'reading' => $this->language->reading,
 				'interaction' => $this->language->spokenInteraction,
 				'production' => $this->language->spokenProduction,
-				'writing' => $this->language->writing,
+				'writing' => $this->language->writing
 			];
 		}
 		return $values;
 	}
 
+	private function setDisabled() 
+	{
+		if($this->language) {
+			$this['form']['language']->setAttribute('disabled');
+			$this['form']['language']->setDefaultValue($this->language->language);
+			return;
+		}
+		
+		$disabledLang = [];
+		foreach ($this->cv->languages as $lng) {
+			$disabledLang[] = $lng->language;
+		}
+		$this['form']['language']->setDisabled($disabledLang);
+	}
+	
 	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->cv) {
