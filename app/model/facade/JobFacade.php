@@ -79,7 +79,7 @@ class JobFacade extends Object
 	{
 		$typeRepo = $this->em->getDao(\App\Model\Entity\JobType::getClassName());
 		$entity = $typeRepo->findOneBy(['name' => $type]);
-		if(!$entity) {
+		if(isset($entity)) {
 			$entity = new \App\Model\Entity\JobType();
 		}
 		return $entity;
@@ -95,7 +95,7 @@ class JobFacade extends Object
 	{
 		$categoryRepo = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
 		$entity = $categoryRepo->findOneBy(['name' => $category]);
-		if(!$entity) {
+		if(isset($entity)) {
 			$entity = new \App\Model\Entity\JobCategory();
 		}
 		return $entity;
