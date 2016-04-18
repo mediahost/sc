@@ -88,6 +88,7 @@ class SignUpControl extends BaseControl
 		$entity->setMail($values->mail)
 				->setPassword($values->password);
 		$entity->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
+		$this->userFacade->saveUserEntity($entity);
 
 		$this->session->verification = FALSE;
 

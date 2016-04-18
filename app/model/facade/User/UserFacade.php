@@ -76,4 +76,7 @@ class UserFacade extends Object
 		return $this->findByMail($mail) === NULL;
 	}
 
+	public function saveUserEntity(User $user) {
+		$this->userRepo->save($user);
+	}
 }
