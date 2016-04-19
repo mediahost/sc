@@ -191,6 +191,10 @@ services:
 		implement: App\Components\Cv\ICvDocumentFactory
 		inject: yes
 
+	ICvDataViewFactory:
+	    implement: App\Components\Cv\ICvDataViewFactory
+	    inject: yes
+
 	# Skills
 	ISkillControlFactory:
 		implement: App\Components\Skills\ISkillControlFactory

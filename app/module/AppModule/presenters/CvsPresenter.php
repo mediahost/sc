@@ -2,6 +2,7 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Cv\ICvDataViewFactory;
 use App\Components\Grids\Cv\CvsGrid;
 use App\Components\Grids\Cv\ICvsGridFactory;
 use App\Model\Entity\Cv;
@@ -15,8 +16,8 @@ class CvsPresenter extends BasePresenter
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var ICvsGridFactory @inject */
-	public $iCvsGridFactory;
+	/** @var ICvDataViewFactory @inject */
+	public $cvDataViewFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -55,15 +56,10 @@ class CvsPresenter extends BasePresenter
 		$this->redirect('default');
 	}
 
-	// </editor-fold>
-	// <editor-fold desc="grids">
-
-	/** @return CvsGrid */
-	public function createComponentCvsGrid()
+	public function createComponentCvDataView() 
 	{
-		$control = $this->iCvsGridFactory->create();
+		$control = $this->cvDataViewFactory->create();
+		$control->setCvs($this->cvDao->findAll());
 		return $control;
 	}
-
-	// </editor-fold>
 }

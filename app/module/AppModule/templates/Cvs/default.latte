@@ -9,22 +9,29 @@
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-12">
-		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption">
-					<i class="icon-notebook"></i>
-					<span class="caption-subject bold uppercase">{_'CVs'}</span>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="portlet light">
+				<div class="portlet-body">
+					{control cvDataView}
 				</div>
-				<div class="actions">
-					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
-					</a>
-				</div>
-			</div>
-			<div class="portlet-body">
-				{control cvsGrid}
 			</div>
 		</div>
 	</div>
-</div>
+{/block content}
+
+
+{block jsPage}
+	<script>
+		$(document).ready(function() {
+			$('#userTable').DataTable({
+				aoColumns: [
+					null, null, null,
+					{
+						bSortable: false
+					}
+				]
+			});
+		});
+	</script>
+{/block jsPage}
