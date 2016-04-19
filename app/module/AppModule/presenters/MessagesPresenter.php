@@ -58,6 +58,14 @@ class MessagesPresenter extends BasePresenter
 	{
 	    $control = $this->communicationFactory->create();
 		$control->setCommunication($this->communication);
+		$control->onAddMessage[] = function() {
+			if ($this->isAjax()) {
+				$this['communication']->redrawControl();
+				$this['communicationList']->redrawControl();
+			} else {
+				$this->redirect('this');
+			}
+		};
 		return $control;
 	}
 

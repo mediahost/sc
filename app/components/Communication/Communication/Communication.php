@@ -16,6 +16,9 @@ class Communication extends BaseControl
 
 	const MESSAGES_PER_PAGE = 5;
 
+	/** @var array */
+	public $onAddMessage = [];
+
 	/** @var \App\Model\Entity\Communication */
 	protected $communication;
 
@@ -78,11 +81,7 @@ class Communication extends BaseControl
 	{
 		$this->communicationFacade->addMessage($this->communication, $values->text, $this->user->identity, $this->company);
 		$form['text']->setValue('');
-		if ($this->presenter->isAjax()) {
-			$this->redrawControl();
-		} else {
-			$this->redirect('this');
-		}
+		$this->onAddMessage();
 	}
 
 	public function isViewer(Sender $sender)
