@@ -4,6 +4,7 @@ namespace App\Components\User;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -53,7 +54,7 @@ class UserControl extends BaseControl
 
 		$form = new Form;
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer);
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
 		$mail = $form->addServerValidatedText('mail', 'E-mail')
 				->addRule(Form::EMAIL, 'Fill right format')
