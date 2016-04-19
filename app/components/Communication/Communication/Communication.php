@@ -78,7 +78,7 @@ class Communication extends BaseControl
 	{
 		$this->communicationFacade->addMessage($this->communication, $values->text, $this->user->identity, $this->company);
 		$form['text']->setValue('');
-		if ($this->presenter->isAjax) {
+		if ($this->presenter->isAjax()) {
 			$this->redrawControl();
 		} else {
 			$this->redirect('this');
