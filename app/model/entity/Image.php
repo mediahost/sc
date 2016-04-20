@@ -25,7 +25,7 @@ class Image extends BaseEntity
 	const FOLDER_DEFAULT = 'others';
 	const FOLDER_COMPANY_LOGO = 'companies/logos';
 	const FOLDER_CANDIDATE_IMAGE = 'candidates/images';
-	const DEFAULT_IMAGE = 'default.png';
+	const DEFAULT_IMAGE = 'default.jpeg';
 
 	use Identifier;
 

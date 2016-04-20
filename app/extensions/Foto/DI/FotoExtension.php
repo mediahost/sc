@@ -15,7 +15,7 @@ class FotoExtension extends CompilerExtension
 		'folder' => '%wwwDir%/foto',
 		'originalFolderName' => 'original',
 		'defaultImage' => NULL, // rewriten in loadConfiguration()
-		'defaultFormat' => 'png',
+		'defaultFormat' => 'jpeg',
 	];
 
 	public function loadConfiguration()
