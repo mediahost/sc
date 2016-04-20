@@ -22,13 +22,12 @@
     <tbody>
     <tr n:foreach="$users as $user">
         <td>{$user->id}</td>
-        <td>
-            {$user->mail}
-            <a href="{plink :App:Users:access, $user->id}" n:if="$template->canAccess($identity, $user)"><i class="icon-key"></i></a>
-        </td>
+        <td>{$user->mail}</td>
         <td>{include 'tag.latte', user=>$user}</td>
 
         <td>
+            <a n:if="$template->canAccess($identity, $user)" class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Users:access $user->id}">
+                <i class="fa fa-key"></i> {_'Access'}</a>
             <a n:if="$template->canEdit($identity, $user)" class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Users:edit $user->id}">
                 <i class="fa fa-edit"></i> {_'Edit'}</a>
             <a n:if="$template->canDelete($identity, $user)" class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Users:delete $user->id}">
