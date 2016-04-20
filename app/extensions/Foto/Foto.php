@@ -80,7 +80,7 @@ class Foto extends Object
 
 		$sizeX = 0;
 		$sizeY = 0;
-		$resizeMethod = Image::FIT;
+		$resizeMethod = Image::EXACT;
 		if (preg_match('@^(\d+)' . preg_quote(FotoHelpers::getSizeSeparator()) . '(\d+)$@', $size, $matches)) {
 			$sizeX = $matches[1];
 			$sizeY = $matches[2];
