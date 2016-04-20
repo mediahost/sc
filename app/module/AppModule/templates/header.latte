@@ -79,10 +79,13 @@
 					</ul>
 				</li>
 			</ul>
+			{var $candidate => $user->getIdentity()->candidate}
 			<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle avatar" data-toggle="dropdown">
-						<img src="{$basePath}/assets/img/avatar3.jpeg" alt="" class="image" />
+						<img n:ifset="$candidate->photo" src="{$basePath}/foto/{$candidate->photo|size:50,50}" alt="" class="image" />
+						{var defaultImage = \App\Model\Entity\Image::DEFAULT_IMAGE}
+						<img n:if="!isset($candidate->photo)" src="{$basePath}/foto/{$defaultImage|size:50,50}" alt="" class="image" />
 						<span class="txt">{$user->getIdentity()->mail}</span>
 						<b class="caret"></b>
 					</a>
@@ -131,12 +134,12 @@
 		{_'You have'} <strong>{_'%s New', NULL, $unreadMessagesCount}</strong> {_'Messages'}
 	</li>
 	<li n:foreach="$communications as $communication">
-		<span class="icon">
-			<img src="{$basePath}/assets/img/avatar1.jpg" alt="photo" />
+		<span class="icon avatar">
+			<img src="{$basePath}/foto/{$communication->getOpposite($user->identity)->image|size:25,25}" alt="photo" />
 		</span>
 		<span class="name">
 			<a n:href="Messages: $communication->id">
-				<strong>{$communication->lastMessage->sender->name}</strong>
+				<strong>{$communication->getOppositeName($user->identity)}</strong>
 			</a>
 			<span class="time">{$communication->lastMessage->time|date:'H:i:s d.m.Y'}</span>
 		</span>

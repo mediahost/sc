@@ -21,7 +21,7 @@
 				{continueIf $iterator->counter <= $skipCount}
 				<li n:class="$control->isViewer($message->sender) ? user : admin, clearfix">
 					<a href="#" class="avatar">
-						<img src="{$basePath}/{$message->sender->image}" alt="" />
+						<img src="{$basePath}/foto/{$message->sender->image|size:50,50}" alt="" />
 					</a>
 					<div class="message">
 						<div class="head clearfix">

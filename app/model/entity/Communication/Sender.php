@@ -49,7 +49,9 @@ class Sender extends BaseEntity
 	{
 		if ($this->company) {
 			return 'assets/img/avatar2.jpeg';
-		} elseif (TRUE) {
+		} elseif($this->user->candidate) {
+			return $this->user->candidate->photo;
+		}elseif (TRUE) {
 			return 'assets/img/avatar3.jpeg';
 		}
 	}

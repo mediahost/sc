@@ -12,7 +12,7 @@
 				<li	n:class="list-group-item, clearfix, $activeCommunication && $communication->id == $activeCommunication->id ? comment-info : (!$communication->lastMessage->isReadByUser($user->identity) ? comment-danger : comment-default)">
 					<a href="{$control->getCommunicationLink($communication)}">
 						<div class="avatar pull-left mr15">
-							<img src="{$basePath}/{$communication->getOpposite($user->identity)->image}" width="50" alt="sender">
+							<img src="{$basePath}/foto/{$communication->getOpposite($user->identity)->image|size:50,50}" width="50" alt="sender">
 						</div>
 						<p class="text-ellipsis">
 							<span class="name strong">
