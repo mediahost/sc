@@ -62,7 +62,7 @@ class SkillCategoryControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		if ($values->parent && $this->entity && $values->parent == $this->entity->id) {
+		if ($values->parent && $this->skillCategory && $values->parent == $this->skillCategory->id) {
 			$form['parent']->addError('Category can\'t be own parent');
 			return;
 		}
