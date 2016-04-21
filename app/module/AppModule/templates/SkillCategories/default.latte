@@ -12,22 +12,25 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption">
-					<i class="icon-folder-alt"></i>
-					<span class="caption-subject bold uppercase">{_'Skill Categories'}</span>
-				</div>
-				<div class="actions">
-					<a n:href="SkillCategories:add" class="btn btn-circle green-sharp">
-						<i class="fa fa-plus"></i> {_'Add Skill Category'}
-					</a>
-					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
-					</a>
-				</div>
-			</div>
 			<div class="portlet-body">
-				{control skillCategoriesGrid}
+				{control skillCategoryDataView}
 			</div>
 		</div>
 	</div>
 </div>
+{/block content}
+
+{block jsPage}
+	<script>
+		$(document).ready(function() {
+			$('#skillCategoryTable').DataTable({
+				aoColumns: [
+					null, null, null,
+					{
+						bSortable: false
+					}
+				]
+			});
+		});
+	</script>
+{/block jsPage}

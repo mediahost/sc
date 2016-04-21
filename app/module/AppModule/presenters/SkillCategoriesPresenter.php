@@ -3,8 +3,8 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\Grids\Skill\ISkillCategoriesGridFactory;
-use App\Components\Grids\Skill\SkillCategoriesGrid;
 use App\Components\Skills\ISkillCategoryControlFactory;
+use App\Components\Skills\ISkillCategoryDataViewFactory;
 use App\Components\Skills\SkillCategoryControl;
 use App\Model\Entity\SkillCategory;
 use App\TaggedString;
@@ -22,8 +22,8 @@ class SkillCategoriesPresenter extends BasePresenter
 	/** @var ISkillCategoryControlFactory @inject */
 	public $iSkillCategoryControlFactory;
 
-	/** @var ISkillCategoriesGridFactory @inject */
-	public $iSkillCategoriesGridFactory;
+	/** @var ISkillCategoryDataViewFactory	 @inject */
+	public $skillCategoryDataViewFactory;
 
 	/** @var EntityDao */
 	private $skillCategoryDao;
@@ -119,15 +119,13 @@ class SkillCategoriesPresenter extends BasePresenter
 		return $control;
 	}
 
-	// </editor-fold>
-	// <editor-fold desc="grids">
-
-	/** @return SkillCategoriesGrid */
-	public function createComponentSkillCategoriesGrid()
+	/**
+	 * @return SkillCategoryDataView
+	 */
+	public function createComponentSkillCategoryDataView()
 	{
-		$control = $this->iSkillCategoriesGridFactory->create();
+		$control = $this->skillCategoryDataViewFactory->create();
+		$control->setSkillsCategories($this->skillCategoryDao->findAll());
 		return $control;
 	}
-
-	// </editor-fold>
 }

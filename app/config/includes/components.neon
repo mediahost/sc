@@ -208,6 +208,10 @@ services:
 		implement: App\Components\Skills\ISkillCategoryControlFactory
 		inject: yes
 
+	ISkillCategoryDataViewFactory:
+	    implement: App\Components\Skills\ISkillCategoryDataViewFactory
+	    inject: yes
+
 	# Example
 	IFormControlFactory:
 		implement: App\Components\Example\Form\IFormControlFactory

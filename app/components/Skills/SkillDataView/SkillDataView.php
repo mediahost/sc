@@ -37,7 +37,7 @@ class SkillDataView extends BaseControl
 
 
 /**
- * Interface ISkillsDataView
+ * Interface ISkillDataView
  * @package App\Components\Skills
  */
 Interface ISkillDataViewFactory
