@@ -4,6 +4,7 @@ namespace App\Components\Skills;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Skill;
 use App\Model\Entity\SkillCategory;
@@ -40,7 +41,7 @@ class SkillControl extends BaseControl
 
 		$form = new Form;
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
 		$form->addText('name', 'Name')
 				->setRequired('Please fill name');

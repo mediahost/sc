@@ -200,6 +200,10 @@ services:
 		implement: App\Components\Skills\ISkillControlFactory
 		inject: yes
 
+	ISkillDataViewFactory:
+	    implement: App\Components\Skills\ISkillDataViewFactory
+	    inject: yes
+
 	ISkillCategoryControlFactory:
 		implement: App\Components\Skills\ISkillCategoryControlFactory
 		inject: yes
