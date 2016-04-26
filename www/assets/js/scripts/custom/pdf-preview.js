@@ -12,6 +12,13 @@ var PdfPreview = function () {
 			var maxScale = parseFloat(preview.attr('data-max-scale')) > 0 ? parseFloat(preview.attr('data-max-scale')) : 1.2;
 			var scalestep = parseFloat(preview.attr('data-scale-step')) > 0 ? parseFloat(preview.attr('data-scale-step')) : 0.2;
 			
+			if ($( window ).width() > 1600) {
+				startScale = 0.9;
+			}
+			if ($( window ).width() > 1750) {
+				startScale = 1;
+			}
+
 			if (file_exists(source)) {
 				PdfViewer.init(id, source, startPage, startScale, scalestep, minScale, maxScale);
 			} else {
