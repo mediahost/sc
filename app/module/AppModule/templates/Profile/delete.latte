@@ -1,11 +1,17 @@
 {includeblock '@settings.latte'}
 {block content}
-<div class="tabs tabs-left cv-tab mb20 row">
-	{include settingsMenu}
-	<div class="col-md-6">
-		<div class="well">
-			<p>{_'Do you really want to delete all data for your account?'}</p>
-			<a class="btn btn-default" n:href="delete!">{_'Yes, I want'}</a>
+<div class="row">
+	<div class="col-lg-5 col-md-12 col-editor">
+		<div class="tabs tabs-left cv-tab mb20 row">
+			{include settingsMenu}
+			<div class="tab-content col-lg-7 col-md-7 col-sm-7 col-xs-7">
+				<div class="tab-pane fade active in" id="work-exp">
+					<div class="well">
+						<p>{_'Do you really want to delete all data for your account?'}</p>
+						<a class="btn btn-default" n:href="delete!">{_'Yes, I want'}</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

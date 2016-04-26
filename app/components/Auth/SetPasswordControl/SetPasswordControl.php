@@ -4,6 +4,7 @@ namespace App\Components\Auth;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity;
 use App\Model\Facade\UserFacade;
@@ -28,7 +29,7 @@ class SetPasswordControl extends BaseControl
 	protected function createComponentForm()
 	{
 		$form = new Form;
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 		$form->setTranslator($this->translator);
 
 		if (!$this->presenterUser) {
