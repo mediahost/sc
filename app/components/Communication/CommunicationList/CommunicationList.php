@@ -7,7 +7,7 @@ use App\Model\Entity;
 class CommunicationList extends BaseControl
 {
 
-	const COMMUNICATIONS_PER_PAGE = 2;
+	const COMMUNICATIONS_PER_PAGE = 10;
 
 	/** @var Entity\Communication[] */
 	protected $communications = [];
