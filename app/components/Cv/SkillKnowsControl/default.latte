@@ -24,7 +24,7 @@
 						<div class="row" 
 							 n:foreach="$child->skills as $skill"
 							 n:ifset="$form['skillLevel'][$skill->id], $form['skillYear'][$skill->id]">
-							<div class="col-md-3">{$skill}</div>
+							<div class="col-md-4">{$skill}</div>
 							<div class="col-md-3">
 								{input $form['skillLevel'][$skill->id] 
 									class=>"rating", 
