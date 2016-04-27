@@ -26,6 +26,9 @@ class MessagesPresenter extends BasePresenter
 	/** @var Communication */
 	protected $communication;
 
+	/** @var array */
+	protected $communications;
+
 	/**
 	 * @secured
 	 * @resource('messages')
@@ -33,15 +36,18 @@ class MessagesPresenter extends BasePresenter
 	 */
 	public function actionDefault($id = NULL)
 	{
-		if ($id) {
+		$this->communications = $this->getUserCommunications();
+		if($id == null) {
+			$this->communication = reset($this->communications);
+		} else if ($id) {
 			$this->communication = $this->communicationFacade->getCommunication($id);
 			if (!$this->communication || !$this->communication->isUserAllowed($this->user->identity)) {
 				$this->flashMessage('Requested conversation was\'t find.', 'danger');
 				$this->redirect('this', NULL);
 			}
-			$this->template->conversation = $this->communication;
-			$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity);
 		}
+		$this->template->conversation = $this->communication;
+		$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity);
 	}
 
 	public function createComponentStartCommunicationModal()
@@ -71,9 +77,8 @@ class MessagesPresenter extends BasePresenter
 
 	public function createComponentCommunicationList()
 	{
-		$communications = $this->getUserCommunications();
 	    $control = $this->communicationListFactory->create();
-		foreach ($communications as $communication) {
+		foreach ($this->communications as $communication) {
 			$control->addCommunication($communication, $this->link('default', $communication->id));
 		}
 		$control->setActiveCommunication($this->communication);
