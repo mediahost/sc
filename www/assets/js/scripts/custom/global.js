@@ -71,6 +71,13 @@ var Global = function () {
 		});
 	};
 
+	var handleDataTables = function (selector, options) {
+		if (options.iDisplayLength == undefined) {
+			options.iDisplayLength = 25;
+		}
+		$(selector).DataTable(options);
+	};
+
 	return {
 		init: function () {
 			$(document).ready(function () {
@@ -83,7 +90,8 @@ var Global = function () {
 			});
 		},
 		handleRightbar: handleRightbar,
-		initAccordion: initAccordion
+		initAccordion: initAccordion,
+		handleDataTables: handleDataTables
 	};
 
 }();
