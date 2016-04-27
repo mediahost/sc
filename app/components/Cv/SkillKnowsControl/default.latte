@@ -24,7 +24,7 @@
 						<div class="row" 
 							 n:foreach="$child->skills as $skill"
 							 n:ifset="$form['skillLevel'][$skill->id], $form['skillYear'][$skill->id]">
-							<div class="col-md-9 row">
+							<div class="col-md-10 row">
 								<div class="col-md-5">{$skill}</div>
 								<div class="col-md-3">
 									{input $form['skillLevel'][$skill->id]
@@ -33,13 +33,13 @@
 									data-empty => "fa fa-circle green-circle-o"}
 								</div>
 								<div class="col-md-4">
-									<div class="input-group">
+									<div class="input-group col-md-9">
 										{input $form['skillYear'][$skill->id] class => "form-control"}
 										<span class="input-group-addon">{_'years'}</span>
 									</div>
 								</div>
 							</div>
-							<div class="col-md-3"></div>
+							<div class="col-md-2"></div>
 						</div>
 					{/foreach}
 				</div>
