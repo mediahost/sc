@@ -11,12 +11,21 @@ var PdfPreview = function () {
 			var minScale = parseFloat(preview.attr('data-min-scale')) > 0 ? parseFloat(preview.attr('data-min-scale')) : 0.8;
 			var maxScale = parseFloat(preview.attr('data-max-scale')) > 0 ? parseFloat(preview.attr('data-max-scale')) : 1.2;
 			var scalestep = parseFloat(preview.attr('data-scale-step')) > 0 ? parseFloat(preview.attr('data-scale-step')) : 0.2;
-			
+
 			if ($( window ).width() > 1600) {
 				startScale = 0.9;
 			}
 			if ($( window ).width() > 1750) {
 				startScale = 1;
+			}
+
+			if ($(document.body).find('cvCheckZoom')) {
+				if ($( window ).width() < 1700) {
+					maxScale = 0.9;
+				}
+				if ($( window ).width() < 1600) {
+					maxScale = 0.8;
+				}
 			}
 
 			if (file_exists(source)) {
