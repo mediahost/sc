@@ -110,10 +110,8 @@ class InstallerModel extends Object
 	 */
 	public function installJobTypes(array $types)
 	{
-		$rep = $this->em->getRepository(\App\Model\Entity\JobType::getClassName());
 		foreach ($types as $type) {
-			$entityType = $this->jobFacade->findOrCreateJobType($type);
-			$rep->save($entityType);
+			$this->jobFacade->findOrCreateJobType($type);
 		}
 		return TRUE;
 	}
@@ -125,10 +123,8 @@ class InstallerModel extends Object
 	 */
 	public function installJobCategories(array $categories)
 	{
-		$rep = $this->em->getRepository(\App\Model\Entity\JobCategory::getClassName());
 		foreach ($categories as $category) {
-			$entityCategory = $this->jobFacade->findOrCreateCategory($category);
-			$rep->save($entityCategory);
+			$this->jobFacade->findOrCreateCategory($category);
 		}
 		return TRUE;
 	}
