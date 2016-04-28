@@ -201,7 +201,6 @@ class JobPresenter extends BasePresenter
 	{
 		$control = $this->iQuestionsControlFactory->create();
 		$control->setAjax(TRUE, TRUE);
-		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 

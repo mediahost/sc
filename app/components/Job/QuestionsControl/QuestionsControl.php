@@ -4,6 +4,8 @@ namespace App\Components\Job;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
+use Nette\Application\Responses\JsonResponse;
+use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Job;
@@ -48,8 +50,8 @@ class QuestionsControl extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$this->invalidateControl();
-		$this->onAfterSave($this->job);
+		$this->presenter->payload->status = IResponse::S200_OK;
+		$this->presenter->sendPayload();
 	}
 	
 	protected function load(ArrayHash $values)
