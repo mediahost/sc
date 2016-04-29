@@ -75,6 +75,10 @@ services:
 	    implement: App\Components\User\IUserDataViewFactory
 	    inject: yes
 
+	ICareerDocsControlFactory:
+	    implement: App\Components\User\ICareerDocsControlFactory
+	    inject: yes
+
 	# Company
 	ICompanyInfoControlFactory:
 		implement: App\Components\Company\ICompanyInfoControlFactory

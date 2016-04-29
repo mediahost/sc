@@ -19,6 +19,8 @@ use App\Components\Cv\IAdditionalControlFactory;
 use App\Components\Cv\LivePreviewControl;
 use App\Components\Cv\SkillsControl;
 use App\Components\Cv\WorksControl;
+use App\Components\User\CareerDocsControl;
+use App\Components\User\ICareerDocsControlFactory;
 use App\Model\Entity\Cv;
 use App\Model\Facade\CvFacade;
 use App\TaggedString;
@@ -76,6 +78,9 @@ class CvEditorPresenter extends BasePresenter
 	
 	/** @var IAdditionalControlFactory @inject */
 	public $iAdditionalControlFactory;
+
+	/** @var ICareerDocsControlFactory @inject */
+	public $iCareerDocsControlFactory;
 
 	/** @var Cv */
 	private $cv;
@@ -163,6 +168,10 @@ class CvEditorPresenter extends BasePresenter
 	public function actionSkills($id = NULL)
 	{
 		$this->getCv($id);
+	}
+
+	public function actionCareerDocs() {
+
 	}
 
 	/**
@@ -318,6 +327,13 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iSendEmailFactory->create();
 		$control->setCv($this->cv);
+		return $control;
+	}
+
+	/** @return CareerDocsControl */
+	public function createComponentCareerDocsControl()
+	{
+		$control = $this->iCareerDocsControlFactory->create();
 		return $control;
 	}
 }
