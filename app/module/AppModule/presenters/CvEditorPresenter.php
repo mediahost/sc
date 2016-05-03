@@ -168,6 +168,7 @@ class CvEditorPresenter extends BasePresenter
 	public function actionSkills($id = NULL)
 	{
 		$this->getCv($id);
+		$this['skillsForm']->setTemplateFile('ItSkills');
 	}
 
 	public function actionCareerDocs() {

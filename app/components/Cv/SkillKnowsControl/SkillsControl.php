@@ -44,6 +44,8 @@ class SkillsControl extends BaseControl
 		$skills = $this->em->getDao(Skill::getClassName())->findAll();
 		if($this->onlyFilledSkills) {
 			$categories = $this->skillFacade->filterFilledCategories($categories, $skillKnows);
+			$categories = $this->skillFacade->sortCategoriesBySkillCount($categories, $skillKnows);
+
 		}
 		$this->template->skills = $skills;
 		$this->template->categories = $categories; 
