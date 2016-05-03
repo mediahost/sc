@@ -79,6 +79,8 @@ services:
 	    implement: App\Components\User\ICareerDocsControlFactory
 	    inject: yes
 
+	imageStorage: App\Components\User\DocStorage(%wwwDir%)
+
 	# Company
 	ICompanyInfoControlFactory:
 		implement: App\Components\Company\ICompanyInfoControlFactory

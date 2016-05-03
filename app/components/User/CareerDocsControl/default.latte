@@ -2,4 +2,10 @@
  * CareerDocsControl template
  *
 *}
+<div n:snippet="CareerDocsControl">
+<span n:foreach="$control->getUploadedDocs() as $id=>$doc" class="tag label label-info">
+    {$doc}
+    <a href="{link deleteDoc $id}" class="white"> x</a>
+</span>
 {control form}
+</div>
