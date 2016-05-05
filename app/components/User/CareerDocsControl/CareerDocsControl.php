@@ -58,6 +58,7 @@ class CareerDocsControl extends BaseControl
             $file = $this->docStorage->upload($file, $fileName);
             $doc = new Document($fileName);
             $doc->candidate = $this->candidate;
+            $doc->public = true;
             $rep = $this->em->getDao(Document::getClassName());
             $rep->save($doc);
             $this->onAfterSave();
@@ -92,7 +93,10 @@ class CareerDocsControl extends BaseControl
     }
     
     public function handleSwitch($id) {
-        
+        $rep = $this->em->getDao(Document::getClassName());
+        $doc = $rep->find($id);
+        $doc->public = !$doc->public;
+        $rep->save($doc);
     }
 
     /**
@@ -109,6 +113,11 @@ class CareerDocsControl extends BaseControl
 
     public function displayDocName($name) {
         return $this->docStorage->getDisplayName($name);
+    }
+
+    public function fileExtension($name) {
+        $ext = pathinfo($name, PATHINFO_EXTENSION);
+        return strtolower($ext);
     }
 }
 

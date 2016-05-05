@@ -23,7 +23,7 @@ class Document extends BaseEntity
     /** @ORM\Column(type="string", length=64, nullable=false) */
     protected $name;
 
-    /** @ORM\Column(type="boolean", nullable=false, options={"default" = true}) */
+    /** @ORM\Column(type="boolean", options={"default" = true}) */
     protected $public;
 
 
