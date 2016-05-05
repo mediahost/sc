@@ -36,6 +36,9 @@
 	<div class="col-lg-6">
 		{include cvPanel}
 	</div>
+	<div class="col-lg-6">
+		{include docsPanel}
+	</div>
 </div>
 
 {define personalDetailsPanel}
@@ -144,4 +147,15 @@
 		{control cvPreview}
 	</div>
 </div>
+{/define}
+
+{define docsPanel}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">{_'Career docs'}</h4>
+		</div>
+		<div class="panel-body docs-tab">
+			{control docsControl}
+		</div>
+	</div>
 {/define}
