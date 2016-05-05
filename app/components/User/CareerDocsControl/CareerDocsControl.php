@@ -43,7 +43,7 @@ class CareerDocsControl extends BaseControl
         $form = new Form;
         $form->setTranslator($this->translator);
         $form->setRenderer(new Bootstrap3FormRenderer());
-        $form->getElementPrototype()->setClass('dropzone');
+        $form->getElementPrototype()->setClass('dropzone dz-clickable dz-started');
         $form->onSuccess[] = $this->handleSend;
         return $form;
     }
@@ -69,7 +69,7 @@ class CareerDocsControl extends BaseControl
     public function getUploadedDocs() {
         $docs = [];
         foreach ($this->candidate->getDocuments() as $document) {
-            $docs[$document->id] = DocStorage::getDisplayName($document);
+            $docs[] = $document;
         }
         return $docs;
     }
@@ -82,12 +82,33 @@ class CareerDocsControl extends BaseControl
         $this->onAfterSave();
     }
 
+    public function handleDeleteAll() {
+        $rep = $this->em->getDao(Document::getClassName());
+        foreach ($this->candidate->getDocuments() as $doc) {
+            $this->docStorage->removeFile($doc->name);
+            $rep->delete($doc);
+        }
+        $this->onAfterSave();
+    }
+    
+    public function handleSwitch($id) {
+        
+    }
+
     /**
      * setter for $candidate
      * @param Candidate $candidate
      */
     public function setCandidate(Candidate $candidate) {
         $this->candidate = $candidate;
+    }
+
+    public function fullDocName($name) {
+        return $this->docStorage->getFullName($name);
+    }
+
+    public function displayDocName($name) {
+        return $this->docStorage->getDisplayName($name);
     }
 }
 

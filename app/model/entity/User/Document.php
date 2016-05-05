@@ -10,6 +10,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  *
  * @property Candidate $candidate
  * @property string $name
+ * @property boolean $public
  */
 class Document extends BaseEntity
 {
@@ -21,6 +22,9 @@ class Document extends BaseEntity
 
     /** @ORM\Column(type="string", length=64, nullable=false) */
     protected $name;
+
+    /** @ORM\Column(type="boolean", nullable=false, options={"default" = true}) */
+    protected $public;
 
 
     public function __construct($name)

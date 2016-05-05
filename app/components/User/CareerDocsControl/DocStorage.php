@@ -50,6 +50,11 @@ class DocStorage extends Object
         }
     }
 
+    public function getFullName($name) {
+        $fullName = sprintf('%s/%s', self::DOC_DIR, $name);
+        return $fullName;
+    }
+
     public static function getDisplayName($name) {
         $displayName = '';
         sscanf($name, "%d_%s", $timestamp, $displayName);
