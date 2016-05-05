@@ -305,7 +305,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iCareerDocsControlFactory->create();
 		$control->setCandidate($this->candidate);
-		
+		$control->setTemplateFile('overView');
 		return $control;
 	}
 	

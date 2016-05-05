@@ -107,6 +107,11 @@ class CareerDocsControl extends BaseControl
         $this->candidate = $candidate;
     }
 
+    public function setTemplateFile($name)
+    {
+        return parent::setTemplateFile($name);
+    }
+
     public function fullDocName($name) {
         return $this->docStorage->getFullName($name);
     }
