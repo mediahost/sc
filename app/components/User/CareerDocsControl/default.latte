@@ -15,13 +15,13 @@
                         </a>
                         <span class="name">{$control->displayDocName($doc)}</span>
                         <div class="actions">
-                            <a href="{link switch $doc->id}" class="confirm switch {$doc->public ? 'public' : 'private'}"></a>
+                            <a href="{link switch $doc->id}" class="switch {$doc->public ? 'public' : 'private'}"></a>
                             <a href="{link deleteDoc $doc->id}" class="confirm delete"></a>
                         </div>
                     </li>
                 </ul>
                 <div class="actions-all">
-                    <a href="{link deleteAll}" class="delete-all">{_'delete all'}</a>
+                    <a href="{link deleteAll}" class="confirm delete-all">{_'delete all'}</a>
                 </div>
             </div>
         </div>

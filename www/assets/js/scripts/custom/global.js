@@ -78,6 +78,14 @@ var Global = function () {
 		$(selector).DataTable(options);
 	};
 
+	var handleDropzone = function() {
+		Dropzone.options.frmCareerDocsControlForm = {
+			init: function() {
+				this.on("success", function(file) { location.reload(); });
+			}
+		}
+	};
+
 	return {
 		init: function () {
 			$(document).ready(function () {
@@ -87,6 +95,7 @@ var Global = function () {
 				handleSocialLinks();
 				handlePersonalDetails();
 				handleMessages();
+				handleDropzone();
 			});
 		},
 		handleRightbar: handleRightbar,
