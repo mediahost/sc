@@ -64,7 +64,7 @@
 						</li>
 					</ul>
 				</li>
-				<li class="dropdown">
+				<li class="dropdown" n:if="$isCandidate && $isCompleteAccount">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="s16 minia-icon-envelope"></i>
 						<span class="txt">{_'Messages'}</span>
@@ -89,16 +89,16 @@
 						<span class="txt">{$user->getIdentity()->mail}</span>
 						<b class="caret"></b>
 					</a>
-					<ul class="dropdown-menu right">
+					<ul class="dropdown-menu right" n:if="$isCompleteAccount">
 						<li class="menu">
 							<ul>
-								<li n:if="$user->isAllowed('profile', 'default') && $isCompleteAccount">
+								<li n:if="$user->isAllowed('profile', 'default')">
 									<a n:href="Profile:">
 										<i class="s16 fa fa-user"></i>
 										{_'My Profile'}
 									</a>
 								</li>
-								<li n:if="$user->isAllowed('profile', 'settings') && $isCompleteAccount">
+								<li n:if="$user->isAllowed('profile', 'settings')">
 									<a n:href="Profile:settings">
 										<i class="s16 fa fa-gears"></i>
 										{_'Settings'}

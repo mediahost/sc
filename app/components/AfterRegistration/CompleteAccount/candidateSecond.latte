@@ -1,0 +1,61 @@
+{form form}
+    <table>
+        <tbody>
+        <tr>
+            <th style="vertical-align: top; padding-top: 6px;">{_'What are you most qualified for?'}</th>
+            <td>
+                <div id="skillTree"></div>
+                <div id="skillInputs" style="display: none;">
+                    {foreach $skills as $skillId => $skillName}
+                        {input "skills-$skillId" }{$skillName}
+                    {/foreach}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <th style="vertical-align: top; padding-top: 6px;">{_'Where do you want to work?'}</th>
+            <td>
+                <div id="countryTree"></div>
+                <div id="countryInputs" style="display: none;">
+                    {foreach $countries as $countryId => $countryName}
+                        {input "countries-$countryId" }{$countryName}
+                    {/foreach}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <th>{_'I am also interested in freelance or remote work'}</th>
+            <td>
+                <div id="freelancerTree"></div>
+                <div id="freelancerInputs" style="display: none;">
+                    {input freelancer}{label freelancer /}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            <td>
+                {$form->render('errors')}
+            </td>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            <td style="padding-left: 30px;">{input save}</td>
+        </tr>
+        </tbody>
+    </table>
+{/form}
+
+<script n:syntax="double">
+
+    var jsonSkills = {{? echo json_encode($jsonSkills); }};
+    var jsonCountries = {{? echo json_encode($jsonCountries); }};
+    var jsonFreelancer = {{? echo json_encode($jsonFreelancer); }};
+
+</script>

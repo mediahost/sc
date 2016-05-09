@@ -9,6 +9,7 @@ use App\Model\Entity\User;
 use App\Model\Facade;
 use App\Model\Storage;
 use App\TaggedString;
+use Tracy\Debugger;
 
 class SignPresenter extends BasePresenter
 {
@@ -80,7 +81,6 @@ class SignPresenter extends BasePresenter
 	/**
 	 * Get valid role name; If isn't valid then return default role
 	 * @param type $role
-	 * @param type $defaultRole
 	 * @return type
 	 */
 	private function getValidRole($role)
@@ -122,15 +122,16 @@ class SignPresenter extends BasePresenter
 	/** @param string $token */
 	public function actionVerify($token)
 	{
-		$registration = $this->userFacade->findByVerificationToken($token);
-		if ($registration) {
-			$signedRole = $this->roleFacade->findByName(Role::SIGNED);
-			$user = $this->userFacade->createFromRegistration($registration, $signedRole);
+		$user = $this->userFacade->findByVerificationToken($token);
+		if ($user) {
+			$user->verificated = TRUE;
+			$userRepo = $this->em->getRepository(User::getClassName());
+			$userRepo->save($user);
 			$this->flashMessage('Your e-mail has been seccessfully verified!', 'success');
 			$this->onVerify($this, $user);
 		} else {
 			$this->flashMessage('Verification token is incorrect.', 'warning');
-			$this->redirect('in', ['role' => $this->session->redirectRole]);
+			$this->redirect('in');
 		}
 	}
 
@@ -144,13 +145,13 @@ class SignPresenter extends BasePresenter
 
 	/**
 	 * Redirect logged to certain destination.
-	 * @param type $redirect
+	 * @param bool $redirect
 	 * @return bool
 	 */
 	private function isLoggedIn($redirect = TRUE)
 	{
 		$isLogged = $this->user->isLoggedIn();
-		if ($isLogged && $redirect) {
+		if ($this->action !== 'verify' && $isLogged && $redirect) {
 			$this->redirect(self::REDIRECT_IS_LOGGED);
 		}
 		return $isLogged;

@@ -28,7 +28,7 @@ abstract class BasePresenter extends Presenter
 {
 
 	/** @persistent */
-	public $lang = '';
+	public $lang = 'en';
 
 	/** @persistent */
 	public $backlink = '';

@@ -53,9 +53,17 @@ services:
 		inject: yes
 
 	# AfterRegistration
-	ICompleteAccountControlFactory:
-		create: App\Components\AfterRegistration\CompleteAccountControl
-		implement: App\Components\AfterRegistration\ICompleteAccountControlFactory
+	ICompleteCompanyControlFactory:
+		create: App\Components\AfterRegistration\CompleteCompanyControl
+		implement: App\Components\AfterRegistration\ICompleteCompanyControlFactory
+		inject: yes
+	ICompleteCandidateFirstControlFactory:
+		create: App\Components\AfterRegistration\CompleteCandidateFirstControl
+		implement: App\Components\AfterRegistration\ICompleteCandidateFirstControlFactory
+		inject: yes
+	ICompleteCandidateSecondControlFactory:
+		create: App\Components\AfterRegistration\CompleteCandidateSecondControl
+		implement: App\Components\AfterRegistration\ICompleteCandidateSecondControlFactory
 		inject: yes
 
 	# User

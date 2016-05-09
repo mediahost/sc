@@ -97,14 +97,10 @@ class FacebookControl extends BaseControl
 	 */
 	protected function createUser(ArrayHash $me)
 	{
-		$user = new Entity\User();
-		$user->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
-
 		if (isset($me->email)) {
-			$user->mail = $me->email;
-			$this->session->verification = TRUE;
+			$user = new Entity\User($me->email, TRUE);
 		} else {
-			$this->session->verification = FALSE;
+			$user = new Entity\User();
 		}
 
 		$fb = new Entity\Facebook($me->id);

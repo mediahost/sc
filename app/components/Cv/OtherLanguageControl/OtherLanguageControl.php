@@ -26,34 +26,37 @@ class OtherLanguageControl extends BaseControl
 	private $language;
 
 	// </editor-fold>
-	
+
 	/**
 	 * Renders control
 	 */
-	public function render() {
+	public function render()
+	{
 		$this->template->cv = $this->cv;
 		$this->template->language = $this->language;
 		$this->setDisabled();
 		parent::render();
 	}
-	
+
 	/**
 	 * Edits Language entity
 	 * @param int $langId
 	 */
-	public function handleEdit($langId) {
+	public function handleEdit($langId)
+	{
 		$this->template->activeId = $langId;
 		$langDao = $this->em->getDao(Language::getClassName());
 		$lang = $langDao->find($langId);
 		$this->setLanguage($lang);
 		$this->invalidateControl();
 	}
-	
+
 	/**
 	 * Deletes Language entity
 	 * @param int $langId
 	 */
-	public function handleDelete($langId) {
+	public function handleDelete($langId)
+	{
 		$langDao = $this->em->getDao(Language::getClassName());
 		$lang = $langDao->find($langId);
 		$langDao->delete($lang);
@@ -83,16 +86,17 @@ class OtherLanguageControl extends BaseControl
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
-		$form->onError[] = function() {
+		$form->onError[] = function () {
 			var_dump($this['form']->errors);
-			echo 'ccccc';exit;
+			echo 'ccccc';
+			exit;
 		};
 		return $form;
 	}
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		if($values['id'] != 0) {
+		if ($values['id'] != 0) {
 			$lang = $this->em->getDao(Language::getClassName())->find($values['id']);
 			$this->setLanguage($lang);
 		}
@@ -114,7 +118,7 @@ class OtherLanguageControl extends BaseControl
 		$this->language->spokenInteraction = $values->interaction;
 		$this->language->spokenProduction = $values->production;
 		$this->language->writing = $values->writing;
-		
+
 		$this->cv->addLanguage($this->language);
 		return $this;
 	}
@@ -144,21 +148,23 @@ class OtherLanguageControl extends BaseControl
 		return $values;
 	}
 
-	private function setDisabled() 
+	private function setDisabled()
 	{
-		if($this->language) {
+		if ($this->language) {
 			$this['form']['language']->setAttribute('disabled');
 			$this['form']['language']->setDefaultValue($this->language->language);
 			return;
 		}
-		
+
 		$disabledLang = [];
-		foreach ($this->cv->languages as $lng) {
-			$disabledLang[] = $lng->language;
+		if (is_array($this->cv->languages)) {
+			foreach ($this->cv->languages as $lng) {
+				$disabledLang[] = $lng->language;
+			}
 		}
 		$this['form']['language']->setDisabled($disabledLang);
 	}
-	
+
 	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->cv) {

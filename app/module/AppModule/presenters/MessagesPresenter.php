@@ -7,6 +7,7 @@ use App\Components\ICommunicationListFactory;
 use App\Components\IStartCommunicationModalFactory;
 use App\Model\Entity\Communication;
 use App\Model\Facade\UserFacade;
+use Tracy\Debugger;
 
 class MessagesPresenter extends BasePresenter
 {
@@ -47,7 +48,9 @@ class MessagesPresenter extends BasePresenter
 			}
 		}
 		$this->template->conversation = $this->communication;
-		$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity);
+		if ($this->communication) {
+			$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity);
+		}
 	}
 
 	public function createComponentStartCommunicationModal()

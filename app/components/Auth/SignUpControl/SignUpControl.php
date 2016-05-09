@@ -84,15 +84,10 @@ class SignUpControl extends BaseControl
 	 */
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$entity = new User;
-		$entity->setMail($values->mail)
-				->setPassword($values->password);
-		$entity->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
-		$this->userFacade->saveUserEntity($entity);
+		$user = new User($values->mail, FALSE);
+		$user->setPassword($values->password);
 
-		$this->session->verification = FALSE;
-
-		$this->onSuccess($this, $entity);
+		$this->onSuccess($this, $user);
 	}
 
 	public function renderLogin()

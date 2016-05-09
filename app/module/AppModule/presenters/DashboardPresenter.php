@@ -1,12 +1,16 @@
 <?php
 
 namespace App\AppModule\Presenters;
+use App\Mail\Messages\ICreateRegistrationMessageFactory;
 
 /**
  * Dashboard presenter
  */
 class DashboardPresenter extends BasePresenter
 {
+
+	/** @var ICreateRegistrationMessageFactory @inject */
+//	public $message;
 
 	/**
 	 * @secured
@@ -15,7 +19,9 @@ class DashboardPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		
+//		$message = $this->message->create();
+//		$message->addTo($this->user->identity->mail);
+//		$message->send();
 	}
 
 }

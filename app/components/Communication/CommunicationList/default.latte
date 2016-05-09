@@ -32,5 +32,8 @@
 				{_'Show more'} ({!= count($communications) - $communicationCount})
 			</a>
 		</div>
+		<div n:if="!count($communications)">
+			{_'You have no messages yet.'}
+		</div>
 	</div>
 </div>

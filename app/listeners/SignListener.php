@@ -17,11 +17,13 @@ use Nette\Application\Application;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Object;
+use Tracy\Debugger;
 
 class SignListener extends Object implements Subscriber
 {
 
 	const REDIRECT_AFTER_LOGIN = ':App:Dashboard:';
+	const REDIRECT_AFTER_REGISTER = ':App:CompleteAccount:';
 	const REDIRECT_SIGNIN_PAGE = ':Front:Sign:in';
 	const REDIRECT_SIGN_UP_REQUIRED = ':Front:Sign:upRequired';
 
@@ -129,26 +131,25 @@ class SignListener extends Object implements Subscriber
 	 */
 	private function verify(Control $control, User $user)
 	{
-		if ($this->session->isVerified()) { // verifikovaná metoda
-			$signedRole = $this->roleFacade->findByName(Role::SIGNED);
-			$user->addRole($signedRole);
-			$savedUser = $this->em->getDao(User::getClassName())->save($user);
-			$this->onCreate($control->presenter, $savedUser);
-		} else {
-			$registration = $this->userFacade->createRegistration($user);
-			$redirectRole = $this->session->redirectRole;
-			$this->session->remove();
+		$role = $this->roleFacade->findByName($this->session->getRole(TRUE));
+		$user->addRole($role);
 
-			// Send verification e-mail
-			$message = $this->verificationMessage->create();
-			$message->addParameter('link', $this->application->presenter->link('//:Front:Sign:verify', $registration->verificationToken));
-			$message->addTo($user->mail);
-			$message->send();
+		$userRepo = $this->em->getRepository(User::getClassName());
+		$this->userFacade->setVerification($user);
+		$userRepo->save($user);
 
+		$this->session->remove();
 
-			$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
-			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE, ['role' => $redirectRole]);
-		}
+		// Send verification e-mail
+		$message = $this->verificationMessage->create();
+		$message->addParameter('link', $this->application->presenter->link('//:Front:Sign:verify', $user->verificationToken));
+		$message->addTo($user->mail);
+		$message->send();
+
+		$control->presenter->user->login($user);
+		$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
+		$control->presenter->redirect(self::REDIRECT_AFTER_REGISTER);
+//		}
 	}
 
 	/**

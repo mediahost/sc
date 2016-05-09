@@ -44,9 +44,6 @@ class UserFacade extends Object
 	/** @var UserRepository */
 	private $userRepo;
 
-	/** @var RegistrationRepository */
-	private $registrationRepo;
-
 	/** @var CompanyPermissionRepository */
 	private $companyPermissionRepo;
 
@@ -64,7 +61,6 @@ class UserFacade extends Object
 		$this->expirationService = $expiration;
 		$this->em = $em;
 		$this->userRepo = $this->em->getRepository(User::getClassName());
-		$this->registrationRepo = $this->em->getRepository(Registration::getClassName());
 		$this->companyPermissionRepo = $this->em->getRepository(CompanyPermission::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 		$this->configSettingsDao = $this->em->getDao(PageConfigSettings::getClassName());
@@ -74,9 +70,5 @@ class UserFacade extends Object
 	public function isUnique($mail)
 	{
 		return $this->findByMail($mail) === NULL;
-	}
-
-	public function saveUserEntity(User $user) {
-		$this->userRepo->save($user);
 	}
 }

@@ -20,6 +20,7 @@ use Nette\Security\IIdentity;
  * @property PageConfigSettings $pageConfigSettings
  * @property PageDesignSettings $pageDesignSettings
  * @property bool|null $beNotified
+ * @property bool $verificated
  */
 class User extends BaseEntity implements IIdentity, IUserSocials
 {
@@ -38,16 +39,14 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 	/** @ORM\OneToOne(targetEntity="PageDesignSettings", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $pageDesignSettings;
 
-	/**
-	 * @ORM\Column(type="boolean", nullable=true)
-	 * @var bool|NULL
-	 */
+	/** @ORM\Column(type="boolean", nullable=true) */
 	protected $beNotified;
 
-	public function __construct($mail = NULL)
+	public function __construct($mail = NULL, $verificated = FALSE)
 	{
-		$this->roles = new ArrayCollection;
-		$this->allowedCompanies = new ArrayCollection;
+		$this->roles = new ArrayCollection();
+		$this->allowedCompanies = new ArrayCollection();
+		$this->verificated = $verificated;
 		if ($mail) {
 			$this->mail = $mail;
 		}

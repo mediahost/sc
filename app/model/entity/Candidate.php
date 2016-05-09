@@ -26,6 +26,7 @@ use Nette\Utils\Strings;
  * @property-read string $degreeName
  * @property string $nationality
  * @property string $phone
+ * @property bool $freelancer
  * @property Address $address
  * @property Image $photo
  * @property Cv[] $cvs
@@ -39,16 +40,16 @@ class Candidate extends BaseEntity
 
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $firstname;
-		
+
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $middlename;
-	
+
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $surname;
 
-	/** @ORM\Column(type="date", nullable=true) */
+	/** @ORM\Column(type="string", length=3, nullable=true) */
 	protected $title;
-	
+
 	/** @ORM\Column(type="date", nullable=true) */
 	protected $birthday;
 
@@ -73,6 +74,15 @@ class Candidate extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="Address", cascade="all", fetch="LAZY") */
 	protected $address;
 
+	/** @ORM\Column(type="boolean") */
+	protected $freelancer = FALSE;
+
+	/** @ORM\Column(type="array") */
+	protected $workLocations;
+
+	/** @ORM\Column(type="array") */
+	protected $qualifiedSkills;
+
 	/** @ORM\OneToMany(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $cvs;
 
@@ -82,13 +92,14 @@ class Candidate extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="User", mappedBy="candidate", fetch="LAZY") */
 	protected $user;
 
-
 	public function __construct($name = NULL)
 	{
 		if ($name) {
 			$this->name = $name;
 		}
-		$this->cvs = new ArrayCollection;
+		$this->workLocations = [];
+		$this->qualifiedSkills = [];
+		$this->cvs = new ArrayCollection();
 		parent::__construct();
 	}
 
@@ -120,11 +131,11 @@ class Candidate extends BaseEntity
 		$genders = self::getGenderList();
 		return array_key_exists($this->gender, $genders) ? $genders[$this->gender] : NULL;
 	}
-	
+
 	public function getTitleName()
 	{
 		$titles = self::getTitleList();
-		return array_key_exists($this->title, $titles)  ?  $titles[$this->title] : NULL;
+		return array_key_exists($this->title, $titles) ? $titles[$this->title] : NULL;
 	}
 
 	public function getNationalityName()
@@ -136,6 +147,16 @@ class Candidate extends BaseEntity
 	public function getDegreeName()
 	{
 		return $this->degreeBefore . ' ' . $this->name . ' ' . $this->degreeAfter;
+	}
+
+	public function isRequiredPersonalFilled()
+	{
+		return $this->photo && $this->address && $this->firstname && $this->surname && $this->phone;
+	}
+
+	public function isRequiredOtherFilled()
+	{
+		return count($this->qualifiedSkills) && count($this->workLocations);
 	}
 
 	public function setPhoto(FileUpload $file)
@@ -166,7 +187,7 @@ class Candidate extends BaseEntity
 	public function getDocuments() {
 		return $this->documents;
 	}
-	
+
 	public function getName()
 	{
 		return sprintf('%s %s %s', $this->firstname, $this->middlename, $this->surname);
@@ -180,15 +201,98 @@ class Candidate extends BaseEntity
 			'x' => 'Not disclosed',
 		];
 	}
-	
+
 	public static function getTitleList()
 	{
-		return ['Mr.', 'Mrs.', 'Ms.'];
+		return [
+			'mr' => 'Mr.',
+			'mrs' => 'Mrs.',
+			'ms' => 'Ms.',
+		];
 	}
 
 	public static function getNationalityList()
 	{
 		return Address::getCountriesList();
+	}
+
+	public static function getLocalities($flat = FALSE)
+	{
+		$countries = [
+			'European Union' => [
+				2 => 'Austria',
+				3 => 'Belgium',
+				4 => 'Bulgaria',
+				5 => 'Croatia',
+				6 => 'Cyprus',
+				7 => 'Czech Republic',
+				8 => 'Denmark',
+				9 => 'Estonia',
+				10 => 'Finland',
+				11 => 'France',
+				12 => 'Germany',
+				13 => 'Greece',
+				14 => 'Hungary',
+				15 => 'Ireland',
+				16 => 'Italy',
+				17 => 'Latvia',
+				18 => 'Lithuania',
+				19 => 'Luxembourg',
+				20 => 'Malta',
+				21 => 'Netherlands',
+				22 => 'Poland',
+				23 => 'Portugal',
+				24 => 'Romania',
+				25 => 'Slovakia',
+				26 => 'Slovenia',
+				27 => 'Spain',
+				28 => 'Sweden',
+				29 => 'United Kingdom',
+			],
+			'Rest of Europe' => [
+				30 => 'Albania',
+				31 => 'Armenia',
+				32 => 'Azerbaijan',
+				33 => 'Belarus',
+				34 => 'Bosnia & Herzegovina',
+				35 => 'Georgia',
+				36 => 'Iceland',
+				37 => 'Kazakhstan',
+				38 => 'Macedonia',
+				39 => 'Moldova',
+				40 => 'Montenegro',
+				41 => 'Russia',
+				42 => 'Serbia',
+				43 => 'Switzerland',
+				44 => 'Turkey',
+				45 => 'Ukraine',
+			],
+			'Middle East' => [
+				46 => 'Israel',
+				47 => 'United Arab Emirate',
+				48 => 'Saudi Arabia',
+				49 => 'Qatar',
+			],
+			'North America' => [
+				50 => 'USA',
+				51 => 'Canada',
+			],
+		];
+		if ($flat) {
+			$flatArray = [];
+			foreach ($countries as $countryId => $country) {
+				if (is_array($country)) {
+					foreach ($country as $countryItemId => $countryItem) {
+						$flatArray[$countryItemId] = $countryItem;
+					}
+				} else {
+					$flatArray[$countryId] = $country;
+				}
+			}
+			return $flatArray;
+		} else {
+			return $countries;
+		}
 	}
 
 }

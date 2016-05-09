@@ -82,15 +82,13 @@ class TwitterControl extends BaseControl
 	 */
 	protected function createUser(array $data)
 	{
-		$userData = $data['user'];
 		$user = new Entity\User();
-		$user->requiredRole = $this->roleFacade->findByName($this->session->getRole(TRUE));
 
+		$userData = $data['user'];
 		$twitter = new Entity\Twitter($userData->id_str);
 		$this->loadTwitterEntity($twitter, $data);
 		$user->twitter = $twitter;
 
-		$this->session->verification = FALSE;
 		return $user;
 	}
 

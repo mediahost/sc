@@ -6,6 +6,7 @@ use App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Role;
 use App\Model\Facade\CommunicationFacade;
+use Tracy\Debugger;
 
 abstract class BasePresenter extends BaseBasePresenter
 {
@@ -15,9 +16,9 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	/** @var Communication[] */
 	private $userCommunications;
-	
+
 	private $showRightSideBar = true;
-	
+
 
 	public function getUserCommunications()
 	{
@@ -30,13 +31,13 @@ abstract class BasePresenter extends BaseBasePresenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->checkUncompleteAccount();
+		$this->checkCompleteAccount();
 	}
 
 	protected function beforeRender()
 	{
 		parent::beforeRender();
-		$this->template->isCompleteAccount = !$this->isUncompleteAccount();
+		$this->template->isCompleteAccount = $this->isCompleteAccount();
 		$this->template->allowedLanguages = $this->languageService->allowedLanguages;
 		$this->template->communications = $this->getUserCommunications();
 		$this->template->unreadMessagesCount = $this->communicationFacade->getUserUnreadCount($this->getUserCommunications(), $this->user->identity);
@@ -44,12 +45,12 @@ abstract class BasePresenter extends BaseBasePresenter
 		$this->template->showRightSidebar = $this->showRightSideBar;
 	}
 
-	/**
-	 * If only role is SIGNED, then redirect to complete account
-	 */
-	private function checkUncompleteAccount()
+	private function checkCompleteAccount()
 	{
-		if ($this->isUncompleteAccount() && $this->name !== 'App:CompleteAccount') {
+		if (!$this->user->loggedIn) {
+			$this->redirect(':Front:Sign:in');
+		}
+		if (!$this->isCompleteAccount() && $this->name !== 'App:CompleteAccount') {
 			$this->redirect(':App:CompleteAccount:');
 		}
 	}
@@ -58,12 +59,15 @@ abstract class BasePresenter extends BaseBasePresenter
 	 * Check if user account is uncomplete
 	 * @return bool
 	 */
-	private function isUncompleteAccount()
+	private function isCompleteAccount()
 	{
-		return $this->user->isInRole(Role::SIGNED) && count($this->user->roles) === 1;
+		$identity = $this->user->identity;
+		$candidate = $identity->candidate;
+		return $candidate->isRequiredPersonalFilled() && $candidate->isRequiredOtherFilled()  && $identity->verificated;
 	}
 
-	protected function hideRightSidebar() {
+	protected function hideRightSidebar()
+	{
 		$this->showRightSideBar = false;
 	}
 }

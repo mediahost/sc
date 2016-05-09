@@ -79,7 +79,7 @@ class DateInput extends BaseControl
 				->id($this->getHtmlId())
 				->value($this->day)
 				->addAttributes(['placeholder' => $this->translator->translate('day')]);
-		$elDay->class = 'form-control input-xsmall';
+		$elDay->class = 'form-control input-mini';
 		$elMonth = Helpers::createSelectBox(
 						$months, array('selected?' => $this->month)
 				)

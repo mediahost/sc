@@ -15,7 +15,8 @@ trait UserFacadeRecovery
 	 */
 	public function setRecovery(User &$user)
 	{
-		$user->setRecovery(Random::generate(32), 'now + ' . $this->expirationService->recovery);
+		$token = Random::generate(32);
+		$user->setRecovery($token, 'now + ' . $this->expirationService->recovery);
 		return $this;
 	}
 
@@ -29,6 +30,19 @@ trait UserFacadeRecovery
 		$user->password = $password;
 		$user->removeRecovery();
 		return $this;
+	}
+
+	/**
+	 * Create registration
+	 * @param User $user
+	 * @return Registration
+	 */
+	public function setVerification(User $user)
+	{
+		$token = Random::generate(32);
+		$user->setVerification($token, 'now + ' . $this->expirationService->verification);
+
+		return $user;
 	}
 
 }
