@@ -1,7 +1,7 @@
 {block sidebar}
 <!-- BEGIN SIDEBAR -->
 <div id="sidebar" class="page-sidebar hidden-lg hidden-md hidden-sm hidden-xs">
-	<div class="shortcuts">
+	<div class="shortcuts" n:if="$isCandidate && $isCompleteAccount">
 		<ul>
 			<li>
 				<a n:href="this" title="{_'Your CV'}" class="tip">
@@ -35,7 +35,7 @@
 							</a>
 						</li>
 						
-						<li n:if="$user->isAllowed('messages')">
+						<li n:if="$user->isAllowed('messages') && $isCompleteAccount">
 							<a n:href="Messages:" n:class="$presenter->isLinkCurrent('Messages:*') ? active">
 								<i class="s16 icomoon-icon-envelop"></i>
 								<span class="txt">{_'Messages'}</span>
@@ -43,7 +43,7 @@
 							</a>
 						</li>
 						
-						<li n:if="$isCandidate">
+						<li n:if="$isCandidate && $isCompleteAccount">
 							<a n:href="CvEditor:" 
 							   n:class="$presenter->isLinkCurrent('CvEditor:*') && !$presenter->isLinkCurrent('CvEditor:Skills') && !$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
 								<i class="s16 icomoon-icon-clipboard"></i>
@@ -51,14 +51,14 @@
 							</a>
 						</li>
 						
-						<li n:if="$isCandidate">
+						<li n:if="$isCandidate && $isCompleteAccount">
 							<a n:href="CvEditor:Skills" n:class="$presenter->isLinkCurrent('CvEditor:Skills') ? active">
 								<i class="s16 icomoon-icon-clipboard"></i>
 								<span class="txt">{_'IT Skills'}</span>
 							</a>
 						</li>
 
-						<li n:if="$isCandidate">
+						<li n:if="$isCandidate && $isCompleteAccount">
 							<a n:href="CvEditor:CareerDocs" n:class="$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
 								<i class="s16 icomoon-icon-clipboard"></i>
 								<span class="txt">{_'Career Docs'}</span>

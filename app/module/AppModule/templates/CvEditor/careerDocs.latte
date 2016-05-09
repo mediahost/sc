@@ -4,6 +4,25 @@
 *}
 {block content}
     <div class="panel-body">
-        <form id="my-awesome-dropzone" action="{link careerDocsControl-send!}" class="dropzone"></form>
+        {control careerDocsControl}
     </div>
 {/block content}
+
+{block jsPage}
+    <script>
+        $(document).ready(function() {
+            $('a.confirm').click(function(e) {
+                e.preventDefault();
+                var href = this.href;
+                bootbox.confirm({
+                    message: {_'Do you really want to delete file?'},
+                    title: {_'Are you sure ?'},
+                    callback: function(result) {
+                        //callback result
+                        location.href = href;
+                    }
+                });
+            });
+        });
+    </script>
+{/block jsPage}

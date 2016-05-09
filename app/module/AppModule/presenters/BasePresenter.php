@@ -47,6 +47,9 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	private function checkCompleteAccount()
 	{
+		if (!$this->user->loggedIn) {
+			$this->redirect(':Front:Sign:in');
+		}
 		if (!$this->isCompleteAccount() && $this->name !== 'App:CompleteAccount') {
 			$this->redirect(':App:CompleteAccount:');
 		}

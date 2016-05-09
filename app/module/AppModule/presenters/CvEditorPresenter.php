@@ -168,6 +168,7 @@ class CvEditorPresenter extends BasePresenter
 	public function actionSkills($id = NULL)
 	{
 		$this->getCv($id);
+		$this['skillsForm']->setTemplateFile('ItSkills');
 	}
 
 	public function actionCareerDocs() {
@@ -334,6 +335,10 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentCareerDocsControl()
 	{
 		$control = $this->iCareerDocsControlFactory->create();
+		$control->setCandidate($this->user->identity->candidate);
+		$control->onAfterSave[] = function(){
+			$this->redirect('this');
+		};
 		return $control;
 	}
 }

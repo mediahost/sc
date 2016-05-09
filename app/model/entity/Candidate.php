@@ -30,6 +30,7 @@ use Nette\Utils\Strings;
  * @property Address $address
  * @property Image $photo
  * @property Cv[] $cvs
+ * @property Document[] $documents
  * @property User $user
  */
 class Candidate extends BaseEntity
@@ -85,6 +86,9 @@ class Candidate extends BaseEntity
 	/** @ORM\OneToMany(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $cvs;
 
+	/** @ORM\OneToMany(targetEntity="Document", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
+	protected $documents;
+
 	/** @ORM\OneToOne(targetEntity="User", mappedBy="candidate", fetch="LAZY") */
 	protected $user;
 
@@ -101,7 +105,7 @@ class Candidate extends BaseEntity
 
 	public function __toString()
 	{
-		return (string)$this->name;
+		return (string) $this->name;
 	}
 
 	public function hasDefaultCv()
@@ -165,6 +169,23 @@ class Candidate extends BaseEntity
 		$this->photo->requestedFilename = 'candidate_photo_' . Strings::webalize(microtime());
 		$this->photo->setFolder(Image::FOLDER_CANDIDATE_IMAGE);
 		return $this;
+	}
+
+	public function addDocument($document) {
+		$this->documents[] = $document;
+	}
+
+	public function removeDocument($documentId) {
+		foreach ($this->documents as $document) {
+			if($document->id == $documentId) {
+				$this->documents->removeElement($document);
+			}
+		}
+		return $this;
+	}
+
+	public function getDocuments() {
+		return $this->documents;
 	}
 
 	public function getName()

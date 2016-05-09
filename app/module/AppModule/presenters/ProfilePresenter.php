@@ -14,6 +14,7 @@ use App\Components\Candidate\IPhotoControlFactory;
 use App\Components\Candidate\IProfileControlFactory;
 use App\Components\Candidate\IAddressControlFactory;
 use App\Components\Candidate\ISocialControlFactory;
+use App\Components\User\ICareerDocsControlFactory;
 use App\Model\Entity;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Candidate;
@@ -51,6 +52,9 @@ class ProfilePresenter extends BasePresenter
 	
 	/** @var ILivePreviewControlFactory @inject */
 	public $iLivePreviewControlFactory;
+
+	/** @var ICareerDocsControlFactory @inject */
+	public $iCareerDocsControlFactory;
 
 	/** @var CvFacade @inject */
 	public $cvFacade;
@@ -294,6 +298,14 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iLivePreviewControlFactory->create();
 		$control->setScale(0.8, 0.8, 1);
 		$control->setCv($this->cv);
+		return $control;
+	}
+
+	public function createComponentDocsControl()
+	{
+		$control = $this->iCareerDocsControlFactory->create();
+		$control->setCandidate($this->candidate);
+		$control->setTemplateFile('overView');
 		return $control;
 	}
 	
