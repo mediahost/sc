@@ -43,6 +43,11 @@ class SkillFacade extends Object
 		}
 		foreach($categories as $key => $category) {
 			$empty = true;
+			foreach ($category->skills as $skill) {
+				if(in_array($skill->id, $knowsId)) {
+					$empty = false;
+				}
+			}
 			foreach ($category->childs as $child) {
 				foreach ($child->skills as $skill) {
 					if(in_array($skill->id, $knowsId)) {
