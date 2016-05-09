@@ -123,7 +123,7 @@ class CompleteAccountPresenter extends BasePresenter
 			$message->addTo($user->mail);
 			$message->send();
 
-			$this->flashMessage('Verification mail was sended.', 'success');
+			$this->flashMessage('Verification mail has been send.', 'success');
 			$this->redirect('this');
 		}
 	}
