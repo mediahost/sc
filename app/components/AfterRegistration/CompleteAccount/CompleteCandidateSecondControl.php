@@ -123,13 +123,14 @@ class CompleteCandidateSecondControl extends BaseControl
 		if (!count($countryList)) {
 			$form->addError('Enter at least one country');
 		}
+		
+		$user->candidate->qualifiedSkills = $skillList;
+		$user->candidate->workLocations = $countryList;
+		$user->candidate->freelancer = $values->freelancer;
+
+		$userRepo->save($user);
 
 		if (!$form->hasErrors()) {
-			$user->candidate->qualifiedSkills = $skillList;
-			$user->candidate->workLocations = $countryList;
-			$user->candidate->freelancer = $values->freelancer;
-
-			$userRepo->save($user);
 
 			$this->onSuccess($this, $user->candidate);
 		}

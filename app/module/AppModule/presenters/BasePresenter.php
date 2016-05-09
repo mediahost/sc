@@ -63,7 +63,7 @@ abstract class BasePresenter extends BaseBasePresenter
 	{
 		$identity = $this->user->identity;
 		$candidate = $identity->candidate;
-		return $candidate->isRequiredPersonalFilled() && $candidate->isRequiredOtherFilled()  && $identity->verificated;
+		return $candidate && $candidate->isRequiredPersonalFilled() && $candidate->isRequiredOtherFilled() && $identity->verificated;
 	}
 
 	protected function hideRightSidebar()
