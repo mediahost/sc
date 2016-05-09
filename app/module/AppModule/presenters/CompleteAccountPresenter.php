@@ -63,10 +63,15 @@ class CompleteAccountPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$user = $this->user;
-		$candidate = $user->identity->candidate;
-		if ($user->isInRole(Role::CANDIDATE) && $candidate->isRequiredPersonalFilled()) {
-			$this->redirect('step2');
+		if ($this->user->isInRole(Role::CANDIDATE)) {
+			if (!$this->user->identity->candidate) {
+				$userRepo = $this->em->getRepository(User::getClassName());
+				$this->user->identity->initCandidate();
+				$userRepo->save($this->user->identity);
+			}
+			if ($this->user->identity->candidate->isRequiredPersonalFilled()) {
+				$this->redirect('step2');
+			}
 		}
 	}
 
