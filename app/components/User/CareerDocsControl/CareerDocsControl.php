@@ -122,7 +122,12 @@ class CareerDocsControl extends BaseControl
 
     public function fileExtension($name) {
         $ext = pathinfo($name, PATHINFO_EXTENSION);
-        return strtolower($ext);
+        switch(strtolower($ext)) {
+            case 'jpg': return 'jpg';
+            case 'png': return 'png';
+            case 'pdf': return 'pdf';
+            default: return 'default';
+        }
     }
 }
 
