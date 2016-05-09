@@ -84,3 +84,6 @@
 ################
 /www/pdf/*
 !/www/pdf/
+/temp
+/temp
+/www/careerDocs
