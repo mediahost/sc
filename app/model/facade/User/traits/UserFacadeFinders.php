@@ -31,14 +31,10 @@ trait UserFacadeFinders
 	 */
 	public function findByVerificationToken($token)
 	{
-		$registration = $this->registrationRepo->findOneBy(['verificationToken' => $token]);
+		$user = $this->userRepo->findOneBy(['verificationToken' => $token]);
 
-		if ($registration) {
-			if ($registration->verificationExpiration > new DateTime()) {
-				return $registration;
-			} else {
-				$this->registrationRepo->delete($registration);
-			}
+		if ($user && $user->verificationExpiration > new DateTime()) {
+			return $user;
 		}
 
 		return NULL;
@@ -48,7 +44,7 @@ trait UserFacadeFinders
 	{
 		if (!empty($token)) {
 			$user = $this->userRepo->findOneBy([
-					'recoveryToken' => $token
+				'recoveryToken' => $token
 			]);
 
 			if ($user) {

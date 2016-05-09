@@ -76,6 +76,7 @@ webloader:
 				- %wwwDir%/assets/js/supr/plugins/tables/datatables/dataTables.bootstrap.js
 				- %wwwDir%/assets/js/supr/jquery.supr.js
 				- %wwwDir%/assets/js/addones/bootstrap-rating.js
+				- %wwwDir%/assets/js/jstree/jstree.min.js
 				- %wwwDir%/assets/js/nette.ajax/nette.ajax.min.js
 				- %wwwDir%/assets/js/live-form-validation.js
 				- %wwwDir%/assets/js/nette.serversidevalidation.js
@@ -91,6 +92,7 @@ webloader:
 				- %wwwDir%/assets/js/scripts/custom/global.js
 				- %wwwDir%/assets/js/scripts/custom/login.js
 				- %wwwDir%/assets/js/scripts/custom/pdf-preview.js
+				- %wwwDir%/assets/js/scripts/custom/jstree.js
 				- %wwwDir%/assets/js/scripts/custom/custom-init.js
 				- %wwwDir%/assets/js/scripts/init.js
 			filters:

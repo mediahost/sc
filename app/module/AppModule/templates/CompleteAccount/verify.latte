@@ -1,0 +1,20 @@
+{block pageTitle}
+{_'Your account is already prepared!'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+	<span>{_'Registration'}</span>
+</li>
+{/block}
+
+{block content}
+<div class="row">
+	<div class="col-md-6">
+		<h4>{_'Please check you mailbox for verification message.'}</h4>
+		<p>{_'After verification your account will be active.'}</p>
+		<p>{_'If you can\'t find verification link in your mailbox, you can use'}
+			<a n:href="resendVerification!">{_'this link for send new verification message'}</a>.
+		</p>
+	</div>
+</div>

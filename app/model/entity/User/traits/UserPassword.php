@@ -10,6 +10,9 @@ use Nette\Security\Passwords;
  * @property-write $password
  * @property-read string $recoveryToken
  * @property-read DateTime $recoveryExpiration
+ * @property-read string $verificationToken
+ * @property-read DateTime $verificationExpiration
+ * @property bool $verificated
  */
 trait UserPassword
 {
@@ -22,6 +25,15 @@ trait UserPassword
 
 	/** @ORM\Column(type="datetime", nullable=true) */
 	private $recoveryExpiration;
+
+	/** @ORM\Column(type="string", length=256) */
+	protected $verificationToken;
+
+	/** @ORM\Column(type="datetime") */
+	protected $verificationExpiration;
+
+	/** @ORM\Column(type="boolean") */
+	protected $verificated = FALSE;
 
 	public function setPassword($password, array $options = NULL)
 	{
@@ -76,22 +88,15 @@ trait UserPassword
 		return $this->recoveryExpiration;
 	}
 
-	/** @return string */
-	public function getHash()
+	public function setVerification($token, $expirationTime)
 	{
-		if ($this->isNew()) {
-			return $this->hash;
+		if (!($expirationTime instanceof DateTime)) {
+			$expirationTime = new DateTime($expirationTime);
 		}
-		throw new MemberAccessException('Cannot read saved property ' . self::getClassName() . '::$hash');
-	}
 
-	public function setHash($hash)
-	{
-		if ($this->isNew()) {
-			$this->hash = $hash;
-			return $this;
-		}
-		throw new MemberAccessException('Cannot write saved property ' . self::getClassName() . '::$hash');
+		$this->verificationToken = $token;
+		$this->verificationExpiration = $expirationTime;
+		return $this;
 	}
 
 }

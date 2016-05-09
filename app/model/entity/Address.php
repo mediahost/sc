@@ -10,6 +10,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @ORM\Entity
  *
  * @property string $name
+ * @property string $house
  * @property string $street
  * @property string $city
  * @property string $zipcode

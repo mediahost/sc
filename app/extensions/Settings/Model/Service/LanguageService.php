@@ -50,7 +50,7 @@ class LanguageService extends BaseService
 			if (!$this->user->pageConfigSettings instanceof PageConfigSettings) {
 				$this->user->pageConfigSettings = new PageConfigSettings;
 			}
-			$this->user->pageConfigSettings->language = $lang;
+			$this->user->getPageConfigSettings()->language = $lang;
 			$this->saveUser();
 		}
 		return $this;

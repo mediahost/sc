@@ -25,7 +25,9 @@ jQuery(document).ready(function () {
 	Global.init();
 	Login.init();
 	PdfPreview.init();
+
 	// Global components
+	CustomTrees.init();
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {

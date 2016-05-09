@@ -12,20 +12,12 @@ use App\Model\Entity\Role;
  * @property-read array $rolesKeys
  * @property Role $maxRole
  * @property Candidate $candidate
- * @property Role $requiredRole
- * @method self setRequiredRole(Role $role)
  */
 trait UserRoles
 {
 
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	private $roles;
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="Role", fetch="LAZY")
-	 * @ORM\JoinColumn(name="required_role_id", referencedColumnName="id", nullable=true)
-	 */
-	protected $requiredRole;
 
 	/** @ORM\OneToOne(targetEntity="Candidate", inversedBy="user", fetch="LAZY", cascade={"persist", "remove"}) */
 	protected $candidate;

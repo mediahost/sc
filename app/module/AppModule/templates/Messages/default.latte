@@ -14,7 +14,7 @@
 		{control communicationList}
 		{control startCommunicationModal}
 	</div>
-	<div class="col-md-7 col-sm-8" n:ifset="$conversation" n:snippet="messages">
+	<div class="col-md-7 col-sm-8" n:if="$conversation" n:snippet="messages">
 		{control communication}
 	</div>
 </div>

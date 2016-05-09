@@ -25,6 +25,7 @@
 		<meta property="og:image" content="{link //:Foto:Foto:}">
 		<meta property="og:url" content="{link //this}">
 
+		<link rel="stylesheet" type="text/css" media="screen,projection,tv" href="{$basePath}/assets/js/jstree/themes/default/style.min.css">
 		{include cssSuprFonts}
 		{control cssSupr}
 		{control cssApp}
@@ -83,7 +84,8 @@
 						</ul>
 					</div>
 					<!-- END PAGE HEADER-->
-					
+
+					{include flashMessage}
 					{include content}
                 </div>
                 <!-- End contentwrapper -->
