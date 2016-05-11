@@ -63,7 +63,10 @@ abstract class BasePresenter extends BaseBasePresenter
 	{
 		$identity = $this->user->identity;
 		$candidate = $identity->candidate;
-		return $candidate && $candidate->isRequiredPersonalFilled() && $candidate->isRequiredOtherFilled() && $identity->verificated;
+		$isCompleteAccount = $candidate && $candidate->isRequiredPersonalFilled() && $candidate->isRequiredOtherFilled() && $identity->verificated;
+		return $isCompleteAccount
+			|| in_array(Role::ADMIN, $this->getUser()->getRoles())
+			|| in_array(Role::SUPERADMIN, $this->getUser()->getRoles());
 	}
 
 	protected function hideRightSidebar()
