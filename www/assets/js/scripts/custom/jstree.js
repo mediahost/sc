@@ -9,6 +9,7 @@ var CustomTrees = function () {
                 'plugins': ["wholerow", "checkbox", "types"],
                 'core': {
                     "dblclick_toggle": true,
+                    "expand_selected_onload": false,
                     "themes": {
                         "responsive": false,
                         "icons": false
@@ -42,6 +43,7 @@ var CustomTrees = function () {
                 'plugins': ["wholerow", "checkbox", "types"],
                 'core': {
                     "dblclick_toggle": true,
+                    "expand_selected_onload": false,
                     "themes": {
                         "responsive": false,
                         "icons": false

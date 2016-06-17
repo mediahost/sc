@@ -3,7 +3,6 @@
 namespace App\Components\Job;
 
 use App\Components\BaseControl;
-use App\Forms\Controls\TextInputBased\TouchSpin;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Job;
@@ -15,9 +14,6 @@ use App\Model\Facade\SkillFacade;
 use Kdyby\Doctrine\EmptyValueException;
 use Nette\Utils\ArrayHash;
 
-/**
- * Job skills form
- */
 class SkillsControl extends BaseControl
 {
 	const SKILL_MIN = 1;
@@ -51,9 +47,9 @@ class SkillsControl extends BaseControl
 	{
 		$this->checkEntityExistsBeforeRender();
 
-		$form = new Form;
+		$form = new Form();
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer);
+		$form->setRenderer(new MetronicFormRenderer());
 
 		$defaultValues = $this->getDefaults();
 		$skills = $this->em->getDao(Skill::getClassName())->findAll();
@@ -130,7 +126,9 @@ class SkillsControl extends BaseControl
 			sscanf($values->yearRange->{$skill->id}, '%d,%d', $yearMin, $yearMax);
 			$newSkillRequest->setYears($yearMin, $yearMax);
 
-			$this->job->skillRequest = $newSkillRequest;
+			if ($newSkillRequest->isLevelsMatter()) {
+				$this->job->skillRequest = $newSkillRequest;
+			}
 		}
 		$this->job->removeOldSkillRequests();
 		return $this;
@@ -138,8 +136,8 @@ class SkillsControl extends BaseControl
 
 	private function save()
 	{
-		$cvRepo = $this->em->getRepository(Job::getClassName());
-		$cvRepo->save($this->job);
+		$jobRepo = $this->em->getRepository(Job::getClassName());
+		$jobRepo->save($this->job);
 		return $this;
 	}
 

@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\AfterRegistration\CompleteCandidateSecondControl;
+use App\Components\AfterRegistration\ICompleteCandidateSecondControlFactory;
 use App\Components\Auth\ConnectManagerControl;
 use App\Components\Auth\IConnectManagerControlFactory;
 use App\Components\Auth\ISetPasswordControlFactory;
@@ -34,46 +36,50 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var IConnectManagerControlFactory @inject */
 	public $iConnectManagerControlFactory;
-	
+
 	/** @var ISkillsControlFactory @inject */
 	public $iSkillsControlFactory;
-	
+
 	/** @var IPhotoControlFactory @inject */
 	public $iPhotoControlFactory;
-	
+
 	/** @var IProfileControlFactory @inject */
 	public $iProfileControlFactory;
-	
+
 	/** @var IAddressControlFactory @inject */
 	public $iAddressControlFactory;
-	
+
 	/** @var ISocialControlFactory @inject */
 	public $iSocialControlFactory;
-	
+
 	/** @var ILivePreviewControlFactory @inject */
 	public $iLivePreviewControlFactory;
 
 	/** @var ICareerDocsControlFactory @inject */
 	public $iCareerDocsControlFactory;
 
+	/** @var ICompleteCandidateSecondControlFactory @inject */
+	public $iCompleteCandidateSecondControlFactory;
+
 	/** @var CvFacade @inject */
 	public $cvFacade;
-	
+
 	/** @var Cv */
 	private $cv;
-	
+
 	/** @var Candidate */
 	private $candidate;
-	
-	
-	private function getCv() {
-		if(!isset($this->cv)) {
+
+
+	private function getCv()
+	{
+		if (!isset($this->cv)) {
 			$candidate = $this->user->identity->candidate;
 			$this->cv = $this->cvFacade->getDefaultCvOrCreate($candidate);
 		}
 		return $this->cv;
 	}
-	
+
 	protected function startup()
 	{
 		parent::startup();
@@ -87,7 +93,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		
+
 	}
 
 	/**
@@ -166,7 +172,7 @@ class ProfilePresenter extends BasePresenter
 	public function handleNotifyChange($bool)
 	{
 		if (is_numeric($bool)) {
-			$bool = (bool) $bool;
+			$bool = (bool)$bool;
 		} else {
 			$bool = NULL;
 		}
@@ -234,7 +240,7 @@ class ProfilePresenter extends BasePresenter
 		};
 		return $control;
 	}
-	
+
 	/** @return SkillsControl */
 	public function createComponentSkillsForm()
 	{
@@ -245,27 +251,27 @@ class ProfilePresenter extends BasePresenter
 		$control->setAjax(TRUE, TRUE);
 		return $control;
 	}
-	
+
 	/** @return PhotoControl */
 	public function createComponentPhotoControl()
 	{
 		$control = $this->iPhotoControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$message = new TaggedString('Photo for \'%s\' was successfully saved.', (string) $saved);
+			$message = new TaggedString('Photo for \'%s\' was successfully saved.', (string)$saved);
 			$this->flashMessage($message, 'success');
-			$this->invalidateControl('personalDetails');
+			$this->redrawControl('personalDetails');
 		};
 		return $control;
 	}
-	
+
 	/** @return ProfileControl */
 	public function createComponentProfileControl()
 	{
 		$control = $this->iProfileControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$this->invalidateControl('personalDetails');
+			$this->redrawControl('personalDetails');
 		};
 		return $control;
 	}
@@ -276,22 +282,22 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iAddressControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$this->invalidateControl('personalDetails');
+			$this->redrawControl('personalDetails');
 		};
 		return $control;
 	}
-	
+
 	/** @return SocialControl */
 	public function createComponentSocialControl()
 	{
 		$control = $this->iSocialControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$this->invalidateControl('socialLinks');
+			$this->redrawControl('socialLinks');
 		};
 		return $control;
 	}
-	
+
 	/** @return LivePreviewControl */
 	public function createComponentCvPreview()
 	{
@@ -308,12 +314,23 @@ class ProfilePresenter extends BasePresenter
 		$control->setTemplateFile('overView');
 		return $control;
 	}
-	
+
+	/** @return CompleteCandidateSecondControl */
+	protected function createComponentCompleteCandidateSecond()
+	{
+		$control = $this->iCompleteCandidateSecondControlFactory->create();
+		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
+			$this->flashMessage('Your data was saved.', 'success');
+			$this->redirect('this');
+		};
+		return $control;
+	}
+
 	// </editor-fold>
 }
 
 
 class ProfilePresenterException
 {
-	
+
 }

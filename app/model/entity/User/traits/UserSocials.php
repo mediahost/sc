@@ -32,10 +32,10 @@ interface IUserSocials
 trait UserSocials
 {
 
-	/** @ORM\OneToOne(targetEntity="Facebook", fetch="LAZY", cascade={"persist", "remove"}) */
+	/** @ORM\OneToOne(targetEntity="Facebook", fetch="LAZY", cascade={"persist", "remove"}, orphanRemoval=true) */
 	protected $facebook;
 
-	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"persist", "remove"}) */
+	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"persist", "remove"}, orphanRemoval=true) */
 	protected $twitter;
 	
 	/** @ORM\Column(type="string", length=256, nullable=true) */

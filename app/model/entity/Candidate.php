@@ -100,6 +100,7 @@ class Candidate extends BaseEntity
 		$this->workLocations = [];
 		$this->qualifiedSkills = [];
 		$this->cvs = new ArrayCollection();
+		$this->documents = new ArrayCollection();
 		parent::__construct();
 	}
 
