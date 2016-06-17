@@ -113,16 +113,16 @@ class SkillKnowRequest extends BaseEntity
 		return $this->levelTo;
 	}
 
-	/** @return int */
-	public function getYearsFrom()
+	/** @return int|NULL */
+	public function getYearsFrom($toInt = FALSE)
 	{
-		return $this->yearsFrom;
+		return $toInt ? (int)$this->yearsFrom : $this->yearsFrom;
 	}
 
-	/** @return int */
-	public function getYearsTo()
+	/** @return int|NULL */
+	public function getYearsTo($toInt = FALSE)
 	{
-		return $this->yearsTo;
+		return $toInt ? (int)$this->yearsTo : $this->yearsTo;
 	}
 
 }

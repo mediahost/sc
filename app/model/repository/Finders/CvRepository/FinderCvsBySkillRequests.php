@@ -47,7 +47,7 @@ class FinderCvsBySkillRequests extends Finder
 		if ($request->hasOneLevel()) {
 			$levelKey = $this->getKeyName('level');
 			$this->andRequests[] = $this->getExpr()->eq('k.level', ':' . $levelKey);
-			$this->setParameter($levelKey, $request->levelFrom);
+			$this->setParameter($levelKey, $request->getLevelFrom());
 		} else {
 			$this->joinLevelsTable = TRUE;
 
@@ -58,8 +58,8 @@ class FinderCvsBySkillRequests extends Finder
 			$expr2 = $this->getExpr()->lte('l.priority', ':' . $levelToKey);
 			$this->andRequests[] = $this->getExpr()->andX($expr1, $expr2);
 
-			$this->setParameter($levelFromKey, $request->levelFrom);
-			$this->setParameter($levelToKey, $request->levelFrom);
+			$this->setParameter($levelFromKey, $request->getLevelFrom());
+			$this->setParameter($levelToKey, $request->getLevelTo());
 		}
 	}
 
@@ -73,8 +73,8 @@ class FinderCvsBySkillRequests extends Finder
 			$expr2 = $this->getExpr()->lte('k.years', ':' . $keyTo);
 			$this->andRequests[] = $this->getExpr()->andX($expr1, $expr2);
 
-			$this->setParameter($keyFrom, $request->yearsFrom);
-			$this->setParameter($keyTo, $request->yearsTo);
+			$this->setParameter($keyFrom, $request->getYearsFrom(TRUE));
+			$this->setParameter($keyTo, $request->getYearsTo(TRUE));
 		}
 	}
 

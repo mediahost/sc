@@ -25,11 +25,11 @@ class JobsGrid extends BaseControl
 
 		$repo = $this->em->getRepository(Job::getClassName());
 		$qb = $repo->createQueryBuilder('j')
-				->select('j, c')
-				->innerJoin('j.company', 'c');
+			->select('j, c')
+			->innerJoin('j.company', 'c');
 		if ($this->company) {
 			$qb->where('j.company = :company')
-					->setParameter('company', $this->company);
+				->setParameter('company', $this->company);
 		}
 		$grid->model = new Doctrine($qb, [
 			'company' => 'c.name'
@@ -41,44 +41,44 @@ class JobsGrid extends BaseControl
 		]);
 
 		$grid->addColumnNumber('id', 'ID #')
-				->setSortable()
-				->setFilterNumber();
+			->setSortable()
+			->setFilterNumber();
 		$grid->getColumn('id')->headerPrototype->width = '5%';
 
 		$grid->addColumnText('name', 'Name')
-				->setSortable()
-				->setFilterText()
-				->setSuggestion();
+			->setSortable()
+			->setFilterText()
+			->setSuggestion();
 
 		$grid->addColumnText('description', 'Description')
-				->setSortable()
-				->setFilterText()
-				->setSuggestion();
+			->setSortable()
+			->setFilterText()
+			->setSuggestion();
 		$grid->getColumn('description')
-				->setTruncate(30);
+			->setTruncate(30);
 
 		if (!$this->company) {
 			$grid->addColumnText('company', 'Company')
-					->setSortable()
-					->setFilterText()
-					->setSuggestion();
+				->setSortable()
+				->setFilterText()
+				->setSuggestion();
 		}
 
 
 		$grid->addActionHref('view', 'View')
-						->setIcon('fa fa-eye');
+			->setIcon('fa fa-eye');
 
 		$grid->addActionHref('edit', 'Edit')
-						->setIcon('fa fa-edit');
+			->setIcon('fa fa-edit');
 
 		$grid->addActionHref('delete', 'Delete')
-						->setIcon('fa fa-trash-o')
-						->setConfirm(function($item) {
-							$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
-							return sprintf($message, (string) $item);
-						})
-				->elementPrototype->class[] = 'red';
-						
+			->setIcon('fa fa-trash-o')
+			->setConfirm(function ($item) {
+				$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
+				return sprintf($message, (string)$item);
+			})
+			->getElementPrototype()->class[] = 'red';
+
 		$grid->setActionWidth("20%");
 
 		return $grid;

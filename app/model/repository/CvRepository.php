@@ -7,7 +7,7 @@ use App\Model\Repository\Finders\CvRepository\FinderCvsBySkillRequests;
 class CvRepository extends BaseRepository
 {
 
-	public function findBySkillRequests(array $skillRequests)
+	public function findBySkillRequests($skillRequests)
 	{
 		$qb = $this->createQueryBuilder('e');
 		$finder = new FinderCvsBySkillRequests($qb);
