@@ -79,7 +79,7 @@ class SkillKnowRequest extends BaseEntity
 
 	public function isLevelsMatter()
 	{
-		return !$this->levelFrom->isFirst();
+		return !$this->levelFrom->isFirst() || !$this->levelTo->isLast();
 	}
 
 	public function isYearsMatter()
