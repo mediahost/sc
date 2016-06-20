@@ -53,7 +53,7 @@ class CvsPresenter extends BasePresenter
 	 * @resource('cvs')
 	 * @privilege('default')
 	 */
-	public function actionDefault($jobId = NULL)
+	public function actionDefault($jobId = NULL, $filter = FALSE)
 	{
 		if ($jobId) {
 			$job = $this->jobRepo->find($jobId);
@@ -61,6 +61,7 @@ class CvsPresenter extends BasePresenter
 				$this['cvDataView']->setJob($job);
 			}
 		}
+		$this->getTemplate()->showFilter = $filter;
 	}
 
 	/**

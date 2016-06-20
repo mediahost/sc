@@ -47,6 +47,12 @@ class SkillsFilter extends BaseControl
 		$form = new Form();
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
+		if ($this->isAjax) {
+			$form->getElementPrototype()->addClass('ajax');
+		}
+		if ($this->isSendOnChange) {
+			$form->getElementPrototype()->addClass('sendOnChange');
+		}
 
 		$defaultValues = $this->getDefaults();
 		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
@@ -149,7 +155,15 @@ class SkillsFilter extends BaseControl
 
 	public function setJob(Job $job)
 	{
-		$this->skillRequests = $job->skillRequests;
+		$this->setSkillRequests($job->skillRequests);
+		return $this;
+	}
+
+	public function setSkillRequests($skillRequests)
+	{
+		foreach ($skillRequests as $id => $skillRequest) {
+			$this->skillRequests[$id] = $skillRequest;
+		}
 		return $this;
 	}
 

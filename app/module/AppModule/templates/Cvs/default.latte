@@ -9,21 +9,32 @@
 {/block}
 
 {block content}
-	<div class="row">
-		<div class="col-md-8">
-			<div class="portlet light">
-				<div class="portlet-body">
-					{control skillFilter}
+	{if $showFilter}
+		<div class="row">
+			<div class="col-md-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<i class="fa fa-filter"></i>
+							{_'Filter'}
+						</h4>
+					</div>
+					<div class="panel-body">
+						{control skillFilter}
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<p>&nbsp;</p>
+	{else}
+		<a n:href="this filter => TRUE" class="btn btn-default">{_'Show Filter'}</a>
+	{/if}
 	<div class="row">
 		<div class="col-md-12">
 			<div class="portlet light">
 				<div class="portlet-body">
-					{control cvDataView}
+					{snippet cvs}
+						{control cvDataView}
+					{/snippet}
 				</div>
 			</div>
 		</div>
