@@ -57,7 +57,7 @@ class SkillCategoriesGrid extends BaseControl
 							$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
 							return sprintf($message, (string) $item);
 						})
-				->elementPrototype->class[] = 'red';
+				->getElementPrototype()->class[] = 'red';
 						
 		$grid->setActionWidth("15%");
 
