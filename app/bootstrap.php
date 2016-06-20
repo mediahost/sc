@@ -9,10 +9,6 @@ $configurator->setDebugMode([
     '94.112.129.121', // Petr - Brno
     '37.221.251.251', // Petr - Svetla n.S.
 	'213.81.220.69', // Kapco
-	'188.121.172.183', // Samo
-	'89.111.69.34', // Martin - Rudoltice
-	'193.86.138.194', // Martin - Brno
-	'85.237.234.112', // Bratislava
 ]);
 
 $configurator->enableDebugger(__DIR__ . '/../log');
