@@ -20,7 +20,15 @@ class CvDataView extends BaseControl
 
 	public function setJob(Job $job)
 	{
-		$this->skillRequests = $job->getSkillRequests();
+		return $this->setSkillRequests($job->getSkillRequests());
+	}
+
+
+	public function setSkillRequests($skillRequests)
+	{
+		foreach ($skillRequests as $id => $skillRequest) {
+			$this->skillRequests[$id] = $skillRequest;
+		}
 		return $this;
 	}
 

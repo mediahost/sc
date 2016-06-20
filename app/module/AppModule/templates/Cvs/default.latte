@@ -3,12 +3,22 @@
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="this">{_'CVs'}</a>
-</li>
+	<li>
+		<a n:href="this">{_'CVs'}</a>
+	</li>
 {/block}
 
 {block content}
+	<div class="row">
+		<div class="col-md-8">
+			<div class="portlet light">
+				<div class="portlet-body">
+					{control skillFilter}
+				</div>
+			</div>
+		</div>
+	</div>
+	<p>&nbsp;</p>
 	<div class="row">
 		<div class="col-md-12">
 			<div class="portlet light">
@@ -23,15 +33,8 @@
 
 {block jsPage}
 	<script>
-		$(document).ready(function() {
-			Global.handleDataTables('#userTable', {
-				aoColumns: [
-					null, null, null,
-					{
-						bSortable: false
-					}
-				]
-			});
+		$(document).ready(function () {
+			$('.slider').slider();
 		});
 	</script>
 {/block jsPage}

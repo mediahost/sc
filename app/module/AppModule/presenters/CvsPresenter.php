@@ -3,10 +3,14 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\Cv\ICvDataViewFactory;
+use App\Components\Cv\ISkillsFilterFactory;
 use App\Components\Grids\Cv\CvsGrid;
 use App\Components\Grids\Cv\ICvsGridFactory;
+use App\Components\Job\ISkillsControlFactory;
+use App\Components\Job\SkillsControl;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
+use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
@@ -20,6 +24,9 @@ class CvsPresenter extends BasePresenter
 
 	/** @var ICvDataViewFactory @inject */
 	public $cvDataViewFactory;
+
+	/** @var ISkillsFilterFactory @inject */
+	public $iSkillFilterFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -70,6 +77,18 @@ class CvsPresenter extends BasePresenter
 	public function createComponentCvDataView()
 	{
 		$control = $this->cvDataViewFactory->create();
+		return $control;
+	}
+
+	/** @return SkillsControl */
+	public function createComponentSkillFilter()
+	{
+		$control = $this->iSkillFilterFactory->create();
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSend = function (array $skillRequests) {
+			$this['cvDataView']->setSkillRequests($skillRequests);
+			$this->redrawControl();
+		};
 		return $control;
 	}
 }

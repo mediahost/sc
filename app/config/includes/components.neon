@@ -185,6 +185,10 @@ services:
 		implement: App\Components\Cv\ISkillsControlFactory
 		inject: yes
 
+	ICvSkillsFilterFactory:
+		implement: App\Components\Cv\ISkillsFilterFactory
+		inject: yes
+
 	ICvSummaryControlFactory:
 		implement: App\Components\Cv\ISummaryControlFactory
 		inject: yes
