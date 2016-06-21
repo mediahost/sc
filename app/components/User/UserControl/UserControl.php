@@ -127,6 +127,7 @@ class UserControl extends BaseControl
 
 	private function save()
 	{
+        $this->userFacade->setVerification($this->user);
 		$userRepo = $this->em->getRepository(User::getClassName());
 		$userRepo->save($this->user);
 		return $this;
