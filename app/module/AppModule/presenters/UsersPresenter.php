@@ -134,7 +134,7 @@ class UsersPresenter extends BasePresenter
 	 * @resource('users')
 	 * @privilege('access')
 	 */
-	public function actionAccess($id)
+	public function actionAccess($id, $view='Dashboard:')
 	{
 		$user = $this->userDao->find($id);
 		if (!$user) {
@@ -145,7 +145,7 @@ class UsersPresenter extends BasePresenter
 			$this->user->login($user);
 			$message = new TaggedString('You are logged as \'%s\'.', $user);
 			$this->flashMessage($message, 'success');
-			$this->redirect('Dashboard:');
+			$this->redirect($view);
 		}
 		$this->redirect('default');
 	}

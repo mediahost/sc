@@ -23,7 +23,9 @@
         <th class="grid-cell-isDefault center text-center center"><i n:if="$cv->isDefault" class="glyphicon glyphicon-ok icon-ok"></i></th>
         <td>
             <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:CvEditor:default $cv->id}">
-                <i class="fa fa-edit"></i> {_'Edit'}</a>
+                <i class="fa fa-edit"></i> {_'CV'}</a>
+            <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Users:access $cv->candidate->user->id, 'Profile:'}">
+                <i class="fa fa-user"></i> {_'Profile'}</a>
             <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Cvs:delete $cv->id}">
                 <i class="fa fa-trash-o"></i> {_'Delete'}</a>
         </td>
