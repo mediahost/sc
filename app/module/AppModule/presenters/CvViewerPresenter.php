@@ -1,6 +1,6 @@
 <?php
 
-namespace App\FrontModule\Presenters;
+namespace App\AppModule\Presenters;
 
 use App\Model\Entity\Cv;
 use App\Model\Facade\CvFacade;
@@ -93,6 +93,15 @@ class CvViewerPresenter extends BasePresenter
 		$this->sendResponse($pdf);
 	}
 
+    public function getPureName()
+	{
+		$pos = strrpos($this->name, ':');
+		if (is_int($pos)) {
+			return substr($this->name, $pos + 1);
+		}
+
+		return $this->name;
+	}
 }
 
 class CvViewerPresenterException extends Exception
