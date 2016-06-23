@@ -26,7 +26,7 @@ trait UserFacadeCreates
 			$user->setMail($mail)
 				->setPassword($password)
 				->addRole($role);
-
+            $this->setVerification($user);
 			return $this->userRepo->save($user);
 		}
 		return NULL;

@@ -76,11 +76,6 @@ class CompanyUserControl extends BaseControl
 					->setOption('description', (string) $helpText);
 		}
 
-		$company = $form->addSelect2('company', 'Company', $this->getCompanies())
-				->setRequired('Please choose company');
-		if ($this->company) {
-			$company->setDisabled();
-		}
 
 		$form->addServerMultiSelectBoxes('roles', 'Roles', $this->getRoles())
 				->setRequired('Please select some role')
@@ -128,20 +123,7 @@ class CompanyUserControl extends BaseControl
 			$role = $this->roleFacade->findByName(Role::COMPANY);
 			$user = $this->userFacade->create($values->mail, $values->password, $role);
 		}
-		// company
-		$company = $this->company ? $this->company : $this->em->getDao(Company::getClassName())->find($values->company);
-		// roles
-		$roles = [];
-		$companyRoleDao = $this->em->getDao(CompanyRole::getClassName());
-		foreach ($values->roles as $roleId) {
-			$findedRole = $companyRoleDao->find($roleId);
-			if ($findedRole) {
-				$roles[] = $companyRoleDao->find($roleId);
-			}
-		}
-
-		$this->companyFacade->addPermission($company, $user, $roles);
-		$this->onAfterSave($user, $company);
+		$this->onAfterSave($user);
 	}
 
 	/** @return array */
