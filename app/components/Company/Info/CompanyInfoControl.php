@@ -82,8 +82,6 @@ class CompanyInfoControl extends BaseControl
 			$users = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
 			$admins = $form->addMultiSelect2('admins', 'Administrators', $users)
 					->setRequired('Company must have administrator');
-//			$managers = $form->addMultiSelect2('managers', 'Managers', $users);
-//			$editors = $form->addMultiSelect2('editors', 'Editors', $users);
 
 			if ($this->linkAddUser) {
 				$this->linkAddUser->setText($this->translator->translate('add new user'));
@@ -91,8 +89,6 @@ class CompanyInfoControl extends BaseControl
 						->setText($this->translator->translate('You can') . ' ')
 						->add($this->linkAddUser);
 				$admins->setOption('description', $message);
-//				$managers->setOption('description', $message);
-//				$editors->setOption('description', $message);
 			}
 		}
 
@@ -133,12 +129,6 @@ class CompanyInfoControl extends BaseControl
 			foreach ($values->admins as $adminId) {
 				$this->usersRoles[$adminId][] = CompanyRole::ADMIN;
 			}
-//			foreach ($values->managers as $managerId) {
-//				$this->usersRoles[$managerId][] = CompanyRole::MANAGER;
-//			}
-//			foreach ($values->editors as $editorId) {
-//				$this->usersRoles[$editorId][] = CompanyRole::EDITOR;
-//			}
 		}
 		return $this;
 	}
@@ -168,12 +158,6 @@ class CompanyInfoControl extends BaseControl
 			foreach ($this->company->adminAccesses as $adminPermission) {
 				$values['admins'][] = $adminPermission->user->id;
 			}
-//			foreach ($this->company->managerAccesses as $managerPermission) {
-//				$values['managers'][] = $managerPermission->user->id;
-//			}
-//			foreach ($this->company->editorAccesses as $editorPermission) {
-//				$values['editors'][] = $editorPermission->user->id;
-//			}
 		}
 		return $values;
 	}
