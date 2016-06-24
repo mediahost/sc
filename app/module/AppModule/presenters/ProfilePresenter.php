@@ -88,7 +88,7 @@ class ProfilePresenter extends BasePresenter
             return $this->userEntity;
         }
         $userId = $this->getParameter('userId');
-        if ($userId) {
+        if ($userId  && $this->user->isInRole('superadmin')) {
             $user = $this->userFacade->findById($userId);
             $this->userEntity = $user;
         } else {
