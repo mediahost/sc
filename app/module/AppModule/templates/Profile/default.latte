@@ -11,7 +11,6 @@
 
 {block content}
 
-{var candidate => $user->getIdentity()->candidate}
 <div class="row">
 	<div class="col-lg-6 col-md-12">
 		{snippet personalDetails}
@@ -42,7 +41,6 @@
 </div>
 
 {define personalDetailsPanel}
-{var candidate => $user->getIdentity()->candidate}
 <div n:if="$candidate" class="panel panel-default">
 	<div class="panel-heading">
 		<h4 class="panel-title">{_'Personal Details'}</h4>

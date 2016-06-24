@@ -69,21 +69,38 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var Candidate */
 	private $candidate;
+    
+    /** @var User */
+    private $userEntity;
 
 
 	private function getCv()
 	{
 		if (!isset($this->cv)) {
-			$candidate = $this->user->identity->candidate;
-			$this->cv = $this->cvFacade->getDefaultCvOrCreate($candidate);
+			$user = $this->getUserEntity();
+			$this->cv = $this->cvFacade->getDefaultCvOrCreate($user->candidate);
 		}
 		return $this->cv;
 	}
+    
+    private function getUserEntity() {
+        if ($this->userEntity) {
+            return $this->userEntity;
+        }
+        $userId = $this->getParameter('userId');
+        if ($userId) {
+            $user = $this->userFacade->findById($userId);
+            $this->userEntity = $user;
+        } else {
+            $this->userEntity = $this->user->identity;
+        }
+        return $this->userEntity;
+    }
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->candidate = $this->user->identity->candidate;
+        $this->candidate = $this->getUserEntity()->candidate;
 	}
 
 	/**
@@ -91,9 +108,9 @@ class ProfilePresenter extends BasePresenter
 	 * @resource('profile')
 	 * @privilege('default')
 	 */
-	public function actionDefault()
+	public function actionDefault($userId=null)
 	{
-
+        $this->template->candidate = $this->getUserEntity()->candidate;
 	}
 
 	/**
@@ -319,6 +336,7 @@ class ProfilePresenter extends BasePresenter
 	protected function createComponentCompleteCandidateSecond()
 	{
 		$control = $this->iCompleteCandidateSecondControlFactory->create();
+        $control->setUserEntity($this->getUserEntity());
 		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
 			$this->flashMessage('Your data was saved.', 'success');
 			$this->redirect('this');

@@ -35,6 +35,9 @@ class CompleteCandidateSecondControl extends BaseControl
 
 	/** @var \Nette\Security\User @inject */
 	public $user;
+    
+    /** @var \App\Model\Entity\User */
+    private $userEntity;
 
 	// </editor-fold>
 
@@ -64,7 +67,7 @@ class CompleteCandidateSecondControl extends BaseControl
 			'id' => 'for-frmpreferencesForm-freelancer',
 			'text' => 'Yes',
 			'state' => [
-				'selected' => $this->user->identity->candidate->freelancer,
+				'selected' => $this->userEntity->candidate->freelancer,
 			],
 		];
 		parent::render();
@@ -102,7 +105,7 @@ class CompleteCandidateSecondControl extends BaseControl
 	{
 		$userRepo = $this->em->getRepository(User::getClassName());
 
-		$user = $this->user->identity;
+		$user = $this->userEntity;
 
 		$skillList = [];
 		foreach ($values->skills as $skillId => $checked) {
@@ -151,7 +154,7 @@ class CompleteCandidateSecondControl extends BaseControl
 				'id' => $skill->id,
 				'text' => $skill->name,
 				'state' => [
-					'selected' => in_array($skill->id, $this->user->identity->candidate->qualifiedSkills),
+					'selected' => in_array($skill->id, $this->userEntity->candidate->qualifiedSkills),
 				],
 			];
 		}
@@ -176,12 +179,15 @@ class CompleteCandidateSecondControl extends BaseControl
 			];
 		}
 		$leaf['state'] = [
-			'selected' => in_array($id, $this->user->identity->candidate->workLocations),
+			'selected' => in_array($id, $this->userEntity->candidate->workLocations),
 		];
 		$leaf['children'] = $children;
 		return $leaf;
 	}
 
+    public function setUserEntity(User $user) {
+        $this->userEntity = $user;
+    }
 }
 
 interface ICompleteCandidateSecondControlFactory
