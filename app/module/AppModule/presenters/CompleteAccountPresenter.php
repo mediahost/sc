@@ -150,6 +150,7 @@ class CompleteAccountPresenter extends BasePresenter
 	protected function createComponentCompleteCandidateSecond()
 	{
 		$control = $this->iCompleteCandidateSecondControlFactory->create();
+        $control->setUserEntity($this->user->identity);
 		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
 			if (!$candidate->user->verificated) {
 				$this->flashMessage('Your data was saved. Please verify your mail!', 'success');
