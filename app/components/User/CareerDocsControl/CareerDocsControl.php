@@ -75,6 +75,10 @@ class CareerDocsControl extends BaseControl
         return $docs;
     }
     
+    public function getCandidate() {
+        return $this->candidate;
+    }
+    
     public function handleDeleteDoc($id) {
         $rep = $this->em->getDao(Document::getClassName());
         $doc = $rep->find($id);

@@ -171,8 +171,13 @@ class CvEditorPresenter extends BasePresenter
 		$this['skillsForm']->setTemplateFile('ItSkills');
 	}
 
-	public function actionCareerDocs() {
-
+	public function actionCareerDocs($userId = NULL) {
+        if ($userId) {
+            $candidate = $this->userFacade->findById($userId)->candidate;
+        } else {
+            $candidate = $this->user->identity->candidate;
+        }
+        $this['careerDocsControl']->setCandidate($candidate);
 	}
 
 	/**
@@ -335,7 +340,6 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentCareerDocsControl()
 	{
 		$control = $this->iCareerDocsControlFactory->create();
-		$control->setCandidate($this->user->identity->candidate);
 		$control->onAfterSave[] = function(){
 			$this->redirect('this');
 		};
