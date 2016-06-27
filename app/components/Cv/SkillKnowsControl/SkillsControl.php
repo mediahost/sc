@@ -141,6 +141,10 @@ class SkillsControl extends BaseControl
 			throw new CvControlException('Use setCv(\App\Model\Entity\Cv) before render');
 		}
 	}
+    
+    public function getCv() {
+        return $this->cv;
+    }
 
 	// <editor-fold desc="setters & getters">
 
