@@ -320,7 +320,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iLivePreviewControlFactory->create();
 		$control->setScale(0.8, 0.8, 1);
-		$control->setCv($this->cv);
+		$control->setCv($this->getCv());
 		return $control;
 	}
 
