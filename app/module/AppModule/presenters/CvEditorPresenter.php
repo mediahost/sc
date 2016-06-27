@@ -136,7 +136,7 @@ class CvEditorPresenter extends BasePresenter
 			$cvDao = $this->em->getDao(Cv::getClassName());
 			$findedCv = $cvDao->find($id);
 			$isOwnCv = $candidate && $findedCv->candidate->id === $candidate->id;
-			$canEditForeignCv = $findedCv && $this->user->isAllowed('cvEditor', 'editForeign');
+                $canEditForeignCv = $findedCv && $this->user->isAllowed('cvEditor', 'editForeign');
 			if ($isOwnCv || $canEditForeignCv) {
 				$this->cv = $findedCv;
 			}
@@ -172,7 +172,7 @@ class CvEditorPresenter extends BasePresenter
 	}
 
 	public function actionCareerDocs($userId = NULL) {
-        if ($userId) {
+        if ($userId && $this->user->isAllowed('cvEditor', 'editForeign')) {
             $candidate = $this->userFacade->findById($userId)->candidate;
         } else {
             $candidate = $this->user->identity->candidate;
