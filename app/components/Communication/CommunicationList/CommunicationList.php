@@ -8,9 +8,15 @@ class CommunicationList extends BaseControl
 {
 
 	const COMMUNICATIONS_PER_PAGE = 10;
+    
+    /** @var IMessageSearchBoxFactory */
+	private $messageSearchBoxFactory;
 
 	/** @var Entity\Communication[] */
 	protected $communications = [];
+    
+    /** @var Entity\Communication[] */
+    protected $searchedCommunications;
 
 	/** @var array */
 	protected $links = [];
@@ -20,6 +26,12 @@ class CommunicationList extends BaseControl
 
 	/** @var int @persistent */
 	public $count = self::COMMUNICATIONS_PER_PAGE;
+    
+    
+    public function __construct(IMessageSearchBoxFactory $messageSearchBoxFactory) {
+        parent::__construct();
+        $this->messageSearchBoxFactory = $messageSearchBoxFactory;
+    }
 
 	/**
 	 * @param Entity\Communication $communication
@@ -54,6 +66,16 @@ class CommunicationList extends BaseControl
 		parent::render();
 	}
 
+    public function createComponentMessageSearchBox() {
+        $control = $this->messageSearchBoxFactory->create();
+        $control->setUser($this->template->user->identity);
+        $control->onSearch[] = function($comunications) {
+            $this->communications = $comunications;
+            $this->presenter->redrawControl('messages');
+            $this->presenter->redrawControl('messages-list');
+        };
+        return $control;
+    }
 }
 
 interface ICommunicationListFactory

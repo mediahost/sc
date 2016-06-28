@@ -1,39 +1,40 @@
 <div class="panel panel-default">
-	<div class="panel-heading">
-		<h4 class="panel-title">
-			<i class="icomoon-icon-bubbles"></i>
-			Your comunications
-		</h4>
-	</div>
-	<div class="panel-body">
-		<ul class="list-group recent-comments">
-			{foreach $communications as $communication}
-				{breakIf $iterator->counter > $communicationCount}
-				<li	n:class="list-group-item, clearfix, $activeCommunication && $communication->id == $activeCommunication->id ? comment-info : (!$communication->lastMessage->isReadByUser($user->identity) ? comment-danger : comment-default)">
-					<a href="{$control->getCommunicationLink($communication)}">
-						<div class="avatar pull-left mr15">
-							<img src="{$basePath}/foto/{$communication->getOpposite($user->identity)->image|size:50,50}" width="50" alt="sender">
-						</div>
-						<p class="text-ellipsis">
-							<span class="name strong">
-								{$communication->getOppositeName($user->identity)}
-							</span>
-							| {$communication->lastMessage->text|truncate:50}
-						</p>
-						<span class="date text-muted small pull-left">
-							{$communication->lastMessage->time|date:'H:i:s d.m.Y'}
-						</span>
-					</a>
-				</li>
-			{/foreach}
-		</ul>
-		<div class="showMoreMessage mt15" n:if="$communicationCount < count($communications)">
-			<a n:href="this, count => $communicationCount + $communicationsPerPage" class="btn btn-default">
-				{_'Show more'} ({!= count($communications) - $communicationCount})
-			</a>
-		</div>
-		<div n:if="!count($communications)">
-			{_'You have no messages yet.'}
-		</div>
-	</div>
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <i class="icomoon-icon-bubbles"></i>
+            Your comunications
+        </h4>
+    </div>
+    <div class="panel-body">
+        {control messageSearchBox}
+        <ul class="list-group recent-comments">
+            {foreach $communications as $communication}
+                {breakIf $iterator->counter > $communicationCount}
+                <li	n:class="list-group-item, clearfix, $activeCommunication && $communication->id == $activeCommunication->id ? comment-info : (!$communication->lastMessage->isReadByUser($user->identity) ? comment-danger : comment-default)">
+                    <a href="{$control->getCommunicationLink($communication)}">
+                        <div class="avatar pull-left mr15">
+                            <img src="{$basePath}/foto/{$communication->getOpposite($user->identity)->image|size:50,50}" width="50" alt="sender">
+                        </div>
+                        <p class="text-ellipsis">
+                            <span class="name strong">
+                                {$communication->getOppositeName($user->identity)}
+                            </span>
+                            | {$communication->lastMessage->text|truncate:50}
+                        </p>
+                        <span class="date text-muted small pull-left">
+                            {$communication->lastMessage->time|date:'H:i:s d.m.Y'}
+                        </span>
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+        <div class="showMoreMessage mt15" n:if="$communicationCount < count($communications)">
+            <a n:href="this, count => $communicationCount + $communicationsPerPage" class="btn btn-default">
+                {_'Show more'} ({!= count($communications) - $communicationCount})
+            </a>
+        </div>
+        <div n:if="!count($communications)">
+            {_'You have no messages yet.'}
+        </div>
+    </div>
 </div>

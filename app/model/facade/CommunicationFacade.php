@@ -171,7 +171,7 @@ class CommunicationFacade extends Object
 	 * @param User $user
 	 * @return Communication[]
 	 */
-	public function getUserCommunications(User $user)
+	public function getUserCommunications(User $user, $search=null)
 	{
 		$queryBuilder = $this->em->createQueryBuilder();
 		$queryBuilder->select('c')
@@ -184,6 +184,9 @@ class CommunicationFacade extends Object
 			->orderBy('last_message_time', 'DESC')
 			->groupBy('c')
 			->setParameter(0, $user);
+        if($search) {
+            $queryBuilder->where('m.text LIKE %~like~', $search);
+        }
 		$query = $queryBuilder->getQuery();
 		return $query->getResult();
 	}

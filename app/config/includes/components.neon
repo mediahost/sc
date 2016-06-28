@@ -271,3 +271,7 @@ services:
 	IStartCommunicationModalFactory:
 		implement: App\Components\IStartCommunicationModalFactory
 		inject: yes
+
+	IMessageSearchBoxFactory:
+		implement: App\Components\IMessageSearchBoxFactory
+		inject: yes

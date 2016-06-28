@@ -2,8 +2,23 @@
    Custom.css - put your own changes here 
 ----------------------------------------- */
 .mapView {
-	height: 250px;
-	
-	margin-bottom: 20px;
-	border: 1px solid black;
+    height: 250px;
+
+    margin-bottom: 20px;
+    border: 1px solid black;
+}
+
+.todo-header {
+    margin-bottom: 15px;
+    width: 100%;
+    min-height: 32px;
+}
+.todo-search {
+    width: 75%;
+    float: left;
+}
+.todo-add {
+    width: 25%;
+    float: right;
+    text-align: right;
 }
