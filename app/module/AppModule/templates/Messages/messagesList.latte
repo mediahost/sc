@@ -1,0 +1,34 @@
+{* Latte template *}
+{block pageTitle}
+{_'Messages list'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+    <a n:href="Messages:messagesList">{_'Messages list'}</a>
+</li>
+{/block}
+
+{block content}
+
+{control communicationDataView}
+
+{/block content}
+
+
+{block jsPage}
+<script>
+    $(document).ready(function () {
+        Global.handleDataTables('#communicationTable', {
+            aoColumns: [
+                null, null, null, null,
+                {
+                    bSortable: false
+                }
+            ]
+        });
+        $.fn.dataTable.ext.search.push(function() {
+        });
+    });
+</script>
+{/block jsPage}

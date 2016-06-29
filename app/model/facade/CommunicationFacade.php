@@ -210,6 +210,31 @@ class CommunicationFacade extends Object
 		$query = $queryBuilder->getQuery();
 		return $query->getResult();
 	}
+    
+    public function getAllCommunications($search=null) {
+        $queryBuilder = $this->em->createQueryBuilder();
+		$queryBuilder->select('c')
+			->from(Communication::getClassName(), 'c')
+			->addSelect('MAX(m.time) as HIDDEN last_message_time')
+			->join('c.contributors', 's')
+			->join('c.messages', 'm')
+			->join('s.user', 'u')
+			->leftJoin('u.candidate', 'cd')
+			->orderBy('last_message_time', 'DESC')
+			->groupBy('c');
+        if($search) {
+            $queryBuilder->where('m.text LIKE :search')
+                ->setParameter('search', '%'.$search.'%');
+            $queryBuilder->orWhere('u.mail LIKE :search')
+                ->setParameter('search', '%'.$search.'%');
+            $queryBuilder->orWhere('cd.firstname LIKE :search')
+                ->setParameter('search', '%'.$search.'%');
+            $queryBuilder->orWhere('cd.surname LIKE :search')
+                ->setParameter('search', '%'.$search.'%');
+        }
+		$query = $queryBuilder->getQuery();
+		return $query->getResult();
+    }
 
 	/**
 	 * @param $id

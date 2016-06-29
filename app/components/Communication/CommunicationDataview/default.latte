@@ -1,0 +1,33 @@
+{**
+ * CommunicationDataView control template
+ *
+ * @param   Array   $communications
+*}
+
+<table id="communicationTable" data-filter="{link filter}"
+       class="table table-bordered table-striped table-hover dt-responsive non-responsive">
+    <thead>
+        <tr>
+            <th>{_'ID'}</th>
+            <th>{_'Subject'}</th>
+            <th>{_'Last message'}</th>
+            <th>{_''}</th>
+            <th>{_'Action'}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr n:foreach="$communications as $communication">
+            <td>{$communication->id}</td>
+            <td>{$communication->subject}</td>
+            <td>
+                {$communication->lastMessage->time|date:'d.m.Y'}
+                - {$communication->lastMessage->text|truncate:50}</td>
+            <td>{$communication->getOppositeName($user->identity)}</td>
+            <td>
+                <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Messages: $communication->id}">
+                    <i class="s16 icomoon-icon-envelop"></i></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+

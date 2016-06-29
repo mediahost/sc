@@ -5,6 +5,7 @@ namespace App\AppModule\Presenters;
 use App\Components\ICommunicationFactory;
 use App\Components\ICommunicationListFactory;
 use App\Components\IStartCommunicationModalFactory;
+use App\Components\ICommunicationDataViewFactory;
 use App\Model\Entity\Communication;
 use App\Model\Facade\UserFacade;
 use Tracy\Debugger;
@@ -23,6 +24,9 @@ class MessagesPresenter extends BasePresenter
 
 	/** @var IStartCommunicationModalFactory @inject */
 	public $startCommunicationModalFactory;
+    
+    /** @var ICommunicationDataViewFactory @inject */
+	public $communicationDataViewFactory;
 
 	/** @var Communication */
 	protected $communication;
@@ -52,6 +56,15 @@ class MessagesPresenter extends BasePresenter
 			$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity);
 		}
 	}
+    
+    /**
+	 * @secured
+	 * @resource('messagesList')
+	 * @privilege('default')
+	 */
+    public function actionMessagesList() {
+
+    }
 
 	public function createComponentStartCommunicationModal()
 	{
@@ -88,4 +101,8 @@ class MessagesPresenter extends BasePresenter
 		return $control;
 	}
 
+    public function createComponentCommunicationDataView() {
+        $control = $this->communicationDataViewFactory->create();
+        return $control;
+    }
 }

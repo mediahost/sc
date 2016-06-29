@@ -275,3 +275,7 @@ services:
 	IMessageSearchBoxFactory:
 		implement: App\Components\IMessageSearchBoxFactory
 		inject: yes
+
+	ICommunicationDataViewFactory:
+		implement: App\Components\ICommunicationDataViewFactory
+		inject: yes

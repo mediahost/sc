@@ -27,6 +27,7 @@ services:
 			- addResource('cvs')
 			- addResource('editForeign')
 			- addResource('messages')
+			- addResource('messagesList')
 
 			- addResource('users')
 			- addResource('skills')

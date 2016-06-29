@@ -36,7 +36,7 @@
 						</li>
 						
 						<li n:if="$user->isAllowed('messages') && $isCompleteAccount">
-							<a n:href="Messages:" n:class="$presenter->isLinkCurrent('Messages:*') ? active">
+                            <a n:href="Messages:" n:class="$presenter->isLinkCurrent('Messages:*') && !$presenter->isLinkCurrent('Messages:MessagesList') ? active">
 								<i class="s16 icomoon-icon-envelop"></i>
 								<span class="txt">{_'Messages'}</span>
 								<span n:if="$unreadMessagesCount" class="notification red">{$unreadMessagesCount}</span>
@@ -121,6 +121,12 @@
 				</div>
 				<div class="mainnav">
 					<ul>
+                                                <li n:if="$user->isAllowed('messagesList')">
+                                                    <a n:href="Messages:MessagesList" n:class="$presenter->isLinkCurrent('Messages:MessagesList') ? active">
+                                                        <i class="s16 icomoon-icon-envelop"></i>
+                                                        <span class="txt">{_'Messages list'}</span>
+                                                    </a>
+                                                </li>
 						<li n:if="$user->isAllowed('examples', 'default')">
 							<a href="#">
 								<i class="s16 fa fa-life-ring"></i>
