@@ -3,6 +3,7 @@
 namespace App\Components;
 
 use App\Model\Facade\CommunicationFacade;
+use Nette\Utils\Html;
 
 
 class CommunicationDataView extends BaseControl {
@@ -35,8 +36,11 @@ class CommunicationDataView extends BaseControl {
                 $communication->subject,
                 $communication->lastMessage->time->format('d.m.Y') . ' - ' .
                 substr($communication->lastMessage->text, 0, 50),
-                $communication->getOppositeName($this->template->user->identity),
-                ''
+                $this->getContributors($communication),
+                Html::el('a')->addAttributes([
+                    'class' => 'grid-action-view btn btn-xs btn-mini',
+                    'href' => $this->presenter->link(':App:Messages:', $communication->id)
+                ])->add('<i class="s16 icomoon-icon-envelop"></i>')->render()
             ];
         }
         $data = [
@@ -46,6 +50,14 @@ class CommunicationDataView extends BaseControl {
             "data" => $data
         ];
         $this->presenter->sendJson($data);
+    }
+    
+    public function getContributors(\App\Model\Entity\Communication $communication) {
+        $result = [];
+        foreach ($communication->contributors as $contributor) {
+            $result[] = $contributor->user;
+        }
+        return implode(', ', $result);
     }
 }
 

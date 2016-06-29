@@ -47,8 +47,10 @@ class MessagesPresenter extends BasePresenter
 		} else if ($id) {
 			$this->communication = $this->communicationFacade->getCommunication($id);
 			if (!$this->communication || !$this->communication->isUserAllowed($this->user->identity)) {
-				$this->flashMessage('Requested conversation was\'t find.', 'danger');
-				$this->redirect('this', NULL);
+                if (!$this->user->isAllowed('messagesList')) {
+                    $this->flashMessage('Requested conversation was\'t find.', 'danger');
+                    $this->redirect('this', NULL);
+                }
 			}
 		}
 		$this->template->conversation = $this->communication;

@@ -11,7 +11,7 @@
             <th>{_'ID'}</th>
             <th>{_'Subject'}</th>
             <th>{_'Last message'}</th>
-            <th>{_''}</th>
+            <th>{_'Senders'}</th>
             <th>{_'Action'}</th>
         </tr>
     </thead>
@@ -22,7 +22,7 @@
             <td>
                 {$communication->lastMessage->time|date:'d.m.Y'}
                 - {$communication->lastMessage->text|truncate:50}</td>
-            <td>{$communication->getOppositeName($user->identity)}</td>
+            <td>{$control->getContributors($communication)}</td>
             <td>
                 <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Messages: $communication->id}">
                     <i class="s16 icomoon-icon-envelop"></i></a>
