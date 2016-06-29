@@ -127,6 +127,10 @@ services:
 		implement: App\Components\Job\IJobDataViewFactory
 		inject: yes
 
+	IJobCategoryDataViewFactory:
+		implement: App\Components\Job\IJobCategoryDataViewFactory
+		inject: yes
+
 	# Candidate
 	ICandidateProfileControlFactory:
 		implement: App\Components\Candidate\IProfileControlFactory

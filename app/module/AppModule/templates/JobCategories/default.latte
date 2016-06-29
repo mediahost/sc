@@ -1,0 +1,23 @@
+{* JobCategories default template *}
+
+{block pageTitle}
+{_'Job Categories'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+    <a n:href="this">{_'Job Categories'}</a>
+</li>
+{/block}
+
+{block content}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light">
+            <div class="portlet-body">
+                {control jobCategoryDataView}
+            </div>
+        </div>
+    </div>
+</div>
+{/block content}

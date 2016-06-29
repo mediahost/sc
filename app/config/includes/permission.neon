@@ -24,6 +24,7 @@ services:
 			- addResource('companies')
 			- addResource('job')
 			- addResource('jobs')
+			- addResource('jobCategories')
 			- addResource('cvs')
 			- addResource('editForeign')
 			- addResource('messages')

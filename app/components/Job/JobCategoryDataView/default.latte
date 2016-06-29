@@ -1,0 +1,30 @@
+{**
+ * JobCategoryDataView control template
+ *
+ * @param   ArrayList	$jobCategories
+*}
+
+<table id="jobCategoryTable" class="table table-bordered table-striped table-hover dt-responsive non-responsive">
+    <thead>
+    <tr>
+        <th>{_'ID'}</th>
+        <th>{_'Name'}</th>
+        <th>{_'Parent Category'}</th>
+        <th>{_'Action'}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr n:foreach="$jobCategories as $category">
+        <td>{$category->id}</td>
+        <td>{$category->name}</td>
+        <td>{$category->parent}</td>
+
+        <td>
+            <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:JobCategories:edit $category->id}">
+                <i class="fa fa-edit"></i> {_'Edit'}</a>
+            <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:JobCategories:delete $category->id}">
+                <i class="fa fa-trash-o"></i> {_'Delete'}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
