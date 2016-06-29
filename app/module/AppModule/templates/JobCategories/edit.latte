@@ -1,0 +1,37 @@
+{**
+ * JobCategories edit view template
+ *
+ * @param   JobCategory     $jobCategory 
+ *}
+
+{block pageTitle}
+{_'Skill Categories'}
+{/block}
+
+{block breadcrumbItems}
+<li>
+    <a n:href="SkillCategories:">{_'Skill Categories'}</a>
+</li>
+<li>
+    <a n:href="this">{if $jobCategory->isNew()}{_'Add'}{else}{_'Edit'}{/if}</a>
+</li>
+{/block}
+
+{block content}
+<div class="row">
+    <div class="col-md-8">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <i class="fa fa-edit font-green-sharp"></i>
+                    <span class="caption-subject bold uppercase">
+                {if $jobCategory->isNew()}{_'Add'}{else}{_'Edit'}{/if} {_'category'}
+            </span>
+        </div>
+    </div>
+    <div class="portlet-body form border">
+        {control jobCategoryForm}
+    </div>
+</div>
+</div>
+</div>

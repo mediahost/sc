@@ -3,9 +3,9 @@
 namespace App\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
-
 
 /**
  * @ORM\Entity
@@ -54,6 +54,12 @@ class JobCategory extends BaseEntity
 	public function getSkills()
 	{
 		return $this->skills;
+	}
+    
+    /** @return bool */
+    public function isNew()
+	{
+		return $this->id === NULL;
 	}
     
     public function __toString()
