@@ -20,8 +20,13 @@ trait JobCategoryFacade {
         return $jobCategorydao->find($id);
     }
     
-    public function saveJObCategory(\App\Model\Entity\JobCategory $category) {
+    public function saveJobCategory(\App\Model\Entity\JobCategory $category) {
         $this->em->persist($category);
 		$this->em->flush();
+    }
+    
+    public function deleteJobCategory(\App\Model\Entity\JobCategory $category) {
+        $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
+        $jobCategorydao->delete($category);
     }
 }

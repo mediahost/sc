@@ -1,6 +1,7 @@
 <?php
 
 namespace App\AppModule\Presenters;
+use Kdyby\Doctrine\DBALException;
 use App\Components\Job\IJobCategoryDataViewFactory;
 use App\Components\Job\IJobCategoryControlFactory;
 use App\Model\Facade\JobFacade;
@@ -46,12 +47,42 @@ class JobCategoriesPresenter extends BasePresenter {
 		$this->setView('edit');
 	}
     
+    /**
+	 * @secured
+	 * @resource('jobCategories')
+	 * @privilege('edit')
+	 */
     public function actionEdit($categoryId) {
-        
+        $this->jobCategory = $this->jobFacade->findJobCategory($categoryId);
+		if ($this->jobCategory) {
+			$this['jobCategoryForm']->setJobCategory($this->jobCategory);
+            $this->template->jobCategory = $this->jobCategory;
+		} else {
+			$this->flashMessage('This category wasn\'t found.', 'error');
+			$this->redirect('default');
+		}
     }
     
+    /**
+	 * @secured
+	 * @resource('jobCategories')
+	 * @privilege('delete')
+	 */
     public function actionDelete($categoryId) {
-        
+        $this->jobCategory = $this->jobFacade->findJobCategory($categoryId);
+		if ($this->jobCategory) {
+			try {
+				$this->jobFacade->deleteJobCategory($this->jobCategory);
+				$message = new \App\TaggedString('Category \'%s\' was deleted.', (string) $this->jobCategory);
+				$this->flashMessage($message, 'success');
+			} catch (DBALException $exc) {
+				$message = new \App\TaggedString('\'%s\' has child category or job. You can\'t delete it.', (string) $this->jobCategory);
+				$this->flashMessage($message, 'danger');
+			}
+		} else {
+			$this->flashMessage('Category was not found.', 'danger');
+		}
+		$this->redirect('default');
     }
     
     public function createComponentJobCategoryForm() {

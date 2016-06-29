@@ -49,7 +49,7 @@ class JobCategoryControl extends \App\Components\BaseControl {
 			return;
 		}
 		$this->load($values);
-		$this->jobFacade->saveJObCategory($this->jobCategory);
+		$this->jobFacade->saveJobCategory($this->jobCategory);
 		$this->onAfterSave($this->jobCategory);
 	}
     
