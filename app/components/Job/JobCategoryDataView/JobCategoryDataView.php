@@ -14,7 +14,7 @@ class JobCategoryDataView extends BaseControl {
      */
     public function render()
     {
-        $this->template->jobCategories = [];
+        $this->template->jobCategories = $this->jobCategories;
         parent::render();
     }
     

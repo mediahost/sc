@@ -2,6 +2,7 @@
 
 namespace App\Model\Facade;
 
+use App\Model\Facade\Traits\JobCategoryFacade;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
 use App\Model\Repository\CvRepository;
@@ -11,6 +12,7 @@ use Nette\Object;
 
 class JobFacade extends Object
 {
+    use JobCategoryFacade;
 
 	/** @var EntityManager @inject */
 	public $em;
