@@ -98,7 +98,7 @@ class JobCategoryControl extends \App\Components\BaseControl {
 	}
     
     private function getParentCategories() {
-        $parents = $this->jobFacade->findParentCategories();
+        $parents = $this->jobFacade->findCategoriesPairs();
         if ($this->jobCategory) {
 			unset($parents[$this->jobCategory->id]);
 		}

@@ -10,7 +10,7 @@ trait JobCategoryFacade {
         return $jobCategorydao->findAll();
     }
     
-    public function findParentCategories() {
+    public function findCategoriesPairs() {
         $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
         return $jobCategorydao->findPairs('name');
     }
