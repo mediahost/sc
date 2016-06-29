@@ -24,8 +24,6 @@ class MessageSearchBox extends BaseControl {
 
     public function createComponentForm() {
         $form = new Form();
-		$form->setRenderer(new \App\Forms\Renderers\MetronicFormRenderer);
-        $form->getElementPrototype()->class('ajax sendOnChange');
         $form->addText('searchString')->setAttribute('placeholder', 'Search for message ...');
         $form->onSuccess[] = $this->formSucceeded;
 		return $form;

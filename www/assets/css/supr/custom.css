@@ -8,16 +8,16 @@
     border: 1px solid black;
 }
 
-.todo-header {
+.message-header {
     margin-bottom: 15px;
     width: 100%;
     min-height: 32px;
 }
-.todo-search {
+.message-search {
     width: 75%;
     float: left;
 }
-.todo-add {
+.message-add {
     width: 25%;
     float: right;
     text-align: right;
