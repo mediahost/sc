@@ -14,11 +14,6 @@
     min-height: 32px;
 }
 .message-search {
-    width: 75%;
+    width: 100%;
     float: left;
-}
-.message-add {
-    width: 25%;
-    float: right;
-    text-align: right;
 }

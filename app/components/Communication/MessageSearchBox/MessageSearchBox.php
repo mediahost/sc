@@ -31,6 +31,8 @@ class MessageSearchBox extends BaseControl {
     
     public function formSucceeded(Form $form, $values)
 	{
+        $user = $this->template->user->identity;
+        $search = $values['searchString'];
         $communications = $this->communicationFacade->getUserCommunications($user, $search);
         $this->onSearch($communications);
     }

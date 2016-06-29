@@ -185,7 +185,8 @@ class CommunicationFacade extends Object
 			->groupBy('c')
 			->setParameter(0, $user);
         if($search) {
-            $queryBuilder->where('m.text LIKE %~like~', $search);
+            $queryBuilder->andWhere('m.text LIKE :search')
+                ->setParameter('search', '%'.$search.'%');
         }
 		$query = $queryBuilder->getQuery();
 		return $query->getResult();
