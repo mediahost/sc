@@ -115,7 +115,7 @@ class SocialControl extends BaseControl
 	 */
 	private function normalizeLinks($links) {
 		foreach ($links as &$link) {
-			if(strpos($link, 'http') === false) {
+			if(strlen($link)  &&  strpos($link, 'http') === false) {
 				$link = 'http://' . $link;
 			}
 		}
