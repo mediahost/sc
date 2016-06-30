@@ -4,17 +4,17 @@
     <div class="shortcuts" n:if="$isCandidate && $isCompleteAccount">
         <ul>
             <li>
-                <a n:href="this" title="{_'Your CV'}" class="tip">
+                <a href="{link CvEditor:}" title="{_'Your CV'}" class="tip">
                     <i class="s24 icomoon-icon-clipboard"></i>
                 </a>
             </li>
             <li>
-                <a n:href="this" title="{_'Your profile'}" class="tip">
+                <a href="{link Profile:}" title="{_'Your profile'}" class="tip">
                     <i class="s24 icomoon-icon-vcard"></i>
                 </a>
             </li>
             <li>
-                <a n:href="this" title="{_'Messages'}" class="tip">
+                <a href={link Messages:}" title="{_'Messages'}" class="tip">
                     <i class="s24 icomoon-icon-bubbles-5"></i>
                 </a>
             </li>
