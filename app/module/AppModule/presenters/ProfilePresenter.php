@@ -4,6 +4,7 @@ namespace App\AppModule\Presenters;
 
 use App\Components\AfterRegistration\CompleteCandidateSecondControl;
 use App\Components\AfterRegistration\ICompleteCandidateSecondControlFactory;
+use App\Components\AfterRegistration\ICompleteCandidatePreviewFactory;
 use App\Components\Auth\ConnectManagerControl;
 use App\Components\Auth\IConnectManagerControlFactory;
 use App\Components\Auth\ISetPasswordControlFactory;
@@ -60,6 +61,9 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var ICompleteCandidateSecondControlFactory @inject */
 	public $iCompleteCandidateSecondControlFactory;
+    
+    /** @var ICompleteCandidatePreviewFactory @inject */
+	public $completeCandidatePreview;
 
 	/** @var CvFacade @inject */
 	public $cvFacade;
@@ -339,12 +343,18 @@ class ProfilePresenter extends BasePresenter
         $control->setUserEntity($this->getUserEntity());
 		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
 			$this->flashMessage('Your data was saved.', 'success');
-			$this->redirect('this');
+			$this->redrawControl('interestedIn');
 		};
 		return $control;
 	}
+    
+    protected function createComponentCompleteCandidatePreview() {
+        $control = $this->completeCandidatePreview->create();
+        $control->setUserEntity($this->getUserEntity());
+        return $control;
+    }
 
-	// </editor-fold>
+    // </editor-fold>
 }
 
 

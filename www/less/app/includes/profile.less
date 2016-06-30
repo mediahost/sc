@@ -32,6 +32,44 @@
 	}
 }
 
+.interestedIn-editor {
+        .interestedIn-edit {
+		display: none;
+                padding: 15px;
+	}
+        .interestedIn {
+                padding: 15px;
+                a {
+                        &.edit {
+				display: block;
+			}
+                }
+                &:hover {
+                        i {
+                                display: inline;
+                        }
+                }
+                i {
+                        display: none;
+                        margin: 0px;
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                }
+	}
+}
+
+.bootstrap-tagsinput {
+        margin-bottom: 30px;
+        padding: 6px;
+}
+.bootstrap-tagsinput .tag:first-child {
+        margin-left: 0px;
+}
+span[data-role="remove"] {
+    display: none;
+}
+
 .personal-detail-editor {
 	.profile-edit {
 		display: none;

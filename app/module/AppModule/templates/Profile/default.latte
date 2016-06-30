@@ -18,7 +18,10 @@
         {/snippet}
 
         {if $candidate}
+            {snippet interestedIn}
             {include interestedInPanel}
+            {/snippet}
+            
             {include cvPanel}
         {/if}
     </div>
@@ -67,30 +70,30 @@
                     {if $candidate}
                         <p class="job-title mb0">
                             <i class="fa fa-building"></i>
-                        {if $candidate->address}{$candidate->address->format()}{/if}
-                        <a href="#edit-address" class="edit">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                    </p>
-                    <p class="balance">
-                        Wanted <span>146$</span>
-                    </p>
-                    <a href="#" class="btn btn-primary btn-large mr10"> <i class="icomoon-icon-bubble-video-chat"></i> Watch video</a>
-                    <a href="{link :App:Messages:default#newMessage}" class="btn btn-default btn-alt btn-large">{_'Send Message'}</a>
-                {/if}
+                            {if $candidate->address}{$candidate->address->format()}{/if}
+                            <a href="#edit-address" class="edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </p>
+                        <p class="balance">
+                            Wanted <span>146$</span>
+                        </p>
+                        <a href="#" class="btn btn-primary btn-large mr10"> <i class="icomoon-icon-bubble-video-chat"></i> Watch video</a>
+                        <a href="{link :App:Messages:default#newMessage}" class="btn btn-default btn-alt btn-large">{_'Send Message'}</a>
+                    {/if}
+                </div>
             </div>
         </div>
+        <div class="row profile-edit" id="edit-photo">
+            {control photoControl}
+        </div>
+        <div class="row profile-edit" id="edit-personal">
+            {control profileControl}
+        </div>
+        <div class="row profile-edit" id="edit-address">
+            {control addressControl}
+        </div>
     </div>
-    <div class="row profile-edit" id="edit-photo">
-        {control photoControl}
-    </div>
-    <div class="row profile-edit" id="edit-personal">
-        {control profileControl}
-    </div>
-    <div class="row profile-edit" id="edit-address">
-        {control addressControl}
-    </div>
-</div>
 </div>
 {/define}
 
@@ -110,10 +113,17 @@
     <div class="panel-heading">
         <h4 class="panel-title">Interested in</h4>
     </div>
-    <div class="panel-body">
-        <p>
+    <div class="panel-body interestedIn-editor">
+        <div class="row interestedIn">
+            <a href="#edit-interested" class="edit">
+                <i class="fa fa-edit"></i>
+            </a>
+            {control completeCandidatePreview}
+        </div>
+                
+        <div class="row interestedIn-edit" id="edit-interested">
             {control completeCandidateSecond}
-        </p>
+        </div>
     </div>
 </div>
 {/define}

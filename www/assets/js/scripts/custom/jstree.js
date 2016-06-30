@@ -4,7 +4,6 @@ var CustomTrees = function () {
 
     var handleSkillsTree = function () {
         if (typeof jsonJobCategories != 'undefined') {
-
             $('#jobCategoriesTree').jstree({
                 'plugins': ["wholerow", "checkbox", "types"],
                 'core': {
@@ -33,7 +32,6 @@ var CustomTrees = function () {
                     }
                 }
             });
-
         }
         
 

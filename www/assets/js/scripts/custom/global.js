@@ -64,6 +64,25 @@ var Global = function () {
             $('.personal-detail-editor .profile-edit').hide();
         });
     };
+    
+    var handleInterestedIn = function () {
+        var main = $('.interestedIn-editor .interestedIn');
+        $(document).on('click', '.interestedIn-editor a.edit', function (e) {
+            e.preventDefault();
+            var target = $(this).attr('href');
+            $(target).show();
+            $(main).hide();
+        });
+        $(document).on('click', '.interestedIn-editor input[type=submit]', function (e) {
+            e.preventDefault();
+            $(main).show();
+            $('.interestedIn-editor .interestedIn-edit').hide();
+        });
+    };
+    
+    var handleTagsInput = function() {
+        $('input[data-role="tagsinput"]').tagsinput({});
+    }
 
     var handleMessages = function () {
         $(document).on('click', '.recent-comments li.list-group-item', function (e) {
@@ -103,8 +122,13 @@ var Global = function () {
                 handleFBSharer();
                 handleSocialLinks();
                 handlePersonalDetails();
+                handleInterestedIn();
                 handleMessages();
                 handleDropzone();
+                handleTagsInput();
+                
+                // Global components
+                CustomTrees.init();
             });
         },
         handleRightbar: handleRightbar,

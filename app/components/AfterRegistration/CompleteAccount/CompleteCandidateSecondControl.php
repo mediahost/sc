@@ -44,7 +44,7 @@ class CompleteCandidateSecondControl extends BaseControl
 
 	// </editor-fold>
 
-	public function render()
+    public function render()
 	{
 		$skillRepo = $this->em->getRepository(Skill::getClassName());
 
@@ -76,12 +76,13 @@ class CompleteCandidateSecondControl extends BaseControl
 		];
 		parent::render();
 	}
-
+    
 	protected function createComponentForm()
 	{
 		$form = new Form();
 		$form->setRenderer(new MetronicHorizontalFormRenderer());
 		$form->setTranslator($this->translator);
+        $form->getElementPrototype()->class('ajax');
         
         $categories = $this->jobFacade->findCategoriesPairs();
         $categoriesContainer = $form->addContainer('categories');
