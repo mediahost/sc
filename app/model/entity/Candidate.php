@@ -79,9 +79,9 @@ class Candidate extends BaseEntity
 
 	/** @ORM\Column(type="array") */
 	protected $workLocations;
-
-	/** @ORM\Column(type="array") */
-	protected $qualifiedSkills;
+    
+    /** @ORM\Column(type="array") */
+	protected $jobCategories;
 
 	/** @ORM\OneToMany(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $cvs;
@@ -98,7 +98,7 @@ class Candidate extends BaseEntity
 			$this->name = $name;
 		}
 		$this->workLocations = [];
-		$this->qualifiedSkills = [];
+        $this->jobCategories = [];
 		$this->cvs = new ArrayCollection();
 		$this->documents = new ArrayCollection();
 		parent::__construct();
@@ -157,7 +157,7 @@ class Candidate extends BaseEntity
 
 	public function isRequiredOtherFilled()
 	{
-		return count($this->qualifiedSkills) && count($this->workLocations);
+		return  count($this->workLocations)  && count($this->jobCategories);
 	}
 
 	public function setPhoto(FileUpload $file)

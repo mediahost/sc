@@ -10,6 +10,13 @@ trait JobCategoryFacade {
         return $jobCategorydao->findAll();
     }
     
+    public function findTopCategories() {
+        $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
+        return $jobCategorydao->findBy([
+				'parent' => NULL,
+		]);
+    }
+    
     public function findCategoriesPairs() {
         $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
         return $jobCategorydao->findPairs('name');

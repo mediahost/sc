@@ -3,9 +3,9 @@ var CustomTrees = function () {
     var formID = 'frm-completeCandidateSecond-form';
 
     var handleSkillsTree = function () {
-        if (typeof jsonSkills != 'undefined') {
+        if (typeof jsonJobCategories != 'undefined') {
 
-            $('#skillTree').jstree({
+            $('#jobCategoriesTree').jstree({
                 'plugins': ["wholerow", "checkbox", "types"],
                 'core': {
                     "dblclick_toggle": true,
@@ -14,16 +14,16 @@ var CustomTrees = function () {
                         "responsive": false,
                         "icons": false
                     },
-                    'data': jsonSkills
+                    'data': jsonJobCategories
                 }
             }).on('changed.jstree', function (e, data) {
                 var i, j, r = [];
                 for (i = 0, j = data.selected.length; i < j; i++) {
                     r.push(data.instance.get_node(data.selected[i]).id);
                 }
-                $('input.inSkillTree').attr('checked', false);
+                $('input.inCategoryTree').attr('checked', false);
                 $.each(r, function (i, value) {
-                    $('#' + formID + '-skills-' + value).attr('checked', true);
+                    $('#' + formID + '-categories-' + value).attr('checked', true);
                 });
             }).on('select_node.jstree', function (e, data) {
                 var id = data.node.id;
@@ -35,7 +35,7 @@ var CustomTrees = function () {
             });
 
         }
-
+        
 
         if (typeof jsonCountries != 'undefined') {
 

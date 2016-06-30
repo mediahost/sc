@@ -5,12 +5,12 @@ namespace App\Components\AfterRegistration;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
-use App\Model\Entity\Address;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Skill;
 use App\Model\Entity\SkillCategory;
 use App\Model\Entity\User;
 use App\Model\Facade\SkillFacade;
+use App\Model\Facade\JobFacade;
 use App\Model\Facade\UserFacade;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Random;
@@ -32,6 +32,9 @@ class CompleteCandidateSecondControl extends BaseControl
 
 	/** @var SkillFacade @inject */
 	public $skillFacade;
+    
+    /** @var JobFacade @inject */
+	public $jobFacade;
 
 	/** @var \Nette\Security\User @inject */
 	public $user;
@@ -46,19 +49,20 @@ class CompleteCandidateSecondControl extends BaseControl
 		$skillRepo = $this->em->getRepository(Skill::getClassName());
 
 		$this->setTemplateFile('candidateSecond');
-
-		$jsonSkills = [];
-		$categories = $this->skillFacade->getTopCategories();
-		foreach ($categories as $category) {
-			$jsonSkills[] = $this->categoryToLeaf($category);
+        
+        $jsonJobCategories = [];
+        $jobCategories = $this->jobFacade->findTopCategories();
+        foreach ($jobCategories as $category) {
+			$jsonJobCategories[] = $this->jobCategoryToLeaf($category);
 		}
+        
 		$jsonLocalities = [];
 		foreach (Candidate::getLocalities() as $localityId => $locality) {
 			$jsonLocalities[] = $this->loacationToLeaf($localityId, $locality);
 		}
 
-		$this->template->skills = $skillRepo->findPairs('name');;
-		$this->template->jsonSkills = $jsonSkills;
+        $this->template->jobCategories = $this->jobFacade->findCategoriesPairs();
+        $this->template->jsonJobCategories = $jsonJobCategories;
 
 		$this->template->countries = Candidate::getLocalities(TRUE);
 		$this->template->jsonCountries = $jsonLocalities;
@@ -78,13 +82,12 @@ class CompleteCandidateSecondControl extends BaseControl
 		$form = new Form();
 		$form->setRenderer(new MetronicHorizontalFormRenderer());
 		$form->setTranslator($this->translator);
-
-		$skillRepo = $this->em->getRepository(Skill::getClassName());
-		$skills = $skillRepo->findPairs('name');
-		$skillsContainer = $form->addContainer('skills');
-		foreach ($skills as $skillId => $skillName) {
-			$skillsContainer->addCheckbox($skillId, $skillName)
-				->setAttribute('class', 'inSkillTree');
+        
+        $categories = $this->jobFacade->findCategoriesPairs();
+        $categoriesContainer = $form->addContainer('categories');
+        foreach ($categories as $categoryId => $categoryName) {
+			$categoriesContainer->addCheckbox($categoryId, $categoryName)
+				->setAttribute('class', 'inCategoryTree');
 		}
 
 		$countryContainer = $form->addContainer('countries');
@@ -106,15 +109,15 @@ class CompleteCandidateSecondControl extends BaseControl
 		$userRepo = $this->em->getRepository(User::getClassName());
 
 		$user = $this->userEntity;
-
-		$skillList = [];
-		foreach ($values->skills as $skillId => $checked) {
+        
+        $categoryList = [];
+        foreach ($values->categories as $categoryId => $checked) {
 			if ($checked) {
-				$skillList[$skillId] = $skillId;
+				$categoryList[$categoryId] = $categoryId;
 			}
 		}
-		if (!count($skillList)) {
-			$form->addError('Enter at least one skill');
+		if (!count($categoryList)) {
+			$form->addError('Enter at least one category');
 		}
 
 		$countryList = [];
@@ -127,7 +130,7 @@ class CompleteCandidateSecondControl extends BaseControl
 			$form->addError('Enter at least one country');
 		}
 		
-		$user->candidate->qualifiedSkills = $skillList;
+        $user->candidate->jobCategories = $categoryList;
 		$user->candidate->workLocations = $countryList;
 		$user->candidate->freelancer = $values->freelancer;
 
@@ -138,26 +141,20 @@ class CompleteCandidateSecondControl extends BaseControl
 			$this->onSuccess($this, $user->candidate);
 		}
 	}
-
-	private function categoryToLeaf(SkillCategory $category)
+    
+    private function jobCategoryToLeaf(\App\Model\Entity\JobCategory $category)
 	{
 		$leaf = [
-			'id' => 'c-' . $category->id,
+			'id' => $category->id,
 			'text' => $category->name,
 		];
 		$children = [];
 		foreach ($category->childs as $child) {
-			$children[] = $this->categoryToLeaf($child);
+			$children[] = $this->jobCategoryToLeaf($child);
 		}
-		foreach ($category->skills as $skill) {
-			$children[] = [
-				'id' => $skill->id,
-				'text' => $skill->name,
-				'state' => [
-					'selected' => in_array($skill->id, $this->userEntity->candidate->qualifiedSkills),
-				],
-			];
-		}
+        $leaf['state'] = [
+			'selected' => in_array($category->id, $this->userEntity->candidate->jobCategories),
+		];
 		$leaf['children'] = $children;
 		return $leaf;
 	}

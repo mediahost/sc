@@ -4,10 +4,10 @@
         <tr>
             <th style="vertical-align: top; padding-top: 6px;">{_'What are you most qualified for?'}</th>
             <td>
-                <div id="skillTree"></div>
-                <div id="skillInputs" style="display: none;">
-                    {foreach $skills as $skillId => $skillName}
-                        {input "skills-$skillId" }{$skillName}
+                <div id="jobCategoriesTree"></div>
+                <div id="categoryInputs" style="display: none;">
+                    {foreach $jobCategories as $categoryId => $categoryName}
+                        {input "categories-$categoryId" }{$categoryName}
                     {/foreach}
                 </div>
             </td>
@@ -54,8 +54,7 @@
 
 <script n:syntax="double">
 
-    var jsonSkills = {{? echo json_encode($jsonSkills); }};
     var jsonCountries = {{? echo json_encode($jsonCountries); }};
     var jsonFreelancer = {{? echo json_encode($jsonFreelancer); }};
-
+    var jsonJobCategories = {{? echo json_encode($jsonJobCategories); }};
 </script>
