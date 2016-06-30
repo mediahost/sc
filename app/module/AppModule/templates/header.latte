@@ -78,6 +78,12 @@
 						</li>
 					</ul>
 				</li>
+                                <li class="button">
+                                        <a href="{link Profile:}" >
+						<i class="s16 fa fa-user"></i>
+						<span class="txt">{_'Profile'}</span>
+					</a>
+                                </li>
 			</ul>
 			{var $candidate => $user->getIdentity()->candidate}
 			<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
