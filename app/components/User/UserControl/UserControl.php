@@ -5,7 +5,6 @@ namespace App\Components\User;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
-use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
@@ -166,7 +165,7 @@ class UserControl extends BaseControl
 	private function getRoles()
 	{
 		if ($this->roles === NULL) {
-			$this->roles = $this->roleFacade->findLowerRoles($this->identityRoles);
+			$this->roles = $this->userFacade->findLowerRoles($this->identityRoles);
 		}
 		return $this->roles;
 	}

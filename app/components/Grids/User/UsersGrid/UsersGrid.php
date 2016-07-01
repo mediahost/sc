@@ -60,7 +60,7 @@ class UsersGrid extends BaseControl
 		$grid->addActionHref('access', 'Access')
 						->setIcon('fa fa-key')
 						->setDisable(function($item) {
-							return !$this->presenter->canAccess($this->identity, $item);
+							return !$this->presenter->userFacade->canAccess($this->identity, $item);
 						});
 
 		$grid->addActionHref('edit', 'Edit')
@@ -76,7 +76,7 @@ class UsersGrid extends BaseControl
 							return sprintf($message, (string) $item);
 						})
 						->setDisable(function($item) {
-							return !$this->presenter->canDelete($this->identity, $item);
+							return !$this->presenter->userFacade->canDelete($this->identity, $item);
 						})
 				->elementPrototype->class[] = 'red';
 						

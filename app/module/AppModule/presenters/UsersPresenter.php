@@ -58,9 +58,9 @@ class UsersPresenter extends BasePresenter
 	{
 		$this->template->users = $this->userDao->findAll();
 		$this->template->identity = $this->user;
-		$this->template->addFilter('canEdit', $this->canEdit);
-		$this->template->addFilter('canDelete', $this->canDelete);
-		$this->template->addFilter('canAccess', $this->canAccess);
+		$this->template->addFilter('canEdit', $this->userFacade->canEdit);
+		$this->template->addFilter('canDelete', $this->userFacade->canDelete);
+		$this->template->addFilter('canAccess', $this->userFacade->canAccess);
 	}
 
 	/**
@@ -86,7 +86,7 @@ class UsersPresenter extends BasePresenter
 		if (!$this->userEntity) {
 			$this->flashMessage('This user wasn\'t found.', 'error');
 			$this->redirect('default');
-		} else if (!$this->canEdit($this->user, $this->userEntity)) {
+		} else if (!$this->userFacade->canEdit($this->user, $this->userEntity)) {
 			$this->flashMessage('You can\'t edit this user.', 'danger');
 			$this->redirect('default');
 		} else {
@@ -120,7 +120,7 @@ class UsersPresenter extends BasePresenter
 		$user = $this->userDao->find($id);
 		if (!$user) {
 			$this->flashMessage('User wasn\'t found.', 'danger');
-		} else if (!$this->canDelete($this->user, $user)) {
+		} else if (!$this->userFacade->canDelete($this->user, $user)) {
 			$this->flashMessage('You can\'t delete this user.', 'danger');
 		} else {
 			$this->userFacade->delete($user);
@@ -139,7 +139,7 @@ class UsersPresenter extends BasePresenter
 		$user = $this->userDao->find($id);
 		if (!$user) {
 			$this->flashMessage('User wasn\'t found.', 'danger');
-		} else if (!$this->canAccess($this->user, $user)) {
+		} else if (!$this->userFacade->canAccess($this->user, $user)) {
 			$this->flashMessage('You can\'t access to this user.', 'danger');
 		} else {
 			$this->user->login($user);
@@ -149,50 +149,7 @@ class UsersPresenter extends BasePresenter
 		}
 		$this->redirect('default');
 	}
-
-	// </editor-fold>
-	// <editor-fold desc="edit/delete priviledges">
-
-	/**
-	 * Decides if identity user can edit user
-	 * @param IdentityUser $identityUser
-	 * @param User $user
-	 * @return boolean
-	 */
-	public function canEdit(IdentityUser $identityUser, User $user)
-	{
-		if ($identityUser->id === $user->id) {
-			return FALSE;
-		} else {
-			// pokud je nejvyšší uživatelova role v nižších rolích přihlášeného uživatele
-			// tedy může editovat pouze uživatele s nižšími rolemi
-			$identityLowerRoles = $this->roleFacade->findLowerRoles($identityUser->roles);
-			return in_array($user->maxRole->name, $identityLowerRoles);
-		}
-	}
-
-	/**
-	 * Decides if identity user can delete user
-	 * @param IdentityUser $identityUser
-	 * @param User $user
-	 * @return boolean
-	 */
-	public function canDelete(IdentityUser $identityUser, User $user)
-	{
-		$isDeletable = $this->userFacade->isDeletable($user);
-		return $this->canEdit($identityUser, $user) && $isDeletable;
-	}
-
-	/**
-	 * Decides if identity user can access user
-	 * @param IdentityUser $identityUser
-	 * @param User $user
-	 * @return boolean
-	 */
-	public function canAccess(IdentityUser $identityUser, User $user)
-	{
-		return $this->canEdit($identityUser, $user);
-	}
+	
 
 	// </editor-fold>
 	// <editor-fold desc="forms">

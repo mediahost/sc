@@ -48,25 +48,6 @@ class RoleFacade extends Object
 		return $this->roleDao->findOneBy(['name' => $name]);
 	}
 
-	public function findLowerRoles(array $roles, $includeMax = FALSE)
-	{
-		$allRoles = $this->roleDao->findPairs('name'); // expect roles by priority (first is the lowest)
-		$lowerRoles = [];
-		$maxRole = Role::getMaxRole($roles);
-		if (in_array($maxRole->name, $allRoles)) {
-			foreach ($allRoles as $id => $dbRole) {
-				if ($maxRole->name === $dbRole) {
-					if ($includeMax) {
-						$lowerRoles[$id] = $dbRole;
-					}
-					break;
-				}
-				$lowerRoles[$id] = $dbRole;
-			}
-		}
-		return $lowerRoles;
-	}
-
 	public function isUnique($name)
 	{
 		return $this->findByName($name) === NULL;

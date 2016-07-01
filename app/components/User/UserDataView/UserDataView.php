@@ -3,6 +3,7 @@
 namespace App\Components\User;
 
 use App\Components\BaseControl;
+use App\Model\Facade\UserFacade;
 use App\Model\Entity\User;
 
 /**
@@ -11,6 +12,9 @@ use App\Model\Entity\User;
  */
 class UserDataView extends BaseControl
 {
+    /** @var UserFacade @inject */
+	public $userFacade;
+    
     /** @var ArrayCollection */
     private $users;
 
@@ -26,9 +30,9 @@ class UserDataView extends BaseControl
         $this->users = ($this->users)  ?  $this->users  :  new ArrayCollection();
         $this->template->users = $this->users;
         $this->template->identity = $this->identity;
-        $this->template->addFilter('canEdit', $this->presenter->canEdit);
-        $this->template->addFilter('canDelete', $this->presenter->canDelete);
-        $this->template->addFilter('canAccess', $this->presenter->canAccess);
+        $this->template->addFilter('canEdit', $this->userFacade->canEdit);
+        $this->template->addFilter('canDelete', $this->userFacade->canDelete);
+        $this->template->addFilter('canAccess', $this->userFacade->canAccess);
         parent::render();
     }
 
