@@ -22,6 +22,8 @@
         <td>{$cv->name}</td>
         <th class="grid-cell-isDefault center text-center center"><i n:if="$cv->isDefault" class="glyphicon glyphicon-ok icon-ok"></i></th>
         <td>
+            <a n:if="$template->canAccess($user, $cv->candidate->user)" class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Users:access $cv->candidate->user->id}">
+                <i class="fa fa-key"></i> {_'Access'}</a>
             <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:CvEditor:default $cv->id}">
                 <i class="fa fa-edit"></i> {_'CV'}</a>
             <a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Profile: $cv->candidate->user->id}">

@@ -3,6 +3,7 @@
 namespace App\Components\Cv;
 
 use App\Components\BaseControl;
+use App\Model\Facade\UserFacade;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
 use App\Model\Entity\SkillKnowRequest;
@@ -10,7 +11,9 @@ use Kdyby\Doctrine\EntityManager;
 
 class CvDataView extends BaseControl
 {
-
+    /** @var UserFacade @inject */
+	public $userFacade;
+    
 	/** @var EntityManager @inject */
 	public $em;
 
@@ -47,6 +50,7 @@ class CvDataView extends BaseControl
 	public function render()
 	{
 		$this->template->cvs = $this->getCvs();
+        $this->template->addFilter('canAccess', $this->userFacade->canAccess);
 		parent::render();
 	}
 }
