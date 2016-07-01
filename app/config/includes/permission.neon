@@ -47,6 +47,7 @@ services:
 			- allow('candidate', 'candidate', ['default', 'address', 'photo'])
 			- allow('candidate', 'cvViewer')
 			- allow('candidate', 'cvEditor', ['default', 'skills', 'jobs'])
+			- allow('candidate', 'jobs', ['default', 'showAll', 'view'])
 			- allow('company', ['company', 'job', 'jobs', 'companies'])
 			- allow(['candidate', 'company', 'admin'], 'messages')
 
