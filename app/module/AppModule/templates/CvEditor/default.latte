@@ -5,7 +5,8 @@
 *}
 
 {block pageTitle}
-{_'CV Editor'}
+{_'CV Editor of candidate '.$cv->candidate.' ('.$cv->candidate->user->mail.')'}
+<a href="{link Messages:}" class="dropdown-toggle"><i class="s16 minia-icon-envelope"></i></a>
 {/block}
 
 {block bodyClass}
