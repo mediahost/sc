@@ -20,11 +20,12 @@ abstract class BasePresenter extends BaseBasePresenter
 	private $showRightSideBar = true;
 
 
-	public function getUserCommunications()
+	public function getUserCommunications(\App\Model\Entity\User $user=null)
 	{
-		if (!$this->userCommunications) {
-			$this->userCommunications = $this->communicationFacade->getUserCommunications($this->user->identity);
-		}
+        if(!$user) {
+            $user = $this->user->identity;
+        }
+		$this->userCommunications = $this->communicationFacade->getUserCommunications($user);
 		return $this->userCommunications;
 	}
 

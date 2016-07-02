@@ -18,6 +18,7 @@ use App\Components\Candidate\IProfileControlFactory;
 use App\Components\Candidate\IAddressControlFactory;
 use App\Components\Candidate\ISocialControlFactory;
 use App\Components\User\ICareerDocsControlFactory;
+use App\Components\ICommunicationListFactory;
 use App\Model\Entity;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Candidate;
@@ -64,6 +65,9 @@ class ProfilePresenter extends BasePresenter
     
     /** @var ICompleteCandidatePreviewFactory @inject */
 	public $completeCandidatePreview;
+
+	/** @var ICommunicationListFactory @inject */
+	public $communicationListFactory;
 
 	/** @var CvFacade @inject */
 	public $cvFacade;
@@ -353,6 +357,16 @@ class ProfilePresenter extends BasePresenter
         $control->setUserEntity($this->getUserEntity());
         return $control;
     }
+    
+    public function createComponentRecentMessages()
+	{
+        $user = $this->getUserEntity();
+	    $control = $this->communicationListFactory->create();
+		foreach ($this->getUserCommunications($user) as $communication) {
+			$control->addCommunication($communication, $this->link('Messages:', $communication->id));
+		}
+		return $control;
+	}
 
     // </editor-fold>
 }
