@@ -55,10 +55,13 @@ class CvsPresenter extends BasePresenter
 	 */
 	public function actionDefault($jobId = NULL, $filter = FALSE)
 	{
+        $this->template->pageTitle = $this->translator->translate('Candidates');
 		if ($jobId) {
 			$job = $this->jobRepo->find($jobId);
 			if ($job) {
 				$this['cvDataView']->setJob($job);
+                $msg = 'Suggested candidates for job ' . $job->name;
+                $this->template->pageTitle = $this->translator->translate($msg);
 			}
 		}
 		$this->getTemplate()->showFilter = $filter;

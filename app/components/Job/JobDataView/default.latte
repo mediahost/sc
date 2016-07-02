@@ -36,7 +36,7 @@
 				<a n:if="$user->isAllowed('jobs', 'edit')" href="{plink :App:Job:edit $job->id}"
                                    class="grid-action-view btn btn-xs btn-mini"><i class="fa fa-edit"></i> Edit</a>
 				<a n:if="$user->isAllowed('jobs', 'cvs')" href="{plink :App:Cvs: 'jobId' => $job->id}"
-                                   class="grid-action-view btn btn-xs btn-mini"><i class="fa fa-file-text"></i> CVs</a>
+                                   class="grid-action-view btn btn-xs btn-mini"><i class="fa fa-file-text"></i> {_'Suggested CVs'}</a>
 				<a  n:if="$user->isAllowed('jobs', 'delete')" href="{plink :App:Job:delete $job->id}"
                                    class="grid-action-view btn btn-xs btn-mini" ><i class="fa fa-trash-o"></i> Delete</a>
 			</td>
