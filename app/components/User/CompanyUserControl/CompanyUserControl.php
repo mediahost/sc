@@ -60,7 +60,8 @@ class CompanyUserControl extends BaseControl
 		$form = new Form;
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer);
-
+        $form->getElementPrototype()->class('ajax');
+                    
 		$user = $form->addServerValidatedText('mail', 'E-mail')
 				->addRule(Form::EMAIL, 'Fill right format')
 				->addRule(Form::FILLED, 'Mail must be filled')

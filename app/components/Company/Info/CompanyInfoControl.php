@@ -2,6 +2,8 @@
 
 namespace App\Components\Company;
 
+
+use App\Components\User\ICompanyUserControlFactory;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
@@ -21,6 +23,12 @@ class CompanyInfoControl extends BaseControl
 
 	/** @var Company */
 	private $company;
+    
+    /** @var \Nette\Security\User */
+    private $user;
+    
+    /** @var \App\Model\Entity\User */
+    private $selectedUser;
 
 	/** @var array */
 	private $usersRoles = [];
@@ -32,6 +40,8 @@ class CompanyInfoControl extends BaseControl
 
 	// </editor-fold>
 	// <editor-fold desc="injects">
+    /** @var ICompanyUserControlFactory @inject */
+	public $iCompanyUserControlFactory;
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
@@ -50,9 +60,6 @@ class CompanyInfoControl extends BaseControl
 
 	/** @var bool */
 	private $canEditUsers = FALSE;
-
-	/** @var Html */
-	private $linkAddUser;
 
 	// </editor-fold>
 
@@ -83,13 +90,12 @@ class CompanyInfoControl extends BaseControl
 			$admins = $form->addMultiSelect2('admins', 'Administrators', $users)
 					->setRequired('Company must have administrator');
 
-			if ($this->linkAddUser) {
-				$this->linkAddUser->setText($this->translator->translate('add new user'));
-				$message = Html::el('')
-						->setText($this->translator->translate('You can') . ' ')
-						->add($this->linkAddUser);
-				$admins->setOption('description', $message);
-			}
+            $linkAddUser = Html::el('a')->href($this->presenter->link('this#addUser'))
+                ->addAttributes(['data-toggle' => 'modal'])
+                ->setText($this->translator->translate('add new user'));
+            $message = Html::el('')->setText($this->translator->translate('You can') . ' ')
+                ->add($linkAddUser);
+            $admins->setOption('description', $message);
 		}
 
 		$form->addSubmit('save', 'Save');
@@ -158,6 +164,9 @@ class CompanyInfoControl extends BaseControl
 			foreach ($this->company->adminAccesses as $adminPermission) {
 				$values['admins'][] = $adminPermission->user->id;
 			}
+            if ($this->selectedUser) {
+                $values['admins'][] = $this->selectedUser->id;
+            }
 		}
 		return $values;
 	}
@@ -176,28 +185,31 @@ class CompanyInfoControl extends BaseControl
 		$this->company = $company;
 		return $this;
 	}
-
-	public function setCanEditInfo($value = TRUE)
-	{
-		$this->canEditInfo = $value;
-		return $this;
-	}
-
-	public function setCanEditUsers($value = TRUE)
-	{
-		$this->canEditUsers = $value;
-		return $this;
-	}
-
-	public function setLinkAddUser($link, array $attributes = [])
-	{
-		$this->linkAddUser = Html::el('a')
-				->href($link)
-				->addAttributes($attributes);
-		return $this;
-	}
+    
+    public function setUser(\Nette\Security\User $user) {
+        $this->user = $user;
+        $this->canEditInfo = $this->user->isAllowed('company', 'edit');
+        $this->canEditUsers = $this->user->isAllowed('company', 'edit');
+    }
+    
+    public function selectUser(\App\Model\Entity\User $user) {
+        $this->selectedUser = $user;
+    }
 
 	// </editor-fold>
+    
+    /** @return CompanyUserControl */
+	public function createComponentEditUserForm()
+	{
+		$control = $this->iCompanyUserControlFactory->create();
+		$control->onAfterSave = function (\App\Model\Entity\User $saved) {
+            $this->selectUser($saved);
+			$message = new \App\TaggedString('User \'%s\' was successfully saved.', (string) $saved);
+			$this->flashMessage($message, 'success');
+			$this->redrawControl('companyInfo');
+		};
+		return $control;
+	}
 }
 
 interface ICompanyInfoControlFactory
