@@ -160,6 +160,10 @@ services:
 		implement: App\Components\Candidate\ICandidatePreviewFactory
 		inject: yes
 
+	IMatchingControlFactory:
+		implement: App\Components\Candidate\IMatchingControlFactory
+		inject: yes
+
 	ISocialControlFactory:
 		implement: App\Components\Candidate\ISocialControlFactory
 		inject: yes

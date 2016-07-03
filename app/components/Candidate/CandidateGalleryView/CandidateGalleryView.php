@@ -5,9 +5,13 @@ namespace App\Components\Candidate;
 use Doctrine\ORM\EntityManager;
 use App\Model\Entity\Cv;
 use App\Components\Candidate\ICandidatePreviewFactory;
+use App\Components\Candidate\IMatchingControlFactory;
 
 
 class CandidateGalleryView extends \App\Components\BaseControl {
+    
+    /** @var IMatchingControlFactory @inject */
+	public $matchingControlFactory;
     
     /** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
@@ -21,8 +25,6 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     /** @var Cv[] */
 	private $cvs = [];
     
-    
-
 
     /**
      * Renders control
@@ -45,6 +47,10 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 		return $cvRepo->findAll();
 	}
 
+    public function createComponentMatchingControl() {
+        $control = $this->matchingControlFactory->create();
+        return $control;
+    }
 
     public function createComponentCandidatePreview() {
         return new \Nette\Application\UI\Multiplier(function ($cvId) {

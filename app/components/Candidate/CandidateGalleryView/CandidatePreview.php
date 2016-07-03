@@ -13,7 +13,7 @@ class CandidatePreview extends \App\Components\BaseControl {
      * Renders control
      */
     public function render() {
-        $this->setTemplateFile('candidatePreview');
+        $this->setTemplateFile('CandidatePreview');
         $this->template->cv = $this->cv;
         parent::render();
     }

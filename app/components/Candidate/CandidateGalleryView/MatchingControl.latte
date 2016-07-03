@@ -1,0 +1,13 @@
+{**
+ * Matching control template
+ *
+ * @param   JobCategory[]     $categories	
+*}
+
+<div class="gallery-category-nav">
+    <ul class="list-group">
+        <a n:foreach="$categories as $category" href="#" class="list-group-item active">
+            {$category->name} <span class="label label-info">{count($category->skills)}</span>
+        </a> 
+    </ul>
+</div>
