@@ -152,6 +152,14 @@ services:
 		implement: App\Components\Candidate\IPhotoControlFactory
 		inject: yes
 
+	ICandidateGalleryViewFactory:
+		implement: App\Components\Candidate\ICandidateGalleryViewFactory
+		inject: yes
+
+	ICandidatePreviewFactory:
+		implement: App\Components\Candidate\ICandidatePreviewFactory
+		inject: yes
+
 	ISocialControlFactory:
 		implement: App\Components\Candidate\ISocialControlFactory
 		inject: yes

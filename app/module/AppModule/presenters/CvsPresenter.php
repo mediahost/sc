@@ -2,6 +2,7 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Candidate\ICandidateGalleryViewFactory;
 use App\Components\Cv\ICvDataViewFactory;
 use App\Components\Cv\ISkillsFilterFactory;
 use App\Components\Grids\Cv\CvsGrid;
@@ -21,6 +22,9 @@ class CvsPresenter extends BasePresenter
 
 	/** @var EntityManager @inject */
 	public $em;
+    
+    /** @var ICandidateGalleryViewFactory @inject */
+	public $candidateGalleryViewFactory;
 
 	/** @var ICvDataViewFactory @inject */
 	public $cvDataViewFactory;
@@ -95,4 +99,9 @@ class CvsPresenter extends BasePresenter
 		};
 		return $control;
 	}
+    
+    public function createComponentCandidateGalleryView() {
+        $control = $this->candidateGalleryViewFactory->create();
+        return $control;
+    }
 }

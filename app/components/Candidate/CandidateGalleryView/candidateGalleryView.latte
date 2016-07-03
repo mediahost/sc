@@ -1,0 +1,31 @@
+{**
+ * CandidateGalleryView control template
+ *
+ * @param   Cv[]     $cvs	
+*}
+
+<div class="row">
+    <div class="col-lg-10">
+        <div class="row gallery sortable-layout ui-sortable">
+            <div n:inner-foreach="$cvs as $cv" class="col-md-3 col-xs-12">
+                {if $iterator->counter%4 == 1}{control candidatePreview-$cv->id}{/if}
+            </div>
+            <div n:inner-foreach="$cvs as $cv" class="col-md-3 col-xs-12">
+                {if $iterator->counter%4 == 2}{control candidatePreview-$cv->id}{/if}
+            </div>
+            <div n:inner-foreach="$cvs as $cv" class="col-md-3 col-xs-12">
+                {if $iterator->counter%4 == 3}{control candidatePreview-$cv->id}{/if}
+            </div>
+            <div n:inner-foreach="$cvs as $cv" class="col-md-3 col-xs-12">
+                {if $iterator->counter%4 == 0}{control candidatePreview-$cv->id}{/if}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="page-header"><h5>{_'Skill filter'}</h5></div>
+        
+        
+        <div class="page-header"><h5>{_'Job categories'}</h5></div>
+        
+    </div>
+</div>

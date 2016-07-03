@@ -1,0 +1,32 @@
+{**
+ * CandidatePreview control template
+ *
+ * @param   Cv     $cv	
+*}
+
+<div class="panel panel-default plain panelMove">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <strong>{$cv->candidate}</strong> 
+            <small>{$cv->candidate->address->city}</small>
+        </h4>
+
+        <div class="btn-group" role="group">
+            <div class="checkbox-custom ml15">
+                <input class="check" type="checkbox" value="option" id="preview-cv{$cv->id}">
+                <label for="preview-cv{$cv->id}"></label>
+            </div>
+            <a href="#" class="btn btn-default btn-link btn-sm" data-toggle="modal" data-target="#edit-image">
+                <i class="fa fa-pencil mr5"></i>Edit
+            </a>
+            <a href="#" class="btn btn-default btn-link btn-sm delete-image">
+                <i class="fa fa-trash-o mr5"></i>Delete</a>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <a href="img/gallery/5.jpg" data-toggle="lightbox" data-gallery="gallerymode" data-title="Yachts" data-parrent="">
+            <img src="{$basePath}/foto/{$cv->candidate->photo|size:150,150}" class="img-responsive" alt="image alt">
+        </a>
+    </div>
+</div>
