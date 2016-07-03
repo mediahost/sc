@@ -173,9 +173,14 @@ class SkillsFilter extends BaseControl
 	{
 		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$this->template->categories = $this->skillFacade->getTopCategories();
+        $this->setTemplateFile('default');
 		parent::render();
 	}
 
+    public function renderPreview() {
+        $this->setTemplateFile('SkillFilterPreview');
+        parent::render();
+    }
 }
 
 interface ISkillsFilterFactory
