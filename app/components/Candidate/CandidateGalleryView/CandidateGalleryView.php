@@ -6,12 +6,16 @@ use Doctrine\ORM\EntityManager;
 use App\Model\Entity\Cv;
 use App\Components\Candidate\ICandidatePreviewFactory;
 use App\Components\Candidate\IMatchingControlFactory;
+use App\Components\Candidate\ISkillFilterFactory;
 
 
 class CandidateGalleryView extends \App\Components\BaseControl {
     
     /** @var IMatchingControlFactory @inject */
 	public $matchingControlFactory;
+    
+    /** @var ISkillFilterFactory @inject */
+	public $skillFilterFactory;
     
     /** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
@@ -49,6 +53,11 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 
     public function createComponentMatchingControl() {
         $control = $this->matchingControlFactory->create();
+        return $control;
+    }
+    
+    public function createComponentSkillFilter() {
+        $control = $this->skillFilterFactory->create();
         return $control;
     }
 
