@@ -40,13 +40,8 @@ class CompleteCandidatePreview extends \App\Components\BaseControl {
     }
     
     public function getDefaults() {
-        $categories = [];
-        $allCategories = $this->jobFacade->findCategoriesPairs();
-        foreach ($allCategories as $id => $category) {
-            if (in_array($id, $this->userEntity->candidate->jobCategories)) {
-                $categories[] = $category;
-            }
-        }
+        $candidate = $this->userEntity->candidate;
+        $categories = $this->jobFacade->findCandidatePreferedCategories($candidate);
         
         $localities = [];
         foreach (\App\Model\Entity\Candidate::getLocalities() as $group) {
