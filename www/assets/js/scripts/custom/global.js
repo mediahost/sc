@@ -83,6 +83,10 @@ var Global = function () {
     var handleTagsInput = function() {
         $('input[data-role="tagsinput"]').tagsinput({});
     }
+    
+    var handleModals = function() {
+        $('[data-opening="true"]').modal('show');
+    }
 
     var handleMessages = function () {
         $(document).on('click', '.recent-comments li.list-group-item', function (e) {
@@ -126,6 +130,7 @@ var Global = function () {
                 handleMessages();
                 handleDropzone();
                 handleTagsInput();
+                handleModals();
                 
                 // Global components
                 CustomTrees.init();

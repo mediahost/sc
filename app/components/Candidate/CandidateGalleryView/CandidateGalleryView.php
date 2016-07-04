@@ -64,7 +64,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     public function createComponentCandidatePreview() {
         return new \Nette\Application\UI\Multiplier(function ($cvId) {
             $cv = \App\ArrayUtils::searchByProperty($this->cvs, 'id', $cvId);
-            $control = new CandidatePreview();
+            $control = $this->candidatePreviewFactory->create();
             $control->setCv($cv);
             return $control;
         });

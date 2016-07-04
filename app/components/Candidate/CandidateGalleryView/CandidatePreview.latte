@@ -16,16 +16,30 @@
                 <input class="check" type="checkbox" value="option" id="preview-cv{$cv->id}">
                 <label for="preview-cv{$cv->id}"></label>
             </div>
-            <a href="#" class="btn btn-default btn-link btn-sm" data-toggle="modal" data-target="#edit-image">
-                <i class="fa fa-pencil mr5"></i>Edit
+            <a href="{plink cvDetail $cv->candidate->user->id}" class="ajax btn btn-default btn-link btn-sm" 
+               data-toggle="modal" data-target="#cvDetail">{_'Detail'}
             </a>
-            <a href="#" class="btn btn-default btn-link btn-sm delete-image">
-                <i class="fa fa-trash-o mr5"></i>Delete</a>
+            <a href="{plink Profile: $cv->candidate->user->id}" class="btn btn-default btn-link btn-sm delete-image">
+                {_'Profile'}
+            </a>
         </div>
     </div>
 
     <div class="panel-body">
-        <a href="img/gallery/5.jpg" data-toggle="lightbox" data-gallery="gallerymode" data-title="Yachts" data-parrent="">
+        <p><small>
+            <b>{_'Prefered job categories: '}</b>
+            {$preferedJobCategories['short']}
+            <a n:ifset="$preferedJobCategories['full']" href="#" class="tip" 
+               data-original-title="{$preferedJobCategories['full']}">{_'more'}</a>
+        </small></p>
+        <p><small>
+            <b>{_'IT Skills: '}</b>
+            {$skills['short']}
+            <a n:ifset="$skills['full']" href="#" class="tip" 
+               data-original-title="{$skills['full']}">{_'more'}</a>
+        </small></p>
+        
+        <a href="{plink CvPreview $cv->candidate->user->id}" class="ajax">
             <img src="{$basePath}/foto/{$cv->candidate->photo|size:150,150}" class="img-responsive" alt="image alt">
         </a>
     </div>

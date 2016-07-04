@@ -3,16 +3,15 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\Candidate\ICandidateGalleryViewFactory;
+use App\Components\AfterRegistration\ICompleteCandidatePreviewFactory;
+use App\Components\Cv\ILivePreviewControlFactory;
 use App\Components\Cv\ICvDataViewFactory;
 use App\Components\Cv\ISkillsFilterFactory;
-use App\Components\Grids\Cv\CvsGrid;
-use App\Components\Grids\Cv\ICvsGridFactory;
-use App\Components\Job\ISkillsControlFactory;
+use App\Components\Cv\ISkillsControlFactory;
 use App\Components\Job\SkillsControl;
+use App\Model\Facade\UserFacade;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
-use App\TaggedString;
-use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -31,7 +30,19 @@ class CvsPresenter extends BasePresenter
 
 	/** @var ISkillsFilterFactory @inject */
 	public $iSkillFilterFactory;
-
+    
+    /** @var ISkillsControlFactory @inject */
+	public $iSkillsControlFactory;
+    
+    /** @var ILivePreviewControlFactory @inject */
+	public $iLivePreviewControlFactory;
+    
+    /** @var ICompleteCandidatePreviewFactory @inject */
+	public $completeCandidatePreview;
+    
+    /** @var UserFacade @inject */
+	public $userFacade;
+    
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
@@ -70,8 +81,21 @@ class CvsPresenter extends BasePresenter
 		}
 		$this->getTemplate()->showFilter = $filter;
 	}
+    
+    public function actionCvDetail($userId) {
+        $user = $this->userFacade->findById($userId);
+        $this['completeCandidatePreview']->setUserEntity($user);
+		$this['skillsForm']->setCv($user->candidate->getDefaultCv());
+        $this->redrawControl('cvDetail');
+    }
+    
+    public function actionCvPreview($userId) {
+        $user = $this->userFacade->findById($userId);
+        $this['cvPreview']->setCv($user->candidate->getDefaultCv());
+        $this->redrawControl('cvPdfPreview');
+    }
 
-	/**
+    /**
 	 * @secured
 	 * @resource('cvs')
 	 * @privilege('delete')
@@ -104,4 +128,25 @@ class CvsPresenter extends BasePresenter
         $control = $this->candidateGalleryViewFactory->create();
         return $control;
     }
+    
+    public function createComponentCvPreview()
+	{
+		$control = $this->iLivePreviewControlFactory->create();
+		$control->setScale(0.8, 0.8, 1);
+		return $control;
+	}
+    
+    public function createComponentCompleteCandidatePreview() {
+        $control = $this->completeCandidatePreview->create();
+        return $control;
+    }
+    
+    public function createComponentSkillsForm()
+	{
+		$control = $this->iSkillsControlFactory->create();
+		$control->setTemplateFile('overview');
+		$control->onlyFilledSkills = true;
+		$control->setAjax(TRUE, TRUE);
+		return $control;
+	}
 }
