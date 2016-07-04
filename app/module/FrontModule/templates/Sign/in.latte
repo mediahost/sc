@@ -16,12 +16,16 @@
 				<strong>{_"Don't you have an account?"}</strong>
 			</h4>
 			<p class="text-center">
-				<a n:href="up, role => $role" class="btn btn-success">
-					{_'Create an'}
-					{if $role === $roleCandidate}{_'candidate'}
-					{elseif $role === $roleCompany}{_'company'}
-					{/if}
-					{_'account'}
+				<a n:href="up, role => $presenter::ROLE_CANDIDATE" class="btn btn-success">
+					{_'Create an candidate account'}
+				</a>
+			</p>
+                        <h5 class="text-center">
+                                <strong>{_"Or"}</strong>
+                        </h5>
+                        <p class="text-center">
+                                <a n:href="up, role => $presenter::ROLE_COMPANY" class="btn btn-success">
+					{_'Create an company account'}
 				</a>
 			</p>
 		</div>
