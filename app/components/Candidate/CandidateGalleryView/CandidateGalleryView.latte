@@ -5,23 +5,20 @@
 *}
 
 <div class="row">
-    <div class="col-lg-10">
+    <div class="col-lg-9">
         <div class="row gallery sortable-layout ui-sortable">
-            <div n:inner-foreach="$cvs as $cv" class="col-md-3 col-xs-12">
-                {if $iterator->counter%4 == 1}{control candidatePreview-$cv->id}{/if}
+            <div n:inner-foreach="$cvs as $cv" class="col-md-4 col-xs-12">
+                {if $iterator->counter%3 == 1}{control candidatePreview-$cv->id}{/if}
             </div>
-            <div n:inner-foreach="$cvs as $cv" class="col-md-3 col-xs-12">
-                {if $iterator->counter%4 == 2}{control candidatePreview-$cv->id}{/if}
+            <div n:inner-foreach="$cvs as $cv" class="col-md-4 col-xs-12">
+                {if $iterator->counter%3 == 2}{control candidatePreview-$cv->id}{/if}
             </div>
-            <div n:inner-foreach="$cvs as $cv" class="col-md-3 col-xs-12">
-                {if $iterator->counter%4 == 3}{control candidatePreview-$cv->id}{/if}
-            </div>
-            <div n:inner-foreach="$cvs as $cv" class="col-md-3 col-xs-12">
-                {if $iterator->counter%4 == 0}{control candidatePreview-$cv->id}{/if}
+            <div n:inner-foreach="$cvs as $cv" class="col-md-4 col-xs-12">
+                {if $iterator->counter%3 == 0}{control candidatePreview-$cv->id}{/if}
             </div>
         </div>
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-3">
         <div class="page-header"><h5>{_'Skill filter'}</h5></div>
         {control skillsFilter:preview}
         
@@ -44,9 +41,6 @@
             </div>
             <div class="modal-body">
                 {control skillsFilter}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">{_'Appli'}</button>
             </div>
         </div>
     </div>

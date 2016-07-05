@@ -17,3 +17,8 @@
     width: 100%;
     float: left;
 }
+
+.gallery-category-nav ul {
+    list-style-type: none;
+    -webkit-padding-start: 0px;
+}

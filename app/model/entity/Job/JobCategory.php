@@ -13,7 +13,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property string $name
  * @property JobCategory $parent
  * @property Collection $childs
- * @property Collection $skills
+ * @property Collection $jobs
  */
 class JobCategory extends BaseEntity
 {
@@ -32,7 +32,7 @@ class JobCategory extends BaseEntity
 	private $childs;
 
 	/** @ORM\OneToMany(targetEntity="Job", mappedBy="category") */
-	private $skills;
+	private $jobs;
 	
 	
 	public function __construct($name = NULL) {
@@ -40,7 +40,7 @@ class JobCategory extends BaseEntity
 			$this->name = $name;
 		}
         $this->childs = new ArrayCollection;
-		$this->skills = new ArrayCollection;
+		$this->jobs = new ArrayCollection;
 		parent::__construct();
 	}
     
@@ -51,9 +51,9 @@ class JobCategory extends BaseEntity
 	}
 
 	/** @return Collection */
-	public function getSkills()
+	public function getJobs()
 	{
-		return $this->skills;
+		return $this->jobs;
 	}
     
     /** @return bool */

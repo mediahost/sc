@@ -5,9 +5,16 @@
 *}
 
 <div class="gallery-category-nav">
-    <ul class="list-group">
-        <a n:foreach="$categories as $category" href="#" class="list-group-item active">
-            {$category->name} <span class="label label-info">{count($category->skills)}</span>
-        </a> 
+    <ul class="">
+        <li n:foreach="$categories as $category" n:if="count($category->jobs)"
+           href="#" class="">
+            <a class="list-group-item active">{$category->name} </a>
+            <ul class="list-group sub show">
+                <a n:foreach="$category->jobs as $job" href="#" class="list-group-item active">
+                    {$job->name}
+                    <small class="label label-info"> 3 {_'Cvs'}</small>
+                </a>
+            </ul>
+        </li> 
     </ul>
 </div>
