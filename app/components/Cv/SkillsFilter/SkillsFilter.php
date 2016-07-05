@@ -178,6 +178,7 @@ class SkillsFilter extends BaseControl
 	}
 
     public function renderPreview() {
+        $this->template->skillRequests = $this->skillRequests;
         $this->setTemplateFile('SkillFilterPreview');
         parent::render();
     }

@@ -50,6 +50,14 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 
 		return $cvRepo->findAll();
 	}
+    
+    public function setSkillRequests($skillRequests)
+	{
+		foreach ($skillRequests as $id => $skillRequest) {
+			$this->skillRequests[$id] = $skillRequest;
+		}
+		return $this;
+	}
 
     public function createComponentMatchingControl() {
         $control = $this->matchingControlFactory->create();
@@ -58,6 +66,11 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     public function createComponentSkillsFilter() {
         $control = $this->skillsFilterFactory->create();
+        $control->setAjax();
+        $control->onAfterSend = function (array $skillRequests) {
+			$this->setSkillRequests($skillRequests);
+			$this->redrawControl();
+		};
         return $control;
     }
 

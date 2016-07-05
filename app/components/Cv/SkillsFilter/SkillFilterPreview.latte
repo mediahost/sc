@@ -1,9 +1,11 @@
 {**
  * SkillFilter control preview template
  *
- * 	
+ * @param   SkillKnowRequest[]     $skillRequests
 *}
-
+<ul n:inner-foreach="$skillRequests as $skillRequest">
+    <li>{$skillRequest->skill}</li>
+</ul>
 <a href="#" class="btn btn-default btn-block" data-toggle="modal" data-target="#resetFilter">
-    {_'Reset filter'}
+    {_'Change filter'}
 </a>

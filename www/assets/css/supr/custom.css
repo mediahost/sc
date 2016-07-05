@@ -18,6 +18,9 @@
     float: left;
 }
 
+.gallery-nav ul {
+    -webkit-padding-start: 20px;
+}
 .gallery-category-nav ul {
     list-style-type: none;
     -webkit-padding-start: 0px;

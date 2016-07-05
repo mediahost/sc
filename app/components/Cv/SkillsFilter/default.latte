@@ -20,20 +20,11 @@
                  class="panel-collapse collapse">
                 <div class="panel-body">
                     <table class="table">
+                        {if count($category->skills)}
+                            {include blockSkills, skills=>$category->skills, form=>$form, categoryName=>''}
+                        {/if}
                         {foreach $category->childs as $child}
-                            <thead>
-                                <tr>
-                                    <th>{$child}</th>
-                                    <th style="width: 30%;">{_'Level Range'}</th>
-                                    <th style="width: 30%;">{_'Years Range'}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {if count($category->skills)}
-                                    {include blockSkills, skills=>$category->skills, form=>$form}
-                                {/if}
-                                {include blockSkills, skills=>$child->skills, form=>$form}
-                            </tbody>
+                            {include blockSkills, skills=>$child->skills, form=>$form, categoryName=>$child->name}
                         {/foreach}
                     </table>
                 </div>
@@ -54,16 +45,27 @@
 
 
 {define blockSkills}
-<tr n:foreach="$skills as $skill" 
-    n:ifset="$form['skillRange'][$skill->id], $form['yearRange'][$skill->id]">
-    <td class="slider-height">
-        {label $form['skillRange'][$skill->id]/}
-    </td>
-    <td style="padding-right: 25px;">
-        {input $form['skillRange'][$skill->id]}
-    </td>
-    <td>
-        {input $form['yearRange'][$skill->id]}
-    </td>
-</tr>
+<thead class="btn-default">
+    <tr>
+        <th>{$categoryName}</th>
+        <th style="width: 30%;">{_'Level Range'}</th>
+        <th style="width: 30%;">{_'Years Range'}</th>
+    </tr>
+</thead>
+<tbody>
+    <tr n:foreach="$skills as $skill" 
+        n:ifset="$form['skillRange'][$skill->id], $form['yearRange'][$skill->id]">
+        <td class="slider-height">
+            {label $form['skillRange'][$skill->id]/}
+        </td>
+        <td style="padding-right: 25px;">
+            {input $form['skillRange'][$skill->id]}
+        </td>
+        <td>
+            {input $form['yearRange'][$skill->id]}
+        </td>
+    </tr>
+</tbody>
+
+
 {/define}
