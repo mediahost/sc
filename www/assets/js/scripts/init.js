@@ -21,6 +21,7 @@ jQuery(document).ready(function () {
 	
 	$.nette.init();
 	
+        Global.handleModals();
 	Global.handleRightbar();
 	Global.init();
 	Login.init();

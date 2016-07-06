@@ -31,9 +31,7 @@
             </div>
         </div>
     </div>
-    {if $existSkills}
-        {input $form['send'], class => 'button btn btn-primary'}
-    {else}
+    {if !$existSkills}
         <div class="note note-danger">
             <h4 class="block">{_'There are no skills to select.'}</h4>
             <p>

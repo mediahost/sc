@@ -97,7 +97,6 @@ class SkillsFilter extends BaseControl
 				->setAttribute('data-slider-id', 'slider-primary');
 		}
 
-		$form->addSubmit('send', 'Filter');
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}

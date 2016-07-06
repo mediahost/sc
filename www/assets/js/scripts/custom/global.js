@@ -82,17 +82,23 @@ var Global = function () {
 
     var handleTagsInput = function () {
         $('input[data-role="tagsinput"]').tagsinput({});
-    }
+    };
 
     var handleModals = function () {
-        $('[data-opening="modal"]').modal('show');
-        $('body').on('click', 'button[data-dismiss="modal"]', function() {
+        $('body').on('click', 'button[data-action="modal"]', function() {
             $(this).closest('.modal-content').find('form').submit();
         });
-        $('body').on('click', 'a[data-dismiss="modal"]', function(e) {
+        $('body').on('click', 'a[data-action="modal"]', function(e) {
             $.nette.ajax({}, this, e);
         });
-    }
+    };
+    
+    var onModalLoad = function() {
+        $('[data-opening="modal"]').modal('show')
+            .on('hidden.bs.modal', function () {
+                $(this).removeAttr('data-opening')
+            });
+    };
 
     var handleMessages = function () {
         $(document).on('click', '.recent-comments li.list-group-item', function (e) {
@@ -153,8 +159,8 @@ var Global = function () {
                 handleMessages();
                 handleDropzone();
                 handleTagsInput();
-                handleModals();
                 handleGalleryView();
+                onModalLoad();
 
                 // Global components
                 CustomTrees.init();
@@ -162,7 +168,8 @@ var Global = function () {
         },
         handleRightbar: handleRightbar,
         initAccordion: initAccordion,
-        handleDataTables: handleDataTables
+        handleDataTables: handleDataTables,
+        handleModals: handleModals
     };
 
 }();
