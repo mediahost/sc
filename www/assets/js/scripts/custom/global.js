@@ -85,7 +85,13 @@ var Global = function () {
     }
 
     var handleModals = function () {
-        $('[data-opening="true"]').modal('show');
+        $('[data-opening="modal"]').modal('show');
+        $('body').on('click', 'button[data-dismiss="modal"]', function() {
+            $(this).closest('.modal-content').find('form').submit();
+        });
+        $('body').on('click', 'a[data-dismiss="modal"]', function(e) {
+            $.nette.ajax({}, this, e);
+        });
     }
 
     var handleMessages = function () {

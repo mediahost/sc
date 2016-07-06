@@ -1,6 +1,13 @@
 /* -----------------------------------------
    Custom.css - put your own changes here 
 ----------------------------------------- */
+.right {
+    float: right;
+}
+.left {
+    float: left;
+}
+
 .mapView {
     height: 250px;
 
@@ -37,7 +44,7 @@
     cursor: move;
 }
 .droppable {
-    height: 200px;
+    min-height: 200px;
 }
 .matched .panel-heading, .matched p {
     display: none;

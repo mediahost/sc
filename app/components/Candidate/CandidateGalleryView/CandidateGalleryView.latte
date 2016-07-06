@@ -3,7 +3,6 @@
  *
  * @param   Cv[]     $cvs	
 *}
-
 <div n:snippet="galeryView" class="row">
     <div class="col-lg-9">
         <div class="row gallery">
@@ -19,15 +18,19 @@
         </div>
     </div>
     <div class="col-lg-3 gallery-nav">
-        <div class="page-header"><h5>{_'Skill filter'}</h5></div>
+        <div class="page-header">
+            <span><strong>{_'Skill filter'}</strong></span>
+            <span class="right"><a href="#" data-toggle="modal" data-target="#resetFilter">{_'Set'}</a></span>
+        </div>
         {control skillsFilter:preview}
-        
-        <div class="page-header"><h5>{_'Jobs'}</h5></div>
+
+        <div class="page-header">
+            <span><strong>{_'Jobs'}</strong></span>
+            <span class="right"><a href="{plink Jobs:showAll}" >{_'All'}</a></span>
+        </div>
         {control matchingControl}
     </div>
 </div>
-
-
 
 <div class="modal fade" id="resetFilter">
     <div class="modal-dialog">
@@ -41,6 +44,10 @@
             </div>
             <div class="modal-body">
                 {control skillsFilter}
+            </div>
+            <div class="modal-footer">
+                <a href="{link resetFilter}" class="btn btn-primary btn-warning" data-dismiss="modal">{_'Reset'}</a>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{_'Filter'}</button>
             </div>
         </div>
     </div>

@@ -39,6 +39,12 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $this->template->cvs = $this->cvs;
         parent::render();
     }
+    
+    public function handleResetFilter() {
+        $this->skillRequests = [];
+        $this['skillsFilter']->setSkillRequests([]);
+        $this->redrawControl();
+    }
 
     private function getCvs()
 	{
