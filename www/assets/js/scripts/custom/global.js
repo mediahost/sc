@@ -64,7 +64,7 @@ var Global = function () {
             $('.personal-detail-editor .profile-edit').hide();
         });
     };
-    
+
     var handleInterestedIn = function () {
         var main = $('.interestedIn-editor .interestedIn');
         $(document).on('click', '.interestedIn-editor a.edit', function (e) {
@@ -79,12 +79,12 @@ var Global = function () {
             $('.interestedIn-editor .interestedIn-edit').hide();
         });
     };
-    
-    var handleTagsInput = function() {
+
+    var handleTagsInput = function () {
         $('input[data-role="tagsinput"]').tagsinput({});
     }
-    
-    var handleModals = function() {
+
+    var handleModals = function () {
         $('[data-opening="true"]').modal('show');
     }
 
@@ -118,6 +118,23 @@ var Global = function () {
         }
     };
 
+    var handleGalleryView = function () {
+        $('.draggable').draggable({
+            revert: 'invalid'
+        });
+        
+        $('.job').on('click', function() {
+            $('.job').removeClass('droppable');
+            $(this).addClass('droppable');
+            $('.droppable').droppable({
+                drop: function (event, ui) {
+                    ui.draggable.addClass('matched').animate({ width: '55px' })
+                        .appendTo('.droppable').animate({ left: '0px', top: '0px' });
+                }
+            });
+        });
+    };
+
     return {
         init: function () {
             $(document).ready(function () {
@@ -131,7 +148,8 @@ var Global = function () {
                 handleDropzone();
                 handleTagsInput();
                 handleModals();
-                
+                handleGalleryView();
+
                 // Global components
                 CustomTrees.init();
             });

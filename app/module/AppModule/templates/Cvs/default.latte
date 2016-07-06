@@ -15,26 +15,7 @@
         {snippet cvDetail}{/snippet}
 
 
-	{if $showFilter}
-		<div class="row">
-			<div class="col-md-8">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h4 class="panel-title">
-							<i class="fa fa-filter"></i>
-							{_'Filter'}
-						</h4>
-					</div>
-					<div class="panel-body">
-						{control skillFilter}
-					</div>
-				</div>
-			</div>
-		</div>
-	{else}
-		<a n:href="this filter => TRUE" class="btn btn-default">{_'Show Filter'}</a>
-                <a href="{link Jobs:showAll}" class="btn btn-default">{_'Back to jobs'}</a>
-	{/if}
+	
 	<div class="row">
 		<div class="col-md-12">
 			<div class="portlet light">

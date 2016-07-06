@@ -25,3 +25,20 @@
     list-style-type: none;
     -webkit-padding-start: 0px;
 }
+.job .matched {
+    float: left;
+    display: none;
+}
+.droppable .matched {
+    display: block;
+}
+.draggable {
+    z-index: 100;
+    cursor: move;
+}
+.droppable {
+    height: 200px;
+}
+.matched .panel-heading, .matched p {
+    display: none;
+}
