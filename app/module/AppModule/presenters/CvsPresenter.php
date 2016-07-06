@@ -89,12 +89,6 @@ class CvsPresenter extends BasePresenter
         $this->redrawControl('cvDetail');
     }
     
-    public function actionCvPreview($userId) {
-        $user = $this->userFacade->findById($userId);
-        $this['cvPreview']->setCv($user->candidate->getDefaultCv());
-        $this->redrawControl('cvPdfPreview');
-    }
-
     /**
 	 * @secured
 	 * @resource('cvs')

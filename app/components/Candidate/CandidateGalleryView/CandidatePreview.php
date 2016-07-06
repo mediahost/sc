@@ -3,6 +3,7 @@
 namespace App\Components\Candidate;
 use App\Model\Facade\JobFacade;
 use App\Model\Facade\SkillFacade;
+use App\Model\Facade\UserFacade;
 
 
 class CandidatePreview extends \App\Components\BaseControl {
@@ -12,6 +13,9 @@ class CandidatePreview extends \App\Components\BaseControl {
     
     /** @var SkillFacade @inject */
     public $skillFacade;
+    
+    /** @var UserFacade @inject */
+    public $userFacade;
     
     /** @var \App\Model\Entity\Cv */
     private $cv;
@@ -25,6 +29,7 @@ class CandidatePreview extends \App\Components\BaseControl {
         $this->template->cv = $this->cv;
         $this->template->preferedJobCategories = $this->getPreferedJobCategories();
         $this->template->skills = $this->getItSkills();
+        $this->template->addFilter('canAccess', $this->userFacade->canAccess);
         parent::render();
     }
     
