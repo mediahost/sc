@@ -8,7 +8,7 @@ namespace App\Components\Job;
  */
 class JobDataView extends \App\Components\BaseControl 
 {
-	/** @var type */
+	/** @var \App\Model\Entity\Job[] */
 	private $jobs;
 	
 	/** @var \App\Model\Entity\Company */
@@ -22,6 +22,14 @@ class JobDataView extends \App\Components\BaseControl
 		$this->template->company = $this->company;
 		parent::render();
 	}
+    
+    public function formatSkillRequests(\App\Model\Entity\Job $job) {
+        $skills = [];
+        foreach ($job->skillRequests as $skillRequest) {
+            $skills[] = $skillRequest->skill;
+        }
+        return implode(', ', $skills);
+    }
 	
 	/**
 	 * @param \Doctrine\Common\Collections\ArrayCollection $jobs
