@@ -16,6 +16,10 @@ var Global = function () {
     var handleRating = function () {
         $('input.rating').rating();
     };
+    
+    var hadleSlider = function() {
+        $('.slider').slider();
+    };
 
     var handleFBSharer = function () {
         $('[href="#share"]').on('click', function () {
@@ -152,6 +156,7 @@ var Global = function () {
             $(document).ready(function () {
                 handleInitPickers();
                 handleRating();
+                hadleSlider();
                 handleFBSharer();
                 handleSocialLinks();
                 handlePersonalDetails();

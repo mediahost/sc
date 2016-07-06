@@ -13,26 +13,4 @@
         {control candidateGalleryView}
         {snippet cvDetail}{/snippet}
 
-
-	
-	<div class="row">
-		<div class="col-md-12">
-			<div class="portlet light">
-				<div class="portlet-body">
-					{snippet cvs}
-						{control cvDataView}
-					{/snippet}
-				</div>
-			</div>
-		</div>
-	</div>
 {/block content}
-
-
-{block jsPage}
-	<script>
-		$(document).ready(function () {
-			$('.slider').slider();
-		});
-	</script>
-{/block jsPage}
