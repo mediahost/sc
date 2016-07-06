@@ -19,7 +19,22 @@ class OffersControl extends \App\Components\BaseControl
 	public $onAfterSave = [];
 	
 	
-	/**
+    public function render() {
+        $this->setTemplateFile('default');
+        parent::render();
+    }
+    
+    public function renderPreview() {
+        $this->template->data = $this->getDefaults();
+        $this->setTemplateFile('preview');
+        parent::render();
+    }
+    
+    public function handleEdit() {
+        $this->redrawControl('offersControl');
+    }
+
+    /**
 	 * @return \App\Forms\Form
 	 */
 	protected function createComponentForm()

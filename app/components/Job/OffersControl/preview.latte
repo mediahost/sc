@@ -1,0 +1,17 @@
+{**
+ * OffersControl template
+ *
+ * @param   array   $data	
+*}
+{snippet offersControl}
+<a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
+<dl class="dl-horizontal">
+    <dt>{_'Offers: '}</dt>
+    <dd>{$data['offers']}</dd>
+    <dd class="divider"></dd>
+    
+    <dt>{_'Requirements: '}</dt>
+    <dd>{$data['requirements']}</dd>
+    <dd class="divider"></dd>
+</dl>
+{/snippet}

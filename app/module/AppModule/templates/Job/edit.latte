@@ -1,71 +1,120 @@
 {block pageTitle}
-{_'Job'}
+{_'Job'} - {$job->name}
 {/block}
 
 {block breadcrumbItems}
 <li>
-	<a n:href="Companies:">{_'Companies'}</a>
+    <a n:href="Companies:">{_'Companies'}</a>
 </li>
 <li>
-	<a n:href="Company: $job->company->id">{$job->company}</a>
+    <a n:href="Company: $job->company->id">{$job->company}</a>
 </li>
 <li>
-	<a n:href="Jobs: $job->company->id">{_'Jobs'}</a>
+    <a n:href="Jobs: $job->company->id">{_'Jobs'}</a>
 </li>
 <li>
-	<a n:href="this">{if $job->isNew()}{_'Add'}{else}{_'Edit'} {$job}{/if}</a>
+    <a n:href="this">{if $job->isNew()}{_'Add'}{else}{_'Edit'} {$job}{/if}</a>
 </li>
 {/block}
 
 {block content}
+
 <div class="row">
-	<div class="col-md-8">
-		<div class="portlet light">
-			<div class="portlet-title tabbable-line">
-				<div class="caption font-green-sharp">
-					<i class="fa fa-edit font-green-sharp"></i>
-					<span class="caption-subject bold uppercase">
-					{if $job->isNew()}{_'Add job'}{else}{_'Edit'} {$job}{/if}
-				</span>
-			</div>
-			<ul n:if="!$job->isNew()" class="nav nav-tabs">
-				<li class="active">
-					<a href="#editInfo" data-toggle="tab">{_'Info'}</a>
-				</li>
-				<li>
-					<a href="#editOffers" data-toggle="tab">{_'Offers & Requirments'}</a>
-				</li>
-				<li>
-					<a href="#editDescriptions" data-toggle="tab">{_'Descriptions'}</a>
-				</li>
-				<li>
-					<a href="#editSkills" data-toggle="tab">{_'Skills'}</a>
-				</li>
-				<li>
-					<a href="#editQuestins" data-toggle="tab">{_'Pre-Screening Questions'}</a>
-				</li>
-			</ul>
-		</div>
-		<div class="portlet-body form border">
-			<div class="tab-content">
-				<div class="tab-pane active" id="editInfo">
-					{control jobInfoForm}
-				</div>
-				<div class="tab-pane" id="editOffers">
-					{control jobOffersForm}
-				</div>
-				<div class="tab-pane" id="editDescriptions">
-					{control jobDescriptionsForm}
-				</div>
-				<div n:if="!$job->isNew()" class="tab-pane" id="editSkills">
-					{control jobSkillsForm}
-				</div>
-				<div class="tab-pane" id="editQuestins">
-					{control jobQuestionsForm}
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="col-md-8">
+        <div class="page-header">
+            <h4>{_'Info'}</h4>
+        </div>
+        {control jobInfoForm:preview}
+        
+        <div class="page-header">
+            <h4>{_'Offers & Requirments'}</h4>
+        </div>
+        {control jobOffersForm:preview}
+        
+        <div class="page-header">
+            <h4>{_'Descriptions'}</h4>
+        </div>
+        {control jobDescriptionsForm:preview}
+        
+        <div class="page-header">
+            <h4>{_'Skills'}</h4>
+        </div>
+        {control jobSkillsForm}
+
+        <div class="page-header">
+            <h4>{_'Pre-Screening Questions'}</h4>
+        </div>
+        {control jobQuestionsForm}
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">{_'Notes'}</h4>
+            </div>
+            <div class="panel-body">
+                
+            </div>    
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">{_'Candidates'}</h4>
+            </div>
+            <div class="panel-body">
+                
+            </div>    
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="portlet light">
+            <div class="portlet-title tabbable-line">
+                <div class="caption font-green-sharp">
+                    <i class="fa fa-edit font-green-sharp"></i>
+                    <span class="caption-subject bold uppercase">
+                    {if $job->isNew()}{_'Add job'}{else}{_'Edit'} {$job}{/if}
+                </span>
+            </div>
+            <ul n:if="!$job->isNew()" class="nav nav-tabs">
+                <li class="active">
+                    <a href="#editInfo" data-toggle="tab">{_'Info'}</a>
+                </li>
+                <li>
+                    <a href="#editOffers" data-toggle="tab">{_'Offers & Requirments'}</a>
+                </li>
+                <li>
+                    <a href="#editDescriptions" data-toggle="tab">{_'Descriptions'}</a>
+                </li>
+                <li>
+                    <a href="#editSkills" data-toggle="tab">{_'Skills'}</a>
+                </li>
+                <li>
+                    <a href="#editQuestins" data-toggle="tab">{_'Pre-Screening Questions'}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body form border">
+            <div class="tab-content">
+                <div class="tab-pane active" id="editInfo">
+                    {control jobInfoForm}
+                </div>
+                <div class="tab-pane" id="editOffers">
+                    {control jobOffersForm}
+                </div>
+                <div class="tab-pane" id="editDescriptions">
+                    {control jobDescriptionsForm}
+                </div>
+                <div n:if="!$job->isNew()" class="tab-pane" id="editSkills">
+                    {control jobSkillsForm}
+                </div>
+                <div class="tab-pane" id="editQuestins">
+                    {control jobQuestionsForm}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
 {/block content}
@@ -73,12 +122,12 @@
 
 {block jsPage}
 <script>
-	$(document).ready(function() {
-		$('#mapView').mapView();
-		
-		$('#jobDescription, #jobSummary').summernote({
-			height: 200
-		});
-	});
+    $(document).ready(function () {
+        $('#mapView').mapView();
+
+        $('#jobDescription, #jobSummary').summernote({
+            height: 200
+        });
+    });
 </script>
 {/block jsPage}

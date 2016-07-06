@@ -40,6 +40,22 @@ class BasicInfoControl extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="variables">
 	// </editor-fold>
+    
+   
+    public function render() {
+        $this->setTemplateFile('default');
+        parent::render();
+    }
+    
+    public function renderPreview() {
+        $this->template->job = $this->job;
+        $this->setTemplateFile('preview');
+        parent::render();
+    }
+    
+    public function handleEdit() {
+        $this->redrawControl('jobInfo');
+    }
 
 	/** @return Form */
 	protected function createComponentForm()

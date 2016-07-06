@@ -21,6 +21,21 @@ class DescriptionsControl extends BaseControl
 	public $onAfterSave = [];
 	
 	
+    public function render() {
+        $this->setTemplateFile('default');
+        parent::render();
+    }
+    
+    public function renderPreview() {
+        $this->template->job = $this->job;
+        $this->setTemplateFile('preview');
+        parent::render();
+    }
+    
+    public function handleEdit() {
+        $this->redrawControl('descriptionControl');
+    }
+    
 	/** @return Form */
 	protected function createComponentForm()
 	{
