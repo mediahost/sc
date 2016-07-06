@@ -9,14 +9,14 @@
         <li n:foreach="$categories as $category" n:if="count($category->jobs)" href="#">
             <a class="list-group-item active">{$category->name} </a>
             <ul class="list-group sub show">
-                <a n:foreach="$category->jobs as $job" href="#" class="list-group-item job">
+                <li n:foreach="$category->jobs as $job" href="#" class="list-group-item job">
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 title">
                             {$job->name}
                             <small class="label label-info"> 3 {_'Cvs'}</small>
                         </div>
                     </div>
-                </a>
+                </li>
             </ul>
         </li> 
     </ul>

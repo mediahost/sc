@@ -32,12 +32,25 @@
     list-style-type: none;
     -webkit-padding-start: 0px;
 }
+.gallery-category-nav .list-group li {
+    cursor: pointer;
+}
 .job .matched {
     float: left;
     display: none;
 }
 .droppable .matched {
     display: block;
+}
+.droppable .label  {
+    display: none;
+}
+.droppable .title  {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.droppable .panel-body {
+    padding: 5px;
 }
 .draggable {
     z-index: 100;
