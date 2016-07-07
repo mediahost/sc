@@ -8,8 +8,10 @@ use App\Components\Job\IOffersControlFactory;
 use App\Components\Job\IDescriptionsControlFactory;
 use App\Components\Job\ISkillsControlFactory;
 use App\Components\Job\IQuestionsControlFactory;
+use App\Components\Candidate\ICandidatePreviewFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
+use App\Model\Entity\Cv;
 use App\Model\Facade\JobFacade;
 use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
@@ -49,6 +51,9 @@ class JobPresenter extends BasePresenter
 	
 	/** @var IQuestionsControlFactory @inject */
 	public $iQuestionsControlFactory;
+    
+    /** @var ICandidatePreviewFactory @inject */
+	public $candidatePreviewFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -58,8 +63,11 @@ class JobPresenter extends BasePresenter
 
 	/** @var EntityDao */
 	private $companyDao;
+    
+    /** @var Cv[] */
+    private $cvs;
 
-	// </editor-fold>
+    // </editor-fold>
 
 	protected function startup()
 	{
@@ -132,8 +140,15 @@ class JobPresenter extends BasePresenter
 
 	public function renderEdit()
 	{
+        $cvRepo = $this->em->getRepository(Cv::getClassName());
+        $this->cvs = $cvRepo->findAll();
+        $this->template->cvs = $this->cvs;
 		$this->template->job = $this->job;
 	}
+    
+    public function actionCvDetail($userId) {
+        
+    }
 
 	/**
 	 * @secured
@@ -203,6 +218,15 @@ class JobPresenter extends BasePresenter
 		$control->setAjax(TRUE, TRUE);
 		return $control;
 	}
+
+    public function createComponentCandidatePreview() {
+        return new \Nette\Application\UI\Multiplier(function ($cvId) {
+            $cv = \App\ArrayUtils::searchByProperty($this->cvs, 'id', $cvId);
+            $control = $this->candidatePreviewFactory->create();
+            $control->setCv($cv);
+            return $control;
+        });
+    }
 
 	// </editor-fold>
 }

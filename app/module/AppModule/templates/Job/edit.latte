@@ -56,14 +56,13 @@
                 
             </div>    
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">{_'Candidates'}</h4>
-            </div>
-            <div class="panel-body">
-                
-            </div>    
+            
+        <div class="page-header">
+            <h4>{_'Candidates'}</h4>
         </div>
+        <div n:inner-foreach="$cvs as $cv" class="panel-body">
+            {control candidatePreview-$cv->id}
+        </div>  
     </div>
 </div>
 
