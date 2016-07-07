@@ -86,11 +86,6 @@ class OtherLanguageControl extends BaseControl
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
-		$form->onError[] = function () {
-			var_dump($this['form']->errors);
-			echo 'ccccc';
-			exit;
-		};
 		return $form;
 	}
 
