@@ -4,6 +4,8 @@
  * @param   SkillKnowRequest[]     $skillRequests
 *}
 <ul n:inner-foreach="$skillRequests as $skillRequest">
-    <li>{$skillRequest->skill}</li>
+    <li>{$skillRequest->skill} {$skillRequest->levelFrom} - {$skillRequest->levelTo}, 
+        {$skillRequest->yearsFrom} - {$skillRequest->yearsTo}
+    </li>
 </ul>
 

@@ -24,6 +24,10 @@
     margin-left: 180px;
 }
 
+.bootstrap-tagsinput {
+    border: none;
+}
+
 .mapView {
     height: 250px;
 
