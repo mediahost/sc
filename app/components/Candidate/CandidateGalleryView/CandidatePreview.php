@@ -34,14 +34,8 @@ class CandidatePreview extends \App\Components\BaseControl {
     }
     
     private function getPreferedJobCategories() {
-        $result = [];
         $categories = $this->jobFacade->findCandidatePreferedCategories($this->cv->candidate);
-        if (count($categories) > 3) {
-            $result['short'] = implode(', ', array_slice($categories, 0, 2));
-            $result['full'] = implode(',', $categories);
-        } else {
-            $result['short'] = implode(', ', $categories);
-        }
+        $result = implode(', ', $categories);
         return $result;
     }
     
@@ -50,12 +44,7 @@ class CandidatePreview extends \App\Components\BaseControl {
         foreach ($this->cv->skillKnows as $skillKnow) {
             $skills[] = $skillKnow->skill->name;
         }
-        if (count($skills) > 3) {
-            $result['short'] = implode(', ', array_slice($skills, 0, 2));
-            $result['full'] = implode(',', $skills);
-        } else {
-            $result['short'] = implode(', ', $skills);
-        }
+        $result = implode(', ', $skills);
         return $result;
     }
 

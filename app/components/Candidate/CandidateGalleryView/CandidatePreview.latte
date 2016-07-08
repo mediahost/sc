@@ -31,16 +31,16 @@
         <p><small>
             <b>{_'Prefered job categories: '}</b>
             </br>
-            {$preferedJobCategories['short']}
-            <a n:ifset="$preferedJobCategories['full']" href="#" class="tip" 
-               data-original-title="{$preferedJobCategories['full']}">{_'more'}</a>
+            <span class="tip" data-original-title="{$preferedJobCategories}">
+                {$preferedJobCategories|truncate:70,'...'}
+            </span>
         </small></p>
         <p><small>
             <b>{_'IT Skills: '}</b>
             </br>
-            {$skills['short']}
-            <a n:ifset="$skills['full']" href="#" class="tip" 
-               data-original-title="{$skills['full']}">{_'more'}</a>
+            <spaan class="tip" data-original-title="{$skills}">
+                {$skills|truncate:70,'...'}
+            </span>
         </small></p>
         
         <a href="{plink cvDetail $cv->candidate->user->id}" class="ajax">

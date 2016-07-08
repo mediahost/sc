@@ -18,7 +18,7 @@ var Global = function () {
     };
     
     var hadleSlider = function() {
-        $('.slider').slider();
+        $('input.slider:not([data])').slider();
     };
 
     var handleFBSharer = function () {
