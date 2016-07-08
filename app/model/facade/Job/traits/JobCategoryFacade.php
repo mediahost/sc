@@ -75,7 +75,7 @@ trait JobCategoryFacade {
         $jobCategorydao->delete($category);
     }
     
-    public function isInParentTree($category, $parent) {
+    public function isInParentTree(\App\Model\Entity\JobCategory $category, \App\Model\Entity\JobCategory $parent) {
         if ($parent->id == $category->id) {
             return true;
         }

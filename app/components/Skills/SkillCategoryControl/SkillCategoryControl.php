@@ -5,9 +5,9 @@ namespace App\Components\Skills;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
-use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\SkillCategory;
 use App\Model\Facade\RoleFacade;
+use App\Model\Facade\SkillFacade;
 use Exception;
 use Nette\Utils\ArrayHash;
 
@@ -30,6 +30,9 @@ class SkillCategoryControl extends BaseControl
 
 	/** @var RoleFacade @inject */
 	public $roleFacade;
+    
+    /** @var SkillFacade @inject */
+	public $skillFacade;
 
 	// </editor-fold>
 
@@ -62,9 +65,13 @@ class SkillCategoryControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		if ($values->parent && $this->skillCategory && $values->parent == $this->skillCategory->id) {
-			$form['parent']->addError('Category can\'t be own parent');
-			return;
+		if ($values->parent && $this->skillCategory) {
+            $skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
+			$parentCategory = $skillCategoryDao->find($values->parent);
+            if ($parentCategory  && $this->skillFacade->isInParentTree($this->skillCategory, $parentCategory)) {
+                $form['parent']->addError('Category can\'t be own parent');
+                return;
+            }
 		}
 		$this->load($values);
 		$this->save();

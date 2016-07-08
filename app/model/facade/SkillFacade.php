@@ -88,4 +88,16 @@ class SkillFacade extends Object
 		});
 		return $categories;
 	}
+    
+    public function isInParentTree(SkillCategory $category, SkillCategory $parent) {
+        if ($parent->id == $category->id) {
+            return true;
+        }
+        if ($parent->parent) {
+            if ($this->isInParentTree($category, $parent->parent)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
