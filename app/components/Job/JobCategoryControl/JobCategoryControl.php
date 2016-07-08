@@ -44,9 +44,12 @@ class JobCategoryControl extends \App\Components\BaseControl {
      */
     public function formSucceeded(Form $form, $values)
 	{
-		if ($values->parent && $this->jobCategory && $values->parent == $this->jobCategory->id) {
-			$form['parent']->addError('Category can\'t be own parent');
-			return;
+		if ($values->parent && $this->jobCategory) {
+            $parentCategory = $this->jobFacade->findJobCategory($values->parent);
+            if ($parentCategory  && $this->jobFacade->isInParentTree($this->jobCategory, $parentCategory)) {  
+                $form['parent']->addError('Category can\'t be own parent');
+                return;
+            }
 		}
 		$this->load($values);
 		$this->jobFacade->saveJobCategory($this->jobCategory);

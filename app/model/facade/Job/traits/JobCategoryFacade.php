@@ -52,6 +52,18 @@ trait JobCategoryFacade {
         $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
         return $jobCategorydao->find($id);
     }
+	
+	public function findOrCreateCategory($category)
+	{
+		$categoryRepo = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
+		$entity = $categoryRepo->findOneBy(['name' => $category]);
+		if(!isset($entity)) {
+			$entity = new \App\Model\Entity\JobCategory();
+			$entity->name = $category;
+			$categoryRepo->save($entity);
+		}
+		return $entity;
+	}
     
     public function saveJobCategory(\App\Model\Entity\JobCategory $category) {
         $this->em->persist($category);
@@ -61,5 +73,17 @@ trait JobCategoryFacade {
     public function deleteJobCategory(\App\Model\Entity\JobCategory $category) {
         $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
         $jobCategorydao->delete($category);
+    }
+    
+    public function isInParentTree($category, $parent) {
+        if ($parent->id == $category->id) {
+            return true;
+        }
+        if ($parent->parent) {
+            if ($this->isInParentTree($category, $parent->parent)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
