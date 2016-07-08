@@ -64,6 +64,13 @@
                                 <span class="txt">{_'Career Docs'}</span>
                             </a>
                         </li>
+                        
+                        <li n:if="$isCandidate && $isCompleteAccount">
+                            <a n:href="Jobs:showAll" n:class="$presenter->isLinkCurrent('Jobs:*') ? active">
+                                <i class="fa fa-briefcase"></i>
+                                <span class="txt">{_'Jobs'}</span>
+                            </a>
+                        </li>
 
                         <!-- BEGIN ADMIN -->
                         <li n:if="$user->isAllowed('users', 'default')">
