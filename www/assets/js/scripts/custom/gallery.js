@@ -4,18 +4,12 @@ var Gallery = function () {
     //checked true - cv is matching
     var match = function (element, checked) {
         if (checked) {
-                    //var checkbox = $('<small></small>').html($('.checkbox-custom').html());
-            //$('.checkbox-custom').html(checkbox);
-            element.addClass('matched')
-               // .removeClass('col-sm-4 col-xs-6')
-                .appendTo('.droppable section').animate({left: '0px', top: '0px'});
-           // $('.gallery-item input[type="checkbox"]').animate({width: '30%'})
+            element.addClass('matched').appendTo('.droppable section').animate({left: '0px', top: '0px'});
             
         } else {
-            element.removeClass('matched')
-                .addClass('col-sm-4 col-xs-6')
-                .appendTo('.gallery');
+            element.removeClass('matched').addClass('col-sm-4 col-xs-6').appendTo('.gallery');
         }
+        element.find('input[type="checkbox"]').attr('checked', checked);
     };
 
     return {

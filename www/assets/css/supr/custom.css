@@ -77,12 +77,14 @@
 .droppable .panel-body {
     padding: 5px;
 }
-.draggable {
-    z-index: 100;
-    cursor: move;
-}
 .droppable {
     min-height: 200px;
+}
+.draggable {
+    cursor: move;
+}
+.ui-draggable-dragging {
+    z-index: 100;
 }
 .matched .btn, .matched p, .matched h4 {
     display: none !important;
