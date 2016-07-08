@@ -22,6 +22,21 @@ trait JobCategoryFacade {
         return $jobCategorydao->findPairs('name');
     }
     
+    public function findCategoriesTree($categories=null) {
+        $result = [];
+        if(!$categories) {
+            $categories = $this->findTopCategories();
+        }
+        foreach ($categories as $category) {
+            if (count($category->childs)) {
+                $result[$category->id] = $this->findCategoriesTree($category->childs);
+            } else {
+                $result[$category->id] = $category->name;
+            }
+        }
+        return $result;
+    }
+    
     public function findCandidatePreferedCategories(\App\Model\Entity\Candidate $candidate) {
         $categories = [];
         $allCategories = $this->findCategoriesPairs();
