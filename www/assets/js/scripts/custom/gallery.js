@@ -18,7 +18,7 @@ var Gallery = function () {
                 revert: 'invalid'
             });
 
-            $('.job').on('click', function () {
+            $(document).on('click', '.job', function () {
                 $('.job').removeClass('droppable');
                 $(this).addClass('droppable');
                 $('.droppable').droppable({
