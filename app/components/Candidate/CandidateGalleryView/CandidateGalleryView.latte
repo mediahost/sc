@@ -5,10 +5,8 @@
 *}
 <div n:snippet="galeryView" class="row">
     <div class="col-lg-9">
-        <div class="row gallery">
-            <div n:foreach="$cvs as $cv" class="col-sm-4 col-xs-6">
-                {control candidatePreview-$cv->id}
-            </div>
+        <div n:inner-foreach="$cvs as $cv" class="row gallery">
+            {control candidatePreview-$cv->id}
         </div>
     </div>
     <div class="col-lg-3 gallery-nav">

@@ -134,23 +134,6 @@ var Global = function () {
         }
     };
 
-    var handleGalleryView = function () {
-        $('.draggable').draggable({
-            revert: 'invalid'
-        });
-        
-        $('.job').on('click', function() {
-            $('.job').removeClass('droppable');
-            $(this).addClass('droppable');
-            $('.droppable').droppable({
-                drop: function (event, ui) {
-                    ui.draggable.addClass('matched').animate({ width: '55px' })
-                        .appendTo('.droppable').animate({ left: '0px', top: '0px' });
-                }
-            });
-        });
-    };
-
     return {
         init: function () {
             $(document).ready(function () {
@@ -164,7 +147,6 @@ var Global = function () {
                 handleMessages();
                 handleDropzone();
                 handleTagsInput();
-                handleGalleryView();
                 onModalLoad();
 
                 // Global components

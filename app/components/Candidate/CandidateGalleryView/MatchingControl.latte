@@ -10,11 +10,12 @@
             <a class="list-group-item active">{$category->name} </a>
             <ul class="list-group sub show">
                 <li n:foreach="$category->jobs as $job" href="#" class="list-group-item job">
-                    <div class="row">
-                        <div class="col-lg-12 title">
+                    <div class="flex-container">
+                        <header class="col-lg-12 title">
                             {$job->name}
                             <small class="label label-info"> 3 {_'Cvs'}</small>
-                        </div>
+                        </header>
+                        <section class="content"></section>
                     </div>
                 </li>
             </ul>

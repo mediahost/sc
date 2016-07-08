@@ -60,6 +60,8 @@
 }
 .droppable .matched {
     display: block;
+    padding: 0px;
+    margin: 0px;
 }
 .droppable .label  {
     display: none;
@@ -78,6 +80,13 @@
 .droppable {
     min-height: 200px;
 }
-.matched .panel-heading, .matched p {
-    display: none;
+.matched .btn, .matched p, .matched h4 {
+    display: none !important;
+}
+section.content {
+    flex: 3;
+}
+.flex-container {
+    display: flex;
+    flex-direction: column;
 }

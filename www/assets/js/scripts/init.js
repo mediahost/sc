@@ -26,6 +26,7 @@ jQuery(document).ready(function () {
 	Global.init();
 	Login.init();
 	PdfPreview.init();
+        Gallery.init();
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {
