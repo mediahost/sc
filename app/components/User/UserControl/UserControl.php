@@ -167,6 +167,12 @@ class UserControl extends BaseControl
 		if ($this->roles === NULL) {
 			$this->roles = $this->userFacade->findLowerRoles($this->identityRoles);
 		}
+        if (in_array(Role::CANDIDATE, $this->user->roles)) {
+            $this->roles = array_diff($this->roles, [Role::COMPANY]);
+        }
+        if (in_array(Role::COMPANY, $this->user->roles)) {
+            $this->roles = array_diff($this->roles, [Role::CANDIDATE]);
+        }
 		return $this->roles;
 	}
 
