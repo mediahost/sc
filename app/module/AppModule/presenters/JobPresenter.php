@@ -8,6 +8,7 @@ use App\Components\Job\IOffersControlFactory;
 use App\Components\Job\IDescriptionsControlFactory;
 use App\Components\Job\ISkillsControlFactory;
 use App\Components\Job\IQuestionsControlFactory;
+use App\Components\Candidate\ICandidateFilterFactory;
 use App\Components\Candidate\ICandidatePreviewFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
@@ -51,6 +52,9 @@ class JobPresenter extends BasePresenter
 	
 	/** @var IQuestionsControlFactory @inject */
 	public $iQuestionsControlFactory;
+    
+    /** @var ICandidateFilterFactory @inject */
+	public $candidateFilterFactory;
     
     /** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
@@ -218,6 +222,13 @@ class JobPresenter extends BasePresenter
 		$control->setAjax(TRUE, TRUE);
 		return $control;
 	}
+    
+    /** @return CandidateFilter */
+    public function createComponentCandidateFilter() {
+        $control = $this->candidateFilterFactory->create();
+        $control->setAjax(TRUE, TRUE);
+        return $control;
+    }
 
     public function createComponentCandidatePreview() {
         return new \Nette\Application\UI\Multiplier(function ($cvId) {

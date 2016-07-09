@@ -156,6 +156,10 @@ services:
 		implement: App\Components\Candidate\ICandidateGalleryViewFactory
 		inject: yes
 
+	ICandidateFilterFactory:
+		implement: App\Components\Candidate\ICandidateFilterFactory
+		inject: yes
+
 	ICandidatePreviewFactory:
 		implement: App\Components\Candidate\ICandidatePreviewFactory
 		inject: yes
