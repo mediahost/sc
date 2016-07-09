@@ -1,0 +1,46 @@
+{**
+ * CandidatePreview control template
+ *
+ * @param   Cv     $cv	
+*}
+
+<div class="panel panel-default plain draggable gallery-item">
+    <div class="panel-heading">
+        <h4 class="panel-title ui-widget-content">
+            <strong>{$cv->candidate}</strong> 
+            <small>&nbsp;{$cv->candidate->address->city}</small>
+        </h4>
+        </br>
+
+        <div class="btn-group" role="group">
+            <a n:if="$template->canAccess($user, $cv->candidate->user)" 
+               href="{plink Users:access $cv->candidate->user->id}" 
+               class="btn btn-default btn-link btn-sm">{_'Access'}
+            </a>
+            <a href="{plink Profile: $cv->candidate->user->id}" class="btn btn-default btn-link btn-sm delete-image">
+                {_'Profile'}
+            </a>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <p><small>
+            <b>{_'Prefered job categories: '}</b>
+            </br>
+            <span class="tip" data-original-title="{$preferedJobCategories}">
+                {$preferedJobCategories|truncate:70,'...'}
+            </span>
+        </small></p>
+        <p><small>
+            <b>{_'IT Skills: '}</b>
+            </br>
+            <spaan class="tip" data-original-title="{$skills}">
+                {$skills|truncate:70,'...'}
+            </span>
+        </small></p>
+        
+        <a href="{plink cvDetail $cv->candidate->user->id}" class="ajax">
+            <img src="{$basePath}/foto/{$cv->candidate->photo|size:150,150}" class="center img-responsive" alt="image alt">
+        </a>
+    </div>
+</div>

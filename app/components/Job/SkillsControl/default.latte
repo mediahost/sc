@@ -1,3 +1,4 @@
+{snippet skillControl}
 {form form}
     {? $form->errors}
     {var existSkills => count($categories) && count($skills)}
@@ -42,6 +43,7 @@
         </div>
     {/if}
 {/form}
+{/snippet}
 
 {define blockSkills}
 <thead>

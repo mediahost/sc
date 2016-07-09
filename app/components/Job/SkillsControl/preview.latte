@@ -1,0 +1,15 @@
+{**
+ * SkillControl template
+ *
+ * @param   Job     $job	
+*}
+{snippet skillControl}
+<a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
+<dl n:inner-foreach="$job->skillRequests as $skillRequest" class="dl-horizontal">
+    <dt>{$skillRequest->skill}:</dt>
+    <dd>{$skillRequest->levelFrom} - {$skillRequest->levelTo}, 
+        {$skillRequest->yearsFrom} - {$skillRequest->yearsTo} {_'years'}
+    </dd>
+    <dd class="divider"></dd>
+</dl>
+{/snippet}

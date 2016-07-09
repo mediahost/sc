@@ -1,0 +1,14 @@
+{**
+ * BasicInfoControl template
+ *
+ * @param   array     $questions	
+*}
+{snippet questionsControl}
+<a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
+<dl n:inner-foreach="$questions as $question" class="dl-horizontal">
+    {continueIf $question == ''}
+    <dt>{_'Question '.$iterator->counter.' : '}</dt>
+    <dd>{$question}</dd>
+    <dd class="divider"></dd>
+</dl>
+{/snippet}

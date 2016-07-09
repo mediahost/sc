@@ -23,7 +23,23 @@ class QuestionsControl extends BaseControl
 	
 	/** @var array */
 	public $onAfterSave = [];
+    
 	
+    public function render()
+	{
+        $this->setTemplateFile('default');
+		parent::render();
+	}
+    
+    public function renderPreview() {
+        $this->template->questions = explode(self::SEPARATOR, $this->job->questions);
+        $this->setTemplateFile('preview');
+        parent::render();
+    }
+    
+    public function handleEdit() {
+        $this->redrawControl('questionsControl');
+    }
 	
 	/** @return Form */
 	protected function createComponentForm()

@@ -181,9 +181,19 @@ class SkillsControl extends BaseControl
 	{
 		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$this->template->categories = $this->skillFacade->getTopCategories();
+        $this->setTemplateFile('default');
 		parent::render();
 	}
-
+    
+    public function renderPreview() {
+        $this->template->job = $this->job;
+        $this->setTemplateFile('preview');
+        parent::render();
+    }
+    
+    public function handleEdit() {
+        $this->redrawControl('skillControl');
+    }
 }
 
 interface ISkillsControlFactory

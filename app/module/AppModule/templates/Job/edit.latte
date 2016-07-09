@@ -39,12 +39,12 @@
         <div class="page-header">
             <h4>{_'Skills'}</h4>
         </div>
-        {control jobSkillsForm}
+        {control jobSkillsForm:preview}
 
         <div class="page-header">
             <h4>{_'Pre-Screening Questions'}</h4>
         </div>
-        {control jobQuestionsForm}
+        {control jobQuestionsForm:preview}
     </div>
 
     <div class="col-md-4">
@@ -61,7 +61,7 @@
             <h4>{_'Candidates'}</h4>
         </div>
         <div n:inner-foreach="$cvs as $cv" class="panel-body">
-            {control candidatePreview-$cv->id}
+            {control candidatePreview-$cv->id:jobView}
         </div>  
     </div>
 </div>
