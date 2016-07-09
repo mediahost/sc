@@ -85,10 +85,18 @@ class Job extends BaseEntity
 	{
 		return (string) $this->name;
 	}
-
-	public function isNew()
+    
+    public function isNew()
 	{
 		return $this->id === NULL;
 	}
 
+    public function hasMatchedCv($cvId) {
+        foreach ($this->cvs as $cv) {
+            if ($cv->id == $cvId) {
+                return true;
+            }
+            return false;
+        }
+    }
 }

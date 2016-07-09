@@ -10,6 +10,18 @@ var Gallery = function () {
             element.removeClass('matched').addClass('col-sm-4 col-xs-6').appendTo('.gallery');
         }
         element.find('input[type="checkbox"]').attr('checked', checked);
+        invite();
+    };
+    
+    var invite = function() {
+        var cvIds = [];
+        var jobObject = $('.droppable');
+        jobObject.find('.matched').each(function(index, item) {
+            cvIds[cvIds.length] = $(item).attr('data-cv');
+        });
+        var url = jobObject.attr('data-action');
+        url = url.replace('__CVS__', cvIds.toString());
+        $.post(url);
     };
 
     return {

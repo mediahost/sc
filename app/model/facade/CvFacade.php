@@ -29,8 +29,12 @@ class CvFacade extends Object
 		$this->cvRepo = $this->em->getRepository(Cv::getClassName());
 		$this->jobRepo = $this->em->getRepository(Job::getClassName());
 	}
+    
+    public function find($id) {
+        return $this->cvRepo->find($id);
+    }
 
-	public function getDefaultCvOrCreate(Candidate $candidate)
+    public function getDefaultCvOrCreate(Candidate $candidate)
 	{
 		try {
 			$defaultCv = $candidate->defaultCv;

@@ -3,6 +3,7 @@
 namespace App\Model\Facade;
 
 use App\Model\Facade\Traits\JobCategoryFacade;
+use App\Model\Facade\Traits\JobMatchingFacade;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
 use App\Model\Repository\CvRepository;
@@ -13,6 +14,7 @@ use Nette\Object;
 class JobFacade extends Object
 {
     use JobCategoryFacade;
+    use JobMatchingFacade;
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -44,8 +46,12 @@ class JobFacade extends Object
 		$jobs = $this->jobDao->findAll();
 		return new ArrayCollection($jobs);
 	}
-	
-	/**
+    
+    public function find($id) {
+        return $this->jobDao->find($id);
+    }
+
+    /**
 	 * @param \App\Model\Entity\Company $company
 	 * @return ArrayCollection
 	 */
