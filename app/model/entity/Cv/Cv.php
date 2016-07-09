@@ -124,6 +124,9 @@ class Cv extends BaseEntity
 	
 	/** @ORM\Column(type="boolean") */
 	protected $additionalIsPublic = FALSE;
+    
+    /**  @ORM\OneToMany(targetEntity="JobCv", mappedBy="cv", fetch="LAZY", cascade={"persist"}) */
+	private $jobs;
 
 	public function __construct($name = NULL)
 	{

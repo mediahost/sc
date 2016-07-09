@@ -21,6 +21,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property JobType $type
  * @property JobCategory $category
  * @property Location $location 
+ * @property Collection $cvs 
  * @property-read ArrayCollection $skillRequests
  * @property-write SkillKnowRequest $skillRequest
  * @property-read ArrayCollection $tags
@@ -64,6 +65,9 @@ class Job extends BaseEntity
 	
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $questions;
+    
+    /** @ORM\OneToMany(targetEntity="JobCv", mappedBy="job", fetch="LAZY", cascade={"persist"}) */
+	protected $cvs;
 
 	
 
