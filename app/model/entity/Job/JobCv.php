@@ -15,24 +15,28 @@ class JobCv extends \Kdyby\Doctrine\Entities\BaseEntity {
     
     use Identifier;
     
-    const CV_STATE_INVITED = 1;
-    const CV_STATE_APLLIED = 2;
-    const CV_STATE_MATCHED = 3;
-    const CV_STATE_SHORTLISTED = 4;
-    const CV_STATE_REJECTED = 5;
-    const CV_STATE_INVITED_COMPANY = 6;
-    const CV_STATE_OFFER_MADE = 7;
-    const CV_STATE_HIRED = 8;
+    const CV_STATE_FREE = 1;
+    const CV_STATE_INVITED = 2;
+    const CV_STATE_APLLIED = 3;
+    const CV_STATE_MATCHED = 4;
+    const CV_STATE_SHORTLISTED = 5;
+    const CV_STATE_REJECTED = 6;
+    const CV_STATE_INVITED_COMPANY = 7;
+    const CV_STATE_OFFER_MADE = 8;
+    const CV_STATE_HIRED = 9;
     
     /** 
 	 * @ORM\ManyToOne(targetEntity="Job", inversedBy="cvs")
-	 * @ORM\JoinColumn(onDelete="CASCADE")
+	 * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
 	 */
 	protected $job;
         
     /** 
 	 * @ORM\ManyToOne(targetEntity="Cv", inversedBy="jobs")
-	 * @ORM\JoinColumn(onDelete="CASCADE")
+	 * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
 	 */
 	protected $cv;
+    
+    /** @ORM\Column(type="smallint", nullable=false, options={"default" = 1})) */
+	protected $state;
 }

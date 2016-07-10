@@ -32,12 +32,26 @@ class MatchingControl extends \App\Components\BaseControl {
         $job = $this->jobFacade->find($jobId);
         $cvs = explode(',', $cvs);
         foreach ($cvs as $cvId) {
-            if(!$job->hasMatchedCv($cvId)) {
-                $cv = $this->cvFacade->find($cvId);
+            $cv = $this->cvFacade->find($cvId);
+            if ($cv) {
                 $this->jobFacade->invite($job, $cv);
                 $this->presenter->flashMessage('Cv was invited to job');
             }
         }
+        foreach ($job->getCvsState() as $cvId => $state) {
+            if (!in_array($cvId, $cvs)) {
+                $this->jobFacade->detach($job, $cvId);
+                $this->presenter->flashMessage('Cv was detached from job');
+            }
+        }
+    }
+    
+    public function getMatchedCvs($job) {
+        $result = [];
+        foreach ($job->getCvsState() as $cvId => $cvState) {
+            $result[] = sprintf("%d|%d", $cvId, $cvState);
+        }
+        return implode(',', $result);
     }
 }
 

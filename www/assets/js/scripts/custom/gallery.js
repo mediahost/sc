@@ -10,7 +10,6 @@ var Gallery = function () {
             element.removeClass('matched').addClass('col-sm-4 col-xs-6').appendTo('.gallery');
         }
         element.find('input[type="checkbox"]').attr('checked', checked);
-        invite();
     };
     
     var invite = function() {
@@ -23,6 +22,16 @@ var Gallery = function () {
         url = url.replace('__CVS__', cvIds.toString());
         $.post(url);
     };
+    
+    var loadJobCvs = function() {
+        var jobObject = $('.droppable');
+        var cvs = jobObject.attr('data-cvs').split(',');
+        $.each(cvs, function(index, cv) {
+            var cvId = cv.split('|')[0];
+            var el = $('.gallery-item[data-cv="' + cvId + '"]');
+            match(el, true);
+        });
+    };
 
     return {
         init: function () {
@@ -31,21 +40,27 @@ var Gallery = function () {
             });
 
             $(document).on('click', '.job', function () {
-                $('.job').removeClass('droppable');
-                $(this).addClass('droppable');
-                $('.droppable').droppable({
-                    drop: function (event, ui) {
-                        match(ui.draggable, true);
-                    }
-                });
+                if ($(this).hasClass('job')) {
+                    $('.job').removeClass('droppable');
+                    $(this).addClass('droppable');
+                    $('.droppable').droppable({
+                        drop: function (event, ui) {
+                            match(ui.draggable, true);
+                            invite();
+                        }
+                    });
+                    loadJobCvs();
+                }
             });
 
             $(document).on('click', '.gallery-item input[type="checkbox"]', function (e) {
                 if ($('.gallery-nav').find('.droppable').length) {
                     match($(this).closest('.draggable'), this.checked);
+                    invite();
                 } else {
                     return false;
                 }
+                e.stopPropagation();
             });
         }
     };

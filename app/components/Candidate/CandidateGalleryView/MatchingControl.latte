@@ -11,6 +11,7 @@
             <ul class="list-group sub show">
                 <li n:foreach="$category->jobs as $job" href="#" 
                     data-action="{link invite $job->id, '__CVS__'}"
+                    data-cvs="{$control->getMatchedCvs($job)}"
                     class="list-group-item job">
                     <div class="flex-container">
                         <header class="title">
