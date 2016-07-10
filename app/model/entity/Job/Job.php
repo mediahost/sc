@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 
 use App\Model\Entity\Traits\JobSkillsUsing;
 use App\Model\Entity\Traits\JobTagsUsing;
+use App\Model\Entity\Traits\JobMatching;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -34,6 +35,7 @@ class Job extends BaseEntity
 	use Identifier;
 	use JobSkillsUsing;
 	use JobTagsUsing;
+    use JobMatching;
 	
 
 	/** @ORM\ManyToOne(targetEntity="Company", inversedBy="jobs") */
@@ -65,9 +67,6 @@ class Job extends BaseEntity
 	
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $questions;
-    
-    /** @ORM\OneToMany(targetEntity="JobCv", mappedBy="job", fetch="LAZY", cascade={"persist"}) */
-	protected $cvs;
 
 	
 
@@ -90,46 +89,4 @@ class Job extends BaseEntity
 	{
 		return $this->id === NULL;
 	}
-
-    public function hasMatchedCv($cvId) {
-        foreach ($this->cvs as $jobCv) {
-            if ($jobCv->cv->id == $cvId) {
-                return true;
-            }
-            return false;
-        }
-    }
-    
-    public function getStateEntity($cvId) {
-        foreach ($this->cvs as $jobCv) {
-            if ($jobCv->cv->id == $cvId) {
-                return $jobCv;
-            }
-        }
-    }
-    
-    public function getCvs() {
-        $result = []; 
-        foreach ($this->cvs as $jobCv) {
-            $result[] = $jobCv->cv;
-        }
-        return $result;
-    }
-    
-    public function removeCv($cvId) {
-        foreach ($this->cvs as $jobCv) {
-            if ($jobCv->id == $cvId) {
-                $this->cvs->removeElement($jobCv);
-            }
-        }
-    }
-
-
-    public function getCvsState() {
-        $result = [];
-        foreach ($this->cvs as $jobCv) {
-            $result[$jobCv->cv->id] = $jobCv->state;
-        }
-        return $result;
-    }
 }
