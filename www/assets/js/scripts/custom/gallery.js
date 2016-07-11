@@ -1,11 +1,22 @@
 
 // Gallery plugin
 var Gallery = function () {
+    var initialized = false;
+    
+    
+    
+    var closeJobs = function() {
+        $('.job').removeClass('droppable');
+        $('.job .gallery-item').each(function(index, item) {
+            var el = $(item);
+            match(el, false);
+        });
+    };
+    
     //checked true - cv is matching
     var match = function (element, checked) {
         if (checked) {
             element.addClass('matched').appendTo('.droppable section').animate({left: '0px', top: '0px'});
-            
         } else {
             element.removeClass('matched').addClass('col-sm-4 col-xs-6').appendTo('.gallery');
         }
@@ -21,16 +32,13 @@ var Gallery = function () {
         });
         var url = jobObject.attr('data-action');
         url = url.replace('__CVS__', cvIds.toString());
-        $.post(url);
+        closeJobs();
+        $.nette.ajax({url: url});
     };
     
     var loadJobCvs = function() {
         var jobObject = $('.droppable');
         var cvs = jobObject.attr('data-cvs').split(',');
-        $('.job .gallery-item').each(function(index, item) {
-            var el = $(item);
-            match(el, false);
-        });
         $.each(cvs, function(index, cv) {
             var cvId = cv.split('|')[0];
             var el = $('.gallery-item[data-cv="' + cvId + '"]');
@@ -40,13 +48,18 @@ var Gallery = function () {
 
     return {
         init: function () {
+            if (this.initialized) {
+                return;
+            }
+            this.initialized = true;
+            
             $('.draggable').draggable({
                 revert: 'invalid'
             });
 
             $(document).on('click', '.job', function () {
+                closeJobs();
                 if ($(this).hasClass('job')) {
-                    $('.job').removeClass('droppable');
                     $(this).addClass('droppable');
                     $('.droppable').droppable({
                         drop: function (event, ui) {
