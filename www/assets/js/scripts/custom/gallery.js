@@ -10,6 +10,7 @@ var Gallery = function () {
             element.removeClass('matched').addClass('col-sm-4 col-xs-6').appendTo('.gallery');
         }
         element.find('input[type="checkbox"]').attr('checked', checked);
+        
     };
     
     var invite = function() {
@@ -26,6 +27,10 @@ var Gallery = function () {
     var loadJobCvs = function() {
         var jobObject = $('.droppable');
         var cvs = jobObject.attr('data-cvs').split(',');
+        $('.job .gallery-item').each(function(index, item) {
+            var el = $(item);
+            match(el, false);
+        });
         $.each(cvs, function(index, cv) {
             var cvId = cv.split('|')[0];
             var el = $('.gallery-item[data-cv="' + cvId + '"]');

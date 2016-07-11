@@ -4,7 +4,7 @@ namespace App\Model\Entity\Traits;
 
 trait JobMatching
 {
-    /** @ORM\OneToMany(targetEntity="JobCv", mappedBy="job", fetch="LAZY", cascade={"persist"}) */
+    /** @ORM\OneToMany(targetEntity="JobCv", mappedBy="job", fetch="LAZY", orphanRemoval=true, cascade={"persist", "remove"}) */
 	protected $cvs;
     
     
@@ -13,8 +13,12 @@ trait JobMatching
             if ($jobCv->cv->id == $cvId) {
                 return true;
             }
-            return false;
         }
+        return false;
+    }
+    
+    public function setStateEntity(\App\Model\Entity\JobCv $entity) {
+        $this->cvs->add($entity);
     }
     
     public function getStateEntity($cvId) {
@@ -25,20 +29,20 @@ trait JobMatching
         }
     }
     
+    public function removeStateEntity($cvId) {
+        foreach ($this->cvs as $jobCv) {
+            if ($jobCv->cv->id == $cvId) {
+                $this->cvs->removeElement($jobCv);
+            }
+        }
+    }
+    
     public function getCvs() {
         $result = []; 
         foreach ($this->cvs as $jobCv) {
             $result[] = $jobCv->cv;
         }
         return $result;
-    }
-    
-    public function removeCv($cvId) {
-        foreach ($this->cvs as $jobCv) {
-            if ($jobCv->id == $cvId) {
-                $this->cvs->removeElement($jobCv);
-            }
-        }
     }
 
 

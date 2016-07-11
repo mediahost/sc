@@ -3,7 +3,7 @@
  *
  * @param   JobCategory[]     $categories	
 *}
-
+{snippet matchingControl}
 <div class="gallery-category-nav">
     <ul class="">
         <li n:foreach="$categories as $category" n:if="count($category->jobs)" href="#">
@@ -16,7 +16,7 @@
                     <div class="flex-container">
                         <header class="title">
                             {$job->name}
-                            <small class="label label-info"> 3 {_'Cvs'}</small>
+                            <small class="label label-info" data-info="{_'Cvs'}"></small>
                         </header>
                         <section class="content"></section>
                     </div>
@@ -25,3 +25,4 @@
         </li> 
     </ul>
 </div>
+{/snippet}
