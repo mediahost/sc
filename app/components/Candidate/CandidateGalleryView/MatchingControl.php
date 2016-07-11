@@ -44,7 +44,8 @@ class MatchingControl extends \App\Components\BaseControl {
                 $this->presenter->flashMessage('Cv was detached from job');
             }
         }
-        $this->redrawControl('matchingControl');
+        $this->presenter->payload->cvs = $this->getMatchedCvs($job);
+        $this->presenter->sendPayload();
     }
     
     public function getMatchedCvs($job) {

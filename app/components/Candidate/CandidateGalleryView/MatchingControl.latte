@@ -16,7 +16,9 @@
                     <div class="flex-container">
                         <header class="title">
                             {$job->name}
-                            <small class="label label-info" data-info="{_'Cvs'}"></small>
+                            <small class="label label-info" data-label="{_' Cvs'}">
+                                {count($job->cvs)}{_' Cvs'}
+                            </small>
                         </header>
                         <section class="content"></section>
                     </div>

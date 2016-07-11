@@ -4,12 +4,43 @@ var Gallery = function () {
     var initialized = false;
     
     
+    var updateLabel = function(jobObject) {
+        var cvs = jobObject.attr('data-cvs').split(',');
+        var labelObj = jobObject.find('[data-label]');
+        var label = cvs.length + labelObj.attr('data-label');
+        labelObj.html(label);
+    }; 
     
     var closeJobs = function() {
+        $( ".droppable" ).droppable('destroy');
         $('.job').removeClass('droppable');
         $('.job .gallery-item').each(function(index, item) {
             var el = $(item);
             match(el, false);
+        });
+    };
+    
+    var openJob = function(job) {
+        if ($(job).hasClass('job')) {
+            $(job).addClass('droppable');
+            
+            $('.droppable').droppable({
+                drop: function (event, ui) {
+                    match(ui.draggable, true);
+                    invite();
+                }
+            });
+            loadJobCvs();
+        }
+    };
+    
+    var loadJobCvs = function(cvs) {
+        var jobObject = $('.droppable');
+        var cvs = jobObject.attr('data-cvs').split(',');
+        $.each(cvs, function(index, cv) {
+            var cvId = cv.split('|')[0];
+            var el = $('.gallery-item[data-cv="' + cvId + '"]');
+            match(el, true);
         });
     };
     
@@ -32,19 +63,15 @@ var Gallery = function () {
         });
         var url = jobObject.attr('data-action');
         url = url.replace('__CVS__', cvIds.toString());
-        closeJobs();
-        $.nette.ajax({url: url});
-    };
-    
-    var loadJobCvs = function() {
-        var jobObject = $('.droppable');
-        var cvs = jobObject.attr('data-cvs').split(',');
-        $.each(cvs, function(index, cv) {
-            var cvId = cv.split('|')[0];
-            var el = $('.gallery-item[data-cv="' + cvId + '"]');
-            match(el, true);
+        $.nette.ajax({
+            url: url,
+            success: function(payload) {
+                jobObject.attr('data-cvs', payload.cvs);
+                updateLabel(jobObject);
+            }
         });
     };
+    
 
     return {
         init: function () {
@@ -59,16 +86,7 @@ var Gallery = function () {
 
             $(document).on('click', '.job', function () {
                 closeJobs();
-                if ($(this).hasClass('job')) {
-                    $(this).addClass('droppable');
-                    $('.droppable').droppable({
-                        drop: function (event, ui) {
-                            match(ui.draggable, true);
-                            invite();
-                        }
-                    });
-                    loadJobCvs();
-                }
+                openJob(this);
             });
 
             $(document).on('click', '.gallery-item input[type="checkbox"]', function (e) {
