@@ -32,6 +32,9 @@
                             </a>
                         </td>
 			<td>
+                            <a n:if="$template->canAccess($user, $company->accesses[0]->user)" 
+                               href="{plink :App:Users:access $company->accesses[0]->user->id}" class="grid-action-view btn btn-xs btn-mini" ><i class="fa fa-key"></i> {_'Access'}</a>
+            
 				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Companies:view $company->id}"><i class="fa fa-eye"></i> View</a>
 				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Jobs: $company->id}"><i class="fa fa-briefcase"></i> Jobs</a>
 				<a class="grid-action-view btn btn-xs btn-mini" href="{plink :App:Companies:editImages $company->id}"><i class="fa fa-image"></i> Images</a>

@@ -3,6 +3,7 @@
 namespace App\Components\Company;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Model\Facade\UserFacade;
 
 /**
  * Description of CompanyDataView
@@ -10,6 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class CompanyDataView extends \App\Components\BaseControl 
 {
+    /** @var UserFacade @inject */
+	public $userFacade;
+    
 	/** @var ArrayCollection */
 	private $companies;
 	
@@ -20,6 +24,7 @@ class CompanyDataView extends \App\Components\BaseControl
 	public function render() {
 		$this->companies = ($this->companies)  ?  $this->companies  :  new ArrayCollection();
 		$this->template->companies = $this->companies;
+        $this->template->addFilter('canAccess', $this->userFacade->canAccess);
 		parent::render();
 	}
 	
