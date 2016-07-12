@@ -36,7 +36,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     public function render() {
         $this->setTemplateFile('CandidateGalleryView');
         $this->cvs = $this->getCvs();
-        $this->template->cvs = $this->cvs;
+        $this->template->cvs = $this->groupCvs($this->cvs);
         parent::render();
     }
     
@@ -56,6 +56,20 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 
 		return $cvRepo->findAll();
 	}
+    
+    private function groupCvs($cvs) {
+        $group = [];
+        $groups = [];
+        foreach ($cvs as $cv) {
+            if (count($group) == 3) {
+                $groups[] = $group;
+                $group = [];
+            }
+            $group[] = $cv;
+        }
+        $groups[] = $group;
+        return $groups;
+    }
     
     public function setSkillRequests($skillRequests)
 	{

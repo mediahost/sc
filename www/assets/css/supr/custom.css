@@ -38,7 +38,6 @@
 .message-header {
     margin-bottom: 15px;
     width: 100%;
-    min-height: 32px;
 }
 .message-search {
     width: 100%;
@@ -46,7 +45,6 @@
 }
 
 .gallery-item p {
-    height: 50px;
 }
 .gallery-nav ul {
     -webkit-padding-start: 20px;

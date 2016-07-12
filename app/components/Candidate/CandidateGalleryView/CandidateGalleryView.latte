@@ -4,9 +4,11 @@
  * @param   Cv[]     $cvs	
 *}
 <div n:snippet="galleryView" class="row">
-    <div class="col-lg-9">
-        <div n:inner-foreach="$cvs as $cv" class="row gallery">
+    <div class="col-lg-9 gallery">
+        <div n:foreach="$cvs as $group" class="row">
+            {foreach $group as $cv}
             {control candidatePreview-$cv->id}
+            {/foreach}
         </div>
     </div>
     <div class="col-lg-3 gallery-nav">
