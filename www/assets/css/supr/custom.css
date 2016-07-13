@@ -94,3 +94,7 @@ section.content {
     display: flex;
     flex-direction: column;
 }
+
+.cv-filter-container {
+    margin-left: 30px;
+}

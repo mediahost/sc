@@ -39,4 +39,18 @@ class JobCv extends \Kdyby\Doctrine\Entities\BaseEntity {
     
     /** @ORM\Column(type="smallint", nullable=false, options={"default" = 1})) */
 	protected $state;
+    
+    public static function getStates() {
+        return [
+            self::CV_STATE_FREE => 'Free',
+            self::CV_STATE_INVITED => 'Invited',
+            self::CV_STATE_APLLIED => 'Apllied',
+            self::CV_STATE_MATCHED => 'Matched',
+            self::CV_STATE_SHORTLISTED => 'Shortlisted',
+            self::CV_STATE_REJECTED => 'Rejected',
+            self::CV_STATE_INVITED_COMPANY => 'Intervirew',
+            self::CV_STATE_OFFER_MADE => 'Offer',
+            self::CV_STATE_HIRED => 'Hired'
+        ];
+    }
 }

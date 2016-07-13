@@ -24,6 +24,7 @@ jQuery(document).ready(function () {
         Global.handleModals();
 	Global.handleRightbar();
 	Global.init();
+        Global.handleJobPage();
 	Login.init();
 	PdfPreview.init();
         Gallery.init();

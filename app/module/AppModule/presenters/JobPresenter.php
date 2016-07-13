@@ -68,8 +68,6 @@ class JobPresenter extends BasePresenter
 	/** @var EntityDao */
 	private $companyDao;
     
-    /** @var Cv[] */
-    private $cvs;
 
     // </editor-fold>
 
@@ -145,8 +143,6 @@ class JobPresenter extends BasePresenter
 	public function renderEdit()
 	{
         $cvRepo = $this->em->getRepository(Cv::getClassName());
-        $this->cvs = $cvRepo->findAll();
-        $this->template->cvs = $this->cvs;
 		$this->template->job = $this->job;
 	}
     
@@ -232,7 +228,7 @@ class JobPresenter extends BasePresenter
 
     public function createComponentCandidatePreview() {
         return new \Nette\Application\UI\Multiplier(function ($cvId) {
-            $cv = \App\ArrayUtils::searchByProperty($this->cvs, 'id', $cvId);
+            $cv = \App\ArrayUtils::searchByProperty($this->job->cvs, 'id', $cvId);
             $control = $this->candidatePreviewFactory->create();
             $control->setCv($cv);
             return $control;

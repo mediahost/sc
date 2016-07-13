@@ -33,13 +33,18 @@ class CandidatePreview extends \App\Components\BaseControl {
         parent::render();
     }
     
-    public function renderJobView() {
+    public function renderJobView(\App\Model\Entity\Job $job) {
         $this->setTemplateFile('CandidateJobView');
         $this->template->cv = $this->cv;
+        $this->template->job = $job;
         $this->template->preferedJobCategories = $this->getPreferedJobCategories();
         $this->template->skills = $this->getItSkills();
         $this->template->addFilter('canAccess', $this->userFacade->canAccess);
         parent::render();
+    }
+    
+    public function getCvState(\App\Model\Entity\Cv $cv, \App\Model\Entity\Job $job) {
+        return $job->getStateEntity($cv->id)->state;
     }
 
     private function getPreferedJobCategories() {

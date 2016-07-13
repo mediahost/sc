@@ -61,8 +61,8 @@
             <h4>{_'Candidates'}</h4>
         </div>
         <div>{control candidateFilter}</div>
-        <div n:inner-foreach="$cvs as $cv" class="panel-body">
-            {control candidatePreview-$cv->id:jobView}
+        <div n:inner-foreach="$job->cvs as $cv" class="panel-body">
+            {control candidatePreview-$cv->id:jobView $job}
         </div>  
     </div>
 </div>

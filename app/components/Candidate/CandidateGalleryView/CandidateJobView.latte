@@ -2,9 +2,11 @@
  * CandidatePreview control template
  *
  * @param   Cv     $cv	
+ * @param   Job    $job	
 *}
 
-<div class="panel panel-default plain draggable gallery-item">
+<div data-state="{$control->getCvState($cv, $job)}"
+    class="panel panel-default plain draggable gallery-item">
     <div class="panel-heading">
         <h4 class="panel-title ui-widget-content">
             <strong>{$cv->candidate}</strong> 

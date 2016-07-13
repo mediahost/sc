@@ -133,6 +133,26 @@ var Global = function () {
             }
         }
     };
+    
+    var handleJobPage = function() {
+        $(document).on('click', '.cv-filter', function() {
+            var checkedStates = [];
+            
+            $('.cv-filter').each(function(index, item) {
+                if($(item).attr('checked') == 'checked') {
+                    checkedStates[checkedStates.length] = $(item).val();
+                }
+            });
+            $('.gallery-item').each(function(index, cv) {
+                var cvState = $(cv).attr('data-state');
+                if(checkedStates.length  &&  $.inArray(cvState, checkedStates) == -1) {
+                    $(cv).hide();
+                } else {
+                    $(cv).show();
+                }
+            }); 
+        });
+    };
 
     return {
         init: function () {
@@ -156,7 +176,8 @@ var Global = function () {
         handleRightbar: handleRightbar,
         initAccordion: initAccordion,
         handleDataTables: handleDataTables,
-        handleModals: handleModals
+        handleModals: handleModals,
+        handleJobPage: handleJobPage
     };
 
 }();
