@@ -98,3 +98,6 @@ section.content {
 .cv-filter-container {
     margin-left: 30px;
 }
+.cv-filter-container .checkbox-inline {
+    margin-left: 0px !important;
+}

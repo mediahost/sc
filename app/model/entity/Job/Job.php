@@ -68,6 +68,8 @@ class Job extends BaseEntity
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $questions;
 
+    /** @ORM\Column(type="text", nullable=true) */
+	protected $notes;
 	
 
 	public function __construct($name = NULL)

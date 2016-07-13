@@ -8,6 +8,7 @@ use App\Components\Job\IOffersControlFactory;
 use App\Components\Job\IDescriptionsControlFactory;
 use App\Components\Job\ISkillsControlFactory;
 use App\Components\Job\IQuestionsControlFactory;
+use App\Components\Job\INotesControlFactory;
 use App\Components\Candidate\ICandidateFilterFactory;
 use App\Components\Candidate\ICandidatePreviewFactory;
 use App\Model\Entity\Company;
@@ -58,6 +59,9 @@ class JobPresenter extends BasePresenter
     
     /** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
+    
+    /** @var INotesControlFactory @inject */
+	public $notesControlFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -113,6 +117,7 @@ class JobPresenter extends BasePresenter
 			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
+            $this['notesControl']->setJob($this->job);
 		} else {
 			$this->flashMessage('Finded company isn\'t exists.', 'danger');
 			$this->redirect('Dashboard:');
@@ -134,6 +139,7 @@ class JobPresenter extends BasePresenter
 			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
+            $this['notesControl']->setJob($this->job);
 		} else {
 			$this->flashMessage('Finded job isn\'t exists.', 'danger');
 			$this->redirect('Dashboard:');
@@ -177,9 +183,8 @@ class JobPresenter extends BasePresenter
 	{
 		$control = $this->iJobBasicInfoControlFactory->create();
 		$control->setAjax(TRUE, TRUE);
-		$control->onAfterSave = function() {
-			$this->afterJobSave;
-			$this->redirect('Jobs:showAll');
+		$control->onAfterSave = function($job) {
+			$this->afterJobSave($job);
 		};
 		return $control;
 	}
@@ -223,6 +228,16 @@ class JobPresenter extends BasePresenter
     public function createComponentCandidateFilter() {
         $control = $this->candidateFilterFactory->create();
         $control->setAjax(TRUE, TRUE);
+        return $control;
+    }
+    
+    /** @return NotesControl */
+    public function createComponentNotesControl() {
+        $control = $this->notesControlFactory->create();
+        $control->setAjax(TRUE, TRUE);
+        $control->onAfterSave = function($job) {
+			$this->afterJobSave($job);
+		};
         return $control;
     }
 

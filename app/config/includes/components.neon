@@ -139,6 +139,10 @@ services:
 		implement: App\Components\Job\IJobCategoryControlFactory
 		inject: yes
 
+	INotesControlFactory:
+		implement: App\Components\Job\INotesControlFactory
+		inject: yes
+
 	# Candidate
 	ICandidateProfileControlFactory:
 		implement: App\Components\Candidate\IProfileControlFactory
