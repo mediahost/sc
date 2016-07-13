@@ -32,7 +32,7 @@ class NotesControl extends \App\Components\BaseControl
 		$form->setRenderer(new \App\Forms\Renderers\Bootstrap3FormRenderer());
         $form->getElementPrototype()->addClass('ajax');
                     
-		$form->addTextArea('notes')->setAttribute('id', 'jobDescription', 10, 80);
+		$form->addTextArea('notes')->setAttribute('id', 'jobDescription')->setAttribute('rows', '8');
         $form->addSubmit('save', 'Save');
         
 		$form->setDefaults($this->getDefaults());

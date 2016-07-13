@@ -5,5 +5,5 @@
 *}
 {snippet notesControl}
     <a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
-    <p>{$job->notes}</p>
+    <p>{$job->notes|noescape}</p>
 {/snippet}

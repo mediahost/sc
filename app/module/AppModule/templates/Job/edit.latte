@@ -67,56 +67,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-8">
-        <div class="portlet light">
-            <div class="portlet-title tabbable-line">
-                <div class="caption font-green-sharp">
-                    <i class="fa fa-edit font-green-sharp"></i>
-                    <span class="caption-subject bold uppercase">
-                    {if $job->isNew()}{_'Add job'}{else}{_'Edit'} {$job}{/if}
-                </span>
-            </div>
-            <ul n:if="!$job->isNew()" class="nav nav-tabs">
-                <li class="active">
-                    <a href="#editInfo" data-toggle="tab">{_'Info'}</a>
-                </li>
-                <li>
-                    <a href="#editOffers" data-toggle="tab">{_'Offers & Requirments'}</a>
-                </li>
-                <li>
-                    <a href="#editDescriptions" data-toggle="tab">{_'Descriptions'}</a>
-                </li>
-                <li>
-                    <a href="#editSkills" data-toggle="tab">{_'Skills'}</a>
-                </li>
-                <li>
-                    <a href="#editQuestins" data-toggle="tab">{_'Pre-Screening Questions'}</a>
-                </li>
-            </ul>
-        </div>
-        <div class="portlet-body form border">
-            <div class="tab-content">
-                <div class="tab-pane active" id="editInfo">
-                    {control jobInfoForm}
-                </div>
-                <div class="tab-pane" id="editOffers">
-                    {control jobOffersForm}
-                </div>
-                <div class="tab-pane" id="editDescriptions">
-                    {control jobDescriptionsForm}
-                </div>
-                <div n:if="!$job->isNew()" class="tab-pane" id="editSkills">
-                    {control jobSkillsForm}
-                </div>
-                <div class="tab-pane" id="editQuestins">
-                    {control jobQuestionsForm}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
 {/block content}
 
 
@@ -125,9 +75,7 @@
     $(document).ready(function () {
         $('#mapView').mapView();
 
-        $('#jobDescription, #jobSummary').summernote({
-            height: 200
-        });
+        
     });
 </script>
 {/block jsPage}
