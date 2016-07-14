@@ -26,6 +26,10 @@ class NotesControl extends \App\Components\BaseControl
         $this->redrawControl('notesControl');
     }
     
+    public function handlePreview() {
+        $this->redrawControl('notesControl');
+    }
+    
     public function createComponentForm() {
         $form = new Form();
 		$form->setTranslator($this->translator);
