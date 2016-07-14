@@ -66,6 +66,7 @@ abstract class BasePresenter extends BaseBasePresenter
 		$candidate = $identity->candidate;
 		$isCompleteAccount = $candidate && $candidate->isRequiredPersonalFilled() && $candidate->isRequiredOtherFilled() && $identity->verificated;
 		return $isCompleteAccount
+            || in_array(Role::COMPANY, $this->getUser()->getRoles())
 			|| in_array(Role::ADMIN, $this->getUser()->getRoles())
 			|| in_array(Role::SUPERADMIN, $this->getUser()->getRoles());
 	}

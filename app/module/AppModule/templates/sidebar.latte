@@ -65,7 +65,7 @@
                             </a>
                         </li>
                         
-                        <li n:if="$isCandidate && $isCompleteAccount">
+                        <li n:if="$isCompleteAccount">
                             <a n:href="Jobs:showAll" n:class="$presenter->isLinkCurrent('Jobs:*') ? active">
                                 <i class="fa fa-briefcase"></i>
                                 <span class="txt">{_'Jobs'}</span>
@@ -90,26 +90,6 @@
                                 <i class="fa fa-building"></i>
                                 <span class="txt">{_'Companies'}</span>
                             </a>
-                        </li>
-                        <li n:if="$user->isAllowed('jobs', 'default')">
-                            <a href="#">
-                                <i class="fa fa-briefcase"></i>
-                                <span class="txt">{_'Jobs'}</span>
-                            </a>
-                            <ul n:class="sub, $presenter->isLinkCurrent('Jobs:*') ? show">
-                                <li>
-                                    <a n:href="Jobs:showAll" n:class="$presenter->isLinkCurrent('Jobs:*') ? active">
-                                        <i class="fa fa-briefcase"></i>
-                                        <span class="txt">{_'Jobs'}</span>
-                                    </a>
-                                </li>
-                                <li n:if="$user->isAllowed('jobCategories', 'default')">
-                                    <a n:href="JobCategories:" n:class="$presenter->isLinkCurrent('JobCategories:*') ? active">
-                                        <i class="fa fa-briefcase"></i>
-                                        <span class="txt">{_'Job categories'}</span>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                         <li n:if="$user->isAllowed('skills', 'view')">
                             <a href="#">
@@ -146,6 +126,12 @@
                                 <a n:href="Messages:MessagesList" n:class="$presenter->isLinkCurrent('Messages:MessagesList') ? active">
                                     <i class="s16 icomoon-icon-envelop"></i>
                                     <span class="txt">{_'Messages list'}</span>
+                                </a>
+                            </li>
+                            <li n:if="$user->isAllowed('jobCategories', 'default')">
+                                <a n:href="JobCategories:" n:class="$presenter->isLinkCurrent('JobCategories:*') ? active">
+                                    <i class="fa fa-briefcase"></i>
+                                    <span class="txt">{_'Job categories'}</span>
                                 </a>
                             </li>
                             <li n:if="$user->isAllowed('examples', 'default')">
