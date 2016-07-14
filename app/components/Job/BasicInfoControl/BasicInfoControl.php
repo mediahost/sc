@@ -43,17 +43,16 @@ class BasicInfoControl extends BaseControl
     
    
     public function render() {
-        $this->setTemplateFile('default');
-        parent::render();
-    }
-    
-    public function renderPreview() {
         $this->template->job = $this->job;
-        $this->setTemplateFile('preview');
         parent::render();
     }
     
     public function handleEdit() {
+        $this->setTemplateFile('edit');
+        $this->redrawControl('jobInfo');
+    }
+    
+    public function handlePreview() {
         $this->redrawControl('jobInfo');
     }
 

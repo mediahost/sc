@@ -1,70 +1,16 @@
+{**
+ * SkillControl template
+ *
+ * @param   Job     $job	
+*}
 {snippet skillControl}
-{form form}
-    {? $form->errors}
-    {var existSkills => count($categories) && count($skills)}
-    <div n:if="$existSkills" 
-         id="candidate-skill-control"
-         class="panel-group accordion scrollable">
-        <div n:foreach="$categories as $category"
-             class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a class="accordion-toggle collapsed" 
-                       data-toggle="collapse" 
-                       data-parent="#candidate-skill-control" 
-                       href="#{$category->name|webalize}_{$category->id}">
-                        {$category->name}
-                    </a>
-                </h4>
-            </div>
-            <div id="{$category->name|webalize}_{$category->id}" 
-                 class="panel-collapse collapse">
-                <div class="panel-body">
-                    <table class="table">
-                        {if count($category->skills)}
-                            {include blockSkills, skills=>$category->skills, form=>$form, categoryName=>''}
-                        {/if}
-                        {foreach $category->childs as $child}
-                            {include blockSkills, skills=>$child->skills, form=>$form, categoryName=>$child->name}
-                        {/foreach}
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    {if $existSkills}
-        {input $form['save'], class => 'button btn btn-primary'}
-    {else}
-        <div class="note note-danger">
-            <h4 class="block">{_'There are no skills to select.'}</h4>
-            <p>
-                {_'We are managing some skills for you right now.'}
-            </p>
-        </div>
-    {/if}
-{/form}
+<a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
+</br>
+<dl n:inner-foreach="$job->skillRequests as $skillRequest" class="dl-horizontal">
+    <dt>{$skillRequest->skill}:</dt>
+    <dd>{$skillRequest->levelFrom} - {$skillRequest->levelTo}, 
+        {$skillRequest->yearsFrom} - {$skillRequest->yearsTo} {_'years'}
+    </dd>
+    <dd class="divider"></dd>
+</dl>
 {/snippet}
-
-{define blockSkills}
-<thead>
-    <tr>
-        <th>{$categoryName}</th>
-        <th style="width: 30%;">{_'Level Range'}</th>
-        <th style="width: 30%;">{_'Years Range'}</th>
-    </tr>
-</thead>
-<tbody>
-    <tr n:foreach="$skills as $skill" 
-        n:ifset="$form['skillRange'][$skill->id], $form['yearRange'][$skill->id]">
-        <td class="slider-height">
-            {label $form['skillRange'][$skill->id]/}
-        </td>
-        <td style="padding-right: 25px;">
-            {input $form['skillRange'][$skill->id]}
-        </td>
-        <td>
-            {input $form['yearRange'][$skill->id]}
-        </td>
-    </tr>
-</tbody>
-{/define}

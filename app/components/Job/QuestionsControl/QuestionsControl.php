@@ -27,17 +27,16 @@ class QuestionsControl extends BaseControl
 	
     public function render()
 	{
-        $this->setTemplateFile('default');
+        $this->template->questions = explode(self::SEPARATOR, $this->job->questions);
 		parent::render();
 	}
-    
-    public function renderPreview() {
-        $this->template->questions = explode(self::SEPARATOR, $this->job->questions);
-        $this->setTemplateFile('preview');
-        parent::render();
+   
+    public function handleEdit() {
+        $this->setTemplateFile('edit');
+        $this->redrawControl('questionsControl');
     }
     
-    public function handleEdit() {
+    public function handlePreview() {
         $this->redrawControl('questionsControl');
     }
 	

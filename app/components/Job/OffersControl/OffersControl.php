@@ -20,17 +20,16 @@ class OffersControl extends \App\Components\BaseControl
 	
 	
     public function render() {
-        $this->setTemplateFile('default');
-        parent::render();
-    }
-    
-    public function renderPreview() {
         $this->template->data = $this->getDefaults();
-        $this->setTemplateFile('preview');
         parent::render();
     }
     
     public function handleEdit() {
+        $this->setTemplateFile('edit');
+        $this->redrawControl('offersControl');
+    }
+    
+    public function handlePreview() {
         $this->redrawControl('offersControl');
     }
 

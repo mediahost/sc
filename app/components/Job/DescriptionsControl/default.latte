@@ -1,7 +1,18 @@
 {**
- * DescriptionsControl control template
+ * DescriptionControl template
  *
+ * @param   Job     $job	
 *}
 {snippet descriptionControl}
-{control form}
+<a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
+</br>
+<dl class="dl-horizontal">
+    <dt>{_'Description: '}</dt>
+    <dd>{$job->description|noescape}</dd>
+    <dd class="divider"></dd>
+    
+    <dt>{_'Summary: '}</dt>
+    <dd>{$job->summary|noescape}</dd>
+    <dd class="divider"></dd>
+</dl>
 {/snippet}
