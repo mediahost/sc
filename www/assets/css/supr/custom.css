@@ -101,3 +101,6 @@ section.content {
 .cv-filter-container .checkbox-inline {
     margin-left: 0px !important;
 }
+.gallery-item .btn-group {
+    margin-left: 20px;
+}
