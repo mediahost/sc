@@ -10,7 +10,7 @@
     <div class="panel-heading">
         <h4 class="panel-title ui-widget-content">
             <strong>{$cv->candidate}</strong> 
-            <small>&nbsp;{$cv->candidate->address->city}</small>
+            <small n:if="$cv->candidate->address">&nbsp;{$cv->candidate->address->city}</small>
         </h4>
         </br>
 
