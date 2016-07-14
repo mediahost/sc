@@ -25,26 +25,31 @@
             <h4>{_'Info'}</h4>
         </div>
         {control jobInfoForm:preview}
+        </br>
         
         <div class="page-header">
             <h4>{_'Offers & Requirments'}</h4>
         </div>
         {control jobOffersForm:preview}
+        </br>
         
         <div class="page-header">
             <h4>{_'Descriptions'}</h4>
         </div>
         {control jobDescriptionsForm:preview}
+        </br>
         
         <div class="page-header">
             <h4>{_'Skills'}</h4>
         </div>
         {control jobSkillsForm:preview}
+        </br>
 
         <div class="page-header">
             <h4>{_'Pre-Screening Questions'}</h4>
         </div>
         {control jobQuestionsForm:preview}
+        </br>
     </div>
 
     <div class="col-md-4">
@@ -68,14 +73,3 @@
 </div>
 
 {/block content}
-
-
-{block jsPage}
-<script>
-    $(document).ready(function () {
-        $('#mapView').mapView();
-
-        
-    });
-</script>
-{/block jsPage}

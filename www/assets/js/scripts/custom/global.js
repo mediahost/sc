@@ -137,6 +137,7 @@ var Global = function () {
     var handleJobPage = function() {
         $(document).on('click', '.cv-filter', function() {
             var checkedStates = [];
+            
             $('.cv-filter').each(function(index, item) {
                 if($(item).attr('checked') == 'checked') {
                     checkedStates[checkedStates.length] = $(item).val();
@@ -150,11 +151,13 @@ var Global = function () {
                     $(cv).show();
                 }
             }); 
-            
-            $('#jobDescription, #jobSummary').summernote({
-                height: 200
-            });
         });
+        $('#jobDescription, #jobSummary').summernote({
+            height: 200
+        });
+        if ($('#mapView').length) {
+            $('#mapView').mapView();
+        }
     };
 
     return {
@@ -171,11 +174,13 @@ var Global = function () {
                 handleDropzone();
                 handleTagsInput();
                 onModalLoad();
-                handleJobPage();
 
                 // Global components
                 CustomTrees.init();
             });
+            
+            
+            handleJobPage();
         },
         handleRightbar: handleRightbar,
         initAccordion: initAccordion,
