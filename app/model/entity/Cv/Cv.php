@@ -3,6 +3,7 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\Traits\CvSkillsUsing;
+use App\Model\Entity\Traits\CvMatching;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -46,6 +47,7 @@ class Cv extends BaseEntity
 
 	use Identifier;
 	use CvSkillsUsing;
+    use CvMatching;
 
 	/** @ORM\Column(type="string", length=100, nullable=true) */
 	protected $name;
@@ -124,9 +126,6 @@ class Cv extends BaseEntity
 	
 	/** @ORM\Column(type="boolean") */
 	protected $additionalIsPublic = FALSE;
-    
-    /**  @ORM\OneToMany(targetEntity="JobCv", mappedBy="cv", fetch="LAZY", cascade={"persist"}) */
-	private $jobs;
 
 	public function __construct($name = NULL)
 	{
