@@ -118,13 +118,15 @@ class UserControl extends BaseControl
 			$this->user->setPassword($values->password);
 		}
 		$this->user->clearRoles();
-		foreach ($values->roles as $id) {
-			$roleDao = $this->em->getDao(Role::getClassName());
-			$item = $roleDao->find($id);
-			if ($item) {
-				$this->user->addRole($item);
-			}
-		}
+        if (isset($values->roles)) {
+            foreach ($values->roles as $id) {
+                $roleDao = $this->em->getDao(Role::getClassName());
+                $item = $roleDao->find($id);
+                if ($item) {
+                    $this->user->addRole($item);
+                }
+            }
+        }
 		return $this;
 	}
 

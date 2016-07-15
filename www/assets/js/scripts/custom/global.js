@@ -184,7 +184,6 @@ var Global = function () {
                 handleInterestedIn();
                 handleMessages();
                 handleDropzone();
-                handleTagsInput();
                 onModalLoad();
                 handleImagUpload();
 
@@ -194,6 +193,7 @@ var Global = function () {
             
             
             handleJobPage();
+            handleTagsInput();
         },
         handleRightbar: handleRightbar,
         initAccordion: initAccordion,
