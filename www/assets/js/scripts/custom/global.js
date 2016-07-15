@@ -20,6 +20,18 @@ var Global = function () {
     var hadleSlider = function() {
         $('input.slider:not([data])').slider();
     };
+    
+    var handleImagUpload = function() {
+        $(document).on('change', '.imageUpload', function() {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('img.imageUploadPreview').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    };
 
     var handleFBSharer = function () {
         $('[href="#share"]').on('click', function () {
@@ -174,6 +186,7 @@ var Global = function () {
                 handleDropzone();
                 handleTagsInput();
                 onModalLoad();
+                handleImagUpload();
 
                 // Global components
                 CustomTrees.init();

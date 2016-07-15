@@ -21,6 +21,12 @@ class PhotoControl extends BaseControl
 	public $onAfterSave = [];
 
 	// </editor-fold>
+    
+    public function render() {
+        $this->template->photo = ($this->candidate->photo)  ?  
+            $this->candidate->photo : \App\Model\Entity\Image::DEFAULT_IMAGE;
+        parent::render();
+    }
 
 	/** @return Form */
 	protected function createComponentForm()
