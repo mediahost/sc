@@ -27,7 +27,6 @@ class Read extends BaseEntity
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Sender")
-	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 * @var Sender
 	 */
 	protected $sender;

@@ -20,7 +20,7 @@ class Sender extends BaseEntity
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="User")
-	 * @ORM\JoinColumn(onDelete="CASCADE")
+	 * @var User
 	 */
 	protected $user;
 
@@ -32,7 +32,6 @@ class Sender extends BaseEntity
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Communication", inversedBy="contributors")
-	 * @ORM\JoinColumn(onDelete="CASCADE")
 	 * @var Communication
 	 */
 	protected $communication;

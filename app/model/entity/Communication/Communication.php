@@ -39,7 +39,7 @@ class Communication extends BaseEntity
 	protected $created;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Sender", mappedBy="communication", cascade={"persist", "remove"}, orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="Sender", mappedBy="communication", cascade={"persist"}, orphanRemoval=true)
 	 * @var ArrayCollection
 	 */
 	protected $contributors;
