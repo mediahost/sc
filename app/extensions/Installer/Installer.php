@@ -3,6 +3,7 @@
 namespace App\Extensions;
 
 use App\Extensions\Installer\Model\InstallerModel;
+use App\Extensions\Installer\Model\CandidatesGenerator;
 use App\Helpers;
 use App\Security\CompanyPermission;
 use Nette\Object;
@@ -53,6 +54,9 @@ class Installer extends Object
 
 	/** @var InstallerModel @inject */
 	public $model;
+    
+    /** @var CandidatesGenerator @inject */
+	public $candidatesGenerator;
 
 	/** @var IAuthorizator @inject */
 	public $permissions;
@@ -254,6 +258,7 @@ class Installer extends Object
 		$this->installSkillLevels($prefix);
 		$this->installJobTypes($prefix);
 		$this->installJobCategories($prefix);
+        $this->installCandidates($prefix);
 	}
 
 	private function installDoctrine($lockPrefix = NULL)
@@ -365,6 +370,23 @@ class Installer extends Object
 		$name = $lockPrefix . $this->getLockName(__METHOD__);
 		if ($this->lock($name)) {
 			$this->model->installJobCategories($this->getJobCategories());
+			$this->onSuccessInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_SUCCESS];
+		} else {
+			$this->onLockedInstall($this, $name);
+			$this->messages[$name] = [self::INSTALL_LOCKED];
+		}
+	}
+    
+    /**
+	 * Install candidates
+	 * @param string $lockPrefix
+	 */
+	private function installCandidates($lockPrefix = NULL)
+	{
+		$name = $lockPrefix . $this->getLockName(__METHOD__);
+		if ($this->lock($name)) {
+			$this->candidatesGenerator->generate();
 			$this->onSuccessInstall($this, $name);
 			$this->messages[$name] = [self::INSTALL_SUCCESS];
 		} else {

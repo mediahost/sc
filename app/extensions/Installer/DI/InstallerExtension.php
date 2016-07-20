@@ -42,6 +42,9 @@ class InstallerExtension extends CompilerExtension
 		$builder->addDefinition($this->prefix('model'))
 				->setClass('App\Extensions\Installer\Model\InstallerModel')
 				->setInject(TRUE);
+        $builder->addDefinition($this->prefix('CandidatesGenerator'))
+                ->setClass('App\Extensions\Installer\Model\CandidatesGenerator')
+				->setInject(TRUE);
 	}
 
 	/**
