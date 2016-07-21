@@ -32,11 +32,11 @@ Class CandidatesGenerator extends \Nette\Object
     public function generate() {
         $role = $this->roleFacade->findByName(\App\Model\Entity\Role::CANDIDATE);
         for($i=0; $i<self::CANDIDATE_COUNT; $i++) {
-            $userMail = sprintf('candidate%d@example.com', $i + 2000);
+            $userMail = sprintf('candidate%d@example.com', $i + 1000);
             $pass = 'candidate123';
             $user = $this->userFacade->create($userMail, $pass, $role);
             
-            $user->candidate->surname = sprintf('candidate%d', $i + 2000);
+            $user->candidate->surname = sprintf('candidate%d', $i + 1000);
             $user->candidate->freelancer = rand(0,1);
             $user->candidate->jobCategories = $this->generateCategoryList();
             $user->candidate->workLocations = $this->generateLocationList();
@@ -48,6 +48,7 @@ Class CandidatesGenerator extends \Nette\Object
     
     public function generateCategoryList() {
         $categories = $this->jobFacade->findCategoriesPairs();
+        $categories = array_keys($categories);
         $categoryList = [];
         $count = rand(0, count($categories));
         for ($i=0; $i<$count; $i++) {
@@ -59,6 +60,7 @@ Class CandidatesGenerator extends \Nette\Object
     
     public function generateLocationList() {
         $countries = \App\Model\Entity\Candidate::getLocalities(TRUE);
+        $countries = array_merge($countries);
         $countryList = [];
         $count = rand(0, count($countries));
         for ($i=0; $i<$count; $i++) {
