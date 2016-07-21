@@ -11,6 +11,8 @@ use App\Components\Cv\ISkillsFilterFactory;
 
 class CandidateGalleryView extends \App\Components\BaseControl {
     
+    static $pagination = [6, 12, 18];
+
     /** @var IMatchingControlFactory @inject */
 	public $matchingControlFactory;
     
@@ -29,6 +31,17 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     /** @var Cv[] */
 	private $cvs = [];
     
+    /** @var int */
+    private $countPerPage;
+    
+    /** @var int */
+    private $current = 1;
+    
+    
+    public function __construct() {
+        parent::__construct();
+        $this->countPerPage = self::$pagination[2];
+    }
 
     /**
      * Renders control
@@ -36,8 +49,17 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     public function render() {
         $this->setTemplateFile('CandidateGalleryView');
         $this->cvs = $this->getCvs();
+        $this->template->pageParams = $this->getPagination();
         $this->template->cvs = $this->groupCvs($this->cvs);
         parent::render();
+    }
+    
+    public function handlePagination($page) {
+        $this->current = $page;
+    }
+    
+    public function handleChangePagination($count) {
+        $this->countPerPage = $count;
     }
     
     public function handleResetFilter() {
@@ -45,16 +67,33 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $this['skillsFilter']->setSkillRequests([]);
         $this->redrawControl();
     }
+    
+    private function getPagination() {
+        $cvRep = $this->em->getRepository(Cv::getClassName());
+        $count = $cvRep->countOfCvs($this->skillRequests);
+        $pages = \App\Helpers::pagination($count, $this->countPerPage, $this->current , 4);
+        $last = ceil($count/$this->countPerPage);
+        $parameters = [
+            'current' => $this->current,
+            'pages' => $pages,
+            'last' => $last,
+            'availableCounts' => array_diff(self::$pagination, [$this->countPerPage]),
+            'countPerPage' => $this->countPerPage
+        ];
+        if ($this->current > 1) {
+            $parameters['previous'] = $this->current-1; 
+        }
+        if ($this->current < $last) {
+            $parameters['next'] = $this->current + 1; 
+        }
+        return $parameters;
+    }
 
     private function getCvs()
 	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
-
-		if (count($this->skillRequests)) {
-			return $cvRepo->findBySkillRequests($this->skillRequests);
-		}
-
-		return $cvRepo->findAll();
+        $cvRep = $this->em->getRepository(Cv::getClassName());
+        $offset = $this->countPerPage*($this->current - 1);
+		return $cvRep->findBySkillRequests($this->skillRequests, $offset, $this->countPerPage);
 	}
     
     private function groupCvs($cvs) {

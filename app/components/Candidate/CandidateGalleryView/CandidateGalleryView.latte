@@ -1,14 +1,45 @@
 {**
  * CandidateGalleryView control template
  *
- * @param   Cv[]     $cvs	
+ * @param   Cv[]        $cvs
+ * @param   array       $pageParams	
 *}
 <div n:snippet="galleryView" class="row">
-    <div class="col-lg-9 gallery">
-        <div n:foreach="$cvs as $group" class="row">
-            {foreach $group as $cv}
-            {control candidatePreview-$cv->id}
-            {/foreach}
+    <div class="col-lg-9">
+        <div class="page-header gallery-category-name">
+            <ul class="pagination">
+                <li n:if="$pageParams['current'] == reset($pageParams['pages'])" class="first disabled"><a href="#">{_'First'}</a></li>
+                <li n:if="$pageParams['current'] != reset($pageParams['pages'])" class="first"><a href="{link pagination 1}">{_'First'}</a></li>
+                <li n:ifset="$pageParams['previous']" class="previous"><a href="{link pagination $pageParams['previous']}"><i class="fa fa-angle-left"></i></a></li>
+                <li n:if="!isset($pageParams['previous'])" class="previous disabled"><a href="#"><i class="fa fa-angle-left"></i></a></li>
+                <li n:foreach="$pageParams['pages'] as $page" n:class="($page==$pageParams['current']) ? 'disabled'">
+                    <a href="{link pagination $page}">{$page}</a>
+                </li>
+                <li n:ifset="$pageParams['next']" class="next"><a href="{link pagination $pageParams['next']}"><i class="fa fa-angle-right"></i></a></li>
+                <li n:if="!isset($pageParams['next'])" class="next disabled"><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                <li n:if="$pageParams['last'] == $pageParams['current']" class="last disabled"><a href="#">{_'Last'}</a></li>
+                <li n:if="$pageParams['last'] != $pageParams['current']" class="last"><a href="{link pagination $pageParams['last']}">{_'Last'}</a></li>
+            </ul>
+
+            <div class="btn-group dropdown mb10 mr10 right">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                    {$pageParams['countPerPage']} {_'Cvs per page'}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu right animated fadeIn" role="menu">
+                    <li n:foreach="$pageParams['availableCounts'] as $cnt">
+                        <a href="{link changePagination $cnt}">{$cnt} {_'Cvs per page'}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="gallery">
+            <div n:foreach="$cvs as $group" class="row">
+                {foreach $group as $cv}
+                    {control candidatePreview-$cv->id}
+                {/foreach}
+            </div>
         </div>
     </div>
     <div class="col-lg-3 gallery-nav">
@@ -41,9 +72,9 @@
             </div>
             <div class="modal-footer">
                 <a href="{link resetFilter}" class="btn btn-primary btn-warning" 
-                    data-dismiss="modal" data-action="modal">{_'Reset'}</a>
+                   data-dismiss="modal" data-action="modal">{_'Reset'}</a>
                 <button type="button" class="btn btn-primary" 
-                    data-dismiss="modal" data-action="modal">{_'Filter'}</button>
+                        data-dismiss="modal" data-action="modal">{_'Filter'}</button>
             </div>
         </div>
     </div>

@@ -21,6 +21,10 @@ abstract class Finder extends Object implements IFinder
 	{
 		return $this->getQuery()->getResult();
 	}
+    
+    public function getSingleScalarResult() {
+        return $this->getQuery()->getSingleScalarResult();
+    }
 
 	protected function getQuery()
 	{
