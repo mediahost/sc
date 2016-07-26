@@ -3,6 +3,7 @@
 namespace App\Model\Repository;
 
 use App\Model\Repository\Finders\CvRepository\FinderCvsBySkillRequests;
+use App\Model\Repository\Finders\CvRepository\FinderCvsBySearch;
 
 class CvRepository extends BaseRepository
 {
@@ -12,6 +13,12 @@ class CvRepository extends BaseRepository
 		$qb = $this->createQueryBuilder('e');
         $qb->setFirstResult($first);
         $qb->setMaxResults($count);
+        
+        if($requests['search']) {
+            $finder = new FinderCvsBySearch($qb);
+            $finder->addRequest($requests['search']);
+            return $finder->getResult();
+        }
         
         if($requests['skill']) {
             $finder = new FinderCvsBySkillRequests($qb);
