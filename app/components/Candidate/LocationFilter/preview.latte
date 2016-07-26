@@ -1,0 +1,8 @@
+{**
+ * LocationFilter control template
+ *	
+ * @param   array       $locations
+*}
+<ul n:ifset="$locations" n:inner-foreach="$locations as $location">
+    <li>{$location}</li>
+</ul>

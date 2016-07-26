@@ -1,0 +1,36 @@
+{**
+ * JobCategoryFilter control template
+ *	
+ * @param   array       $countries	
+*}
+{form form}
+    <table>
+        <tbody>
+        <tr>
+            <th style="vertical-align: top; padding-top: 6px;"></th>
+            <td>
+                <div id="countryTree"></div>
+                <div id="countryInputs" style="display: none;">
+                    {foreach $countries as $countryId => $countryName}
+                        {input "countries-$countryId" }{$countryName}
+                    {/foreach}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            <td>
+                {$form->render('errors')}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{/form}
+
+<script n:syntax="double">
+
+    var jsonCountries = {{? echo json_encode($jsonCountries); }};
+</script>

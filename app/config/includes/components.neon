@@ -180,6 +180,10 @@ services:
 		implement: App\Components\Candidate\ISocialControlFactory
 		inject: yes
 
+	ILocationFilterFactory:
+		implement: App\Components\Candidate\ILocationFilterFactory
+		inject: yes
+
 	# Cv
 	ICvAdditionalControlFactory:
 		implement: App\Components\Cv\IAdditionalControlFactory

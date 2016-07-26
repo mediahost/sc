@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use App\Model\Entity\Cv;
 use App\Components\Candidate\ICandidatePreviewFactory;
 use App\Components\Candidate\IMatchingControlFactory;
+use App\Components\Candidate\ILocationFilterFactory;
 use App\Components\Job\IJobCategoryFilterFactory;
 use App\Components\Cv\ISkillsFilterFactory;
 
@@ -22,6 +23,9 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     /** @var IJobCategoryFilterFactory @inject */
     public $jobCategoryFilterFactory;
+    
+    /** @var ILocationFilterFactory @inject */
+    public $locationFilterFactory;
     
     /** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
@@ -145,6 +149,16 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $control = $this->jobCategoryFilterFactory->create();
         $control->setAjax();
         $control->onAfterSend = function(array $categoryRequests) {
+            
+            $this->redrawControl();
+        };
+        return $control;
+    }
+    
+    public function createComponentLocationFilter() {
+        $control = $this->locationFilterFactory->create();
+        $control->setAjax();
+        $control->onAfterSend = function(array $locationRequests) {
             
             $this->redrawControl();
         };
