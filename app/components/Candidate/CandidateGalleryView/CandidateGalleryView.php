@@ -7,6 +7,7 @@ use App\Model\Entity\Cv;
 use App\Components\Candidate\ICandidatePreviewFactory;
 use App\Components\Candidate\IMatchingControlFactory;
 use App\Components\Candidate\ILocationFilterFactory;
+use App\Components\Candidate\ISearchFilterFactory;
 use App\Components\Job\IJobCategoryFilterFactory;
 use App\Components\Cv\ISkillsFilterFactory;
 
@@ -27,6 +28,9 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     /** @var ILocationFilterFactory @inject */
     public $locationFilterFactory;
     
+    /** @var ISearchFilterFactory @inject */
+    public $searchFilterFactory;
+    
     /** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
     
@@ -35,6 +39,9 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     /** @var SkillKnowRequest[] */
 	private $skillRequests = [];
+    
+    /** @var string */
+    private $searchRequest;
     
     /** @var Cv[] */
 	private $cvs = [];
@@ -101,8 +108,15 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 	{
         $cvRep = $this->em->getRepository(Cv::getClassName());
         $offset = $this->countPerPage*($this->current - 1);
-		return $cvRep->findBySkillRequests($this->skillRequests, $offset, $this->countPerPage);
+		return $cvRep->findByRequests($this->getRequests(), $offset, $this->countPerPage);
 	}
+    
+    private function getRequests() {
+        return [
+            'skill' => $this->skillRequests,
+            'search' => $this->searchRequest
+        ];
+    }
     
     private function groupCvs($cvs) {
         $group = [];
@@ -160,6 +174,15 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $control->setAjax();
         $control->onAfterSend = function(array $locationRequests) {
             
+            $this->redrawControl();
+        };
+        return $control;
+    }
+    
+    public function createComponentSearchFilter() {
+        $control = $this->searchFilterFactory->create();
+        $control->onAfterSend = function($searchRequest) {
+            $this->searchRequest = $searchRequest;
             $this->redrawControl();
         };
         return $control;

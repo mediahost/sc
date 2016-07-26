@@ -7,14 +7,15 @@ use App\Model\Repository\Finders\CvRepository\FinderCvsBySkillRequests;
 class CvRepository extends BaseRepository
 {
 
-	public function findBySkillRequests($skillRequests=null, $first=1, $count=18)
+	public function findByRequests($requests=null, $first=1, $count=18)
 	{
 		$qb = $this->createQueryBuilder('e');
         $qb->setFirstResult($first);
         $qb->setMaxResults($count);
-        if($skillRequests) {
+        
+        if($requests['skill']) {
             $finder = new FinderCvsBySkillRequests($qb);
-            foreach ($skillRequests as $skillRequest) {
+            foreach ($requests['skill'] as $skillRequest) {
                 $finder->addRequest($skillRequest);
             }
             return $finder->getResult();

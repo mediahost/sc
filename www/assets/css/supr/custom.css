@@ -103,3 +103,7 @@ section.content {
 .gallery-item .btn-group {
     margin-left: 20px;
 }
+
+.gallery-nav .search {
+    width: 100%;
+}

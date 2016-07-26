@@ -184,6 +184,10 @@ services:
 		implement: App\Components\Candidate\ILocationFilterFactory
 		inject: yes
 
+	ISearchFilterFactory:
+		implement: App\Components\Candidate\ISearchFilterFactory
+		inject: yes
+
 	# Cv
 	ICvAdditionalControlFactory:
 		implement: App\Components\Cv\IAdditionalControlFactory
