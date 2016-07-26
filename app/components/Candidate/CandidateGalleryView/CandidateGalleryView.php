@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use App\Model\Entity\Cv;
 use App\Components\Candidate\ICandidatePreviewFactory;
 use App\Components\Candidate\IMatchingControlFactory;
+use App\Components\Job\IJobCategoryFilterFactory;
 use App\Components\Cv\ISkillsFilterFactory;
 
 
@@ -18,6 +19,9 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     /** @var ISkillsFilterFactory @inject */
 	public $skillsFilterFactory;
+    
+    /** @var IJobCategoryFilterFactory @inject */
+    public $jobCategoryFilterFactory;
     
     /** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
@@ -117,6 +121,10 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 		}
 		return $this;
 	}
+    
+    public function setCategoryRequests($categoryRequests) {
+        
+    }
 
     public function createComponentMatchingControl() {
         $control = $this->matchingControlFactory->create();
@@ -130,6 +138,16 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 			$this->setSkillRequests($skillRequests);
 			$this->redrawControl();
 		};
+        return $control;
+    }
+    
+    public function createComponentCategoryFilter() {
+        $control = $this->jobCategoryFilterFactory->create();
+        $control->setAjax();
+        $control->onAfterSend = function(array $categoryRequests) {
+            
+            $this->redrawControl();
+        };
         return $control;
     }
 

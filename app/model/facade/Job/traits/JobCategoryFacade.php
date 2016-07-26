@@ -4,6 +4,8 @@ namespace App\Model\Facade\Traits;
 
 trait JobCategoryFacade {
     
+    private $categoriesPairs;
+    
     
     public function findCategories() {
         $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
@@ -18,8 +20,11 @@ trait JobCategoryFacade {
     }
     
     public function findCategoriesPairs() {
-        $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
-        return $jobCategorydao->findPairs('name');
+        if (!$this->categoriesPairs) {
+            $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
+            $this->categoriesPairs = $jobCategorydao->findPairs('name');
+        }
+        return $this->categoriesPairs;
     }
     
     public function findCategoriesTree($categories=null) {
@@ -61,6 +66,7 @@ trait JobCategoryFacade {
 			$entity = new \App\Model\Entity\JobCategory();
 			$entity->name = $category;
 			$categoryRepo->save($entity);
+            $this->categoriesPairs = null;
 		}
 		return $entity;
 	}
@@ -68,11 +74,13 @@ trait JobCategoryFacade {
     public function saveJobCategory(\App\Model\Entity\JobCategory $category) {
         $this->em->persist($category);
 		$this->em->flush();
+        $this->categoriesPairs = null;
     }
     
     public function deleteJobCategory(\App\Model\Entity\JobCategory $category) {
         $jobCategorydao = $this->em->getDao(\App\Model\Entity\JobCategory::getClassName());
         $jobCategorydao->delete($category);
+        $this->categoriesPairs = null;
     }
     
     public function isInParentTree(\App\Model\Entity\JobCategory $category, \App\Model\Entity\JobCategory $parent) {

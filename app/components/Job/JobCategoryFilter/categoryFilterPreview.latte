@@ -1,0 +1,8 @@
+{**
+ * JobCategoryFilter control template
+ *	
+ * @param   array       $categories
+*}
+<ul n:ifset="$categories" n:inner-foreach="$categories as $category">
+    <li>{$category}</li>
+</ul>
