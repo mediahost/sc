@@ -52,10 +52,10 @@ class LocationFilter extends \App\Components\BaseControl
     
     public function formSucceeded(Form $form, ArrayHash $values)
 	{
-        var_dump($values);
+        $countries = Candidate::getLocalities(TRUE);
 		foreach ($values->countries as $countryId => $checked) {
 			if ($checked) {
-				$this->locationRequests[$countryId] = $countryId;
+				$this->locationRequests[$countryId] = $countries[$countryId];
 			}
 		}
         $this->onAfterSend($this->locationRequests);

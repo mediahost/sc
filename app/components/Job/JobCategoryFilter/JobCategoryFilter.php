@@ -31,7 +31,7 @@ class JobCategoryFilter extends \App\Components\BaseControl
     }
     
     public function renderPreview() {
-        $this->template->categoryRequests = $this->categoryRequests;
+        $this->template->categories = $this->categoryRequests;
         $this->setTemplateFile('categoryFilterPreview');
         parent::render();
     }
@@ -60,7 +60,6 @@ class JobCategoryFilter extends \App\Components\BaseControl
 				$this->categoryRequests[$categoryId] = $categoriesAll[$categoryId];
 			}
 		}
-        var_dump($values->categories);
         $this->onAfterSend($this->categoryRequests);
     }
     
