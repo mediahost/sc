@@ -1,9 +1,8 @@
 var CustomTrees = function () {
 
-    var formID = 'frm-completeCandidateSecond-form';
-
     var handleSkillsTree = function () {
-        if (typeof jsonJobCategories != 'undefined') {
+        if (typeof jsonJobCategories != 'undefined' 
+                &&  $.jstree.reference('#jobCategoriesTree') === null) {
             $('#jobCategoriesTree').jstree({
                 'plugins': ["wholerow", "checkbox", "types"],
                 'core': {
@@ -16,6 +15,7 @@ var CustomTrees = function () {
                     'data': jsonJobCategories
                 }
             }).on('changed.jstree', function (e, data) {
+                var formID = $(this).closest('form')[0].id;
                 var i, j, r = [];
                 for (i = 0, j = data.selected.length; i < j; i++) {
                     r.push(data.instance.get_node(data.selected[i]).id);
@@ -35,7 +35,8 @@ var CustomTrees = function () {
         }
         
 
-        if (typeof jsonCountries != 'undefined') {
+        if (typeof jsonCountries != 'undefined'  
+                &&  $.jstree.reference('#countryTree') === null) {
 
             $('#countryTree').jstree({
                 'plugins': ["wholerow", "checkbox", "types"],
@@ -49,6 +50,7 @@ var CustomTrees = function () {
                     'data': jsonCountries
                 }
             }).on('changed.jstree', function (e, data) {
+                var formID = $(this).closest('form')[0].id;
                 var i, j, r = [];
                 for (i = 0, j = data.selected.length; i < j; i++) {
                     r.push(data.instance.get_node(data.selected[i]).id);
@@ -68,7 +70,8 @@ var CustomTrees = function () {
 
         }
 
-        if (typeof jsonFreelancer != 'undefined') {
+        if (typeof jsonFreelancer != 'undefined'
+                &&  $.jstree.reference('#freelancerTree') === null) {
 
             $('#freelancerTree').jstree({
                 'plugins': ["wholerow", "checkbox", "types"],
@@ -81,6 +84,7 @@ var CustomTrees = function () {
                     'data': jsonFreelancer
                 }
             }).on('changed.jstree', function (e, data) {
+                var formID = $(this).closest('form')[0].id;
                 $('#' + formID + '-freelancer').attr('checked', !!data.selected.length);
             });
 
