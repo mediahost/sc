@@ -40,6 +40,12 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     /** @var SkillKnowRequest[] */
 	private $skillRequests = [];
     
+    /** @var array */
+	private $locationRequests = [];
+    
+    /** @var array */
+	private $categoryRequests = [];
+    
     /** @var string */
     private $searchRequest;
     
@@ -114,6 +120,8 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     private function getRequests() {
         return [
             'skill' => $this->skillRequests,
+            'location' => $this->locationRequests,
+            'category' => $this->categoryRequests,
             'search' => $this->searchRequest
         ];
     }
@@ -139,10 +147,6 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 		}
 		return $this;
 	}
-    
-    public function setCategoryRequests($categoryRequests) {
-        
-    }
 
     public function createComponentMatchingControl() {
         $control = $this->matchingControlFactory->create();
@@ -163,7 +167,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $control = $this->jobCategoryFilterFactory->create();
         $control->setAjax();
         $control->onAfterSend = function(array $categoryRequests) {
-            
+            $this->categoryRequests = $categoryRequests;
             $this->redrawControl();
         };
         return $control;
@@ -173,7 +177,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $control = $this->locationFilterFactory->create();
         $control->setAjax();
         $control->onAfterSend = function(array $locationRequests) {
-            
+            $this->locationRequests = $locationRequests;
             $this->redrawControl();
         };
         return $control;

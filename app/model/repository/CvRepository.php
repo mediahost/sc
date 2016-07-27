@@ -4,6 +4,7 @@ namespace App\Model\Repository;
 
 use App\Model\Repository\Finders\CvRepository\FinderCvsBySkillRequests;
 use App\Model\Repository\Finders\CvRepository\FinderCvsBySearch;
+use App\Model\Repository\Finders\CvRepository\FinderCvsByJobCategory;
 
 class CvRepository extends BaseRepository
 {
@@ -17,6 +18,12 @@ class CvRepository extends BaseRepository
         if($requests['search']) {
             $finder = new FinderCvsBySearch($qb);
             $finder->addRequest($requests['search']);
+            return $finder->getResult();
+        }
+        
+        if($requests['category']) {
+            $finder = new FinderCvsByJobCategory($qb);
+            $finder->addRequest($requests['category']);
             return $finder->getResult();
         }
         
