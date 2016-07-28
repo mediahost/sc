@@ -5,17 +5,25 @@
 *}
 <div class="page-header gallery-category-name">
     <ul class="pagination">
-        <li n:if="$pageParams['current'] == reset($pageParams['pages'])" class="first disabled"><a href="#">{_'First'}</a></li>
-        <li n:if="$pageParams['current'] != reset($pageParams['pages'])" class="first"><a href="{link pagination 1}">{_'First'}</a></li>
-        <li n:ifset="$pageParams['previous']" class="previous"><a href="{link pagination $pageParams['previous']}"><i class="fa fa-angle-left"></i></a></li>
-        <li n:if="!isset($pageParams['previous'])" class="previous disabled"><a href="#"><i class="fa fa-angle-left"></i></a></li>
+        <li n:if="$pageParams['current'] == reset($pageParams['pages'])" class="first disabled">
+            <a href="#" class="ajax">{_'First'}</a></li>
+        <li n:if="$pageParams['current'] != reset($pageParams['pages'])" class="first">
+            <a href="{link pagination 1}" class="ajax">{_'First'}</a></li>
+        <li n:ifset="$pageParams['previous']" class="previous">
+            <a href="{link pagination $pageParams['previous']}" class="ajax"><i class="fa fa-angle-left"></i></a></li>
+        <li n:if="!isset($pageParams['previous'])" class="previous disabled">
+            <a href="#"><i class="fa fa-angle-left"></i></a></li>
         <li n:foreach="$pageParams['pages'] as $page" n:class="($page==$pageParams['current']) ? 'disabled'">
-            <a href="{link pagination $page}">{$page}</a>
+            <a href="{link pagination $page}" class="ajax">{$page}</a>
         </li>
-        <li n:ifset="$pageParams['next']" class="next"><a href="{link pagination $pageParams['next']}"><i class="fa fa-angle-right"></i></a></li>
-        <li n:if="!isset($pageParams['next'])" class="next disabled"><a href="#"><i class="fa fa-angle-right"></i></a></li>
-        <li n:if="$pageParams['last'] == $pageParams['current']" class="last disabled"><a href="#">{_'Last'}</a></li>
-        <li n:if="$pageParams['last'] != $pageParams['current']" class="last"><a href="{link pagination $pageParams['last']}">{_'Last'}</a></li>
+        <li n:ifset="$pageParams['next']" class="next">
+            <a href="{link pagination $pageParams['next']}" class="ajax"><i class="fa fa-angle-right"></i></a></li>
+        <li n:if="!isset($pageParams['next'])" class="next disabled">
+            <a href="#"><i class="fa fa-angle-right"></i></a></li>
+        <li n:if="$pageParams['last'] == $pageParams['current']" class="last disabled">
+            <a href="#">{_'Last'}</a></li>
+        <li n:if="$pageParams['last'] != $pageParams['current']" class="last">
+            <a href="{link pagination $pageParams['last']}" class="ajax">{_'Last'}</a></li>
     </ul>
 
     <div class="btn-group dropdown mb10 mr10 right">

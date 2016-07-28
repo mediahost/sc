@@ -69,6 +69,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 
     public function handlePagination($page) {
         $this->current = $page;
+        $this->redrawControl();
     }
     
     public function handleChangePagination($count) {
