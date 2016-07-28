@@ -37,17 +37,8 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     /** @var EntityManager @inject */
 	public $em;
     
-    /** @var SkillKnowRequest[] */
-	private $skillRequests = [];
-    
-    /** @var array */
-	private $locationRequests = [];
-    
-    /** @var array */
-	private $categoryRequests = [];
-    
-    /** @var string */
-    private $searchRequest;
+    /** @var \Nette\Http\Session */
+    private $session;
     
     /** @var Cv[] */
 	private $cvs = [];
@@ -57,11 +48,12 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     /** @var int */
     private $current = 1;
+ 
     
-    
-    public function __construct() {
+    public function __construct(\Nette\Http\Session $session) {
         parent::__construct();
         $this->countPerPage = self::$pagination[2];
+        $this->session = $session->getSection('candidateGalleryView');
     }
 
     /**
@@ -74,7 +66,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $this->template->cvs = $this->groupCvs($this->cvs);
         parent::render();
     }
-    
+
     public function handlePagination($page) {
         $this->current = $page;
     }
@@ -89,9 +81,27 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $this->redrawControl();
     }
     
+    private function persistFilter($filter, $value) {
+        $this->session[$filter] = $value;
+    }
+    
+    private function getRequests($filter=null) {
+        $result = [];
+        $result['skill'] = isset($this->session['skill'])  ?  $this->session['skill']  :  [];
+        $result['location'] = isset($this->session['location'])  ?  $this->session['location']  :  [];
+        $result['category'] = isset($this->session['category'])  ?  $this->session['category']  :  [];
+        $result['search'] = isset($this->session['search'])  ?  $this->session['search']  :  null;
+        
+        if ($filter) {
+            return $result[$filter];
+        } else {
+            return $result;
+        }
+    }
+    
     private function getPagination() {
         $cvRep = $this->em->getRepository(Cv::getClassName());
-        $count = $cvRep->countOfCvs($this->skillRequests);
+        $count = $cvRep->countOfCvs($this->getRequests('skill'));
         $pages = \App\Helpers::pagination($count, $this->countPerPage, $this->current , 4);
         $last = ceil($count/$this->countPerPage);
         $parameters = [
@@ -117,15 +127,6 @@ class CandidateGalleryView extends \App\Components\BaseControl {
 		return $cvRep->findByRequests($this->getRequests(), $offset, $this->countPerPage);
 	}
     
-    private function getRequests() {
-        return [
-            'skill' => $this->skillRequests,
-            'location' => $this->locationRequests,
-            'category' => $this->categoryRequests,
-            'search' => $this->searchRequest
-        ];
-    }
-    
     private function groupCvs($cvs) {
         $group = [];
         $groups = [];
@@ -139,14 +140,6 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $groups[] = $group;
         return $groups;
     }
-    
-    public function setSkillRequests($skillRequests)
-	{
-		foreach ($skillRequests as $id => $skillRequest) {
-			$this->skillRequests[$id] = $skillRequest;
-		}
-		return $this;
-	}
 
     public function createComponentMatchingControl() {
         $control = $this->matchingControlFactory->create();
@@ -155,9 +148,9 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     public function createComponentSkillsFilter() {
         $control = $this->skillsFilterFactory->create();
-        $control->setAjax();
+        $control->setSkillRequests($this->getRequests('skill'));
         $control->onAfterSend = function (array $skillRequests) {
-			$this->setSkillRequests($skillRequests);
+            $this->persistFilter('skill', $skillRequests);
 			$this->redrawControl();
 		};
         return $control;
@@ -165,9 +158,9 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     public function createComponentCategoryFilter() {
         $control = $this->jobCategoryFilterFactory->create();
-        $control->setAjax();
+        $control->setCategoryRequests($this->getRequests('category'));
         $control->onAfterSend = function(array $categoryRequests) {
-            $this->categoryRequests = $categoryRequests;
+            $this->persistFilter('category', $categoryRequests);
             $this->redrawControl();
         };
         return $control;
@@ -175,9 +168,9 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     public function createComponentLocationFilter() {
         $control = $this->locationFilterFactory->create();
-        $control->setAjax();
+        $control->setLocationRequests($this->getRequests('location'));
         $control->onAfterSend = function(array $locationRequests) {
-            $this->locationRequests = $locationRequests;
+            $this->persistFilter('location', $locationRequests);
             $this->redrawControl();
         };
         return $control;
@@ -185,8 +178,9 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     public function createComponentSearchFilter() {
         $control = $this->searchFilterFactory->create();
+        $control->setSearchRequest($this->getRequests('search'));
         $control->onAfterSend = function($searchRequest) {
-            $this->searchRequest = $searchRequest;
+            $this->persistFilter('search', $searchRequest);
             $this->redrawControl();
         };
         return $control;

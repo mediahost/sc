@@ -3,8 +3,10 @@
 namespace App\Model\Repository;
 
 use App\Model\Repository\Finders\CvRepository\FinderCvsBySkillRequests;
-use App\Model\Repository\Finders\CvRepository\FinderCvsBySearch;
+use App\Model\Repository\Finders\CvRepository\FinderCvsByCandidateRequests;
 use App\Model\Repository\Finders\CvRepository\FinderCvsByJobCategory;
+use App\Model\Repository\Finders\CvRepository\FinderCvsByLocation;
+
 
 class CvRepository extends BaseRepository
 {
@@ -16,15 +18,30 @@ class CvRepository extends BaseRepository
         $qb->setMaxResults($count);
         
         if($requests['search']) {
-            $finder = new FinderCvsBySearch($qb);
-            $finder->addRequest($requests['search']);
-            return $finder->getResult();
+            $finderByCandidate = new FinderCvsByCandidateRequests($qb);
+            $finderByCandidate->addSearchRequest($requests['search']);
         }
         
         if($requests['category']) {
-            $finder = new FinderCvsByJobCategory($qb);
-            $finder->addRequest($requests['category']);
-            return $finder->getResult();
+            if (!isset($finderByCandidate)) {
+                $finderByCandidate = new FinderCvsByCandidateRequests($qb);
+            }
+            foreach ($requests['category'] as $categoryId=>$category) {
+                $finderByCandidate->addCategoryRequest($categoryId);
+            }
+        }
+        
+        if($requests['location']) {
+            if (!isset($finderByCandidate)) {
+                $finderByCandidate = new FinderCvsByCandidateRequests($qb);
+            }
+            foreach ($requests['location'] as $locationId=>$location) {
+                $finderByCandidate->addLocationRequest($locationId);
+            }
+        }
+        
+        if (isset($finderByCandidate)) {
+            $finderByCandidate->build();
         }
         
         if($requests['skill']) {
@@ -32,7 +49,7 @@ class CvRepository extends BaseRepository
             foreach ($requests['skill'] as $skillRequest) {
                 $finder->addRequest($skillRequest);
             }
-            return $finder->getResult();
+            $finder->build();
         }
 		return $qb->getQuery()->getResult();
 	}

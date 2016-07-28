@@ -4,9 +4,11 @@ namespace App\Model\Repository\Finders\CvRepository;
 
 use App\Model\Repository\Finders\Finder;
 
-
-class FinderCvsBySearch extends Finder 
+class FinderCvsByCandidateRequests extends Finder
 {
+    /** @var bool */
+    private $joinUserTable = FALSE;
+    
     /** @var array */
 	private $orRequests = [];
 
@@ -16,12 +18,22 @@ class FinderCvsBySearch extends Finder
     
     protected function init()
 	{
-		$this->qb
-				->innerJoin('e.candidate', 'c');
+		$this->qb->innerJoin('e.candidate', 'c');
 	}
     
-    public function addRequest($request)
+    public function addCategoryRequest($request)
 	{
+        $this->orRequests[] = $this->getExpr()->like('c.jobCategories', ':categoryId');
+        $this->setParameter('categoryId', '%:'.$request.';%');
+    }
+    
+    public function addLocationRequest($request) {
+        $this->orRequests[] = $this->getExpr()->like('c.workLocations', ':location');
+        $this->setParameter('location', '%:'.$request.';%');
+    }
+    
+    public function addSearchRequest($request) {
+        $this->joinUserTable = TRUE;
         $this->orRequests[] = $this->getExpr()->like('c.firstname', ':firstname');
 		$this->setParameter('firstname', '%'.$request.'%');
         $this->orRequests[] = $this->getExpr()->like('c.surname', ':surname');
@@ -30,15 +42,17 @@ class FinderCvsBySearch extends Finder
 		$this->setParameter('email', $request);
     }
     
-    protected function build()
+    public function build()
 	{
-		$this->buildJoins();
 		$this->buildOrs();
+        $this->buildJoins();
 	}
     
     private function buildJoins()
 	{
-        $this->qb->innerJoin('c.user', 'u');
+		if ($this->joinUserTable) {
+            $this->qb->innerJoin('c.user', 'u');
+		}
 	}
     
     private function buildAnds()

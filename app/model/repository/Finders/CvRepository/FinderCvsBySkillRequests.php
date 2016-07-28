@@ -20,9 +20,8 @@ class FinderCvsBySkillRequests extends Finder
 
 	protected function init()
 	{
-		$this->qb
-				->innerJoin('e.skillKnows', 'k')
-				->where('e.isDefault = :isDefault')
+		$this->qb->innerJoin('e.skillKnows', 'k')
+                ->where('e.isDefault = :isDefault')
 				->setParameter('isDefault', TRUE);
 	}
 
@@ -78,7 +77,7 @@ class FinderCvsBySkillRequests extends Finder
 		}
 	}
 
-	protected function build()
+	public function build()
 	{
 		$this->buildJoins();
 		$this->buildOrs();

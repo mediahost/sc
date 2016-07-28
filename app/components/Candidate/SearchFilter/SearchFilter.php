@@ -28,6 +28,10 @@ class SearchFilter extends \App\Components\BaseControl {
         $this->searchRequest = $values->searchString;
         $this->onAfterSend($this->searchRequest);
     }
+    
+    public function setSearchRequest($request) {
+        $this->searchRequest = $request;
+    }
 }
 
 interface ISearchFilterFactory

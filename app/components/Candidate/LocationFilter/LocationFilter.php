@@ -61,6 +61,12 @@ class LocationFilter extends \App\Components\BaseControl
         $this->onAfterSend($this->locationRequests);
     }
     
+    public function setLocationRequests($requests) {
+        foreach ($requests as $id=>$request) {
+            $this->locationRequests[$id] = $request;
+        }
+    }
+    
     private function loacationToLeaf($id, $location)
 	{
 		$children = [];

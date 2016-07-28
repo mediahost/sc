@@ -63,6 +63,12 @@ class JobCategoryFilter extends \App\Components\BaseControl
         $this->onAfterSend($this->categoryRequests);
     }
     
+    public function setCategoryRequests($requests) {
+        foreach($requests as $id=>$request) {
+            $this->categoryRequests[$id] = $request;
+        }
+    }
+    
     private function jobCategoryToLeaf(\App\Model\Entity\JobCategory $category)
 	{
 		$leaf = [
