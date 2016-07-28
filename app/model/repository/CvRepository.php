@@ -13,9 +13,20 @@ class CvRepository extends BaseRepository
 
 	public function findByRequests($requests=null, $first=1, $count=18)
 	{
-		$qb = $this->createQueryBuilder('e');
+		$qb = $this->getQueryBuilder($requests);
         $qb->setFirstResult($first);
         $qb->setMaxResults($count);
+		return $qb->getQuery()->getResult();
+	}
+    
+    public function countOfCvs($requests=null) {
+        $qb = $this->getQueryBuilder($requests);
+        $qb->select($qb->expr()->count('e.id'));
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+    
+    private function getQueryBuilder($requests=null) {
+        $qb = $this->createQueryBuilder('e');
         
         if($requests['search']) {
             $finderByCandidate = new FinderCvsByCandidateRequests($qb);
@@ -51,19 +62,7 @@ class CvRepository extends BaseRepository
             }
             $finder->build();
         }
-		return $qb->getQuery()->getResult();
-	}
-    
-    public function countOfCvs($skillRequests=null) {
-        $qb = $this->createQueryBuilder('e');
-        $qb->select($qb->expr()->count('e.id'));
-        if($skillRequests) {
-            $finder = new FinderCvsBySkillRequests($qb);
-            foreach ($skillRequests as $skillRequest) {
-                $finder->addRequest($skillRequest);
-            }
-            return $finder->getSingleScalarResult();
-        }
-        return $qb->getQuery()->getSingleScalarResult();
+        
+        return $qb;
     }
 }

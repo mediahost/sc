@@ -75,10 +75,19 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $this->countPerPage = $count;
     }
     
-    public function handleResetFilter() {
-        $this->skillRequests = [];
-        $this['skillsFilter']->setSkillRequests([]);
+    public function handleResetFilter($filter) {
+        $this->resetFilter($filter);
         $this->redrawControl();
+    }
+    
+    public function resetFilter($filter=null) {
+        if ($filter) {
+            if (isset($this->session[$filter])) {
+                $this->session[$filter] = [];
+            }
+        } else {
+            $this->session = null;
+        }
     }
     
     private function persistFilter($filter, $value) {
@@ -101,7 +110,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
     
     private function getPagination() {
         $cvRep = $this->em->getRepository(Cv::getClassName());
-        $count = $cvRep->countOfCvs($this->getRequests('skill'));
+        $count = $cvRep->countOfCvs($this->getRequests());
         $pages = \App\Helpers::pagination($count, $this->countPerPage, $this->current , 4);
         $last = ceil($count/$this->countPerPage);
         $parameters = [
