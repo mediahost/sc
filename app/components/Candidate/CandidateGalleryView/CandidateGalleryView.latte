@@ -8,12 +8,8 @@
     <div class="col-lg-9">
         {include 'paginationTemplate.latte'}
 
-        <div class="gallery">
-            <div n:foreach="$cvs as $group" class="row">
-                {foreach $group as $cv}
-                    {control candidatePreview-$cv->id}
-                {/foreach}
-            </div>
+        <div n:inner-foreach="$cvs as $cv" class="gallery row">
+            {control candidatePreview-$cv->id}
         </div>
     </div>
     <div class="col-lg-3 gallery-nav">

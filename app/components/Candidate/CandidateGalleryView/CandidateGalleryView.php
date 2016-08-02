@@ -67,7 +67,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $this->skillRequests = $this['skillsFilter']->setSkillRequests($this->getSerializedRequests('skill'));
         $this->cvs = $this->getCvs();
         $this->template->pageParams = $this->getPagination();
-        $this->template->cvs = $this->groupCvs($this->cvs);
+        $this->template->cvs = $this->cvs;
         parent::render();
     }
 
@@ -146,20 +146,6 @@ class CandidateGalleryView extends \App\Components\BaseControl {
         $offset = $this->countPerPage*($this->current - 1);
 		return $cvRep->findByRequests($this->getRequests(), $offset, $this->countPerPage);
 	}
-    
-    private function groupCvs($cvs) {
-        $group = [];
-        $groups = [];
-        foreach ($cvs as $cv) {
-            if (count($group) == 3) {
-                $groups[] = $group;
-                $group = [];
-            }
-            $group[] = $cv;
-        }
-        $groups[] = $group;
-        return $groups;
-    }
 
     public function createComponentMatchingControl() {
         $control = $this->matchingControlFactory->create();

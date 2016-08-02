@@ -43,7 +43,8 @@
     width: 100%;
 }
 
-.gallery-item p {
+.gallery-item .panel-body {
+    height: 350px;
 }
 .gallery-nav ul {
     -webkit-padding-start: 20px;
@@ -73,6 +74,7 @@
 }
 .droppable .panel-body {
     padding: 5px;
+    height: auto;
 }
 .droppable {
     min-height: 200px;

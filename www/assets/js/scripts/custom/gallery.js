@@ -3,20 +3,6 @@
 var Gallery = function () {
     var initialized = false;
     
-    
-    var alignGallery = function() {
-        $('.gallery .row').each(function(index, row) {
-            var nextRow = $(row).next('.row');
-            while($(row).children().length < 3  &&  $(nextRow).length) {
-                if($(nextRow).children().length) {
-                    $(row).append(nextRow.children()[0]);
-                } else {
-                    nextRow = $(nextRow).next('.row');
-                }
-            }
-        });
-    };
-    
     var updateLabel = function(jobObject) {
         var cvs = jobObject.attr('data-cvs').split(',');
         var labelObj = jobObject.find('[data-label]');
@@ -62,12 +48,10 @@ var Gallery = function () {
         if (checked) {
             element.addClass('matched').appendTo('.droppable section').animate({left: '0px', top: '0px'});
         } else {
-            var galleryRow = $('.gallery .row').last('.row');
             element.removeClass('matched').addClass('col-sm-4 col-xs-6');
-            galleryRow.append(element);
+            $('.gallery').append(element);
         }
         element.find('input[type="checkbox"]').attr('checked', checked);
-        alignGallery();
     };
     
     var invite = function() {
@@ -102,7 +86,6 @@ var Gallery = function () {
             $(document).on('click', '.job', function () {
                 closeJobs();
                 openJob(this);
-                alignGallery();
             });
 
             $(document).on('click', '.gallery-item input[type="checkbox"]', function (e) {
