@@ -17,7 +17,7 @@ abstract class BasePresenter extends BaseBasePresenter
 	/** @var Communication[] */
 	private $userCommunications;
 
-	private $showRightSideBar = true;
+	private $showRightSideBar = false;
 
 
 	public function getUserCommunications(\App\Model\Entity\User $user=null)
