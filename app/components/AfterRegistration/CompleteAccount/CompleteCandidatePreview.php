@@ -17,6 +17,7 @@ class CompleteCandidatePreview extends \App\Components\BaseControl {
     
     
     public function render() {
+        $this->template->freelancer = $this->userEntity->candidate->freelancer ? 'yes' : 'no';
         $this->setTemplateFile('candidateSecondPreview');
         parent::render();
     }
@@ -33,8 +34,6 @@ class CompleteCandidatePreview extends \App\Components\BaseControl {
 			->setAttribute('data-role', 'tagsinput')
             ->setDisabled();
         
-        $form->addCheckbox('freelance')->setDisabled();
-
 		$form->setDefaults($this->getDefaults());
 		return $form;
     }
@@ -54,8 +53,7 @@ class CompleteCandidatePreview extends \App\Components\BaseControl {
         
         return [
 			'categories' => implode(',', $categories),
-			'countries' => implode(',', $localities),
-            'freelance' => $this->userEntity->candidate->freelancer
+			'countries' => implode(',', $localities)
 		];
     }
     
