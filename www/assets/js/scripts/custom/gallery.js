@@ -48,7 +48,7 @@ var Gallery = function () {
         if (checked) {
             element.addClass('matched').appendTo('.droppable section').animate({left: '0px', top: '0px'});
         } else {
-            element.removeClass('matched').addClass('col-sm-4 col-xs-6');
+            element.removeClass('matched').addClass('col-lg-4 col-sm-6 col-xs-12');
             $('.gallery').append(element);
         }
         element.find('input[type="checkbox"]').attr('checked', checked);
