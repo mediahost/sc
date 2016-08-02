@@ -15,7 +15,17 @@ class FinderCvsByCandidateRequests extends Finder
 	/** @var array */
 	private $andRequests;
     
+    /** @var array */
+    private $categoryRequests = [];
     
+    /** @var array */
+    private $locationRequests = [];
+
+    /** @var array */
+    private $searchRequests = [];
+
+
+
     protected function init()
 	{
 		$this->qb->innerJoin('e.candidate', 'c');
@@ -23,29 +33,33 @@ class FinderCvsByCandidateRequests extends Finder
     
     public function addCategoryRequest($request)
 	{
-        $this->orRequests[] = $this->getExpr()->like('c.jobCategories', ':categoryId');
-        $this->setParameter('categoryId', '%:'.$request.';%');
+        $key = 'categoryId' . count($this->categoryRequests);
+        $this->categoryRequests[] = $this->getExpr()->like('c.jobCategories', ':'.$key);
+        $this->setParameter($key, '%:'.$request.';%');
     }
     
     public function addLocationRequest($request) {
-        $this->orRequests[] = $this->getExpr()->like('c.workLocations', ':location');
-        $this->setParameter('location', '%:'.$request.';%');
+        $key = 'location' . count($this->locationRequests);
+        $this->locationRequests[] = $this->getExpr()->like('c.workLocations', ':'.$key);
+        $this->setParameter($key, '%:'.$request.';%');
     }
     
     public function addSearchRequest($request) {
         $this->joinUserTable = TRUE;
-        $this->orRequests[] = $this->getExpr()->like('c.firstname', ':firstname');
+        $this->searchRequests[] = $this->getExpr()->like('c.firstname', ':firstname');
 		$this->setParameter('firstname', '%'.$request.'%');
-        $this->orRequests[] = $this->getExpr()->like('c.surname', ':surname');
+        $this->searchRequests[] = $this->getExpr()->like('c.surname', ':surname');
 		$this->setParameter('surname', '%'.$request.'%');
-        $this->orRequests[] = $this->getExpr()->like('u.mail', ':email');
+        $this->searchRequests[] = $this->getExpr()->like('u.mail', ':email');
 		$this->setParameter('email', $request);
     }
     
     public function build()
 	{
-		$this->buildOrs();
         $this->buildJoins();
+        $this->buildCategoryRequests();
+        $this->buildLocationRequests();
+        $this->buildSearchRequests();
 	}
     
     private function buildJoins()
@@ -55,14 +69,18 @@ class FinderCvsByCandidateRequests extends Finder
 		}
 	}
     
-    private function buildAnds()
-	{
-		$this->orRequests[] = call_user_func_array([$this->getExpr(), 'andX'], $this->andRequests);
-	}
-
-	private function buildOrs()
-	{
-		$ors = call_user_func_array([$this->getExpr(), 'orX'], $this->orRequests);
-		$this->qb->andWhere($ors);
-	}
+    private function buildCategoryRequests() {
+        $ors = call_user_func_array([$this->getExpr(), 'orX'], $this->categoryRequests);
+        $this->qb->andWhere($ors);
+    }
+    
+    private function buildLocationRequests() {
+        $ors = call_user_func_array([$this->getExpr(), 'orX'], $this->locationRequests);
+        $this->qb->andWhere($ors);
+    }
+    
+    private function buildSearchRequests() {
+        $ors = call_user_func_array([$this->getExpr(), 'orX'], $this->searchRequests);
+        $this->qb->andWhere($ors);
+    }
 }

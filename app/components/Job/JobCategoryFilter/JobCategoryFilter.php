@@ -54,6 +54,7 @@ class JobCategoryFilter extends \App\Components\BaseControl
     }
     
     public function formSucceeded(\App\Forms\Form $form, \Nette\Utils\ArrayHash $values) {
+        $this->categoryRequests = [];
         $categoriesAll = $this->jobFacade->findCategoriesPairs();
         foreach ($values->categories as $categoryId => $checked) {
 			if ($checked) {

@@ -28,6 +28,14 @@ class CvRepository extends BaseRepository
     private function getQueryBuilder($requests=null) {
         $qb = $this->createQueryBuilder('e');
         
+        if($requests['skill']) {
+            $finder = new FinderCvsBySkillRequests($qb);
+            foreach ($requests['skill'] as $skillRequest) {
+                $finder->addRequest($skillRequest);
+            }
+            $finder->build();
+        }
+        
         if($requests['search']) {
             $finderByCandidate = new FinderCvsByCandidateRequests($qb);
             $finderByCandidate->addSearchRequest($requests['search']);
@@ -53,14 +61,6 @@ class CvRepository extends BaseRepository
         
         if (isset($finderByCandidate)) {
             $finderByCandidate->build();
-        }
-        
-        if($requests['skill']) {
-            $finder = new FinderCvsBySkillRequests($qb);
-            foreach ($requests['skill'] as $skillRequest) {
-                $finder->addRequest($skillRequest);
-            }
-            $finder->build();
         }
         
         return $qb;

@@ -104,10 +104,10 @@ class SkillsFilter extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);
-		$this->onAfterSend($this->skillRequests);
+		$this->onAfterSend($values);
 	}
 
-	protected function load(ArrayHash $values)
+	protected function load($values)
 	{
 		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
 		$skilLevelRepo = $this->em->getRepository(SkillLevel::getClassName());
@@ -158,12 +158,12 @@ class SkillsFilter extends BaseControl
 		return $this;
 	}
 
-	public function setSkillRequests($skillRequests)
+	public function setSkillRequests($values)
 	{
-		foreach ($skillRequests as $id => $skillRequest) {
-			$this->skillRequests[$id] = $skillRequest;
-		}
-		return $this;
+        if (count($values)) {
+            $this->load($values);
+        }
+		return $this->skillRequests;
 	}
 
 	// </editor-fold>
