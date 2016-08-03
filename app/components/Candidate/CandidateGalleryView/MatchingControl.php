@@ -18,17 +18,45 @@ class MatchingControl extends \App\Components\BaseControl {
     /** @var JobCategory[] */
     private $categories;
     
+    /** @var int */
+    private $openJob;
+    
     
     /**
      * Renders control
      */
     public function render() {
+        $categories = $this->jobFacade->findCategories();
+        if (!$this->openJob) {
+            $this->openJob = $categories[0]->id;
+        }
         $this->setTemplateFile('MatchingControl');
-        $this->template->categories = $this->jobFacade->findCategories();
+        $this->template->categories = $categories;
+        $this->template->openJob = $this->openJob;
         parent::render();
     }
     
-    public function handleInvite($jobId, $cvs) {
+    public function handleInvite($jobId, $cvId, $matched) {
+        $job = $this->jobFacade->find($jobId);
+        if (!$job) {
+            $this->presenter->flashMessage('Job was not found');
+            $this->presenter->sendPayload();
+        }
+        $cv = $this->cvFacade->find($cvId);
+        if (!$cv) {
+            $this->presenter->flashMessage('Cv was not found');
+            $this->presenter->sendPayload();
+        }
+        if ($matched) {
+            $this->jobFacade->invite($job, $cv);
+        } else {
+            $this->jobFacade->detach($job, $cvId);
+        }
+        $this->openJob = $jobId;
+        $this->redrawControl('matchingControl');
+    }
+    
+    public function handleInvite1($jobId, $cvs) {
         $job = $this->jobFacade->find($jobId);
         $cvs = explode(',', $cvs);
         foreach ($cvs as $cvId) {

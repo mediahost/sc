@@ -1,7 +1,8 @@
 {**
  * Matching control template
  *
- * @param   JobCategory[]     $categories	
+ * @param   JobCategory[]       $categories
+ * @param   int                 $openJob	
 *}
 {snippet matchingControl}
 <div class="gallery-category-nav">
@@ -10,9 +11,10 @@
             <a class="list-group-item active">{$category->name} </a>
             <ul class="list-group sub show">
                 <li n:foreach="$category->jobs as $job" href="#" 
-                    data-action="{link invite $job->id, '__CVS__'}"
+                    data-action="{link invite $job->id, '__CVS__', '__MATCHED__'}"
                     data-cvs="{$control->getMatchedCvs($job)}"
-                    class="list-group-item job">
+                    data-job="{$job->id}"
+                    class="list-group-item job {($job->id == $openJob) ? 'droppable' : ''}">
                     <div class="flex-container">
                         <header class="title">
                             {$job->name}
@@ -20,7 +22,23 @@
                                 {count($job->cvs)}{_' Cvs'}
                             </small>
                         </header>
-                        <section class="content"></section>
+                            <section n:inner-foreach="$job->cvs as $cv" class="content">
+                                <div data-cv="{$cv->id}" class="matched panel panel-default plain">
+                                    <div class="panel-heading">
+                                        <div class="btn-group" role="group">
+                                            <div class="checkbox-custom ml15">
+                                            <input class="check" type="checkbox" value="option" id="preview-cv6" checked="checked">
+                                                <label for="preview-cv6"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <a href="{plink cvDetail $cv->candidate->user->id}" class="ajax">
+                                            <img src="{$basePath}/foto/{$cv->candidate->photo|size:50,50}" class="center img-responsive">
+                                        </a>
+                                    </div>
+                                </div>
+                            </section>
                     </div>
                 </li>
             </ul>
