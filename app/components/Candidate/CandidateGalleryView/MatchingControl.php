@@ -28,7 +28,8 @@ class MatchingControl extends \App\Components\BaseControl {
     public function render() {
         $categories = $this->jobFacade->findCategories();
         if (!$this->openJob) {
-            $this->openJob = $categories[0]->id;
+            $category = reset($categories);
+            $this->openJob = $category->id;
         }
         $this->setTemplateFile('MatchingControl');
         $this->template->categories = $categories;

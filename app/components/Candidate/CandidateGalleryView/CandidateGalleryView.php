@@ -91,7 +91,7 @@ class CandidateGalleryView extends \App\Components\BaseControl {
                 $this->session[$filter] = [];
             }
         } else {
-            $this->session = null;
+            $this->session->remove();
         }
     }
     

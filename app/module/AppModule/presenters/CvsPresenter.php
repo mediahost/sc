@@ -68,19 +68,15 @@ class CvsPresenter extends BasePresenter
 	 * @resource('cvs')
 	 * @privilege('default')
 	 */
-	public function actionDefault($jobId = NULL, $filter = FALSE)
+	public function actionDefault()
 	{
         $this->template->pageTitle = $this->translator->translate('Candidates');
-		if ($jobId) {
-			$job = $this->jobRepo->find($jobId);
-			if ($job) {
-				$this['cvDataView']->setJob($job);
-                $msg = 'Suggested candidates for job ' . $job->name;
-                $this->template->pageTitle = $this->translator->translate($msg);
-			}
-		}
-		$this->getTemplate()->showFilter = $filter;
 	}
+    
+    public function actionCandidates() {
+        $this['candidateGalleryView']->resetFilter();
+        $this->redirect('default');
+    }
     
     public function actionCvDetail($userId) {
         $user = $this->userFacade->findById($userId);

@@ -19,7 +19,9 @@ class SearchFilter extends \App\Components\BaseControl {
         $form = new Form();
         $form->setTranslator($this->translator);
         $form->getElementPrototype()->class('ajax sendOnChange');
-        $form->addText('searchString')->setAttribute('placeholder', 'Search cv ...');
+        $form->addText('searchString')
+            ->setDefaultValue($this->searchRequest)
+            ->setAttribute('placeholder', 'Search cv ...');
         $form->onSuccess[] = $this->formSucceeded;
 		return $form;
     }

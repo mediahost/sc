@@ -3,7 +3,9 @@
 var Gallery = function() {
     
     var closeJobs = function() {
-        $( ".droppable" ).droppable('destroy');
+        if ($( ".droppable" ).hasClass('ui-droppable')) {
+            $( ".droppable" ).droppable('destroy');
+        }
         $('.job').removeClass('droppable');
     };
     
