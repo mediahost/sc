@@ -87,3 +87,9 @@
 /temp
 /temp
 /www/careerDocs
+
+#################
+## Wordpress
+################
+/www/wp/*
+!/www/wp/
