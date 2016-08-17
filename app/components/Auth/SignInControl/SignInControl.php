@@ -27,6 +27,9 @@ class SignInControl extends BaseControl
 	/** @var ITwitterControlFactory @inject */
 	public $iTwitterControlFactory;
 
+	/** @var ILinkedinControlFactory @inject */
+	public $iLinkedinControlFactory;
+
 	/** @var UserFacade @inject */
 	public $userFacade;
 
@@ -134,6 +137,12 @@ class SignInControl extends BaseControl
 	protected function createComponentTwitter()
 	{
 		return $this->iTwitterControlFactory->create();
+	}
+
+	/** @return LinkedinControl */
+	protected function createComponentLinkedin()
+	{
+		return $this->iLinkedinControlFactory->create();
 	}
 
 	// </editor-fold>

@@ -4,9 +4,13 @@ namespace App\Components\Auth;
 
 use App\Components\BaseControl;
 use App\Model\Entity\Facebook;
+use App\Model\Entity\Linkedin;
 use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
+use GuzzleHttp\Client;
+use Nette\Http\UrlScript;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
  * ConnectManagerControl
@@ -17,6 +21,7 @@ class ConnectManagerControl extends BaseControl
 	const APP = 'App login';
 	const FACEBOOK = 'Facebook';
 	const TWITTER = 'Twitter';
+	const LINKEDIN = 'Linked In';
 
 	// <editor-fold desc="events">
 
@@ -43,6 +48,9 @@ class ConnectManagerControl extends BaseControl
 
 	/** @var ITwitterControlFactory @inject */
 	public $iTwitterControlFactory;
+
+	/** @var ILinkedinControlFactory @inject */
+	public $iLinkedinControlFactory;
 
 	// </editor-fold>
 
@@ -110,10 +118,19 @@ class ConnectManagerControl extends BaseControl
 				$this->link('deactivate!', User::SOCIAL_CONNECTION_TWITTER) :
 				$this['twitter']->getLink();
 
+		$liConnection = clone $initConnection;
+		$liConnection->name = $this->translator->translate('Linked In');
+		$liConnection->active = $this->user->hasSocialConnection(User::SOCIAL_CONNECTION_LINKEDIN);
+//		$liConnection->link = $liConnection->active ?
+//			$this->link('deactivate!', User::SOCIAL_CONNECTION_LINKEDIN) :
+//			$this['linkedin']->getLink();
+		$liConnection->link = $this['linkedin']->getLink();
+
 		$sources = [
 			$appConnection,
 			$fbConnection,
 			$twConnection,
+			$liConnection,
 		];
 
 		$template = $this->getTemplate();
@@ -145,6 +162,10 @@ class ConnectManagerControl extends BaseControl
 			case User::SOCIAL_CONNECTION_TWITTER:
 				$disconected = self::TWITTER;
 				$user->clearTwitter();
+				break;
+			case User::SOCIAL_CONNECTION_LINKEDIN:
+				$disconected = self::LINKEDIN;
+				$user->clearLinkedin();
 				break;
 		}
 		if ($disconected) {
@@ -198,6 +219,28 @@ class ConnectManagerControl extends BaseControl
 				$userDao->save($user);
 			}
 			$this->onConnect(self::TWITTER);
+		};
+		return $control;
+	}
+
+	/** @return LinkedinControl */
+	protected function createComponentLinkedin()
+	{
+		$control = $this->iLinkedinControlFactory->create();
+		$control->setConnect();
+		$control->onConnect[] = function (Linkedin $li) {
+			$liDao = $this->em->getDao(Linkedin::getClassName());
+			if ($liDao->find($li->id)) {
+				$this->onUsingConnection(self::LINKEDIN);
+				return;
+			}
+			$userDao = $this->em->getDao(User::getClassName());
+			$user = $userDao->find($this->user->id);
+			if (!$user->hasSocialConnection(User::SOCIAL_CONNECTION_LINKEDIN)) {
+				$user->linkedin = $li;
+				$userDao->save($user);
+			}
+			$this->onConnect(self::LINKEDIN);
 		};
 		return $control;
 	}

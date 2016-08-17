@@ -64,6 +64,7 @@ class SignListener extends Object implements Subscriber
 	{
 		return array(
 			'App\Components\Auth\FacebookControl::onSuccess' => 'onStartup',
+			'App\Components\Auth\LinkedinControl::onSuccess' => 'onStartup',
 			'App\Components\Auth\SignUpControl::onSuccess' => 'onStartup',
 			'App\Components\Auth\TwitterControl::onSuccess' => 'onStartup',
 			'App\Components\Auth\RequiredControl::onSuccess' => 'onRequiredSuccess',

@@ -3,6 +3,7 @@
 namespace App\Model\Entity\Traits;
 
 use App\Model\Entity\Facebook;
+use App\Model\Entity\Linkedin;
 use App\Model\Entity\Twitter;
 
 interface IUserSocials
@@ -20,6 +21,7 @@ interface IUserSocials
 /**
  * @property Facebook $facebook
  * @property Twitter $twitter
+ * @property Linkedin $linkedin
  * @property string $socialName
  * @property string $socialBirthday
  * @property int $connectionCount
@@ -37,6 +39,9 @@ trait UserSocials
 
 	/** @ORM\OneToOne(targetEntity="Twitter", fetch="LAZY", cascade={"persist", "remove"}, orphanRemoval=true) */
 	protected $twitter;
+
+	/** @ORM\OneToOne(targetEntity="Linkedin", fetch="LAZY", cascade={"persist", "remove"}, orphanRemoval=true) */
+	protected $linkedin;
 	
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $facebookLink;
@@ -66,9 +71,18 @@ trait UserSocials
 		return $this;
 	}
 
+	public function clearLinkedin()
+	{
+		$this->linkedin = NULL;
+		return $this;
+	}
+
 	public function getSocialName()
 	{
-		if ($this->facebook) { // prefer FB
+		if ($this->linkedin) { // prefer LinkedIn
+			return $this->linkedin->name;
+		}
+		if ($this->facebook) {
 			return $this->facebook->name;
 		}
 		if ($this->twitter) {
@@ -94,6 +108,8 @@ trait UserSocials
 				return (bool) ($this->facebook instanceof Facebook && $this->facebook->id);
 			case IUserSocials::SOCIAL_CONNECTION_TWITTER:
 				return (bool) ($this->twitter instanceof Twitter && $this->twitter->id);
+			case IUserSocials::SOCIAL_CONNECTION_LINKEDIN:
+				return (bool) ($this->linkedin instanceof Linkedin && $this->linkedin->id);
 			default:
 				return FALSE;
 		}

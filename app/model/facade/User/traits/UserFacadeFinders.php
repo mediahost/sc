@@ -22,6 +22,11 @@ trait UserFacadeFinders
 	{
 		return $this->userRepo->findOneBy(['twitter.id' => $id]);
 	}
+
+	public function findByLinkedinId($id)
+	{
+		return $this->userRepo->findOneBy(['linkedin.id' => $id]);
+	}
     
     public function findById($id) {
         return $this->userRepo->findOneBy(['id' => $id]);

@@ -37,6 +37,11 @@ services:
 		implement: App\Components\Auth\ITwitterControlFactory
 		inject: yes
 
+	ILinkedinControlFactory:
+		create: App\Components\Auth\LinkedinControl
+		implement: App\Components\Auth\ILinkedinControlFactory
+		inject: yes
+
 	IRequiredControlFactory:
 		create: App\Components\Auth\RequiredControl
 		implement: App\Components\Auth\IRequiredControlFactory
