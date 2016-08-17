@@ -258,7 +258,6 @@ class Installer extends Object
 		$this->installSkillLevels($prefix);
 		$this->installJobTypes($prefix);
 		$this->installJobCategories($prefix);
-        $this->installCandidates($prefix);
 	}
 
 	private function installDoctrine($lockPrefix = NULL)
