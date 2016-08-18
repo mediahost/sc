@@ -71,6 +71,9 @@ class MessagesPresenter extends BasePresenter
 	public function createComponentStartCommunicationModal()
 	{
 	    $control = $this->startCommunicationModalFactory->create();
+        foreach ($this->communications as $communication) {
+            $control->addCommunication($communication);
+        }
 		$control->onSuccess[] = function (Communication $communication) {
 			$this->redirect('default', $communication->id);
 		};

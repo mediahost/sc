@@ -27,6 +27,9 @@ class StartCommunicationModal extends BaseControl
 
 	/** @var Company */
 	protected $company;
+    
+    /** @var Communication[] */
+    private $communications;
 
 	public function communicateAsCompany(Company $company)
 	{
@@ -52,7 +55,7 @@ class StartCommunicationModal extends BaseControl
 		}
 		$select = $form->addSelect('type', 'with', ['user' => 'User', 'company' => 'Company'])
 			->setDefaultValue('user');
-		$userSelect = $form->addSelect('user', 'User', $users);
+		$userSelect = $form->addSelect('user', 'User', $this->getUsers());
 		$companySelect = $form->addSelect('company', 'Company', $companies);
 		$form->addTextArea('message', 'Message', NULL, 5);
 		$form->addSubmit('send', 'Send');
@@ -95,7 +98,29 @@ class StartCommunicationModal extends BaseControl
 
 		$this->onSuccess($communication);
 	}
+    
+    /**
+     * For candidate returns users with them user has communication. Otherwise all users
+     * @return User[]
+     */
+    private function getUsers() {
+        if ($this->user->isInRole('candidate')) {
+            $users = $this->communicationFacade->extractUsersFromCommunications($this->communications);
+            $userMails = array_map(function($user) { return $user->mail; }, $users);
+            return array_diff($userMails, [$this->user->identity->mail]);
+        }
+        return array_diff($this->userFacade->getUsers(), [$this->user->identity->mail]);
+    }
 
+    /**
+     * Setter for $communications
+     * @param \App\Model\Entity\Communication $communication
+     * @return \App\Components\StartCommunicationModal
+     */
+    public function addCommunication(\App\Model\Entity\Communication $communication) {
+        $this->communications[] = $communication;
+        return $this;
+    }
 }
 
 interface IStartCommunicationModalFactory

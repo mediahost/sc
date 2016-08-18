@@ -297,4 +297,20 @@ class CommunicationFacade extends Object
 		return $count;
 	}
 
+    /**
+     * Get users from communications
+     * @param Communication[] $communications
+     * @return User[]
+     */
+    public function extractUsersFromCommunications($communications) {
+        $users = [];
+        foreach ($communications as $communication) {
+            foreach ($communication->contributors as $contributor) {
+                if (!key_exists($contributor->user->id, $users)) {
+                    $users[$contributor->user->id] = $contributor->user;
+                }
+            }
+        }
+        return $users;
+    }
 }
