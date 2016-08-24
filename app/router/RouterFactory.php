@@ -23,7 +23,6 @@ class RouterFactory
 		$router[] = new Route('index.php', 'Front:Default:default', Route::ONE_WAY);
 
 		$router[] = $fotoRouter = new RouteList('Foto');
-		$router[] = $ajaxRouter = new RouteList('Ajax');
 		$router[] = $adminRouter = new RouteList('App');
 		$router[] = $frontRouter = new RouteList('Front');
 
@@ -37,15 +36,6 @@ class RouterFactory
 		]);
 
 		// </editor-fold>
-		// <editor-fold desc="Ajax">
-
-		$ajaxRouter[] = new Route('ajax/<presenter>/<action>[/<id>]', [
-			'presenter' => 'Default',
-			'action' => 'default',
-			'id' => NULL,
-		]);
-
-		// </editor-fold>
 		// <editor-fold desc="App">
 
 		$adminRouter[] = new Route('app/<presenter>/<action>[/<id>]', [
@@ -56,6 +46,10 @@ class RouterFactory
 
 		// </editor-fold>
 		// <editor-fold desc="Front">
+		$frontRouter[] = new Route('install', [
+			'presenter' => 'Install',
+			'action' => 'default',
+		]);
 
 		$roles = preg_quote(SignPresenter::ROLE_CANDIDATE) . '|' . preg_quote(SignPresenter::ROLE_COMPANY);
 		$frontRouter[] = new Route('<presenter>/<action (in|up)>[/<role (' . $roles . ')>]', [
