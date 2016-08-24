@@ -306,7 +306,7 @@ class CommunicationFacade extends Object
         $users = [];
         foreach ($communications as $communication) {
             foreach ($communication->contributors as $contributor) {
-                if (!key_exists($contributor->user->id, $users)) {
+                if (isset($contributor->user)  &&  !key_exists($contributor->user->id, $users)) {
                     $users[$contributor->user->id] = $contributor->user;
                 }
             }
