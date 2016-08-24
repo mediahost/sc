@@ -2,6 +2,7 @@
 
 namespace App\Components\Job;
 use Nette\Application\UI\Form;
+use Nette\Utils\DateTime;
 
 /**
  * Description of NotesControl
@@ -63,7 +64,8 @@ class NotesControl extends \App\Components\BaseControl
 	}
     
     protected function load($values) {
-        $this->job->notes = nl2br($values->notes);
+        $this->job->notes = $values->notes;
+        $this->job->notes_updated = new DateTime();
 		return $this;
     }
 

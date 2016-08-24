@@ -70,6 +70,9 @@ class Job extends BaseEntity
 
     /** @ORM\Column(type="text", nullable=true) */
 	protected $notes;
+    
+    /** @ORM\Column(type="datetime", nullable=false) */
+	protected $notes_updated;
 	
 
 	public function __construct($name = NULL)
