@@ -2,8 +2,7 @@
 
 namespace App\Components;
 
-use App\Extensions\Settings\Model\Service\LanguageService;
-use App\Extensions\Settings\Model\Service\PasswordService;
+use App\Extensions\Settings\SettingsStorage;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI;
 use Nette\Localization\ITranslator;
@@ -16,11 +15,8 @@ abstract class BaseControl extends UI\Control
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var LanguageService @inject */
-	public $languageService;
-
-	/** @var PasswordService @inject */
-	public $passwordService;
+	/** @var SettingsStorage @inject */
+	public $settings;
 
 	/** @var ITranslator @inject */
 	public $translator;

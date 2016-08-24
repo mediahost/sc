@@ -4,12 +4,9 @@ namespace App\BaseModule\Presenters;
 
 use App\Components\Auth\ISignOutControlFactory;
 use App\Components\Auth\SignOutControl;
-use App\Extensions\Settings\Model\Service\DesignService;
-use App\Extensions\Settings\Model\Service\LanguageService;
-use App\Extensions\Settings\Model\Storage\DefaultSettingsStorage;
+use App\Extensions\Settings\SettingsStorage;
 use App\Model\Entity;
 use App\Model\Facade\UserFacade;
-use App\TaggedString;
 use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\MemberAccessException as DoctrineMemberAccessException;
@@ -44,14 +41,8 @@ abstract class BasePresenter extends Presenter
 	/** @var Gettext @inject */
 	public $translator;
 
-	/** @var DefaultSettingsStorage @inject */
-	public $settingStorage;
-
-	/** @var DesignService @inject */
-	public $designService;
-
-	/** @var LanguageService @inject */
-	public $languageService;
+	/** @var SettingsStorage @inject */
+	public $settings;
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -64,36 +55,23 @@ abstract class BasePresenter extends Presenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->loadUserSettings();
-		$this->setLang();
+		$this->setLocale();
 	}
 
 	protected function beforeRender()
 	{
-		$this->template->lang = $this->lang;
-		$this->template->designSettings = $this->designService->settings;
-		$this->template->designColors = $this->designService->colors;
+		$this->template->setTranslator($this->translator);
+		$this->template->lang = $this->translator->getLocale(); // TODO: remove lang from latte
+		$this->template->locale = $this->translator->getLocale();
+		$this->template->defaultLocale = $this->translator->getDefaultLocale();
+		$this->template->allowedLanguages = $this->translator->getAvailableLocales();
+
+		$this->template->pageInfo = $this->settings->getPageInfo();
 
 		$this->template->isCandidate = in_array(Entity\Role::CANDIDATE, $this->getUser()->getRoles());
 		$this->template->isCompany = in_array(Entity\Role::COMPANY, $this->getUser()->getRoles());
 		$this->template->isAdmin = in_array(Entity\Role::ADMIN, $this->getUser()->getRoles());
 	}
-
-	// <editor-fold desc="flash messages">
-
-	/** Translate flash messages if not HTML */
-	public function flashMessage($message, $type = 'info')
-	{
-		if (is_string($message)) {
-			$message = $this->translator->translate($message);
-		} else if ($message instanceof TaggedString) {
-			$message->setTranslator($this->translator);
-			$message = (string) $message;
-		}
-		parent::flashMessage($message, $type);
-	}
-
-	// </editor-fold>
 	// <editor-fold desc="requirments">
 
 	public function checkRequirements($element)
@@ -152,46 +130,20 @@ abstract class BasePresenter extends Presenter
 	}
 
 	// </editor-fold>
-	// <editor-fold desc="settings">
-
-	protected function loadUserSettings()
-	{
-		$this->settingStorage->loggedIn = $this->user->loggedIn;
-		if ($this->user->identity instanceof Entity\User) {
-			$this->settingStorage->user = $this->user->identity;
-		}
-	}
-
-	// </editor-fold>
 	// <editor-fold desc="language">
 
-	private function setLang()
+	private function setLocale()
 	{
-		$presenterExceptions = [
-			'Front:Install',
-		];
-		if (in_array($this->presenter->name, $presenterExceptions)) { // defaultLanguage for some presenters
-			$this->lang = NULL;
-			return;
-		}
 
-		// for identity in session load from settings
-		$this->lang = $this->languageService->userLanguage;
-		// for no identity in session or not setted in identity (detect from browser or default)
-		if (!$this->lang) {
-			$this->lang = $this->languageService->detectedLanguage;
-		}
-		$this->translator->setLang($this->lang);
 	}
 
 	// </editor-fold>
 	// <editor-fold desc="handlers">
 
-	public function handleChangeLanguage($newLang)
+	public function handleChangeLanguage($locale)
 	{
-		if ($this->languageService->isAllowed($newLang)) {
-			$this->languageService->userLanguage = $newLang;
-			$this->redirect('this', ['lang' => $newLang]);
+		if (in_array($locale, $this->translator->getAvailableLocales())) {
+			$this->redirect('this', ['lang' => $locale]);
 		} else {
 			$this->flashMessage('Requested language isn\'t supported.', 'warning');
 			$this->redirect('this');

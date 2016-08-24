@@ -39,7 +39,6 @@ abstract class BasePresenter extends BaseBasePresenter
 	{
 		parent::beforeRender();
 		$this->template->isCompleteAccount = $this->isCompleteAccount();
-		$this->template->allowedLanguages = $this->languageService->allowedLanguages;
 		$this->template->communications = $this->getUserCommunications();
 		$this->template->unreadMessagesCount = $this->communicationFacade->getUserUnreadCount($this->getUserCommunications(), $this->user->identity);
 		$this->template->communicationFacade = $this->communicationFacade;

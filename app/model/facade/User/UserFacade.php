@@ -2,10 +2,8 @@
 
 namespace App\Model\Facade;
 
-use App\Extensions\Settings\Model\Service\ExpirationService;
+use App\Extensions\Settings\SettingsStorage;
 use App\Model\Entity\CompanyPermission;
-use App\Model\Entity\PageConfigSettings;
-use App\Model\Entity\PageDesignSettings;
 use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -35,8 +33,8 @@ class UserFacade extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var ExpirationService @inject */
-	public $expirationService;
+	/** @var SettingsStorage @inject */
+	public $settings;
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
@@ -50,21 +48,12 @@ class UserFacade extends Object
 	/** @var EntityDao */
 	private $roleDao;
 
-	/** @var EntityDao */
-	private $configSettingsDao;
-
-	/** @var EntityDao */
-	private $designSettingsDao;
-
-	public function __construct(EntityManager $em, ExpirationService $expiration)
+	public function __construct(EntityManager $em)
 	{
-		$this->expirationService = $expiration;
 		$this->em = $em;
 		$this->userRepo = $this->em->getRepository(User::getClassName());
 		$this->companyPermissionRepo = $this->em->getRepository(CompanyPermission::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
-		$this->configSettingsDao = $this->em->getDao(PageConfigSettings::getClassName());
-		$this->designSettingsDao = $this->em->getDao(PageDesignSettings::getClassName());
 	}
 
 	public function isUnique($mail)
