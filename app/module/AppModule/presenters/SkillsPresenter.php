@@ -73,7 +73,8 @@ class SkillsPresenter extends BasePresenter
 		if ($this->skill) {
 			$this['skillForm']->setSkill($this->skill);
 		} else {
-			$this->flashMessage('This skill wasn\'t found.', 'error');
+			$message = $this->translator->translate('This skill wasn\'t found.');
+			$this->flashMessage($message, 'error');
 			$this->redirect('default');
 		}
 	}
@@ -96,7 +97,8 @@ class SkillsPresenter extends BasePresenter
 			$message = $this->translator->translate('\'%skill%\' was deleted.', ['skill' => $this->skill]);
 			$this->flashMessage($message, 'success');
 		} else {
-			$this->flashMessage('Skill was not found.', 'danger');
+			$message = $this->translator->translate('Skill was not found.');
+			$this->flashMessage($message, 'danger');
 		}
 		$this->redirect('default');
 	}

@@ -3,16 +3,16 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\Grids\Job\IJobsGridFactory;
-use App\Components\Job\IJobDataViewFactory;
 use App\Components\Grids\Job\JobsGrid;
+use App\Components\Job\IJobDataViewFactory;
+use App\Components\Job\JobDataView;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
+use App\Model\Entity\Role;
+use App\Model\Facade\JobFacade;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 
-/**
- * Jobs presenter.
- */
 class JobsPresenter extends BasePresenter
 {
 	// <editor-fold desc="injects">
@@ -26,7 +26,7 @@ class JobsPresenter extends BasePresenter
 	/** @var IJobDataViewFactory @inject */
 	public $iJobDataViewFactory;
 	
-	/** @var \App\Model\Facade\JobFacade @inject */
+	/** @var JobFacade @inject */
 	public $jobFacade;
 	
 	// </editor-fold>
@@ -63,7 +63,8 @@ class JobsPresenter extends BasePresenter
 			$this['jobsDataView']->setCompany($company);
 			$this->template->company = $company;
 		} else {
-			$this->flashMessage('Finded company isn\'t exists.', 'danger');
+			$message = $this->translator->translate('Finded company isn\'t exists.');
+			$this->flashMessage($message, 'danger');
 			$this->redirect('Dashboard:');
 		}
 	}
@@ -75,7 +76,8 @@ class JobsPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->flashMessage('Not implemented yet', 'warning');
+		$message = $this->translator->translate('Not implemented yet');
+		$this->flashMessage($message, 'warning');
 		$this->redirect('Dashboard:');
 	}
 
@@ -86,7 +88,7 @@ class JobsPresenter extends BasePresenter
 	 */
 	public function actionShowAll()
 	{
-		if(in_array(\App\Model\Entity\Role::COMPANY, $this->getUser()->getRoles())) {
+		if(in_array(Role::COMPANY, $this->getUser()->getRoles())) {
 			$jobs = $this->jobFacade->findByUser($this->getUser());
 		} else {
 			$jobs = $this->jobFacade->findAll();
@@ -103,7 +105,8 @@ class JobsPresenter extends BasePresenter
 		$control = $this->iJobsGridFactory->create();
 		return $control;
 	}
-	
+
+	/** @return JobDataView */
 	public function createComponentJobsDataView()
 	{
 		$control = $this->iJobDataViewFactory->create();

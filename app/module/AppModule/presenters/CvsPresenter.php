@@ -92,7 +92,8 @@ class CvsPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$this->flashMessage('Not implemented yet.', 'warning');
+		$message = $this->translator->translate('Not implemented yet.');
+		$this->flashMessage($message, 'warning');
 		$this->redirect('default');
 	}
 

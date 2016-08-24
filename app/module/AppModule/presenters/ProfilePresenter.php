@@ -350,7 +350,8 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iCompleteCandidateSecondControlFactory->create();
 		$control->setUserEntity($this->getUserEntity());
 		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
-			$this->flashMessage('Your data was saved.', 'success');
+			$message = $this->translator->translate('Your data was saved.');
+			$this->flashMessage($message, 'success');
 			$this->redrawControl('interestedIn');
 		};
 		return $control;

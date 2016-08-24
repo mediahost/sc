@@ -148,9 +148,9 @@ class SignListener extends Object implements Subscriber
 		$message->addTo($user->mail);
 		$message->send();
 
-		$message = 'We have sent you a verification e-mail. Please check your inbox!';
+		$messageText = $this->translator->translate('We have sent you a verification e-mail. Please check your inbox!');
 		$control->presenter->user->login($user);
-		$control->presenter->flashMessage($message, 'success');
+		$control->presenter->flashMessage($messageText, 'success');
 		$control->presenter->redirect(self::REDIRECT_AFTER_REGISTER);
 //		}
 	}
@@ -162,7 +162,7 @@ class SignListener extends Object implements Subscriber
 	 */
 	public function onRecovery(Presenter $presenter, User $user)
 	{
-		$message = 'We have sent you a verification e-mail. Please check your inbox!';
+		$message = $this->translator->translate('We have sent you a verification e-mail. Please check your inbox!');
 		$presenter->flashMessage($message, 'success');
 		$this->onSuccess($presenter, $user);
 	}
@@ -178,8 +178,8 @@ class SignListener extends Object implements Subscriber
 		$message->addTo($user->mail);
 		$message->send();
 
-		$message = 'Your account has been seccessfully created.';
-		$presenter->flashMessage($message, 'success');
+		$messageText = $this->translator->translate('Your account has been seccessfully created.');
+		$presenter->flashMessage($messageText, 'success');
 		$this->onSuccess($presenter, $user);
 	}
 
@@ -200,7 +200,7 @@ class SignListener extends Object implements Subscriber
 		}
 
 		$presenter->user->login($user);
-		$message = 'You are logged in.';
+		$message = $this->translator->translate('You are logged in.');
 		$presenter->flashMessage($message, 'success');
 
 		$presenter->restoreRequest($presenter->backlink);

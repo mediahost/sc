@@ -52,7 +52,8 @@ class FacebookControl extends BaseControl
 			$fb = $dialog->getFacebook();
 
 			if (!$fb->getUser()) {
-				$this->presenter->flashMessage('We are sorry, facebook authentication failed.');
+				$message = $this->translator->translate('We are sorry, %method% authentication failed hard.', ['method' => 'Facebbok']);
+				$this->presenter->flashMessage($message);
 				return;
 			}
 
@@ -75,7 +76,8 @@ class FacebookControl extends BaseControl
 				}
 			} catch (FacebookApiException $e) {
 				Debugger::log($e->getMessage(), 'facebook');
-				$this->presenter->flashMessage('We are sorry, facebook authentication failed hard.');
+				$message = $this->translator->translate('We are sorry, %method% authentication failed hard.', ['method' => 'LinkedIn']);
+				$this->presenter->flashMessage($message);
 			}
 		};
 

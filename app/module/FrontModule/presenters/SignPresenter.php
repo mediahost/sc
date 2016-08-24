@@ -124,11 +124,11 @@ class SignPresenter extends BasePresenter
 			$user->verificated = TRUE;
 			$userRepo = $this->em->getRepository(User::getClassName());
 			$userRepo->save($user);
-			$message = 'Your e-mail has been seccessfully verified!';
+			$message = $this->translator->translate('Your e-mail has been seccessfully verified!');
 			$this->flashMessage($message, 'success');
 			$this->onVerify($this, $user);
 		} else {
-			$message = 'Verification token is incorrect.';
+			$message = $this->translator->translate('Verification token is incorrect.');
 			$this->flashMessage($message, 'warning');
 			$this->redirect('in');
 		}
@@ -170,7 +170,8 @@ class SignPresenter extends BasePresenter
 			$message->addTo($user->mail);
 			$message->send();
 
-			$this->flashMessage('Recovery link has been sent to your mail.');
+			$message = $this->translator->translate('Recovery link has been sent to your mail.');
+			$this->flashMessage($message);
 			$this->redirect(':Front:Sign:in');
 		};
 		$control->onMissingUser[] = function ($mail) {

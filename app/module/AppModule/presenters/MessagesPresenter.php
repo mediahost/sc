@@ -2,13 +2,12 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\ICommunicationDataViewFactory;
 use App\Components\ICommunicationFactory;
 use App\Components\ICommunicationListFactory;
 use App\Components\IStartCommunicationModalFactory;
-use App\Components\ICommunicationDataViewFactory;
 use App\Model\Entity\Communication;
 use App\Model\Facade\UserFacade;
-use Tracy\Debugger;
 
 class MessagesPresenter extends BasePresenter
 {
@@ -48,7 +47,8 @@ class MessagesPresenter extends BasePresenter
 			$this->communication = $this->communicationFacade->getCommunication($id);
 			if (!$this->communication || !$this->communication->isUserAllowed($this->user->identity)) {
                 if (!$this->user->isAllowed('messagesList')) {
-                    $this->flashMessage('Requested conversation was\'t find.', 'danger');
+                	$message = $this->translator->translate('Requested conversation was\'t find.');
+                    $this->flashMessage($message, 'danger');
                     $this->redirect('this', NULL);
                 }
 			}

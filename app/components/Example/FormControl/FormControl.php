@@ -89,7 +89,8 @@ class FormControl extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		$this->presenter->flashMessage('This is only example form', 'success');
+		$message = $this->translator->translate('This is only example form');
+		$this->presenter->flashMessage($message, 'success');
 		$this->onAfterSave($form, $values);
 	}
 

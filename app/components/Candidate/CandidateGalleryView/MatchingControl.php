@@ -40,12 +40,14 @@ class MatchingControl extends \App\Components\BaseControl {
     public function handleInvite($jobId, $cvId, $matched) {
         $job = $this->jobFacade->find($jobId);
         if (!$job) {
-            $this->presenter->flashMessage('Job was not found');
+	        $message = $this->translator->translate('Job was not found');
+            $this->presenter->flashMessage($message);
             $this->presenter->sendPayload();
         }
         $cv = $this->cvFacade->find($cvId);
         if (!$cv) {
-            $this->presenter->flashMessage('Cv was not found');
+	        $message = $this->translator->translate('Cv was not found');
+            $this->presenter->flashMessage($message);
             $this->presenter->sendPayload();
         }
         if ($matched) {
@@ -64,13 +66,15 @@ class MatchingControl extends \App\Components\BaseControl {
             $cv = $this->cvFacade->find($cvId);
             if ($cv) {
                 $this->jobFacade->invite($job, $cv);
-                $this->presenter->flashMessage('Cv was invited to job');
+	            $message = $this->translator->translate('Cv was invited to job');
+                $this->presenter->flashMessage($message);
             }
         }
         foreach ($job->getCvsState() as $cvId => $state) {
             if (!in_array($cvId, $cvs)) {
                 $this->jobFacade->detach($job, $cvId);
-                $this->presenter->flashMessage('Cv was detached from job');
+	            $message = $this->translator->translate('Cv was detached from job');
+                $this->presenter->flashMessage($message);
             }
         }
         $this->presenter->payload->cvs = $this->getMatchedCvs($job);

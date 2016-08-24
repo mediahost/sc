@@ -103,7 +103,7 @@ class SkillsControl extends BaseControl
 			$this->save();
 			$this->onAfterSave($this->job);
 		} catch (EmptyValueException $e) {
-			$errorMessage = 'Some mandatory field isn\'t filled. Please go into basic info form and complete all data.';
+			$errorMessage = $this->translator->translate('Some mandatory field isn\'t filled. Please go into basic info form and complete all data.');
 			$form->addError($errorMessage);
 			$this->presenter->flashMessage($errorMessage, 'danger');
 		}

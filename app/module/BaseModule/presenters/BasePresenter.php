@@ -92,10 +92,12 @@ abstract class BasePresenter extends Presenter
 	{
 		if (!$this->user->loggedIn) {
 			if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
-				$this->flashMessage('You have been signed out, because you have been inactive for long time.');
+				$message = $this->translator->translate('You have been signed out, because you have been inactive for long time.');
+				$this->flashMessage($message);
 				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]); // Can be lock screen
 			} else {
-				$this->flashMessage('You should be logged in!');
+				$message = $this->translator->translate('You should be logged in!');
+				$this->flashMessage($message);
 				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
 			}
 		} elseif (!$this->user->isAllowed($resource, $privilege)) {
@@ -142,7 +144,8 @@ abstract class BasePresenter extends Presenter
 		if (in_array($locale, $this->translator->getAvailableLocales())) {
 			$this->redirect('this', ['lang' => $locale]);
 		} else {
-			$this->flashMessage('Requested language isn\'t supported.', 'warning');
+			$message = $this->translator->translate('Requested language isn\'t supported.');
+			$this->flashMessage($message, 'warning');
 			$this->redirect('this');
 		}
 	}

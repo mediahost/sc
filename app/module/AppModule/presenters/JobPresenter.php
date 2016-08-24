@@ -94,7 +94,7 @@ class JobPresenter extends BasePresenter
 			$this->template->job = $job;
 			$this->template->matchedCvs = $this->jobFacade->findCvs($job);
 		} else {
-			$message = 'Finded job isn\'t exists.';
+			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Dashboard:');
 		}
@@ -118,7 +118,7 @@ class JobPresenter extends BasePresenter
 			$this['jobQuestionsForm']->setJob($this->job);
 			$this['notesControl']->setJob($this->job);
 		} else {
-			$message = 'Finded company isn\'t exists.';
+			$message = $this->translator->translate('Finded company isn\'t exists.');
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Dashboard:');
 		}
@@ -141,7 +141,7 @@ class JobPresenter extends BasePresenter
 			$this['jobQuestionsForm']->setJob($this->job);
 			$this['notesControl']->setJob($this->job);
 		} else {
-			$message = 'Finded job isn\'t exists.';
+			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Dashboard:');
 		}

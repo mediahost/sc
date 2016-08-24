@@ -104,7 +104,8 @@ class CompleteAccountPresenter extends BasePresenter
 			} elseif (!$candidate->isRequiredOtherFilled()) {
 				$this->redirect('step2');
 			}
-			$this->flashMessage('Your candidate account is complete. Enjoy your ride!');
+			$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
+			$this->flashMessage($message);
 			$this->redirect(':App:Dashboard:');
 		}
 	}
@@ -128,7 +129,8 @@ class CompleteAccountPresenter extends BasePresenter
 			$message->addTo($user->mail);
 			$message->send();
 
-			$this->flashMessage('Verification mail has been send.', 'success');
+			$message = $this->translator->translate('Verification mail has been send.');
+			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		}
 	}
@@ -140,7 +142,8 @@ class CompleteAccountPresenter extends BasePresenter
 	{
 		$control = $this->iCompleteCandidateFirstControlFactory->create();
 		$control->onSuccess[] = function (CompleteCandidateFirstControl $control, Candidate $candidate) {
-			$this->flashMessage('Your data was saved. Your candidate account is almost complete.', 'success');
+			$message = $this->translator->translate('Your data was saved. Your candidate account is almost complete.');
+			$this->flashMessage($message, 'success');
 			$this->redirect('step2');
 		};
 		return $control;
@@ -153,10 +156,12 @@ class CompleteAccountPresenter extends BasePresenter
         $control->setUserEntity($this->user->identity);
 		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
 			if (!$candidate->user->verificated) {
-				$this->flashMessage('Your data was saved. Please verify your mail!', 'success');
+				$message = $this->translator->translate('Your data was saved. Please verify your mail!');
+				$this->flashMessage($message, 'success');
 				$this->redirect('verify');
 			} else {
-				$this->flashMessage('Your candidate account is complete. Enjoy your ride!', 'success');
+				$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
+				$this->flashMessage($message, 'success');
 				$this->redirect(':App:Dashboard:');
 			}
 		};
@@ -168,7 +173,8 @@ class CompleteAccountPresenter extends BasePresenter
 	{
 		$control = $this->iCompleteCompanyControlFactory->create();
 		$control->onSuccess[] = function (CompleteCompanyControl $control, Company $company) {
-			$this->flashMessage('Your company account is complete. Enjoy your ride!', 'success');
+			$message = $this->translator->translate('Your company account is complete. Enjoy your ride!');
+			$this->flashMessage($message, 'success');
 			$this->redirect(':App:Company:default', ['id' => $company->id]);
 		};
 		return $control;

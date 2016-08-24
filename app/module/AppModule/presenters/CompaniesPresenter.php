@@ -154,7 +154,8 @@ class CompaniesPresenter extends BasePresenter
 			$this->flashMessage($message, 'danger');
 		} else {
 			$this->companyFacade->delete($company);
-			$this->flashMessage('Company was deleted.', 'success');
+			$message = $this->translator->translate('Company was deleted.');
+			$this->flashMessage($message, 'success');
 		}
 		$this->redirect('default');
 	}
@@ -184,7 +185,6 @@ class CompaniesPresenter extends BasePresenter
 			$message = $this->translator->translate('Images for company \'%company%\' was successfully saved.', ['company' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
-//			$this->redirect('default');
 		};
 		return $control;
 	}

@@ -14,7 +14,8 @@ class CompanyProfilePresenter extends BasePresenter
 		if ($company) {
 			$this->template->company = $company;
 		} else {
-			$this->flashMessage('Requested company isn\'t exist. Pleas check your URL, or try find company on our pages.', 'error');
+			$message = $this->translator->translate('Requested company isn\'t exist. Pleas check your URL, or try find company on our pages.');
+			$this->flashMessage($message, 'error');
 			$this->redirect(':Front:Homepage:');
 		}
 	}

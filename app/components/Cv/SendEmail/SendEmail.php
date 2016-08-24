@@ -63,7 +63,8 @@ class SendEmail extends BaseControl
 		$message->addAttachment($fileName);
 		$message->send();
 		unlink($fileName);
-		$this->flashMessage('CV has been sent to your mail.');
+		$messageText = $this->translator->translate('CV has been sent to your mail.');
+		$this->flashMessage($messageText);
 		$this->presenter->payload->closePopup = true;
 		$this->presenter->invalidateControl('sendEmail');
 	}

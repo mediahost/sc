@@ -76,7 +76,8 @@ class ServicePresenter extends BasePresenter
 	{
 		$this->reinstall();
 		$this->importDbAll();
-		$this->flashMessage('Data was imported from SQL files', 'success');
+		$message = $this->translator->translate('Data was imported from SQL files');
+		$this->flashMessage($message, 'success');
 		$this->redirect('this');
 	}
 
@@ -88,7 +89,8 @@ class ServicePresenter extends BasePresenter
 	public function handleInstall()
 	{
 		$this->install();
-		$this->flashMessage('DB was instaled', 'success');
+		$message = $this->translator->translate('DB was instaled');
+		$this->flashMessage($message, 'success');
 		$this->redirect('this');
 	}
 
@@ -100,7 +102,8 @@ class ServicePresenter extends BasePresenter
 	public function handleReinstall()
 	{
 		$this->reinstall();
-		$this->flashMessage('DB was reinstaled', 'success');
+		$message = $this->translator->translate('DB was reinstaled');
+		$this->flashMessage($message, 'success');
 		$this->redirect('this');
 	}
 
@@ -112,7 +115,8 @@ class ServicePresenter extends BasePresenter
 	public function handleCreateSkills($categoriesCnt, $subcategoriesCnt, $skillsCnt)
 	{
 		$this->createSkills($categoriesCnt, $subcategoriesCnt, $skillsCnt);
-		$this->flashMessage('Skills and cateories was succesfully created', 'success');
+		$message = $this->translator->translate('Skills and cateories was succesfully created');
+		$this->flashMessage($message, 'success');
 		$this->redirect('this');
 	}
 
@@ -124,7 +128,8 @@ class ServicePresenter extends BasePresenter
 	public function handleCreateCandidates($candidateCnt)
 	{
 		$this->createCandidates($candidateCnt);
-		$this->flashMessage('Candidates and their CVs was succesfully created', 'success');
+		$message = $this->translator->translate('Candidates and their CVs was succesfully created');
+		$this->flashMessage($message, 'success');
 		$this->redirect('this');
 	}
 
@@ -136,7 +141,8 @@ class ServicePresenter extends BasePresenter
 	public function handleCreateCompanies($companiesCnt, $jobsCnt)
 	{
 		$this->createCompanies($companiesCnt, $jobsCnt);
-		$this->flashMessage('Candidates and their CVs was succesfully created', 'success');
+		$message = $this->translator->translate('Candidates and their CVs was succesfully created');
+		$this->flashMessage($message, 'success');
 		$this->redirect('this');
 	}
 

@@ -10,6 +10,7 @@ use App\Model\Storage\SignUpStorage;
 use Fabian\Linkedin\Exception;
 use Fabian\Linkedin\Linkedin;
 use Fabian\Linkedin\LoginDialog;
+use Kdyby\Translation\Translator;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
@@ -92,7 +93,8 @@ class LinkedinControl extends BaseControl
 				}
 			} catch (Exception $e) {
 				Debugger::log($e->getMessage(), 'linkedin');
-				$this->presenter->flashMessage('We are sorry, LinkedIn authentication failed hard.');
+				$message = $this->translator->translate('We are sorry, %method% authentication failed hard.', ['method' => 'LinkedIn']);
+				$this->presenter->flashMessage($message);
 			}
 		};
 

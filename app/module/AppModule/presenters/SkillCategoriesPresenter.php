@@ -70,7 +70,8 @@ class SkillCategoriesPresenter extends BasePresenter
 		if ($this->skillCategory) {
 			$this['skillCategoryForm']->setSkillCategory($this->skillCategory);
 		} else {
-			$this->flashMessage('This category wasn\'t found.', 'error');
+			$message = $this->translator->translate('This category wasn\'t found.');
+			$this->flashMessage($message, 'error');
 			$this->redirect('default');
 		}
 	}
@@ -98,7 +99,8 @@ class SkillCategoriesPresenter extends BasePresenter
 				$this->flashMessage($message, 'danger');
 			}
 		} else {
-			$this->flashMessage('Category was not found.', 'danger');
+			$message = $this->translator->translate('Category was not found.');
+			$this->flashMessage($message, 'danger');
 		}
 		$this->redirect('default');
 	}

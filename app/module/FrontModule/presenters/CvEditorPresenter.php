@@ -132,7 +132,8 @@ class CvEditorPresenter extends BasePresenter
 		try {
 			$this->setCv($id);
 		} catch (CvEditorPresenterException $ex) {
-			$this->flashMessage($ex->getMessage(), 'danger');
+			$message = $this->translator->translate($ex->getMessage());
+			$this->flashMessage($message, 'danger');
 			$this->redirect('Homepage:');
 		}
 		return $this->cv;

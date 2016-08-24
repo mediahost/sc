@@ -83,7 +83,8 @@ class JobCategoriesPresenter extends BasePresenter
 				$this->flashMessage($message, 'danger');
 			}
 		} else {
-			$this->flashMessage('Category was not found.', 'danger');
+			$message = 'Category was not found.';
+			$this->flashMessage($message, 'danger');
 		}
 		$this->redirect('default');
 	}
