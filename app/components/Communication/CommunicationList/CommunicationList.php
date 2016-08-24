@@ -9,6 +9,9 @@ class CommunicationList extends BaseControl
 
 	const COMMUNICATIONS_PER_PAGE = 10;
     
+    /** @var string */
+    private $searchString = '';
+    
     /** @var IMessageSearchBoxFactory */
 	private $messageSearchBoxFactory;
 
@@ -27,7 +30,7 @@ class CommunicationList extends BaseControl
 	/** @var int @persistent */
 	public $count = self::COMMUNICATIONS_PER_PAGE;
     
-    
+
     public function __construct(IMessageSearchBoxFactory $messageSearchBoxFactory) {
         parent::__construct();
         $this->messageSearchBoxFactory = $messageSearchBoxFactory;
@@ -59,17 +62,25 @@ class CommunicationList extends BaseControl
 
 	public function render()
 	{
+        $this->template->addFilter('mark', $this->markSearchString);
 		$this->template->communications = $this->communications;
 		$this->template->activeCommunication = $this->activeCommunication;
 		$this->template->communicationCount = $this->count;
 		$this->template->communicationsPerPage = self::COMMUNICATIONS_PER_PAGE;
 		parent::render();
 	}
+    
+    public function markSearchString($string) {
+        $replace = '<strong>'.$this->searchString.'</strong>';
+        $string = str_replace($this->searchString, $replace, $string);
+        return $string;
+    }
 
     public function createComponentMessageSearchBox() {
         $control = $this->messageSearchBoxFactory->create();
         $control->setUser($this->template->user->identity);
-        $control->onSearch[] = function($comunications) {
+        $control->onSearch[] = function($comunications) use($control) {
+            $this->searchString = $control->getSearchString();
             $this->communications = $comunications;
             $this->presenter->redrawControl('messages');
             $this->presenter->redrawControl('messages-list');

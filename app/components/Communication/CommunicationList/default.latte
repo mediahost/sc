@@ -19,7 +19,7 @@
                             <span class="name strong">
                                 {$communication->getOppositeName($user->identity)}
                             </span>
-                            | {$communication->lastMessage->text|truncate:50}
+                            | {$communication->lastMessage->text|truncate:50|mark|noescape}
                         </p>
                         <span class="date text-muted small pull-left">
                             {$communication->lastMessage->time|date:'H:i:s d.m.Y'}
