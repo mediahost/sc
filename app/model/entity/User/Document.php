@@ -14,27 +14,26 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  */
 class Document extends BaseEntity
 {
-    use Identifier;
+	use Identifier;
+
+	/** @ORM\ManyToOne(targetEntity="Candidate", inversedBy="documents") */
+	protected $candidate;
+
+	/** @ORM\Column(type="string", length=64, nullable=false) */
+	protected $name;
+
+	/** @ORM\Column(type="boolean", options={"default" = true}) */
+	protected $public;
 
 
-    /** @ORM\ManyToOne(targetEntity="Candidate", inversedBy="documents") */
-    protected $candidate;
+	public function __construct($name)
+	{
+		parent::__construct();
+		$this->name = $name;
+	}
 
-    /** @ORM\Column(type="string", length=64, nullable=false) */
-    protected $name;
-
-    /** @ORM\Column(type="boolean", options={"default" = true}) */
-    protected $public;
-
-
-    public function __construct($name)
-    {
-        parent::__construct();
-        $this->name = $name;
-    }
-
-    public function __toString()
-    {
-        return $this->name;
-    }
+	public function __toString()
+	{
+		return $this->name;
+	}
 }

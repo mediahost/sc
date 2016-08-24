@@ -12,6 +12,9 @@ use Nette\Utils\Strings;
 
 /**
  * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"person" = "Person", "candidate" = "Candidate"})
  *
  * @property string $firstname
  * @property string $middlename
@@ -26,17 +29,17 @@ use Nette\Utils\Strings;
  * @property-read string $degreeName
  * @property string $nationality
  * @property string $phone
- * @property bool $freelancer
  * @property Address $address
  * @property Image $photo
- * @property Cv[] $cvs
- * @property Document[] $documents
  * @property User $user
  */
-class Candidate extends BaseEntity
+class Person extends BaseEntity
 {
 
 	use Identifier;
+
+	/** @ORM\OneToOne(targetEntity="User", mappedBy="person", fetch="LAZY") */
+	protected $user;
 
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $firstname;
@@ -74,57 +77,17 @@ class Candidate extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="Address", cascade="all", fetch="LAZY") */
 	protected $address;
 
-	/** @ORM\Column(type="boolean") */
-	protected $freelancer = FALSE;
-
-	/** @ORM\Column(type="array") */
-	protected $workLocations;
-    
-    /** @ORM\Column(type="array") */
-	protected $jobCategories;
-
-	/** @ORM\OneToMany(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
-	protected $cvs;
-
-	/** @ORM\OneToMany(targetEntity="Document", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
-	protected $documents;
-
-	/** @ORM\OneToOne(targetEntity="User", mappedBy="candidate", fetch="LAZY") */
-	protected $user;
-
 	public function __construct($name = NULL)
 	{
 		if ($name) {
 			$this->name = $name;
 		}
-		$this->workLocations = [];
-        $this->jobCategories = [];
-		$this->cvs = new ArrayCollection();
-		$this->documents = new ArrayCollection();
 		parent::__construct();
 	}
 
 	public function __toString()
 	{
-		return (string) $this->name;
-	}
-
-	public function hasDefaultCv()
-	{
-		$isDefault = function (Cv $cv) {
-			return $cv->isDefault;
-		};
-		return $this->cvs->exists($isDefault);
-	}
-
-	public function getDefaultCv()
-	{
-		foreach ($this->cvs as $cv) {
-			if ($cv->isDefault) {
-				return $cv;
-			}
-		}
-		throw new EntityException('Candidate has no default CV');
+		return (string)$this->name;
 	}
 
 	public function getGenderName()
@@ -150,14 +113,9 @@ class Candidate extends BaseEntity
 		return $this->degreeBefore . ' ' . $this->name . ' ' . $this->degreeAfter;
 	}
 
-	public function isRequiredPersonalFilled()
+	public function isFilled()
 	{
 		return $this->photo && $this->address && $this->firstname && $this->surname && $this->phone;
-	}
-
-	public function isRequiredOtherFilled()
-	{
-		return  count($this->workLocations)  && count($this->jobCategories);
 	}
 
 	public function setPhoto(FileUpload $file)
@@ -172,24 +130,7 @@ class Candidate extends BaseEntity
 		return $this;
 	}
 
-	public function addDocument($document) {
-		$this->documents[] = $document;
-	}
-
-	public function removeDocument($documentId) {
-		foreach ($this->documents as $document) {
-			if($document->id == $documentId) {
-				$this->documents->removeElement($document);
-			}
-		}
-		return $this;
-	}
-
-	public function getDocuments() {
-		return $this->documents;
-	}
-
-	public function getName()
+	public function getFullName()
 	{
 		return sprintf('%s %s %s', $this->firstname, $this->middlename, $this->surname);
 	}

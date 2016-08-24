@@ -55,15 +55,15 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 
 	public function __toString()
 	{
-		return (string) $this->mail;
+		return (string)$this->mail;
 	}
 
 	public function toArray()
 	{
 		return [
-				'id'   => $this->id,
-				'mail' => $this->mail,
-				'role' => $this->roles->toArray(),
+			'id' => $this->id,
+			'mail' => $this->mail,
+			'role' => $this->roles->toArray(),
 		];
 	}
 
