@@ -63,7 +63,7 @@ class NotesControl extends \App\Components\BaseControl
 	}
     
     protected function load($values) {
-        $this->job->notes = $values->notes;
+        $this->job->notes = nl2br($values->notes);
 		return $this;
     }
 
