@@ -48,6 +48,13 @@ abstract class BaseControl extends UI\Control
 		return $this;
 	}
 
+	public function getTemplate()
+	{
+		$template = parent::getTemplate();
+		$template->setTranslator($this->translator);
+		return $template;
+	}
+
 	public function render()
 	{
 		$dir = dirname($this->getReflection()->getFileName());

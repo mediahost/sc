@@ -2,7 +2,7 @@
 
 namespace App\Model\Facade;
 
-use App\Extensions\Settings\Model\Service\ModuleService;
+use App\Extensions\Settings\SettingsStorage;
 use App\Model\Entity\Role;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
@@ -14,16 +14,15 @@ class RoleFacade extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var ModuleService @inject */
-	public $moduleService;
+	/** @var SettingsStorage @inject */
+	public $settings;
 
 	/** @var EntityDao */
 	private $roleDao;
 
-	public function __construct(EntityManager $em, ModuleService $modules)
+	public function __construct(EntityManager $em)
 	{
 		$this->em = $em;
-		$this->moduleService = $modules;
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
@@ -57,7 +56,7 @@ class RoleFacade extends Object
 	{
 		try {
 			$role = $this->findByName($roleName);
-			$registrableRoles = $this->moduleService->getModuleSettings('registrableRole')->roles;
+			$registrableRoles = $this->settings->getModules()->registrableRoles;
 			return $this->isInRegistrable($role, (array) $registrableRoles);
 		} catch (\ErrorException $e) {
 			return FALSE;

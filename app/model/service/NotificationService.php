@@ -2,9 +2,10 @@
 
 namespace App\Model\Service;
 
+use App\Extensions\Settings\SettingsStorage;
 use App\Model\Entity\Message;
 use App\Model\Entity\Sender;
-use App\Model\Entity\Special\UniversalDataEntity;
+use Kdyby\Translation\Translator;
 use Nette\Mail\IMailer;
 use Nette\Object;
 use Nette\Utils\Validators;
@@ -12,17 +13,14 @@ use Nette\Utils\Validators;
 class NotificationService extends Object
 {
 
-	/** @var UniversalDataEntity */
-	private $settings;
+	/** @var SettingsStorage @inject */
+	public $settings;
 
-	/** @var IMailer */
-	private $mailer;
+	/** @var IMailer @inject */
+	public $mailer;
 
-	public function __construct(UniversalDataEntity $settings, IMailer $mailer)
-	{
-		$this->settings = $settings;
-		$this->mailer = $mailer;
-	}
+	/** @var Translator @inject */
+	public $translator;
 
 	public function processNewMessageNotifications(Message $message)
 	{
@@ -48,7 +46,7 @@ class NotificationService extends Object
 	{
 		if ($sender->beNotified === NULL) {
 		    if ($sender->user->beNotified === NULL) {
-		        return $this->settings->newMessage;
+		        return $this->settings->modules->notifications->newMessage;
 		    } else {
 				return $sender->user->beNotified;
 			}
@@ -63,10 +61,15 @@ class NotificationService extends Object
 		    return;
 		}
 		$mail = new \Nette\Mail\Message();
-		$mail->setFrom($this->settings->from);
+		$mail->setFrom($this->settings->modules->notifications->from);
 		$mail->addTo($notificationReceiver->user->mail);
-		$mail->setSubject('Source-code.com - new message notification');
-		$mail->setBody('You have now message on source-code.com ('.$message->sender->getName().': '.$message->text.')'); // TODO: mail formating
+		$subject = $this->translator->translate('Source-code.com - new message notification');
+		$mail->setSubject($subject);
+		$body = $this->translator->translate('You have now message on source-code.com (%name%: %text%', [
+			'name' => $message->sender->getName(),
+			'text' => $message->text,
+		]);
+		$mail->setBody($body); // TODO: mail formating
 		$this->mailer->send($mail);
 	}
 

@@ -12,7 +12,7 @@ class SettingsExtension extends CompilerExtension
 	/** @var array */
 	public $defaults = [
 		'modules' => [
-			'registrableRole' => ['company', 'candidate'],
+			'registrableRoles' => ['company', 'candidate'],
 			'notifications' => [
 				'enabled' => TRUE,
 				'from' => 'info@source-code.com',
