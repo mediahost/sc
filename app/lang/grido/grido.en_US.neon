@@ -1,5 +1,5 @@
 grido:
-	HintNumber: 'You can use <, <=, >, >=, <>. e.g. '>= %d''
+	HintNumber: "You can use <, <=, >, >=, <>. e.g. '>= %d'"
 	SelectSomeRow: 'Select some row'
 	Invert: 'Invert'
 	Items: 'Items %d - %d of %d'
