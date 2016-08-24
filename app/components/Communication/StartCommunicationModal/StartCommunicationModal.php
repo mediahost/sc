@@ -29,7 +29,7 @@ class StartCommunicationModal extends BaseControl
 	protected $company;
     
     /** @var Communication[] */
-    private $communications;
+    private $communications=[];
 
 	public function communicateAsCompany(Company $company)
 	{
