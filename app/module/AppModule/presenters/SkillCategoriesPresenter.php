@@ -7,7 +7,6 @@ use App\Components\Skills\ISkillCategoryControlFactory;
 use App\Components\Skills\ISkillCategoryDataViewFactory;
 use App\Components\Skills\SkillCategoryControl;
 use App\Model\Entity\SkillCategory;
-use App\TaggedString;
 use Kdyby\Doctrine\DBALException;
 use Kdyby\Doctrine\EntityDao;
 
@@ -92,10 +91,10 @@ class SkillCategoriesPresenter extends BasePresenter
 		if ($this->skillCategory) {
 			try {
 				$this->skillCategoryDao->delete($this->skillCategory);
-				$message = new TaggedString('Category \'%s\' was deleted.', (string) $this->skillCategory);
+				$message = $this->translator->translate('Category \'%category%\' was deleted.', ['category' => (string)$this->skillCategory]);
 				$this->flashMessage($message, 'success');
 			} catch (DBALException $exc) {
-				$message = new TaggedString('\'%s\' has child category or skill. You can\'t delete it.', (string) $this->skillCategory);
+				$message = $this->translator->translate('\'%category%\' has child category or skill. You can\'t delete it.', ['category' => (string)$this->skillCategory]);
 				$this->flashMessage($message, 'danger');
 			}
 		} else {
@@ -112,7 +111,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	{
 		$control = $this->iSkillCategoryControlFactory->create();
 		$control->onAfterSave = function (SkillCategory $saved) {
-			$message = new TaggedString('\'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('\'%category%\' was successfully saved.', ['category' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};

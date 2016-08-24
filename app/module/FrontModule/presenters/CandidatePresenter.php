@@ -7,7 +7,6 @@ use App\Components\Candidate\IPhotoControlFactory;
 use App\Components\Candidate\IProfileControlFactory;
 use App\Components\Candidate\ProfileControl;
 use App\Model\Entity\Candidate;
-use App\TaggedString;
 
 class CandidatePresenter extends BasePresenter
 {
@@ -35,7 +34,7 @@ class CandidatePresenter extends BasePresenter
 		parent::startup();
 		$this->candidate = $this->user->identity->candidate;
 	}
-	
+
 	protected function beforeRender()
 	{
 		$this->template->candidate = $this->candidate;
@@ -49,7 +48,7 @@ class CandidatePresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		
+
 	}
 
 	/**
@@ -59,7 +58,7 @@ class CandidatePresenter extends BasePresenter
 	 */
 	public function actionAddress()
 	{
-		
+
 	}
 
 	/**
@@ -69,7 +68,7 @@ class CandidatePresenter extends BasePresenter
 	 */
 	public function actionPhoto()
 	{
-		
+
 	}
 
 	// <editor-fold desc="forms">
@@ -80,7 +79,7 @@ class CandidatePresenter extends BasePresenter
 		$control = $this->iProfileControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$message = new TaggedString('Personal info for \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Personal info for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};
@@ -93,7 +92,7 @@ class CandidatePresenter extends BasePresenter
 		$control = $this->iAddressControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$message = new TaggedString('Address for \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Address for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};
@@ -106,7 +105,7 @@ class CandidatePresenter extends BasePresenter
 		$control = $this->iPhotoControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$message = new TaggedString('Photo for \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};

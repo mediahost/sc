@@ -6,8 +6,8 @@ use App\Components\Grids\Skill\ISkillsGridFactory;
 use App\Components\Skills\ISkillControlFactory;
 use App\Components\Skills\ISkillDataViewFactory;
 use App\Components\Skills\SkillControl;
+use App\Components\Skills\SkillDataView;
 use App\Model\Entity\Skill;
-use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 
 class SkillsPresenter extends BasePresenter
@@ -93,7 +93,7 @@ class SkillsPresenter extends BasePresenter
 		$this->skill = $this->skillDao->find($id);
 		if ($this->skill) {
 			$this->skillDao->delete($this->skill);
-			$message = new TaggedString('\'%s\' was deleted.', $this->skill);
+			$message = $this->translator->translate('\'%skill%\' was deleted.', ['skill' => $this->skill]);
 			$this->flashMessage($message, 'success');
 		} else {
 			$this->flashMessage('Skill was not found.', 'danger');
@@ -109,16 +109,14 @@ class SkillsPresenter extends BasePresenter
 	{
 		$control = $this->iSkillControlFactory->create();
 		$control->onAfterSave = function (Skill $saved) {
-			$message = new TaggedString('\'%s\' was successfully saved.', $saved->name);
+			$message = $this->translator->translate('\'%skill%\' was successfully saved.', ['skill' => $saved->name]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};
 		return $control;
 	}
 
-	/**
-	 * @return \App\Components\Skills\SkillDataView
-	 */
+	/** @return SkillDataView */
 	public function createComponentSkillDataView()
 	{
 		$control = $this->skillDataViewFactory->create();

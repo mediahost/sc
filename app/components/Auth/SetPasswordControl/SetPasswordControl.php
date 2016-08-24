@@ -5,10 +5,8 @@ namespace App\Components\Auth;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
-use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity;
 use App\Model\Facade\UserFacade;
-use App\TaggedString;
 use Exception;
 use Nette\Security;
 use Nette\Utils\ArrayHash;
@@ -44,7 +42,7 @@ class SetPasswordControl extends BaseControl
 				->setEmptyValue($user->mail)
 				->setDisabled();
 
-		$helpText = new TaggedString('At least %d characters long.', $this->settings->passwords->length);
+		$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
 		$helpText->setTranslator($this->translator);
 		$form->addPassword('newPassword', 'New password', NULL, 255)
 				->setAttribute('placeholder', 'Password')

@@ -4,12 +4,9 @@ namespace App\FrontModule\Presenters;
 
 use App\Components\Auth;
 use App\Mail\Messages\IForgottenMessageFactory;
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade;
 use App\Model\Storage;
-use App\TaggedString;
-use Tracy\Debugger;
 
 class SignPresenter extends BasePresenter
 {
@@ -127,10 +124,12 @@ class SignPresenter extends BasePresenter
 			$user->verificated = TRUE;
 			$userRepo = $this->em->getRepository(User::getClassName());
 			$userRepo->save($user);
-			$this->flashMessage('Your e-mail has been seccessfully verified!', 'success');
+			$message = 'Your e-mail has been seccessfully verified!';
+			$this->flashMessage($message, 'success');
 			$this->onVerify($this, $user);
 		} else {
-			$this->flashMessage('Verification token is incorrect.', 'warning');
+			$message = 'Verification token is incorrect.';
+			$this->flashMessage($message, 'warning');
 			$this->redirect('in');
 		}
 	}
@@ -175,7 +174,7 @@ class SignPresenter extends BasePresenter
 			$this->redirect(':Front:Sign:in');
 		};
 		$control->onMissingUser[] = function ($mail) {
-			$message = new TaggedString('We do not register any user with mail \'%s\'.', $mail);
+			$message = $this->translator->translate('We do not register any user with mail \'%mail%\'.', ['mail' => $mail]);
 			$this->flashMessage($message, 'warning');
 			$this->redirect(':Front:Sign:lostPassword');
 		};
@@ -187,7 +186,8 @@ class SignPresenter extends BasePresenter
 	{
 		$control = $this->iRecoveryControlFactory->create();
 		$control->onFailToken[] = function () {
-			$this->flashMessage('Token to recovery your password is no longer active. Please request new one.', 'info');
+			$message = 'Token to recovery your password is no longer active. Please request new one.';
+			$this->flashMessage($message, 'info');
 			$this->redirect(':Front:Sign:lostPassword');
 		};
 		return $control;

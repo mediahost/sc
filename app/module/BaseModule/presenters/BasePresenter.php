@@ -7,9 +7,9 @@ use App\Components\Auth\SignOutControl;
 use App\Extensions\Settings\SettingsStorage;
 use App\Model\Entity;
 use App\Model\Facade\UserFacade;
-use GettextTranslator\Gettext;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\MemberAccessException as DoctrineMemberAccessException;
+use Kdyby\Translation\Translator;
 use Latte\Macros\MacroSet;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
@@ -18,14 +18,11 @@ use Nette\Security\IUserStorage;
 use WebLoader\Nette\CssLoader;
 use WebLoader\Nette\LoaderFactory;
 
-/**
- * Base presenter for all application presenters.
- */
 abstract class BasePresenter extends Presenter
 {
 
 	/** @persistent */
-	public $lang = 'en';
+	public $lang;
 
 	/** @persistent */
 	public $backlink = '';
@@ -38,7 +35,7 @@ abstract class BasePresenter extends Presenter
 	/** @var ISignOutControlFactory @inject */
 	public $iSignOutControlFactory;
 
-	/** @var Gettext @inject */
+	/** @var Translator @inject */
 	public $translator;
 
 	/** @var SettingsStorage @inject */

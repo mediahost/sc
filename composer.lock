@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b7fe4f7e9a3fa4c6a97ab6f97c9cadd8",
-    "content-hash": "6611d1a28b16f062c29beea4c6db2026",
+    "hash": "3d85fe8a323cfe331a7c460a4b08f58f",
+    "content-hash": "350d11c675046586650f5b8419b15ded",
     "packages": [
         {
             "name": "dg/adminer-custom",
@@ -1917,16 +1917,16 @@
         },
         {
             "name": "kdyby/translation",
-            "version": "v2.3.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kdyby/Translation.git",
-                "reference": "b0517f926ea1217ed069a8fe6d70f1004e37b0d6"
+                "reference": "8be1a5b412762e7e616a99df8facb19f0976537c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kdyby/Translation/zipball/b0517f926ea1217ed069a8fe6d70f1004e37b0d6",
-                "reference": "b0517f926ea1217ed069a8fe6d70f1004e37b0d6",
+                "url": "https://api.github.com/repos/Kdyby/Translation/zipball/8be1a5b412762e7e616a99df8facb19f0976537c",
+                "reference": "8be1a5b412762e7e616a99df8facb19f0976537c",
                 "shasum": ""
             },
             "require": {
@@ -1980,7 +1980,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -2011,7 +2011,7 @@
                 "nette",
                 "translation"
             ],
-            "time": "2016-04-19 21:27:14"
+            "time": "2016-08-20 13:48:41"
         },
         {
             "name": "kdyby/validator",
@@ -4775,6 +4775,7 @@
         "kdyby/annotations": 20,
         "kdyby/validator": 20,
         "kdyby/doctrine-forms": 20,
+        "kdyby/translation": 20,
         "knplabs/doctrine-behaviors": 20,
         "janmarek/webloader": 20,
         "joseki/webloader-filters": 20,

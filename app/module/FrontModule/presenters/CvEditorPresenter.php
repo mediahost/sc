@@ -33,13 +33,9 @@ use App\Model\Entity\Education;
 use App\Model\Entity\Language;
 use App\Model\Entity\Work;
 use App\Model\Facade\CvFacade;
-use App\TaggedString;
 use Exception;
 
-/**
- *
- */
-class CvEditorPresenter1 extends BasePresenter
+class CvEditorPresenter extends BasePresenter
 {
 
 	/** @persistent int */
@@ -206,7 +202,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionAdditional($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -216,7 +212,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionEducations($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -253,7 +249,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionEmployment($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -263,7 +259,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionExperience($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -300,7 +296,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionLanguage($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -337,7 +333,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionObjective($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -347,7 +343,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionPersonal($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -357,7 +353,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionSkills($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -377,7 +373,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionSummary($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -387,7 +383,7 @@ class CvEditorPresenter1 extends BasePresenter
 	 */
 	public function actionWorks($id = NULL)
 	{
-		
+
 	}
 
 	/**
@@ -445,7 +441,7 @@ class CvEditorPresenter1 extends BasePresenter
 		$control = $this->iEducationsControlFactory->create();
 		$control->setCv($this->cv);
 		$control->onAfterSave = function (Cv $saved) {
-			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('educations');
 		};
@@ -467,7 +463,7 @@ class CvEditorPresenter1 extends BasePresenter
 		$control = $this->iExperienceControlFactory->create();
 		$control->setCv($this->cv);
 		$control->onAfterSave = function (Cv $saved) {
-			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('experience');
 		};
@@ -490,7 +486,7 @@ class CvEditorPresenter1 extends BasePresenter
 		$control = $this->iOtherLanguageControlFactory->create();
 		$control->setCv($this->cv);
 		$control->onAfterSave = function (Cv $saved) {
-			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('language');
 		};
@@ -552,7 +548,7 @@ class CvEditorPresenter1 extends BasePresenter
 		$control = $this->iWorksControlFactory->create();
 		$control->setCv($this->cv);
 		$control->onAfterSave = function (Cv $saved) {
-			$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('works');
 		};
@@ -561,7 +557,7 @@ class CvEditorPresenter1 extends BasePresenter
 
 	public function standardOnAfterSave(Cv $saved)
 	{
-		$message = new TaggedString('Cv \'%s\' was successfully saved.', (string) $saved);
+		$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 		$this->flashMessage($message, 'success');
 		if ($this->isAjax()) {
 			$this['cvPreview']->redrawControl();

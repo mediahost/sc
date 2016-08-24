@@ -12,7 +12,6 @@ use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use App\TaggedString;
 use Nette\Forms\IControl;
 
 /**
@@ -69,7 +68,7 @@ class CompanyUserControl extends BaseControl
 		if ($this->user) {
 			$user->setDisabled();
 		} else {
-			$helpText = new TaggedString('At least %d characters long.', $this->settings->passwords->length);
+			$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
 			$helpText->setTranslator($this->translator);
 			$form->addText('password', 'Password')
 					->addRule(Form::FILLED, 'Password must be filled')

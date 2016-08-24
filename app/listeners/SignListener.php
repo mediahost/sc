@@ -9,9 +9,9 @@ use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use App\TaggedString;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
+use Kdyby\Translation\Translator;
 use Nette\Application\Application;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
@@ -32,6 +32,9 @@ class SignListener extends Object implements Subscriber
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	/** @var Translator @inject */
+	public $translator;
 
 	/** @var UserFacade @inject */
 	public $userFacade;
@@ -116,7 +119,7 @@ class SignListener extends Object implements Subscriber
 		if (!$existedUser) {
 			$this->verify($control, $user);
 		} else {
-			$message = new TaggedString('%s is already registered.', $user->mail);
+			$message = $this->translator->translate('%mail% is already registered.', ['mail' => $user->mail]);
 			$control->presenter->flashMessage($message);
 			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE, ['role' => $this->session->redirectRole]);
 		}
@@ -145,8 +148,9 @@ class SignListener extends Object implements Subscriber
 		$message->addTo($user->mail);
 		$message->send();
 
+		$message = 'We have sent you a verification e-mail. Please check your inbox!';
 		$control->presenter->user->login($user);
-		$control->presenter->flashMessage('We have sent you a verification e-mail. Please check your inbox!', 'success');
+		$control->presenter->flashMessage($message, 'success');
 		$control->presenter->redirect(self::REDIRECT_AFTER_REGISTER);
 //		}
 	}
@@ -158,7 +162,8 @@ class SignListener extends Object implements Subscriber
 	 */
 	public function onRecovery(Presenter $presenter, User $user)
 	{
-		$presenter->flashMessage('Your password has been successfully changed!', 'success');
+		$message = 'We have sent you a verification e-mail. Please check your inbox!';
+		$presenter->flashMessage($message, 'success');
 		$this->onSuccess($presenter, $user);
 	}
 
@@ -173,7 +178,8 @@ class SignListener extends Object implements Subscriber
 		$message->addTo($user->mail);
 		$message->send();
 
-		$presenter->flashMessage('Your account has been seccessfully created.', 'success');
+		$message = 'Your account has been seccessfully created.';
+		$presenter->flashMessage($message, 'success');
 		$this->onSuccess($presenter, $user);
 	}
 
@@ -194,7 +200,8 @@ class SignListener extends Object implements Subscriber
 		}
 
 		$presenter->user->login($user);
-		$presenter->flashMessage('You are logged in.', 'success');
+		$message = 'You are logged in.';
+		$presenter->flashMessage($message, 'success');
 
 		$presenter->restoreRequest($presenter->backlink);
 		$presenter->redirect(self::REDIRECT_AFTER_LOGIN);

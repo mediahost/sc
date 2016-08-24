@@ -4,15 +4,15 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Company\CompanyImagesControl;
 use App\Components\Company\CompanyInfoControl;
+use App\Components\Company\ICompanyDataViewFactory;
 use App\Components\Company\ICompanyImagesControlFactory;
 use App\Components\Company\ICompanyInfoControlFactory;
-use App\Components\Company\ICompanyDataViewFactory;
 use App\Components\Grids\Company\CompaniesGrid;
 use App\Components\Grids\Company\ICompaniesGridFactory;
 use App\Model\Entity\Company;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
-use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 
@@ -35,10 +35,10 @@ class CompaniesPresenter extends BasePresenter
 
 	/** @var ICompanyImagesControlFactory @inject */
 	public $iCompanyImagesControlFactory;
-    
+
 	/** @var ICompaniesGridFactory @inject */
 	public $iCompaniesGridFactory;
-	
+
 	/** @var ICompanyDataViewFactory @inject */
 	public $iCompanyDataViewFactory;
 
@@ -69,7 +69,7 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		if(in_array(\App\Model\Entity\Role::COMPANY, $this->getUser()->getRoles())) {
+		if (in_array(Role::COMPANY, $this->getUser()->getRoles())) {
 			$companies = $this->companyFacade->findByUser($this->getUser());
 		} else {
 			$companies = $this->companyFacade->findAll();
@@ -98,7 +98,8 @@ class CompaniesPresenter extends BasePresenter
 	{
 		$this->company = $this->companyDao->find($id);
 		if (!$this->company) {
-			$this->flashMessage('This company wasn\'t found.', 'error');
+			$message = $this->translator->translate('This company wasn\'t found.');
+			$this->flashMessage($message, 'error');
 			$this->redirect('default');
 		} else {
 			$this['companyInfoForm']->setCompany($this->company);
@@ -119,7 +120,8 @@ class CompaniesPresenter extends BasePresenter
 	{
 		$this->company = $this->companyDao->find($id);
 		if (!$this->company) {
-			$this->flashMessage('This company wasn\'t found.', 'error');
+			$message = $this->translator->translate('This company wasn\'t found.');
+			$this->flashMessage($message, 'error');
 			$this->redirect('default');
 		} else {
 			$this['companyImagesForm']->setCompany($this->company);
@@ -134,7 +136,8 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionView($id)
 	{
-		$this->flashMessage('Not implemented yet.', 'warning');
+		$message = $this->translator->translate('Not implemented yet.');
+		$this->flashMessage($message, 'warning');
 		$this->redirect('default');
 	}
 
@@ -147,7 +150,8 @@ class CompaniesPresenter extends BasePresenter
 	{
 		$company = $this->companyDao->find($id);
 		if (!$company) {
-			$this->flashMessage('Company wasn\'t found.', 'danger');
+			$message = $this->translator->translate('Company wasn\'t found.');
+			$this->flashMessage($message, 'danger');
 		} else {
 			$this->companyFacade->delete($company);
 			$this->flashMessage('Company was deleted.', 'success');
@@ -163,9 +167,9 @@ class CompaniesPresenter extends BasePresenter
 	public function createComponentCompanyInfoForm()
 	{
 		$control = $this->iCompanyInfoControlFactory->create();
-        $control->setUser($this->user);
+		$control->setUser($this->user);
 		$control->onAfterSave = function (Company $saved) {
-			$message = new TaggedString('Company \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Company \'%company%\' was successfully saved.', ['company' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};
@@ -177,7 +181,7 @@ class CompaniesPresenter extends BasePresenter
 	{
 		$control = $this->iCompanyImagesControlFactory->create();
 		$control->onAfterSave = function (Company $saved) {
-			$message = new TaggedString('Images for company \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Images for company \'%company%\' was successfully saved.', ['company' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 //			$this->redirect('default');
@@ -194,7 +198,7 @@ class CompaniesPresenter extends BasePresenter
 		$control = $this->iCompaniesGridFactory->create();
 		return $control;
 	}
-	
+
 	/** @return CompanyDataView */
 	public function createComponentCompanyDataView()
 	{

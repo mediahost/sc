@@ -9,15 +9,11 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use App\TaggedString;
 use Exception;
 use Kdyby\Doctrine\DuplicateEntryException;
 use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 
-/**
- * Form with all user's personal settings.
- */
 class UserControl extends BaseControl
 {
 
@@ -66,7 +62,7 @@ class UserControl extends BaseControl
 
 		$password = $form->addText('password', 'Password');
 		if ($this->user->isNew()) {
-			$helpText = new TaggedString('At least %d characters long.', $this->settings->passwords->length);
+			$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
 			$helpText->setTranslator($this->translator);
 			$password->addRule(Form::FILLED, 'Password must be filled')
 					->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
@@ -104,7 +100,7 @@ class UserControl extends BaseControl
 			$this->save();
 			$this->onAfterSave($this->user);
 		} catch (DuplicateEntryException $exc) {
-			$message = new TaggedString('\'%s\' is already registred', $values->mail);
+			$message = $this->translator->translate('\'%mail%\' is already registred', ['mail' => $values->mail]);
 			$form['mail']->addError($message);
 		}
 	}

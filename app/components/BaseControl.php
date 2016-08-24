@@ -4,8 +4,8 @@ namespace App\Components;
 
 use App\Extensions\Settings\SettingsStorage;
 use Kdyby\Doctrine\EntityManager;
+use Kdyby\Translation\Translator;
 use Nette\Application\UI;
-use Nette\Localization\ITranslator;
 
 abstract class BaseControl extends UI\Control
 {
@@ -18,7 +18,7 @@ abstract class BaseControl extends UI\Control
 	/** @var SettingsStorage @inject */
 	public $settings;
 
-	/** @var ITranslator @inject */
+	/** @var Translator @inject */
 	public $translator;
 
 	/** @var string */
@@ -41,9 +41,6 @@ abstract class BaseControl extends UI\Control
 		return $this;
 	}
 
-	/**
-	 * Set ajax for form
-	 */
 	public function setAjax($isAjax = TRUE, $sendOnChange = TRUE)
 	{
 		$this->isAjax = $isAjax;

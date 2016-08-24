@@ -5,7 +5,6 @@ namespace App\AppModule\Presenters;
 use App\Components\Candidate\IProfileControlFactory;
 use App\Components\Candidate\ProfileControl;
 use App\Model\Entity\Candidate;
-use App\TaggedString;
 
 class CandidatePresenter extends BasePresenter
 {
@@ -51,7 +50,7 @@ class CandidatePresenter extends BasePresenter
 		$control = $this->iProfileControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$message = new TaggedString('Candidate \'%s\' was successfully saved.', (string) $saved);
+			$message = $this->translator->translate('Candidate \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};

@@ -9,7 +9,6 @@ use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Storage\SignUpStorage;
-use App\TaggedString;
 use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 
@@ -51,24 +50,24 @@ class SignUpControl extends BaseControl
 		$form->setTranslator($this->translator);
 
 		$form->addServerValidatedText('mail', 'E-mail')
-				->setRequired('Please enter your e-mail.')
-				->setAttribute('placeholder', 'E-mail')
-				->addRule(Form::EMAIL, 'E-mail has not valid format.')
-				->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'))
-				->setOption('description', 'for example: example@domain.com');
+			->setRequired('Please enter your e-mail.')
+			->setAttribute('placeholder', 'E-mail')
+			->addRule(Form::EMAIL, 'E-mail has not valid format.')
+			->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'))
+			->setOption('description', 'for example: example@domain.com');
 
-		$helpText = new TaggedString('At least %d characters long.', $this->settings->passwords->length);
+		$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
 		$helpText->setTranslator($this->translator);
 		$form->addPassword('password', 'Password')
-				->setAttribute('placeholder', 'Password')
-				->setRequired('Please enter your password')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
-				->setOption('description', (string) $helpText);
+			->setAttribute('placeholder', 'Password')
+			->setRequired('Please enter your password')
+			->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
+			->setOption('description', (string)$helpText);
 
 		$form->addPassword('passwordVerify', 'Re-type Your Password')
-				->setAttribute('placeholder', 'Re-type Your Password')
-				->setRequired('Please enter your password')
-				->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
+			->setAttribute('placeholder', 'Re-type Your Password')
+			->setRequired('Please enter your password')
+			->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
 
 		$form->addSubmit('continue', 'Continue');
 

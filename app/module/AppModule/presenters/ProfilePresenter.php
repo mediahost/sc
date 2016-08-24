@@ -3,29 +3,28 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\AfterRegistration\CompleteCandidateSecondControl;
-use App\Components\AfterRegistration\ICompleteCandidateSecondControlFactory;
 use App\Components\AfterRegistration\ICompleteCandidatePreviewFactory;
+use App\Components\AfterRegistration\ICompleteCandidateSecondControlFactory;
 use App\Components\Auth\ConnectManagerControl;
 use App\Components\Auth\IConnectManagerControlFactory;
 use App\Components\Auth\ISetPasswordControlFactory;
 use App\Components\Auth\SetPasswordControl;
-use App\Components\Cv\ILivePreviewControlFactory;
-use App\Components\Cv\LivePreviewControl;
-use App\Components\Cv\ISkillsControlFactory;
-use App\Components\Cv\SkillsControl;
+use App\Components\Candidate\IAddressControlFactory;
 use App\Components\Candidate\IPhotoControlFactory;
 use App\Components\Candidate\IProfileControlFactory;
-use App\Components\Candidate\IAddressControlFactory;
 use App\Components\Candidate\ISocialControlFactory;
-use App\Components\User\ICareerDocsControlFactory;
+use App\Components\Cv\ILivePreviewControlFactory;
+use App\Components\Cv\ISkillsControlFactory;
+use App\Components\Cv\LivePreviewControl;
+use App\Components\Cv\SkillsControl;
 use App\Components\ICommunicationListFactory;
+use App\Components\User\ICareerDocsControlFactory;
 use App\Model\Entity;
-use App\Model\Entity\Cv;
 use App\Model\Entity\Candidate;
+use App\Model\Entity\Cv;
 use App\Model\Facade\CantDeleteUserException;
-use App\Model\Facade\UserFacade;
 use App\Model\Facade\CvFacade;
-use App\TaggedString;
+use App\Model\Facade\UserFacade;
 
 class ProfilePresenter extends BasePresenter
 {
@@ -62,8 +61,8 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var ICompleteCandidateSecondControlFactory @inject */
 	public $iCompleteCandidateSecondControlFactory;
-    
-    /** @var ICompleteCandidatePreviewFactory @inject */
+
+	/** @var ICompleteCandidatePreviewFactory @inject */
 	public $completeCandidatePreview;
 
 	/** @var ICommunicationListFactory @inject */
@@ -77,9 +76,9 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var Candidate */
 	private $candidate;
-    
-    /** @var User */
-    private $userEntity;
+
+	/** @var User */
+	private $userEntity;
 
 
 	private function getCv()
@@ -90,25 +89,26 @@ class ProfilePresenter extends BasePresenter
 		}
 		return $this->cv;
 	}
-    
-    private function getUserEntity() {
-        if ($this->userEntity) {
-            return $this->userEntity;
-        }
-        $userId = $this->getParameter('userId');
-        if ($userId  && $this->user->isInRole('superadmin')) {
-            $user = $this->userFacade->findById($userId);
-            $this->userEntity = $user;
-        } else {
-            $this->userEntity = $this->user->identity;
-        }
-        return $this->userEntity;
-    }
+
+	private function getUserEntity()
+	{
+		if ($this->userEntity) {
+			return $this->userEntity;
+		}
+		$userId = $this->getParameter('userId');
+		if ($userId && $this->user->isInRole('superadmin')) {
+			$user = $this->userFacade->findById($userId);
+			$this->userEntity = $user;
+		} else {
+			$this->userEntity = $this->user->identity;
+		}
+		return $this->userEntity;
+	}
 
 	protected function startup()
 	{
 		parent::startup();
-        $this->candidate = $this->getUserEntity()->candidate;
+		$this->candidate = $this->getUserEntity()->candidate;
 	}
 
 	/**
@@ -116,9 +116,9 @@ class ProfilePresenter extends BasePresenter
 	 * @resource('profile')
 	 * @privilege('default')
 	 */
-	public function actionDefault($userId=null)
+	public function actionDefault($userId = null)
 	{
-        $this->template->candidate = $this->getUserEntity()->candidate;
+		$this->template->candidate = $this->getUserEntity()->candidate;
 	}
 
 	/**
@@ -171,10 +171,12 @@ class ProfilePresenter extends BasePresenter
 		try {
 			$this->userFacade->deleteById($this->user->id);
 			$this->user->logout();
-			$this->flashMessage('Your account has been deleted', 'success');
+			$message = $this->translator->translate('Your account has been deleted');
+			$this->flashMessage($message, 'success');
 			$this->redirect(":Front:Homepage:");
 		} catch (CantDeleteUserException $ex) {
-			$this->flashMessage('You can\'t delete account, because you are only one admin for your company.', 'danger');
+			$message = $this->translator->translate('You can\'t delete account, because you are only one admin for your company.');
+			$this->flashMessage($message, 'danger');
 			$this->redirect("this");
 		}
 	}
@@ -216,7 +218,8 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iSetPasswordControlFactory->create();
 		$control->setUser($this->user);
 		$control->onSuccess[] = function () {
-			$this->flashMessage('Password has been successfuly set!', 'success');
+			$message = $this->translator->translate('Password has been successfuly set!');
+			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};
 		return $control;
@@ -230,34 +233,35 @@ class ProfilePresenter extends BasePresenter
 		$control->setUser($userDao->find($this->user->id));
 		$control->setAppActivateRedirect($this->link('setPassword'));
 		$control->onConnect[] = function ($type) {
-			$message = new TaggedString('%s was connected.', $type);
+			$message = $this->translator->translate('%type% was connected.', ['type' => $type]);
 			$this->flashMessage($message, 'success');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}
 		};
 		$control->onDisconnect[] = function (Entity\User $user, $type) {
-			$message = new TaggedString('%s was disconnected.', $type);
+			$message = $this->translator->translate('%type% was disconnected.', ['type' => $type]);
 			$this->flashMessage($message, 'success');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}
 		};
 		$control->onLastConnection[] = function () {
-			$this->flashMessage('Last login method is not possible deactivate.', 'danger');
+			$message = $this->translator->translate('Last login method is not possible deactivate.');
+			$this->flashMessage($message, 'danger');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}
 		};
 		$control->onInvalidType[] = function ($type) {
-			$message = new TaggedString('We can\'t find \'%s\' to disconnect.', $type);
+			$message = $this->translator->translate('We can\'t find \'%type%\' to disconnect.', ['type' => $type]);
 			$this->flashMessage($message, 'danger');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
 			}
 		};
 		$control->onUsingConnection[] = function ($type) {
-			$message = new TaggedString('Logged %s account is using by another account.', $type);
+			$message = $this->translator->translate('Logged %type% account is using by another account.', ['type' => $type]);
 			$this->flashMessage($message, 'danger');
 			if (!$this->isAjax()) {
 				$this->redirect('this');
@@ -283,7 +287,7 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iPhotoControlFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
-			$message = new TaggedString('Photo for \'%s\' was successfully saved.', (string)$saved);
+			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redrawControl('personalDetails');
 		};
@@ -344,31 +348,32 @@ class ProfilePresenter extends BasePresenter
 	protected function createComponentCompleteCandidateSecond()
 	{
 		$control = $this->iCompleteCandidateSecondControlFactory->create();
-        $control->setUserEntity($this->getUserEntity());
+		$control->setUserEntity($this->getUserEntity());
 		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
 			$this->flashMessage('Your data was saved.', 'success');
 			$this->redrawControl('interestedIn');
 		};
 		return $control;
 	}
-    
-    protected function createComponentCompleteCandidatePreview() {
-        $control = $this->completeCandidatePreview->create();
-        $control->setUserEntity($this->getUserEntity());
-        return $control;
-    }
-    
-    public function createComponentRecentMessages()
+
+	protected function createComponentCompleteCandidatePreview()
 	{
-        $user = $this->getUserEntity();
-	    $control = $this->communicationListFactory->create();
+		$control = $this->completeCandidatePreview->create();
+		$control->setUserEntity($this->getUserEntity());
+		return $control;
+	}
+
+	public function createComponentRecentMessages()
+	{
+		$user = $this->getUserEntity();
+		$control = $this->communicationListFactory->create();
 		foreach ($this->getUserCommunications($user) as $communication) {
 			$control->addCommunication($communication, $this->link('Messages:', $communication->id));
 		}
 		return $control;
 	}
 
-    // </editor-fold>
+	// </editor-fold>
 }
 
 

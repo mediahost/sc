@@ -2,26 +2,24 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Job\BasicInfoControl;
-use App\Components\Job\IBasicInfoControlFactory;
-use App\Components\Job\IOffersControlFactory;
-use App\Components\Job\IDescriptionsControlFactory;
-use App\Components\Job\ISkillsControlFactory;
-use App\Components\Job\IQuestionsControlFactory;
-use App\Components\Job\INotesControlFactory;
+use App\ArrayUtils;
 use App\Components\Candidate\ICandidateFilterFactory;
 use App\Components\Candidate\ICandidatePreviewFactory;
+use App\Components\Job\BasicInfoControl;
+use App\Components\Job\IBasicInfoControlFactory;
+use App\Components\Job\IDescriptionsControlFactory;
+use App\Components\Job\INotesControlFactory;
+use App\Components\Job\IOffersControlFactory;
+use App\Components\Job\IQuestionsControlFactory;
+use App\Components\Job\ISkillsControlFactory;
 use App\Model\Entity\Company;
-use App\Model\Entity\Job;
 use App\Model\Entity\Cv;
+use App\Model\Entity\Job;
 use App\Model\Facade\JobFacade;
-use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
+use Nette\Application\UI\Multiplier;
 
-/**
- * Job presenter.
- */
 class JobPresenter extends BasePresenter
 {
 
@@ -41,26 +39,26 @@ class JobPresenter extends BasePresenter
 
 	/** @var IBasicInfoControlFactory @inject */
 	public $iJobBasicInfoControlFactory;
-	
+
 	/** @var IOffersControlFactory @inject */
 	public $iIOffersControlFactory;
-	
+
 	/** @var IDescriptionsControlFactory @inject */
 	public $iDescriptionsControlFactory;
 
 	/** @var ISkillsControlFactory @inject */
 	public $iJobSkillsControlFactory;
-	
+
 	/** @var IQuestionsControlFactory @inject */
 	public $iQuestionsControlFactory;
-    
-    /** @var ICandidateFilterFactory @inject */
+
+	/** @var ICandidateFilterFactory @inject */
 	public $candidateFilterFactory;
-    
-    /** @var ICandidatePreviewFactory @inject */
+
+	/** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
-    
-    /** @var INotesControlFactory @inject */
+
+	/** @var INotesControlFactory @inject */
 	public $notesControlFactory;
 
 	// </editor-fold>
@@ -71,9 +69,9 @@ class JobPresenter extends BasePresenter
 
 	/** @var EntityDao */
 	private $companyDao;
-    
 
-    // </editor-fold>
+
+	// </editor-fold>
 
 	protected function startup()
 	{
@@ -96,7 +94,8 @@ class JobPresenter extends BasePresenter
 			$this->template->job = $job;
 			$this->template->matchedCvs = $this->jobFacade->findCvs($job);
 		} else {
-			$this->flashMessage('Finded job isn\'t exists.', 'danger');
+			$message = 'Finded job isn\'t exists.';
+			$this->flashMessage($message, 'danger');
 			$this->redirect('Dashboard:');
 		}
 	}
@@ -117,9 +116,10 @@ class JobPresenter extends BasePresenter
 			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
-            $this['notesControl']->setJob($this->job);
+			$this['notesControl']->setJob($this->job);
 		} else {
-			$this->flashMessage('Finded company isn\'t exists.', 'danger');
+			$message = 'Finded company isn\'t exists.';
+			$this->flashMessage($message, 'danger');
 			$this->redirect('Dashboard:');
 		}
 		$this->setView('edit');
@@ -139,22 +139,24 @@ class JobPresenter extends BasePresenter
 			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
-            $this['notesControl']->setJob($this->job);
+			$this['notesControl']->setJob($this->job);
 		} else {
-			$this->flashMessage('Finded job isn\'t exists.', 'danger');
+			$message = 'Finded job isn\'t exists.';
+			$this->flashMessage($message, 'danger');
 			$this->redirect('Dashboard:');
 		}
 	}
 
 	public function renderEdit()
 	{
-        $cvRepo = $this->em->getRepository(Cv::getClassName());
+		$cvRepo = $this->em->getRepository(Cv::getClassName());
 		$this->template->job = $this->job;
 	}
-    
-    public function actionCvDetail($userId) {
-        
-    }
+
+	public function actionCvDetail($userId)
+	{
+
+	}
 
 	/**
 	 * @secured
@@ -166,10 +168,10 @@ class JobPresenter extends BasePresenter
 		$this->jobFacade->delete($id);
 		$this->redirect('Jobs:showAll');
 	}
-	
+
 	public function afterJobSave(Job $job)
 	{
-		$message = new TaggedString('Job \'%s\' was successfully saved.', (string) $job);
+		$message = $this->translator->translate('Job \'%job%\' was successfully saved.', ['job' => (string)$job]);
 		$this->flashMessage($message, 'success');
 	}
 
@@ -183,12 +185,12 @@ class JobPresenter extends BasePresenter
 	{
 		$control = $this->iJobBasicInfoControlFactory->create();
 		$control->setAjax(TRUE, TRUE);
-		$control->onAfterSave = function($job) {
+		$control->onAfterSave = function ($job) {
 			$this->afterJobSave($job);
 		};
 		return $control;
 	}
-	
+
 	/** @return OffersControl */
 	public function createComponentJobOffersForm()
 	{
@@ -197,7 +199,7 @@ class JobPresenter extends BasePresenter
 		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
-	
+
 	/** @return DescriptionsControl */
 	public function createComponentJobDescriptionsForm()
 	{
@@ -215,7 +217,7 @@ class JobPresenter extends BasePresenter
 		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
-	
+
 	/** @return QuestionsControl */
 	public function createComponentJobQuestionsForm()
 	{
@@ -223,32 +225,35 @@ class JobPresenter extends BasePresenter
 		$control->setAjax(TRUE, TRUE);
 		return $control;
 	}
-    
-    /** @return CandidateFilter */
-    public function createComponentCandidateFilter() {
-        $control = $this->candidateFilterFactory->create();
-        $control->setAjax(TRUE, TRUE);
-        return $control;
-    }
-    
-    /** @return NotesControl */
-    public function createComponentNotesControl() {
-        $control = $this->notesControlFactory->create();
-        $control->setAjax(TRUE, TRUE);
-        $control->onAfterSave = function($job) {
+
+	/** @return CandidateFilter */
+	public function createComponentCandidateFilter()
+	{
+		$control = $this->candidateFilterFactory->create();
+		$control->setAjax(TRUE, TRUE);
+		return $control;
+	}
+
+	/** @return NotesControl */
+	public function createComponentNotesControl()
+	{
+		$control = $this->notesControlFactory->create();
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSave = function ($job) {
 			$this->afterJobSave($job);
 		};
-        return $control;
-    }
+		return $control;
+	}
 
-    public function createComponentCandidatePreview() {
-        return new \Nette\Application\UI\Multiplier(function ($cvId) {
-            $cv = \App\ArrayUtils::searchByProperty($this->job->cvs, 'id', $cvId);
-            $control = $this->candidatePreviewFactory->create();
-            $control->setCv($cv);
-            return $control;
-        });
-    }
+	public function createComponentCandidatePreview()
+	{
+		return new Multiplier(function ($cvId) {
+			$cv = ArrayUtils::searchByProperty($this->job->cvs, 'id', $cvId);
+			$control = $this->candidatePreviewFactory->create();
+			$control->setCv($cv);
+			return $control;
+		});
+	}
 
 	// </editor-fold>
 }

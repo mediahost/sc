@@ -2,16 +2,15 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\User\IUserDataViewFactory;
 use App\Components\User\IUserControlFactory;
+use App\Components\User\IUserDataViewFactory;
 use App\Components\User\UserControl;
+use App\Components\User\UserDataView;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use App\TaggedString;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
-use Nette\Security\User as IdentityUser;
 
 class UsersPresenter extends BasePresenter
 {
@@ -70,7 +69,7 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->userEntity = new User;
+		$this->userEntity = new User();
 		$this['userForm']->setUser($this->userEntity);
 		$this->setView('edit');
 	}
@@ -84,10 +83,12 @@ class UsersPresenter extends BasePresenter
 	{
 		$this->userEntity = $this->userDao->find($id);
 		if (!$this->userEntity) {
-			$this->flashMessage('This user wasn\'t found.', 'error');
+			$message = $this->translator->translate('This user wasn\'t found.');
+			$this->flashMessage($message, 'error');
 			$this->redirect('default');
 		} else if (!$this->userFacade->canEdit($this->user, $this->userEntity)) {
-			$this->flashMessage('You can\'t edit this user.', 'danger');
+			$message = $this->translator->translate('You can\'t edit this user.');
+			$this->flashMessage($message, 'danger');
 			$this->redirect('default');
 		} else {
 			$this['userForm']->setUser($this->userEntity);
@@ -106,7 +107,8 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionView($id)
 	{
-		$this->flashMessage('Not implemented yet.', 'warning');
+		$message = $this->translator->translate('Not implemented yet.');
+		$this->flashMessage($message, 'warning');
 		$this->redirect('default');
 	}
 
@@ -119,12 +121,15 @@ class UsersPresenter extends BasePresenter
 	{
 		$user = $this->userDao->find($id);
 		if (!$user) {
-			$this->flashMessage('User wasn\'t found.', 'danger');
+			$message = $this->translator->translate('User wasn\'t found.');
+			$this->flashMessage($message, 'danger');
 		} else if (!$this->userFacade->canDelete($this->user, $user)) {
-			$this->flashMessage('You can\'t delete this user.', 'danger');
+			$message = $this->translator->translate('You can\'t delete this user.');
+			$this->flashMessage($message, 'danger');
 		} else {
 			$this->userFacade->delete($user);
-			$this->flashMessage('User was deleted.', 'success');
+			$message = $this->translator->translate('User was deleted.');
+			$this->flashMessage($message, 'success');
 		}
 		$this->redirect('default');
 	}
@@ -134,22 +139,24 @@ class UsersPresenter extends BasePresenter
 	 * @resource('users')
 	 * @privilege('access')
 	 */
-	public function actionAccess($id, $view='Dashboard:')
+	public function actionAccess($id, $view = 'Dashboard:')
 	{
 		$user = $this->userDao->find($id);
 		if (!$user) {
-			$this->flashMessage('User wasn\'t found.', 'danger');
+			$message = $this->translator->translate('User wasn\'t found.');
+			$this->flashMessage($message, 'danger');
 		} else if (!$this->userFacade->canAccess($this->user, $user)) {
-			$this->flashMessage('You can\'t access to this user.', 'danger');
+			$message = $this->translator->translate('You can\'t access to this user.');
+			$this->flashMessage($message, 'danger');
 		} else {
 			$this->user->login($user);
-			$message = new TaggedString('You are logged as \'%s\'.', $user);
+			$message = $this->translator->translate('You are logged as \'%user%\'.', ['user' => $user]);
 			$this->flashMessage($message, 'success');
 			$this->redirect($view);
 		}
 		$this->redirect('default');
 	}
-	
+
 
 	// </editor-fold>
 	// <editor-fold desc="forms">
@@ -160,14 +167,14 @@ class UsersPresenter extends BasePresenter
 		$control = $this->iUserControlFactory->create();
 		$control->setIdentityRoles($this->user->roles);
 		$control->onAfterSave = function (User $savedUser) {
-			$message = new TaggedString('User \'%s\' was successfully saved.', (string) $savedUser);
+			$message = $this->translator->translate('User \'%user%\' was successfully saved.', ['user' => (string)$savedUser]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
 		};
 		return $control;
 	}
 
-	/** @return \App\Components\User\UserDataView */
+	/** @return UserDataView */
 	public function createComponentUserDataView()
 	{
 		$control = $this->userDataViewFactory->create();

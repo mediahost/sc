@@ -3,18 +3,19 @@
 namespace App\Components\Company;
 
 
-use App\Components\User\ICompanyUserControlFactory;
 use App\Components\BaseControl;
+use App\Components\User\ICompanyUserControlFactory;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
+use App\Model\Entity;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
 use App\Model\Entity\Role;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use Exception;
 use Nette\Forms\IControl;
+use Nette\Security\User;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 
@@ -23,12 +24,12 @@ class CompanyInfoControl extends BaseControl
 
 	/** @var Company */
 	private $company;
-    
-    /** @var \Nette\Security\User */
-    private $user;
-    
-    /** @var \App\Model\Entity\User */
-    private $selectedUser;
+
+	/** @var User */
+	private $user;
+
+	/** @var Entity\User */
+	private $selectedUser;
 
 	/** @var array */
 	private $usersRoles = [];
@@ -40,7 +41,8 @@ class CompanyInfoControl extends BaseControl
 
 	// </editor-fold>
 	// <editor-fold desc="injects">
-    /** @var ICompanyUserControlFactory @inject */
+
+	/** @var ICompanyUserControlFactory @inject */
 	public $iCompanyUserControlFactory;
 
 	/** @var CompanyFacade @inject */
@@ -68,34 +70,34 @@ class CompanyInfoControl extends BaseControl
 	{
 		$this->checkEntityExistsBeforeRender();
 
-		$form = new Form;
+		$form = new Form();
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer);
+		$form->setRenderer(new Bootstrap3FormRenderer());
 
 		if ($this->canEditInfo) {
 			$form->addServerValidatedText('companyId', 'Company ID')
-					->setAttribute('placeholder', 'Company identification')
-					->setRequired('Please enter company\'s identification.')
-					->addServerRule([$this, 'validateCompanyId'], $this->translator->translate('%s is already registered.'));
+				->setAttribute('placeholder', 'Company identification')
+				->setRequired('Please enter company\'s identification.')
+				->addServerRule([$this, 'validateCompanyId'], $this->translator->translate('%s is already registered.'));
 			$form->addServerValidatedText('name', 'Name')
-					->setAttribute('placeholder', 'Company name')
-					->setRequired('Please enter your company\'s name.')
-					->addServerRule([$this, 'validateCompanyName'], $this->translator->translate('%s is already registered.'));
+				->setAttribute('placeholder', 'Company name')
+				->setRequired('Please enter your company\'s name.')
+				->addServerRule([$this, 'validateCompanyName'], $this->translator->translate('%s is already registered.'));
 			$form->addTextArea('address', 'Address')
-					->setAttribute('placeholder', 'Company Address');
+				->setAttribute('placeholder', 'Company Address');
 		}
 
 		if ($this->canEditUsers) {
 			$users = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
 			$admins = $form->addMultiSelect2('admins', 'Administrators', $users)
-					->setRequired('Company must have administrator');
+				->setRequired('Company must have administrator');
 
-            $linkAddUser = Html::el('a')->href($this->presenter->link('this#addUser'))
-                ->addAttributes(['data-toggle' => 'modal'])
-                ->setText($this->translator->translate('add new user'));
-            $message = Html::el('')->setText($this->translator->translate('You can') . ' ')
-                ->add($linkAddUser);
-            $admins->setOption('description', $message);
+			$linkAddUser = Html::el('a')->href($this->presenter->link('this#addUser'))
+				->addAttributes(['data-toggle' => 'modal'])
+				->setText($this->translator->translate('add new user'));
+			$message = Html::el('')->setText($this->translator->translate('You can') . ' ')
+				->add($linkAddUser);
+			$admins->setOption('description', $message);
 		}
 
 		$form->addSubmit('save', 'Save');
@@ -164,9 +166,9 @@ class CompanyInfoControl extends BaseControl
 			foreach ($this->company->adminAccesses as $adminPermission) {
 				$values['admins'][] = $adminPermission->user->id;
 			}
-            if ($this->selectedUser) {
-                $values['admins'][] = $this->selectedUser->id;
-            }
+			if ($this->selectedUser) {
+				$values['admins'][] = $this->selectedUser->id;
+			}
 		}
 		return $values;
 	}
@@ -185,26 +187,28 @@ class CompanyInfoControl extends BaseControl
 		$this->company = $company;
 		return $this;
 	}
-    
-    public function setUser(\Nette\Security\User $user) {
-        $this->user = $user;
-        $this->canEditInfo = $this->user->isAllowed('company', 'edit');
-        $this->canEditUsers = $this->user->isAllowed('company', 'edit');
-    }
-    
-    public function selectUser(\App\Model\Entity\User $user) {
-        $this->selectedUser = $user;
-    }
+
+	public function setUser(User $user)
+	{
+		$this->user = $user;
+		$this->canEditInfo = $this->user->isAllowed('company', 'edit');
+		$this->canEditUsers = $this->user->isAllowed('company', 'edit');
+	}
+
+	public function selectUser(Entity\User $user)
+	{
+		$this->selectedUser = $user;
+	}
 
 	// </editor-fold>
-    
-    /** @return CompanyUserControl */
+
+	/** @return CompanyUserControl */
 	public function createComponentEditUserForm()
 	{
 		$control = $this->iCompanyUserControlFactory->create();
-		$control->onAfterSave = function (\App\Model\Entity\User $saved) {
-            $this->selectUser($saved);
-			$message = new \App\TaggedString('User \'%s\' was successfully saved.', (string) $saved);
+		$control->onAfterSave = function (Entity\User $saved) {
+			$this->selectUser($saved);
+			$message = $this->translator->translate('User \'%user%\' was successfully saved.', ['user' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redrawControl('companyInfo');
 		};

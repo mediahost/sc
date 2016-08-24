@@ -4,10 +4,6 @@ namespace App\Components\Skills;
 
 use App\Components\BaseControl;
 
-/**
- * Class SkillDataView
- * @package App\Components\Skills
- */
 class SkillDataView extends BaseControl
 {
     /** @var array */

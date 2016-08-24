@@ -7,7 +7,6 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
-use App\TaggedString;
 use Nette\Utils\ArrayHash;
 
 class RecoveryControl extends BaseControl
@@ -32,7 +31,7 @@ class RecoveryControl extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$helpText = new TaggedString('At least %d characters long.', $this->settings->passwords->length);
+		$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
 		$helpText->setTranslator($this->translator);
 		$form->addPassword('newPassword', 'New password', NULL, 255)
 				->setAttribute('placeholder', 'Password')
