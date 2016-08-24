@@ -54,6 +54,11 @@ class ProfileControl extends BaseControl
 				->getControlPrototype()->class[] = 'input-small';
 
 		$form->addDatePicker('birthday', 'Birthday');
+        
+        $form->addText('tags', 'Tags')
+                ->setAttribute('data-role', 'tagsinput')
+				->getControlPrototype()->class[] = 'input-small';
+
 
 		$form->addRadioList('gender', 'Gender', Candidate::getGenderList())
 			->setDefaultValue('x');
@@ -82,6 +87,7 @@ class ProfileControl extends BaseControl
 		$this->candidate->gender = $values->gender;
 		$this->candidate->degreeBefore = $values->degreebefore;
 		$this->candidate->degreeAfter = $values->degreeafter;
+        $this->candidate->tags = $values->tags;
 		return $this;
 	}
 
@@ -104,6 +110,7 @@ class ProfileControl extends BaseControl
 			'gender' => $this->candidate->gender,
 			'degreebefore' => $this->candidate->degreeBefore,
 			'degreeafter' => $this->candidate->degreeAfter,
+            'tags' => $this->candidate->tags
 		];
 		return $values;
 	}

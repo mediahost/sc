@@ -82,6 +82,9 @@ class Candidate extends BaseEntity
     
     /** @ORM\Column(type="array") */
 	protected $jobCategories;
+    
+    /** @ORM\Column(type="string", length=64, nullable=true) */
+	protected $tags;
 
 	/** @ORM\OneToMany(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $cvs;
