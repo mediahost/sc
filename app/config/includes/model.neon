@@ -27,3 +27,11 @@ services:
 		class: Knp\DoctrineBehaviors\ORM\Tree\TreeSubscriber
 		arguments: [Knp\DoctrineBehaviors\Reflection\ClassAnalyzer(), FALSE, 'Knp\DoctrineBehaviors\Model\Tree\Node']
 		tags: [kdyby.subscriber]
+	timestampSubscriber:
+		class: Knp\DoctrineBehaviors\ORM\Timestampable\TimestampableSubscriber
+		arguments: [Knp\DoctrineBehaviors\Reflection\ClassAnalyzer(), FALSE, 'Knp\DoctrineBehaviors\Model\Timestampable\Timestampable']
+		tags: [kdyby.subscriber]
+	loggableSubscriber:
+		class: Knp\DoctrineBehaviors\ORM\Loggable\LoggableSubscriber
+		arguments: [Knp\DoctrineBehaviors\Reflection\ClassAnalyzer(), FALSE, ['Tracy\Debugger', 'log']]
+		tags: [kdyby.subscriber]

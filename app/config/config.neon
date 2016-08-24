@@ -24,7 +24,7 @@ parameters:
 
 php:
 	date.timezone: Europe/Prague
-	# zlib.output_compression: yes
+	zlib.output_compression: yes
 
 nette:
 	application:
@@ -48,9 +48,7 @@ services:
 	urlScript:
 		factory: @httpRequest::getUrl()
 
-	nette.templateFactory:
-		class: App\Templating\TemplateFactory
-		inject: yes
+	nette.templateFactory: App\Templating\TemplateFactory
 	security.userStorage: Majkl578\NetteAddons\Doctrine2Identity\Http\UserStorage
 
 extensions:
