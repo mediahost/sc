@@ -4,7 +4,7 @@
  * @param   Job     $job
 *}
 {snippet notesControl}
-    <a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
+    <a n:if="!$job->isNew()" href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
     </br>
     <p>{$job->notes|nl2br|noescape}</p>
 {/snippet}

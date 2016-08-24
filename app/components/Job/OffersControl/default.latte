@@ -4,7 +4,7 @@
  * @param   array   $data	
 *}
 {snippet offersControl}
-<a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
+<a n:if="!$job->isNew()" href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
 </br>
 <dl class="dl-horizontal">
     <dt>{_'Offers: '}</dt>

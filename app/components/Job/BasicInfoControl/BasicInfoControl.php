@@ -44,6 +44,9 @@ class BasicInfoControl extends BaseControl
    
     public function render() {
         $this->template->job = $this->job;
+        if ($this->job->isNew()) {
+            $this->setTemplateFile('edit');
+        }
         parent::render();
     }
     

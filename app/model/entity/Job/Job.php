@@ -71,7 +71,7 @@ class Job extends BaseEntity
     /** @ORM\Column(type="text", nullable=true) */
 	protected $notes;
     
-    /** @ORM\Column(type="datetime", nullable=false) */
+    /** @ORM\Column(type="datetime", nullable=true) */
 	protected $notes_updated;
 	
 

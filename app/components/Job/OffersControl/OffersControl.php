@@ -20,6 +20,7 @@ class OffersControl extends \App\Components\BaseControl
 	
 	
     public function render() {
+        $this->template->job = $this->job;
         $this->template->data = $this->getDefaults();
         parent::render();
     }
