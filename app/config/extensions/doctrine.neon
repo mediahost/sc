@@ -10,3 +10,6 @@ extensions:
 
 events:
     debugger: on
+
+doctrine:
+	resultCache: Kdyby\DoctrineCache\Cache
