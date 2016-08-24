@@ -6,7 +6,7 @@
 {snippet jobInfo}
 <a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
 </br>
-<dl class="dl-horizontal">
+<dl n:if="!$job->isNew()" class="dl-horizontal">
     <dt>{_'Type: '}</dt>
     <dd>{$job->type->name}</dd>
     <dd class="divider"></dd>
