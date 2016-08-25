@@ -30,7 +30,7 @@ class SignUpControl extends BaseControl
 	public $iTwitterControlFactory;
 
 	/** @var ILinkedinControlFactory @inject */
-	public $iLinkedinControlFactory;
+	//public $iLinkedinControlFactory;
 
 	/** @var UserFacade @inject */
 	public $userFacade;
