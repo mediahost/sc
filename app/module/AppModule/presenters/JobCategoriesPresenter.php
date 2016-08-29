@@ -2,7 +2,7 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Job\IJobCategoryControlFactory;
+use App\Components\Job\IJobCategoryFactory;
 use App\Components\Job\IJobCategoryDataViewFactory;
 use App\Model\Entity\JobCategory;
 use App\Model\Facade\JobFacade;
@@ -14,8 +14,8 @@ class JobCategoriesPresenter extends BasePresenter
 	/** @var IJobCategoryDataViewFactory @inject */
 	public $jobCategoryDataViewFactory;
 
-	/** @var IJobCategoryControlFactory @inject */
-	public $jobCategoryControlFactory;
+	/** @var IJobCategoryFactory @inject */
+	public $jobCategoryFactory;
 
 	/** @var JobFacade @inject */
 	public $jobFacade;
@@ -91,7 +91,7 @@ class JobCategoriesPresenter extends BasePresenter
 
 	public function createComponentJobCategoryForm()
 	{
-		$control = $this->jobCategoryControlFactory->create();
+		$control = $this->jobCategoryFactory->create();
 		$control->onAfterSave = function (JobCategory $saved) {
 			$message = $this->translator->translate('\'%category%\' was successfully saved.', ['category' => (string)$saved]);
 			$this->flashMessage($message, 'success');

@@ -2,36 +2,8 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Components\Cv\AdditionalControl;
-use App\Components\Cv\BasicInfoControl;
-use App\Components\Cv\EducationsControl;
-use App\Components\Cv\EmploymentControl;
-use App\Components\Cv\ExperienceControl;
-use App\Components\Cv\IAdditionalControlFactory;
-use App\Components\Cv\IBasicInfoControlFactory;
-use App\Components\Cv\IEducationsControlFactory;
-use App\Components\Cv\IEmploymentControlFactory;
-use App\Components\Cv\IExperienceControlFactory;
-use App\Components\Cv\ILanguageControlFactory;
-use App\Components\Cv\IOtherLanguageControlFactory;
-use App\Components\Cv\ILivePreviewControlFactory;
-use App\Components\Cv\IObjectiveControlFactory;
-use App\Components\Cv\IPersonalControlFactory;
-use App\Components\Cv\ISkillsControlFactory;
-use App\Components\Cv\ISummaryControlFactory;
-use App\Components\Cv\IWorksControlFactory;
-use App\Components\Cv\LanguageControl;
-use App\Components\Cv\OtherLanguageControl;
-use App\Components\Cv\LivePreviewControl;
-use App\Components\Cv\ObjectiveControl;
-use App\Components\Cv\PersonalControl;
-use App\Components\Cv\SkillsControl;
-use App\Components\Cv\SummaryControl;
-use App\Components\Cv\WorksControl;
-use App\Model\Entity\Cv;
-use App\Model\Entity\Education;
-use App\Model\Entity\Language;
-use App\Model\Entity\Work;
+use App\Components\Cv;
+use App\Model\Entity;
 use App\Model\Facade\CvFacade;
 use Exception;
 
@@ -46,44 +18,44 @@ class CvEditorPresenter extends BasePresenter
 	/** @var CvFacade @inject */
 	public $cvFacade;
 
-	/** @var IAdditionalControlFactory @inject */
-	public $iAdditionalControlFactory;
+	/** @var Cv\IAdditionalFactory @inject */
+	public $iAdditionalFactory;
 
-	/** @var IEducationsControlFactory @inject */
-	public $iEducationsControlFactory;
+	/** @var Cv\IEducationsFactory @inject */
+	public $iEducationsFactory;
 
-	/** @var IEmploymentControlFactory @inject */
-	public $iEmploymentControlFactory;
+	/** @var Cv\IEmploymentFactory @inject */
+	public $iEmploymentFactory;
 
-	/** @var IExperienceControlFactory @inject */
-	public $iExperienceControlFactory;
+	/** @var Cv\IExperienceFactory @inject */
+	public $iExperienceFactory;
 
-	/** @var ILanguageControlFactory @inject */
-	public $iLanguageControlFactory;
+	/** @var Cv\ILanguageFactory @inject */
+	public $iLanguageFactory;
 
-	/** @var IOtherLanguageControlFactory @inject */
-	public $iOtherLanguageControlFactory;
+	/** @var Cv\IOtherLanguageFactory @inject */
+	public $iOtherLanguageFactory;
 
-	/** @var IObjectiveControlFactory @inject */
-	public $iObjectiveControlFactory;
+	/** @var Cv\IObjectiveFactory @inject */
+	public $iObjectiveFactory;
 
-	/** @var IPersonalControlFactory @inject */
-	public $iPersonalControlFactory;
+	/** @var Cv\IPersonalFactory @inject */
+	public $iPersonalFactory;
 
-	/** @var ISkillsControlFactory @inject */
-	public $iSkillsControlFactory;
+	/** @var Cv\ISkillsFilterFactory @inject */
+	public $iSkillsFactory;
 
-	/** @var IBasicInfoControlFactory @inject */
-	public $iSettingsControlFactory;
+	/** @var Cv\IBasicInfoFactory @inject */
+	public $iSettingsFactory;
 
-	/** @var ISummaryControlFactory @inject */
-	public $iSummaryControlFactory;
+	/** @var Cv\ISummaryFactory @inject */
+	public $iSummaryFactory;
 
-	/** @var IWorksControlFactory @inject */
-	public $iWorksControlFactory;
+	/** @var Cv\IWorksFactory @inject */
+	public $iWorksFactory;
 
-	/** @var ILivePreviewControlFactory @inject */
-	public $iLivePreviewControlFactory;
+	/** @var Cv\ILivePreviewFactory @inject */
+	public $iLivePreviewFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -113,7 +85,7 @@ class CvEditorPresenter extends BasePresenter
 
 	private function saveCv()
 	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
+		$cvRepo = $this->em->getRepository(Entity\Cv::getClassName());
 		$cvRepo->save($this->cv);
 		return $this;
 	}
@@ -147,7 +119,7 @@ class CvEditorPresenter extends BasePresenter
 		$candidate = $this->user->identity->candidate;
 
 		if ($id) {
-			$cvDao = $this->em->getDao(Cv::getClassName());
+			$cvDao = $this->em->getDao(Entity\Cv::getClassName());
 			$findedCv = $cvDao->find($id);
 			$isOwnCv = $candidate && $findedCv->candidate->id === $candidate->id;
 			$canEditForeignCv = $findedCv && $this->user->isAllowed('cvEditor', 'editForeign');
@@ -270,7 +242,7 @@ class CvEditorPresenter extends BasePresenter
 	 */
 	public function actionEditExperience($id = NULL, $expId = NULL)
 	{
-		$expDao = $this->em->getDao(Work::getClassName());
+		$expDao = $this->em->getDao(Entity\Work::getClassName());
 		$exp = $expDao->find($expId);
 		$this['experienceForm']->setExperience($exp);
 	}
@@ -283,7 +255,7 @@ class CvEditorPresenter extends BasePresenter
 	public function handleDeleteExperience($expId = NULL)
 	{
 		if ($this->cv->existsExperienceId($expId)) {
-			$expDao = $this->em->getDao(Work::getClassName());
+			$expDao = $this->em->getDao(Entity\Work::getClassName());
 			$exp = $expDao->find($expId);
 			$expDao->delete($exp);
 		}
@@ -307,7 +279,7 @@ class CvEditorPresenter extends BasePresenter
 	 */
 	public function actionEditLanguage($id = NULL, $langId = NULL)
 	{
-		$langDao = $this->em->getDao(Language::getClassName());
+		$langDao = $this->em->getDao(Entity\Language::getClassName());
 		$lang = $langDao->find($langId);
 		$this['languageForm']->setLanguage($lang);
 	}
@@ -320,7 +292,7 @@ class CvEditorPresenter extends BasePresenter
 	public function handleDeleteLanguage($langId = NULL)
 	{
 		if ($this->cv->existsLanguageId($langId)) {
-			$langDao = $this->em->getDao(Language::getClassName());
+			$langDao = $this->em->getDao(Entity\Language::getClassName());
 			$lang = $langDao->find($langId);
 			$langDao->delete($lang);
 		}
@@ -394,7 +366,7 @@ class CvEditorPresenter extends BasePresenter
 	 */
 	public function actionEditWork($id = NULL, $workId = NULL)
 	{
-		$workDao = $this->em->getDao(Work::getClassName());
+		$workDao = $this->em->getDao(Entity\Work::getClassName());
 		$work = $workDao->find($workId);
 		$this['worksForm']->setWork($work);
 	}
@@ -407,7 +379,7 @@ class CvEditorPresenter extends BasePresenter
 	public function handleDeleteWork($workId = NULL)
 	{
 		if ($this->cv->existsWorkId($workId)) {
-			$workDao = $this->em->getDao(Work::getClassName());
+			$workDao = $this->em->getDao(Entity\Work::getClassName());
 			$work = $workDao->find($workId);
 			$workDao->delete($work);
 		}
@@ -426,22 +398,22 @@ class CvEditorPresenter extends BasePresenter
 
 	// <editor-fold desc="forms">
 
-	/** @return AdditionalControl */
+	/** @return Cv\Additional */
 	public function createComponentAdditionalForm()
 	{
-		$control = $this->iAdditionalControlFactory->create();
+		$control = $this->iAdditionalFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
 
-	/** @return EducationsControl */
+	/** @return Cv\Educations */
 	public function createComponentEducationsForm()
 	{
-		$control = $this->iEducationsControlFactory->create();
+		$control = $this->iEducationsFactory->create();
 		$control->setCv($this->cv);
-		$control->onAfterSave = function (Cv $saved) {
+		$control->onAfterSave = function (Entity\Cv $saved) {
 			$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('educations');
@@ -449,21 +421,21 @@ class CvEditorPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return EmploymentControl */
+	/** @return Cv\Employment */
 	public function createComponentEmploymentForm()
 	{
-		$control = $this->iEmploymentControlFactory->create();
+		$control = $this->iEmploymentFactory->create();
 		$control->setCv($this->cv);
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
 
-	/** @return ExperienceControl */
+	/** @return Cv\Experience */
 	public function createComponentExperienceForm()
 	{
-		$control = $this->iExperienceControlFactory->create();
+		$control = $this->iExperienceFactory->create();
 		$control->setCv($this->cv);
-		$control->onAfterSave = function (Cv $saved) {
+		$control->onAfterSave = function (Entity\Cv $saved) {
 			$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('experience');
@@ -471,22 +443,22 @@ class CvEditorPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return LanguageControl */
+	/** @return Cv\Language */
 	public function createComponentMotherLanguageForm()
 	{
-		$control = $this->iLanguageControlFactory->create();
+		$control = $this->iLanguageFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
 
-	/** @return OtherLanguageControl */
+	/** @return Cv\OtherLanguage */
 	public function createComponentLanguageForm()
 	{
-		$control = $this->iOtherLanguageControlFactory->create();
+		$control = $this->iOtherLanguageFactory->create();
 		$control->setCv($this->cv);
-		$control->onAfterSave = function (Cv $saved) {
+		$control->onAfterSave = function (Entity\Cv $saved) {
 			$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('language');
@@ -494,61 +466,61 @@ class CvEditorPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return ObjectiveControl */
+	/** @return Cv\Objective */
 	public function createComponentObjectiveForm()
 	{
-		$control = $this->iObjectiveControlFactory->create();
+		$control = $this->iObjectiveFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
 
-	/** @return PersonalControl */
+	/** @return Cv\Personal */
 	public function createComponentPersonalForm()
 	{
-		$control = $this->iPersonalControlFactory->create();
+		$control = $this->iPersonalFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
 
-	/** @return BasicInfoControl */
+	/** @return Cv\BasicInfo */
 	public function createComponentSettingsForm()
 	{
-		$control = $this->iSettingsControlFactory->create();
+		$control = $this->iSettingsFactory->create();
 		$control->setAjax();
 		$control->setCv($this->cv);
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
 
-	/** @return SkillsControl */
+	/** @return Cv\Skills */
 	public function createComponentSkillsForm()
 	{
-		$control = $this->iSkillsControlFactory->create();
+		$control = $this->iSkillsFactory->create();
 		$control->setCv($this->cv);
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
 
-	/** @return SummaryControl */
+	/** @return Cv\Summary */
 	public function createComponentSummaryForm()
 	{
-		$control = $this->iSummaryControlFactory->create();
+		$control = $this->iSummaryFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax();
 		$control->onAfterSave = $this->standardOnAfterSave;
 		return $control;
 	}
 
-	/** @return WorksControl */
+	/** @return Cv\Works */
 	public function createComponentWorksForm()
 	{
-		$control = $this->iWorksControlFactory->create();
+		$control = $this->iWorksFactory->create();
 		$control->setCv($this->cv);
-		$control->onAfterSave = function (Cv $saved) {
+		$control->onAfterSave = function (Entity\Cv $saved) {
 			$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('works');
@@ -556,7 +528,7 @@ class CvEditorPresenter extends BasePresenter
 		return $control;
 	}
 
-	public function standardOnAfterSave(Cv $saved)
+	public function standardOnAfterSave(Entity\Cv $saved)
 	{
 		$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$saved]);
 		$this->flashMessage($message, 'success');
@@ -571,10 +543,10 @@ class CvEditorPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="preview">
 
-	/** @return LivePreviewControl */
+	/** @return Cv\LivePreview */
 	public function createComponentCvPreview()
 	{
-		$control = $this->iLivePreviewControlFactory->create();
+		$control = $this->iLivePreviewFactory->create();
 		$control->setCv($this->cv);
 		$control->setScale(0.6);
 		return $control;

@@ -2,11 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\User\IUserControlFactory;
-use App\Components\User\IUserDataViewFactory;
-use App\Components\User\UserControl;
-use App\Components\User\UserDataView;
-use App\Model\Entity\User;
+use App\Components\User;
+use App\Model\Entity;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Kdyby\Doctrine\EntityDao;
@@ -15,7 +12,7 @@ use Kdyby\Doctrine\EntityManager;
 class UsersPresenter extends BasePresenter
 {
 
-	/** @var User */
+	/** @var Entity\User */
 	private $userEntity;
 
 	/** @var EntityDao */
@@ -32,10 +29,10 @@ class UsersPresenter extends BasePresenter
 	/** @var RoleFacade @inject */
 	public $roleFacade;
 
-	/** @var IUserControlFactory @inject */
-	public $iUserControlFactory;
+	/** @var User\IUserFactory @inject */
+	public $iUserFactory;
 
-	/** @var IUserDataViewFactory @inject */
+	/** @var User\IUserDataViewFactory @inject */
 	public $userDataViewFactory;
 
 	// </editor-fold>
@@ -43,7 +40,7 @@ class UsersPresenter extends BasePresenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->userDao = $this->em->getDao(Entity\User::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -69,7 +66,7 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->userEntity = new User();
+		$this->userEntity = new Entity\User();
 		$this['userForm']->setUser($this->userEntity);
 		$this->setView('edit');
 	}
@@ -161,12 +158,12 @@ class UsersPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="forms">
 
-	/** @return UserControl */
+	/** @return User\User */
 	public function createComponentUserForm()
 	{
-		$control = $this->iUserControlFactory->create();
+		$control = $this->iUserFactory->create();
 		$control->setIdentityRoles($this->user->roles);
-		$control->onAfterSave = function (User $savedUser) {
+		$control->onAfterSave = function (Entity\User $savedUser) {
 			$message = $this->translator->translate('User \'%user%\' was successfully saved.', ['user' => (string)$savedUser]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
@@ -174,7 +171,7 @@ class UsersPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return UserDataView */
+	/** @return User\UserDataView */
 	public function createComponentUserDataView()
 	{
 		$control = $this->userDataViewFactory->create();

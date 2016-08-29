@@ -6,16 +6,11 @@ use Nette\Utils\Html;
 use App\Forms\Form;
 use App\Model\Entity\Location;
 
-/**
- * MapView component
- *
- */
-class MapView extends \Nette\Forms\Controls\BaseControl 
+class MapView extends BaseControl
 {
 	/** @var Location */
 	private $location;
-	
-	
+
 	public function __construct($caption = NULL) {
 		parent::__construct($caption);
 	}
@@ -69,7 +64,7 @@ class MapView extends \Nette\Forms\Controls\BaseControl
 		$this->location->placeName = $this->getHttpData(Form::DATA_LINE, '[placeName]');
 		$this->location->placeType = $this->getHttpData(Form::DATA_LINE, '[placeType]');
 		$this->location->placeIcon = $this->getHttpData(Form::DATA_LINE, '[placeIcon]');
-		$this->location->placeLocation = $this->getHttpData(Form::DATA_LINE, '[placeLocation]');
+		$this->location->setPlaceLocation($this->getHttpData(Form::DATA_LINE, '[placeLocation]'));
 		$this->location->placeViewport = $this->getHttpData(Form::DATA_LINE, '[placeViewport]');
 	}
 }

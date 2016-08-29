@@ -3,91 +3,91 @@
 
 services:
 	# Auth
-	- {implement: App\Components\Auth\ISignOutControlFactory, inject: yes}
-	- {create: App\Components\Auth\ConnectManagerControl, implement: App\Components\Auth\IConnectManagerControlFactory, inject: yes}
-	- {create: App\Components\Auth\FacebookControl, implement: App\Components\Auth\IFacebookControlFactory, inject: yes}
-	- {create: App\Components\Auth\TwitterControl, implement: App\Components\Auth\ITwitterControlFactory, inject: yes}
-	- {create: App\Components\Auth\LinkedinControl, implement: App\Components\Auth\ILinkedinControlFactory, inject: yes}
-	- {create: App\Components\Auth\SignInControl, implement: App\Components\Auth\ISignInControlFactory, inject: yes}
-	- {create: App\Components\Auth\SignUpControl, implement: App\Components\Auth\ISignUpControlFactory, inject: yes}
-	- {create: App\Components\Auth\RequiredControl, implement: App\Components\Auth\IRequiredControlFactory, inject: yes}
-	- {create: App\Components\Auth\ForgottenControl, implement: App\Components\Auth\IForgottenControlFactory, inject: yes}
-	- {create: App\Components\Auth\SetPasswordControl, implement: App\Components\Auth\ISetPasswordControlFactory, inject: yes}
-	- {create: App\Components\Auth\RecoveryControl, implement: App\Components\Auth\IRecoveryControlFactory, inject: yes}
+	- {implement: App\Components\Auth\ISignOutFactory, inject: yes}
+	- {create: App\Components\Auth\ConnectManager, implement: App\Components\Auth\IConnectManagerFactory, inject: yes}
+	- {create: App\Components\Auth\Facebook, implement: App\Components\Auth\IFacebookFactory, inject: yes}
+	- {create: App\Components\Auth\Twitter, implement: App\Components\Auth\ITwitterFactory, inject: yes}
+	- {create: App\Components\Auth\Linkedin, implement: App\Components\Auth\ILinkedinFactory, inject: yes}
+	- {create: App\Components\Auth\SignIn, implement: App\Components\Auth\ISignInFactory, inject: yes}
+	- {create: App\Components\Auth\SignUp, implement: App\Components\Auth\ISignUpFactory, inject: yes}
+	- {create: App\Components\Auth\Required, implement: App\Components\Auth\IRequiredFactory, inject: yes}
+	- {create: App\Components\Auth\Forgotten, implement: App\Components\Auth\IForgottenFactory, inject: yes}
+	- {create: App\Components\Auth\SetPassword, implement: App\Components\Auth\ISetPasswordFactory, inject: yes}
+	- {create: App\Components\Auth\Recovery, implement: App\Components\Auth\IRecoveryFactory, inject: yes}
 
 	# AfterRegistration
-	- {implement: App\Components\AfterRegistration\ICompleteCompanyControlFactory, inject: yes}
-	- {implement: App\Components\AfterRegistration\ICompleteCandidateFirstControlFactory, inject: yes}
-	- {implement: App\Components\AfterRegistration\ICompleteCandidateSecondControlFactory, inject: yes}
+	- {implement: App\Components\AfterRegistration\ICompleteCompanyFactory, inject: yes}
+	- {implement: App\Components\AfterRegistration\ICompleteCandidateFirstFactory, inject: yes}
+	- {implement: App\Components\AfterRegistration\ICompleteCandidateSecondFactory, inject: yes}
 	- {implement: App\Components\AfterRegistration\ICompleteCandidatePreviewFactory, inject: yes}
 
 	# User
-	- {implement: App\Components\User\IUserControlFactory, inject: yes}
-	- {implement: App\Components\User\ICompanyUserControlFactory, inject: yes}
+	- {implement: App\Components\User\IUserFactory, inject: yes}
+	- {implement: App\Components\User\ICompanyUserFactory, inject: yes}
 	- {implement: App\Components\User\IUserDataViewFactory, inject: yes}
-	- {implement: App\Components\User\ICareerDocsControlFactory, inject: yes}
+	- {implement: App\Components\User\ICareerDocsFactory, inject: yes}
+	- {implement: App\Components\Grids\User\IUsersGridFactory, inject: yes}
 
 	imageStorage: App\Components\User\DocStorage(%wwwDir%) # TODO: remove!!!
 
 	# Company
-	- {implement: App\Components\Company\ICompanyInfoControlFactory, inject: yes}
-	- {implement: App\Components\Company\ICompanyImagesControlFactory, inject: yes}
+	- {implement: App\Components\Company\ICompanyInfoFactory, inject: yes}
+	- {implement: App\Components\Company\ICompanyImagesFactory, inject: yes}
 	- {implement: App\Components\Company\ICompanyDataViewFactory, inject: yes}
 
 	# Job
-	- {implement: App\Components\Job\IBasicInfoControlFactory, inject: yes}
-	- {implement: App\Components\Job\IOffersControlFactory, inject: yes}
-	- {implement: App\Components\Job\IDescriptionsControlFactory, inject: yes}
-	- {implement: App\Components\Job\ISkillsControlFactory, inject: yes}
-	- {implement: App\Components\Job\IQuestionsControlFactory, inject: yes}
+	- {implement: App\Components\Job\IBasicInfoFactory, inject: yes}
+	- {implement: App\Components\Job\IOffersFactory, inject: yes}
+	- {implement: App\Components\Job\IDescriptionsFactory, inject: yes}
+	- {implement: App\Components\Job\ISkillsFactory, inject: yes}
+	- {implement: App\Components\Job\IQuestionsFactory, inject: yes}
 	- {implement: App\Components\Job\IJobDataViewFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryDataViewFactory, inject: yes}
-	- {implement: App\Components\Job\IJobCategoryControlFactory, inject: yes}
-	- {implement: App\Components\Job\INotesControlFactory, inject: yes}
+	- {implement: App\Components\Job\IJobCategoryFactory, inject: yes}
+	- {implement: App\Components\Job\INotesFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFilterFactory, inject: yes}
 
 	# Candidate
-	- {implement: App\Components\Candidate\IProfileControlFactory, inject: yes}
-	- {implement: App\Components\Candidate\IAddressControlFactory, inject: yes}
-	- {implement: App\Components\Candidate\IPhotoControlFactory, inject: yes}
+	- {implement: App\Components\Candidate\IProfileFactory, inject: yes}
+	- {implement: App\Components\Candidate\IAddressFactory, inject: yes}
+	- {implement: App\Components\Candidate\IPhotoFactory, inject: yes}
 	- {implement: App\Components\Candidate\ICandidateGalleryViewFactory, inject: yes}
 	- {implement: App\Components\Candidate\ICandidateFilterFactory, inject: yes}
 	- {implement: App\Components\Candidate\ICandidatePreviewFactory, inject: yes}
-	- {implement: App\Components\Candidate\IMatchingControlFactory, inject: yes}
-	- {implement: App\Components\Candidate\ISocialControlFactory, inject: yes}
+	- {implement: App\Components\Candidate\IMatchingFactory, inject: yes}
+	- {implement: App\Components\Candidate\ISocialFactory, inject: yes}
 	- {implement: App\Components\Candidate\ILocationFilterFactory, inject: yes}
 	- {implement: App\Components\Candidate\ISearchFilterFactory, inject: yes}
 
 	# Cv
-	- {implement: App\Components\Cv\IAdditionalControlFactory, inject: yes}
-	- {implement: App\Components\Cv\IEducationsControlFactory, inject: yes}
-	- {implement: App\Components\Cv\IEmploymentControlFactory, inject: yes}
-	- {implement: App\Components\Cv\IExperienceControlFactory, inject: yes}
-	- {implement: App\Components\Cv\ILanguageControlFactory, inject: yes}
-	- {implement: App\Components\Cv\IOtherLanguageControlFactory, inject: yes}
-	- {implement: App\Components\Cv\IObjectiveControlFactory, inject: yes}
-	- {implement: App\Components\Cv\IPersonalControlFactory, inject: yes}
-	- {implement: App\Components\Cv\IBasicInfoControlFactory, inject: yes}
-	- {implement: App\Components\Cv\ISkillsControlFactory, inject: yes}
+	- {implement: App\Components\Cv\IAdditionalFactory, inject: yes}
+	- {implement: App\Components\Cv\IEducationsFactory, inject: yes}
+	- {implement: App\Components\Cv\IEmploymentFactory, inject: yes}
+	- {implement: App\Components\Cv\IExperienceFactory, inject: yes}
+	- {implement: App\Components\Cv\ILanguageFactory, inject: yes}
+	- {implement: App\Components\Cv\IOtherLanguageFactory, inject: yes}
+	- {implement: App\Components\Cv\IObjectiveFactory, inject: yes}
+	- {implement: App\Components\Cv\IPersonalFactory, inject: yes}
+	- {implement: App\Components\Cv\IBasicInfoFactory, inject: yes}
+	- {implement: App\Components\Cv\ISkillsFactory, inject: yes}
 	- {implement: App\Components\Cv\ISkillsFilterFactory, inject: yes}
-	- {implement: App\Components\Cv\ISummaryControlFactory, inject: yes}
-	- {implement: App\Components\Cv\IWorksControlFactory, inject: yes}
-	- {implement: App\Components\Cv\ILivePreviewControlFactory, inject: yes}
+	- {implement: App\Components\Cv\ISummaryFactory, inject: yes}
+	- {implement: App\Components\Cv\IWorksFactory, inject: yes}
+	- {implement: App\Components\Cv\ILivePreviewFactory, inject: yes}
 	- {implement: App\Components\Cv\ISendEmailFactory, inject: yes}
 	- {implement: App\Components\Cv\ICvDocumentFactory, inject: yes}
 	- {implement: App\Components\Cv\ICvDataViewFactory, inject: yes}
 
 	# Skills
-	- {implement: App\Components\Skills\ISkillControlFactory, inject: yes}
+	- {implement: App\Components\Skills\ISkillFactory, inject: yes}
 	- {implement: App\Components\Skills\ISkillDataViewFactory, inject: yes}
-	- {implement: App\Components\Skills\ISkillCategoryControlFactory, inject: yes}
+	- {implement: App\Components\Skills\ISkillCategoryFactory, inject: yes}
 	- {implement: App\Components\Skills\ISkillCategoryDataViewFactory, inject: yes}
 
 	# Example
-	- {implement: App\Components\Example\Form\IFormControlFactory, inject: yes}
+	- {implement: App\Components\Example\Form\IExampleFormFactory, inject: yes}
 
 	# Grids
-	- {implement: App\Components\Grids\User\IUsersGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Company\ICompaniesGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Job\IJobsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Cv\ICvsGridFactory, inject: yes}

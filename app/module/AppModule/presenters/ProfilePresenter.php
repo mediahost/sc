@@ -2,23 +2,24 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\AfterRegistration\CompleteCandidateSecondControl;
+use App\Components\AfterRegistration\CompleteCandidateSecond;
 use App\Components\AfterRegistration\ICompleteCandidatePreviewFactory;
-use App\Components\AfterRegistration\ICompleteCandidateSecondControlFactory;
-use App\Components\Auth\ConnectManagerControl;
-use App\Components\Auth\IConnectManagerControlFactory;
-use App\Components\Auth\ISetPasswordControlFactory;
-use App\Components\Auth\SetPasswordControl;
-use App\Components\Candidate\IAddressControlFactory;
-use App\Components\Candidate\IPhotoControlFactory;
-use App\Components\Candidate\IProfileControlFactory;
-use App\Components\Candidate\ISocialControlFactory;
-use App\Components\Cv\ILivePreviewControlFactory;
-use App\Components\Cv\ISkillsControlFactory;
-use App\Components\Cv\LivePreviewControl;
-use App\Components\Cv\SkillsControl;
+use App\Components\AfterRegistration\ICompleteCandidateSecondFactory;
+use App\Components\Auth\ConnectManager;
+use App\Components\Auth\IConnectManagerFactory;
+use App\Components\Auth\ISetPasswordFactory;
+use App\Components\Auth\SetPassword;
+use App\Components\Candidate\IAddressFactory;
+use App\Components\Candidate\IPhotoFactory;
+use App\Components\Candidate\IProfileFactory;
+use App\Components\Candidate\ISocialFactory;
+use App\Components\Cv\ILivePreviewFactory;
+use App\Components\Cv\ISkillsFactory;
+use App\Components\Cv\LivePreview;
+use App\Components\Cv\Skills;
 use App\Components\ICommunicationListFactory;
-use App\Components\User\ICareerDocsControlFactory;
+use App\Components\User\CareerDocs;
+use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Cv;
@@ -32,35 +33,35 @@ class ProfilePresenter extends BasePresenter
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var ISetPasswordControlFactory @inject */
-	public $iSetPasswordControlFactory;
+	/** @var ISetPasswordFactory @inject */
+	public $iSetPasswordFactory;
 
-	/** @var IConnectManagerControlFactory @inject */
-	public $iConnectManagerControlFactory;
+	/** @var IConnectManagerFactory @inject */
+	public $iConnectManagerFactory;
 
-	/** @var ISkillsControlFactory @inject */
-	public $iSkillsControlFactory;
+	/** @var ISkillsFactory @inject */
+	public $iSkillsFactory;
 
-	/** @var IPhotoControlFactory @inject */
-	public $iPhotoControlFactory;
+	/** @var IPhotoFactory @inject */
+	public $iPhotoFactory;
 
-	/** @var IProfileControlFactory @inject */
-	public $iProfileControlFactory;
+	/** @var IProfileFactory @inject */
+	public $iProfileFactory;
 
-	/** @var IAddressControlFactory @inject */
-	public $iAddressControlFactory;
+	/** @var IAddressFactory @inject */
+	public $iAddressFactory;
 
-	/** @var ISocialControlFactory @inject */
-	public $iSocialControlFactory;
+	/** @var ISocialFactory @inject */
+	public $iSocialFactory;
 
-	/** @var ILivePreviewControlFactory @inject */
-	public $iLivePreviewControlFactory;
+	/** @var ILivePreviewFactory @inject */
+	public $iLivePreviewFactory;
 
-	/** @var ICareerDocsControlFactory @inject */
-	public $iCareerDocsControlFactory;
+	/** @var ICareerDocsFactory @inject */
+	public $iCareerDocsFactory;
 
-	/** @var ICompleteCandidateSecondControlFactory @inject */
-	public $iCompleteCandidateSecondControlFactory;
+	/** @var ICompleteCandidateSecondFactory @inject */
+	public $iCompleteCandidateSecondFactory;
 
 	/** @var ICompleteCandidatePreviewFactory @inject */
 	public $completeCandidatePreview;
@@ -212,10 +213,10 @@ class ProfilePresenter extends BasePresenter
 
 	// <editor-fold desc="components">
 
-	/** @return SetPasswordControl */
+	/** @return SetPassword */
 	protected function createComponentSetPassword()
 	{
-		$control = $this->iSetPasswordControlFactory->create();
+		$control = $this->iSetPasswordFactory->create();
 		$control->setUser($this->user);
 		$control->onSuccess[] = function () {
 			$message = $this->translator->translate('Password has been successfuly set!');
@@ -225,11 +226,11 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return ConnectManagerControl */
+	/** @return ConnectManager */
 	protected function createComponentConnect()
 	{
 		$userDao = $this->em->getDao(Entity\User::getClassName());
-		$control = $this->iConnectManagerControlFactory->create();
+		$control = $this->iConnectManagerFactory->create();
 		$control->setUser($userDao->find($this->user->id));
 		$control->setAppActivateRedirect($this->link('setPassword'));
 		$control->onConnect[] = function ($type) {
@@ -270,10 +271,10 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return SkillsControl */
+	/** @return Skills */
 	public function createComponentSkillsForm()
 	{
-		$control = $this->iSkillsControlFactory->create();
+		$control = $this->iSkillsFactory->create();
 		$control->setTemplateFile('overview');
 		$control->onlyFilledSkills = true;
 		$control->setCv($this->getCv());
@@ -281,10 +282,10 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return PhotoControl */
-	public function createComponentPhotoControl()
+	/** @return Photo */
+	public function createComponentPhotoForm()
 	{
-		$control = $this->iPhotoControlFactory->create();
+		$control = $this->iPhotoFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
@@ -294,10 +295,10 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return ProfileControl */
-	public function createComponentProfileControl()
+	/** @return Profile */
+	public function createComponentProfileForm()
 	{
-		$control = $this->iProfileControlFactory->create();
+		$control = $this->iProfileFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$this->redrawControl('personalDetails');
@@ -305,10 +306,10 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return AddressControl */
-	public function createComponentAddressControl()
+	/** @return Address */
+	public function createComponentAddressForm()
 	{
-		$control = $this->iAddressControlFactory->create();
+		$control = $this->iAddressFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$this->redrawControl('personalDetails');
@@ -316,10 +317,10 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return SocialControl */
-	public function createComponentSocialControl()
+	/** @return Social */
+	public function createComponentSocialForm()
 	{
-		$control = $this->iSocialControlFactory->create();
+		$control = $this->iSocialFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$this->redrawControl('socialLinks');
@@ -327,29 +328,30 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return LivePreviewControl */
+	/** @return LivePreview */
 	public function createComponentCvPreview()
 	{
-		$control = $this->iLivePreviewControlFactory->create();
+		$control = $this->iLivePreviewFactory->create();
 		$control->setScale(0.8, 0.8, 1);
 		$control->setCv($this->getCv());
 		return $control;
 	}
 
-	public function createComponentDocsControl()
+	/** @return CareerDocs */
+	public function createComponentDocsForm()
 	{
-		$control = $this->iCareerDocsControlFactory->create();
+		$control = $this->iCareerDocsFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->setTemplateFile('overView');
 		return $control;
 	}
 
-	/** @return CompleteCandidateSecondControl */
+	/** @return CompleteCandidateSecond */
 	protected function createComponentCompleteCandidateSecond()
 	{
-		$control = $this->iCompleteCandidateSecondControlFactory->create();
+		$control = $this->iCompleteCandidateSecondFactory->create();
 		$control->setUserEntity($this->getUserEntity());
-		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
+		$control->onSuccess[] = function (CompleteCandidateSecond $control, Candidate $candidate) {
 			$message = $this->translator->translate('Your data was saved.');
 			$this->flashMessage($message, 'success');
 			$this->redrawControl('interestedIn');

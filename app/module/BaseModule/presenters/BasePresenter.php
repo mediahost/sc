@@ -2,8 +2,8 @@
 
 namespace App\BaseModule\Presenters;
 
-use App\Components\Auth\ISignOutControlFactory;
-use App\Components\Auth\SignOutControl;
+use App\Components\Auth\ISignOutFactory;
+use App\Components\Auth\SignOut;
 use App\Extensions\Settings\SettingsStorage;
 use App\Model\Entity;
 use App\Model\Facade\UserFacade;
@@ -32,8 +32,8 @@ abstract class BasePresenter extends Presenter
 	/** @var LoaderFactory @inject */
 	public $webLoader;
 
-	/** @var ISignOutControlFactory @inject */
-	public $iSignOutControlFactory;
+	/** @var ISignOutFactory @inject */
+	public $iSignOutFactory;
 
 	/** @var Translator @inject */
 	public $translator;
@@ -153,10 +153,10 @@ abstract class BasePresenter extends Presenter
 	// </editor-fold>
 	// <editor-fold desc="components">
 
-	/** @return SignOutControl */
+	/** @return SignOut */
 	public function createComponentSignOut()
 	{
-		return $this->iSignOutControlFactory->create();
+		return $this->iSignOutFactory->create();
 	}
 
 	// </editor-fold>

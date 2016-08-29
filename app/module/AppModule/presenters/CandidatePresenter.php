@@ -2,16 +2,16 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Candidate\IProfileControlFactory;
-use App\Components\Candidate\ProfileControl;
+use App\Components\Candidate\IProfileFactory;
+use App\Components\Candidate\Profile;
 use App\Model\Entity\Candidate;
 
 class CandidatePresenter extends BasePresenter
 {
 	// <editor-fold desc="inject">
 
-	/** @var IProfileControlFactory @inject */
-	public $iProfileControlFactory;
+	/** @var IProfileFactory @inject */
+	public $iProfileFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -44,10 +44,10 @@ class CandidatePresenter extends BasePresenter
 
 	// <editor-fold desc="forms">
 
-	/** @return ProfileControl */
+	/** @return Profile */
 	public function createComponentProfileForm()
 	{
-		$control = $this->iProfileControlFactory->create();
+		$control = $this->iProfileFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = $this->translator->translate('Candidate \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);

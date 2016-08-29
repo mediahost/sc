@@ -1,0 +1,21 @@
+<div id="docs" class="restContent">
+    <div n:snippet="CareerDocs">
+        {control form}
+
+        <ul class="files">
+            <li n:foreach="$control->getUploadedDocs() as $doc" class="file {$control->fileExtension($doc)}">
+                <a href="{$basePath}/{$control->fullDocName($doc)}" target="_blank" class="thumbnail">
+                    <span class="icon"></span>
+                </a>
+                <span class="name">{$control->displayDocName($doc)}</span>
+                <div class="actions">
+                    <a href="{link switch $doc->id}" class="switch {$doc->public ? 'public' : 'private'}"></a>
+                    <a href="{link deleteDoc $doc->id}" class="confirm delete"></a>
+                </div>
+            </li>
+        </ul>
+        <div class="actions-all">
+            <a href="{link deleteAll}" class="confirm delete-all">{_'delete all'}</a>
+        </div>
+    </div>
+</div>

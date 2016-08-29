@@ -2,12 +2,11 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\AfterRegistration\CompleteCandidateFirstControl;
-use App\Components\AfterRegistration\CompleteCandidateSecondControl;
-use App\Components\AfterRegistration\CompleteCompanyControl;
-use App\Components\AfterRegistration\ICompleteCandidateFirstControlFactory;
-use App\Components\AfterRegistration\ICompleteCandidateSecondControlFactory;
-use App\Components\AfterRegistration\ICompleteCompanyControlFactory;
+use App\Components\AfterRegistration\CompleteCandidateSecond;
+use App\Components\AfterRegistration\CompleteCompany;
+use App\Components\AfterRegistration\ICompleteCandidateFirstFactory;
+use App\Components\AfterRegistration\ICompleteCandidateSecondFactory;
+use App\Components\AfterRegistration\ICompleteCompanyFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
@@ -15,22 +14,18 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use Tracy\Debugger;
 
-/**
- * Complete account presenter
- */
 class CompleteAccountPresenter extends BasePresenter
 {
 
-	/** @var ICompleteCandidateFirstControlFactory @inject */
-	public $iCompleteCandidateFirstControlFactory;
+	/** @var ICompleteCandidateFirstFactory @inject */
+	public $iCompleteCandidateFirstFactory;
 
-	/** @var ICompleteCandidateSecondControlFactory @inject */
-	public $iCompleteCandidateSecondControlFactory;
+	/** @var ICompleteCandidateSecondFactory @inject */
+	public $iCompleteCandidateSecondFactory;
 
-	/** @var ICompleteCompanyControlFactory @inject */
-	public $iCompleteCompanyControlFactory;
+	/** @var ICompleteCompanyFactory @inject */
+	public $iCompleteCompanyFactory;
 
 	/** @var IVerificationMessageFactory @inject */
 	public $verificationMessage;
@@ -137,11 +132,11 @@ class CompleteAccountPresenter extends BasePresenter
 
 	// <editor-fold desc="components">
 
-	/** @return CompleteCandidateFirstControl */
+	/** @return CompleteCandidateFirst */
 	protected function createComponentCompleteCandidateFirst()
 	{
-		$control = $this->iCompleteCandidateFirstControlFactory->create();
-		$control->onSuccess[] = function (CompleteCandidateFirstControl $control, Candidate $candidate) {
+		$control = $this->iCompleteCandidateFirstFactory->create();
+		$control->onSuccess[] = function (CompleteCandidateFirst $control, Candidate $candidate) {
 			$message = $this->translator->translate('Your data was saved. Your candidate account is almost complete.');
 			$this->flashMessage($message, 'success');
 			$this->redirect('step2');
@@ -149,12 +144,12 @@ class CompleteAccountPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return CompleteCandidateSecondControl */
+	/** @return CompleteCandidateSecond */
 	protected function createComponentCompleteCandidateSecond()
 	{
-		$control = $this->iCompleteCandidateSecondControlFactory->create();
-        $control->setUserEntity($this->user->identity);
-		$control->onSuccess[] = function (CompleteCandidateSecondControl $control, Candidate $candidate) {
+		$control = $this->iCompleteCandidateSecondFactory->create();
+		$control->setUserEntity($this->user->identity);
+		$control->onSuccess[] = function (CompleteCandidateSecond $control, Candidate $candidate) {
 			if (!$candidate->user->verificated) {
 				$message = $this->translator->translate('Your data was saved. Please verify your mail!');
 				$this->flashMessage($message, 'success');
@@ -168,11 +163,11 @@ class CompleteAccountPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return CompleteCompanyControl */
+	/** @return CompleteCompany */
 	protected function createComponentCompleteCompany()
 	{
-		$control = $this->iCompleteCompanyControlFactory->create();
-		$control->onSuccess[] = function (CompleteCompanyControl $control, Company $company) {
+		$control = $this->iCompleteCompanyFactory->create();
+		$control->onSuccess[] = function (CompleteCompany $control, Company $company) {
 			$message = $this->translator->translate('Your company account is complete. Enjoy your ride!');
 			$this->flashMessage($message, 'success');
 			$this->redirect(':App:Company:default', ['id' => $company->id]);

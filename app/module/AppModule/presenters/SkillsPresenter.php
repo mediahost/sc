@@ -3,23 +3,23 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\Grids\Skill\ISkillsGridFactory;
-use App\Components\Skills\ISkillControlFactory;
+use App\Components\Skills\ISkillFactory;
 use App\Components\Skills\ISkillDataViewFactory;
-use App\Components\Skills\SkillControl;
+use App\Components\Skills\Skill;
 use App\Components\Skills\SkillDataView;
-use App\Model\Entity\Skill;
+use App\Model\Entity;
 use Kdyby\Doctrine\EntityDao;
 
 class SkillsPresenter extends BasePresenter
 {
 
-	/** @var Skill */
+	/** @var Entity\Skill */
 	private $skill;
 
 	// <editor-fold desc="constants & variables">
 
-	/** @var ISkillControlFactory @inject */
-	public $iSkillControlFactory;
+	/** @var ISkillFactory @inject */
+	public $iSkillFactory;
 
 	/** @var ISkillsGridFactory @inject */
 	public $iSkillsGridFactory;
@@ -35,7 +35,7 @@ class SkillsPresenter extends BasePresenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->skillDao = $this->em->getDao(Skill::getClassName());
+		$this->skillDao = $this->em->getDao(Entity\Skill::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -57,7 +57,7 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->skill = new Skill;
+		$this->skill = new Entity\Skill();
 		$this['skillForm']->setSkill($this->skill);
 		$this->setView('edit');
 	}
@@ -106,11 +106,11 @@ class SkillsPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="forms">
 
-	/** @return SkillControl */
+	/** @return Skill */
 	public function createComponentSkillForm()
 	{
-		$control = $this->iSkillControlFactory->create();
-		$control->onAfterSave = function (Skill $saved) {
+		$control = $this->iSkillFactory->create();
+		$control->onAfterSave = function (Entity\Skill $saved) {
 			$message = $this->translator->translate('\'%skill%\' was successfully saved.', ['skill' => $saved->name]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');

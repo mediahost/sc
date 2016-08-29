@@ -26,26 +26,26 @@ class SignPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="Injects">
 
-	/** @var Auth\IFacebookControlFactory @inject */
-	public $iFacebookControlFactory;
+	/** @var Auth\IFacebookFactory @inject */
+	public $iFacebookFactory;
 
-	/** @var Auth\IForgottenControlFactory @inject */
-	public $iForgottenControlFactory;
+	/** @var Auth\IForgottenFactory @inject */
+	public $iForgottenFactory;
 
-	/** @var Auth\IRecoveryControlFactory @inject */
-	public $iRecoveryControlFactory;
+	/** @var Auth\IRecoveryFactory @inject */
+	public $iRecoveryFactory;
 
-	/** @var Auth\IRequiredControlFactory @inject */
-	public $iRequiredControlFactory;
+	/** @var Auth\IRequiredFactory @inject */
+	public $iRequiredFactory;
 
-	/** @var Auth\ISignInControlFactory @inject */
-	public $iSignInControlFactory;
+	/** @var Auth\ISignInFactory @inject */
+	public $iSignInFactory;
 
-	/** @var Auth\ISignUpControlFactory @inject */
-	public $iSignUpControlFactory;
+	/** @var Auth\ISignUpFactory @inject */
+	public $iSignUpFactory;
 
-	/** @var Auth\ITwitterControlFactory @inject */
-	public $iTwitterControlFactory;
+	/** @var Auth\ITwitterFactory @inject */
+	public $iTwitterFactory;
 
 	/** @var Storage\SignUpStorage @inject */
 	public $session;
@@ -75,11 +75,7 @@ class SignPresenter extends BasePresenter
 		$this->template->roleCompany = self::ROLE_COMPANY;
 	}
 
-	/**
-	 * Get valid role name; If isn't valid then return default role
-	 * @param type $role
-	 * @return type
-	 */
+	/** Get valid role name; If isn't valid then return default role */
 	private function getValidRole($role)
 	{
 		switch ($role) {
@@ -116,7 +112,6 @@ class SignPresenter extends BasePresenter
 		$this->template->role = $this->session->role;
 	}
 
-	/** @param string $token */
 	public function actionVerify($token)
 	{
 		$user = $this->userFacade->findByVerificationToken($token);
@@ -134,7 +129,6 @@ class SignPresenter extends BasePresenter
 		}
 	}
 
-	/** @param string $token */
 	public function actionRecovery($token)
 	{
 		$this['recovery']->setToken($token);
@@ -142,11 +136,7 @@ class SignPresenter extends BasePresenter
 
 	// </editor-fold>
 
-	/**
-	 * Redirect logged to certain destination.
-	 * @param bool $redirect
-	 * @return bool
-	 */
+	/** Redirect logged to certain destination.*/
 	private function isLoggedIn($redirect = TRUE)
 	{
 		$isLogged = $this->user->isLoggedIn();
@@ -158,10 +148,10 @@ class SignPresenter extends BasePresenter
 
 	// <editor-fold desc="controls">
 
-	/** @return Auth\ForgottenControl */
+	/** @return Auth\Forgotten */
 	protected function createComponentForgotten()
 	{
-		$control = $this->iForgottenControlFactory->create();
+		$control = $this->iForgottenFactory->create();
 		$control->onSuccess[] = function (User $user) {
 
 			// Send e-mail with recovery link
@@ -182,10 +172,10 @@ class SignPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return Auth\RecoveryControl */
+	/** @return Auth\Recovery */
 	protected function createComponentRecovery()
 	{
-		$control = $this->iRecoveryControlFactory->create();
+		$control = $this->iRecoveryFactory->create();
 		$control->onFailToken[] = function () {
 			$message = 'Token to recovery your password is no longer active. Please request new one.';
 			$this->flashMessage($message, 'info');
@@ -194,22 +184,22 @@ class SignPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return Auth\RequiredControl */
+	/** @return Auth\Required */
 	protected function createComponentRequired()
 	{
-		return $this->iRequiredControlFactory->create();
+		return $this->iRequiredFactory->create();
 	}
 
-	/** @return Auth\SignInControl */
+	/** @return Auth\SignIn */
 	protected function createComponentSignIn()
 	{
-		return $this->iSignInControlFactory->create();
+		return $this->iSignInFactory->create();
 	}
 
-	/** @return Auth\SignUpControl */
+	/** @return Auth\SignUp */
 	protected function createComponentSignUp()
 	{
-		return $this->iSignUpControlFactory->create();
+		return $this->iSignUpFactory->create();
 	}
 
 	// </editor-fold>

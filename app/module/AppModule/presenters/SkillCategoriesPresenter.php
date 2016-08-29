@@ -2,26 +2,25 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Grids\Skill\ISkillCategoriesGridFactory;
-use App\Components\Skills\ISkillCategoryControlFactory;
 use App\Components\Skills\ISkillCategoryDataViewFactory;
-use App\Components\Skills\SkillCategoryControl;
-use App\Model\Entity\SkillCategory;
+use App\Components\Skills\ISkillCategoryFactory;
+use App\Components\Skills\SkillCategory;
+use App\Model\Entity;
 use Kdyby\Doctrine\DBALException;
 use Kdyby\Doctrine\EntityDao;
 
 class SkillCategoriesPresenter extends BasePresenter
 {
 
-	/** @var SkillCategory */
+	/** @var Entity\SkillCategory */
 	private $skillCategory;
 
 	// <editor-fold desc="constants & variables">
 
-	/** @var ISkillCategoryControlFactory @inject */
-	public $iSkillCategoryControlFactory;
+	/** @var ISkillCategoryFactory @inject */
+	public $iSkillCategoryFactory;
 
-	/** @var ISkillCategoryDataViewFactory	 @inject */
+	/** @var ISkillCategoryDataViewFactory     @inject */
 	public $skillCategoryDataViewFactory;
 
 	/** @var EntityDao */
@@ -32,7 +31,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->skillCategoryDao = $this->em->getDao(SkillCategory::getClassName());
+		$this->skillCategoryDao = $this->em->getDao(Entity\SkillCategory::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -54,7 +53,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->skillCategory = new SkillCategory;
+		$this->skillCategory = new Entity\SkillCategory();
 		$this['skillCategoryForm']->setSkillCategory($this->skillCategory);
 		$this->setView('edit');
 	}
@@ -108,11 +107,11 @@ class SkillCategoriesPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="forms">
 
-	/** @return SkillCategoryControl */
+	/** @return SkillCategory */
 	public function createComponentSkillCategoryForm()
 	{
-		$control = $this->iSkillCategoryControlFactory->create();
-		$control->onAfterSave = function (SkillCategory $saved) {
+		$control = $this->iSkillCategoryFactory->create();
+		$control->onAfterSave = function (Entity\SkillCategory $saved) {
 			$message = $this->translator->translate('\'%category%\' was successfully saved.', ['category' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redirect('default');
@@ -120,9 +119,7 @@ class SkillCategoriesPresenter extends BasePresenter
 		return $control;
 	}
 
-	/**
-	 * @return SkillCategoryDataView
-	 */
+	/** @return SkillCategoryDataView */
 	public function createComponentSkillCategoryDataView()
 	{
 		$control = $this->skillCategoryDataViewFactory->create();

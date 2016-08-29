@@ -5,13 +5,14 @@ namespace App\AppModule\Presenters;
 use App\ArrayUtils;
 use App\Components\Candidate\ICandidateFilterFactory;
 use App\Components\Candidate\ICandidatePreviewFactory;
-use App\Components\Job\BasicInfoControl;
-use App\Components\Job\IBasicInfoControlFactory;
-use App\Components\Job\IDescriptionsControlFactory;
-use App\Components\Job\INotesControlFactory;
-use App\Components\Job\IOffersControlFactory;
-use App\Components\Job\IQuestionsControlFactory;
-use App\Components\Job\ISkillsControlFactory;
+use App\Components\Job\BasicInfo;
+use App\Components\Job\Descriptions;
+use App\Components\Job\IBasicInfoFactory;
+use App\Components\Job\IDescriptionsFactory;
+use App\Components\Job\INotesFactory;
+use App\Components\Job\IOffersFactory;
+use App\Components\Job\IQuestionsFactory;
+use App\Components\Job\ISkillsFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
@@ -37,29 +38,29 @@ class JobPresenter extends BasePresenter
 	/** @var JobFacade @inject */
 	public $jobFacade;
 
-	/** @var IBasicInfoControlFactory @inject */
-	public $iJobBasicInfoControlFactory;
+	/** @var IBasicInfoFactory @inject */
+	public $iJobBasicInfoFactory;
 
-	/** @var IOffersControlFactory @inject */
-	public $iIOffersControlFactory;
+	/** @var IOffersFactory @inject */
+	public $iIOffersFactory;
 
-	/** @var IDescriptionsControlFactory @inject */
-	public $iDescriptionsControlFactory;
+	/** @var IDescriptionsFactory @inject */
+	public $iDescriptionsFactory;
 
-	/** @var ISkillsControlFactory @inject */
-	public $iJobSkillsControlFactory;
+	/** @var ISkillsFactory @inject */
+	public $iJobSkillsFactory;
 
-	/** @var IQuestionsControlFactory @inject */
-	public $iQuestionsControlFactory;
+	/** @var IQuestionsFactory @inject */
+	public $iQuestionsFactory;
 
 	/** @var ICandidateFilterFactory @inject */
-	public $candidateFilterFactory;
+	public $candidateFactory;
 
 	/** @var ICandidatePreviewFactory @inject */
 	public $candidatePreviewFactory;
 
-	/** @var INotesControlFactory @inject */
-	public $notesControlFactory;
+	/** @var INotesFactory @inject */
+	public $notesFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -116,7 +117,7 @@ class JobPresenter extends BasePresenter
 			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
-			$this['notesControl']->setJob($this->job);
+			$this['notes']->setJob($this->job);
 		} else {
 			$message = $this->translator->translate('Finded company isn\'t exists.');
 			$this->flashMessage($message, 'danger');
@@ -139,7 +140,7 @@ class JobPresenter extends BasePresenter
 			$this['jobDescriptionsForm']->setJob($this->job);
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
-			$this['notesControl']->setJob($this->job);
+			$this['notes']->setJob($this->job);
 		} else {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
@@ -180,10 +181,10 @@ class JobPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="forms">
 
-	/** @return BasicInfoControl */
+	/** @return BasicInfo */
 	public function createComponentJobInfoForm()
 	{
-		$control = $this->iJobBasicInfoControlFactory->create();
+		$control = $this->iJobBasicInfoFactory->create();
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = function ($job) {
 			$this->afterJobSave($job);
@@ -191,37 +192,37 @@ class JobPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return OffersControl */
+	/** @return Offers */
 	public function createComponentJobOffersForm()
 	{
-		$control = $this->iIOffersControlFactory->create();
+		$control = $this->iIOffersFactory->create();
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 
-	/** @return DescriptionsControl */
+	/** @return Descriptions */
 	public function createComponentJobDescriptionsForm()
 	{
-		$control = $this->iDescriptionsControlFactory->create();
+		$control = $this->iDescriptionsFactory->create();
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 
-	/** @return SkillsControl */
+	/** @return Skills */
 	public function createComponentJobSkillsForm()
 	{
-		$control = $this->iJobSkillsControlFactory->create();
+		$control = $this->iJobSkillsFactory->create();
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 
-	/** @return QuestionsControl */
+	/** @return Questions */
 	public function createComponentJobQuestionsForm()
 	{
-		$control = $this->iQuestionsControlFactory->create();
+		$control = $this->iQuestionsFactory->create();
 		$control->setAjax(TRUE, TRUE);
 		return $control;
 	}
@@ -229,15 +230,15 @@ class JobPresenter extends BasePresenter
 	/** @return CandidateFilter */
 	public function createComponentCandidateFilter()
 	{
-		$control = $this->candidateFilterFactory->create();
+		$control = $this->candidateFactory->create();
 		$control->setAjax(TRUE, TRUE);
 		return $control;
 	}
 
-	/** @return NotesControl */
-	public function createComponentNotesControl()
+	/** @return Notes */
+	public function createComponentNotes()
 	{
-		$control = $this->notesControlFactory->create();
+		$control = $this->notesFactory->create();
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = function ($job) {
 			$this->afterJobSave($job);

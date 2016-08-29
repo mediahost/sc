@@ -2,26 +2,10 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Cv\IBasicInfoControlFactory;
-use App\Components\Cv\ILivePreviewControlFactory;
-use App\Components\Cv\ISendEmailFactory;
-use App\Components\Cv\ISkillsControlFactory;
-use App\Components\Cv\IWorksControlFactory;
-use App\Components\Cv\IEducationsControlFactory;
-use App\Components\Cv\IExperienceControlFactory;
-use App\Components\Cv\IPersonalControlFactory;
-use App\Components\Cv\ILanguageControlFactory;
-use App\Components\Cv\IOtherLanguageControlFactory;
-use App\Components\Cv\IObjectiveControlFactory;
-use App\Components\Cv\IEmploymentControlFactory;
-use App\Components\Cv\ISummaryControlFactory;
-use App\Components\Cv\IAdditionalControlFactory;
-use App\Components\Cv\LivePreviewControl;
-use App\Components\Cv\SkillsControl;
-use App\Components\Cv\WorksControl;
-use App\Components\User\CareerDocsControl;
-use App\Components\User\ICareerDocsControlFactory;
-use App\Model\Entity\Cv;
+use App\Components\Cv;
+use App\Components\User\CareerDocs;
+use App\Components\User\ICareerDocsFactory;
+use App\Model\Entity;
 use App\Model\Facade\CvFacade;
 use Exception;
 
@@ -33,78 +17,66 @@ class CvEditorPresenter extends BasePresenter
 	/** @var CvFacade @inject */
 	public $cvFacade;
 
-	/** @var ISkillsControlFactory @inject */
-	public $iSkillsControlFactory;
+	/** @var Cv\ISkillsFactory @inject */
+	public $iSkillsFactory;
 
-	/** @var IBasicInfoControlFactory @inject */
-	public $iBasicInfoControlFactory;
+	/** @var Cv\IBasicInfoFactory @inject */
+	public $iBasicInfoFactory;
 
-	/** @var ILivePreviewControlFactory @inject */
-	public $iLivePreviewControlFactory;
+	/** @var Cv\ILivePreviewFactory @inject */
+	public $iLivePreviewFactory;
 
-	/** @var ISendEmailFactory @inject */
+	/** @var Cv\ISendEmailFactory @inject */
 	public $iSendEmailFactory;
 
-	/** @var IWorksControlFactory @inject */
-	public $iWorksControlFactory;
+	/** @var Cv\IWorksFactory @inject */
+	public $iWorksFactory;
 
-	/** @var IEducationsControlFactory @inject */
-	public $iEducationsControlFactory;
+	/** @var Cv\IEducationsFactory @inject */
+	public $iEducationsFactory;
 
-	/** @var IExperienceControlFactory @inject */
-	public $iExperienceControlFactory;
+	/** @var Cv\IExperienceFactory @inject */
+	public $iExperienceFactory;
 
-	/** @var IPersonalControlFactory @inject */
-	public $iPersonalControlFactory;
+	/** @var Cv\IPersonalFactory @inject */
+	public $iPersonalFactory;
 
-	/** @var ILanguageControlFactory @inject */
-	public $iLanguageControlFactory;
+	/** @var Cv\ILanguageFactory @inject */
+	public $iLanguageFactory;
 
-	/** @var IOtherLanguageControlFactory @inject */
-	public $iOtherLanguageControlFactory;
+	/** @var Cv\IOtherLanguageFactory @inject */
+	public $iOtherLanguageFactory;
 
-	/** @var IObjectiveControlFactory @inject */
-	public $iObjectiveControlFactory;
+	/** @var Cv\IObjectiveFactory @inject */
+	public $iObjectiveFactory;
 
-	/** @var IEmploymentControlFactory @inject */
-	public $iEmploymentControlFactory;
+	/** @var Cv\IEmploymentFactory @inject */
+	public $iEmploymentFactory;
 
-	/** @var ISummaryControlFactory @inject */
-	public $iSummaryControlFactory;
+	/** @var Cv\ISummaryFactory @inject */
+	public $iSummaryFactory;
 
-	/** @var IAdditionalControlFactory @inject */
-	public $iAdditionalControlFactory;
+	/** @var Cv\IAdditionalFactory @inject */
+	public $iAdditionalFactory;
 
-	/** @var ICareerDocsControlFactory @inject */
-	public $iCareerDocsControlFactory;
+	/** @var ICareerDocsFactory @inject */
+	public $iCareerDocsFactory;
 
-	/** @var Cv */
+	/** @var Entity\Cv */
 	private $cv;
 
-
-	/**
-	 * @inheritdoc
-	 */
 	protected function startup()
 	{
 		parent::startup();
 		$this->hideRightSidebar();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	protected function beforeRender()
 	{
 		parent::beforeRender();
 		$this->template->cv = $this->cv;
 	}
 
-	/**
-	 * Cv entity getter
-	 * @param int $id
-	 * @return Cv
-	 */
 	private function getCv($id)
 	{
 		try {
@@ -116,11 +88,6 @@ class CvEditorPresenter extends BasePresenter
 		return $this->cv;
 	}
 
-	/**
-	 * Cv entity setter
-	 * @param int $id
-	 * @throws CvEditorPresenterException
-	 */
 	private function setCv($id)
 	{
 		if ($this->cv) {
@@ -129,7 +96,7 @@ class CvEditorPresenter extends BasePresenter
 		$candidate = $this->user->identity->candidate;
 
 		if ($id) {
-			$cvDao = $this->em->getDao(Cv::getClassName());
+			$cvDao = $this->em->getDao(Entity\Cv::getClassName());
 			$findedCv = $cvDao->find($id);
 			$isOwnCv = $candidate && $findedCv->candidate->id === $candidate->id;
 			$canEditForeignCv = $findedCv && $this->user->isAllowed('cvEditor', 'editForeign');
@@ -174,7 +141,7 @@ class CvEditorPresenter extends BasePresenter
 		} else {
 			$candidate = $this->user->identity->candidate;
 		}
-		$this['careerDocsControl']->setCandidate($candidate);
+		$this['careerDocs']->setCandidate($candidate);
 	}
 
 	/**
@@ -200,130 +167,130 @@ class CvEditorPresenter extends BasePresenter
 		}
 	}
 
-	/** @return BasicInfoControl */
+	/** @return BasicInfo */
 	public function createComponentBasicInfoForm()
 	{
-		$control = $this->iBasicInfoControlFactory->create();
+		$control = $this->iBasicInfoFactory->create();
 		$control->setAjax(TRUE, TRUE);
 		$control->setCv($this->cv);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return WorksControl */
-	public function createComponentWorksControl()
+	/** @return Works */
+	public function createComponentWorksForm()
 	{
-		$control = $this->iWorksControlFactory->create();
+		$control = $this->iWorksFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return EducationsControl */
-	public function createComponentEducationsControl()
+	/** @return Educations */
+	public function createComponentEducationsForm()
 	{
-		$control = $this->iEducationsControlFactory->create();
+		$control = $this->iEducationsFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return SkillsControl */
+	/** @return Skills */
 	public function createComponentSkillsForm()
 	{
-		$control = $this->iSkillsControlFactory->create();
+		$control = $this->iSkillsFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return ExperienceControl */
-	public function createComponentExperienceControl()
+	/** @return Experience */
+	public function createComponentExperienceForm()
 	{
-		$control = $this->iExperienceControlFactory->create();
+		$control = $this->iExperienceFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return PersonalControl */
-	public function createComponentPersonalControl()
+	/** @return Personal */
+	public function createComponentPersonalForm()
 	{
-		$control = $this->iPersonalControlFactory->create();
+		$control = $this->iPersonalFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return LanguageControl */
-	public function createComponentLanguageControl()
+	/** @return Language */
+	public function createComponentLanguageForm()
 	{
-		$control = $this->iLanguageControlFactory->create();
+		$control = $this->iLanguageFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return OtherLanguageControl */
-	public function createComponentOtherLanguageControl()
+	/** @return OtherLanguage */
+	public function createComponentOtherLanguageForm()
 	{
-		$control = $this->iOtherLanguageControlFactory->create();
+		$control = $this->iOtherLanguageFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return ObjectiveControl */
-	public function createComponentObjectiveControl()
+	/** @return Objective */
+	public function createComponentObjectiveForm()
 	{
-		$control = $this->iObjectiveControlFactory->create();
+		$control = $this->iObjectiveFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return EmploymentControl */
-	public function createComponentEmploymentControl()
+	/** @return Employment */
+	public function createComponentEmploymentForm()
 	{
-		$control = $this->iEmploymentControlFactory->create();
+		$control = $this->iEmploymentFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return SummaryControl */
-	public function createComponentSummaryControl()
+	/** @return Summary */
+	public function createComponentSummaryForm()
 	{
-		$control = $this->iSummaryControlFactory->create();
+		$control = $this->iSummaryFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return AdditionalControl */
-	public function createComponentAdditionalControl()
+	/** @return Additional */
+	public function createComponentAdditionalForm()
 	{
-		$control = $this->iAdditionalControlFactory->create();
+		$control = $this->iAdditionalFactory->create();
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
 
-	/** @return LivePreviewControl */
+	/** @return LivePreview */
 	public function createComponentCvPreview()
 	{
-		$control = $this->iLivePreviewControlFactory->create();
+		$control = $this->iLivePreviewFactory->create();
 		$control->setScale(0.8, 0.8, 1);
 		$control->setCv($this->cv);
 		return $control;
@@ -337,10 +304,10 @@ class CvEditorPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return CareerDocsControl */
-	public function createComponentCareerDocsControl()
+	/** @return CareerDocs */
+	public function createComponentCareerDocs()
 	{
-		$control = $this->iCareerDocsControlFactory->create();
+		$control = $this->iCareerDocsFactory->create();
 		$control->onAfterSave[] = function () {
 			$this->redirect('this');
 		};

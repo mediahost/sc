@@ -2,24 +2,26 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Components\Candidate\IAddressControlFactory;
-use App\Components\Candidate\IPhotoControlFactory;
-use App\Components\Candidate\IProfileControlFactory;
-use App\Components\Candidate\ProfileControl;
+use App\Components\Candidate\Address;
+use App\Components\Candidate\IAddressFactory;
+use App\Components\Candidate\IPhotoFactory;
+use App\Components\Candidate\IProfileFactory;
+use App\Components\Candidate\Photo;
+use App\Components\Candidate\Profile;
 use App\Model\Entity\Candidate;
 
 class CandidatePresenter extends BasePresenter
 {
 	// <editor-fold desc="inject">
 
-	/** @var IProfileControlFactory @inject */
-	public $iProfileControlFactory;
+	/** @var IProfileFactory @inject */
+	public $iProfileFactory;
 
-	/** @var IAddressControlFactory @inject */
-	public $iAddressControlFactory;
+	/** @var IAddressFactory @inject */
+	public $iAddressFactory;
 
-	/** @var IPhotoControlFactory @inject */
-	public $iPhotoControlFactory;
+	/** @var IPhotoFactory @inject */
+	public $iPhotoFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -73,10 +75,10 @@ class CandidatePresenter extends BasePresenter
 
 	// <editor-fold desc="forms">
 
-	/** @return ProfileControl */
+	/** @return Profile */
 	public function createComponentProfileForm()
 	{
-		$control = $this->iProfileControlFactory->create();
+		$control = $this->iProfileFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = $this->translator->translate('Personal info for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
@@ -86,10 +88,10 @@ class CandidatePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return ProfileControl */
+	/** @return Address */
 	public function createComponentAddressForm()
 	{
-		$control = $this->iAddressControlFactory->create();
+		$control = $this->iAddressFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = $this->translator->translate('Address for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
@@ -99,10 +101,10 @@ class CandidatePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return ProfileControl */
+	/** @return Photo */
 	public function createComponentPhotoForm()
 	{
-		$control = $this->iPhotoControlFactory->create();
+		$control = $this->iPhotoFactory->create();
 		$control->setCandidate($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);

@@ -2,16 +2,12 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Candidate\ICandidateGalleryViewFactory;
 use App\Components\AfterRegistration\ICompleteCandidatePreviewFactory;
-use App\Components\Cv\ILivePreviewControlFactory;
-use App\Components\Cv\ICvDataViewFactory;
-use App\Components\Cv\ISkillsFilterFactory;
-use App\Components\Cv\ISkillsControlFactory;
-use App\Components\Job\SkillsControl;
+use App\Components\Candidate\ICandidateGalleryViewFactory;
+use App\Components\Cv;
+use App\Components\Job\Skills;
+use App\Model\Entity;
 use App\Model\Facade\UserFacade;
-use App\Model\Entity\Cv;
-use App\Model\Entity\Job;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\EntityRepository;
 
@@ -21,28 +17,28 @@ class CvsPresenter extends BasePresenter
 
 	/** @var EntityManager @inject */
 	public $em;
-    
-    /** @var ICandidateGalleryViewFactory @inject */
+
+	/** @var ICandidateGalleryViewFactory @inject */
 	public $candidateGalleryViewFactory;
 
-	/** @var ICvDataViewFactory @inject */
+	/** @var Cv\ICvDataViewFactory @inject */
 	public $cvDataViewFactory;
 
-	/** @var ISkillsFilterFactory @inject */
+	/** @var Cv\ISkillsFilterFactory @inject */
 	public $iSkillFilterFactory;
-    
-    /** @var ISkillsControlFactory @inject */
-	public $iSkillsControlFactory;
-    
-    /** @var ILivePreviewControlFactory @inject */
-	public $iLivePreviewControlFactory;
-    
-    /** @var ICompleteCandidatePreviewFactory @inject */
+
+	/** @var Cv\ISkillsFactory @inject */
+	public $iSkillsFactory;
+
+	/** @var Cv\ILivePreviewFactory @inject */
+	public $iLivePreviewFactory;
+
+	/** @var ICompleteCandidatePreviewFactory @inject */
 	public $completeCandidatePreview;
-    
-    /** @var UserFacade @inject */
+
+	/** @var UserFacade @inject */
 	public $userFacade;
-    
+
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
@@ -57,8 +53,8 @@ class CvsPresenter extends BasePresenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->cvRepo = $this->em->getRepository(Cv::getClassName());
-		$this->jobRepo = $this->em->getRepository(Job::getClassName());
+		$this->cvRepo = $this->em->getRepository(Entity\Cv::getClassName());
+		$this->jobRepo = $this->em->getRepository(Entity\Job::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -70,22 +66,24 @@ class CvsPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-        $this->template->pageTitle = $this->translator->translate('Candidates');
+		$this->template->pageTitle = $this->translator->translate('Candidates');
 	}
-    
-    public function actionCandidates() {
-        $this['candidateGalleryView']->resetFilter();
-        $this->redirect('default');
-    }
-    
-    public function actionCvDetail($userId) {
-        $user = $this->userFacade->findById($userId);
-        $this['completeCandidatePreview']->setUserEntity($user);
+
+	public function actionCandidates()
+	{
+		$this['candidateGalleryView']->resetFilter();
+		$this->redirect('default');
+	}
+
+	public function actionCvDetail($userId)
+	{
+		$user = $this->userFacade->findById($userId);
+		$this['completeCandidatePreview']->setUserEntity($user);
 		$this['skillsForm']->setCv($user->candidate->getDefaultCv());
-        $this->redrawControl('cvDetail');
-    }
-    
-    /**
+		$this->redrawControl('cvDetail');
+	}
+
+	/**
 	 * @secured
 	 * @resource('cvs')
 	 * @privilege('delete')
@@ -103,7 +101,7 @@ class CvsPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return SkillsControl */
+	/** @return Skills */
 	public function createComponentSkillFilter()
 	{
 		$control = $this->iSkillFilterFactory->create();
@@ -114,27 +112,29 @@ class CvsPresenter extends BasePresenter
 		};
 		return $control;
 	}
-    
-    public function createComponentCandidateGalleryView() {
-        $control = $this->candidateGalleryViewFactory->create();
-        return $control;
-    }
-    
-    public function createComponentCvPreview()
+
+	public function createComponentCandidateGalleryView()
 	{
-		$control = $this->iLivePreviewControlFactory->create();
+		$control = $this->candidateGalleryViewFactory->create();
+		return $control;
+	}
+
+	public function createComponentCvPreview()
+	{
+		$control = $this->iLivePreviewFactory->create();
 		$control->setScale(0.8, 0.8, 1);
 		return $control;
 	}
-    
-    public function createComponentCompleteCandidatePreview() {
-        $control = $this->completeCandidatePreview->create();
-        return $control;
-    }
-    
-    public function createComponentSkillsForm()
+
+	public function createComponentCompleteCandidatePreview()
 	{
-		$control = $this->iSkillsControlFactory->create();
+		$control = $this->completeCandidatePreview->create();
+		return $control;
+	}
+
+	public function createComponentSkillsForm()
+	{
+		$control = $this->iSkillsFactory->create();
 		$control->setTemplateFile('overview');
 		$control->onlyFilledSkills = true;
 		$control->setAjax(TRUE, TRUE);

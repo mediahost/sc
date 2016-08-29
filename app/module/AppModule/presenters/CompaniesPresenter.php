@@ -2,11 +2,11 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Company\CompanyImagesControl;
-use App\Components\Company\CompanyInfoControl;
+use App\Components\Company\CompanyImages;
+use App\Components\Company\CompanyInfo;
 use App\Components\Company\ICompanyDataViewFactory;
-use App\Components\Company\ICompanyImagesControlFactory;
-use App\Components\Company\ICompanyInfoControlFactory;
+use App\Components\Company\ICompanyImagesFactory;
+use App\Components\Company\ICompanyInfoFactory;
 use App\Components\Grids\Company\CompaniesGrid;
 use App\Components\Grids\Company\ICompaniesGridFactory;
 use App\Model\Entity\Company;
@@ -30,11 +30,11 @@ class CompaniesPresenter extends BasePresenter
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
 
-	/** @var ICompanyInfoControlFactory @inject */
-	public $iCompanyInfoControlFactory;
+	/** @var ICompanyInfoFactory @inject */
+	public $iCompanyInfoFactory;
 
-	/** @var ICompanyImagesControlFactory @inject */
-	public $iCompanyImagesControlFactory;
+	/** @var ICompanyImagesFactory @inject */
+	public $iCompanyImagesFactory;
 
 	/** @var ICompaniesGridFactory @inject */
 	public $iCompaniesGridFactory;
@@ -164,10 +164,10 @@ class CompaniesPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="forms">
 
-	/** @return CompanyInfoControl */
+	/** @return CompanyInfo */
 	public function createComponentCompanyInfoForm()
 	{
-		$control = $this->iCompanyInfoControlFactory->create();
+		$control = $this->iCompanyInfoFactory->create();
 		$control->setUser($this->user);
 		$control->onAfterSave = function (Company $saved) {
 			$message = $this->translator->translate('Company \'%company%\' was successfully saved.', ['company' => (string)$saved]);
@@ -177,10 +177,10 @@ class CompaniesPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return CompanyImagesControl */
+	/** @return CompanyImages */
 	public function createComponentCompanyImagesForm()
 	{
-		$control = $this->iCompanyImagesControlFactory->create();
+		$control = $this->iCompanyImagesFactory->create();
 		$control->onAfterSave = function (Company $saved) {
 			$message = $this->translator->translate('Images for company \'%company%\' was successfully saved.', ['company' => (string)$saved]);
 			$this->flashMessage($message, 'success');

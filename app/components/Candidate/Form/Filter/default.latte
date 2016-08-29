@@ -1,0 +1,6 @@
+<div class="cv-filter-container">
+    <small n:foreach="$states as $id => $name" class="checkbox-custom checkbox-inline">
+        <input type="checkbox" value="{$id}" class="cv-filter" id="checkbox{$id}">
+        <label for="checkbox{$id}">{$name}</label>
+    </small>
+</div>
