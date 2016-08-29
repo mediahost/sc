@@ -4,14 +4,13 @@ namespace App\Extensions\Installer\Model;
 
 use App\Model\Entity\SkillLevel;
 use App\Model\Facade\CompanyFacade;
+use App\Model\Facade\JobFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use App\Model\Facade\JobFacade;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Nette\InvalidArgumentException;
 use Nette\Object;
-use Tracy\Debugger;
 
 class InstallerModel extends Object
 {
@@ -99,32 +98,6 @@ class InstallerModel extends Object
 				throw new InvalidArgumentException('Invalid name of role. Check if exists role with name \'' . $role . '\'.');
 			}
 			$this->userFacade->create($initUserMail, $pass, $roleEntity);
-		}
-		return TRUE;
-	}
-	
-	/**
-	 * Create job types
-	 * @param array $types
-	 * @return boolean
-	 */
-	public function installJobTypes(array $types)
-	{
-		foreach ($types as $type) {
-			$this->jobFacade->findOrCreateJobType($type);
-		}
-		return TRUE;
-	}
-	
-	/**
-	 * Create job categories
-	 * @param array $categories
-	 * @return boolean
-	 */
-	public function installJobCategories(array $categories)
-	{
-		foreach ($categories as $category) {
-			$this->jobFacade->findOrCreateCategory($category);
 		}
 		return TRUE;
 	}

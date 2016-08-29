@@ -2,8 +2,8 @@
 
 namespace App\Extensions;
 
-use App\Extensions\Installer\Model\InstallerModel;
 use App\Extensions\Installer\Model\CandidatesGenerator;
+use App\Extensions\Installer\Model\InstallerModel;
 use App\Helpers;
 use App\Security\CompanyPermission;
 use Nette\Object;
@@ -54,9 +54,6 @@ class Installer extends Object
 
 	/** @var InstallerModel @inject */
 	public $model;
-    
-    /** @var CandidatesGenerator @inject */
-	public $candidatesGenerator;
 
 	/** @var IAuthorizator @inject */
 	public $permissions;
@@ -73,13 +70,6 @@ class Installer extends Object
 	// </editor-fold>
 	// <editor-fold desc="setters">
 
-	/**
-	 * Set nested pathes
-	 * @param string $tempDir
-	 * @param string $wwwDir
-	 * @param string $appDir
-	 * @return self
-	 */
 	public function setPathes($appDir, $wwwDir, $tempDir, $installDir)
 	{
 		$this->tempDir = $tempDir;
@@ -89,50 +79,30 @@ class Installer extends Object
 		return $this;
 	}
 
-	/**
-	 * @param bool $value
-	 * @return self
-	 */
 	public function setLock($value)
 	{
-		$this->lock = (bool) $value;
+		$this->lock = (bool)$value;
 		return $this;
 	}
 
-	/**
-	 * @param bool $value
-	 * @return self
-	 */
 	public function setInstallDoctrine($value)
 	{
-		$this->installDoctrine = (bool) $value;
+		$this->installDoctrine = (bool)$value;
 		return $this;
 	}
 
-	/**
-	 * @param bool $value
-	 * @return self
-	 */
 	public function setInstallAdminer($value)
 	{
-		$this->installAdminer = (bool) $value;
+		$this->installAdminer = (bool)$value;
 		return $this;
 	}
 
-	/**
-	 * @param bool $value
-	 * @return self
-	 */
 	public function setInstallComposer($value)
 	{
-		$this->installComposer = (bool) $value;
+		$this->installComposer = (bool)$value;
 		return $this;
 	}
 
-	/**
-	 * @param array $value
-	 * @return self
-	 */
 	public function setInitUsers(array $value)
 	{
 		$this->initUsers = $value;
@@ -160,33 +130,6 @@ class Installer extends Object
 			3 => 'Intermediate',
 			4 => 'Advanced',
 			5 => 'Expert',
-		];
-	}
-	
-	private function getJobTypes()
-	{
-		return [
-			'Full-Time',
-			'Part-Time',
-			'Contract'
-		];
-	}
-	
-	private function getJobCategories()
-	{
-		return [
-			'Database Admin',
-			'Games Developer',
-			'App Developer',
-			'Programmer',
-			'TOP',
-			'IT Consultant',
-			'IT Project Mngr',
-			'Web Designer',
-			'Mainframe Devel',
-			'Data Science',
-			'Dig. Marketing',
-			'SAP Manager'
 		];
 	}
 
@@ -256,136 +199,42 @@ class Installer extends Object
 		$this->installUsers($prefix);
 		$this->installCompany($prefix);
 		$this->installSkillLevels($prefix);
-		$this->installJobTypes($prefix);
-		$this->installJobCategories($prefix);
 	}
 
 	private function installDoctrine($lockPrefix = NULL)
 	{
 		if ($this->installDoctrine) {
-			$name = $lockPrefix . $this->getLockName(__METHOD__);
-			if ($this->lock($name)) {
-				$this->model->installDoctrine();
-				$this->onSuccessInstall($this, $name);
-				$this->messages[$name] = [self::INSTALL_SUCCESS];
-			} else {
-				$this->onLockedInstall($this, $name);
-				$this->messages[$name] = [self::INSTALL_LOCKED];
-			}
+			$this->runInstall(__METHOD__, $lockPrefix);
 		}
 	}
 
-	/**
-	 * Instal roles
-	 * @param string $lockPrefix
-	 */
 	private function installRoles($lockPrefix = NULL)
 	{
-		$name = $lockPrefix . $this->getLockName(__METHOD__);
-		if ($this->lock($name)) {
-			$this->model->installRoles($this->getRoles());
-			$this->onSuccessInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_SUCCESS];
-		} else {
-			$this->onLockedInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_LOCKED];
-		}
+		$this->runInstall(__METHOD__, $lockPrefix, [$this->getRoles()]);
 	}
 
-	/**
-	 * Instal users
-	 * @param string $lockPrefix
-	 */
 	private function installUsers($lockPrefix = NULL)
 	{
-		$name = $lockPrefix . $this->getLockName(__METHOD__);
-		if ($this->lock($name)) {
-			$this->model->installUsers($this->initUsers);
-			$this->onSuccessInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_SUCCESS];
-		} else {
-			$this->onLockedInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_LOCKED];
-		}
+		$this->runInstall(__METHOD__, $lockPrefix, [$this->initUsers]);
 	}
 
-	/**
-	 * Instal company
-	 * @param string $lockPrefix
-	 */
 	private function installCompany($lockPrefix = NULL)
 	{
-		$name = $lockPrefix . $this->getLockName(__METHOD__);
-		if ($this->lock($name)) {
-			$this->model->installCompanyRoles($this->getCompanyRoles());
-			$this->onSuccessInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_SUCCESS];
-		} else {
-			$this->onLockedInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_LOCKED];
-		}
+		$this->runInstall(__METHOD__, $lockPrefix, [$this->getCompanyRoles()]);
 	}
 
-	/**
-	 * Instal skill levels
-	 * @param string $lockPrefix
-	 */
 	private function installSkillLevels($lockPrefix = NULL)
 	{
-		$name = $lockPrefix . $this->getLockName(__METHOD__);
-		if ($this->lock($name)) {
-			$this->model->installSkillLevels($this->getSkillLevels());
-			$this->onSuccessInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_SUCCESS];
-		} else {
-			$this->onLockedInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_LOCKED];
-		}
+		$this->runInstall(__METHOD__, $lockPrefix, [$this->getSkillLevels()]);
 	}
-	
-	/**
-	 * Install job types
-	 * @param string $lockPrefix
-	 */
-	private function installJobTypes($lockPrefix = NULL)
+
+	private function runInstall($method, $prefix, array $params = [])
 	{
-		$name = $lockPrefix . $this->getLockName(__METHOD__);
+		$lockName =$this->getLockName($method);
+		$name = $prefix . $lockName;
+		$function = 'install' . $lockName;
 		if ($this->lock($name)) {
-			$this->model->installJobTypes($this->getJobTypes());
-			$this->onSuccessInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_SUCCESS];
-		} else {
-			$this->onLockedInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_LOCKED];
-		}
-	}
-	
-	/**
-	 * Install job categories
-	 * @param string $lockPrefix
-	 */
-	private function installJobCategories($lockPrefix = NULL)
-	{
-		$name = $lockPrefix . $this->getLockName(__METHOD__);
-		if ($this->lock($name)) {
-			$this->model->installJobCategories($this->getJobCategories());
-			$this->onSuccessInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_SUCCESS];
-		} else {
-			$this->onLockedInstall($this, $name);
-			$this->messages[$name] = [self::INSTALL_LOCKED];
-		}
-	}
-    
-    /**
-	 * Install candidates
-	 * @param string $lockPrefix
-	 */
-	private function installCandidates($lockPrefix = NULL)
-	{
-		$name = $lockPrefix . $this->getLockName(__METHOD__);
-		if ($this->lock($name)) {
-			$this->candidatesGenerator->generate();
+			call_user_func_array($this->model->$function, $params);
 			$this->onSuccessInstall($this, $name);
 			$this->messages[$name] = [self::INSTALL_SUCCESS];
 		} else {
