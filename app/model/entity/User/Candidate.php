@@ -6,9 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
-use Nette\Http\FileUpload;
-use Nette\Utils\DateTime;
-use Nette\Utils\Strings;
 
 /**
  * @ORM\Entity
@@ -16,10 +13,15 @@ use Nette\Utils\Strings;
  * @property bool $freelancer
  * @property Cv[] $cvs
  * @property Document[] $documents
- * @property User $user
+ * @property Person $person
  */
-class Candidate extends Person
+class Candidate extends BaseEntity
 {
+
+	use Identifier;
+
+	/** @ORM\OneToOne(targetEntity="Person", mappedBy="candidate", fetch="LAZY") */
+	protected $person;
 
 	/** @ORM\Column(type="boolean") */
 	protected $freelancer = FALSE;
@@ -47,7 +49,7 @@ class Candidate extends Person
 
 	public function __toString()
 	{
-		return parent::__toString();
+		return (string) $this->person;
 	}
 
 	public function hasDefaultCv()

@@ -41,6 +41,9 @@ class Person extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="User", mappedBy="person", fetch="LAZY") */
 	protected $user;
 
+	/** @ORM\OneToOne(targetEntity="Candidate", inversedBy="person", fetch="LAZY", cascade={"persist", "remove"}, orphanRemoval=true) */
+	protected $candidate;
+
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $firstname;
 
@@ -83,6 +86,14 @@ class Person extends BaseEntity
 			$this->name = $name;
 		}
 		parent::__construct();
+	}
+
+	public function initCandidate()
+	{
+		if (!$this->candidate) {
+			$this->candidate = new Candidate();
+		}
+		return $this;
 	}
 
 	public function __toString()

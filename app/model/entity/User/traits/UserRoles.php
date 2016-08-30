@@ -5,13 +5,15 @@ namespace App\Model\Entity\Traits;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyPermission;
+use App\Model\Entity\Person;
 use App\Model\Entity\Role;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @property-read array $roles
+ * @property-read ArrayCollection $roles
  * @property-read array $rolesKeys
  * @property Role $maxRole
- * @property Candidate $candidate
+ * @property Person $person
  */
 trait UserRoles
 {
@@ -19,8 +21,8 @@ trait UserRoles
 	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
 	private $roles;
 
-	/** @ORM\OneToOne(targetEntity="Candidate", inversedBy="user", fetch="LAZY", cascade={"persist", "remove"}) */
-	protected $candidate;
+	/** @ORM\OneToOne(targetEntity="Person", inversedBy="user", fetch="LAZY", cascade={"persist", "remove"}, orphanRemoval=true) */
+	protected $person;
 
 	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="user", fetch="LAZY", cascade={"persist"}) */
 	protected $allowedCompanies;
@@ -56,12 +58,34 @@ trait UserRoles
 		return $this;
 	}
 
-	public function initCandidate()
+	public function initPerson()
 	{
-		if (!$this->candidate) {
-			$this->candidate = new Candidate;
+		if (!$this->person) {
+			$this->person = new Person();
 		}
 		return $this;
+	}
+
+	public function initCandidate()
+	{
+		$this->initPerson();
+		$this->person->initCandidate();
+		return $this;
+	}
+
+	public function isCompany()
+	{
+		return !$this->isCandidate() && $this->isInRole(Role::COMPANY);
+	}
+
+	public function isInRole($role)
+	{
+		switch ($role) {
+			case Role::COMPANY:
+				return !parent::isInRole(Role::CANDIDATE) && parent::isInRole($role);
+			default:
+				return parent::isInRole($role);
+		}
 	}
 
 	public function getRolesKeys()
