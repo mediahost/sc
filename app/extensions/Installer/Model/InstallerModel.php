@@ -53,7 +53,7 @@ class InstallerModel extends Object
 	 * Create all nested roles
 	 * @return boolean
 	 */
-	public function installCompanyRoles(array $roles)
+	public function installCompany(array $roles)
 	{
 		foreach ($roles as $roleName) {
 			$this->companyFacade->createRole($roleName);
