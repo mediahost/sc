@@ -5,7 +5,7 @@ namespace App\Components\AfterRegistration;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
-use App\Model\Entity\Candidate;
+use App\Model\Entity\Person;
 use App\Model\Entity\User;
 use App\Model\Facade\JobFacade;
 
@@ -20,7 +20,7 @@ class CompleteCandidatePreview extends BaseControl
 
 	public function render()
 	{
-		$this->template->freelancer = $this->userEntity->candidate->freelancer ? 'yes' : 'no';
+		$this->template->freelancer = $this->userEntity->getCandidate()->freelancer ? 'yes' : 'no';
 		$this->setTemplateFile('candidateSecondPreview');
 		parent::render();
 	}
@@ -44,13 +44,13 @@ class CompleteCandidatePreview extends BaseControl
 
 	public function getDefaults()
 	{
-		$candidate = $this->userEntity->candidate;
+		$candidate = $this->userEntity->getCandidate();
 		$categories = $this->jobFacade->findCandidatePreferedCategories($candidate);
 
 		$localities = [];
-		foreach (Candidate::getLocalities() as $group) {
+		foreach (Person::getLocalities() as $group) {
 			foreach ($group as $localityId => $locality) {
-				if (in_array($localityId, $this->userEntity->candidate->workLocations)) {
+				if (in_array($localityId, $candidate->workLocations)) {
 					$localities[] = $locality;
 				}
 			}
@@ -62,7 +62,7 @@ class CompleteCandidatePreview extends BaseControl
 		];
 	}
 
-	public function setUserEntity(User $user)
+	public function setUser(User $user)
 	{
 		$this->userEntity = $user;
 	}

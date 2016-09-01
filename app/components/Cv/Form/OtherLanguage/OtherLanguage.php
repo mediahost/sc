@@ -18,7 +18,7 @@ class OtherLanguage extends BaseControl
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
 
-	/** @var Cv */
+	/** @var Entity\Cv */
 	private $cv;
 
 	/** @var Language */
@@ -155,7 +155,7 @@ class OtherLanguage extends BaseControl
 
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	public function setCv(Cv $cv)
+	public function setCv(Entity\Cv $cv)
 	{
 		$this->cv = $cv;
 		return $this;

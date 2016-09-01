@@ -17,8 +17,8 @@ services:
 
 	# AfterRegistration
 	- {implement: App\Components\AfterRegistration\ICompleteCompanyFactory, inject: yes}
-	- {implement: App\Components\AfterRegistration\ICompleteCandidateFirstFactory, inject: yes}
-	- {implement: App\Components\AfterRegistration\ICompleteCandidateSecondFactory, inject: yes}
+	- {implement: App\Components\AfterRegistration\ICompletePersonFactory, inject: yes}
+	- {implement: App\Components\AfterRegistration\ICompleteCandidateFactory, inject: yes}
 	- {implement: App\Components\AfterRegistration\ICompleteCandidatePreviewFactory, inject: yes}
 
 	# User

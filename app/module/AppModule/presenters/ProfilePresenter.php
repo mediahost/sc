@@ -2,9 +2,10 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\AfterRegistration\CompleteCandidateSecond;
+use App\Components\AfterRegistration\CompleteCandidate;
+use App\Components\AfterRegistration\CompleteCandidatePreview;
 use App\Components\AfterRegistration\ICompleteCandidatePreviewFactory;
-use App\Components\AfterRegistration\ICompleteCandidateSecondFactory;
+use App\Components\AfterRegistration\ICompleteCandidateFactory;
 use App\Components\Auth\ConnectManager;
 use App\Components\Auth\IConnectManagerFactory;
 use App\Components\Auth\ISetPasswordFactory;
@@ -60,8 +61,8 @@ class ProfilePresenter extends BasePresenter
 	/** @var ICareerDocsFactory @inject */
 	public $iCareerDocsFactory;
 
-	/** @var ICompleteCandidateSecondFactory @inject */
-	public $iCompleteCandidateSecondFactory;
+	/** @var ICompleteCandidateFactory @inject */
+	public $iCompleteCandidateFactory;
 
 	/** @var ICompleteCandidatePreviewFactory @inject */
 	public $completeCandidatePreview;
@@ -346,12 +347,12 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return CompleteCandidateSecond */
-	protected function createComponentCompleteCandidateSecond()
+	/** @return CompleteCandidate */
+	protected function createComponentCompleteCandidate()
 	{
-		$control = $this->iCompleteCandidateSecondFactory->create();
-		$control->setUserEntity($this->getUserEntity());
-		$control->onSuccess[] = function (CompleteCandidateSecond $control, Candidate $candidate) {
+		$control = $this->iCompleteCandidateFactory->create();
+		$control->setUser($this->getUserEntity());
+		$control->onSuccess[] = function (CompleteCandidate $control, Candidate $candidate) {
 			$message = $this->translator->translate('Your data was saved.');
 			$this->flashMessage($message, 'success');
 			$this->redrawControl('interestedIn');
@@ -359,10 +360,11 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
+	/** @return CompleteCandidatePreview */
 	protected function createComponentCompleteCandidatePreview()
 	{
 		$control = $this->completeCandidatePreview->create();
-		$control->setUserEntity($this->getUserEntity());
+		$control->setUser($this->getUserEntity());
 		return $control;
 	}
 

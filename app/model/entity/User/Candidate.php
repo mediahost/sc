@@ -49,7 +49,12 @@ class Candidate extends BaseEntity
 
 	public function __toString()
 	{
-		return (string) $this->person;
+		return (string)$this->getPerson();
+	}
+
+	public function getUser()
+	{
+		return $this->getPerson()->getUser();
 	}
 
 	public function hasDefaultCv()
@@ -70,12 +75,7 @@ class Candidate extends BaseEntity
 		throw new EntityException('Candidate has no default CV');
 	}
 
-	public function isRequiredPersonalFilled()
-	{
-		return $this->isFilled();
-	}
-
-	public function isRequiredOtherFilled()
+	public function isFilled()
 	{
 		return count($this->workLocations) && count($this->jobCategories);
 	}

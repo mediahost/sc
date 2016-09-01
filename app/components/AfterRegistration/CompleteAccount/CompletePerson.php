@@ -6,12 +6,12 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
 use App\Model\Entity\Address;
-use App\Model\Entity\Candidate;
+use App\Model\Entity\Person;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use Nette\Utils\ArrayHash;
 
-class CompleteCandidateFirst extends BaseControl
+class CompletePerson extends BaseControl
 {
 
 	// <editor-fold desc="events">
@@ -32,21 +32,22 @@ class CompleteCandidateFirst extends BaseControl
 
 	public function render()
 	{
-		$this->setTemplateFile('candidateFirst');
+		$this->setTemplateFile('person');
 		parent::render();
 	}
 
 	protected function createComponentForm()
 	{
-		/* @var $candidate Candidate */
-		$candidate = $this->user->identity->candidate;
+		/* @var $person Person */
+		$user = $this->user->getIdentity();
+		$person = $user->getPerson();
 
 		$form = new Form();
 		$form->setRenderer(new MetronicHorizontalFormRenderer());
 		$form->setTranslator($this->translator);
 
 		$form->addGroup('Personal Info');
-		$form->addSelect('title', 'Title', Candidate::getTitleList())
+		$form->addSelect('title', 'Title', Person::getTitleList())
 			->setAttribute('class', 'input-small');
 		$form->addText('degreeFront', 'Degree in front of name')
 			->setAttribute('class', 'input-large');
@@ -57,12 +58,12 @@ class CompleteCandidateFirst extends BaseControl
 			->setRequired();
 		$form->addText('degreeAfter', 'Degree after name')
 			->setAttribute('class', 'input-large');
-		$form->addRadioList('gender', 'Gender', Candidate::getGenderList())
+		$form->addRadioList('gender', 'Gender', Person::getGenderList())
 			->setDefaultValue('x')
 			->setAttribute('class', 'custom-radio');
 
 		$form->addDateInput('birthday', 'Birthday')
-			->setDefaultValue($this->user->identity->socialBirthday)
+			->setDefaultValue($user->socialBirthday)
 			->setRequired();
 
 		$form->addSelect2('nationality', 'Nationality', Address::getCountriesList())
@@ -82,33 +83,34 @@ class CompleteCandidateFirst extends BaseControl
 		$form->addSelect2('country', 'Country', Address::getCountriesList())
 			->setAttribute('class', 'input-xlarge')
 			->setRequired();
-		$form->addText('tel', 'Contact number')
+		$form->addText('phone', 'Contact number')
 			->setAttribute('class', 'input-xlarge')
 			->setRequired();
 
 		$form->addGroup('Photo');
 		$form->addUpload('photo', 'Photo')
-			->setRequired(!$candidate->photo);
+			->setRequired(!$person->photo);
 
 		$defaultsArr = [
-			'title' => $candidate->title,
-			'degreeFront' => $candidate->degreeBefore,
-			'firstName' => $candidate->firstname,
-			'middleName' => $candidate->middlename,
-			'surname' => $candidate->surname,
-			'degreeAfter' => $candidate->degreeAfter,
-			'gender' => $candidate->gender,
-			'birthday' => $candidate->birthday,
-			'nationality' => $candidate->nationality,
-			'tel' => $candidate->phone,
+			'title' => $person->title,
+			'degreeFront' => $person->degreeBefore,
+			'firstName' => $person->firstname,
+			'middleName' => $person->middlename,
+			'surname' => $person->surname,
+			'degreeAfter' => $person->degreeAfter,
+			'gender' => $person->gender,
+			'birthday' => $person->birthday,
+			'nationality' => $person->nationality,
+			'phone' => $person->phone,
 		];
-		if ($candidate->address) {
+		if ($person->address) {
+			$address = $person->address;
 			$defaultsArr += [
-				'house' => $candidate->address->house,
-				'street' => $candidate->address->street,
-				'zipcode' => $candidate->address->zipcode,
-				'city' => $candidate->address->city,
-				'country' => $candidate->address->country,
+				'house' => $address->house,
+				'street' => $address->street,
+				'zipcode' => $address->zipcode,
+				'city' => $address->city,
+				'country' => $address->country,
 			];
 		}
 		$form->setDefaults($defaultsArr);
@@ -124,21 +126,23 @@ class CompleteCandidateFirst extends BaseControl
 		$userRepo = $this->em->getRepository(User::getClassName());
 
 		/* @var $user User */
-		$user = $this->user->identity;
-		$user->candidate->title = $values->title;
-		$user->candidate->degreeBefore = $values->degreeFront;
-		$user->candidate->firstname = $values->firstName;
-		$user->candidate->middlename = $values->middleName;
-		$user->candidate->surname = $values->surname;
-		$user->candidate->degreeAfter = $values->degreeAfter;
-		$user->candidate->gender = $values->gender;
-		$user->candidate->birthday = $values->birthday;
-		$user->candidate->nationality = $values->nationality;
-		$user->candidate->phone = $values->tel;
-		$user->candidate->setPhoto($values->photo);
+		$user = $this->user->getIdentity();
+		$person = $user->getPerson();
 
-		if ($user->candidate->address) {
-			$address = $user->candidate->address;
+		$person->title = $values->title;
+		$person->degreeBefore = $values->degreeFront;
+		$person->firstname = $values->firstName;
+		$person->middlename = $values->middleName;
+		$person->surname = $values->surname;
+		$person->degreeAfter = $values->degreeAfter;
+		$person->gender = $values->gender;
+		$person->birthday = $values->birthday;
+		$person->nationality = $values->nationality;
+		$person->phone = $values->phone;
+		$person->setPhoto($values->photo);
+
+		if ($person->address) {
+			$address = $person->address;
 		} else {
 			$address = new Address();
 		}
@@ -147,18 +151,18 @@ class CompleteCandidateFirst extends BaseControl
 		$address->zipcode = $values->zipcode;
 		$address->city = $values->city;
 		$address->country = $values->country;
-		$user->candidate->address = $address;
+		$person->address = $address;
 
-		$user = $userRepo->save($user);
+		$userRepo->save($user);
 
-		$this->onSuccess($this, $user->candidate);
+		$this->onSuccess($this, $person);
 	}
 
 }
 
-interface ICompleteCandidateFirstFactory
+interface ICompletePersonFactory
 {
 
-	/** @return CompleteCandidateFirst */
+	/** @return CompletePerson */
 	function create();
 }

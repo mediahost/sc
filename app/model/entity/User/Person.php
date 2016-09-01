@@ -88,17 +88,17 @@ class Person extends BaseEntity
 		parent::__construct();
 	}
 
-	public function initCandidate()
+	public function __toString()
+	{
+		return (string)$this->getFullName();
+	}
+
+	public function getCandidate()
 	{
 		if (!$this->candidate) {
 			$this->candidate = new Candidate();
 		}
-		return $this;
-	}
-
-	public function __toString()
-	{
-		return (string)$this->name;
+		return $this->candidate;
 	}
 
 	public function getGenderName()

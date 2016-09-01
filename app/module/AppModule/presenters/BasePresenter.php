@@ -5,6 +5,7 @@ namespace App\AppModule\Presenters;
 use App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Facade\CommunicationFacade;
 use Tracy\Debugger;
 
@@ -20,11 +21,11 @@ abstract class BasePresenter extends BaseBasePresenter
 	private $showRightSideBar = false;
 
 
-	public function getUserCommunications(\App\Model\Entity\User $user=null)
+	public function getUserCommunications(\App\Model\Entity\User $user = null)
 	{
-        if(!$user) {
-            $user = $this->user->identity;
-        }
+		if (!$user) {
+			$user = $this->user->identity;
+		}
 		$this->userCommunications = $this->communicationFacade->getUserCommunications($user);
 		return $this->userCommunications;
 	}
@@ -61,13 +62,15 @@ abstract class BasePresenter extends BaseBasePresenter
 	 */
 	private function isCompleteAccount()
 	{
+		/** @var User $identity */
 		$identity = $this->user->identity;
-		$candidate = $identity->candidate;
-		$isCompleteAccount = $candidate && $candidate->isRequiredPersonalFilled() && $candidate->isRequiredOtherFilled() && $identity->verificated;
-		return $isCompleteAccount
-            || in_array(Role::COMPANY, $this->getUser()->getRoles())
-			|| in_array(Role::ADMIN, $this->getUser()->getRoles())
-			|| in_array(Role::SUPERADMIN, $this->getUser()->getRoles());
+		$person = $identity->getPerson();
+		$candidate = $person->getCandidate();
+		$isCompleteAccount = $person->isFilled() && $candidate->isFilled() && $identity->verificated;
+		return ($this->getUser()->isInRole(Role::CANDIDATE) && $isCompleteAccount)
+		|| $this->getUser()->isInRole(Role::COMPANY)
+		|| $this->getUser()->isInRole(Role::ADMIN)
+		|| $this->getUser()->isInRole(Role::SUPERADMIN);
 	}
 
 	protected function hideRightSidebar()

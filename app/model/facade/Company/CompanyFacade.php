@@ -101,12 +101,12 @@ class CompanyFacade extends Object
 			return NULL;
 		}
 		$findedCompany = $this->find($company);
-		$userId = $user instanceof User ? $user->id : (string) $user;
+		$userId = $user instanceof User ? $user->id : (string)$user;
 		$findedUser = $this->userRepo->find($userId);
 
 		$permission = $this->findPermission($findedCompany, $findedUser);
 		if (!$permission) {
-			$permission = new CompanyPermission;
+			$permission = new CompanyPermission();
 		} else if ($clearRoles) {
 			$permission->clearRoles();
 		}
@@ -145,7 +145,7 @@ class CompanyFacade extends Object
 		return TRUE;
 	}
 
-	public function clearJobs(Company $company) 
+	public function clearJobs(Company $company)
 	{
 		foreach ($company->jobs as $job) {
 			$this->em->remove($job);

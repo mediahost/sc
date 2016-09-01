@@ -2,14 +2,16 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\AfterRegistration\CompleteCandidateSecond;
+use App\Components\AfterRegistration\CompleteCandidate;
 use App\Components\AfterRegistration\CompleteCompany;
-use App\Components\AfterRegistration\ICompleteCandidateFirstFactory;
-use App\Components\AfterRegistration\ICompleteCandidateSecondFactory;
+use App\Components\AfterRegistration\CompletePerson;
+use App\Components\AfterRegistration\ICompletePersonFactory;
+use App\Components\AfterRegistration\ICompleteCandidateFactory;
 use App\Components\AfterRegistration\ICompleteCompanyFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
+use App\Model\Entity\Person;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
@@ -18,11 +20,11 @@ use App\Model\Facade\UserFacade;
 class CompleteAccountPresenter extends BasePresenter
 {
 
-	/** @var ICompleteCandidateFirstFactory @inject */
-	public $iCompleteCandidateFirstFactory;
+	/** @var ICompletePersonFactory @inject */
+	public $iCompletePersonFactory;
 
-	/** @var ICompleteCandidateSecondFactory @inject */
-	public $iCompleteCandidateSecondFactory;
+	/** @var ICompleteCandidateFactory @inject */
+	public $iCompleteCandidateFactory;
 
 	/** @var ICompleteCompanyFactory @inject */
 	public $iCompleteCompanyFactory;
@@ -58,13 +60,14 @@ class CompleteAccountPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		if ($this->user->isInRole(Role::CANDIDATE)) {
-			if (!$this->user->identity->candidate) {
+		$user = $this->getUser();
+		if ($user->isInRole(Role::CANDIDATE)) {
+			$candidate = $user->getIdentity()->getCandidate();
+			if (!$candidate->id) {
 				$userRepo = $this->em->getRepository(User::getClassName());
-				$this->user->identity->initCandidate();
-				$userRepo->save($this->user->identity);
+				$userRepo->save($user->getIdentity());
 			}
-			if ($this->user->identity->candidate->isRequiredPersonalFilled()) {
+			if ($user->getIdentity()->getPerson()->isFilled()) {
 				$this->redirect('step2');
 			}
 		}
@@ -77,9 +80,9 @@ class CompleteAccountPresenter extends BasePresenter
 	 */
 	public function actionStep2()
 	{
-		$user = $this->user;
-		$candidate = $user->identity->candidate;
-		if ($user->isInRole(Role::CANDIDATE) && $candidate->isRequiredOtherFilled()) {
+		$user = $this->getUser();
+		$candidate = $user->getIdentity()->getCandidate();
+		if ($user->isInRole(Role::CANDIDATE) && $candidate->isFilled()) {
 			$this->redirect('verify');
 		}
 	}
@@ -87,16 +90,17 @@ class CompleteAccountPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('registration')
-	 * @privilege('step2')
+	 * @privilege('verify')
 	 */
 	public function actionVerify()
 	{
-		$user = $this->user;
-		$candidate = $user->identity->candidate;
-		if ($user->identity->verificated) {
-			if (!$candidate->isRequiredPersonalFilled()) {
+		$identity = $this->getUser()->getIdentity();
+		$person = $identity->getPerson();
+		$candidate = $person->getCandidate();
+		if ($identity->verificated) {
+			if (!$person->isFilled()) {
 				$this->redirect('default');
-			} elseif (!$candidate->isRequiredOtherFilled()) {
+			} elseif (!$candidate->isFilled()) {
 				$this->redirect('step2');
 			}
 			$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
@@ -112,16 +116,16 @@ class CompleteAccountPresenter extends BasePresenter
 	 */
 	public function handleResendVerification()
 	{
-		$user = $this->user->identity;
-		if (!$user->verificated) {
+		$identity = $this->getUser()->getIdentity();
+		if (!$identity->verificated) {
 			$userRepo = $this->em->getRepository(User::getClassName());
-			$this->userFacade->setVerification($user);
-			$userRepo->save($user);
+			$this->userFacade->setVerification($identity);
+			$userRepo->save($identity);
 
 			// Send verification e-mail
 			$message = $this->verificationMessage->create();
-			$message->addParameter('link', $this->link('//:Front:Sign:verify', $user->verificationToken));
-			$message->addTo($user->mail);
+			$message->addParameter('link', $this->link('//:Front:Sign:verify', $identity->verificationToken));
+			$message->addTo($identity->mail);
 			$message->send();
 
 			$message = $this->translator->translate('Verification mail has been send.');
@@ -132,11 +136,11 @@ class CompleteAccountPresenter extends BasePresenter
 
 	// <editor-fold desc="components">
 
-	/** @return CompleteCandidateFirst */
-	protected function createComponentCompleteCandidateFirst()
+	/** @return CompletePerson */
+	protected function createComponentCompletePerson()
 	{
-		$control = $this->iCompleteCandidateFirstFactory->create();
-		$control->onSuccess[] = function (CompleteCandidateFirst $control, Candidate $candidate) {
+		$control = $this->iCompletePersonFactory->create();
+		$control->onSuccess[] = function (CompletePerson $control, Person $person) {
 			$message = $this->translator->translate('Your data was saved. Your candidate account is almost complete.');
 			$this->flashMessage($message, 'success');
 			$this->redirect('step2');
@@ -144,13 +148,12 @@ class CompleteAccountPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return CompleteCandidateSecond */
-	protected function createComponentCompleteCandidateSecond()
+	/** @return CompleteCandidate */
+	protected function createComponentCompleteCandidate()
 	{
-		$control = $this->iCompleteCandidateSecondFactory->create();
-		$control->setUserEntity($this->user->identity);
-		$control->onSuccess[] = function (CompleteCandidateSecond $control, Candidate $candidate) {
-			if (!$candidate->user->verificated) {
+		$control = $this->iCompleteCandidateFactory->create();
+		$control->onSuccess[] = function (CompleteCandidate $control, Candidate $candidate) {
+			if (!$candidate->getUser()->verificated) {
 				$message = $this->translator->translate('Your data was saved. Please verify your mail!');
 				$this->flashMessage($message, 'success');
 				$this->redirect('verify');

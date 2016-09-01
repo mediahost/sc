@@ -1,151 +1,104 @@
 {block header}
-<!-- BEGIN HEADER -->
-<div id="header">
-	<nav class="navbar navbar-default" role="navigation">
-		<div class="navbar-header">
-			<a class="navbar-brand" href="index.html">
-                {_'Source-Code'}
-            </a>
-		</div>
-		<div id="navbar-no-collapse" class="navbar-no-collapse">
-			<ul class="nav navbar-nav">
-				<li>
-					<a href="#" class="collapseBtn leftbar">
-						<i class="s16 minia-icon-list-3"></i>
-					</a>
-				</li>
-				<li>
-					<a href="#" class="tipB reset-layout" title="{_'Reset panel postions'}">
-						<i class="s16 icomoon-icon-history"></i>
-					</a>
-				</li>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<i class="s16 icomoon-icon-cog-2"></i>
-						<span class="txt">
-							{_'Settings'}
-						</span>
-						<b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu left dropdown-form template-settings">
-						<li class="menu">
-							<ul role="menu">
-								<li>
-									<strong>{_'Template settings'}</strong>
-								</li>
-								<li>
-									<div class="toggle-custom">
-										<label class="toggle" data-on="{_'ON'}" data-off="{_'OFF'}">
-											<input type="checkbox" id="fixed-header-toggle" name="fixed-header-toggle" checked>
-											<span class="button-checkbox"></span>
-										</label>
-										<label for="fixed-header-toggle">{_'Fixed header'}</label>
-									</div>
-								</li>
-								<li>
-									<div class="toggle-custom">
-										<label class="toggle" data-on="{_'ON'}" data-off="{_'OFF'}">
-											<input type="checkbox" id="fixed-left-sidebar" name="fixed-left-sidebar" checked>
-											<span class="button-checkbox"></span>
-										</label>
-										<label for="fixed-left-sidebar">{_'Fixed Left Sidebar'}</label>
-									</div>
-								</li>
-								<li>
-									<div class="toggle-custom">
-										<label class="toggle" data-on="{_'ON'}" data-off="{_'OFF'}">
-											<input type="checkbox" id="fixed-right-sidebar" name="fixed-right-sidebar" checked>
-											<span class="button-checkbox"></span>
-										</label>
-										<label for="fixed-right-sidebar">{_'Fixed Right Sidebar'}</label>
-									</div>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-				<li class="dropdown" n:if="$user->isAllowed('messages') && $isCompleteAccount">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<i class="s16 minia-icon-envelope"></i>
-						<span class="txt">{_'Messages'}</span>
-						<span class="notification" n:if="$unreadMessagesCount">
+	<!-- BEGIN HEADER -->
+	<div id="header">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="index.html">
+					{_'Source-Code'}
+				</a>
+			</div>
+			<div id="navbar-no-collapse" class="navbar-no-collapse">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="#" class="collapseBtn leftbar">
+							<i class="s16 minia-icon-list-3"></i>
+						</a>
+					</li>
+					<li class="dropdown" n:if="$user->isAllowed('messages') && $isCompleteAccount">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<i class="s16 minia-icon-envelope"></i>
+							<span class="txt">{_'Messages'}</span>
+							<span class="notification" n:if="$unreadMessagesCount">
 							{$unreadMessagesCount}
 						</span>
-					</a>
-					<ul class="dropdown-menu left">
-						<li class="menu">
-							{include messageViewer}
-						</li>
-					</ul>
-				</li>
-                                <li class="button">
-                                        <a href="{link Profile:}" >
-						<i class="s16 fa fa-user"></i>
-						<span class="txt">{_'Profile'}</span>
-					</a>
-                                </li>
-			</ul>
-			{var $candidate => $user->getIdentity()->candidate}
-			<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle avatar" data-toggle="dropdown">
-						<img n:ifset="$candidate->photo" src="{$basePath}/foto/{$candidate->photo|size:50,50}" alt="" class="image" />
-						{var defaultImage = \App\Model\Entity\Image::DEFAULT_IMAGE}
-						<img n:if="!isset($candidate->photo)" src="{$basePath}/foto/{$defaultImage|size:50,50}" alt="" class="image" />
-						<span class="txt">{$user->getIdentity()->mail}</span>
-						<b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu right" n:if="$isCompleteAccount">
-						<li class="menu">
-							<ul>
-								<li n:if="$user->isAllowed('profile', 'default')">
-									<a n:href="Profile:">
-										<i class="s16 fa fa-user"></i>
-										{_'My Profile'}
-									</a>
-								</li>
-								<li n:if="$user->isAllowed('profile', 'settings')">
-									<a n:href="Profile:settings">
-										<i class="s16 fa fa-gears"></i>
-										{_'Settings'}
-									</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<a href="{control signOut}">
-						<i class="s16 icomoon-icon-exit"></i>
-						<span class="txt">
+						</a>
+						<ul class="dropdown-menu left">
+							<li class="menu">
+								{include messageViewer}
+							</li>
+						</ul>
+					</li>
+					<li class="button" n:if="$user->isAllowed('profile') && $isCompleteAccount">
+						<a href="{link Profile:}">
+							<i class="s16 fa fa-user"></i>
+							<span class="txt">{_'Profile'}</span>
+						</a>
+					</li>
+				</ul>
+				{var $person => $user->getIdentity()->getPerson()}
+				<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
+					<li n:class="$isCompleteAccount ? dropdown">
+						<a href="#" n:class="$isCompleteAccount ? dropdown-toggle, avatar"{if $isCompleteAccount} data-toggle="dropdown"{/if}>
+							<img n:ifset="$person->photo" src="{$basePath}/foto/{$person->photo|size:50,50}"
+															 alt="" class="image"/>
+							{var defaultImage = \App\Model\Entity\Image::DEFAULT_IMAGE}
+							<img n:if="!isset($person->photo)" src="{$basePath}/foto/{$defaultImage|size:50,50}"
+																  alt="" class="image"/>
+							<span class="txt">{$user->getIdentity()->mail}</span>
+							<b class="caret" n:if="$isCompleteAccount"></b>
+						</a>
+						<ul class="dropdown-menu right" n:if="$isCompleteAccount">
+							<li class="menu">
+								<ul>
+									<li n:if="$user->isAllowed('profile', 'default')">
+										<a n:href="Profile:">
+											<i class="s16 fa fa-user"></i>
+											{_'My Profile'}
+										</a>
+									</li>
+									<li n:if="$user->isAllowed('profile', 'settings')">
+										<a n:href="Profile:settings">
+											<i class="s16 fa fa-gears"></i>
+											{_'Settings'}
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="{control signOut}">
+							<i class="s16 icomoon-icon-exit"></i>
+							<span class="txt">
 							{_'Sign out'}
 						</span>
-					</a>
-				</li>
-				<li>
-					<a id="toggle-right-sidebar" href="#">
-						<i class="s16 icomoon-icon-indent-increase"></i>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</nav>
-</div>
-<!-- END HEADER -->
+						</a>
+					</li>
+					<li>
+						<a id="toggle-right-sidebar" href="#">
+							<i class="s16 icomoon-icon-indent-increase"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<!-- END HEADER -->
 {/block}
 
 {define messageViewer}
-<ul class="messages">
-	<li class="header">
-		{_'You have'} <strong>{_'%s New', NULL, $unreadMessagesCount}</strong> {_'Messages'}
-	</li>
-	<li n:foreach="$communications as $communication">
+	<ul class="messages">
+		<li class="header">
+			{_'You have'} <strong>{_'%count% New', $unreadMessagesCount}</strong> {_'Messages'}
+		</li>
+		<li n:foreach="$communications as $communication">
 		<span class="icon avatar">
 			<a n:href="Messages: $communication->id">
-				<img src="{$basePath}/foto/{$communication->getOpposite($user->identity)->image|size:25,25}" alt="photo" />
+				<img src="{$basePath}/foto/{$communication->getOpposite($user->identity)->image|size:25,25}"
+					 alt="photo"/>
 			</a>
 		</span>
-		<span class="name">
+			<span class="name">
 			<a n:href="Messages: $communication->id">
 				<strong>{$communication->getOppositeName($user->identity)}</strong>
 			</a>
@@ -155,15 +108,15 @@
 				</a>
 			</span>
 		</span>
-		<span class="msg">
+			<span class="msg">
 			<a n:href="Messages: $communication->id">{$communication->lastMessage->text|truncate:30}</a>
 		</span>
-	</li>
-	<li class="view-all">
-		<a n:href="Messages:">
-			{_'View all messages'}
-			<i class="s16 fa fa-angle-double-right"></i>
-		</a>
-	</li>
-</ul>
+		</li>
+		<li class="view-all">
+			<a n:href="Messages:">
+				{_'View all messages'}
+				<i class="s16 fa fa-angle-double-right"></i>
+			</a>
+		</li>
+	</ul>
 {/define}

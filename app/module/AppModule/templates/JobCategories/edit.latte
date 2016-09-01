@@ -1,16 +1,10 @@
-{**
- * JobCategories edit view template
- *
- * @param   JobCategory     $jobCategory 
- *}
-
 {block pageTitle}
-{_'Skill Categories'}
+{_'Job Categories'}
 {/block}
 
 {block breadcrumbItems}
 <li>
-    <a n:href="SkillCategories:">{_'Skill Categories'}</a>
+    <a n:href="SkillCategories:">{_'Job Categories'}</a>
 </li>
 <li>
     <a n:href="this">{if $jobCategory->isNew()}{_'Add'}{else}{_'Edit'}{/if}</a>

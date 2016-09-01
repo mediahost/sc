@@ -152,7 +152,6 @@ class SignListener extends Object implements Subscriber
 		$control->presenter->user->login($user);
 		$control->presenter->flashMessage($messageText, 'success');
 		$control->presenter->redirect(self::REDIRECT_AFTER_REGISTER);
-//		}
 	}
 
 	/**

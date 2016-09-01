@@ -5,16 +5,15 @@ namespace App\Components\AfterRegistration;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
-use App\Model\Entity\Candidate;
 use App\Model\Entity\JobCategory;
-use App\Model\Entity\Skill;
+use App\Model\Entity\Person;
 use App\Model\Entity\User;
 use App\Model\Facade\JobFacade;
 use App\Model\Facade\SkillFacade;
 use App\Model\Facade\UserFacade;
 use Nette\Utils\ArrayHash;
 
-class CompleteCandidateSecond extends BaseControl
+class CompleteCandidate extends BaseControl
 {
 
 	// <editor-fold desc="events">
@@ -30,67 +29,64 @@ class CompleteCandidateSecond extends BaseControl
 
 	/** @var SkillFacade @inject */
 	public $skillFacade;
-    
-    /** @var JobFacade @inject */
+
+	/** @var JobFacade @inject */
 	public $jobFacade;
 
 	/** @var \Nette\Security\User @inject */
 	public $user;
-    
-    /** @var User */
-    private $userEntity;
 
 	// </editor-fold>
 
-    public function render()
+	public function render()
 	{
-		$skillRepo = $this->em->getRepository(Skill::getClassName());
+		$this->setTemplateFile('candidate');
 
-		$this->setTemplateFile('candidateSecond');
-        
-        $jsonJobCategories = [];
-        $jobCategories = $this->jobFacade->findTopCategories();
-        foreach ($jobCategories as $category) {
+		$jsonJobCategories = [];
+		$jobCategories = $this->jobFacade->findTopCategories();
+		foreach ($jobCategories as $category) {
 			$jsonJobCategories[] = $this->jobCategoryToLeaf($category);
 		}
-        
+
 		$jsonLocalities = [];
-		foreach (Candidate::getLocalities() as $localityId => $locality) {
+		foreach (Person::getLocalities() as $localityId => $locality) {
 			$jsonLocalities[] = $this->loacationToLeaf($localityId, $locality);
 		}
 
-        $this->template->jobCategories = $this->jobFacade->findCategoriesPairs();
-        $this->template->jsonJobCategories = $jsonJobCategories;
+		$candidate = $this->user->getIdentity()->getCandidate();
 
-		$this->template->countries = Candidate::getLocalities(TRUE);
+		$this->template->jobCategories = $this->jobFacade->findCategoriesPairs();
+		$this->template->jsonJobCategories = $jsonJobCategories;
+
+		$this->template->countries = Person::getLocalities(TRUE);
 		$this->template->jsonCountries = $jsonLocalities;
 
 		$this->template->jsonFreelancer = [
 			'id' => 'for-frmpreferencesForm-freelancer',
 			'text' => 'Yes',
 			'state' => [
-				'selected' => $this->userEntity->candidate->freelancer,
+				'selected' => $candidate->freelancer,
 			],
 		];
 		parent::render();
 	}
-    
+
 	protected function createComponentForm()
 	{
 		$form = new Form();
 		$form->setRenderer(new MetronicHorizontalFormRenderer());
 		$form->setTranslator($this->translator);
-        $form->getElementPrototype()->class('ajax');
-        
-        $categories = $this->jobFacade->findCategoriesPairs();
-        $categoriesContainer = $form->addContainer('categories');
-        foreach ($categories as $categoryId => $categoryName) {
+		$form->getElementPrototype()->class('ajax');
+
+		$categories = $this->jobFacade->findCategoriesPairs();
+		$categoriesContainer = $form->addContainer('categories');
+		foreach ($categories as $categoryId => $categoryName) {
 			$categoriesContainer->addCheckbox($categoryId, $categoryName)
 				->setAttribute('class', 'inCategoryTree');
 		}
 
 		$countryContainer = $form->addContainer('countries');
-		foreach (Candidate::getLocalities(TRUE) as $countryId => $countryName) {
+		foreach (Person::getLocalities(TRUE) as $countryId => $countryName) {
 			$countryContainer->addCheckbox($countryId, $countryName)
 				->setAttribute('class', 'inCountryTree');
 		}
@@ -107,10 +103,11 @@ class CompleteCandidateSecond extends BaseControl
 	{
 		$userRepo = $this->em->getRepository(User::getClassName());
 
-		$user = $this->userEntity;
-        
-        $categoryList = [];
-        foreach ($values->categories as $categoryId => $checked) {
+		$user = $this->user->getIdentity();
+		$candidate = $user->getCandidate();
+
+		$categoryList = [];
+		foreach ($values->categories as $categoryId => $checked) {
 			if ($checked) {
 				$categoryList[$categoryId] = $categoryId;
 			}
@@ -128,21 +125,21 @@ class CompleteCandidateSecond extends BaseControl
 		if (!count($countryList)) {
 			$form->addError('Enter at least one country');
 		}
-		
-        $user->candidate->jobCategories = $categoryList;
-		$user->candidate->workLocations = $countryList;
-		$user->candidate->freelancer = $values->freelancer;
+
+		$candidate->jobCategories = $categoryList;
+		$candidate->workLocations = $countryList;
+		$candidate->freelancer = $values->freelancer;
 
 		$userRepo->save($user);
 
 		if (!$form->hasErrors()) {
-
-			$this->onSuccess($this, $user->candidate);
+			$this->onSuccess($this, $candidate);
 		}
 	}
-    
-    private function jobCategoryToLeaf(JobCategory $category)
+
+	private function jobCategoryToLeaf(JobCategory $category)
 	{
+		$candidate = $this->user->getIdentity()->getCandidate();
 		$leaf = [
 			'id' => $category->id,
 			'text' => $category->name,
@@ -151,8 +148,8 @@ class CompleteCandidateSecond extends BaseControl
 		foreach ($category->childs as $child) {
 			$children[] = $this->jobCategoryToLeaf($child);
 		}
-        $leaf['state'] = [
-			'selected' => in_array($category->id, $this->userEntity->candidate->jobCategories),
+		$leaf['state'] = [
+			'selected' => in_array($category->id, $candidate->jobCategories),
 		];
 		$leaf['children'] = $children;
 		return $leaf;
@@ -160,6 +157,7 @@ class CompleteCandidateSecond extends BaseControl
 
 	private function loacationToLeaf($id, $location)
 	{
+		$candidate = $this->user->getIdentity()->getCandidate();
 		$children = [];
 		if (is_array($location)) {
 			$leaf = [
@@ -175,20 +173,16 @@ class CompleteCandidateSecond extends BaseControl
 			];
 		}
 		$leaf['state'] = [
-			'selected' => in_array($id, $this->userEntity->candidate->workLocations),
+			'selected' => in_array($id, $candidate->workLocations),
 		];
 		$leaf['children'] = $children;
 		return $leaf;
 	}
-
-    public function setUserEntity(User $user) {
-        $this->userEntity = $user;
-    }
 }
 
-interface ICompleteCandidateSecondFactory
+interface ICompleteCandidateFactory
 {
 
-	/** @return CompleteCandidateSecond */
+	/** @return CompleteCandidate */
 	function create();
 }

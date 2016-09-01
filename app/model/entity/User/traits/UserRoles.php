@@ -32,7 +32,7 @@ trait UserRoles
 		if (!$this->roles->contains($role)) {
 			$this->roles->add($role);
 			if ($role->name === Role::CANDIDATE) {
-				$this->initCandidate();
+				$this->getCandidate();
 			}
 		}
 		return $this;
@@ -58,21 +58,6 @@ trait UserRoles
 		return $this;
 	}
 
-	public function initPerson()
-	{
-		if (!$this->person) {
-			$this->person = new Person();
-		}
-		return $this;
-	}
-
-	public function initCandidate()
-	{
-		$this->initPerson();
-		$this->person->initCandidate();
-		return $this;
-	}
-
 	public function isCompany()
 	{
 		return !$this->isCandidate() && $this->isInRole(Role::COMPANY);
@@ -86,6 +71,19 @@ trait UserRoles
 			default:
 				return parent::isInRole($role);
 		}
+	}
+
+	public function getPerson()
+	{
+		if (!$this->person) {
+			$this->person = new Person();
+		}
+		return $this->person;
+	}
+
+	public function getCandidate()
+	{
+		return $this->getPerson()->getCandidate();
 	}
 
 	public function getRolesKeys()
