@@ -7,6 +7,7 @@ use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity;
 use App\Model\Facade\CvFacade;
+use Doctrine\ORM\EntityNotFoundException;
 use Exception;
 
 class CvEditorPresenter extends BasePresenter
@@ -81,7 +82,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		try {
 			$this->setCv($id);
-		} catch (CvEditorPresenterException $ex) {
+		} catch (EntityNotFoundException $ex) {
 			$this->flashMessage($ex->getMessage(), 'danger');
 			$this->redirect('Dashboard:');
 		}
@@ -93,7 +94,7 @@ class CvEditorPresenter extends BasePresenter
 		if ($this->cv) {
 			return;
 		}
-		$candidate = $this->user->identity->candidate;
+		$candidate = $this->user->identity->getCandidate();
 
 		if ($id) {
 			$cvDao = $this->em->getDao(Entity\Cv::getClassName());
@@ -108,7 +109,7 @@ class CvEditorPresenter extends BasePresenter
 		}
 
 		if (!$this->cv) {
-			throw new CvEditorPresenterException('Requested CV wasn\'t found.');
+			throw new EntityNotFoundException('Requested CV wasn\'t found.');
 		}
 	}
 
@@ -313,9 +314,4 @@ class CvEditorPresenter extends BasePresenter
 		};
 		return $control;
 	}
-}
-
-class CvEditorPresenterException extends Exception
-{
-
 }

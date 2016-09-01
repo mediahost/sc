@@ -380,9 +380,3 @@ class ProfilePresenter extends BasePresenter
 
 	// </editor-fold>
 }
-
-
-class ProfilePresenterException
-{
-
-}

@@ -41,7 +41,7 @@ class CvViewerPresenter extends BasePresenter
 		}
 
 		if (!$this->cv) {
-			throw new CvViewerPresenterException('Requested CV wasn\'t found.');
+			throw new Exception('Requested CV wasn\'t found.');
 		}
 	}
 
@@ -102,9 +102,4 @@ class CvViewerPresenter extends BasePresenter
 
 		return $this->name;
 	}
-}
-
-class CvViewerPresenterException extends Exception
-{
-	
 }
