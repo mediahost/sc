@@ -15,12 +15,12 @@ class CompleteCandidatePreview extends BaseControl
 	/** @var JobFacade @inject */
 	public $jobFacade;
 
-	/** @var User */
-	private $userEntity;
+	/** @var \Nette\Security\User @inject */
+	public $user;
 
 	public function render()
 	{
-		$this->template->freelancer = $this->userEntity->getCandidate()->freelancer ? 'yes' : 'no';
+		$this->template->freelancer = $this->user->getIdentity()->getCandidate()->freelancer ? 'yes' : 'no';
 		$this->setTemplateFile('candidateSecondPreview');
 		parent::render();
 	}
@@ -44,7 +44,7 @@ class CompleteCandidatePreview extends BaseControl
 
 	public function getDefaults()
 	{
-		$candidate = $this->userEntity->getCandidate();
+		$candidate = $this->user->getIdentity()->getCandidate();
 		$categories = $this->jobFacade->findCandidatePreferedCategories($candidate);
 
 		$localities = [];
@@ -60,11 +60,6 @@ class CompleteCandidatePreview extends BaseControl
 			'categories' => implode(',', $categories),
 			'countries' => implode(',', $localities)
 		];
-	}
-
-	public function setUser(User $user)
-	{
-		$this->userEntity = $user;
 	}
 }
 

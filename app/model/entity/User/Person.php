@@ -12,10 +12,8 @@ use Nette\Utils\Strings;
 
 /**
  * @ORM\Entity
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"person" = "Person", "candidate" = "Candidate"})
  *
+ * @property User $user
  * @property string $firstname
  * @property string $middlename
  * @property string $surname
@@ -31,7 +29,11 @@ use Nette\Utils\Strings;
  * @property string $phone
  * @property Address $address
  * @property Image $photo
- * @property User $user
+ * @property string $facebookLink
+ * @property string $twitterLink
+ * @property string $googleLink
+ * @property string $linkedinLink
+ * @property string $pinterestLink
  */
 class Person extends BaseEntity
 {
@@ -80,13 +82,20 @@ class Person extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="Address", cascade="all", fetch="LAZY") */
 	protected $address;
 
-	public function __construct($name = NULL)
-	{
-		if ($name) {
-			$this->name = $name;
-		}
-		parent::__construct();
-	}
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $facebookLink;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $twitterLink;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $googleLink;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $linkedinLink;
+
+	/** @ORM\Column(type="string", length=256, nullable=true) */
+	protected $pinterestLink;
 
 	public function __toString()
 	{
@@ -121,7 +130,7 @@ class Person extends BaseEntity
 
 	public function getDegreeName()
 	{
-		return $this->degreeBefore . ' ' . $this->name . ' ' . $this->degreeAfter;
+		return $this->degreeBefore . ' ' . $this->getFullName() . ' ' . $this->degreeAfter;
 	}
 
 	public function isFilled()

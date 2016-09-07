@@ -10,10 +10,10 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 /**
  * @ORM\Entity
  *
- * @property bool $freelancer
- * @property Cv[] $cvs
- * @property Document[] $documents
  * @property Person $person
+ * @property Cv $cv
+ * @property bool $freelancer
+ * @property Document[] $documents
  */
 class Candidate extends BaseEntity
 {
@@ -22,6 +22,9 @@ class Candidate extends BaseEntity
 
 	/** @ORM\OneToOne(targetEntity="Person", mappedBy="candidate", fetch="LAZY") */
 	protected $person;
+
+	/** @ORM\OneToOne(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
+	protected $cv;
 
 	/** @ORM\Column(type="boolean") */
 	protected $freelancer = FALSE;
@@ -32,9 +35,6 @@ class Candidate extends BaseEntity
 	/** @ORM\Column(type="array") */
 	protected $jobCategories;
 
-	/** @ORM\OneToMany(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
-	protected $cvs;
-
 	/** @ORM\OneToMany(targetEntity="Document", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $documents;
 
@@ -42,7 +42,6 @@ class Candidate extends BaseEntity
 	{
 		$this->workLocations = [];
 		$this->jobCategories = [];
-		$this->cvs = new ArrayCollection();
 		$this->documents = new ArrayCollection();
 		parent::__construct($name);
 	}
@@ -52,27 +51,12 @@ class Candidate extends BaseEntity
 		return (string)$this->getPerson();
 	}
 
-	public function getUser()
+	public function getCv()
 	{
-		return $this->getPerson()->getUser();
-	}
-
-	public function hasDefaultCv()
-	{
-		$isDefault = function (Cv $cv) {
-			return $cv->isDefault;
-		};
-		return $this->cvs->exists($isDefault);
-	}
-
-	public function getDefaultCv()
-	{
-		foreach ($this->cvs as $cv) {
-			if ($cv->isDefault) {
-				return $cv;
-			}
+		if (!$this->cv) {
+			$this->cv = new Cv();
 		}
-		throw new EntityException('Candidate has no default CV');
+		return $this->cv;
 	}
 
 	public function isFilled()

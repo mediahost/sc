@@ -18,11 +18,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 trait UserRoles
 {
 
-	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
-	private $roles;
-
 	/** @ORM\OneToOne(targetEntity="Person", inversedBy="user", fetch="LAZY", cascade={"persist", "remove"}, orphanRemoval=true) */
 	protected $person;
+
+	/** @ORM\ManyToMany(targetEntity="Role", fetch="EAGER", cascade={"persist"}) */
+	private $roles;
 
 	/** @ORM\OneToMany(targetEntity="CompanyPermission", mappedBy="user", fetch="LAZY", cascade={"persist"}) */
 	protected $allowedCompanies;

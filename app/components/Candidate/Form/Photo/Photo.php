@@ -3,17 +3,18 @@
 namespace App\Components\Candidate;
 
 use App\Components\BaseControl;
+use App\Components\BaseControlException;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Candidate;
 use App\Model\Entity\Image;
+use App\Model\Entity\Person;
 use Nette\Utils\ArrayHash;
 
 class Photo extends BaseControl
 {
 
-	/** @var Candidate */
-	public $candidate;
+	/** @var Person */
+	public $person;
 
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -24,8 +25,7 @@ class Photo extends BaseControl
 
 	public function render()
 	{
-		$this->template->photo = ($this->candidate->photo) ?
-			$this->candidate->photo : Image::DEFAULT_IMAGE;
+		$this->template->photo = $this->person->photo ? $this->person->photo : Image::DEFAULT_IMAGE;
 		parent::render();
 	}
 
@@ -57,20 +57,20 @@ class Photo extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->candidate);
+		$this->onAfterSave($this->person);
 	}
 
 	protected function load(ArrayHash $values)
 	{
 		if ($values->photo->isImage()) {
-			$this->candidate->photo = $values->photo;
+			$this->person->photo = $values->photo;
 		}
 		return $this;
 	}
 
 	protected function save()
 	{
-		$this->em->persist($this->candidate);
+		$this->em->persist($this->person);
 		$this->em->flush();
 		return $this;
 	}
@@ -79,23 +79,23 @@ class Photo extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'photo' => $this->candidate->photo,
+			'photo' => $this->person->photo,
 		];
 		return $values;
 	}
 
 	private function checkEntityExistsBeforeRender()
 	{
-		if (!$this->candidate) {
-			throw new CandidateException('Use setCandidate(\App\Model\Entity\Candidate) before render');
+		if (!$this->person) {
+			throw new BaseControlException('Use setPerson(\App\Model\Entity\Person) before render');
 		}
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	public function setCandidate(Candidate $candidate)
+	public function setPerson(Person $person)
 	{
-		$this->candidate = $candidate;
+		$this->person = $person;
 		return $this;
 	}
 

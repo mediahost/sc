@@ -3,6 +3,7 @@
 namespace App\Components\Candidate;
 
 use App\Components\BaseControl;
+use App\Components\BaseControlException;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity;
@@ -11,8 +12,8 @@ use Nette\Utils\ArrayHash;
 class Address extends BaseControl
 {
 
-	/** @var Entity\Candidate */
-	public $candidate;
+	/** @var Entity\Person */
+	private $person;
 
 	// <editor-fold defaultstate="expanded" desc="events">
 
@@ -36,7 +37,7 @@ class Address extends BaseControl
 		$form->addText('city', 'City');
 		$form->addSelect2('country', 'Country', Entity\Address::getCountriesList())
 				->setPrompt('Not disclosed');
-		$form->addSelect2('nationality', 'Nationality', Entity\Candidate::getNationalityList())
+		$form->addSelect2('nationality', 'Nationality', Entity\Person::getNationalityList())
 				->setPrompt('Not disclosed');
 		$form->addText('phone', 'Contact number');
 
@@ -51,27 +52,27 @@ class Address extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->candidate);
+		$this->onAfterSave($this->person);
 	}
 
 	protected function load(ArrayHash $values)
 	{
-		if (!$this->candidate->address) {
-			$this->candidate->address = new Address();
+		if (!$this->person->address) {
+			$this->person->address = new Address();
 		}
-		$this->candidate->address->house = $values->house;
-		$this->candidate->address->street = $values->street;
-		$this->candidate->address->zipcode = $values->zipcode;
-		$this->candidate->address->city = $values->city;
-		$this->candidate->address->country = $values->country;
-		$this->candidate->phone = $values->phone;
-		$this->candidate->nationality = $values->nationality;
+		$this->person->address->house = $values->house;
+		$this->person->address->street = $values->street;
+		$this->person->address->zipcode = $values->zipcode;
+		$this->person->address->city = $values->city;
+		$this->person->address->country = $values->country;
+		$this->person->phone = $values->phone;
+		$this->person->nationality = $values->nationality;
 		return $this;
 	}
 
 	protected function save()
 	{
-		$this->em->persist($this->candidate);
+		$this->em->persist($this->person);
 		$this->em->flush();
 		return $this;
 	}
@@ -80,16 +81,16 @@ class Address extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'phone' => $this->candidate->phone,
-			'nationality' => $this->candidate->nationality,
+			'phone' => $this->person->phone,
+			'nationality' => $this->person->nationality,
 		];
-		if ($this->candidate->address) {
+		if ($this->person->address) {
 			$values += [
-				'house' => $this->candidate->address->house,
-				'street' => $this->candidate->address->street,
-				'zipcode' => $this->candidate->address->zipcode,
-				'city' => $this->candidate->address->city,
-				'country' => ($this->candidate->address->countryName) ? $this->candidate->address->country : NULL,
+				'house' => $this->person->address->house,
+				'street' => $this->person->address->street,
+				'zipcode' => $this->person->address->zipcode,
+				'city' => $this->person->address->city,
+				'country' => ($this->person->address->getCountryName()) ? $this->person->address->country : NULL,
 			];
 		}
 		return $values;
@@ -97,16 +98,16 @@ class Address extends BaseControl
 
 	private function checkEntityExistsBeforeRender()
 	{
-		if (!$this->candidate) {
-			throw new CandidateException('Use setCandidate(\App\Model\Entity\Candidate) before render');
+		if (!$this->person) {
+			throw new BaseControlException('Use setPerson(\App\Model\Entity\Person) before render');
 		}
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="setters & getters">
 
-	public function setCandidate(Entity\Candidate $candidate)
+	public function setPerson(Entity\Person $person)
 	{
-		$this->candidate = $candidate;
+		$this->person = $person;
 		return $this;
 	}
 

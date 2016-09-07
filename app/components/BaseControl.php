@@ -65,3 +65,8 @@ abstract class BaseControl extends UI\Control
 	}
 
 }
+
+class BaseControlException extends \Exception
+{
+
+}

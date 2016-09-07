@@ -25,11 +25,6 @@ interface IUserSocials
  * @property string $socialName
  * @property string $socialBirthday
  * @property int $connectionCount
- * @property string $facebookLink
- * @property string $twitterLink
- * @property string $googleLink
- * @property string $linkedinLink
- * @property string $pinterestLink
  */
 trait UserSocials
 {
@@ -42,22 +37,6 @@ trait UserSocials
 
 	/** @ORM\OneToOne(targetEntity="Linkedin", fetch="LAZY", cascade={"persist", "remove"}, orphanRemoval=true) */
 	protected $linkedin;
-	
-	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $facebookLink;
-	
-	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $twitterLink;
-	
-	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $googleLink;
-	
-	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $linkedinLink;
-	
-	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $pinterestLink;
-	
 
 	public function clearFacebook()
 	{
@@ -103,13 +82,13 @@ trait UserSocials
 	{
 		switch ($socialConnectionName) {
 			case IUserSocials::SOCIAL_CONNECTION_APP:
-				return (bool) $this->hash;
+				return (bool)$this->hash;
 			case IUserSocials::SOCIAL_CONNECTION_FACEBOOK:
-				return (bool) ($this->facebook instanceof Facebook && $this->facebook->id);
+				return (bool)($this->facebook instanceof Facebook && $this->facebook->id);
 			case IUserSocials::SOCIAL_CONNECTION_TWITTER:
-				return (bool) ($this->twitter instanceof Twitter && $this->twitter->id);
+				return (bool)($this->twitter instanceof Twitter && $this->twitter->id);
 			case IUserSocials::SOCIAL_CONNECTION_LINKEDIN:
-				return (bool) ($this->linkedin instanceof Linkedin && $this->linkedin->id);
+				return (bool)($this->linkedin instanceof Linkedin && $this->linkedin->id);
 			default:
 				return FALSE;
 		}
@@ -118,12 +97,12 @@ trait UserSocials
 	public function getConnectionCount()
 	{
 		$allConnections = [
-				IUserSocials::SOCIAL_CONNECTION_APP,
-				IUserSocials::SOCIAL_CONNECTION_FACEBOOK,
-				IUserSocials::SOCIAL_CONNECTION_GITHUB,
-				IUserSocials::SOCIAL_CONNECTION_GOOGLE,
-				IUserSocials::SOCIAL_CONNECTION_LINKEDIN,
-				IUserSocials::SOCIAL_CONNECTION_TWITTER,
+			IUserSocials::SOCIAL_CONNECTION_APP,
+			IUserSocials::SOCIAL_CONNECTION_FACEBOOK,
+			IUserSocials::SOCIAL_CONNECTION_GITHUB,
+			IUserSocials::SOCIAL_CONNECTION_GOOGLE,
+			IUserSocials::SOCIAL_CONNECTION_LINKEDIN,
+			IUserSocials::SOCIAL_CONNECTION_TWITTER,
 		];
 		$count = 0;
 		foreach ($allConnections as $connection) {

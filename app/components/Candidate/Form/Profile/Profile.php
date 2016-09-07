@@ -3,16 +3,18 @@
 namespace App\Components\Candidate;
 
 use App\Components\BaseControl;
+use App\Components\BaseControlException;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
+use App\Model\Entity\Person;
 use Nette\Utils\ArrayHash;
 
 class Profile extends BaseControl
 {
 
-	/** @var Candidate */
-	public $candidate;
+	/** @var Person */
+	public $person;
 
 	// <editor-fold desc="events">
 
@@ -20,13 +22,13 @@ class Profile extends BaseControl
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	
-	public function render() {
-		$this->template->genderList = Candidate::getGenderList();
+
+	public function render()
+	{
+		$this->template->genderList = Person::getGenderList();
 		parent::render();
 	}
-	
-	
+
 	/** @return Form */
 	protected function createComponentForm()
 	{
@@ -35,26 +37,26 @@ class Profile extends BaseControl
 		$form = new Form();
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
-		
-		$form->addSelect('title', 'Title', Candidate::getTitleList());
+
+		$form->addSelect('title', 'Title', Person::getTitleList());
 
 		$form->addText('degreebefore', 'Degree in front of name', NULL, 50)
-				->getControlPrototype()->class[] = 'input-small';
+			->getControlPrototype()->class[] = 'input-small';
 
 		$form->addText('firstname', 'First Name(s)', NULL, 100)
-				->setRequired('Please enter your First Name(s).');
-		
+			->setRequired('Please enter your First Name(s).');
+
 		$form->addText('middlename', 'Middle Name', NULL, 100);
-		
+
 		$form->addText('surname', 'Surname(s)', NULL, 100)
-				->setRequired('Please enter your Surname(s).');
+			->setRequired('Please enter your Surname(s).');
 
 		$form->addText('degreeafter', 'Degree after name', NULL, 50)
-				->getControlPrototype()->class[] = 'input-small';
+			->getControlPrototype()->class[] = 'input-small';
 
 		$form->addDatePicker('birthday', 'Birthday');
 
-		$form->addRadioList('gender', 'Gender', Candidate::getGenderList())
+		$form->addRadioList('gender', 'Gender', Person::getGenderList())
 			->setDefaultValue('x');
 
 		$form->addSubmit('save', 'Save');
@@ -68,25 +70,24 @@ class Profile extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$this->onAfterSave($this->candidate);
+		$this->onAfterSave($this->person);
 	}
 
 	protected function load(ArrayHash $values)
 	{
-		//$this->candidate->title = $values->title;
-		$this->candidate->firstname = $values->firstname;
-		$this->candidate->middlename = $values->middlename;
-		$this->candidate->surname = $values->surname;
-		$this->candidate->birthday = $values->birthday;
-		$this->candidate->gender = $values->gender;
-		$this->candidate->degreeBefore = $values->degreebefore;
-		$this->candidate->degreeAfter = $values->degreeafter;
+		$this->person->firstname = $values->firstname;
+		$this->person->middlename = $values->middlename;
+		$this->person->surname = $values->surname;
+		$this->person->birthday = $values->birthday;
+		$this->person->gender = $values->gender;
+		$this->person->degreeBefore = $values->degreebefore;
+		$this->person->degreeAfter = $values->degreeafter;
 		return $this;
 	}
 
 	protected function save()
 	{
-		$this->em->persist($this->candidate);
+		$this->em->persist($this->person);
 		$this->em->flush();
 		return $this;
 	}
@@ -95,30 +96,30 @@ class Profile extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [
-			'title' => $this->candidate->title,
-			'firstname' => $this->candidate->firstname,
-			'middlename' => $this->candidate->middlename,
-			'surname' => $this->candidate->surname,
-			'birthday' => $this->candidate->birthday,
-			'gender' => $this->candidate->gender,
-			'degreebefore' => $this->candidate->degreeBefore,
-			'degreeafter' => $this->candidate->degreeAfter,
+			'title' => $this->person->title,
+			'firstname' => $this->person->firstname,
+			'middlename' => $this->person->middlename,
+			'surname' => $this->person->surname,
+			'birthday' => $this->person->birthday,
+			'gender' => $this->person->gender,
+			'degreebefore' => $this->person->degreeBefore,
+			'degreeafter' => $this->person->degreeAfter,
 		];
 		return $values;
 	}
 
 	private function checkEntityExistsBeforeRender()
 	{
-		if (!$this->candidate) {
-			throw new CandidateException('Use setCandidate(\App\Model\Entity\Candidate) before render');
+		if (!$this->person) {
+			throw new BaseControlException('Use setPerson(\App\Model\Entity\Person) before render');
 		}
 	}
 
 	// <editor-fold desc="setters & getters">
 
-	public function setCandidate(Candidate $candidate)
+	public function setPerson(Person $person)
 	{
-		$this->candidate = $candidate;
+		$this->person = $person;
 		return $this;
 	}
 

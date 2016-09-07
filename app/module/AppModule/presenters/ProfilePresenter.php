@@ -27,6 +27,7 @@ use App\Model\Entity\Cv;
 use App\Model\Facade\CantDeleteUserException;
 use App\Model\Facade\CvFacade;
 use App\Model\Facade\UserFacade;
+use Tracy\Debugger;
 
 class ProfilePresenter extends BasePresenter
 {
@@ -73,44 +74,21 @@ class ProfilePresenter extends BasePresenter
 	/** @var CvFacade @inject */
 	public $cvFacade;
 
-	/** @var Cv */
-	private $cv;
+	/** @var Person */
+	private $person;
 
 	/** @var Candidate */
 	private $candidate;
 
-	/** @var User */
-	private $userEntity;
-
-
-	private function getCv()
-	{
-		if (!isset($this->cv)) {
-			$user = $this->getUserEntity();
-			$this->cv = $this->cvFacade->getDefaultCvOrCreate($user->candidate);
-		}
-		return $this->cv;
-	}
-
-	private function getUserEntity()
-	{
-		if ($this->userEntity) {
-			return $this->userEntity;
-		}
-		$userId = $this->getParameter('userId');
-		if ($userId && $this->user->isInRole('superadmin')) {
-			$user = $this->userFacade->findById($userId);
-			$this->userEntity = $user;
-		} else {
-			$this->userEntity = $this->user->identity;
-		}
-		return $this->userEntity;
-	}
+	/** @var Cv */
+	private $cv;
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->candidate = $this->getUserEntity()->candidate;
+		$this->person = $this->getUser()->getIdentity()->getPerson();
+		$this->candidate = $this->person->getCandidate();
+		$this->cv = $this->candidate->getCv();
 	}
 
 	/**
@@ -118,9 +96,10 @@ class ProfilePresenter extends BasePresenter
 	 * @resource('profile')
 	 * @privilege('default')
 	 */
-	public function actionDefault($userId = null)
+	public function actionDefault()
 	{
-		$this->template->candidate = $this->getUserEntity()->candidate;
+		$this->template->person = $this->person;
+		$this->template->candidate = $this->candidate;
 	}
 
 	/**
@@ -171,7 +150,7 @@ class ProfilePresenter extends BasePresenter
 	public function handleDelete()
 	{
 		try {
-			$this->userFacade->deleteById($this->user->id);
+			$this->userFacade->deleteById($this->getUser()->id);
 			$this->user->logout();
 			$message = $this->translator->translate('Your account has been deleted');
 			$this->flashMessage($message, 'success');
@@ -278,7 +257,7 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iSkillsFactory->create();
 		$control->setTemplateFile('overview');
 		$control->onlyFilledSkills = true;
-		$control->setCv($this->getCv());
+		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		return $control;
 	}
@@ -287,8 +266,8 @@ class ProfilePresenter extends BasePresenter
 	public function createComponentPhotoForm()
 	{
 		$control = $this->iPhotoFactory->create();
-		$control->setCandidate($this->candidate);
-		$control->onAfterSave = function (Candidate $saved) {
+		$control->setPerson($this->person);
+		$control->onAfterSave = function (Person $saved) {
 			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redrawControl('personalDetails');
@@ -300,8 +279,8 @@ class ProfilePresenter extends BasePresenter
 	public function createComponentProfileForm()
 	{
 		$control = $this->iProfileFactory->create();
-		$control->setCandidate($this->candidate);
-		$control->onAfterSave = function (Candidate $saved) {
+		$control->setPerson($this->person);
+		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('personalDetails');
 		};
 		return $control;
@@ -311,8 +290,8 @@ class ProfilePresenter extends BasePresenter
 	public function createComponentAddressForm()
 	{
 		$control = $this->iAddressFactory->create();
-		$control->setCandidate($this->candidate);
-		$control->onAfterSave = function (Candidate $saved) {
+		$control->setPerson($this->person);
+		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('personalDetails');
 		};
 		return $control;
@@ -322,8 +301,8 @@ class ProfilePresenter extends BasePresenter
 	public function createComponentSocialForm()
 	{
 		$control = $this->iSocialFactory->create();
-		$control->setCandidate($this->candidate);
-		$control->onAfterSave = function (Candidate $saved) {
+		$control->setPerson($this->person);
+		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('socialLinks');
 		};
 		return $control;
@@ -334,7 +313,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iLivePreviewFactory->create();
 		$control->setScale(0.8, 0.8, 1);
-		$control->setCv($this->getCv());
+		$control->setCv($this->cv);
 		return $control;
 	}
 
@@ -351,7 +330,6 @@ class ProfilePresenter extends BasePresenter
 	protected function createComponentCompleteCandidate()
 	{
 		$control = $this->iCompleteCandidateFactory->create();
-		$control->setUser($this->getUserEntity());
 		$control->onSuccess[] = function (CompleteCandidate $control, Candidate $candidate) {
 			$message = $this->translator->translate('Your data was saved.');
 			$this->flashMessage($message, 'success');
@@ -364,15 +342,13 @@ class ProfilePresenter extends BasePresenter
 	protected function createComponentCompleteCandidatePreview()
 	{
 		$control = $this->completeCandidatePreview->create();
-		$control->setUser($this->getUserEntity());
 		return $control;
 	}
 
 	public function createComponentRecentMessages()
 	{
-		$user = $this->getUserEntity();
 		$control = $this->communicationListFactory->create();
-		foreach ($this->getUserCommunications($user) as $communication) {
+		foreach ($this->getUserCommunications($this->getUser()->getIdentity()) as $communication) {
 			$control->addCommunication($communication, $this->link('Messages:', $communication->id));
 		}
 		return $control;

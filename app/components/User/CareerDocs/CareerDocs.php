@@ -23,7 +23,6 @@ class CareerDocs extends BaseControl
 	/** @var Candidate */
 	private $candidate;
 
-
 	public function __construct(DocStorage $docStorage)
 	{
 		$this->docStorage = $docStorage;

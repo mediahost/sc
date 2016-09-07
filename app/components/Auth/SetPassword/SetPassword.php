@@ -42,7 +42,6 @@ class SetPassword extends BaseControl
 				->setDisabled();
 
 		$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
-		$helpText->setTranslator($this->translator);
 		$form->addPassword('newPassword', 'New password', NULL, 255)
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')

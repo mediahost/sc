@@ -21,7 +21,7 @@ abstract class BasePresenter extends BaseBasePresenter
 	private $showRightSideBar = false;
 
 
-	public function getUserCommunications(\App\Model\Entity\User $user = null)
+	public function getUserCommunications(User $user = null)
 	{
 		if (!$user) {
 			$user = $this->user->identity;

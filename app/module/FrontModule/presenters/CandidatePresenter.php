@@ -92,7 +92,7 @@ class CandidatePresenter extends BasePresenter
 	public function createComponentAddressForm()
 	{
 		$control = $this->iAddressFactory->create();
-		$control->setCandidate($this->candidate);
+		$control->setPerson($this->candidate);
 		$control->onAfterSave = function (Candidate $saved) {
 			$message = $this->translator->translate('Address for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');

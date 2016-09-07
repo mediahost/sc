@@ -49,6 +49,9 @@ class Cv extends BaseEntity
 	use CvSkillsUsing;
     use CvMatching;
 
+	/** @ORM\OneToOne(targetEntity="Candidate", inversedBy="cv") */
+	protected $candidate;
+
 	/** @ORM\Column(type="string", length=100, nullable=true) */
 	protected $name;
 
@@ -63,9 +66,6 @@ class Cv extends BaseEntity
 
 	/** @ORM\Column(type="boolean", nullable=false) */
 	protected $isDefault;
-
-	/** @ORM\ManyToOne(targetEntity="Candidate", inversedBy="cvs") */
-	protected $candidate;
 
 	/** @ORM\Column(type="boolean", nullable=false) */
 	protected $isPublic = FALSE;
