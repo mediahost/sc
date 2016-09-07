@@ -2,48 +2,45 @@
 
 namespace App\Components\Job;
 
-use App\Components\BaseControl;
-use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
-use App\Model\Entity\Job;
 use App\Model\Entity\TagJob;
 use App\Model\Entity\Tag;
-use Nette\Utils\ArrayHash;
 
-class Offers extends BaseControl
+/**
+ * Description of OffersControl
+ *
+ */
+class Offers extends \App\Components\BaseControl
 {
 	/** @var Job */
 	private $job;
-
+	
 	/** @var array */
 	public $onAfterSave = [];
-
-
-	public function render()
-	{
-		$this->template->data = $this->getDefaults();
-		parent::render();
-	}
-
-	public function handleEdit()
-	{
-		$this->setTemplateFile('edit');
-		$this->redrawControl('offers');
-	}
-
-	public function handlePreview()
-	{
-		$this->redrawControl('offers');
-	}
+	
+	
+    public function render() {
+	    $this->template->job = $this->job;
+        $this->template->data = $this->getDefaults();
+        parent::render();
+    }
+    
+    public function handleEdit() {
+        $this->setTemplateFile('edit');
+        $this->redrawControl('offers');
+    }
+    
+    public function handlePreview() {
+        $this->redrawControl('offers');
+    }
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
+		
 		$form = new Form();
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
-		$form->getElementPrototype()->addClass('ajax sendOnChange');
 
 		$form->addText('offers', 'Offers')
 			->setAttribute('data-role', 'tagsinput')
@@ -52,6 +49,7 @@ class Offers extends BaseControl
 			->setAttribute('data-role', 'tagsinput')
 			->setAttribute('placeholder', 'add a tag');
 
+        $form->addSubmit('save', 'Save');
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;

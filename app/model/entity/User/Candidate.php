@@ -38,6 +38,9 @@ class Candidate extends BaseEntity
 	/** @ORM\OneToMany(targetEntity="Document", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $documents;
 
+	/** @ORM\Column(type="string", length=64, nullable=true) */
+	protected $tags;
+
 	public function __construct($name = NULL)
 	{
 		$this->workLocations = [];

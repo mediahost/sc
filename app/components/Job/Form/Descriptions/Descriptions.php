@@ -23,13 +23,6 @@ class Descriptions extends BaseControl
     }
     
     public function handleEditDescription() {
-        $this->template->drawDescription = true;
-        $this->setTemplateFile('edit');
-        $this->redrawControl('descriptionControl');
-    }
-    
-    public function handleEditSummary() {
-        $this->template->drawSummary = true;
         $this->setTemplateFile('edit');
         $this->redrawControl('descriptionControl');
     }
@@ -50,6 +43,10 @@ class Descriptions extends BaseControl
 		$form->addTextArea('description', 'Description')
 			->setAttribute('placeholder', 'Job description')
 			->setAttribute('id', 'jobDescription');
+        
+        $form->addTextArea('summary', 'Summary')
+			->setAttribute('placeholder', 'Job summary')
+			->setAttribute('id', 'jobSummary');
 		
 		$form->addSubmit('save', 'Save');
 
@@ -58,25 +55,6 @@ class Descriptions extends BaseControl
 		return $form;
 	}
     
-    public function createComponentFormSummary() {
-        $this->checkEntityExistsBeforeRender();
-
-		$form = new Form;
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer);
-        
-        
-		$form->addTextArea('summary', 'Summary')
-			->setAttribute('placeholder', 'Job summary')
-			->setAttribute('id', 'jobSummary');
-        
-        $form->addSubmit('save', 'Save');
-
-		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
-		return $form;
-    }
-	
 	public function formSucceeded(Form $form, $values)
 	{
 		$this->load($values);

@@ -11,6 +11,8 @@
         <div n:inner-foreach="$cvs as $cv" class="gallery row">
             {control candidatePreview-$cv->id}
         </div>
+        
+        {include 'paginationTemplate.latte'}
     </div>
     <div class="col-lg-3 gallery-nav">
         <div class="search">

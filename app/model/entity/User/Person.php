@@ -97,6 +97,18 @@ class Person extends BaseEntity
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $pinterestLink;
 
+	public function __construct($name = NULL)
+	{
+		if ($name) {
+			$this->name = $name;
+		}
+		$this->workLocations = [];
+        $this->jobCategories = [];
+		$this->cvs = new ArrayCollection();
+		$this->documents = new ArrayCollection();
+		parent::__construct();
+	}
+
 	public function __toString()
 	{
 		return (string)$this->getFullName();
@@ -136,6 +148,11 @@ class Person extends BaseEntity
 	public function isFilled()
 	{
 		return $this->photo && $this->address && $this->firstname && $this->surname && $this->phone;
+	}
+
+	public function isRequiredOtherFilled()
+	{
+		return  count($this->workLocations)  && count($this->jobCategories);
 	}
 
 	public function setPhoto(FileUpload $file)

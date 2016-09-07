@@ -45,9 +45,10 @@
 
 .gallery-item .panel-body {
     height: 350px;
+    padding-top: 0px;
 }
 .gallery-item .panel-heading {
-    height: 80px;
+    height: 50px;
 }
 .gallery-nav ul {
     -webkit-padding-start: 20px;

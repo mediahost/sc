@@ -23,7 +23,8 @@ class Questions extends BaseControl
 
 	public function render()
 	{
-		$this->template->questions = explode(self::SEPARATOR, $this->job->questions);
+        $this->template->job = $this->job;
+        $this->template->questions = explode(self::SEPARATOR, $this->job->questions);
 		parent::render();
 	}
 

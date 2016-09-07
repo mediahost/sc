@@ -1,0 +1,5 @@
+{snippet notesControl}
+    <a n:if="!$job->isNew()" href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
+    </br>
+    <p>{$job->notes|nl2br|noescape}</p>
+{/snippet}

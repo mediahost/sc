@@ -15,6 +15,9 @@ class MessageSearchBox extends BaseControl {
     /** @var \App\Model\Entity\User */
     private $user;
     
+    /** @var string */
+    private $searchString;
+    
     
     public function __construct(\App\Model\Facade\CommunicationFacade $communicationFacade) {
         parent::__construct();
@@ -32,9 +35,13 @@ class MessageSearchBox extends BaseControl {
     public function formSucceeded(Form $form, $values)
 	{
         $user = $this->template->user->identity;
-        $search = $values['searchString'];
-        $communications = $this->communicationFacade->getUserCommunications($user, $search);
+        $this->searchString = $values['searchString'];
+        $communications = $this->communicationFacade->getUserCommunications($user, $this->searchString);
         $this->onSearch($communications);
+    }
+    
+    public function getSearchString() {
+        return $this->searchString;
     }
     
     public function setUser(\App\Model\Entity\User $user) {
