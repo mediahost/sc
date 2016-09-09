@@ -49,8 +49,8 @@ class Sender extends BaseEntity
 	{
 		if ($this->company) {
 			return 'assets/img/avatar2.jpeg';
-		} elseif($this->user->candidate) {
-			return $this->user->candidate->photo;
+		} elseif($this->user->person) {
+			return $this->user->person->photo;
 		}elseif (TRUE) {
 			return 'assets/img/avatar3.jpeg';
 		}
@@ -60,8 +60,8 @@ class Sender extends BaseEntity
 	{
 		if ($this->company) {
 		    return $this->company->name;
-		} elseif ($this->user->candidate && $this->user->candidate->name) {
-			return $this->user->candidate->name;
+		} elseif ($this->user->person) {
+			return $this->user->person->getFullName();
 		} else {
 			return $this->user->mail;
 		}
@@ -70,7 +70,7 @@ class Sender extends BaseEntity
 	public function getUserName()
 	{
 		if ($this->user->candidate) {
-			return $this->user->candidate->name;
+			return $this->user->person->getFullName();
 		} else {
 			return $this->user->mail;
 		}
