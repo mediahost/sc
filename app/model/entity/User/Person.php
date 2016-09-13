@@ -106,6 +106,7 @@ class Person extends BaseEntity
 	{
 		if (!$this->candidate) {
 			$this->candidate = new Candidate();
+			$this->candidate->person = $this;
 		}
 		return $this->candidate;
 	}

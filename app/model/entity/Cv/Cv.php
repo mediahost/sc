@@ -128,6 +128,7 @@ class Cv extends BaseEntity
 	protected $additionalIsPublic = FALSE;
 
 	public function __construct($name = NULL)
+
 	{
 		if ($name) {
 			$this->name = $name;

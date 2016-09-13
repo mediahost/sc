@@ -77,6 +77,7 @@ trait UserRoles
 	{
 		if (!$this->person) {
 			$this->person = new Person();
+			$this->person->user = $this;
 		}
 		return $this->person;
 	}
