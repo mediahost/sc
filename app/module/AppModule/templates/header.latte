@@ -14,7 +14,7 @@
 							<i class="s16 minia-icon-list-3"></i>
 						</a>
 					</li>
-					<li class="dropdown" n:if="$user->isAllowed('messages') && $isCompleteAccount">
+					<li class="dropdown" n:if="$user->isAllowed('messages', 'default') && $isCompleteAccount">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="s16 minia-icon-envelope"></i>
 							<span class="txt">{_'Messages'}</span>
