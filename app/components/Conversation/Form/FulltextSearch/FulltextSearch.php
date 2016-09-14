@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Components;
+namespace App\Components\Conversation\Form;
 
+use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
 
-class MessageSearchBox extends BaseControl
+class FulltextSearch extends BaseControl
 {
 
 	/** @var array */
@@ -63,10 +64,10 @@ class MessageSearchBox extends BaseControl
 
 }
 
-interface IMessageSearchBoxFactory
+interface IFulltextSearchFactory
 {
 
-	/** @return MessageSearchBox */
+	/** @return FulltextSearch */
 	public function create();
 
 }

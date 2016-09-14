@@ -1,34 +1,36 @@
 <?php
 
-namespace App\Components;
+namespace App\Components\Conversation\Form;
 
-use App\Model\Entity;
+use App\Components\BaseControl;
+use App\Model\Entity\Communication;
+use App\Model\Entity\Sender;
 
-class CommunicationList extends BaseControl
+class ConversationList extends BaseControl
 {
 
 	const COMMUNICATIONS_PER_PAGE = 10;
 
-	/** @var IMessageSearchBoxFactory @inject */
-	public $iMessageSearchBoxFactory;
+	/** @var IFulltextSearchFactory @inject */
+	public $iFulltextSearchFactory;
 
 	/** @var Sender */
 	private $sender;
 
-	/** @var Entity\Communication[] */
-	protected $communications = [];
-
-	/** @var Entity\Communication|NULL */
-	protected $activeCommunication;
-
-	/** @var array */
-	protected $links = [];
+	/** @var bool */
+	private $allowSearchBox = TRUE;
 
 	/** @var string */
 	private $searchString;
 
 	/** @var int @persistent */
 	public $count = self::COMMUNICATIONS_PER_PAGE;
+
+	/** @var Communication[] */
+	protected $communications = [];
+
+	/** @var Communication|NULL */
+	protected $activeCommunication;
 
 	public function render()
 	{
@@ -38,12 +40,14 @@ class CommunicationList extends BaseControl
 		$this->template->activeCommunication = $this->activeCommunication;
 		$this->template->communicationCount = $this->count;
 		$this->template->communicationsPerPage = self::COMMUNICATIONS_PER_PAGE;
+		$this->template->allowSearchBox = $this->allowSearchBox;
 		parent::render();
 	}
 
-	public function createComponentMessageSearchBox()
+	/** @return FulltextSearch */
+	public function createComponentSearchBox()
 	{
-		$control = $this->iMessageSearchBoxFactory->create();
+		$control = $this->iFulltextSearchFactory->create();
 		$control->setSender($this->sender)
 			->setAjax();
 		$control->onSearch[] = function ($comunications) use ($control) {
@@ -62,19 +66,26 @@ class CommunicationList extends BaseControl
 		return $string;
 	}
 
-	public function setSender(Entity\Sender $sender)
+	public function setSender(Sender $sender)
 	{
 		$this->sender = $sender;
 		$this->activeCommunication = $this->sender->getLastCommunication();
 		$this->communications = $this->sender->communications;
 		return $this;
 	}
+
+	public function disableSearchBox($value = TRUE)
+	{
+		$this->allowSearchBox = !$value;
+		return $this;
+	}
+
 }
 
-interface ICommunicationListFactory
+interface IConversationListFactory
 {
 
-	/** @return CommunicationList */
+	/** @return ConversationList */
 	public function create();
 
 }

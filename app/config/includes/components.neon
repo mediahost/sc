@@ -95,8 +95,8 @@ services:
 	- {implement: App\Components\Grids\Skill\ISkillCategoriesGridFactory, inject: yes}
 
 	# Communication
-	- {implement: App\Components\INewCommunicationFactory, inject: yes}
-	- {implement: App\Components\ICommunicationFactory, inject: yes}
-	- {implement: App\Components\ICommunicationListFactory, inject: yes}
-	- {implement: App\Components\IMessageSearchBoxFactory, inject: yes}
+	- {implement: App\Components\Conversation\Form\INewConversationFactory, inject: yes}
+	- {implement: App\Components\Conversation\Form\IConversationFactory, inject: yes}
+	- {implement: App\Components\Conversation\Form\IConversationListFactory, inject: yes}
+	- {implement: App\Components\Conversation\Form\IFulltextSearchFactory, inject: yes}
 	- {implement: App\Components\ICommunicationDataViewFactory, inject: yes}

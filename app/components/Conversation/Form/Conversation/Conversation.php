@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Components;
+namespace App\Components\Conversation\Form;
 
-use App\Model\Entity;
+use App\Components\BaseControl;
+use App\Model\Entity\Communication;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
 use Nette\Application\UI\Form;
 
-class Communication extends BaseControl
+class Conversation extends BaseControl
 {
 
 	const MESSAGES_PER_PAGE = 5;
@@ -18,7 +19,7 @@ class Communication extends BaseControl
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
 
-	/** @var Entity\Communication */
+	/** @var Communication */
 	protected $communication;
 
 	/** @var Sender */
@@ -76,7 +77,7 @@ class Communication extends BaseControl
 		$this->redrawControl('notifyButtons');
 	}
 
-	public function setCommunication(Entity\Communication $communication)
+	public function setCommunication(Communication $communication)
 	{
 		$this->communication = $communication;
 		return $this;
@@ -90,9 +91,9 @@ class Communication extends BaseControl
 
 }
 
-interface ICommunicationFactory
+interface IConversationFactory
 {
 
-	/** @return Communication */
+	/** @return Conversation */
 	public function create();
 }

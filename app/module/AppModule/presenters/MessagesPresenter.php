@@ -2,12 +2,14 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\CommunicationList;
+use App\Components\CommunicationDataView;
+use App\Components\Conversation\Form\Conversation;
+use App\Components\Conversation\Form\ConversationList;
+use App\Components\Conversation\Form\IConversationFactory;
+use App\Components\Conversation\Form\IConversationListFactory;
+use App\Components\Conversation\Form\INewConversationFactory;
+use App\Components\Conversation\Form\NewConversation;
 use App\Components\ICommunicationDataViewFactory;
-use App\Components\ICommunicationFactory;
-use App\Components\ICommunicationListFactory;
-use App\Components\INewCommunicationFactory;
-use App\Components\NewCommunication;
 use App\Model\Entity\Communication;
 use App\Model\Facade\UserFacade;
 
@@ -17,14 +19,14 @@ class MessagesPresenter extends BasePresenter
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var INewCommunicationFactory @inject */
-	public $iNewCommunicationFactory;
+	/** @var INewConversationFactory @inject */
+	public $iNewConversationFactory;
 
-	/** @var ICommunicationFactory @inject */
-	public $iCommunicationFactory;
+	/** @var IConversationFactory @inject */
+	public $iConversationFactory;
 
-	/** @var ICommunicationListFactory @inject */
-	public $iCommunicationListFactory;
+	/** @var IConversationListFactory @inject */
+	public $iConversationListFactory;
 
 	/** @var ICommunicationDataViewFactory @inject */
 	public $iCommunicationDataViewFactory;
@@ -70,10 +72,10 @@ class MessagesPresenter extends BasePresenter
 
 	}
 
-	/** @return NewCommunication */
+	/** @return NewConversation */
 	public function createComponentNewCommunication()
 	{
-		$control = $this->iNewCommunicationFactory->create();
+		$control = $this->iNewConversationFactory->create();
 		$control->setSender($this->sender);
 		$control->onSend[] = function (Communication $communication) {
 			$this->redirect('default', $communication->id);
@@ -81,10 +83,10 @@ class MessagesPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return \App\Components\Communication */
+	/** @return Conversation */
 	public function createComponentCommunication()
 	{
-		$control = $this->iCommunicationFactory->create();
+		$control = $this->iConversationFactory->create();
 		$control->setAjax(TRUE, FALSE);
 		$control->setSender($this->sender);
 		$control->onSend[] = function () {
@@ -98,14 +100,15 @@ class MessagesPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return CommunicationList */
+	/** @return ConversationList */
 	public function createComponentCommunicationList()
 	{
-		$control = $this->iCommunicationListFactory->create();
+		$control = $this->iConversationListFactory->create();
 		$control->setSender($this->sender);
 		return $control;
 	}
 
+	/** @return CommunicationDataView */
 	public function createComponentCommunicationDataView()
 	{
 		$control = $this->iCommunicationDataViewFactory->create();

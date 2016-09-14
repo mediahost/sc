@@ -6,7 +6,9 @@
 		</h4>
 	</div>
 	<div class="panel-body">
-		{control messageSearchBox}
+		{if $allowSearchBox}
+		{control searchBox}
+		{/if}
 		<ul class="list-group recent-comments">
 			{foreach $communications as $communication}
 				{breakIf $iterator->counter > $communicationCount}

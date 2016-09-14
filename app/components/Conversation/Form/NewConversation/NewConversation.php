@@ -1,20 +1,14 @@
 <?php
 
-namespace App\Components;
+namespace App\Components\Conversation\Form;
 
+use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Company;
 use App\Model\Entity\Sender;
-use App\Model\Entity\User;
 use App\Model\Facade\CommunicationFacade;
-use App\Model\Facade\UserFacade;
-use App\Model\Repository\UserRepository;
-use Kdyby\Doctrine\EntityDao;
-use Kdyby\Doctrine\EntityManager;
-use Tracy\Debugger;
 
-class NewCommunication extends BaseControl
+class NewConversation extends BaseControl
 {
 
 	/** @var CommunicationFacade @inject */
@@ -64,10 +58,10 @@ class NewCommunication extends BaseControl
 	}
 }
 
-interface INewCommunicationFactory
+interface INewConversationFactory
 {
 
-	/** @return NewCommunication */
+	/** @return NewConversation */
 	public function create();
 
 }
