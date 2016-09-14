@@ -4,6 +4,7 @@ namespace App\Components\Conversation\Form;
 
 use App\Components\BaseControl;
 use App\Model\Entity\Communication;
+use App\Model\Entity\Notification;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
 use Nette\Application\UI\Form;
@@ -59,10 +60,17 @@ class Conversation extends BaseControl
 
 	public function render()
 	{
+		$notifyRepo = $this->em->getRepository(Notification::getClassName());
+		$notification = $notifyRepo->findOneBy([
+			'communication' => $this->communication,
+			'sender' => $this->sender,
+		]);
+
 		$this->template->communication = $this->communication;
 		$this->template->sender = $this->sender;
 		$this->template->messageCount = $this->count;
 		$this->template->messagesPerPage = self::MESSAGES_PER_PAGE;
+		$this->template->notification = $notification ? $notification->enabled : NULL;
 		parent::render();
 	}
 
@@ -73,7 +81,25 @@ class Conversation extends BaseControl
 
 	public function handleNotifyChange($value = NULL)
 	{
-		// TODO: implement
+		$notifyRepo = $this->em->getRepository(Notification::getClassName());
+		$notification = $notifyRepo->findOneBy([
+			'communication' => $this->communication,
+			'sender' => $this->sender,
+		]);
+
+		if ($value === NULL) {
+			if ($notification) {
+				$notifyRepo->delete($notification);
+			}
+		} else {
+			if (!$notification) {
+				$notification = new Notification();
+				$notification->communication = $this->communication;
+				$notification->sender = $this->sender;
+			}
+			$notification->enabled = (bool)$value;
+			$notifyRepo->save($notification);
+		}
 		$this->redrawControl('notifyButtons');
 	}
 

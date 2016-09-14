@@ -30,6 +30,9 @@ class Sender extends BaseEntity
 	/** @ORM\ManyToMany(targetEntity="Communication", mappedBy="contributors") */
 	protected $communications;
 
+	/** @ORM\OneToMany(targetEntity="Notification", mappedBy="sender") */
+	protected $notifications;
+
 	/** @ORM\Column(type="boolean") */
 	protected $beNotified = TRUE;
 

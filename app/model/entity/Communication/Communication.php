@@ -28,14 +28,17 @@ class Communication extends BaseEntity
 	/** @ORM\Column(type="string", length=512, nullable=true) */
 	protected $subject;
 
+	/** @ORM\ManyToMany(targetEntity="Sender", inversedBy="communication", cascade={"persist"}, orphanRemoval=true) */
+	private $contributors;
+
+	/** @ORM\OneToMany(targetEntity="Notification", mappedBy="comunication") */
+	protected $notifications;
+
 	/**
 	 * @ORM\OneToMany(targetEntity="Message", mappedBy="communication", cascade={"persist"}, orphanRemoval=true)
 	 * @ORM\OrderBy({"id" = "ASC"})
 	 */
 	protected $messages;
-
-	/** @ORM\ManyToMany(targetEntity="Sender", inversedBy="communication", cascade={"persist"}, orphanRemoval=true) */
-	private $contributors;
 
 	public function __construct(Sender $sender, Sender $reciever)
 	{

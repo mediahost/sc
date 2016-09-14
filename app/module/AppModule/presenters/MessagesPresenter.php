@@ -11,6 +11,7 @@ use App\Components\Conversation\Form\INewConversationFactory;
 use App\Components\Conversation\Form\NewConversation;
 use App\Components\ICommunicationDataViewFactory;
 use App\Model\Entity\Communication;
+use App\Model\Entity\Sender;
 use App\Model\Facade\UserFacade;
 
 class MessagesPresenter extends BasePresenter
@@ -56,9 +57,11 @@ class MessagesPresenter extends BasePresenter
 		}
 	}
 
-	public function handleNotifyChange($value = NULL)
+	public function handleNotifyChange($value)
 	{
-		// TODO: implement
+		$this->sender->beNotified = (bool)$value;
+		$senderRepo = $this->em->getRepository(Sender::getClassName());
+		$senderRepo->save($this->sender);
 		$this->redrawControl('notifyButtons');
 	}
 

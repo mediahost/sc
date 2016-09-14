@@ -19,10 +19,10 @@
 			<div class="mt20">
 				{_'Global e-mail notifications'}<br/>
 				<div class="btn-group" n:snippet="notifyButtons">
-					<a n:class="btn, btn-default, ajax, $sender->beNotified ? active" n:href="notifyChange! TRUE">
+					<a n:class="btn, btn-default, ajax, $sender->beNotified ? active" n:href="notifyChange! 1">
 						{_'Yes'}
 					</a>
-					<a n:class="btn, btn-default, ajax, !$sender->beNotified ? active" n:href="notifyChange! FALSE">
+					<a n:class="btn, btn-default, ajax, !$sender->beNotified ? active" n:href="notifyChange! 0">
 						{_'No'}
 					</a>
 				</div>
