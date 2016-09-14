@@ -89,6 +89,11 @@ class MessagesPresenter extends BasePresenter
 		}
 	}
 
+	/**
+	 * @secured
+	 * @resource('messages')
+	 * @privilege('changeNotify')
+	 */
 	public function handleNotifyChange($value)
 	{
 		$this->sender->beNotified = (bool)$value;
