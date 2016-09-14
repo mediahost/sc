@@ -51,6 +51,7 @@ class MessagesPresenter extends BasePresenter
 			$communicationRepo = $this->em->getRepository(Communication::getClassName());
 			$communication = $communicationRepo->find($id);
 			if ($communication && $communication->isContributor($this->sender)) {
+				$this['conversation']->setSender($this->sender);
 				$this['conversation']->setCommunication($communication);
 				$this['conversationList']->setCommunication($communication);
 				$this->template->conversation = $communication;
@@ -60,6 +61,31 @@ class MessagesPresenter extends BasePresenter
 				$this->flashMessage($message, 'danger');
 				$this->redirect('this', NULL);
 			}
+		}
+	}
+
+	/**
+	 * @secured
+	 * @resource('messages')
+	 * @privilege('browse')
+	 */
+	public function actionBrowse($id)
+	{
+		if ($id) {
+			$communicationRepo = $this->em->getRepository(Communication::getClassName());
+			$communication = $communicationRepo->find($id);
+			if ($communication) {
+				$this['conversation']->setSender($communication->firstContributor);
+				$this['conversation']->setCommunication($communication);
+				$this['conversation']->diableEdit();
+				$this->template->conversation = $communication;
+			} else {
+				$message = $this->translator->translate('Requested conversation was\'t find.');
+				$this->flashMessage($message, 'danger');
+				$this->redirect('this', NULL);
+			}
+		} else {
+			$this->redirect('default', NULL);
 		}
 	}
 
@@ -97,7 +123,6 @@ class MessagesPresenter extends BasePresenter
 	{
 		$control = $this->iConversationFactory->create();
 		$control->setAjax(TRUE, FALSE);
-		$control->setSender($this->sender);
 		$control->onSend[] = function () {
 			if ($this->isAjax()) {
 				$this['communication']->redrawControl();

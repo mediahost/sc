@@ -1,0 +1,17 @@
+{block pageTitle}
+	{_'Messages'}
+{/block}
+
+{block breadcrumbItems}
+	<li>
+		<a n:href="Messages:">{_'Messages'}</a>
+	</li>
+{/block}
+
+{block content}
+	<div class="row">
+		<div class="col-md-7 col-sm-8" n:ifset="$conversation" n:snippet="messages">
+			{control conversation}
+		</div>
+	</div>
+{/block}

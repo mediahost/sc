@@ -49,6 +49,7 @@ services:
 			- allow('candidate', ['cvViewer', 'cvEditor'])
 			- allow('company', ['company', 'job', 'jobs', 'companies'])
 			- allow(['candidate', 'company', 'admin'], 'messages')
+			- deny(['candidate', 'company'], 'messages', 'browse')
 
 			- allow('admin', 'users')
 			- allow('admin', 'skills')

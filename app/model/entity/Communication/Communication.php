@@ -14,7 +14,7 @@ use Nette\Utils\DateTime;
  * @ORM\Entity(repositoryClass="App\Model\Repository\CommunicationRepository")
  * @property string $subject
  * @property ArrayCollection $messages
- * @property ArrayCollection $contributors
+ * @property Sender $firstContributor
  * @property Message $lastMessage
  * @property DateTime $createdAt
  * @property DateTime $updatedAt
@@ -57,6 +57,11 @@ class Communication extends BaseEntity
 	public function removeSender(Sender $sender)
 	{
 		$this->contributors->removeElement($sender);
+	}
+
+	public function getFirstContributor()
+	{
+		return $this->contributors->first();
 	}
 
 	public function getOpposites(Sender $me)

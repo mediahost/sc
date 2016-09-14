@@ -26,6 +26,9 @@ class Conversation extends BaseControl
 	/** @var Sender */
 	protected $sender;
 
+	/** @var bool */
+	protected $disableEdit = FALSE;
+
 	/** @var int @persistent */
 	public $count = self::MESSAGES_PER_PAGE;
 
@@ -66,6 +69,7 @@ class Conversation extends BaseControl
 			'sender' => $this->sender,
 		]);
 
+		$this->template->editMode = !$this->disableEdit;
 		$this->template->communication = $this->communication;
 		$this->template->sender = $this->sender;
 		$this->template->messageCount = $this->count;
@@ -112,6 +116,12 @@ class Conversation extends BaseControl
 	public function setSender(Sender $sender)
 	{
 		$this->sender = $sender;
+		return $this;
+	}
+
+	public function diableEdit($value = TRUE)
+	{
+		$this->disableEdit = $value;
 		return $this;
 	}
 
