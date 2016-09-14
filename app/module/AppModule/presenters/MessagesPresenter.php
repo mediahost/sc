@@ -130,8 +130,8 @@ class MessagesPresenter extends BasePresenter
 		$control->setAjax(TRUE, FALSE);
 		$control->onSend[] = function () {
 			if ($this->isAjax()) {
-				$this['communication']->redrawControl();
-				$this['communicationList']->redrawControl();
+				$this['conversation']->redrawControl();
+				$this['conversationList']->redrawControl();
 			} else {
 				$this->redirect('this');
 			}

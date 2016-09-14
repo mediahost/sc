@@ -103,7 +103,7 @@ class Sender extends BaseEntity
 
 	public function getLastCommunication()
 	{
-		return $this->communications->last();
+		return $this->getCommunications()->first();
 	}
 
 	/**
