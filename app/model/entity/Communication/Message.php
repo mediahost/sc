@@ -11,6 +11,7 @@ use Knp\DoctrineBehaviors\Model;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"App\Listeners\Model\Entity\MessageListener"})
  * @property Sender $sender
  * @property ArrayCollection $reads
  * @property Communication $communication

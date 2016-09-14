@@ -31,7 +31,7 @@ class Communication extends BaseEntity
 	/** @ORM\ManyToMany(targetEntity="Sender", inversedBy="communication", cascade={"persist"}, orphanRemoval=true) */
 	private $contributors;
 
-	/** @ORM\OneToMany(targetEntity="Notification", mappedBy="comunication") */
+	/** @ORM\OneToMany(targetEntity="Notification", mappedBy="communication") */
 	protected $notifications;
 
 	/**
@@ -62,6 +62,11 @@ class Communication extends BaseEntity
 	public function getFirstContributor()
 	{
 		return $this->contributors->first();
+	}
+
+	public function getContributors()
+	{
+		return $this->contributors;
 	}
 
 	public function getOpposites(Sender $me)
