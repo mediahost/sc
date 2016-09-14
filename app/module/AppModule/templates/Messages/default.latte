@@ -11,7 +11,7 @@
 {block content}
 	<div class="row">
 		<div class="col-md-5 col-sm-4" n:snippet="messages-list">
-			{control communicationList}
+			{control conversationList}
 			<a n:href="this#newMessage" class="btn btn-info" data-toggle="modal">
 				<i class="fa fa-envelope"></i>
 				{_'New Message'}
@@ -28,8 +28,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-7 col-sm-8" n:if="$conversation" n:snippet="messages">
-			{control communication}
+		<div class="col-md-7 col-sm-8" n:ifset="$conversation" n:snippet="messages">
+			{control conversation}
 		</div>
 	</div>
 
@@ -41,7 +41,7 @@
 					<h4 class="modal-title">{_'Start communication'}</h4>
 				</div>
 				<div class="modal-body">
-					{control newCommunication}
+					{control newConversation}
 				</div>
 			</div>
 		</div>

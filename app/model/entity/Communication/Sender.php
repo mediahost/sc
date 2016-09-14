@@ -13,6 +13,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property-read string $name
  * @property Company $company
  * @property ArrayCollection $communications
+ * @property Communication $lastCommunication
  * @property bool|NULL $beNotified
  * @property-read int $unreadCount
  */
@@ -28,7 +29,7 @@ class Sender extends BaseEntity
 	protected $company;
 
 	/** @ORM\ManyToMany(targetEntity="Communication", mappedBy="contributors") */
-	protected $communications;
+	private $communications;
 
 	/** @ORM\OneToMany(targetEntity="Notification", mappedBy="sender") */
 	protected $notifications;
@@ -78,7 +79,7 @@ class Sender extends BaseEntity
 	public function getUnreadCount()
 	{
 		$unread = 0;
-		$countUnread = function ($key, Communication $communication) use ($unread) {
+		$countUnread = function ($key, Communication $communication) use (&$unread) {
 			if ($communication->getUnreadCount($this)) {
 				$unread++;
 			}
@@ -86,6 +87,18 @@ class Sender extends BaseEntity
 		};
 		$this->communications->forAll($countUnread);
 		return $unread;
+	}
+
+	public function getCommunications($order = TRUE)
+	{
+		if ($order) {
+			$iterator = $this->communications->getIterator();
+			@$iterator->uasort(function (Communication $a, Communication $b) {
+				return ($a->lastMessage->createdAt > $b->lastMessage->createdAt) ? -1 : 1;
+			});
+			return new ArrayCollection(iterator_to_array($iterator));
+		}
+		return $this->communications;
 	}
 
 	public function getLastCommunication()

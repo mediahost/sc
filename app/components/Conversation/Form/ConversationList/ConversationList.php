@@ -5,11 +5,15 @@ namespace App\Components\Conversation\Form;
 use App\Components\BaseControl;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Sender;
+use App\Model\Facade\CommunicationFacade;
 
 class ConversationList extends BaseControl
 {
 
-	const COMMUNICATIONS_PER_PAGE = 10;
+	const CONVERSATIONS_PER_PAGE = 10;
+
+	/** @var CommunicationFacade @inject */
+	public $communicationFacade;
 
 	/** @var IFulltextSearchFactory @inject */
 	public $iFulltextSearchFactory;
@@ -24,7 +28,7 @@ class ConversationList extends BaseControl
 	private $searchString;
 
 	/** @var int @persistent */
-	public $count = self::COMMUNICATIONS_PER_PAGE;
+	public $count = self::CONVERSATIONS_PER_PAGE;
 
 	/** @var Communication[] */
 	protected $communications = [];
@@ -39,7 +43,7 @@ class ConversationList extends BaseControl
 		$this->template->communications = $this->communications;
 		$this->template->activeCommunication = $this->activeCommunication;
 		$this->template->communicationCount = $this->count;
-		$this->template->communicationsPerPage = self::COMMUNICATIONS_PER_PAGE;
+		$this->template->communicationsPerPage = self::CONVERSATIONS_PER_PAGE;
 		$this->template->allowSearchBox = $this->allowSearchBox;
 		parent::render();
 	}
@@ -69,8 +73,13 @@ class ConversationList extends BaseControl
 	public function setSender(Sender $sender)
 	{
 		$this->sender = $sender;
-		$this->activeCommunication = $this->sender->getLastCommunication();
 		$this->communications = $this->sender->communications;
+		return $this;
+	}
+
+	public function setCommunication(Communication $active)
+	{
+		$this->activeCommunication = $active;
 		return $this;
 	}
 

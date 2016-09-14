@@ -96,15 +96,15 @@ class CommunicationFacade extends Object
 		return $this->communicationRepo->findBySenders($one, $two);
 	}
 
+	public function findByFulltext(Sender $me, $text)
+	{
+		return $this->communicationRepo->findByFulltext($me, $text);
+	}
+
 	public function markAsRead(Communication $communication, Sender $reader)
 	{
 		$communication->markMessagesAsRead($reader);
 		$this->communicationRepo->save($communication);
-	}
-
-	public function findByFulltext(Sender $me, $text)
-	{
-		return $this->communicationRepo->findByFulltext($me, $text);
 	}
 
 }

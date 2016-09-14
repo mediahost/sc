@@ -115,8 +115,8 @@ class Communication extends BaseEntity
 	public function getUnreadCount(Sender $sender)
 	{
 		$unread = 0;
-		$countUnread = function ($key, Message $message) use ($unread, $sender) {
-			if ($message->isReadBy($sender)) {
+		$countUnread = function ($key, Message $message) use (&$unread, $sender) {
+			if (!$message->isReadBy($sender)) {
 				$unread++;
 			}
 			return TRUE;

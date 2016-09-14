@@ -32,6 +32,9 @@ class MessagesPresenter extends BasePresenter
 	/** @var ICommunicationDataViewFactory @inject */
 	public $iCommunicationDataViewFactory;
 
+	/** @var Communication */
+	private $communication;
+
 	/**
 	 * @secured
 	 * @resource('messages')
@@ -40,13 +43,16 @@ class MessagesPresenter extends BasePresenter
 	public function actionDefault($id = NULL)
 	{
 		if (!$id) {
-			$communication = $this->sender->getLastCommunication();
-			$this->redirect('this', ['id' => $communication->id]);
+			$communication = $this->sender->lastCommunication;
+			if ($communication) {
+				$this->redirect('this', ['id' => $communication->id]);
+			}
 		} else {
 			$communicationRepo = $this->em->getRepository(Communication::getClassName());
 			$communication = $communicationRepo->find($id);
 			if ($communication && $communication->isContributor($this->sender)) {
-				$this['communication']->setCommunication($communication);
+				$this['conversation']->setCommunication($communication);
+				$this['conversationList']->setCommunication($communication);
 				$this->template->conversation = $communication;
 				$this->communicationFacade->markAsRead($communication, $this->sender);
 			} else {
@@ -76,7 +82,7 @@ class MessagesPresenter extends BasePresenter
 	}
 
 	/** @return NewConversation */
-	public function createComponentNewCommunication()
+	public function createComponentNewConversation()
 	{
 		$control = $this->iNewConversationFactory->create();
 		$control->setSender($this->sender);
@@ -87,7 +93,7 @@ class MessagesPresenter extends BasePresenter
 	}
 
 	/** @return Conversation */
-	public function createComponentCommunication()
+	public function createComponentConversation()
 	{
 		$control = $this->iConversationFactory->create();
 		$control->setAjax(TRUE, FALSE);
@@ -104,7 +110,7 @@ class MessagesPresenter extends BasePresenter
 	}
 
 	/** @return ConversationList */
-	public function createComponentCommunicationList()
+	public function createComponentConversationList()
 	{
 		$control = $this->iConversationListFactory->create();
 		$control->setSender($this->sender);

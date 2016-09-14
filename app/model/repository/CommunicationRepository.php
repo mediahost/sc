@@ -3,6 +3,8 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Sender;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 class CommunicationRepository extends BaseRepository
@@ -19,11 +21,12 @@ class CommunicationRepository extends BaseRepository
 										ON t1.communication_id = t2.communication_id', $rsm);
 		$nqb->setParameter('one', $one->id);
 		$nqb->setParameter('two', $two->id);
-		$id = $nqb->getSingleScalarResult();
-		if ($id) {
+		try {
+			$id = $nqb->getSingleScalarResult();
 			return $this->find($id);
+		} catch (NoResultException $e) {
+			return NULL;
 		}
-		return NULL;
 	}
 
 	public function findByFulltext(Sender $me, $text)
