@@ -3,58 +3,70 @@
 namespace App\Components;
 
 use App\Forms\Form;
+use App\Model\Entity\Sender;
+use App\Model\Facade\CommunicationFacade;
 
+class MessageSearchBox extends BaseControl
+{
 
-class MessageSearchBox extends BaseControl {
-    
-    public $onSearch = [];
-    
-    /** @var \App\Model\Facade\CommunicationFacade */
-    private $communicationFacade;
-    
-    /** @var \App\Model\Entity\User */
-    private $user;
-    
-    /** @var string */
-    private $searchString;
-    
-    
-    public function __construct(\App\Model\Facade\CommunicationFacade $communicationFacade) {
-        parent::__construct();
-        $this->communicationFacade = $communicationFacade;
-    }
+	/** @var array */
+	public $onSearch = [];
 
+	/** @var CommunicationFacade @inject */
+	public $communicationFacade;
 
-    public function createComponentForm() {
-        $form = new Form();
-        $form->addText('searchString')->setAttribute('placeholder', 'Search for message ...');
-        $form->onSuccess[] = $this->formSucceeded;
-		return $form;
-    }
-    
-    public function formSucceeded(Form $form, $values)
+	/** @var Sender */
+	private $sender;
+
+	/** @var string */
+	private $search;
+
+	public function createComponentForm()
 	{
-        $user = $this->template->user->identity;
-        $this->searchString = $values['searchString'];
-        $communications = $this->communicationFacade->getUserCommunications($user, $this->searchString);
-        $this->onSearch($communications);
-    }
-    
-    public function getSearchString() {
-        return $this->searchString;
-    }
-    
-    public function setUser(\App\Model\Entity\User $user) {
-        $this->user = $user;
-    }
+		$form = new Form();
+		$form->setTranslator($this->translator);
+		if ($this->isAjax) {
+			$form->getElementPrototype()->class[] = 'ajax';
+		}
+		if ($this->isSendOnChange) {
+			$form->getElementPrototype()->class[] = 'sendOnChange';
+		}
+
+		$form->addText('search')
+			->setAttribute('placeholder', 'Search for message...');
+
+		$form->onSuccess[] = $this->formSucceeded;
+		return $form;
+	}
+
+	public function formSucceeded(Form $form, $values)
+	{
+		if ($values->search) {
+			$this->search = $values->search;
+			$communications = $this->communicationFacade->findByFulltext($this->sender, $this->search);
+		} else {
+			$communications = $this->sender->communications;
+		}
+		$this->onSearch($communications);
+	}
+
+	public function getSearched()
+	{
+		return $this->search;
+	}
+
+	public function setSender(Sender $sender)
+	{
+		$this->sender = $sender;
+		return $this;
+	}
+
 }
 
 interface IMessageSearchBoxFactory
 {
 
-	/**
-	 * @return MessageSearchBox
-	 */
+	/** @return MessageSearchBox */
 	public function create();
 
 }

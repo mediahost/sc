@@ -2,6 +2,7 @@
 
 namespace App\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
@@ -9,79 +10,97 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 /**
  * @ORM\Entity
  * @property User $user
+ * @property-read string $name
  * @property Company $company
- * @property Communication $communication
- * @property bool|null $beNotified
+ * @property ArrayCollection $communications
+ * @property bool|NULL $beNotified
+ * @property-read int $unreadCount
  */
 class Sender extends BaseEntity
 {
 
 	use Identifier;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="User")
-	 * @var User
-	 */
+	/** @ORM\ManyToOne(targetEntity="User") */
 	protected $user;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Company")
-	 * @var Company
-	 */
+	/** @ORM\ManyToOne(targetEntity="Company") */
 	protected $company;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Communication", inversedBy="contributors")
-	 * @var Communication
-	 */
-	protected $communication;
+	/** @ORM\ManyToMany(targetEntity="Communication", mappedBy="contributors") */
+	protected $communications;
 
-	/**
-	 * @ORM\Column(type="boolean", nullable=true)
-	 * @var bool|NULL
-	 */
-	protected $beNotified;
+	/** @ORM\Column(type="boolean") */
+	protected $beNotified = TRUE;
 
-	/**
-	 * TODO: implement
-	 */
+	public function __construct(User $user)
+	{
+		$this->communications = new ArrayCollection();
+		parent::__construct();
+		$this->user = $user;
+	}
+
+	public function isCompany()
+	{
+		return (bool)$this->company;
+	}
+
 	public function getImage()
 	{
-		if ($this->company) {
-			return 'assets/img/avatar2.jpeg';
-		} elseif($this->user->candidate) {
-			return $this->user->candidate->photo;
-		}elseif (TRUE) {
-			return 'assets/img/avatar3.jpeg';
+		if ($this->isCompany()) {
+			return $this->company->logo;
+		} else {
+			return $this->user->person->photo;
 		}
 	}
 
 	public function getName()
 	{
 		if ($this->company) {
-		    return $this->company->name;
-		} elseif ($this->user->candidate && $this->user->candidate->name) {
-			return $this->user->candidate->name;
+			return $this->company->name;
 		} else {
-			return $this->user->mail;
+			return $this->getUserName();
 		}
 	}
 
 	public function getUserName()
 	{
-		if ($this->user->candidate) {
-			return $this->user->candidate->name;
+		if ($this->user->person && $this->user->person->fullName) {
+			return $this->user->person->fullName;
 		} else {
 			return $this->user->mail;
 		}
 	}
 
+	public function getUnreadCount()
+	{
+		$unread = 0;
+		$countUnread = function ($key, Communication $communication) use ($unread) {
+			if ($communication->getUnreadCount($this)) {
+				$unread++;
+			}
+			return TRUE;
+		};
+		$this->communications->forAll($countUnread);
+		return $unread;
+	}
+
+	public function getLastCommunication()
+	{
+		return $this->communications->last();
+	}
+
 	/**
-	 * TODO: implement - vrací odkaz na veřejný profil společnosti nebo uživatele (veřejný profil uživatele, zatím neexistuje, takže bude stačit, když bude vracet odkaz na editaci uživatele
+	 * TODO: implement - vrací odkaz na veřejný profil společnosti nebo uživatele
 	 */
 	public function getPublicLink()
 	{
 
+	}
+
+	public function __toString()
+	{
+		return $this->getName();
 	}
 
 }

@@ -57,7 +57,7 @@ class Company extends BaseEntity
 
 	public function __toString()
 	{
-		return (string) $this->name;
+		return (string)$this->name;
 	}
 
 	public function isNew()
@@ -75,6 +75,15 @@ class Company extends BaseEntity
 		$this->logo->requestedFilename = 'company_logo_' . Strings::webalize(microtime());
 		$this->logo->setFolder(Image::FOLDER_COMPANY_LOGO);
 		return $this;
+	}
+
+	public function getLogo()
+	{
+		if ($this->logo) {
+			return $this->logo;
+		} else {
+			return 'assets/img/avatar3.jpeg'; // default image
+		}
 	}
 
 }

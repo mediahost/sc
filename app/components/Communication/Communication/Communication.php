@@ -2,14 +2,10 @@
 
 namespace App\Components;
 
-use App\Model\Entity\Company;
-use App\Model\Entity\Message;
+use App\Model\Entity;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
-use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
-use Nette\Security\User;
 
 class Communication extends BaseControl
 {
@@ -17,118 +13,79 @@ class Communication extends BaseControl
 	const MESSAGES_PER_PAGE = 5;
 
 	/** @var array */
-	public $onAddMessage = [];
-
-	/** @var \App\Model\Entity\Communication */
-	protected $communication;
+	public $onSend = [];
 
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
 
-	/** @var EntityManager @inject */
-	public $em;
+	/** @var Entity\Communication */
+	protected $communication;
 
-	/** @var User @inject */
-	public $user;
-
-	/** @var ITranslator @inject */
-	public $translator;
+	/** @var Sender */
+	protected $sender;
 
 	/** @var int @persistent */
 	public $count = self::MESSAGES_PER_PAGE;
 
-	/** @var Company */
-	protected $company;
-
-	/**
-	 * @param \App\Model\Entity\Communication $communication
-	 */
-	public function setCommunication(\App\Model\Entity\Communication $communication)
-	{
-		$this->communication = $communication;
-	}
-
-	public function comunicateAsCompany(Company $company)
-	{
-		$this->company = $company;
-	}
-
-	public function render()
-	{
-		$this->template->communication = $this->communication;
-		$this->template->viewer = $this->getViewerContributor();
-		$this->template->opposite = $this->getOppositeContributor();
-		$this->template->messageCount = $this->count;
-		$this->template->messagesPerPage = self::MESSAGES_PER_PAGE;
-		parent::render();
-	}
-
-	public function createComponentMessageForm()
+	public function createComponentMessage()
 	{
 		$form = new Form();
-		$form->getElementPrototype()->class('ajax');
 		$form->setTranslator($this->translator);
-		
-		$form->addTextArea('text')
-				->addRule(Form::FILLED, 'Must be filled');
-		$form->addSubmit('send');
-		
+		if ($this->isAjax) {
+			$form->getElementPrototype()->class[] = 'ajax';
+		}
+		if ($this->isSendOnChange) {
+			$form->getElementPrototype()->class[] = 'sendOnChange';
+		}
+
+		$form->addTextArea('message')
+			->addRule(Form::FILLED, 'Must be filled', NULL, 3)
+			->setAttribute('placeholder', $this->translator->translate('Type a message here...'))
+			->getControlPrototype()->class = 'elastic form-control';
+		$form->addSubmit('send', 'Send message')
+			->getControlPrototype()->class = 'btn btn-info mt10';
+
 		$form->onSuccess[] = $this->processForm;
 		return $form;
 	}
 
 	public function processForm(Form $form, $values)
 	{
-		$this->communicationFacade->addMessage($this->communication, $values->text, $this->user->identity, $this->company);
-		$form['text']->setValue('');
-		$this->onAddMessage();
+		$this->communicationFacade->sendMessage($this->sender, $this->communication, $values->message);
+		$form['message']->setValue('');
+		$this->onSend();
+	}
+
+	public function render()
+	{
+		$this->template->communication = $this->communication;
+		$this->template->sender = $this->sender;
+		$this->template->messageCount = $this->count;
+		$this->template->messagesPerPage = self::MESSAGES_PER_PAGE;
+		parent::render();
 	}
 
 	public function isViewer(Sender $sender)
 	{
-		if ($this->company) {
-			return $sender->company && $sender->company->id == $this->company->id;
-		} else {
-			return $sender->user->id == $this->user->id;
-		}
+		return $this->sender->id === $sender->id;
 	}
 
-	public function isMessageUnread(Message $message)
+	public function handleNotifyChange($value = NULL)
 	{
-		if ($this->company && $message->isReadByCompany($this->company)) {
-			return TRUE;
-		} elseif (!$this->company && $message->isReadByUser($this->user->identity)) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		// TODO: implement
+		$this->redrawControl('notifyButtons');
 	}
 
-	public function isViewedByCompany()
+	public function setCommunication(Entity\Communication $communication)
 	{
-		return (bool) $this->company;
+		$this->communication = $communication;
+		return $this;
 	}
 
-	public function getViewerContributor()
+	public function setSender(Sender $sender)
 	{
-		return $this->communication->getContributor($this->user->identity);
-	}
-
-	public function getOppositeContributor()
-	{
-		return $this->communication->getOpposite($this->user->identity);
-	}
-
-	public function handleNotifyChange($bool)
-	{
-		if (is_numeric($bool)) {
-			$bool = (bool) $bool;
-		} else {
-			$bool = NULL;
-		}
-		$viewer = $this->getViewerContributor();
-		$viewer->beNotified = $bool;
-		$this->redrawControl('notifiButtons');
+		$this->sender = $sender;
+		return $this;
 	}
 
 }
@@ -136,8 +93,6 @@ class Communication extends BaseControl
 interface ICommunicationFactory
 {
 
-	/**
-	 * @return Communication
-	 */
+	/** @return Communication */
 	public function create();
 }

@@ -8,93 +8,73 @@ class CommunicationList extends BaseControl
 {
 
 	const COMMUNICATIONS_PER_PAGE = 10;
-    
-    /** @var string */
-    private $searchString = '';
-    
-    /** @var IMessageSearchBoxFactory */
-	private $messageSearchBoxFactory;
+
+	/** @var IMessageSearchBoxFactory @inject */
+	public $iMessageSearchBoxFactory;
+
+	/** @var Sender */
+	private $sender;
 
 	/** @var Entity\Communication[] */
 	protected $communications = [];
-    
-    /** @var Entity\Communication[] */
-    protected $searchedCommunications;
-
-	/** @var array */
-	protected $links = [];
 
 	/** @var Entity\Communication|NULL */
 	protected $activeCommunication;
 
+	/** @var array */
+	protected $links = [];
+
+	/** @var string */
+	private $searchString;
+
 	/** @var int @persistent */
 	public $count = self::COMMUNICATIONS_PER_PAGE;
-    
-
-    public function __construct(IMessageSearchBoxFactory $messageSearchBoxFactory) {
-        parent::__construct();
-        $this->messageSearchBoxFactory = $messageSearchBoxFactory;
-    }
-
-	/**
-	 * @param Entity\Communication $communication
-	 * @param string|NULL $link
-	 */
-	public function addCommunication(Entity\Communication $communication, $link = NULL)
-	{
-		$this->communications[] = $communication;
-		$this->links[$communication->id] = $link;
-	}
-
-	public function getCommunicationLink(Entity\Communication $communication)
-	{
-		$id = $communication->id;
-		return isset($this->links[$id]) ? $this->links[$id] : NULL;
-	}
-
-	/**
-	 * @param Entity\Communication|NULL $activeCommunication
-	 */
-	public function setActiveCommunication($activeCommunication)
-	{
-		$this->activeCommunication = $activeCommunication;
-	}
 
 	public function render()
 	{
-        $this->template->addFilter('mark', $this->markSearchString);
+		$this->template->addFilter('mark', $this->markSearchString);
+		$this->template->sender = $this->sender;
 		$this->template->communications = $this->communications;
 		$this->template->activeCommunication = $this->activeCommunication;
 		$this->template->communicationCount = $this->count;
 		$this->template->communicationsPerPage = self::COMMUNICATIONS_PER_PAGE;
 		parent::render();
 	}
-    
-    public function markSearchString($string) {
-        $replace = '<strong>'.$this->searchString.'</strong>';
-        $string = str_replace($this->searchString, $replace, $string);
-        return $string;
-    }
 
-    public function createComponentMessageSearchBox() {
-        $control = $this->messageSearchBoxFactory->create();
-        $control->setUser($this->template->user->identity);
-        $control->onSearch[] = function($comunications) use($control) {
-            $this->searchString = $control->getSearchString();
-            $this->communications = $comunications;
-            $this->presenter->redrawControl('messages');
-            $this->presenter->redrawControl('messages-list');
-        };
-        return $control;
-    }
+	public function createComponentMessageSearchBox()
+	{
+		$control = $this->iMessageSearchBoxFactory->create();
+		$control->setSender($this->sender)
+			->setAjax();
+		$control->onSearch[] = function ($comunications) use ($control) {
+			$this->searchString = $control->getSearched();
+			$this->communications = $comunications;
+			$this->presenter->redrawControl('messages');
+			$this->presenter->redrawControl('messages-list');
+		};
+		return $control;
+	}
+
+	public function markSearchString($string)
+	{
+		$replacement = '<strong>' . $this->searchString . '</strong>';
+		$string = str_replace($this->searchString, $replacement, $string);
+		return $string;
+	}
+
+	public function setSender(Entity\Sender $sender)
+	{
+		$this->sender = $sender;
+		$this->activeCommunication = $this->sender->getLastCommunication();
+		$this->communications = $this->sender->communications;
+		return $this;
+	}
 }
 
 interface ICommunicationListFactory
 {
 
-	/**
-	 * @return CommunicationList
-	 */
+	/** @return CommunicationList */
 	public function create();
 
 }

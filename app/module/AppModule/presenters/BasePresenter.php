@@ -4,9 +4,13 @@ namespace App\AppModule\Presenters;
 
 use App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
 use App\Model\Entity\Communication;
+use App\Model\Entity\Company;
 use App\Model\Entity\Role;
+use App\Model\Entity\Sender;
 use App\Model\Entity\User;
 use App\Model\Facade\CommunicationFacade;
+use App\Model\Facade\CompanyFacade;
+use Nette\Application\ApplicationException;
 use Tracy\Debugger;
 
 abstract class BasePresenter extends BaseBasePresenter
@@ -15,35 +19,34 @@ abstract class BasePresenter extends BaseBasePresenter
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
 
-	/** @var Communication[] */
-	private $userCommunications;
+	/** @var CompanyFacade @inject */
+	public $companyFacade;
+
+	/** @var Sender */
+	protected $sender;
+
+	/** @var Company */
+	protected $company;
 
 	private $showRightSideBar = false;
-
-
-	public function getUserCommunications(User $user = null)
-	{
-		if (!$user) {
-			$user = $this->user->identity;
-		}
-		$this->userCommunications = $this->communicationFacade->getUserCommunications($user);
-		return $this->userCommunications;
-	}
 
 	protected function startup()
 	{
 		parent::startup();
 		$this->checkCompleteAccount();
+		$this->chooseCompany();
+		$this->chooseSender();
 	}
 
 	protected function beforeRender()
 	{
 		parent::beforeRender();
 		$this->template->isCompleteAccount = $this->isCompleteAccount();
-		$this->template->communications = $this->getUserCommunications();
-		$this->template->unreadMessagesCount = $this->communicationFacade->getUserUnreadCount($this->getUserCommunications(), $this->user->identity);
-		$this->template->communicationFacade = $this->communicationFacade;
 		$this->template->showRightSidebar = $this->showRightSideBar;
+
+		$this->template->sender = $this->sender;
+		$this->template->communications = $this->sender->communications;
+		$this->template->unreadMessagesCount = $this->sender->unreadCount;
 	}
 
 	private function checkCompleteAccount()
@@ -56,8 +59,26 @@ abstract class BasePresenter extends BaseBasePresenter
 		}
 	}
 
+	private function chooseCompany()
+	{
+		if ($this->getUser()->isInRole(Role::COMPANY)) {
+			$companies = $this->companyFacade->findByUser($this->user);
+			$this->company = $companies->first();
+		}
+	}
+
+	private function chooseSender()
+	{
+		$senders = $this->communicationFacade->findSenders($this->user->identity, $this->company);
+		if (count($senders)) {
+			$this->sender = current($senders);
+		} else {
+			$this->sender = $this->communicationFacade->createSender($this->user->identity, $this->company);
+		}
+	}
+
 	/**
-	 * Check if user account is uncomplete
+	 * Check if user account is complete
 	 * @return bool
 	 */
 	private function isCompleteAccount()

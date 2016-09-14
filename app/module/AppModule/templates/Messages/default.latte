@@ -1,21 +1,49 @@
 {block pageTitle}
-{_'Messages'}
+	{_'Messages'}
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="Messages:">{_'Messages'}</a>
-</li>
+	<li>
+		<a n:href="Messages:">{_'Messages'}</a>
+	</li>
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-5 col-sm-4" n:snippet="messages-list">
-		{control communicationList}
-		{control startCommunicationModal}
+	<div class="row">
+		<div class="col-md-5 col-sm-4" n:snippet="messages-list">
+			{control communicationList}
+			<a n:href="this#newMessage" class="btn btn-info" data-toggle="modal">
+				<i class="fa fa-envelope"></i>
+				{_'New Message'}
+			</a>
+			<div class="mt20">
+				{_'Global e-mail notifications'}<br/>
+				<div class="btn-group" n:snippet="notifyButtons">
+					<a n:class="btn, btn-default, ajax, $sender->beNotified ? active" n:href="notifyChange! TRUE">
+						{_'Yes'}
+					</a>
+					<a n:class="btn, btn-default, ajax, !$sender->beNotified ? active" n:href="notifyChange! FALSE">
+						{_'No'}
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-7 col-sm-8" n:if="$conversation" n:snippet="messages">
+			{control communication}
+		</div>
 	</div>
-	<div class="col-md-7 col-sm-8" n:if="$conversation" n:snippet="messages">
-		{control communication}
+
+	<div class="modal fade" id="newMessage" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					<h4 class="modal-title">{_'Start communication'}</h4>
+				</div>
+				<div class="modal-body">
+					{control newCommunication}
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
 {/block}

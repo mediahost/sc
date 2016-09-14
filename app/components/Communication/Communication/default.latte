@@ -4,61 +4,61 @@
 			<i class="s16 icomoon-icon-bubbles-6"></i>
 			{if $communication->subject}
 				{$communication->subject}
-			{elseif $opposite}
-				Communication with {$opposite->name}
+			{else}
+				{_'Communication with %name%', NULL, ['name' => $communication->getOppositesName($sender)]}
 			{/if}
 		</h4>
 	</div>
 	<div class="panel-body">
-		<div class="showMoreMessage" n:if="$messageCount < count($communication->messages)">
-			<a n:href="this, count => $messageCount + $messagesPerPage" class="btn btn-default">
-				{_'Show older'} ({!= count($communication->messages) - $messageCount})
-			</a>
-		</div>
-		<ul class="messages" n:snippet="messages">
-			{var skipCount => count($communication->messages) - $messageCount}
-			{foreach $communication->messages as $message}
-				{continueIf $iterator->counter <= $skipCount}
-				<li n:class="$control->isViewer($message->sender) ? user : admin, clearfix">
-					<a href="#" class="avatar">
-						<img src="{$basePath}/foto/{$message->sender->image|size:50,50}" alt="" />
-					</a>
-					<div class="message">
-						<div class="head clearfix">
+		<div n:snippet="messages">
+
+			<div class="showMoreMessage" n:if="$messageCount < count($communication->messages)">
+				<a n:href="this, count => $messageCount + $messagesPerPage" class="btn btn-default">
+					{_'Show older'} ({!= count($communication->messages) - $messageCount})
+				</a>
+			</div>
+			<ul class="messages">
+				{var skipCount => count($communication->messages) - $messageCount}
+				{foreach $communication->messages as $message}
+					{continueIf $iterator->counter <= $skipCount}
+					<li n:class="$control->isViewer($message->sender) ? admin : user, clearfix">
+						<a href="#" class="avatar">
+							<img src="{$basePath}/foto/{$message->sender->image|size:50,50}" alt=""/>
+						</a>
+						<div class="message">
+							<div class="head clearfix">
 							<span class="name">
 								<strong>
-									{$message->sender->getName()}
-									{if $control->isViewer($message->sender) && $control->isViewedByCompany()}
-										({$message->sender->getUserName()})
-									{/if}
+									{$message->sender->name}
 								</strong>
 							</span>
-							<span class="time">{$message->time|date:'H:i:s d.m.Y'}</span>
+								<span class="time">{$message->createdAt|date:'H:i d.m.Y'}</span>
+							</div>
+							<p>
+								{!$message->text|escape|nl2br}
+							</p>
 						</div>
-						<p>
-							{!$message->text|escape|nl2br}
-						</p>
-					</div>
+					</li>
+				{/foreach}
+				<li class="sendMsg">
+					{form message}
+						{input message}
+						{input send}
+					{/form}
 				</li>
-			{/foreach}
-			<li class="sendMsg">
-				{form messageForm}
-					<textarea n:name="text" class="elastic form-control" rows="3" placeholder="{_"Type a message here..."}"></textarea>
-					<input n:name="send" type="submit" class="btn btn-info mt10" value="Send message" />
-				{/form}
-			</li>
-		</ul>
+			</ul>
+		</div>
 		<div class="notification-settings">
-			Notifications:
-			<div class="btn-group" n:snippet="notifiButtons">
-				<a n:class="btn, btn-default, ajax, $viewer->beNotified === TRUE ? active" n:href="notifyChange 1">
-					Yes
+			{_'E-mail notifications'}:
+			<div class="btn-group" n:snippet="notifyButtons">
+				<a n:class="btn, btn-default, ajax, $sender->beNotified === TRUE ? active" n:href="notifyChange! TRUE">
+					{_'Yes'}
 				</a>
-				<a n:class="btn, btn-default, ajax, $viewer->beNotified === FALSE ? active" n:href="notifyChange 0">
-					No
+				<a n:class="btn, btn-default, ajax, $sender->beNotified === FALSE ? active" n:href="notifyChange! FALSE">
+					{_'No'}
 				</a>
-				<a n:class="btn, btn-default, ajax, $viewer->beNotified === NULL ? active" n:href="notifyChange">
-					By your global settings
+				<a n:class="btn, btn-default, ajax, $sender->beNotified === NULL ? active" n:href="notifyChange!">
+					{_'By your global settings'}
 				</a>
 			</div>
 		</div>

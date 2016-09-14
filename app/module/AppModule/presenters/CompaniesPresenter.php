@@ -19,9 +19,6 @@ use Kdyby\Doctrine\EntityManager;
 class CompaniesPresenter extends BasePresenter
 {
 
-	/** @var Company */
-	private $company;
-
 	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
@@ -84,8 +81,8 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->company = new Company();
-		$this['companyInfoForm']->setCompany($this->company);
+		$company = new Company();
+		$this['companyInfoForm']->setCompany($company);
 		$this->setView('edit');
 	}
 
@@ -96,19 +93,15 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->company = $this->companyDao->find($id);
-		if (!$this->company) {
+		$company = $this->companyDao->find($id);
+		if (!$company) {
 			$message = $this->translator->translate('This company wasn\'t found.');
 			$this->flashMessage($message, 'error');
 			$this->redirect('default');
 		} else {
-			$this['companyInfoForm']->setCompany($this->company);
+			$this['companyInfoForm']->setCompany($company);
 		}
-	}
-
-	public function renderEdit()
-	{
-		$this->template->company = $this->company;
+		$this->template->company = $company;
 	}
 
 	/**
@@ -118,14 +111,14 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionEditImages($id)
 	{
-		$this->company = $this->companyDao->find($id);
-		if (!$this->company) {
+		$company = $this->companyDao->find($id);
+		if (!$company) {
 			$message = $this->translator->translate('This company wasn\'t found.');
 			$this->flashMessage($message, 'error');
 			$this->redirect('default');
 		} else {
-			$this['companyImagesForm']->setCompany($this->company);
-			$this->template->company = $this->company;
+			$this['companyImagesForm']->setCompany($company);
+			$this->template->company = $company;
 		}
 	}
 
