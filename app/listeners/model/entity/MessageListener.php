@@ -66,8 +66,6 @@ class MessageListener extends Object implements Subscriber
 			$notificationMessage->setMessage($message);
 			$notificationMessage->send();
 		}
-
-		exit;
 	}
 
 }
