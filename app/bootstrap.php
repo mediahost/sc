@@ -8,7 +8,7 @@ $configurator = new Nette\Configurator;
 $configurator->setDebugMode([
     '94.112.129.121', // Petr - Brno
     '149.62.146.153', // Petr - Brno2
-    '37.221.251.251', // Petr - Svetla n.S.
+	'37.221.251.254', // Petr - Svetla n.S.
 	'213.81.220.69', // Kapco
 ]);
 
