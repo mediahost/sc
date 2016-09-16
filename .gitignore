@@ -92,4 +92,4 @@
 ## Wordpress
 ################
 /www/wp/*
-!/www/wp/
+!/www/wp/.htaccess
