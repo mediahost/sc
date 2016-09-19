@@ -6,22 +6,22 @@
 		<td class="info" colspan="6">
 			<table class="address">
 				<tr>
-					<td class="name">{$candidate->degreeName}</td>
-					<td class="photo" rowspan="5" n:if="$candidate->photo">
-						<img src="{$basePath}foto/{$candidate->photo|size:150,150}" 
-                         alt="{$candidate->degreeName}" />
+					<td class="name">{$person->degreeName}</td>
+					<td class="photo" rowspan="5" n:if="$person->photo">
+						<img src="{$basePath}foto/{$person->photo|size:150,150}"
+                         alt="{$person->degreeName}" />
 					</td>
 				</tr>
-				<tr n:if="$candidate->address">
+				<tr n:if="$person->address">
 					<td class="address" colspan="2">
-						{$candidate->address->format()}
+						{$person->address->format()}
 					</td>
 				</tr>
-				<tr n:if="$candidate->phone">
-					<td class="phone">{$candidate->phone}</td>
+				<tr n:if="$person->phone">
+					<td class="phone">{$person->phone}</td>
 				</tr>
 				<tr>
-					<td class="mail">{$candidate->user->mail}</td>
+					<td class="mail">{$user->mail}</td>
 				</tr>
 				<tr><td></td></tr>
 			</table>
