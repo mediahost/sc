@@ -24,7 +24,6 @@ services:
 	# User
 	- {implement: App\Components\User\IUserFactory, inject: yes}
 	- {implement: App\Components\User\ICompanyUserFactory, inject: yes}
-	- {implement: App\Components\User\IUserDataViewFactory, inject: yes}
 	- {implement: App\Components\User\ICareerDocsFactory, inject: yes}
 	- {implement: App\Components\Grids\User\IUsersGridFactory, inject: yes}
 

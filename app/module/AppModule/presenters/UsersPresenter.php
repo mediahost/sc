@@ -2,6 +2,7 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Grids\User\IUsersGridFactory;
 use App\Components\User;
 use App\Model\Entity;
 use App\Model\Facade\RoleFacade;
@@ -32,8 +33,8 @@ class UsersPresenter extends BasePresenter
 	/** @var User\IUserFactory @inject */
 	public $iUserFactory;
 
-	/** @var User\IUserDataViewFactory @inject */
-	public $userDataViewFactory;
+	/** @var IUsersGridFactory @inject */
+	public $iUsersGridFactory;
 
 	// </editor-fold>
 
@@ -171,11 +172,9 @@ class UsersPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return User\UserDataView */
-	public function createComponentUserDataView()
+	public function createComponentUsersGrid()
 	{
-		$control = $this->userDataViewFactory->create();
-		$control->setUsers($this->userDao->findAll());
+		$control = $this->iUsersGridFactory->create();
 		$control->setIdentity($this->user);
 		return $control;
 	}

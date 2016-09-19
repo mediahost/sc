@@ -13,24 +13,10 @@
 	<div class="col-md-12">
 		<div class="portlet light">
 			<div class="portlet-body">
-				{control userDataView}
+				{control usersGrid}
 			</div>
 		</div>
 	</div>
 </div>
 {/block content}
 
-{block jsPage}
-	<script>
-		$(document).ready(function() {
-			Global.handleDataTables('#userTable', {
-				aoColumns: [
-					null, null, null,
-					{
-						bSortable: false
-					}
-				]
-			});
-		});
-	</script>
-{/block jsPage}

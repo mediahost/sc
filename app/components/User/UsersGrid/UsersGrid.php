@@ -64,7 +64,7 @@ class UsersGrid extends BaseControl
 		$grid->addActionHref('edit', 'Edit')
 						->setIcon('fa fa-edit')
 						->setDisable(function($item) {
-							return !$this->presenter->canEdit($this->identity, $item);
+							return !$this->presenter->userFacade->canEdit($this->identity, $item);
 						});
 
 		$grid->addActionHref('delete', 'Delete')
