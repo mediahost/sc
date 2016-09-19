@@ -45,11 +45,11 @@ services:
 			- allow('signed', 'profile', ['default', 'settings', 'notifications', 'delete'])
 
 			- allow('candidate', 'candidate', ['default', 'address', 'photo'])
-			- allow('candidate', 'cvViewer')
-			- allow('candidate', 'cvEditor', ['default', 'skills', 'jobs'])
 			- allow('candidate', 'jobs', ['showAll'])
+			- allow('candidate', ['cvViewer', 'cvEditor'])
 			- allow('company', ['company', 'job', 'jobs', 'companies'])
 			- allow(['candidate', 'company', 'admin'], 'messages')
+			- deny(['candidate', 'company'], 'messages', 'browse')
 
 			- allow('admin', 'users')
 			- allow('admin', 'skills')

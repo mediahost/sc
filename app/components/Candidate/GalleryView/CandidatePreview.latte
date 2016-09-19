@@ -1,15 +1,12 @@
-{**
- * CandidatePreview control template
- *
- * @param   Cv     $cv	
-*}
 
 <div data-cv="{$cv->id}" data-jobs=""
      class="col-lg-4 col-sm-6 col-xs-12 panel panel-default plain draggable gallery-item">
     <div class="panel-heading">
         <h4 class="panel-title ui-widget-content">
-            <strong>{$cv->candidate}</strong> 
-            <div><small n:if="$cv->candidate->address">&nbsp;{$cv->candidate->address->city}</small></div>
+            <strong>{$cv->candidate}</strong>
+            <div n:if="$cv->candidate->person">
+            	<small>&nbsp;{$cv->candidate->person->address->city}</small>
+            </div>
         </h4>
     </div>
 

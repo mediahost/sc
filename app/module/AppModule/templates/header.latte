@@ -14,7 +14,7 @@
 							<i class="s16 minia-icon-list-3"></i>
 						</a>
 					</li>
-					<li class="dropdown" n:if="$user->isAllowed('messages') && $isCompleteAccount">
+					<li class="dropdown" n:if="$user->isAllowed('messages', 'default') && $isCompleteAccount">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="s16 minia-icon-envelope"></i>
 							<span class="txt">{_'Messages'}</span>
@@ -94,17 +94,17 @@
 		<li n:foreach="$communications as $communication">
 		<span class="icon avatar">
 			<a n:href="Messages: $communication->id">
-				<img src="{$basePath}/foto/{$communication->getOpposite($user->identity)->image|size:25,25}"
+				<img src="{$basePath}/foto/{$communication->getOpposites($sender)->first()->image|size:25,25}"
 					 alt="photo"/>
 			</a>
 		</span>
 			<span class="name">
 			<a n:href="Messages: $communication->id">
-				<strong>{$communication->getOppositeName($user->identity)}</strong>
+				<strong>{$communication->getOppositesName($sender)}</strong>
 			</a>
 			<span class="time">
 				<a n:href="Messages: $communication->id">
-				{$communication->lastMessage->time|date:'H:i:s d.m.Y'}
+				{$communication->lastMessage->createdAt|date:'H:i:s d.m.Y'}
 				</a>
 			</span>
 		</span>

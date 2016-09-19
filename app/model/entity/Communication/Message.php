@@ -7,97 +7,50 @@ use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Utils\DateTime;
+use Knp\DoctrineBehaviors\Model;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"App\Listeners\Model\Entity\MessageListener"})
  * @property Sender $sender
- * @property DateTime $time
- * @property ArrayCollection|Read[] $reads
+ * @property ArrayCollection $reads
  * @property Communication $communication
  * @property string $text
+ * @property DateTime $createdAt
+ * @property DateTime $updatedAt
  */
 class Message extends BaseEntity
 {
 
 	use Identifier;
+	use Model\Timestampable\Timestampable;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Sender")
-	 * @var Sender
-	 */
+	/** @ORM\ManyToOne(targetEntity="Sender") */
 	protected $sender;
 
-	/**
-	 * @ORM\Column(type="datetime")
-	 * @var DateTime
-	 */
-	protected $time;
-
-	/**
-	 * @ORM\OneToMany(targetEntity="Read", mappedBy="message", cascade={"persist"}, orphanRemoval=true)
-	 * @var Read[]
-	 */
+	/** @ORM\OneToMany(targetEntity="Read", mappedBy="message", cascade={"persist"}, orphanRemoval=true) */
 	protected $reads;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Communication", inversedBy="messages")
-	 * @var Communication
-	 */
+	/** @ORM\ManyToOne(targetEntity="Communication", inversedBy="messages") */
 	protected $communication;
 
-	/**
-	 * @ORM\Column(type="text")
-	 * @var string
-	 */
+	/** @ORM\Column(type="text") */
 	protected $text;
 
-	public function __construct()
+	public function __construct(Sender $sender, $text)
 	{
-		$this->time = new DateTime();
 		$this->reads = new ArrayCollection();
 		parent::__construct();
+		$this->sender = $sender;
+		$this->text = $text;
 	}
 
-	/**
-	 * @param Sender $sender
-	 * @return bool
-	 */
-	public function isReadBySender(Sender $sender)
+	public function isReadBy(Sender $reader)
 	{
-		foreach ($this->reads as $read) {
-			if ($read->sender->id == $sender->id) {
-			    return TRUE;
-			}
-		}
-		return FALSE;
-	}
-
-	/**
-	 * @param User $user
-	 * @return bool
-	 */
-	public function isReadByUser(User $user)
-	{
-		foreach ($this->reads as $read) {
-			if ($read->sender->user && $read->sender->user->id == $user->id) {
-				return TRUE;
-			}
-		}
-		return FALSE;
-	}
-
-	/**
-	 * @param Company $company
-	 * @return bool
-	 */
-	public function isReadByCompany(Company $company)
-	{
-		foreach ($this->reads as $read) {
-			if ($read->sender->company && $read->sender->company->id == $company->id) {
-				return TRUE;
-			}
-		}
-		return FALSE;
+		$isRead = function ($key, Read $read) use ($reader) {
+			return $read->reader->id === $reader->id;
+		};
+		return $this->reads->exists($isRead);
 	}
 
 	public function addRead(Read $read)

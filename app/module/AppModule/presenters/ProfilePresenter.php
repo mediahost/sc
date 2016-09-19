@@ -4,8 +4,8 @@ namespace App\AppModule\Presenters;
 
 use App\Components\AfterRegistration\CompleteCandidate;
 use App\Components\AfterRegistration\CompleteCandidatePreview;
-use App\Components\AfterRegistration\ICompleteCandidatePreviewFactory;
 use App\Components\AfterRegistration\ICompleteCandidateFactory;
+use App\Components\AfterRegistration\ICompleteCandidatePreviewFactory;
 use App\Components\Auth\ConnectManager;
 use App\Components\Auth\IConnectManagerFactory;
 use App\Components\Auth\ISetPasswordFactory;
@@ -14,11 +14,12 @@ use App\Components\Candidate\IAddressFactory;
 use App\Components\Candidate\IPhotoFactory;
 use App\Components\Candidate\IProfileFactory;
 use App\Components\Candidate\ISocialFactory;
+use App\Components\Conversation\Form\ConversationList;
+use App\Components\Conversation\Form\IConversationListFactory;
 use App\Components\Cv\ILivePreviewFactory;
 use App\Components\Cv\ISkillsFactory;
 use App\Components\Cv\LivePreview;
 use App\Components\Cv\Skills;
-use App\Components\ICommunicationListFactory;
 use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity;
@@ -27,7 +28,6 @@ use App\Model\Entity\Cv;
 use App\Model\Facade\CantDeleteUserException;
 use App\Model\Facade\CvFacade;
 use App\Model\Facade\UserFacade;
-use Tracy\Debugger;
 
 class ProfilePresenter extends BasePresenter
 {
@@ -68,8 +68,8 @@ class ProfilePresenter extends BasePresenter
 	/** @var ICompleteCandidatePreviewFactory @inject */
 	public $completeCandidatePreview;
 
-	/** @var ICommunicationListFactory @inject */
-	public $communicationListFactory;
+	/** @var IConversationListFactory @inject */
+	public $iConversationListFactory;
 
 	/** @var CvFacade @inject */
 	public $cvFacade;
@@ -345,12 +345,12 @@ class ProfilePresenter extends BasePresenter
 		return $control;
 	}
 
+	/** @return ConversationList */
 	public function createComponentRecentMessages()
 	{
-		$control = $this->communicationListFactory->create();
-		foreach ($this->getUserCommunications($this->getUser()->getIdentity()) as $communication) {
-			$control->addCommunication($communication, $this->link('Messages:', $communication->id));
-		}
+		$control = $this->iConversationListFactory->create();
+		$control->setSender($this->sender);
+		$control->disableSearchBox();
 		return $control;
 	}
 

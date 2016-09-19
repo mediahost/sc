@@ -35,7 +35,7 @@
                             </a>
                         </li>
 
-                        <li n:if="$user->isAllowed('messages') && $isCompleteAccount">
+                        <li n:if="$user->isAllowed('messages', 'default') && $isCompleteAccount">
                             <a n:href="Messages:" n:class="$presenter->isLinkCurrent('Messages:*') && !$presenter->isLinkCurrent('Messages:MessagesList') ? active">
                                 <i class="s16 icomoon-icon-envelop"></i>
                                 <span class="txt">{_'Messages'}</span>

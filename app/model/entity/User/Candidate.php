@@ -58,6 +58,7 @@ class Candidate extends BaseEntity
 	{
 		if (!$this->cv) {
 			$this->cv = new Cv();
+			$this->cv->candidate = $this;
 		}
 		return $this->cv;
 	}

@@ -9,7 +9,7 @@ use Nette\Utils\DateTime;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="`read`")
+ * @ORM\Table(name="message_read")
  * @property Sender $sender
  * @property Message $message
  * @property DateTime $time
@@ -19,27 +19,18 @@ class Read extends BaseEntity
 
 	use Identifier;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Message", inversedBy="reads")
-	 * @var Message
-	 */
+	/** @ORM\ManyToOne(targetEntity="Message", inversedBy="reads") */
 	protected $message;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Sender")
-	 * @var Sender
-	 */
-	protected $sender;
+	/** @ORM\ManyToOne(targetEntity="Sender") */
+	protected $reader;
 
-	/**
-	 * @ORM\Column(type="date")
-	 * @var DateTime
-	 */
+	/** @ORM\Column(type="datetime") */
 	protected $time;
 
-	public function __construct(Sender $sender = NULL)
+	public function __construct(Sender $reader = NULL)
 	{
-		$this->sender = $sender;
+		$this->reader = $reader;
 		$this->time = new DateTime();
 		parent::__construct();
 	}

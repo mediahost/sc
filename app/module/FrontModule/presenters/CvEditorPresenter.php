@@ -60,7 +60,7 @@ class CvEditorPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
-	/** @var Cv */
+	/** @var Entity\Cv */
 	private $cv;
 
 	// </editor-fold>
@@ -116,7 +116,8 @@ class CvEditorPresenter extends BasePresenter
 		if ($this->cv) {
 			return $this;
 		}
-		$candidate = $this->user->identity->candidate;
+		$user = $this->user->identity;
+		$candidate = $user->person->candidate;
 
 		if ($id) {
 			$cvDao = $this->em->getDao(Entity\Cv::getClassName());
@@ -126,8 +127,8 @@ class CvEditorPresenter extends BasePresenter
 			if ($isOwnCv || $canEditForeignCv) {
 				$this->cv = $findedCv;
 			}
-		} else if ($candidate) { // pro kandidáta načti defaultní
-			$this->cv = $this->cvFacade->getDefaultCvOrCreate($candidate);
+		} else if ($candidate) {
+			$this->cv = $candidate->cv;
 		}
 
 		if (!$this->cv) {

@@ -2,11 +2,16 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\CommunicationDataView;
+use App\Components\Conversation\Form\Conversation;
+use App\Components\Conversation\Form\ConversationList;
+use App\Components\Conversation\Form\IConversationFactory;
+use App\Components\Conversation\Form\IConversationListFactory;
+use App\Components\Conversation\Form\INewConversationFactory;
+use App\Components\Conversation\Form\NewConversation;
 use App\Components\ICommunicationDataViewFactory;
-use App\Components\ICommunicationFactory;
-use App\Components\ICommunicationListFactory;
-use App\Components\IStartCommunicationModalFactory;
 use App\Model\Entity\Communication;
+use App\Model\Entity\Sender;
 use App\Model\Facade\UserFacade;
 
 class MessagesPresenter extends BasePresenter
@@ -15,23 +20,20 @@ class MessagesPresenter extends BasePresenter
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var ICommunicationFactory @inject */
-	public $communicationFactory;
+	/** @var INewConversationFactory @inject */
+	public $iNewConversationFactory;
 
-	/** @var ICommunicationListFactory @inject */
-	public $communicationListFactory;
+	/** @var IConversationFactory @inject */
+	public $iConversationFactory;
 
-	/** @var IStartCommunicationModalFactory @inject */
-	public $startCommunicationModalFactory;
-    
-    /** @var ICommunicationDataViewFactory @inject */
-	public $communicationDataViewFactory;
+	/** @var IConversationListFactory @inject */
+	public $iConversationListFactory;
+
+	/** @var ICommunicationDataViewFactory @inject */
+	public $iCommunicationDataViewFactory;
 
 	/** @var Communication */
-	protected $communication;
-
-	/** @var array */
-	protected $communications;
+	private $communication;
 
 	/**
 	 * @secured
@@ -40,55 +42,96 @@ class MessagesPresenter extends BasePresenter
 	 */
 	public function actionDefault($id = NULL)
 	{
-		$this->communications = $this->getUserCommunications();
-		if($id == null) {
-			$this->communication = reset($this->communications);
-		} else if ($id) {
-			$this->communication = $this->communicationFacade->getCommunication($id);
-			if (!$this->communication || !$this->communication->isUserAllowed($this->user->identity)) {
-                if (!$this->user->isAllowed('messagesList')) {
-                	$message = $this->translator->translate('Requested conversation was\'t find.');
-                    $this->flashMessage($message, 'danger');
-                    $this->redirect('this', NULL);
-                }
+		if (!$id) {
+			$communication = $this->sender->lastCommunication;
+			if ($communication) {
+				$this->redirect('this', ['id' => $communication->id]);
+			}
+		} else {
+			$communicationRepo = $this->em->getRepository(Communication::getClassName());
+			$communication = $communicationRepo->find($id);
+			if ($communication && $communication->isContributor($this->sender)) {
+				$this['conversation']->setSender($this->sender);
+				$this['conversation']->setCommunication($communication);
+				$this['conversationList']->setCommunication($communication);
+				$this->template->conversation = $communication;
+				$this->communicationFacade->markAsRead($communication, $this->sender);
+			} else {
+				$message = $this->translator->translate('Requested conversation was\'t find for you.');
+				$this->flashMessage($message, 'danger');
+				$this->redirect('this', NULL);
 			}
 		}
-		$this->template->conversation = $this->communication;
-		if ($this->communication) {
-			$this->communicationFacade->markCommunicationAsRead($this->communication, $this->user->identity);
+	}
+
+	/**
+	 * @secured
+	 * @resource('messages')
+	 * @privilege('browse')
+	 */
+	public function actionBrowse($id)
+	{
+		if ($id) {
+			$communicationRepo = $this->em->getRepository(Communication::getClassName());
+			$communication = $communicationRepo->find($id);
+			if ($communication) {
+				$this['conversation']->setSender($communication->firstContributor);
+				$this['conversation']->setCommunication($communication);
+				$this['conversation']->diableEdit();
+				$this->template->conversation = $communication;
+			} else {
+				$message = $this->translator->translate('Requested conversation was\'t find.');
+				$this->flashMessage($message, 'danger');
+				$this->redirect('this', NULL);
+			}
+		} else {
+			$this->redirect('default', NULL);
 		}
 	}
-    
-    /**
+
+	/**
+	 * @secured
+	 * @resource('messages')
+	 * @privilege('changeNotify')
+	 */
+	public function handleNotifyChange($value)
+	{
+		$this->sender->beNotified = (bool)$value;
+		$senderRepo = $this->em->getRepository(Sender::getClassName());
+		$senderRepo->save($this->sender);
+		$this->redrawControl('notifyButtons');
+	}
+
+	/**
 	 * @secured
 	 * @resource('messagesList')
 	 * @privilege('default')
 	 */
-    public function actionMessagesList() {
-
-    }
-
-	public function createComponentStartCommunicationModal()
+	public function actionMessagesList()
 	{
-	    $control = $this->startCommunicationModalFactory->create();
-        foreach ($this->communications as $communication) {
-            $control->addCommunication($communication);
-        }
-		$control->onSuccess[] = function (Communication $communication) {
+
+	}
+
+	/** @return NewConversation */
+	public function createComponentNewConversation()
+	{
+		$control = $this->iNewConversationFactory->create();
+		$control->setSender($this->sender);
+		$control->onSend[] = function (Communication $communication) {
 			$this->redirect('default', $communication->id);
 		};
 		return $control;
 	}
 
-
-	public function createComponentCommunication()
+	/** @return Conversation */
+	public function createComponentConversation()
 	{
-	    $control = $this->communicationFactory->create();
-		$control->setCommunication($this->communication);
-		$control->onAddMessage[] = function() {
+		$control = $this->iConversationFactory->create();
+		$control->setAjax(TRUE, FALSE);
+		$control->onSend[] = function () {
 			if ($this->isAjax()) {
-				$this['communication']->redrawControl();
-				$this['communicationList']->redrawControl();
+				$this['conversation']->redrawControl();
+				$this['conversationList']->redrawControl();
 			} else {
 				$this->redirect('this');
 			}
@@ -96,18 +139,18 @@ class MessagesPresenter extends BasePresenter
 		return $control;
 	}
 
-	public function createComponentCommunicationList()
+	/** @return ConversationList */
+	public function createComponentConversationList()
 	{
-	    $control = $this->communicationListFactory->create();
-		foreach ($this->communications as $communication) {
-			$control->addCommunication($communication, $this->link('default', $communication->id));
-		}
-		$control->setActiveCommunication($this->communication);
+		$control = $this->iConversationListFactory->create();
+		$control->setSender($this->sender);
 		return $control;
 	}
 
-    public function createComponentCommunicationDataView() {
-        $control = $this->communicationDataViewFactory->create();
-        return $control;
-    }
+	/** @return CommunicationDataView */
+	public function createComponentCommunicationDataView()
+	{
+		$control = $this->iCommunicationDataViewFactory->create();
+		return $control;
+	}
 }

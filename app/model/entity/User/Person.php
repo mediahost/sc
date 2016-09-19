@@ -17,6 +17,7 @@ use Nette\Utils\Strings;
  * @property string $firstname
  * @property string $middlename
  * @property string $surname
+ * @property string $fullName
  * @property DateTime $birthday
  * @property string $title
  * @property-read array $titles
@@ -106,6 +107,7 @@ class Person extends BaseEntity
 	{
 		if (!$this->candidate) {
 			$this->candidate = new Candidate();
+			$this->candidate->person = $this;
 		}
 		return $this->candidate;
 	}
@@ -153,6 +155,14 @@ class Person extends BaseEntity
 		$this->photo->requestedFilename = 'candidate_photo_' . Strings::webalize(microtime());
 		$this->photo->setFolder(Image::FOLDER_CANDIDATE_IMAGE);
 		return $this;
+	}
+
+	public function getPhoto() {
+		if ($this->photo) {
+			return $this->photo;
+		} else {
+			return 'assets/img/avatar3.jpeg'; // default image
+		}
 	}
 
 	public function getFullName()

@@ -34,7 +34,7 @@ class CompanyPermission extends BaseEntity
 
 	public function __construct()
 	{
-		$this->roles = new ArrayCollection;
+		$this->roles = new ArrayCollection();
 		parent::__construct();
 	}
 
