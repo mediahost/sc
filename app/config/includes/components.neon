@@ -28,8 +28,6 @@ services:
 	- {implement: App\Components\User\ICareerDocsFactory, inject: yes}
 	- {implement: App\Components\Grids\User\IUsersGridFactory, inject: yes}
 
-	imageStorage: App\Components\User\DocStorage(%wwwDir%) # TODO: remove!!!
-
 	# Company
 	- {implement: App\Components\Company\ICompanyInfoFactory, inject: yes}
 	- {implement: App\Components\Company\ICompanyImagesFactory, inject: yes}

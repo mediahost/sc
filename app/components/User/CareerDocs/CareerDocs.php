@@ -8,6 +8,7 @@ use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Document;
 use Doctrine\ORM\EntityManager;
+use Nette\Utils\ArrayHash;
 
 class CareerDocs extends BaseControl
 {
@@ -23,10 +24,6 @@ class CareerDocs extends BaseControl
 	/** @var Candidate */
 	private $candidate;
 
-	public function __construct(DocStorage $docStorage)
-	{
-		$this->docStorage = $docStorage;
-	}
 
 	public function createComponentForm()
 	{
@@ -34,24 +31,28 @@ class CareerDocs extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 		$form->getElementPrototype()->setClass('dropzone dz-clickable dz-started');
-		$form->onSuccess[] = $this->handleSend;
+		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
-	public function handleSend(Form $form, $values)
-	{
+	public function formSucceeded(Form $form, ArrayHash $values) {
+		$this->load($form);
+		$this->save();
+		$this->onAfterSave($this->candidate);
+	}
+
+	protected function load(Form $form) {
 		$file = $form->getHttpData()['file'];
-		try {
-			$file = $this->docStorage->upload($file, $fileName);
-			$doc = new Document($fileName);
-			$doc->candidate = $this->candidate;
-			$doc->public = true;
-			$rep = $this->em->getDao(Document::getClassName());
-			$rep->save($doc);
-			$this->onAfterSave();
-		} catch (CareerDocsException $ex) {
-			$form->addError('Document is not uploaded');
-		}
+		$document = new Document();
+		$document->setFile($file);
+		$document->public = true;
+		$this->candidate->addDocument($document);
+	}
+
+	protected function save() {
+		$this->em->persist($this->candidate);
+		$this->em->flush();
+		return $this;
 	}
 
 	public function getUploadedDocs()
@@ -63,33 +64,29 @@ class CareerDocs extends BaseControl
 		return $docs;
 	}
 
-	public function getCandidate()
-	{
-		return $this->candidate;
-	}
-
 	public function handleDeleteDoc($id)
 	{
-		$rep = $this->em->getDao(Document::getClassName());
+		$rep = $this->em->getRepository(Document::getClassName());
 		$doc = $rep->find($id);
-		$this->docStorage->removeFile($doc->name);
-		$rep->delete($doc);
-		$this->onAfterSave();
+		if ($doc) {
+			$this->em->remove($doc);
+			$this->em->flush();
+			$this->onAfterSave();
+		}
 	}
 
 	public function handleDeleteAll()
 	{
-		$rep = $this->em->getDao(Document::getClassName());
 		foreach ($this->candidate->getDocuments() as $doc) {
-			$this->docStorage->removeFile($doc->name);
-			$rep->delete($doc);
+			$this->em->remove($doc);
 		}
+		$this->em->flush();
 		$this->onAfterSave();
 	}
 
 	public function handleSwitch($id)
 	{
-		$rep = $this->em->getDao(Document::getClassName());
+		$rep = $this->em->getRepository(Document::getClassName());
 		$doc = $rep->find($id);
 		$doc->public = !$doc->public;
 		$rep->save($doc);
@@ -113,21 +110,6 @@ class CareerDocs extends BaseControl
 	public function displayDocName($name)
 	{
 		return $this->docStorage->getDisplayName($name);
-	}
-
-	public function fileExtension($name)
-	{
-		$ext = pathinfo($name, PATHINFO_EXTENSION);
-		switch (strtolower($ext)) {
-			case 'jpg':
-				return 'jpg';
-			case 'png':
-				return 'png';
-			case 'pdf':
-				return 'pdf';
-			default:
-				return 'default';
-		}
 	}
 }
 

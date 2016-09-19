@@ -35,7 +35,7 @@ class Candidate extends BaseEntity
 	/** @ORM\Column(type="array") */
 	protected $jobCategories;
 
-	/** @ORM\OneToMany(targetEntity="Document", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
+	/** @ORM\OneToMany(targetEntity="Document", mappedBy="candidate", fetch="EAGER", cascade={"all"}) */
 	protected $documents;
 
 	/** @ORM\Column(type="string", length=64, nullable=true) */
@@ -69,17 +69,8 @@ class Candidate extends BaseEntity
 
 	public function addDocument($document)
 	{
-		$this->documents[] = $document;
-	}
-
-	public function removeDocument($documentId)
-	{
-		foreach ($this->documents as $document) {
-			if ($document->id == $documentId) {
-				$this->documents->removeElement($document);
-			}
-		}
-		return $this;
+		$this->documents->add($document);
+		$document->setCandidate($this);
 	}
 
 	public function getDocuments()

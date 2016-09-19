@@ -93,3 +93,4 @@
 ################
 /www/wp/*
 !/www/wp/
+/www/documents
