@@ -30,7 +30,6 @@ services:
 	# Company
 	- {implement: App\Components\Company\ICompanyInfoFactory, inject: yes}
 	- {implement: App\Components\Company\ICompanyImagesFactory, inject: yes}
-	- {implement: App\Components\Company\ICompanyDataViewFactory, inject: yes}
 
 	# Job
 	- {implement: App\Components\Job\IBasicInfoFactory, inject: yes}

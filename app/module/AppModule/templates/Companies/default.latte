@@ -13,7 +13,7 @@
 	<div class="col-md-12">
 		<div class="portlet light">
 			<div class="portlet-body">
-				{control companyDataView}
+				{control companiesGrid}
 			</div>
 		</div>
 	</div>
@@ -31,17 +31,3 @@
 </div>
 {/block content}
 	
-{block jsPage}
-<script>
-	$(document).ready(function() {
-		Global.handleDataTables('#companyTable', {
-			aoColumns: [
-				null, null, null, 
-				{
-					bSortable: false
-				}
-			]
-		});
-	});
-</script>
-{/block jsPage}
