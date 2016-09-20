@@ -9,20 +9,16 @@ use Grido\DataSources\Doctrine;
 
 class SkillCategoriesGrid extends BaseControl
 {
+	public function render() {
+		$this['grid']->render();
+	}
 
 	protected function createComponentGrid()
 	{
 		$grid = new BaseGrid();
 		$grid->setTranslator($this->translator);
 		$grid->setTheme(BaseGrid::THEME_METRONIC);
-
-		$repo = $this->em->getRepository(SkillCategory::getClassName());
-		$qb = $repo->createQueryBuilder('c')
-				->select('c, p')
-				->leftJoin('c.parent', 'p');
-		$grid->model = new Doctrine($qb, [
-			'parent' => 'p.name'
-		]);
+		$grid->model = $this->getModel();
 
 		$grid->setDefaultSort([
 			'parent' => 'ASC',
@@ -62,6 +58,16 @@ class SkillCategoriesGrid extends BaseControl
 		return $grid;
 	}
 
+	private function getModel() {
+		$repo = $this->em->getRepository(SkillCategory::getClassName());
+		$qb = $repo->createQueryBuilder('c')
+			->select('c, p')
+			->leftJoin('c.parent', 'p');
+		$model = new Doctrine($qb, [
+			'parent' => 'p.name'
+		]);
+		return $model;
+	}
 }
 
 interface ISkillCategoriesGridFactory
