@@ -71,6 +71,8 @@ class CvViewerPresenter extends BasePresenter
 		$templateParams = [
 			'cv' => $this->cv,
 			'candidate' => $this->cv->candidate,
+			'person' => $this->cv->candidate->person,
+			'user' => $this->cv->candidate->person->user,
 			'theme' => $theme,
 			'basePath' => $this->httpRequest->url->basePath,
 			'lang' => $this->lang,

@@ -65,9 +65,6 @@ class Cv extends BaseEntity
 	protected $lastUsedPreviewScale;
 
 	/** @ORM\Column(type="boolean", nullable=false) */
-	protected $isDefault;
-
-	/** @ORM\Column(type="boolean", nullable=false) */
 	protected $isPublic = FALSE;
 
 	/** @ORM\Column(type="string", length=20, nullable=true) */

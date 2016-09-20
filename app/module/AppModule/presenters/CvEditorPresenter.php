@@ -8,7 +8,6 @@ use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity;
 use App\Model\Facade\CvFacade;
 use Doctrine\ORM\EntityNotFoundException;
-use Exception;
 
 class CvEditorPresenter extends BasePresenter
 {

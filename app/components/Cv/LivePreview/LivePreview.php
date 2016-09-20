@@ -54,6 +54,10 @@ class LivePreview extends BaseControl
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
+		if (!$this->cv->id) {
+			$cvRepo = $this->em->getRepository(Cv::getClassName());
+			$cvRepo->save($this->cv);
+		}
 		return $this;
 	}
 
