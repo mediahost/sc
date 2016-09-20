@@ -37,7 +37,6 @@ services:
 	- {implement: App\Components\Job\IDescriptionsFactory, inject: yes}
 	- {implement: App\Components\Job\ISkillsFactory, inject: yes}
 	- {implement: App\Components\Job\IQuestionsFactory, inject: yes}
-	- {implement: App\Components\Job\IJobCategoryDataViewFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFactory, inject: yes}
 	- {implement: App\Components\Job\INotesFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFilterFactory, inject: yes}
@@ -83,6 +82,7 @@ services:
 	# Grids
 	- {implement: App\Components\Grids\Company\ICompaniesGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Job\IJobsGridFactory, inject: yes}
+	- {implement: App\Components\Grids\Job\IJobCategoriesGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Cv\ICvsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Skill\ISkillsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Skill\ISkillCategoriesGridFactory, inject: yes}
