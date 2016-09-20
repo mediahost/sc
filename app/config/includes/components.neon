@@ -76,7 +76,6 @@ services:
 	# Skills
 	- {implement: App\Components\Skills\ISkillFactory, inject: yes}
 	- {implement: App\Components\Skills\ISkillCategoryFactory, inject: yes}
-	- {implement: App\Components\Skills\ISkillCategoryDataViewFactory, inject: yes}
 
 	# Example
 	- {implement: App\Components\Example\Form\IExampleFormFactory, inject: yes}
