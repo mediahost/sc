@@ -24,54 +24,27 @@ class JobFacade extends Object
 	public $em;
 
 	/** @var CvRepository */
-	private $cvDao;
+	private $cvRepo;
 	
 	/** @var JobRepository */
-	private $jobDao;
+	private $jobRepo;
 
 	
 	public function __construct(EntityManager $em)
 	{
 		$this->em = $em;
-		$this->cvDao = $this->em->getDao(Cv::getClassName());
-		$this->jobDao = $this->em->getDao(Job::getClassName());
+		$this->cvRepo = $this->em->getRepository(Cv::getClassName());
+		$this->jobRepo = $this->em->getRepository(Job::getClassName());
 	}
 
 	public function findCvs(Job $job)
 	{
-		return $this->cvDao->findBySkillRequests($job->skillRequests->toArray());
-	}
-
-	/** TODO: Refactoring */
-	public function findAll() 
-	{
-		$jobs = $this->jobDao->findAll();
-		return new ArrayCollection($jobs);
+		return $this->cvRepo->findBySkillRequests($job->skillRequests->toArray());
 	}
     
     public function find($id) {
-        return $this->jobDao->find($id);
+        return $this->jobRepo->find($id);
     }
-
-	/** TODO: Refactoring - Proč vrací arrayCollection? */
-	public function findByCompany(Company $company)
-	{
-		$jobs = $this->jobDao->findBy(['company.id' => $company->id]);
-		return new ArrayCollection($jobs);
-	}
-
-	/** TODO: Refactoring */
-	public function findByUser(User $user)
-	{
-		$jobs = new ArrayCollection();
-		$alowedCompanies = new ArrayCollection($user->identity->allowedCompanies);
-		foreach ($alowedCompanies as $permission) {
-			foreach ($permission->company->getJobs() as $job) {
-				$jobs->add($job);
-			}
-		}
-		return $jobs;
-	}
 	
 	public function findJobType($idType) 
 	{
@@ -105,7 +78,7 @@ class JobFacade extends Object
 	
 	public function delete($id)
 	{
-		$job = $this->jobDao->find($id);
-		$this->jobDao->delete($job);
+		$job = $this->jobRepo->find($id);
+		$this->jobRepo->delete($job);
 	}
 }
