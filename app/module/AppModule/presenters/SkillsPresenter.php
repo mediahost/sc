@@ -4,9 +4,7 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Grids\Skill\ISkillsGridFactory;
 use App\Components\Skills\ISkillFactory;
-use App\Components\Skills\ISkillDataViewFactory;
 use App\Components\Skills\Skill;
-use App\Components\Skills\SkillDataView;
 use App\Model\Entity;
 use Kdyby\Doctrine\EntityDao;
 
@@ -24,18 +22,15 @@ class SkillsPresenter extends BasePresenter
 	/** @var ISkillsGridFactory @inject */
 	public $iSkillsGridFactory;
 
-	/** @var ISkillDataViewFactory @inject */
-	public $skillDataViewFactory;
-
 	/** @var EntityDao */
-	private $skillDao;
+	private $skillRepo;
 
 	// </editor-fold>
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->skillDao = $this->em->getDao(Entity\Skill::getClassName());
+		$this->skillRepo = $this->em->getRepository(Entity\Skill::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -69,7 +64,7 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->skill = $this->skillDao->find($id);
+		$this->skill = $this->skillRepo->find($id);
 		if ($this->skill) {
 			$this['skillForm']->setSkill($this->skill);
 		} else {
@@ -91,9 +86,9 @@ class SkillsPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$this->skill = $this->skillDao->find($id);
+		$this->skill = $this->skillRepo->find($id);
 		if ($this->skill) {
-			$this->skillDao->delete($this->skill);
+			$this->skillRepo->delete($this->skill);
 			$message = $this->translator->translate('\'%skill%\' was deleted.', ['skill' => $this->skill]);
 			$this->flashMessage($message, 'success');
 		} else {
@@ -118,11 +113,10 @@ class SkillsPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return SkillDataView */
-	public function createComponentSkillDataView()
+	/** @return SkillsGrid */
+	public function createComponentSkillsGrid()
 	{
-		$control = $this->skillDataViewFactory->create();
-		$control->setSkills($this->skillDao->findAll());
+		$control = $this->iSkillsGridFactory->create();
 		return $control;
 	}
 }

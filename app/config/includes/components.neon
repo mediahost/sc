@@ -75,7 +75,6 @@ services:
 
 	# Skills
 	- {implement: App\Components\Skills\ISkillFactory, inject: yes}
-	- {implement: App\Components\Skills\ISkillDataViewFactory, inject: yes}
 	- {implement: App\Components\Skills\ISkillCategoryFactory, inject: yes}
 	- {implement: App\Components\Skills\ISkillCategoryDataViewFactory, inject: yes}
 
