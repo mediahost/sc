@@ -15,12 +15,7 @@ class ConversationsGrid extends BaseControl {
     
     /** @var CommunicationFacade @inject */
 	public $communicationFacade;
-    
-    
 
-    public function render() {
-        $this['grid']->render();
-    }
 
     protected function createComponentGrid() {
 	    $grid = new BaseGrid();

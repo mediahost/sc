@@ -9,9 +9,6 @@ use Grido\DataSources\Doctrine;
 
 class SkillCategoriesGrid extends BaseControl
 {
-	public function render() {
-		$this['grid']->render();
-	}
 
 	protected function createComponentGrid()
 	{

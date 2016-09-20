@@ -9,10 +9,7 @@ use Grido\DataSources\Doctrine;
 
 class JobCategoriesGrid extends BaseControl
 {
-	public function render() {
-		$this['grid']->render();
-	}
-
+	
 	public function createComponentGrid() {
 		$grid = new BaseGrid();
 		$grid->setTranslator($this->translator);

@@ -14,9 +14,6 @@ class JobsGrid extends BaseControl
 	/** @var Company */
 	private $company;
 
-	public function render() {
-		$this['grid']->render();
-	}
 
 	protected function createComponentGrid()
 	{
