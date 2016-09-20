@@ -94,6 +94,16 @@ class Communication extends BaseEntity
 		return $names;
 	}
 
+	public function getContributorsName() {
+		$names = NULL;
+		$concatNames = function ($key, Sender $sender) use (&$names) {
+			$names = Helpers::concatStrings(', ', $names, $sender->name);
+			return TRUE;
+		};
+		$this->contributors->forAll($concatNames);
+		return $names;
+	}
+
 	public function markMessagesAsRead(Sender $reader)
 	{
 		$markAsRead = function ($key, Message $message) use ($reader) {

@@ -96,4 +96,4 @@ services:
 	- {implement: App\Components\Conversation\Form\IConversationFactory, inject: yes}
 	- {implement: App\Components\Conversation\Form\IConversationListFactory, inject: yes}
 	- {implement: App\Components\Conversation\Form\IFulltextSearchFactory, inject: yes}
-	- {implement: App\Components\ICommunicationDataViewFactory, inject: yes}
+	- {implement: App\Components\IConversationsGridFactory, inject: yes}

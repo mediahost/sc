@@ -2,14 +2,13 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\CommunicationDataView;
 use App\Components\Conversation\Form\Conversation;
 use App\Components\Conversation\Form\ConversationList;
 use App\Components\Conversation\Form\IConversationFactory;
 use App\Components\Conversation\Form\IConversationListFactory;
 use App\Components\Conversation\Form\INewConversationFactory;
 use App\Components\Conversation\Form\NewConversation;
-use App\Components\ICommunicationDataViewFactory;
+use App\Components\IConversationsGridFactory;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Sender;
 use App\Model\Facade\UserFacade;
@@ -29,8 +28,8 @@ class MessagesPresenter extends BasePresenter
 	/** @var IConversationListFactory @inject */
 	public $iConversationListFactory;
 
-	/** @var ICommunicationDataViewFactory @inject */
-	public $iCommunicationDataViewFactory;
+	/** @var IConversationsGridFactory @inject */
+	public $iConversationsGridFactory;
 
 	/** @var Communication */
 	private $communication;
@@ -147,10 +146,10 @@ class MessagesPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return CommunicationDataView */
+	/** @return ConversationsGrid */
 	public function createComponentCommunicationDataView()
 	{
-		$control = $this->iCommunicationDataViewFactory->create();
+		$control = $this->iConversationsGridFactory->create();
 		return $control;
 	}
 }
