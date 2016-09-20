@@ -14,23 +14,17 @@ class JobsGrid extends BaseControl
 	/** @var Company */
 	private $company;
 
+	public function render() {
+		$this['grid']->render();
+	}
+
 	protected function createComponentGrid()
 	{
 		$grid = new BaseGrid();
 		$grid->setTranslator($this->translator);
-		$grid->setTheme(BaseGrid::THEME_METRONIC);
+		$grid->setTheme(BaseGrid::THEME_SUPR);
 
-		$repo = $this->em->getRepository(Job::getClassName());
-		$qb = $repo->createQueryBuilder('j')
-			->select('j, c')
-			->innerJoin('j.company', 'c');
-		if ($this->company) {
-			$qb->where('j.company = :company')
-				->setParameter('company', $this->company);
-		}
-		$grid->model = new Doctrine($qb, [
-			'company' => 'c.name'
-		]);
+		$grid->model = $this->getModel();
 
 		$grid->setDefaultSort([
 			'id' => 'DESC',
@@ -79,6 +73,21 @@ class JobsGrid extends BaseControl
 		$grid->setActionWidth("20%");
 
 		return $grid;
+	}
+
+	public function getModel() {
+		$repo = $this->em->getRepository(Job::getClassName());
+		$qb = $repo->createQueryBuilder('j')
+			->select('j, c')
+			->innerJoin('j.company', 'c');
+		if ($this->company) {
+			$qb->where('j.company = :company')
+				->setParameter('company', $this->company);
+		}
+		$model = new Doctrine($qb, [
+			'company' => 'c.name'
+		]);
+		return $model;
 	}
 
 	public function setCompany(Company $company)

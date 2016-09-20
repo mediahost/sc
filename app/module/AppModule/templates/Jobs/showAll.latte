@@ -13,25 +13,11 @@
 	<div class="col-md-12">
 		<div class="portlet light">
 			<div class="portlet-body">
-				{control jobsDataView}
+				{control jobsGrid}
 			</div>
 		</div>
 	</div>
 </div>
 {/block content}
 			
-			
-{block jsPage}
-<script>
-	$(document).ready(function() {
-		Global.handleDataTables('#jobTable', {
-			aoColumns: [
-				null, null, null, null,
-				{
-					bSortable: false
-				}
-			]
-		});
-	});
-</script>
-{/block jsPage}
+
