@@ -19,11 +19,7 @@ class Additional extends BaseControl
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->getElementPrototype()->addClass('ajax sendOnChange');
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
+		$form = $this->createFormInstance();
 
 		$form->addCheckbox('show', 'Include in CV');
 		$form->addTextArea('additional', 'Additional information');
@@ -37,7 +33,7 @@ class Additional extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 

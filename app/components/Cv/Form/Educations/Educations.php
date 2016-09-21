@@ -4,7 +4,6 @@ namespace App\Components\Cv;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Address;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Education;
@@ -34,7 +33,7 @@ class Educations extends BaseControl
 		$eduDao = $this->em->getDao(Education::getClassName());
 		$edu = $eduDao->find($eduId);
 		$this->setEducation($edu);
-		$this->invalidateControl();
+		$this->redrawControl();
 	}
 
 	public function handleDelete($eduId)
@@ -43,18 +42,14 @@ class Educations extends BaseControl
 		$edu = $eduDao->find($eduId);
 		$eduDao->delete($edu);
 		$this->cv->deleteEducation($edu);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->getElementPrototype()->addClass('ajax');
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
+		$form = $this->createFormInstance();
 
 		$form->addHidden('id', 0);
 		$form->addText('institution', 'Institution')->setRequired('Must be filled');
@@ -78,8 +73,8 @@ class Educations extends BaseControl
 		}
 		$this->load($values);
 		$this->save();
-		$form->setValues(array(), true);
-		$this->invalidateControl();
+		$form->setValues([], true);
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 

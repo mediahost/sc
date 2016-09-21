@@ -10,13 +10,8 @@ use Nette\Utils\ArrayHash;
 
 class OtherLanguage extends BaseControl
 {
-	// <editor-fold defaultstate="expanded" desc="events">
-
 	/** @var array */
 	public $onAfterSave = [];
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
 
 	/** @var Entity\Cv */
 	private $cv;
@@ -24,7 +19,6 @@ class OtherLanguage extends BaseControl
 	/** @var Language */
 	private $language;
 
-	// </editor-fold>
 
 	public function render()
 	{
@@ -40,7 +34,7 @@ class OtherLanguage extends BaseControl
 		$langDao = $this->em->getDao(Entity\Language::getClassName());
 		$lang = $langDao->find($langId);
 		$this->setLanguage($lang);
-		$this->invalidateControl();
+		$this->redrawControl();
 	}
 
 	public function handleDelete($langId)
@@ -49,22 +43,17 @@ class OtherLanguage extends BaseControl
 		$lang = $langDao->find($langId);
 		$langDao->delete($lang);
 		$this->cv->deleteLanguage($lang);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
+		$form = $this->createFormInstance();
 
 		$form->addHidden('id', 0);
 		$form->addSelect2('language', 'Language', Entity\Language::getLanguagesList());
-
 		$form->addHidden('listening', 'Listening');
 		$form->addHidden('reading', 'Reading');
 		$form->addHidden('interaction', 'Spoken Interaction');
@@ -85,7 +74,7 @@ class OtherLanguage extends BaseControl
 		$this->load($values);
 		$this->save();
 		$form->setValues([], true);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave($this->cv);
 	}
 
@@ -153,21 +142,17 @@ class OtherLanguage extends BaseControl
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
 	public function setCv(Entity\Cv $cv)
 	{
 		$this->cv = $cv;
 		return $this;
 	}
 
-	public function setLanguage(Language $lang)
+	public function setLanguage(Entity\Language $lang)
 	{
 		$this->language = $lang;
 		return $this;
 	}
-
-	// </editor-fold>
 }
 
 interface IOtherLanguageFactory

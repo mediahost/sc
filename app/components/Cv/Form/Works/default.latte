@@ -6,86 +6,8 @@
  * @param	int		$activeId
 *}
 {snippet worksControl}
+{control form}
 
-{form form class => "ajax form-horizontal group-border stripped"}
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label">{_'Company name'}</label>
-		<div class="col-lg-10 col-md-9">
-			<input n:name="company" type="text" class="form-control">
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3  control-label">{_'Date'}</label>
-		<div class="col-lg-10 col-md-9">
-			{input season}
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label">{_'Position held'}</label>
-		<div class="col-lg-10 col-md-9">
-			<input n:name="position" type="text" class="form-control">
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label">{_'Main activities and responsibilities'}</label>
-		<div class="col-lg-10 col-md-9">
-			<textarea n:name="activities" class="form-control" rows="4"></textarea>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label">{_'Achievement'}</label>
-		<div class="col-lg-10 col-md-9">
-			<textarea n:name="achievment" class="form-control" rows="4"></textarea>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label"></label>
-		<div class="col-lg-10 col-md-9">
-			<div class="checkbox-custom">
-				{input show_refree: class=>"form-control"}
-				<label for="showReferee">{_'Show Referee in CV'}</label>
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label">{_'Referee name'}</label>
-		<div class="col-lg-10 col-md-9">
-			<input n:name="referee_name" type="text" class="form-control">
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label">{_'Position'}</label>
-		<div class="col-lg-10 col-md-9">
-			<input n:name="referee_position" type="text" class="form-control">
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label">{_'Phone'}</label>
-		<div class="col-lg-10 col-md-9">
-			<input n:name="referee_phone" type="text" class="form-control">
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-2 col-md-3 control-label">{_'Email'}</label>
-		<div class="col-lg-10 col-md-9">
-			<input n:name="referee_mail" type="text" class="form-control">
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-lg-offset-2">
-			<button name="save" class="btn btn-primary ml15" type="submit">{_'Save'}</button>
-		</div>
-	</div>
-			
-	<div  class="form-group" n:if="$form->hasErrors()">
-		<label class="col-lg-2 col-md-3 control-label"></label>
-		<div n:foreach="$form->errors as $error" class="col-lg-10 col-md-9">
-			<span class="error-message">{$error}</span>
-		</div>
-	</div>
-{/form}
-
-		
 <div n:if="count($cv->works)" class="list-group">
 	<div n:foreach="$cv->works as $work" n:if="!$work->isExperience"
 	   class="list-group-item {(isset($activeId)  &&  $work->id == $activeId)  ?  'active'}">

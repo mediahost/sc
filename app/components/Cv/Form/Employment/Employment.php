@@ -20,10 +20,7 @@ class Employment extends BaseControl
 	{
 		$this->checkEntityExistsBeforeRender();
 
-		$form = new Form();
-		$form->getElementPrototype()->addClass('ajax sendOnChange');
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
+		$form = $this->createFormInstance();
 
 		$form->addGroup();
 		$form->addCheckbox('show_job', 'Include to CV');
@@ -44,7 +41,7 @@ class Employment extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 

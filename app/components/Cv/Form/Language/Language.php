@@ -29,11 +29,7 @@ class Language extends BaseControl
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
-
+		$form = $this->createFormInstance();
 		$form->addSelect('motherTongue', 'Mother tongue', Entity\Language::getLanguagesList());
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
@@ -45,7 +41,7 @@ class Language extends BaseControl
 		$this->load($values);
 		$this->save();
 		$form->setValues(array('motherTongue' => $this->cv->motherLanguage), true);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 

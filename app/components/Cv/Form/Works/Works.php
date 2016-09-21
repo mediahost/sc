@@ -34,7 +34,7 @@ class Works extends BaseControl
 		$workDao = $this->em->getDao(Work::getClassName());
 		$work = $workDao->find($workId);
 		$this->setWork($work);
-		$this->invalidateControl();
+		$this->redrawControl();
 	}
 
 	public function handleDelete($workId)
@@ -43,25 +43,21 @@ class Works extends BaseControl
 		$work = $workDao->find($workId);
 		$workDao->delete($work);
 		$this->cv->deleteWork($work);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->getElementPrototype()->addClass('ajax');
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
+		$form = $this->createFormInstance();
 
 		$form->addHidden('id', 0);
 		$form->addText('company', 'Company')->setRequired('Must be filled');
 		$form->addDateRangePicker('season', 'Date from');
 		$form->addText('position', 'Position held');
 		$form->addTextArea('activities', 'Main activities and responsibilities');
-		$form->addTextArea('achievment', 'Achievement');
+		$form->addTextArea('achievement', 'Achievement');
 		$form->addCheckBox('show_refree', 'Show Referee in CV');
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
@@ -73,7 +69,7 @@ class Works extends BaseControl
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		$form->onError[] = function () {
-			$this->invalidateControl();
+			$this->redrawControl();
 		};
 		return $form;
 	}
@@ -86,8 +82,8 @@ class Works extends BaseControl
 		}
 		$this->load($values);
 		$this->save();
-		$form->setValues(array(), true);
-		$this->invalidateControl();
+		$form->setValues([], true);
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
@@ -101,7 +97,7 @@ class Works extends BaseControl
 		$this->work->dateStart = $values->season['start'];
 		$this->work->dateEnd = $values->season['end'];
 		$this->work->activities = $values->activities;
-		$this->work->achievment = $values->achievment;
+		$this->work->achievment = $values->achievement;
 		$this->work->refereeIsPublic = (bool)$values->show_refree;
 		$this->work->referee = new Referee();
 		$this->work->referee->name = $values->referee_name;
@@ -130,7 +126,7 @@ class Works extends BaseControl
 				'position' => $this->work->position,
 				'season' => array('start' => $this->work->dateStart, 'end' => $this->work->dateEnd),
 				'activities' => $this->work->activities,
-				'achievment' => $this->work->achievment,
+				'achievement' => $this->work->achievment,
 				'show_refree' => $this->work->refereeIsPublic,
 				'referee_name' => $this->work->referee->name,
 				'referee_position' => $this->work->referee->position,

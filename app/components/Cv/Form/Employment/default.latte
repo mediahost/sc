@@ -3,52 +3,5 @@
  *
 *}
 {snippet employmentControl}
-{form form class => "ajax sendOnChange form-horizontal group-border stripped"}
-	{? $form->errors}
-	<div class="form-group">
-		<label class="col-lg-3 col-md-3 control-label"></label>
-		<div class="col-lg-9 col-md-9">
-			<div class="checkbox-custom">
-				{input show_job: class=>"form-control"}
-				<label for="showReferee">{_'Include in CV'}</label>
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		{label available class => "col-lg-3 col-md-3 control-label" /}
-		<div class="col-lg-5 col-md-5">
-			<div class="input-daterange input-group" data-date-format="dd.mm.yyyy">
-				<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-				{input $form['available']}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		{label position class => "col-lg-3 col-md-3 control-label" /}
-		<div class="col-lg-9 col-md-9">
-			{input $form['position'] class => "form-control", rows => "4"}
-		</div>
-	</div>
-	<h5>Salary expectations</h5>
-	<div class="form-group">
-		<label class="col-lg-3 col-md-3 control-label"></label>
-		<div class="col-lg-9 col-md-9">
-			<div class="checkbox-custom">
-				{input show_salary: class=>"form-control"}
-				<label for="showReferee">{_'Mention salary'}</label>
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="col-lg-3 col-md-3  control-label">{_'€ per annum'}</label>
-		<div class="col-lg-9 col-md-9">
-			<div class="input-group">
-				<span class="input-group-addon">{_'from'}</span>
-				{input $form['salary_from'] class => "form-control"}
-				<span class="input-group-addon">{_'to'}</span>
-				{input $form['salary_to'] class => "form-control"}
-			</div>
-		</div>
-	</div>
-{/form}
+{control form}
 {/snippet}

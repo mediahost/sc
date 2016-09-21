@@ -4,7 +4,6 @@ namespace App\Components\Cv;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Referee;
 use App\Model\Entity\Work;
@@ -32,7 +31,7 @@ class Experience extends BaseControl
 		$this->template->activeId = $workId;
 		$work = $this->em->getDao(Work::getClassName())->find($workId);
 		$this->setExperience($work);
-		$this->invalidateControl();
+		$this->redrawControl();
 	}
 
 	public function handleDelete($workId)
@@ -41,18 +40,14 @@ class Experience extends BaseControl
 		$work = $workDao->find($workId);
 		$workDao->delete($work);
 		$this->cv->deleteWork($work);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->getElementPrototype()->addClass('ajax');
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
+		$form = $this->createFormInstance();
 
 		$form->addHidden('id', 0);
 		$form->addText('company', 'Company name')->setRequired('Must be filled');
@@ -82,7 +77,7 @@ class Experience extends BaseControl
 		$this->load($values);
 		$this->save();
 		$form->setValues(array(), true);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
