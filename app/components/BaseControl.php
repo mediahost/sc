@@ -3,8 +3,6 @@
 namespace App\Components;
 
 use App\Extensions\Settings\SettingsStorage;
-use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI;
@@ -64,18 +62,6 @@ abstract class BaseControl extends UI\Control
 		$template = $this->getTemplate();
 		$template->setFile($dir . '/' . $this->templateFile . '.latte');
 		$template->render();
-	}
-
-	protected function createFormInstance() {
-		$form = new Form();
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
-		if ($this->isAjax && $this->isSendOnChange) {
-			$form->getElementPrototype()->class('ajax sendOnChange');
-		} else {
-			$form->addSubmit('save', 'Save');
-		}
-		return $form;
 	}
 }
 

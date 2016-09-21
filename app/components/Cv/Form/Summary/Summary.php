@@ -2,19 +2,12 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
-class Summary extends BaseControl
+class Summary extends CvForm
 {
-	/** @var array */
-	public $onAfterSave = [];
-
-	/** @var Cv */
-	private $cv;
 
 	protected function createComponentForm()
 	{
@@ -44,13 +37,6 @@ class Summary extends BaseControl
 		return $this;
 	}
 
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
-		$cvRepo->save($this->cv);
-		return $this;
-	}
-
 	protected function getDefaults()
 	{
 		$values = [
@@ -58,19 +44,6 @@ class Summary extends BaseControl
 			'show' => $this->cv->careerSummaryIsPublic,
 		];
 		return $values;
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
-		}
-	}
-
-	public function setCv(Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
 	}
 }
 

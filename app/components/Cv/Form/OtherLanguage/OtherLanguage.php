@@ -2,20 +2,12 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity;
 use Nette\Utils\ArrayHash;
 
-class OtherLanguage extends BaseControl
+class OtherLanguage extends CvForm
 {
-	/** @var array */
-	public $onAfterSave = [];
-
-	/** @var Entity\Cv */
-	private $cv;
-
 	/** @var Language */
 	private $language;
 
@@ -94,13 +86,6 @@ class OtherLanguage extends BaseControl
 		return $this;
 	}
 
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Entity\Cv::getClassName());
-		$cvRepo->save($this->cv);
-		return $this;
-	}
-
 	protected function getDefaults()
 	{
 		$values = [];
@@ -133,19 +118,6 @@ class OtherLanguage extends BaseControl
 			}
 		}
 		$this['form']['language']->setDisabled($disabledLang);
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
-		}
-	}
-
-	public function setCv(Entity\Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
 	}
 
 	public function setLanguage(Entity\Language $lang)

@@ -183,7 +183,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iWorksFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, false);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -193,7 +193,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iEducationsFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, false);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -213,7 +213,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iExperienceFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, false);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -223,7 +223,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iPersonalFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, true);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -233,7 +233,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iLanguageFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, true);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -243,7 +243,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iOtherLanguageFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, false);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -253,7 +253,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iObjectiveFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, true);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -263,7 +263,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iEmploymentFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, true);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -273,7 +273,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iSummaryFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, true);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}
@@ -283,7 +283,7 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iAdditionalFactory->create();
 		$control->setCv($this->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control->setAjax(true, true);
 		$control->onAfterSave = $this->afterCvSave;
 		return $control;
 	}

@@ -2,21 +2,13 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Model\Entity\Address;
-use App\Model\Entity\Cv;
 use App\Model\Entity\Education;
 use Nette\Utils\ArrayHash;
 
-class Educations extends BaseControl
+class Educations extends CvForm
 {
-	/** @var array */
-	public $onAfterSave = [];
-
-	/** @var Cv */
-	private $cv;
-
 	/** @var Education */
 	private $education;
 
@@ -68,12 +60,12 @@ class Educations extends BaseControl
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		if ($values['id'] != 0) {
-			$edu = $this->em->getDao(Education::getClassName())->find($values['id']);
-			$this->setEducation($edu);
+			$education = $this->em->getDao(Education::getClassName())->find($values['id']);
+			$this->education = $education;
 		}
+		$form->setValues([], true);
 		$this->load($values);
 		$this->save();
-		$form->setValues([], true);
 		$this->redrawControl();
 		$this->onAfterSave();
 	}
@@ -96,13 +88,6 @@ class Educations extends BaseControl
 		return $this;
 	}
 
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
-		$cvRepo->save($this->cv);
-		return $this;
-	}
-
 	protected function getDefaults()
 	{
 		$values = [];
@@ -118,19 +103,6 @@ class Educations extends BaseControl
 			];
 		}
 		return $values;
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
-		}
-	}
-
-	public function setCv(Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
 	}
 
 	public function setEducation(Education $education)

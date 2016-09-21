@@ -2,21 +2,14 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Referee;
 use App\Model\Entity\Work;
 use Nette\Utils\ArrayHash;
 
-class Experience extends BaseControl
+class Experience extends CvForm
 {
-	/** @var array */
-	public $onAfterSave = [];
-
-	/** @var Cv */
-	private $cv;
-
 	/** @var Work */
 	private $experience;
 
@@ -104,13 +97,6 @@ class Experience extends BaseControl
 		return $this;
 	}
 
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
-		$cvRepo->save($this->cv);
-		return $this;
-	}
-
 	protected function getDefaults()
 	{
 		$values = [];
@@ -130,19 +116,6 @@ class Experience extends BaseControl
 			];
 		}
 		return $values;
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
-		}
-	}
-
-	public function setCv(Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
 	}
 
 	public function setExperience(Work $experience)
