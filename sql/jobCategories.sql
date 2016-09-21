@@ -1,0 +1,16 @@
+INSERT INTO `job_category` (`id`, `name`, `parent_id`) VALUES
+(1,	'Database Admin',	NULL),
+(2,	'Games Developer',	NULL),
+(3,	'App Developer',	NULL),
+(4,	'Programmer',	NULL),
+(5,	'TOP',	NULL),
+(6,	'IT Consultant',	NULL),
+(7,	'IT Project Mngr',	NULL),
+(8,	'Web Designer',	NULL),
+(9,	'Mainframe Devel',	NULL),
+(10,	'Data Science',	NULL),
+(11,	'Dig. Marketing',	NULL),
+(12,	'SAP Manager',	NULL),
+(13,	'SQL',	1),
+(14,	'Oracle',	1),
+(15,	'test',	NULL);
