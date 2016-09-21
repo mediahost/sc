@@ -5,6 +5,7 @@ namespace App\Components\Candidate;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
 use App\Model\Entity\Candidate;
+use App\Model\Entity\Person;
 use Nette\Utils\ArrayHash;
 
 class LocationFilter extends \App\Components\BaseControl 
@@ -19,10 +20,10 @@ class LocationFilter extends \App\Components\BaseControl
     
     public function render() {
         $jsonLocalities = [];
-		foreach (Candidate::getLocalities() as $localityId => $locality) {
+		foreach (Person::getLocalities() as $localityId => $locality) {
 			$jsonLocalities[] = $this->loacationToLeaf($localityId, $locality);
 		}
-        $this->template->countries = Candidate::getLocalities(TRUE);
+        $this->template->countries = Person::getLocalities(TRUE);
 		$this->template->jsonCountries = $jsonLocalities;
         $this->setTemplateFile('default');
         parent::render();
@@ -41,7 +42,7 @@ class LocationFilter extends \App\Components\BaseControl
         $form->getElementPrototype()->class('ajax');
         
         $countryContainer = $form->addContainer('countries');
-		foreach (Candidate::getLocalities(TRUE) as $countryId => $countryName) {
+		foreach (Person::getLocalities(TRUE) as $countryId => $countryName) {
 			$countryContainer->addCheckbox($countryId, $countryName)
 				->setAttribute('class', 'inCountryTree');
 		}

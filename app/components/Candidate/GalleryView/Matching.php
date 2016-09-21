@@ -29,7 +29,7 @@ class Matching extends BaseControl
 			$category = reset($categories);
 			$this->openJob = $category->id;
 		}
-		$this->setTemplateFile('matching');
+		$this->setTemplateFile('Matching');
 		$this->template->categories = $categories;
 		$this->template->openJob = $this->openJob;
 		parent::render();
