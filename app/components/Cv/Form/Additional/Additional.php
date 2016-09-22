@@ -11,12 +11,9 @@ class Additional extends CvForm
 	{
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
-
 		$form->addCheckbox('show', 'Include in CV');
 		$form->addTextArea('additional', 'Additional information');
-
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 

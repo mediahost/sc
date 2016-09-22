@@ -3,7 +3,6 @@
 namespace App\Components\Cv;
 
 use App\Forms\Form;
-use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
 class Objective extends CvForm
@@ -12,12 +11,9 @@ class Objective extends CvForm
 	{
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
-
 		$form->addCheckbox('show', 'Include in CV');
 		$form->addTextArea('objective', 'Your career objective');
-
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 

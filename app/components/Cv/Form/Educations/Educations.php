@@ -42,7 +42,6 @@ class Educations extends CvForm
 	{
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
-
 		$form->addHidden('id', 0);
 		$form->addText('institution', 'Institution')->setRequired('Must be filled');
 		$form->addText('city', 'City');
@@ -50,10 +49,7 @@ class Educations extends CvForm
 		$form->addDateRangePicker('season', 'Date from');
 		$form->addText('title', 'Title of qualification awarded');
 		$form->addTextArea('subjects', 'Principal subjects / occupational skills covered');
-
-		$form->addSubmit('save', 'Save');
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
@@ -103,12 +99,6 @@ class Educations extends CvForm
 			];
 		}
 		return $values;
-	}
-
-	public function setEducation(Education $education)
-	{
-		$this->education = $education;
-		return $this;
 	}
 }
 

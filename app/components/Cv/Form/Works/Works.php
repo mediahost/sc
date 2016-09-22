@@ -2,10 +2,7 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
-use App\Model\Entity\Cv;
 use App\Model\Entity\Referee;
 use App\Model\Entity\Work;
 use Nette\Utils\ArrayHash;
@@ -45,7 +42,6 @@ class Works extends CvForm
 	{
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
-
 		$form->addHidden('id', 0);
 		$form->addText('company', 'Company')->setRequired('Must be filled');
 		$form->addDateRangePicker('season', 'Date from');
@@ -56,15 +52,8 @@ class Works extends CvForm
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
 		$form->addText('referee_phone', 'Phone');
-		$form->addText('referee_mail', 'Email')
-			->addRule(Form::EMAIL, 'Entered value is not email!');
-
-		$form->addSubmit('save', 'Save');
+		$form->addText('referee_mail', 'Email')->addRule(Form::EMAIL, 'Entered value is not email!');
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
-		$form->onError[] = function () {
-			$this->redrawControl();
-		};
 		return $form;
 	}
 
@@ -74,9 +63,9 @@ class Works extends CvForm
 			$work = $this->em->getDao(Work::getClassName())->find($values['id']);
 			$this->setWork($work);
 		}
+		$form->setValues([], true);
 		$this->load($values);
 		$this->save();
-		$form->setValues([], true);
 		$this->redrawControl();
 		$this->onAfterSave();
 	}

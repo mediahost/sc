@@ -26,7 +26,6 @@ class Language extends CvForm
 		$form = $this->createFormInstance();
 		$form->addSelect('motherTongue', 'Mother tongue', Entity\Language::getLanguagesList());
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
@@ -34,7 +33,6 @@ class Language extends CvForm
 	{
 		$this->load($values);
 		$this->save();
-		$form->setValues(array('motherTongue' => $this->cv->motherLanguage), true);
 		$this->redrawControl();
 		$this->onAfterSave();
 	}

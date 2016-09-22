@@ -3,7 +3,6 @@
 namespace App\Components\Cv;
 
 use App\Forms\Form;
-use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
 class Summary extends CvForm
@@ -13,12 +12,9 @@ class Summary extends CvForm
 	{
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
-
 		$form->addCheckbox('show', 'Include in CV');
 		$form->addTextArea('summary', 'Career summary');
-
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 

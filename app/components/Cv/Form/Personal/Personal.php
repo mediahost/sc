@@ -4,7 +4,6 @@ namespace App\Components\Cv;
 
 use App\Forms\Form;
 use App\Model\Entity\Competences;
-use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
 class Personal extends CvForm
@@ -14,16 +13,13 @@ class Personal extends CvForm
 	{
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
-
 		$form->addTextArea('social', 'Social skills and competences');
 		$form->addTextArea('organisation', 'Organisational skills and competences');
 		$form->addTextArea('technical', 'Technical skills and competences');
 		$form->addTextArea('artictic', 'Artistic skills and competences');
 		$form->addTextArea('other', 'Other skills and competences');
 		$form->addMultiSelect2('licenses', 'Driving licenses', Competences::getDrivingLicensesList());
-
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 

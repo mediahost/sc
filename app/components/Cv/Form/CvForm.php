@@ -6,6 +6,7 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Cv;
+use Nette\Utils\ArrayHash;
 
 abstract class CvForm extends BaseControl
 {
@@ -15,6 +16,20 @@ abstract class CvForm extends BaseControl
 	/** @var Cv */
 	protected $cv;
 
+	/**
+	 * @param Form $form
+	 * @param ArrayHash $values
+	 * @return mixed
+	 */
+	abstract function formSucceeded(Form $form, ArrayHash $values);
+
+
+	public function render() {
+		if (!$this->isAjax || !$this->isSendOnChange) {
+			$this['form']->addSubmit('save', 'Save');
+		}
+		parent::render();
+	}
 
 	/** @return Form */
 	protected function createFormInstance() {
@@ -25,9 +40,8 @@ abstract class CvForm extends BaseControl
 			$form->getElementPrototype()->class('ajax sendOnChange');
 		} elseif ($this->isAjax) {
 			$form->getElementPrototype()->class('ajax');
-		} else {
-			$form->addSubmit('save', 'Save');
 		}
+		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 

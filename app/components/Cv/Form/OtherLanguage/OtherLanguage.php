@@ -43,7 +43,6 @@ class OtherLanguage extends CvForm
 	{
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
-
 		$form->addHidden('id', 0);
 		$form->addSelect2('language', 'Language', Entity\Language::getLanguagesList());
 		$form->addHidden('listening', 'Listening');
@@ -51,9 +50,7 @@ class OtherLanguage extends CvForm
 		$form->addHidden('interaction', 'Spoken Interaction');
 		$form->addHidden('production', 'Spoken Production');
 		$form->addHidden('writing', 'Writing');
-
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
@@ -63,9 +60,9 @@ class OtherLanguage extends CvForm
 			$lang = $this->em->getDao(Entity\Language::getClassName())->find($values['id']);
 			$this->setLanguage($lang);
 		}
+		$form->setValues([], true);
 		$this->load($values);
 		$this->save();
-		$form->setValues([], true);
 		$this->redrawControl();
 		$this->onAfterSave($this->cv);
 	}

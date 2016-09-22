@@ -41,7 +41,6 @@ class Experience extends CvForm
 	{
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
-
 		$form->addHidden('id', 0);
 		$form->addText('company', 'Company name')->setRequired('Must be filled');
 		$form->addDateRangePicker('season', 'Date from');
@@ -52,12 +51,8 @@ class Experience extends CvForm
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
 		$form->addText('referee_phone', 'Phone');
-		$form->addText('referee_mail', 'Email')
-			->addRule(Form::EMAIL, 'Entered value is not email!');
-
-		$form->addSubmit('save', 'Save');
+		$form->addText('referee_mail', 'Email')->addRule(Form::EMAIL, 'Entered value is not email!');
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 

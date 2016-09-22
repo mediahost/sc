@@ -11,7 +11,6 @@ class Employment extends CvForm
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
 		$form = $this->createFormInstance();
 
 		$form->addGroup();
@@ -25,7 +24,6 @@ class Employment extends CvForm
 		$form->addText('salary_to', 'To');
 
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
@@ -64,7 +62,6 @@ class Employment extends CvForm
 
 interface IEmploymentFactory
 {
-
 	/** @return Employment */
 	function create();
 }
