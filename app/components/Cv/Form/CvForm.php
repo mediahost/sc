@@ -31,6 +31,13 @@ abstract class CvForm extends BaseControl
 		parent::render();
 	}
 
+	protected function save()
+	{
+		$cvRepo = $this->em->getRepository(Cv::getClassName());
+		$cvRepo->save($this->cv);
+		return $this;
+	}
+
 	/** @return Form */
 	protected function createFormInstance() {
 		$form = new Form();
@@ -42,21 +49,16 @@ abstract class CvForm extends BaseControl
 			$form->getElementPrototype()->class('ajax');
 		}
 		$form->onSuccess[] = $this->formSucceeded;
-		$form->onError[] = function(Form $form) {
-			foreach ($form->errors as $error) {
-				$this->presenter->flashMessage($error, 'error');
-			}
-			$this->redrawControl();
-			$this->presenter->redrawControl('flashMessages');
-		};
+		$form->onError[] = $this->errorHandller;
 		return $form;
 	}
 
-	protected function save()
-	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
-		$cvRepo->save($this->cv);
-		return $this;
+	public function errorHandller(Form $form) {
+		foreach ($form->errors as $error) {
+			$this->presenter->flashMessage($error, 'error');
+		}
+		$this->redrawControl();
+		$this->presenter->redrawControl('flashMessages');
 	}
 
 	protected function checkEntityExistsBeforeRender() {
