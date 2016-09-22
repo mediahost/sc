@@ -42,6 +42,13 @@ abstract class CvForm extends BaseControl
 			$form->getElementPrototype()->class('ajax');
 		}
 		$form->onSuccess[] = $this->formSucceeded;
+		$form->onError[] = function(Form $form) {
+			foreach ($form->errors as $error) {
+				$this->presenter->flashMessage($error, 'error');
+			}
+			$this->redrawControl();
+			$this->presenter->redrawControl('flashMessages');
+		};
 		return $form;
 	}
 

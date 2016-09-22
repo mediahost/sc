@@ -4,6 +4,7 @@ namespace App\Components\Cv;
 
 use App\Forms\Form;
 use App\Model\Entity;
+use Nette\Http\Request;
 use Nette\Utils\ArrayHash;
 
 class OtherLanguage extends CvForm
@@ -11,17 +12,28 @@ class OtherLanguage extends CvForm
 	/** @var Language */
 	private $language;
 
+	/** @var bool */
+	private $editMode = false;
+
+
+	public function __construct(Request $httpRequest)
+	{
+		if (isset($httpRequest->post['id'])  &&  $httpRequest->post['id'] > 0) {
+			$this->editMode = true;
+		}
+	}
 
 	public function render()
 	{
 		$this->template->cv = $this->cv;
 		$this->template->language = $this->language;
-		$this->setDisabled();
+		$this->disableUsedLanguages();
 		parent::render();
 	}
 
 	public function handleEdit($langId)
 	{
+		$this->editMode = true;
 		$this->template->activeId = $langId;
 		$langDao = $this->em->getDao(Entity\Language::getClassName());
 		$lang = $langDao->find($langId);
@@ -44,7 +56,10 @@ class OtherLanguage extends CvForm
 		$this->checkEntityExistsBeforeRender();
 		$form = $this->createFormInstance();
 		$form->addHidden('id', 0);
-		$form->addSelect2('language', 'Language', Entity\Language::getLanguagesList());
+		$language = $form->addSelect2('language', 'Language', Entity\Language::getLanguagesList());
+		if ($this->editMode) {
+			$language->setDisabled();
+		}
 		$form->addHidden('listening', 'Listening');
 		$form->addHidden('reading', 'Reading');
 		$form->addHidden('interaction', 'Spoken Interaction');
@@ -72,7 +87,9 @@ class OtherLanguage extends CvForm
 		if (!$this->language) {
 			$this->language = new Entity\Language();
 		}
-		$this->language->language = $values->language;
+		if (isset($values->language)) {
+			$this->language->language = $values->language;
+		}
 		$this->language->listening = $values->listening;
 		$this->language->reading = $values->reading;
 		$this->language->spokenInteraction = $values->interaction;
@@ -100,21 +117,17 @@ class OtherLanguage extends CvForm
 		return $values;
 	}
 
-	private function setDisabled()
+	private function disableUsedLanguages()
 	{
-		if ($this->language) {
-			$this['form']['language']->setAttribute('disabled');
-			$this['form']['language']->setDefaultValue($this->language->language);
-			return;
-		}
-
-		$disabledLang = [];
-		if (is_array($this->cv->languages)) {
-			foreach ($this->cv->languages as $lng) {
-				$disabledLang[] = $lng->language;
+		if (!$this['form']['language']->isDisabled()) {
+			$disabledLang = [];
+			if (is_array($this->cv->languages)) {
+				foreach ($this->cv->languages as $lng) {
+					$disabledLang[] = $lng->language;
+				}
 			}
+			$this['form']['language']->setDisabled($disabledLang);
 		}
-		$this['form']['language']->setDisabled($disabledLang);
 	}
 
 	public function setLanguage(Entity\Language $lang)
