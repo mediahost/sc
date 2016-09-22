@@ -3,7 +3,6 @@
 namespace App\Components\Cv;
 
 use App\Forms\Form;
-use App\Model\Entity\Cv;
 use Nette\Utils\ArrayHash;
 
 class Employment extends CvForm
