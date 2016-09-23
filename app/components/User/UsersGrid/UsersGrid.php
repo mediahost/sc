@@ -21,15 +21,7 @@ class UsersGrid extends BaseControl
 		$grid = new BaseGrid();
 		$grid->setTranslator($this->translator);
 		$grid->setTheme(BaseGrid::THEME_SUPR);
-
-		$repo = $this->em->getRepository(User::getClassName());
-		$qb = $repo->createQueryBuilder('u')
-			->select('u, r')
-			->leftJoin('u.roles', 'r');
-		$grid->model = new Doctrine($qb, [
-			'roles' => 'r.id'
-		]);
-
+		$grid->model = $this->getModel();
 		$grid->setDefaultSort([
 			'id' => 'ASC',
 			'mail' => 'ASC'
@@ -45,39 +37,25 @@ class UsersGrid extends BaseControl
 		$col->getHeaderPrototype()->style['width'] = '50%';
 
 		$col = $grid->addColumnText('roles', 'Roles');
-		$col->setSortable()
-			->setFilterSelect($this->getRoles());
+		$col->setSortable()->setFilterSelect($this->getRoles());
 		$col->setCustomRender(__DIR__ . '/tag.latte')
 			->setCustomRenderExport([$this, 'joinRoles']);
 		$col->getHeaderPrototype()->style['width'] = '15%';
 
-		$grid->addActionHref('access', 'Access')
-			->setIcon('fa fa-key')
-			->setDisable(function ($item) {
-				return !$this->presenter->userFacade->canAccess($this->identity, $item);
-			});
 
-		$grid->addActionHref('edit', 'Edit')
-			->setIcon('fa fa-edit')
-			->setDisable(function ($item) {
-				return !$this->presenter->userFacade->canEdit($this->identity, $item);
-			});
+		$grid->addActionHref('access', 'Access')->setIcon('fa fa-key')
+			->setDisable([$this, 'checkAccess']);
 
-		$grid->addActionHref('delete', 'Delete')
-			->setIcon('fa fa-trash-o')
-			->setConfirm(function ($item) {
-				$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
-				return sprintf($message, (string)$item);
-			})
-			->setDisable(function ($item) {
-				return !$this->presenter->userFacade->canDelete($this->identity, $item);
-			})
+		$grid->addActionHref('edit', 'Edit')->setIcon('fa fa-edit')
+			->setDisable([$this, 'checkEdit']);
+
+		$grid->addActionHref('delete', 'Delete')->setIcon('fa fa-trash-o')
+			->setConfirm([$this, 'getConfirmMessage'])
+			->setDisable([$this, 'checkDelete'])
 			->getElementPrototype()->class[] = 'red';
 
 		$grid->setActionWidth("25%");
-
 		$grid->setExport('users');
-
 		return $grid;
 	}
 
@@ -87,6 +65,17 @@ class UsersGrid extends BaseControl
 		return $this;
 	}
 
+	private function getModel() {
+		$repo = $this->em->getRepository(User::getClassName());
+		$qb = $repo->createQueryBuilder('u')
+			->select('u, r')
+			->leftJoin('u.roles', 'r');
+		$model = new Doctrine($qb, [
+			'roles' => 'r.id'
+		]);
+		return $model;
+	}
+
 	private function getRoles() {
 		$roleRepo = $this->em->getRepository(Role::getClassName());
 		return $roleRepo->findPairs('name');
@@ -94,6 +83,23 @@ class UsersGrid extends BaseControl
 
 	private function joinRoles($item) {
 		return Helpers::concatStrings(', ', $item->roles);
+	}
+
+	public function checkAccess($item) {
+		return !$this->presenter->userFacade->canAccess($this->identity, $item);
+	}
+
+	public function checkEdit($item) {
+		return !$this->presenter->userFacade->canEdit($this->identity, $item);
+	}
+
+	public function checkDelete($item) {
+		return !$this->presenter->userFacade->canDelete($this->identity, $item);
+	}
+
+	public function getConfirmMessage($item) {
+		$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
+		return sprintf($message, (string)$item);
 	}
 }
 
