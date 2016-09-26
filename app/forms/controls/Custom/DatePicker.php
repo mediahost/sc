@@ -154,7 +154,7 @@ class DatePicker extends BaseControl
 	public function getValue($formated = FALSE)
 	{
 		$date = $this->date instanceof \DateTime ?
-				$this->date : DateTime::createFromFormat($this->format, $this->date);
+			$this->date : DateTime::createFromFormat($this->format, $this->date);
 		return (self::validateDate($this) && $date) ? ($formated ? $date->format($this->format) : $date) : NULL;
 	}
 
@@ -163,23 +163,18 @@ class DatePicker extends BaseControl
 	 */
 	public function getControl()
 	{
-		return $this->getInput(FALSE);
 		$input = $this->getInput(!$this->readOnly);
 		$icon = $this->getIcon();
-		$button = $this->getButton();
 
-		$block = Html::el('div');
-		$block->class($this->size, TRUE);
-		if ($this->readOnly) {
-			$block->class('input-group date date-picker', TRUE)
-					->addAttributes($this->attributes)
-					->add($input)
-					->add($button);
-		} else {
-			$block->class('input-icon right', TRUE)
-					->add($icon)
-					->add($input->addAttributes($this->attributes));
-		}
+		$blockGroup = Html::el('div')
+			->class('input-group input-datepicker', TRUE)
+			->class($this->size, TRUE);
+		$block = Html::el('span')
+			->class('input-group-addon', TRUE)
+			->add($icon);
+		$block = $blockGroup->add($block)
+			->class('input-group', TRUE)
+			->add($input->addAttributes($this->attributes));
 		return $block;
 	}
 
@@ -189,9 +184,9 @@ class DatePicker extends BaseControl
 	private function getInput($picker = TRUE)
 	{
 		$input = Html::el('input class="form-control"')
-				->name($this->getHtmlName() . '[date]')
-				->id($this->getHtmlId())
-				->value($this->getValue(TRUE));
+			->name($this->getHtmlName() . '[date]')
+			->id($this->getHtmlId())
+			->value($this->getValue(TRUE));
 		if ($picker) {
 			$input->class('date-picker', TRUE);
 		}
@@ -209,8 +204,8 @@ class DatePicker extends BaseControl
 	private function getButton()
 	{
 		return Html::el('span class="input-group-btn"')
-						->add(Html::el('button class="btn default" type="button"')
-								->add($this->getIcon()));
+			->add(Html::el('button class="btn default" type="button"')
+				->add($this->getIcon()));
 	}
 
 	// </editor-fold>
@@ -229,7 +224,7 @@ class DatePicker extends BaseControl
 			return TRUE;
 		} else {
 			$d = $control->date instanceof \DateTime ?
-					$control->date : DateTime::createFromFormat($control->format, $control->date);
+				$control->date : DateTime::createFromFormat($control->format, $control->date);
 			return $d && $d->format($control->format) == DateTime::from($control->date)->format($control->format);
 		}
 	}

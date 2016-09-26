@@ -4,13 +4,11 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Company\CompanyImages;
 use App\Components\Company\CompanyInfo;
-use App\Components\Company\ICompanyDataViewFactory;
 use App\Components\Company\ICompanyImagesFactory;
 use App\Components\Company\ICompanyInfoFactory;
 use App\Components\Grids\Company\CompaniesGrid;
 use App\Components\Grids\Company\ICompaniesGridFactory;
 use App\Model\Entity\Company;
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
 use Kdyby\Doctrine\EntityDao;
@@ -36,25 +34,22 @@ class CompaniesPresenter extends BasePresenter
 	/** @var ICompaniesGridFactory @inject */
 	public $iCompaniesGridFactory;
 
-	/** @var ICompanyDataViewFactory @inject */
-	public $iCompanyDataViewFactory;
-
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
 	/** @var EntityDao */
-	private $companyDao;
+	private $companyRepo;
 
 	/** @var EntityDao */
-	private $userDao;
+	private $userRepo;
 
 	// </editor-fold>
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->companyDao = $this->em->getDao(Company::getClassName());
-		$this->userDao = $this->em->getDao(User::getClassName());
+		$this->companyRepo = $this->em->getRepository(Company::getClassName());
+		$this->userRepo = $this->em->getRepository(User::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -66,12 +61,6 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		if (in_array(Role::COMPANY, $this->getUser()->getRoles())) {
-			$companies = $this->companyFacade->findByUser($this->getUser());
-		} else {
-			$companies = $this->companyFacade->findAll();
-		}
-		$this['companyDataView']->setCompanies($companies);
 	}
 
 	/**
@@ -93,7 +82,7 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$company = $this->companyDao->find($id);
+		$company = $this->companyRepo->find($id);
 		if (!$company) {
 			$message = $this->translator->translate('This company wasn\'t found.');
 			$this->flashMessage($message, 'error');
@@ -111,7 +100,7 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionEditImages($id)
 	{
-		$company = $this->companyDao->find($id);
+		$company = $this->companyRepo->find($id);
 		if (!$company) {
 			$message = $this->translator->translate('This company wasn\'t found.');
 			$this->flashMessage($message, 'error');
@@ -141,7 +130,7 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$company = $this->companyDao->find($id);
+		$company = $this->companyRepo->find($id);
 		if (!$company) {
 			$message = $this->translator->translate('Company wasn\'t found.');
 			$this->flashMessage($message, 'danger');
@@ -191,13 +180,5 @@ class CompaniesPresenter extends BasePresenter
 		$control = $this->iCompaniesGridFactory->create();
 		return $control;
 	}
-
-	/** @return CompanyDataView */
-	public function createComponentCompanyDataView()
-	{
-		$control = $this->iCompanyDataViewFactory->create();
-		return $control;
-	}
-
 	// </editor-fold>
 }

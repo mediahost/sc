@@ -2,45 +2,43 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity;
+use Nette\Http\Request;
 use Nette\Utils\ArrayHash;
 
-class OtherLanguage extends BaseControl
+class OtherLanguage extends CvForm
 {
-	// <editor-fold defaultstate="expanded" desc="events">
-
-	/** @var array */
-	public $onAfterSave = [];
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="variables">
-
-	/** @var Entity\Cv */
-	private $cv;
-
 	/** @var Language */
 	private $language;
 
-	// </editor-fold>
+	/** @var bool */
+	private $editMode = false;
+
+
+	public function __construct(Request $httpRequest)
+	{
+		if (isset($httpRequest->post['id'])  &&  $httpRequest->post['id'] > 0) {
+			$this->editMode = true;
+		}
+	}
 
 	public function render()
 	{
 		$this->template->cv = $this->cv;
 		$this->template->language = $this->language;
-		$this->setDisabled();
+		$this->disableUsedLanguages();
 		parent::render();
 	}
 
 	public function handleEdit($langId)
 	{
+		$this->editMode = true;
 		$this->template->activeId = $langId;
 		$langDao = $this->em->getDao(Entity\Language::getClassName());
 		$lang = $langDao->find($langId);
 		$this->setLanguage($lang);
-		$this->invalidateControl();
+		$this->redrawControl();
 	}
 
 	public function handleDelete($langId)
@@ -49,30 +47,25 @@ class OtherLanguage extends BaseControl
 		$lang = $langDao->find($langId);
 		$langDao->delete($lang);
 		$this->cv->deleteLanguage($lang);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new MetronicFormRenderer());
-
+		$form = $this->createFormInstance();
 		$form->addHidden('id', 0);
-		$form->addSelect2('language', 'Language', Entity\Language::getLanguagesList());
-
+		$language = $form->addSelect2('language', 'Language', Entity\Language::getLanguagesList());
+		if ($this->editMode) {
+			$language->setDisabled();
+		}
 		$form->addHidden('listening', 'Listening');
 		$form->addHidden('reading', 'Reading');
 		$form->addHidden('interaction', 'Spoken Interaction');
 		$form->addHidden('production', 'Spoken Production');
 		$form->addHidden('writing', 'Writing');
-
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
@@ -82,10 +75,10 @@ class OtherLanguage extends BaseControl
 			$lang = $this->em->getDao(Entity\Language::getClassName())->find($values['id']);
 			$this->setLanguage($lang);
 		}
+		$form->setValues([], true);
 		$this->load($values);
 		$this->save();
-		$form->setValues([], true);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave($this->cv);
 	}
 
@@ -94,7 +87,9 @@ class OtherLanguage extends BaseControl
 		if (!$this->language) {
 			$this->language = new Entity\Language();
 		}
-		$this->language->language = $values->language;
+		if (isset($values->language)) {
+			$this->language->language = $values->language;
+		}
 		$this->language->listening = $values->listening;
 		$this->language->reading = $values->reading;
 		$this->language->spokenInteraction = $values->interaction;
@@ -102,13 +97,6 @@ class OtherLanguage extends BaseControl
 		$this->language->writing = $values->writing;
 
 		$this->cv->addLanguage($this->language);
-		return $this;
-	}
-
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Entity\Cv::getClassName());
-		$cvRepo->save($this->cv);
 		return $this;
 	}
 
@@ -129,45 +117,24 @@ class OtherLanguage extends BaseControl
 		return $values;
 	}
 
-	private function setDisabled()
+	private function disableUsedLanguages()
 	{
-		if ($this->language) {
-			$this['form']['language']->setAttribute('disabled');
-			$this['form']['language']->setDefaultValue($this->language->language);
-			return;
-		}
-
-		$disabledLang = [];
-		if (is_array($this->cv->languages)) {
-			foreach ($this->cv->languages as $lng) {
-				$disabledLang[] = $lng->language;
+		if (!$this['form']['language']->isDisabled()) {
+			$disabledLang = [];
+			if (is_array($this->cv->languages)) {
+				foreach ($this->cv->languages as $lng) {
+					$disabledLang[] = $lng->language;
+				}
 			}
-		}
-		$this['form']['language']->setDisabled($disabledLang);
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
+			$this['form']['language']->setDisabled($disabledLang);
 		}
 	}
 
-	// <editor-fold defaultstate="collapsed" desc="setters & getters">
-
-	public function setCv(Entity\Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
-	}
-
-	public function setLanguage(Language $lang)
+	public function setLanguage(Entity\Language $lang)
 	{
 		$this->language = $lang;
 		return $this;
 	}
-
-	// </editor-fold>
 }
 
 interface IOtherLanguageFactory

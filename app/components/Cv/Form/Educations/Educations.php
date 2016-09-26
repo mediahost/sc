@@ -2,22 +2,13 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Address;
-use App\Model\Entity\Cv;
 use App\Model\Entity\Education;
 use Nette\Utils\ArrayHash;
 
-class Educations extends BaseControl
+class Educations extends CvForm
 {
-	/** @var array */
-	public $onAfterSave = [];
-
-	/** @var Cv */
-	private $cv;
-
 	/** @var Education */
 	private $education;
 
@@ -34,7 +25,7 @@ class Educations extends BaseControl
 		$eduDao = $this->em->getDao(Education::getClassName());
 		$edu = $eduDao->find($eduId);
 		$this->setEducation($edu);
-		$this->invalidateControl();
+		$this->redrawControl();
 	}
 
 	public function handleDelete($eduId)
@@ -43,19 +34,14 @@ class Educations extends BaseControl
 		$edu = $eduDao->find($eduId);
 		$eduDao->delete($edu);
 		$this->cv->deleteEducation($edu);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->getElementPrototype()->addClass('ajax');
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
-
+		$form = $this->createFormInstance();
 		$form->addHidden('id', 0);
 		$form->addText('institution', 'Institution')->setRequired('Must be filled');
 		$form->addText('city', 'City');
@@ -63,23 +49,20 @@ class Educations extends BaseControl
 		$form->addDateRangePicker('season', 'Date from');
 		$form->addText('title', 'Title of qualification awarded');
 		$form->addTextArea('subjects', 'Principal subjects / occupational skills covered');
-
-		$form->addSubmit('save', 'Save');
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		if ($values['id'] != 0) {
-			$edu = $this->em->getDao(Education::getClassName())->find($values['id']);
-			$this->setEducation($edu);
+			$education = $this->em->getDao(Education::getClassName())->find($values['id']);
+			$this->education = $education;
 		}
+		$form->setValues([], true);
 		$this->load($values);
 		$this->save();
-		$form->setValues(array(), true);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
@@ -101,13 +84,6 @@ class Educations extends BaseControl
 		return $this;
 	}
 
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
-		$cvRepo->save($this->cv);
-		return $this;
-	}
-
 	protected function getDefaults()
 	{
 		$values = [];
@@ -123,25 +99,6 @@ class Educations extends BaseControl
 			];
 		}
 		return $values;
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
-		}
-	}
-
-	public function setCv(Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
-	}
-
-	public function setEducation(Education $education)
-	{
-		$this->education = $education;
-		return $this;
 	}
 }
 

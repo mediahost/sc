@@ -63,7 +63,6 @@ abstract class BaseControl extends UI\Control
 		$template->setFile($dir . '/' . $this->templateFile . '.latte');
 		$template->render();
 	}
-
 }
 
 class BaseControlException extends \Exception

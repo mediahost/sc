@@ -2,22 +2,14 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Referee;
 use App\Model\Entity\Work;
 use Nette\Utils\ArrayHash;
 
-class Experience extends BaseControl
+class Experience extends CvForm
 {
-	/** @var array */
-	public $onAfterSave = [];
-
-	/** @var Cv */
-	private $cv;
-
 	/** @var Work */
 	private $experience;
 
@@ -32,7 +24,7 @@ class Experience extends BaseControl
 		$this->template->activeId = $workId;
 		$work = $this->em->getDao(Work::getClassName())->find($workId);
 		$this->setExperience($work);
-		$this->invalidateControl();
+		$this->redrawControl();
 	}
 
 	public function handleDelete($workId)
@@ -41,19 +33,14 @@ class Experience extends BaseControl
 		$work = $workDao->find($workId);
 		$workDao->delete($work);
 		$this->cv->deleteWork($work);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->getElementPrototype()->addClass('ajax');
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
-
+		$form = $this->createFormInstance();
 		$form->addHidden('id', 0);
 		$form->addText('company', 'Company name')->setRequired('Must be filled');
 		$form->addDateRangePicker('season', 'Date from');
@@ -64,12 +51,8 @@ class Experience extends BaseControl
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
 		$form->addText('referee_phone', 'Phone');
-		$form->addText('referee_mail', 'Email')
-			->addRule(Form::EMAIL, 'Entered value is not email!');
-
-		$form->addSubmit('save', 'Save');
+		$form->addText('referee_mail', 'Email')->addRule(Form::EMAIL, 'Entered value is not email!');
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
@@ -82,7 +65,7 @@ class Experience extends BaseControl
 		$this->load($values);
 		$this->save();
 		$form->setValues(array(), true);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
@@ -109,13 +92,6 @@ class Experience extends BaseControl
 		return $this;
 	}
 
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
-		$cvRepo->save($this->cv);
-		return $this;
-	}
-
 	protected function getDefaults()
 	{
 		$values = [];
@@ -135,19 +111,6 @@ class Experience extends BaseControl
 			];
 		}
 		return $values;
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
-		}
-	}
-
-	public function setCv(Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
 	}
 
 	public function setExperience(Work $experience)

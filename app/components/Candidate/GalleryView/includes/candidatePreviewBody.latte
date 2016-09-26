@@ -32,17 +32,17 @@
                 <label for="preview-cv{$cv->id}"></label>
             </div>
             <a n:if="$template->canAccess($user, $cv->candidate->person->user)"
-               href="{plink Users:access $cv->candidate->user->id}" 
+               href="{plink Users:access $cv->candidate->person->user->id}"
                class="btn btn-default btn-link btn-sm">{_'Access'}
             </a>
-            <a href="{plink Profile: $cv->candidate->user->id}" target="_blank"
+            <a href="{plink Profile:}" target="_blank"
                class="btn btn-default btn-link btn-sm delete-image">
                 {_'Profile'}
             </a>
         </div>
     </small>
     <br><br>     
-    <a href="{plink cvDetail $cv->candidate->user->id}" class="ajax">
-        <img src="{$basePath}/foto/{$cv->candidate->photo|size:150,150}" class="center img-responsive" alt="image alt">
+    <a href="{plink cvDetail $cv->candidate->person->user->id}" class="ajax">
+        <img src="{$basePath}/foto/{$cv->candidate->person->photo|size:150,150}" class="center img-responsive" alt="image alt">
     </a>
 </div>

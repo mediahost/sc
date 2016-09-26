@@ -67,7 +67,7 @@ class CandidateGalleryView extends BaseControl
 
 	public function render()
 	{
-		$this->setTemplateFile('candidateGalleryView');
+		$this->setTemplateFile('CandidateGalleryView');
 		$this->skillRequests = $this['skillsFilter']->setSkillRequests($this->getSerializedRequests('skill'));
 		$this->cvs = $this->getCvs();
 		$this->template->pageParams = $this->getPagination();

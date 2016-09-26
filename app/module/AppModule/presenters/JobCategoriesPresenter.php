@@ -2,8 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Grids\Job\IJobCategoriesGridFactory;
 use App\Components\Job\IJobCategoryFactory;
-use App\Components\Job\IJobCategoryDataViewFactory;
 use App\Model\Entity\JobCategory;
 use App\Model\Facade\JobFacade;
 use Kdyby\Doctrine\DBALException;
@@ -11,8 +11,8 @@ use Kdyby\Doctrine\DBALException;
 class JobCategoriesPresenter extends BasePresenter
 {
 
-	/** @var IJobCategoryDataViewFactory @inject */
-	public $jobCategoryDataViewFactory;
+	/** @var IJobCategoriesGridFactory @inject */
+	public $jobCategoriesGridFactory;
 
 	/** @var IJobCategoryFactory @inject */
 	public $jobCategoryFactory;
@@ -52,9 +52,9 @@ class JobCategoriesPresenter extends BasePresenter
 	 * @resource('jobCategories')
 	 * @privilege('edit')
 	 */
-	public function actionEdit($categoryId)
+	public function actionEdit($id)
 	{
-		$this->jobCategory = $this->jobFacade->findJobCategory($categoryId);
+		$this->jobCategory = $this->jobFacade->findJobCategory($id);
 		if ($this->jobCategory) {
 			$this['jobCategoryForm']->setJobCategory($this->jobCategory);
 			$this->template->jobCategory = $this->jobCategory;
@@ -70,9 +70,9 @@ class JobCategoriesPresenter extends BasePresenter
 	 * @resource('jobCategories')
 	 * @privilege('delete')
 	 */
-	public function actionDelete($categoryId)
+	public function actionDelete($id)
 	{
-		$this->jobCategory = $this->jobFacade->findJobCategory($categoryId);
+		$this->jobCategory = $this->jobFacade->findJobCategory($id);
 		if ($this->jobCategory) {
 			try {
 				$this->jobFacade->deleteJobCategory($this->jobCategory);
@@ -100,10 +100,9 @@ class JobCategoriesPresenter extends BasePresenter
 		return $control;
 	}
 
-	public function createComponentJobCategoryDataView()
+	public function createComponentJobCategoriesGrid()
 	{
-		$control = $this->jobCategoryDataViewFactory->create();
-		$control->setJobCategories($this->jobFacade->findCategories());
+		$control = $this->jobCategoriesGridFactory->create();
 		return $control;
 	}
 }

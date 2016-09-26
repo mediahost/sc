@@ -18,9 +18,6 @@ class CareerDocs extends BaseControl
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var DocStorage */
-	private $docStorage;
-
 	/** @var Candidate */
 	private $candidate;
 
@@ -84,7 +81,7 @@ class CareerDocs extends BaseControl
 		$this->onAfterSave();
 	}
 
-	public function handleSwitch($id)
+	public function handlePublic($id)
 	{
 		$rep = $this->em->getRepository(Document::getClassName());
 		$doc = $rep->find($id);
@@ -100,16 +97,6 @@ class CareerDocs extends BaseControl
 	public function setTemplateFile($name)
 	{
 		return parent::setTemplateFile($name);
-	}
-
-	public function fullDocName($name)
-	{
-		return $this->docStorage->getFullName($name);
-	}
-
-	public function displayDocName($name)
-	{
-		return $this->docStorage->getDisplayName($name);
 	}
 }
 

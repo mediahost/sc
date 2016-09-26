@@ -8,14 +8,8 @@ use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity;
 use Nette\Utils\ArrayHash;
 
-class Language extends BaseControl
+class Language extends CvForm
 {
-	/** @var array */
-	public $onAfterSave = [];
-
-	/** @var Entity\Cv */
-	private $cv;
-
 	/** @var Entity\Language */
 	private $language;
 
@@ -29,14 +23,9 @@ class Language extends BaseControl
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
-
+		$form = $this->createFormInstance();
 		$form->addSelect('motherTongue', 'Mother tongue', Entity\Language::getLanguagesList());
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
@@ -44,8 +33,7 @@ class Language extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$form->setValues(array('motherTongue' => $this->cv->motherLanguage), true);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
@@ -55,31 +43,11 @@ class Language extends BaseControl
 		return $this;
 	}
 
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Entity\Cv::getClassName());
-		$cvRepo->save($this->cv);
-		return $this;
-	}
-
 	protected function getDefaults()
 	{
 		$values = [];
 		$values['motherTongue'] = $this->cv->motherLanguage;
 		return $values;
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
-		}
-	}
-
-	public function setCv(Entity\Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
 	}
 
 	public function setLanguage(Entity\Language $lang)

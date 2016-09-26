@@ -65,7 +65,6 @@ class CompanyUser extends BaseControl
 			$user->setDisabled();
 		} else {
 			$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
-			$helpText->setTranslator($this->translator);
 			$form->addText('password', 'Password')
 					->addRule(Form::FILLED, 'Password must be filled')
 					->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)

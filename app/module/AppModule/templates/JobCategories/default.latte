@@ -1,23 +1,27 @@
 {* JobCategories default template *}
 
 {block pageTitle}
-{_'Job Categories'}
+	{_'Job Categories'}
 {/block}
 
 {block breadcrumbItems}
-<li>
-    <a n:href="this">{_'Job Categories'}</a>
-</li>
+	<li>
+		<a n:href="this">{_'Job Categories'}</a>
+	</li>
 {/block}
 
 {block content}
-<div class="row">
-    <div class="col-md-12">
-        <div class="portlet light">
-            <div class="portlet-body">
-                {control jobCategoryDataView}
-            </div>
-        </div>
-    </div>
-</div>
+	<a href="{plink JobCategories:add}" class="btn btn-default DTTT_button_copy">
+		<span>{_'Add Job category'}</span>
+	</a>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="portlet light">
+				<div class="portlet-body">
+					{control jobCategoriesGrid}
+				</div>
+			</div>
+		</div>
+	</div>
 {/block content}

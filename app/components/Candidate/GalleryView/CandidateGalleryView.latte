@@ -6,13 +6,13 @@
 *}
 <div n:snippet="galleryView" class="row">
     <div class="col-lg-9">
-        {include 'paginationTemplate.latte'}
+        {include 'includes/paginationTemplate.latte'}
 
         <div n:inner-foreach="$cvs as $cv" class="gallery row">
             {control candidatePreview-$cv->id}
         </div>
         
-        {include 'paginationTemplate.latte'}
+        {include 'includes/paginationTemplate.latte'}
     </div>
     <div class="col-lg-3 gallery-nav">
         <div class="search">
@@ -47,6 +47,6 @@
     </div>
 </div>
 
-        {include 'skillFilterTemplate.latte'}
-        {include 'categoryFilterTemplate.latte'}
-        {include 'locationFilterTemplate.latte'}
+        {include 'includes/skillFilterTemplate.latte'}
+        {include 'includes/categoryFilterTemplate.latte'}
+        {include 'includes/locationFilterTemplate.latte'}

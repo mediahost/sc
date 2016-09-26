@@ -45,6 +45,11 @@ class Message extends BaseEntity
 		$this->text = $text;
 	}
 
+	public function __toString()
+	{
+		return $this->text;
+	}
+
 	public function isReadBy(Sender $reader)
 	{
 		$isRead = function ($key, Read $read) use ($reader) {

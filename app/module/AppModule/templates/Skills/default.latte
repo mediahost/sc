@@ -3,34 +3,23 @@
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="this">{_'Skills'}</a>
-</li>
+	<li>
+		<a n:href="this">{_'Skills'}</a>
+	</li>
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-12">
-		<div class="portlet light">
-			<div class="portlet-body">
-				{control skillDataView}
+	<a href="{plink Skills:add}" class="btn btn-default DTTT_button_copy">
+		<span>{_'Add Skill'}</span>
+	</a>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="portlet light">
+				<div class="portlet-body">
+					{control skillsGrid}
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 {/block content}
 
-{block jsPage}
-	<script>
-		$(document).ready(function() {
-			Global.handleDataTables('#skillTable', {
-				aoColumns: [
-					null, null, null,
-					{
-						bSortable: false
-					}
-				]
-			});
-		});
-	</script>
-{/block jsPage}

@@ -30,7 +30,6 @@ services:
 	# Company
 	- {implement: App\Components\Company\ICompanyInfoFactory, inject: yes}
 	- {implement: App\Components\Company\ICompanyImagesFactory, inject: yes}
-	- {implement: App\Components\Company\ICompanyDataViewFactory, inject: yes}
 
 	# Job
 	- {implement: App\Components\Job\IBasicInfoFactory, inject: yes}
@@ -38,8 +37,6 @@ services:
 	- {implement: App\Components\Job\IDescriptionsFactory, inject: yes}
 	- {implement: App\Components\Job\ISkillsFactory, inject: yes}
 	- {implement: App\Components\Job\IQuestionsFactory, inject: yes}
-	- {implement: App\Components\Job\IJobDataViewFactory, inject: yes}
-	- {implement: App\Components\Job\IJobCategoryDataViewFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFactory, inject: yes}
 	- {implement: App\Components\Job\INotesFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFilterFactory, inject: yes}
@@ -77,9 +74,7 @@ services:
 
 	# Skills
 	- {implement: App\Components\Skills\ISkillFactory, inject: yes}
-	- {implement: App\Components\Skills\ISkillDataViewFactory, inject: yes}
 	- {implement: App\Components\Skills\ISkillCategoryFactory, inject: yes}
-	- {implement: App\Components\Skills\ISkillCategoryDataViewFactory, inject: yes}
 
 	# Example
 	- {implement: App\Components\Example\Form\IExampleFormFactory, inject: yes}
@@ -87,6 +82,7 @@ services:
 	# Grids
 	- {implement: App\Components\Grids\Company\ICompaniesGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Job\IJobsGridFactory, inject: yes}
+	- {implement: App\Components\Grids\Job\IJobCategoriesGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Cv\ICvsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Skill\ISkillsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Skill\ISkillCategoriesGridFactory, inject: yes}
@@ -96,4 +92,4 @@ services:
 	- {implement: App\Components\Conversation\Form\IConversationFactory, inject: yes}
 	- {implement: App\Components\Conversation\Form\IConversationListFactory, inject: yes}
 	- {implement: App\Components\Conversation\Form\IFulltextSearchFactory, inject: yes}
-	- {implement: App\Components\ICommunicationDataViewFactory, inject: yes}
+	- {implement: App\Components\IConversationsGridFactory, inject: yes}

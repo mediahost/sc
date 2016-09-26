@@ -2,7 +2,7 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Skills\ISkillCategoryDataViewFactory;
+use App\Components\Grids\Skill\ISkillCategoriesGridFactory;
 use App\Components\Skills\ISkillCategoryFactory;
 use App\Components\Skills\SkillCategory;
 use App\Model\Entity;
@@ -20,18 +20,18 @@ class SkillCategoriesPresenter extends BasePresenter
 	/** @var ISkillCategoryFactory @inject */
 	public $iSkillCategoryFactory;
 
-	/** @var ISkillCategoryDataViewFactory     @inject */
-	public $skillCategoryDataViewFactory;
+	/** @var ISkillCategoriesGridFactory @inject */
+	public $iSkillCategoriesGridFactory;
 
 	/** @var EntityDao */
-	private $skillCategoryDao;
+	private $skillCategoryRepo;
 
 	// </editor-fold>
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->skillCategoryDao = $this->em->getDao(Entity\SkillCategory::getClassName());
+		$this->skillCategoryRepo = $this->em->getRepository(Entity\SkillCategory::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -65,7 +65,7 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->skillCategory = $this->skillCategoryDao->find($id);
+		$this->skillCategory = $this->skillCategoryRepo->find($id);
 		if ($this->skillCategory) {
 			$this['skillCategoryForm']->setSkillCategory($this->skillCategory);
 		} else {
@@ -87,10 +87,10 @@ class SkillCategoriesPresenter extends BasePresenter
 	 */
 	public function actionDelete($id)
 	{
-		$this->skillCategory = $this->skillCategoryDao->find($id);
+		$this->skillCategory = $this->skillCategoryRepo->find($id);
 		if ($this->skillCategory) {
 			try {
-				$this->skillCategoryDao->delete($this->skillCategory);
+				$this->skillCategoryRepo->delete($this->skillCategory);
 				$message = $this->translator->translate('Category \'%category%\' was deleted.', ['category' => (string)$this->skillCategory]);
 				$this->flashMessage($message, 'success');
 			} catch (DBALException $exc) {
@@ -119,11 +119,10 @@ class SkillCategoriesPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return SkillCategoryDataView */
-	public function createComponentSkillCategoryDataView()
+	/** @return SkillCategoriesGrid */
+	public function createComponentSkillCategoriesGrid()
 	{
-		$control = $this->skillCategoryDataViewFactory->create();
-		$control->setSkillsCategories($this->skillCategoryDao->findAll());
+		$control = $this->iSkillCategoriesGridFactory->create();
 		return $control;
 	}
 }

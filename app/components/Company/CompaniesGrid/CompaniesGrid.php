@@ -15,30 +15,22 @@ class CompaniesGrid extends BaseControl
 		$grid = new BaseGrid();
 		$grid->setTranslator($this->translator);
 		$grid->setTheme(BaseGrid::THEME_METRONIC);
-
-		$repo = $this->em->getRepository(Company::getClassName());
-		$qb = $repo->createQueryBuilder('c');
-		$grid->model = new Doctrine($qb);
-
+		$grid->model = $this->getModel();
 		$grid->setDefaultSort([
 			'id' => 'DESC',
 		]);
 
-		$grid->addColumnText('companyId', 'ID')
-			->setSortable()
-			->setFilterText();
-		$grid->getColumn('companyId')->headerPrototype->width = '10%';
+		$col = $grid->addColumnText('companyId', 'ID');
+		$col->setSortable()->setFilterText();
+		$col->headerPrototype->width = '10%';
 
-		$grid->addColumnText('name', 'Name')
-			->setSortable()
-			->setFilterText()
-			->setSuggestion();
-		$grid->getColumn('name')
-			->setCustomRender(__DIR__ . '/companyName.latte');
+		$col = $grid->addColumnText('name', 'Name');
+		$col->setSortable()->setFilterText()->setSuggestion();
+		$col->setCustomRender(__DIR__ . '/companyName.latte');
 
-		$grid->addColumnText('users', 'Users')
-			->setCustomRender(__DIR__ . '/users.latte');
-		$grid->getColumn('users')->headerPrototype->width = '20%';
+		$col = $grid->addColumnText('users', 'Users');
+		$col->setCustomRender(__DIR__ . '/users.latte');
+		$col->headerPrototype->width = '20%';
 
 
 		$grid->addActionHref('view', 'Public Profile', ':Front:CompanyProfile:')
@@ -55,17 +47,24 @@ class CompaniesGrid extends BaseControl
 
 		$grid->addActionHref('delete', 'Delete')
 			->setIcon('fa fa-trash-o')
-			->setConfirm(function ($item) {
-				$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
-				return sprintf($message, (string)$item);
-			})
+			->setConfirm([$this, 'getConfirmMessage'])
 			->getElementPrototype()->class[] = 'red';
 
 		$grid->setActionWidth("25%");
-
 		return $grid;
 	}
 
+	private function getModel() {
+		$repo = $this->em->getRepository(Company::getClassName());
+		$qb = $repo->createQueryBuilder('c');
+		$model = new Doctrine($qb);
+		return $model;
+	}
+
+	private function getConfirmMessage($item) {
+		$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
+		return sprintf($message, (string)$item);
+	}
 }
 
 interface ICompaniesGridFactory

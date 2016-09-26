@@ -9,7 +9,7 @@
                 </a>
                 <span class="name">{$doc->getDisplayName()}</span>
                 <div class="actions">
-                    <a href="{link switch $doc->id}" class="switch {$doc->public ? 'public' : 'private'}"></a>
+                    <a href="{link public $doc->id}" class="switch {$doc->public ? 'public' : 'private'}"></a>
                     <a href="{link deleteDoc $doc->id}" class="confirm delete"></a>
                 </div>
             </li>

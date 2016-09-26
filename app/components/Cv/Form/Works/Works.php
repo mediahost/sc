@@ -2,22 +2,13 @@
 
 namespace App\Components\Cv;
 
-use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
-use App\Model\Entity\Cv;
 use App\Model\Entity\Referee;
 use App\Model\Entity\Work;
 use Nette\Utils\ArrayHash;
 
-class Works extends BaseControl
+class Works extends CvForm
 {
-	/** @var array */
-	public $onAfterSave = [];
-
-	/** @var Cv */
-	private $cv;
-
 	/** @var Work */
 	private $work;
 
@@ -34,7 +25,7 @@ class Works extends BaseControl
 		$workDao = $this->em->getDao(Work::getClassName());
 		$work = $workDao->find($workId);
 		$this->setWork($work);
-		$this->invalidateControl();
+		$this->redrawControl();
 	}
 
 	public function handleDelete($workId)
@@ -43,38 +34,26 @@ class Works extends BaseControl
 		$work = $workDao->find($workId);
 		$workDao->delete($work);
 		$this->cv->deleteWork($work);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
 	protected function createComponentForm()
 	{
 		$this->checkEntityExistsBeforeRender();
-
-		$form = new Form();
-		$form->getElementPrototype()->addClass('ajax');
-		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
-
+		$form = $this->createFormInstance();
 		$form->addHidden('id', 0);
 		$form->addText('company', 'Company')->setRequired('Must be filled');
 		$form->addDateRangePicker('season', 'Date from');
 		$form->addText('position', 'Position held');
 		$form->addTextArea('activities', 'Main activities and responsibilities');
-		$form->addTextArea('achievment', 'Achievement');
+		$form->addTextArea('achievement', 'Achievement');
 		$form->addCheckBox('show_refree', 'Show Referee in CV');
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
 		$form->addText('referee_phone', 'Phone');
-		$form->addText('referee_mail', 'Email')
-			->addRule(Form::EMAIL, 'Entered value is not email!');
-
-		$form->addSubmit('save', 'Save');
+		$form->addText('referee_mail', 'Email')->addRule(Form::EMAIL, 'Entered value is not email!');
 		$form->setDefaults($this->getDefaults());
-		$form->onSuccess[] = $this->formSucceeded;
-		$form->onError[] = function () {
-			$this->invalidateControl();
-		};
 		return $form;
 	}
 
@@ -84,10 +63,10 @@ class Works extends BaseControl
 			$work = $this->em->getDao(Work::getClassName())->find($values['id']);
 			$this->setWork($work);
 		}
+		$form->setValues([], true);
 		$this->load($values);
 		$this->save();
-		$form->setValues(array(), true);
-		$this->invalidateControl();
+		$this->redrawControl();
 		$this->onAfterSave();
 	}
 
@@ -101,7 +80,7 @@ class Works extends BaseControl
 		$this->work->dateStart = $values->season['start'];
 		$this->work->dateEnd = $values->season['end'];
 		$this->work->activities = $values->activities;
-		$this->work->achievment = $values->achievment;
+		$this->work->achievment = $values->achievement;
 		$this->work->refereeIsPublic = (bool)$values->show_refree;
 		$this->work->referee = new Referee();
 		$this->work->referee->name = $values->referee_name;
@@ -110,13 +89,6 @@ class Works extends BaseControl
 		$this->work->referee->mail = $values->referee_mail;
 
 		$this->cv->addWork($this->work);
-		return $this;
-	}
-
-	private function save()
-	{
-		$cvRepo = $this->em->getRepository(Cv::getClassName());
-		$cvRepo->save($this->cv);
 		return $this;
 	}
 
@@ -130,7 +102,7 @@ class Works extends BaseControl
 				'position' => $this->work->position,
 				'season' => array('start' => $this->work->dateStart, 'end' => $this->work->dateEnd),
 				'activities' => $this->work->activities,
-				'achievment' => $this->work->achievment,
+				'achievement' => $this->work->achievment,
 				'show_refree' => $this->work->refereeIsPublic,
 				'referee_name' => $this->work->referee->name,
 				'referee_position' => $this->work->referee->position,
@@ -139,19 +111,6 @@ class Works extends BaseControl
 			];
 		}
 		return $values;
-	}
-
-	private function checkEntityExistsBeforeRender()
-	{
-		if (!$this->cv) {
-			throw new CvException('Use setCv(\App\Model\Entity\Cv) before render');
-		}
-	}
-
-	public function setCv(Cv $cv)
-	{
-		$this->cv = $cv;
-		return $this;
 	}
 
 	public function setWork(Work $work)

@@ -48,13 +48,13 @@ class BaseGrid extends Grid
 		return $column;
 	}
 
-	public function setTheme($theme = self::THEME_METRONIC)
+	public function setTheme($theme = self::THEME_SUPR)
 	{
 		switch ($theme) {
-			case self::THEME_METRONIC:
+			case self::THEME_SUPR:
 			default:
-				$this->templateFile = self::THEME_METRONIC;
-				$this->getTablePrototype()->class[] = 'table-bordered no-footer';
+				$this->templateFile = self::THEME_SUPR;
+				$this->getTablePrototype()->class[] = 'table-bordered dataTable';
 				break;
 		}
 	}

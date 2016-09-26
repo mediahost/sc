@@ -1,42 +1,19 @@
 {block pageTitle}
-{_'Jobs for'} {$company}
-{/block}
-
-{block breadcrumbItems}
-<li>
-	<a n:href="Companies:">{_'Companies'}</a>
-</li>
-<li>
-	<a n:href="Companies:view, $company->id">{$company}</a>
-</li>
-<li>
-	<a n:href="Jobs:">{_'Jobs'}</a>
-</li>
+	{_'Jobs for'} {$company}
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-12">
-		<div class="portlet light">
-			<div class="portlet-body">
-				{control jobsDataView}
+	<a n:if="$company" href="{plink Job:add $company->id}" class="btn btn-default">
+		<span>{_'Add job'}</span>
+	</a>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="portlet light">
+				<div class="portlet-body">
+					{control jobsGrid}
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 {/block content}
-
-{block jsPage}
-<script>
-	$(document).ready(function() {
-		Global.handleDataTables('#jobTable', {
-			aoColumns: [
-				null, null, null, null,
-				{
-					bSortable: false
-				}
-			]
-		});
-	});
-</script>
-{/block jsPage}
