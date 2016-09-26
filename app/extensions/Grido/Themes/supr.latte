@@ -84,13 +84,22 @@
 						</th>
 						{foreach $columns as $column}
 							{if $column->isSortable()}
-								<th n:if="!$column->getSort()" class="sorting">
+								{var thClass => implode($column->getHeaderPrototype()->class, ' ')}
+								{var thRestAttrs => ''}
+								{foreach $column->getHeaderPrototype()->attrs as $thAttrName => $thAttrValue}
+									{continueIf $thAttrName == 'class'}
+									{if is_array($thAttrValue)}
+										{var thAttrValue => implode($thAttrValue, ' ')}
+									{/if}
+									{var thRestAttrs .= ' ' . $thAttrName . '="' . $thAttrValue . '"'}
+								{/foreach}
+								<th n:if="!$column->getSort()" class="sorting {$thClass}"{$thRestAttrs|noescape}>
 									<a n:href="sort! [$column->getName() => \Grido\Components\Columns\Column::ORDER_ASC]" 
 									   class="ajax">{$column->getLabel()|noescape}</a></th>
-								<th n:if="$column->getSort() == \Grido\Components\Columns\Column::ORDER_ASC" class="sorting_asc">
+								<th n:if="$column->getSort() == \Grido\Components\Columns\Column::ORDER_ASC" class="sorting_asc {$thClass}"{$thRestAttrs|noescape}>
 									<a n:href="sort! [$column->getName() => \Grido\Components\Columns\Column::ORDER_DESC]" 
 									   class="ajax">{$column->getLabel()|noescape}</a></th>
-								<th n:if="$column->getSort() == \Grido\Components\Columns\Column::ORDER_DESC" class="sorting_desc">
+								<th n:if="$column->getSort() == \Grido\Components\Columns\Column::ORDER_DESC" class="sorting_desc {$thClass}"{$thRestAttrs|noescape}>
 									<a n:href="sort! [$column->getName() => \Grido\Components\Columns\Column::ORDER_ASC]" 
 									   class="ajax">{$column->getLabel()|noescape}</a>
 								</th>
