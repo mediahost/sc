@@ -1,5 +1,5 @@
 {block pageTitle}
-{if $cv->candidate->user->id === $user->id}
+{if $cv->candidate->person->user->id === $user->id}
 	{_'Candidate'}
 {else}
 	{_"%s's CV", 1, $cv->candidate}
@@ -7,7 +7,7 @@
 {/block}
 
 {block breadcrumbItems}
-{if $cv->candidate->user->id === $user->id}
+{if $cv->candidate->person->user->id === $user->id}
 	<li>
 		<a n:href="Candidate:">{_'Candidate'}</a>
 	</li>
@@ -16,13 +16,13 @@
 		<a n:href="Users:">{_'Users'}</a>
 	</li>
 	<li>
-		<a n:href="Users:edit, $cv->candidate->user->id">{$cv->candidate->user}</a>
+		<a n:href="Users:edit, $cv->candidate->person->user->id">{$cv->candidate->person->user}</a>
 	</li>
 	<li>
 		<a n:href="Cvs:">{_'CVs'}</a>
 	</li>
 	<li>
-		<a n:href="Users:view, $cv->candidate->user->id">{$cv->candidate}</a>
+		<a n:href="Users:view, $cv->candidate->person->user->id">{$cv->candidate}</a>
 	</li>
 {/if}
 {/block}
