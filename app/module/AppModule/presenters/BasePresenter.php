@@ -3,15 +3,12 @@
 namespace App\AppModule\Presenters;
 
 use App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
-use App\Model\Entity\Communication;
 use App\Model\Entity\Company;
 use App\Model\Entity\Role;
 use App\Model\Entity\Sender;
 use App\Model\Entity\User;
 use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\CompanyFacade;
-use Nette\Application\ApplicationException;
-use Tracy\Debugger;
 
 abstract class BasePresenter extends BaseBasePresenter
 {
@@ -33,9 +30,9 @@ abstract class BasePresenter extends BaseBasePresenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->checkCompleteAccount();
 		$this->chooseCompany();
 		$this->chooseSender();
+		$this->checkCompleteAccount();
 	}
 
 	protected function beforeRender()
@@ -54,7 +51,8 @@ abstract class BasePresenter extends BaseBasePresenter
 		if (!$this->user->loggedIn) {
 			$this->redirect(':Front:Sign:in');
 		}
-		if ($this->user->isInRole(Role::CANDIDATE) && !$this->isCompleteAccount() && $this->name !== 'App:CompleteAccount') {
+		$isInRoles = $this->user->isInRole(Role::CANDIDATE) || $this->user->isInRole(Role::COMPANY);
+		if ($isInRoles && !$this->isCompleteAccount() && $this->name !== 'App:CompleteAccount') {
 			$this->redirect(':App:CompleteAccount:');
 		}
 	}
@@ -89,9 +87,10 @@ abstract class BasePresenter extends BaseBasePresenter
 		$identity = $this->user->identity;
 		$person = $identity->getPerson();
 		$candidate = $person->getCandidate();
-		$isCompleteAccount = $person->isFilled() && $candidate->isFilled() && $identity->verificated;
-		return ($this->getUser()->isInRole(Role::CANDIDATE) && $isCompleteAccount)
-		|| $this->getUser()->isInRole(Role::COMPANY)
+		$isCompleteCandidateAccount = $person->isFilled() && $candidate->isFilled() && $identity->verificated;
+		$isCompleteCompanyAccount = $this->company && $identity->verificated;
+		return ($this->getUser()->isInRole(Role::CANDIDATE) && $isCompleteCandidateAccount)
+		|| ($this->getUser()->isInRole(Role::COMPANY) && $isCompleteCompanyAccount)
 		|| $this->getUser()->isInRole(Role::ADMIN)
 		|| $this->getUser()->isInRole(Role::SUPERADMIN);
 	}

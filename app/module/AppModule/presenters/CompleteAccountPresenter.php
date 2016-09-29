@@ -71,6 +71,11 @@ class CompleteAccountPresenter extends BasePresenter
 				$this->redirect('step2');
 			}
 		}
+		if ($user->isInRole(Role::COMPANY)) {
+			if ($this->company) {
+				$this->redirect('verify');
+			}
+		}
 	}
 
 	/**
@@ -98,14 +103,23 @@ class CompleteAccountPresenter extends BasePresenter
 		$person = $identity->getPerson();
 		$candidate = $person->getCandidate();
 		if ($identity->verificated) {
-			if (!$person->isFilled()) {
-				$this->redirect('default');
-			} elseif (!$candidate->isFilled()) {
-				$this->redirect('step2');
+			if ($this->user->isInRole(Role::CANDIDATE)) {
+				if (!$person->isFilled()) {
+					$this->redirect('default');
+				} elseif (!$candidate->isFilled()) {
+					$this->redirect('step2');
+				}
+				$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
+				$this->flashMessage($message);
+				$this->redirect(':App:Dashboard:');
+			} else if ($this->user->isInRole(Role::COMPANY)) {
+				if (!$this->company) {
+					$this->redirect('default');
+				}
+				$message = $this->translator->translate('Your company account is complete. Enjoy your ride!');
+				$this->flashMessage($message);
+				$this->redirect(':App:Dashboard:');
 			}
-			$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
-			$this->flashMessage($message);
-			$this->redirect(':App:Dashboard:');
 		}
 	}
 
@@ -173,7 +187,7 @@ class CompleteAccountPresenter extends BasePresenter
 		$control->onSuccess[] = function (CompleteCompany $control, Company $company) {
 			$message = $this->translator->translate('Your company account is complete. Enjoy your ride!');
 			$this->flashMessage($message, 'success');
-			$this->redirect(':App:Company:default', ['id' => $company->id]);
+			$this->redirect(':App:Dashboard:');
 		};
 		return $control;
 	}

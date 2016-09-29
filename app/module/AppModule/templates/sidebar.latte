@@ -73,25 +73,25 @@
                         </li>
 
                         <!-- BEGIN ADMIN -->
-                        <li n:if="$user->isAllowed('users', 'default')">
+                        <li n:if="$isCompleteAccount && $user->isAllowed('users', 'default')">
                             <a n:href="Users:" n:class="$presenter->isLinkCurrent('Users:*') ? active">
                                 <i class="fa fa-users"></i>
                                 <span class="txt">{_'Users'}</span>
                             </a>
                         </li>
-                        <li n:if="$user->isAllowed('cvs', 'default')">
+                        <li n:if="$isCompleteAccount && $user->isAllowed('cvs', 'default')">
                             <a n:href="Cvs:candidates" n:class="$presenter->isLinkCurrent('Cvs:*') ? active">
                                 <i class="fa fa-file-text"></i>
                                 <span class="txt">{_'Candidates'}</span>
                             </a>
                         </li>
-                        <li n:if="$user->isAllowed('companies', 'default')">
+                        <li n:if="$isCompleteAccount && $user->isAllowed('companies', 'default')">
                             <a n:href="Companies:" n:class="$presenter->isLinkCurrent('Companies:*') ? active">
                                 <i class="fa fa-building"></i>
                                 <span class="txt">{_'Companies'}</span>
                             </a>
                         </li>
-                        <li n:if="$user->isAllowed('skills', 'view')">
+                        <li n:if="$isCompleteAccount && $user->isAllowed('skills', 'view')">
                             <a href="#">
                                 <i class="s16 icomoon-icon-star-5"></i>
                                 <span class="txt">{_'Skills'}</span>
