@@ -267,7 +267,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iPhotoFactory->create();
 		$control->setPerson($this->person);
-		$control->onAfterSave = function (Person $saved) {
+		$control->onAfterSave = function (Entity\Person $saved) {
 			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redrawControl('personalDetails');
@@ -280,7 +280,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iProfileFactory->create();
 		$control->setPerson($this->person);
-		$control->onAfterSave = function (Person $saved) {
+		$control->onAfterSave = function (Entity\Person $saved) {
 			$this->redrawControl('personalDetails');
 		};
 		return $control;
@@ -291,7 +291,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iAddressFactory->create();
 		$control->setPerson($this->person);
-		$control->onAfterSave = function (Person $saved) {
+		$control->onAfterSave = function (Entity\Person $saved) {
 			$this->redrawControl('personalDetails');
 		};
 		return $control;
@@ -302,7 +302,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iSocialFactory->create();
 		$control->setPerson($this->person);
-		$control->onAfterSave = function (Person $saved) {
+		$control->onAfterSave = function (Entity\Person $saved) {
 			$this->redrawControl('socialLinks');
 		};
 		return $control;
