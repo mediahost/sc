@@ -63,7 +63,9 @@ abstract class BasePresenter extends BaseBasePresenter
 	{
 		if ($this->getUser()->isInRole(Role::COMPANY)) {
 			$companies = $this->companyFacade->findByUser($this->user);
-			$this->company = $companies->first();
+			if ($companies->count()) {
+				$this->company = $companies->first();
+			}
 		}
 	}
 
