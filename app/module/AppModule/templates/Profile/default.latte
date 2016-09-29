@@ -1,5 +1,5 @@
 {block pageTitle}
-	{if $candidate}
+	{if $isCandidate}
 		{_'Overview of candidate %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $identity->mail]}
 		<a href="{link Messages:}" class="dropdown-toggle"><i class="s16 minia-icon-envelope"></i></a>
 	{else}
@@ -15,7 +15,9 @@
 {/block}
 
 {block content}
-
+{if $isCompany}
+	{_'Not implemented for Company profile'}
+{else}
 <div class="row">
 	<div class="col-lg-6 col-md-12">
 		{snippet personalDetails}
@@ -42,6 +44,7 @@
 		{control recentMessages}
 	</div>
 </div>
+{/if}
 
 {define personalDetailsPanel}
 	<div n:if="$person" class="panel panel-default">
@@ -54,10 +57,10 @@
 					<div class="profile-avatar">
 						<a href="#edit-photo" class="edit">
 							<img n:if="$person->photo" alt="{$person->degreeName}" class="responsive"
-														  src="{$basePath}/foto/{$person->photo|size:150,150}">
+													   src="{$basePath}/foto/{$person->photo|size:150,150}">
 							{var defaultImage = \App\Model\Entity\Image::DEFAULT_IMAGE}
 							<img n:if="!$person->photo" alt="{$person->degreeName}" class="responsive"
-														   src="{$basePath}/foto/{$defaultImage|size:150,150}">
+														src="{$basePath}/foto/{$defaultImage|size:150,150}">
 							<i class="fa fa-edit"></i>
 						</a>
 					</div>
