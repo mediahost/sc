@@ -59,7 +59,7 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	private function chooseCompany()
 	{
-		if ($this->getUser()->isInRole(Role::COMPANY)) {
+		if ($this->user->loggedIn && $this->user->isInRole(Role::COMPANY)) {
 			$companies = $this->companyFacade->findByUser($this->user);
 			if ($companies->count()) {
 				$this->company = $companies->first();
@@ -69,11 +69,13 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	private function chooseSender()
 	{
-		$senders = $this->communicationFacade->findSenders($this->user->identity, $this->company);
-		if (count($senders)) {
-			$this->sender = current($senders);
-		} else {
-			$this->sender = $this->communicationFacade->createSender($this->user->identity, $this->company);
+		if ($this->user->loggedIn) {
+			$senders = $this->communicationFacade->findSenders($this->user->identity, $this->company);
+			if (count($senders)) {
+				$this->sender = current($senders);
+			} else {
+				$this->sender = $this->communicationFacade->createSender($this->user->identity, $this->company);
+			}
 		}
 	}
 
