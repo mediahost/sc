@@ -21,7 +21,7 @@
         <p>
             <b>{_'IT Skills: '}</b>
             </br>
-            <spaan class="tip" data-original-title="{$skills}">
+            <span class="tip" data-original-title="{$skills}">
                 {$skills|truncate:70,'...'}
             </span>
         </p>
@@ -31,7 +31,7 @@
                 <input class="check" type="checkbox" value="option" id="preview-cv{$cv->id}">
                 <label for="preview-cv{$cv->id}"></label>
             </div>
-            <a n:if="$template->canAccess($user, $cv->candidate->person->user)"
+            <a n:if="isset($cv->candidate->person->user) && $template->canAccess($user, $cv->candidate->person->user)"
                href="{plink Users:access $cv->candidate->person->user->id}"
                class="btn btn-default btn-link btn-sm">{_'Access'}
             </a>
@@ -41,8 +41,8 @@
             </a>
         </div>
     </small>
-    <br><br>     
-    <a href="{plink cvDetail $cv->candidate->person->user->id}" class="ajax">
+    <br><br>
+    <a n:ifset="$cv->candidate->person->user" href="{plink cvDetail $cv->candidate->person->user->id}" class="ajax">
         <img src="{$basePath}/foto/{$cv->candidate->person->photo|size:150,150}" class="center img-responsive" alt="image alt">
     </a>
 </div>
