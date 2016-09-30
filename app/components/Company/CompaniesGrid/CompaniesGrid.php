@@ -61,7 +61,7 @@ class CompaniesGrid extends BaseControl
 		return $model;
 	}
 
-	private function getConfirmMessage($item) {
+	public function getConfirmMessage($item) {
 		$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
 		return sprintf($message, (string)$item);
 	}

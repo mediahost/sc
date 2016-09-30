@@ -15,8 +15,8 @@
 {/block}
 
 {block content}
-{if $isCompany}
-	{_'Not implemented for Company profile'}
+{if $isCompany || $isAdmin}
+	{_'Not implemented for this role'}
 {else}
 <div class="row">
 	<div class="col-lg-6 col-md-12">

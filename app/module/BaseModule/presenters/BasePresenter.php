@@ -68,7 +68,7 @@ abstract class BasePresenter extends Presenter
 
 		$this->template->isCandidate = in_array(Entity\Role::CANDIDATE, $this->getUser()->getRoles());
 		$this->template->isCompany = in_array(Entity\Role::COMPANY, $this->getUser()->getRoles());
-		$this->template->isAdmin = in_array(Entity\Role::ADMIN, $this->getUser()->getRoles());
+		$this->template->isAdmin = in_array(Entity\Role::ADMIN, $this->getUser()->getRoles()) || in_array(Entity\Role::SUPERADMIN, $this->getUser()->getRoles());
 	}
 	// <editor-fold desc="requirments">
 
