@@ -22,11 +22,11 @@ return array(
 			www/webtemp/*
 			!www/webtemp/.htaccess
 			www/foto/*
-			!www/foto/
+			!www/foto/.htaccess
 			www/wp/*
-			!www/wp/
+			!www/wp/.htaccess
 			www/pdf/*
-			!www/pdf/
+			!www/pdf/.htaccess
 			*.local.neon
 			*.server.neon
 			*.server_dev.neon

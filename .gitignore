@@ -74,25 +74,17 @@
 /bin/testInstaller.bat
 
 #################
-## Foto
+## Files
 ################
 /www/foto/*
 !/www/foto/
-
-#################
-## PDF
-################
 /www/pdf/*
 !/www/pdf/
-/temp
-/temp
-/www/careerDocs
+/www/documents/*
+!/www/documents/
 
 #################
 ## Wordpress
 ################
 /www/wp/*
 !/www/wp/.htaccess
-
-
-/www/documents
