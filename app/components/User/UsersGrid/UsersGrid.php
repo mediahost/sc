@@ -29,18 +29,17 @@ class UsersGrid extends BaseControl
 
 		$col = $grid->addColumnNumber('id', '#');
 		$col->setSortable()->setFilterNumber();
-		$col->getHeaderPrototype()->style['width'] = '5%';
+		$col->getHeaderPrototype()->width = '5%';
 		$col->cellPrototype->class[] = 'center';
 
 		$col = $grid->addColumnEmail('mail', 'Mail');
 		$col->setSortable()->setFilterText()->setSuggestion();
-		$col->getHeaderPrototype()->style['width'] = '50%';
 
 		$col = $grid->addColumnText('roles', 'Roles');
 		$col->setSortable()->setFilterSelect($this->getRoles());
 		$col->setCustomRender(__DIR__ . '/tag.latte')
 			->setCustomRenderExport([$this, 'joinRoles']);
-		$col->getHeaderPrototype()->style['width'] = '15%';
+		$col->getHeaderPrototype()->width = '15%';
 
 
 		$grid->addActionHref('access', 'Access')->setIcon('fa fa-key')
@@ -54,7 +53,7 @@ class UsersGrid extends BaseControl
 			->setDisable([$this, 'checkDelete'])
 			->getElementPrototype()->class[] = 'red';
 
-		$grid->setActionWidth("25%");
+		$grid->setActionWidth("15%");
 		$grid->setExport('users');
 		return $grid;
 	}
