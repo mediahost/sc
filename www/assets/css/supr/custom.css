@@ -113,3 +113,7 @@ section.content {
 .gallery-nav .search {
     width: 100%;
 }
+
+.checkbox-custom {
+    display: inline-block;
+}
