@@ -50,7 +50,7 @@ class CompaniesGrid extends BaseControl
 			->setConfirm([$this, 'getConfirmMessage'])
 			->getElementPrototype()->class[] = 'red';
 
-		$grid->setActionWidth();
+		$grid->setActionWidth("20%");
 		return $grid;
 	}
 
