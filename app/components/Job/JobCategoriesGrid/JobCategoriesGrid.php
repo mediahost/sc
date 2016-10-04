@@ -22,7 +22,7 @@ class JobCategoriesGrid extends BaseControl
 			'id' => 'ASC',
 		]);
 
-		$grid->addColumnNumber('id', 'ID #')
+		$grid->addColumnNumber('id', 'Id')
 			->setSortable()
 			->setFilterNumber();
 		$grid->getColumn('id')->headerPrototype->width = '5%';
@@ -49,7 +49,7 @@ class JobCategoriesGrid extends BaseControl
 			})
 			->getElementPrototype()->class[] = 'red';
 
-		$grid->setActionWidth("15%");
+		$grid->setActionWidth("20%");
 
 		return $grid;
 	}
