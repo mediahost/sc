@@ -22,17 +22,17 @@ class Works extends CvForm
 	public function handleEdit($workId)
 	{
 		$this->template->activeId = $workId;
-		$workDao = $this->em->getDao(Work::getClassName());
-		$work = $workDao->find($workId);
+		$repository = $this->em->getRepository(Work::getClassName());
+		$work = $repository->find($workId);
 		$this->setWork($work);
 		$this->redrawControl();
 	}
 
 	public function handleDelete($workId)
 	{
-		$workDao = $this->em->getDao(Work::getClassName());
-		$work = $workDao->find($workId);
-		$workDao->delete($work);
+		$repository = $this->em->getRepository(Work::getClassName());
+		$work = $repository->find($workId);
+		$repository->delete($work);
 		$this->cv->deleteWork($work);
 		$this->redrawControl();
 		$this->onAfterSave();
@@ -48,7 +48,7 @@ class Works extends CvForm
 		$form->addText('position', 'Position held');
 		$form->addTextArea('activities', 'Main activities and responsibilities');
 		$form->addTextArea('achievement', 'Achievement');
-		$form->addCheckBox('show_refree', 'Show Referee in CV');
+		$form->addCheckbox('show_refree', 'Show Referee in CV');
 		$form->addText('referee_name', 'Referee name');
 		$form->addText('referee_position', 'Position');
 		$form->addText('referee_phone', 'Phone');
@@ -60,7 +60,7 @@ class Works extends CvForm
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		if ($values['id'] != 0) {
-			$work = $this->em->getDao(Work::getClassName())->find($values['id']);
+			$work = $this->em->getRepository(Work::getClassName())->find($values['id']);
 			$this->setWork($work);
 		}
 		$form->setValues([], true);
