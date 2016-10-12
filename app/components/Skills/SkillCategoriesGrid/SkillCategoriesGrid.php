@@ -23,10 +23,10 @@ class SkillCategoriesGrid extends BaseControl
 			'id' => 'ASC',
 		]);
 
-		$col = $grid->addColumnNumber('id', 'Id')
+		$grid->addColumnNumber('id', 'Id')
 				->setSortable()
 				->setFilterNumber();
-		$col->getHeaderPrototype()->width = '5%';
+		$grid->getColumn('id')->getHeaderPrototype()->width = '5%';
 
 		$grid->addColumnText('name', 'Name')
 				->setSortable()
