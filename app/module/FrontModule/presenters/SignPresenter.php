@@ -23,6 +23,9 @@ class SignPresenter extends BasePresenter
 	/** @var array */
 	public $onVerify = [];
 
+	/** @var array */
+	public $onAccess = [];
+
 	// </editor-fold>
 	// <editor-fold desc="Injects">
 
@@ -132,6 +135,18 @@ class SignPresenter extends BasePresenter
 	public function actionRecovery($token)
 	{
 		$this['recovery']->setToken($token);
+	}
+
+	public function actionAccess($token)
+	{
+		$user = $this->userFacade->findByAccessToken($token);
+		if ($user) {
+			$this->onAccess($this, $user);
+		} else {
+			$message = $this->translator->translate('Access token is incorrect.');
+			$this->flashMessage($message, 'warning');
+			$this->redirect('in');
+		}
 	}
 
 	// </editor-fold>

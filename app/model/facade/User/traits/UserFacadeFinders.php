@@ -69,4 +69,24 @@ trait UserFacadeFinders
 		return NULL;
 	}
 
+	public function findByAccessToken($token)
+	{
+		if (!empty($token)) {
+			$user = $this->userRepo->findOneBy([
+				'accessToken' => $token
+			]);
+
+			if ($user) {
+				if ($user->accessExpiration > new DateTime()) {
+					return $user;
+				} else {
+					$user->removeRecovery();
+					$this->userRepo->save($user);
+				}
+			}
+		}
+
+		return NULL;
+	}
+
 }

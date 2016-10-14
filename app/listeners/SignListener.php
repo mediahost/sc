@@ -72,6 +72,7 @@ class SignListener extends Object implements Subscriber
 			'App\Components\Auth\SignIn::onSuccess' => 'onSuccess',
 			'App\Components\Auth\Recovery::onSuccess' => 'onRecovery',
 			'App\FrontModule\Presenters\SignPresenter::onVerify' => 'onCreate',
+			'App\FrontModule\Presenters\SignPresenter::onAccess' => 'onStartup',
 		);
 	}
 

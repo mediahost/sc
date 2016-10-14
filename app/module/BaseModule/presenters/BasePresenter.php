@@ -13,6 +13,7 @@ use Kdyby\Translation\Translator;
 use Latte\Macros\MacroSet;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
+use Nette\Http\Request;
 use Nette\MemberAccessException as NetteMemberAccessException;
 use Nette\Security\IUserStorage;
 use WebLoader\Nette\CssLoader;
@@ -20,6 +21,8 @@ use WebLoader\Nette\LoaderFactory;
 
 abstract class BasePresenter extends Presenter
 {
+
+	const ACCESS_ID_PARAM = 'accessId';
 
 	/** @persistent */
 	public $lang;
@@ -92,10 +95,16 @@ abstract class BasePresenter extends Presenter
 	private function checkSecured($resource, $privilege)
 	{
 		if (!$this->user->loggedIn) {
-			if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
+			if ($this->getParameter('accessId')) {
+				$this->redirect(':Front:Sign:access', [
+					'token' => $this->getParameter(self::ACCESS_ID_PARAM),
+					'backlink' => $this->storeRequest(),
+				]);
+			}
+			if ($this->user->logoutReason === IUserStorage::INACTIVITY) { // can redirect to lock screen
 				$message = $this->translator->translate('You have been signed out, because you have been inactive for long time.');
 				$this->flashMessage($message);
-				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]); // Can be lock screen
+				$this->redirect(':Front:Sign:in', ['backlink' => $this->storeRequest()]);
 			} else {
 				$message = $this->translator->translate('You should be logged in!');
 				$this->flashMessage($message);
@@ -104,6 +113,17 @@ abstract class BasePresenter extends Presenter
 		} elseif (!$this->user->isAllowed($resource, $privilege)) {
 			throw new ForbiddenRequestException;
 		}
+	}
+
+	public function restoreRequest($key)
+	{
+		$session = $this->getSession('Nette.Application/requests');
+		/** @var Request $request */
+		$request = $session[$key][1];
+		$params = $request->getParameters();
+		unset($params[self::ACCESS_ID_PARAM]);
+		$request->setParameters($params);
+		return parent::restoreRequest($key);
 	}
 
 	private function checkCompanySecured($resource, $privilege)
