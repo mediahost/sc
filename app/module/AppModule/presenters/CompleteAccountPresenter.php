@@ -5,6 +5,7 @@ namespace App\AppModule\Presenters;
 use App\Components\AfterRegistration\CompleteCandidate;
 use App\Components\AfterRegistration\CompleteCompany;
 use App\Components\AfterRegistration\CompletePerson;
+use App\Components\AfterRegistration\ICompleteCandidateFromCvFactory;
 use App\Components\AfterRegistration\ICompletePersonFactory;
 use App\Components\AfterRegistration\ICompleteCandidateFactory;
 use App\Components\AfterRegistration\ICompleteCompanyFactory;
@@ -22,6 +23,9 @@ class CompleteAccountPresenter extends BasePresenter
 
 	/** @var ICompletePersonFactory @inject */
 	public $iCompletePersonFactory;
+
+	/** @var ICompleteCandidateFromCvFactory @inject */
+	public $iCompleteCandidateFromCvFactory;
 
 	/** @var ICompleteCandidateFactory @inject */
 	public $iCompleteCandidateFactory;
@@ -159,6 +163,15 @@ class CompleteAccountPresenter extends BasePresenter
 			$this->flashMessage($message, 'success');
 			$this->redirect('step2');
 		};
+		return $control;
+	}
+
+	/**
+	 * @return \App\Components\AfterRegistration\CompleteCandidateFromCv
+	 */
+	protected function createComponentCompleteCandidateFromCv()
+	{
+		$control = $this->iCompleteCandidateFromCvFactory->create();
 		return $control;
 	}
 
