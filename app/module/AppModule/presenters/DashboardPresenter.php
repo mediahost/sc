@@ -3,9 +3,6 @@
 namespace App\AppModule\Presenters;
 use App\Mail\Messages\ICreateRegistrationMessageFactory;
 
-/**
- * Dashboard presenter
- */
 class DashboardPresenter extends BasePresenter
 {
 
