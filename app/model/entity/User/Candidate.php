@@ -6,14 +6,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Nette\Http\FileUpload;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"App\Listeners\Model\Entity\CandidateListener"})
  *
  * @property Person $person
  * @property Cv $cv
  * @property bool $freelancer
  * @property Document[] $documents
+ * @property FileUpload|string $cvFile
  */
 class Candidate extends BaseEntity
 {
@@ -25,6 +28,9 @@ class Candidate extends BaseEntity
 
 	/** @ORM\OneToOne(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $cv;
+
+	/** @ORM\Column(type="string", length=64, nullable=true) */
+	protected $cvFile;
 
 	/** @ORM\Column(type="boolean") */
 	protected $freelancer = FALSE;
@@ -40,6 +46,8 @@ class Candidate extends BaseEntity
 
 	/** @ORM\Column(type="string", length=64, nullable=true) */
 	protected $tags;
+
+
 
 	public function __construct($name = NULL)
 	{
@@ -78,5 +86,4 @@ class Candidate extends BaseEntity
 	{
 		return $this->documents;
 	}
-
 }

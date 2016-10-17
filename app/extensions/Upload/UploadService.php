@@ -14,9 +14,16 @@ class UploadService extends Object
 	private $rootFolder;
 
 	/** @var string */
+	private $cvsFolder;
+
+	/** @var string */
+	private $documentsFolder;
+
+	/** @var string */
 	private $url;
 
-	public function uploadFile(FileUpload $file) {
+	public function uploadFile(FileUpload $file)
+	{
 		$dateTime = new DateTime();
 		$uploadName = $file->getSanitizedName();
 		$fileName = sprintf('%s_%s', $dateTime->getTimestamp(), $uploadName);
@@ -25,16 +32,43 @@ class UploadService extends Object
 		return $fileName;
 	}
 
-	public function deleteFile($fileName) {
+	public function deleteFile($fileName)
+	{
 		$path = Helpers::getPath($this->rootFolder, $fileName);
-		if(file_exists($path)) {
+		if (file_exists($path)) {
 			unlink($path);
 		}
 	}
 
-	public function setFolder($folder)
+	public function uploadCv(FileUpload $file, $userId)
 	{
-		$this->rootFolder = $folder;
+		$dateTime = new DateTime();
+		$uploadName = $file->getSanitizedName();
+		$fileName = sprintf('%s_%s', $dateTime->getTimestamp(), $uploadName);
+		$path = Helpers::getPath($this->rootFolder, $this->cvsFolder, $userId, $fileName);
+		$file->move($path);
+		return $fileName;
+	}
+
+	public function deleteCv($fileName, $userId)
+	{
+		$path = Helpers::getPath($this->rootFolder, $this->cvsFolder, $userId, $fileName);
+		if (file_exists($path)) {
+			unlink($path);
+		}
+	}
+
+	public function setFolders($config)
+	{
+		$this->rootFolder = $config['root_folder'];
+		FileSystem::createDir($this->rootFolder);
+
+		$this->cvsFolder = $config['cvs_folder'];
+		$folder = Helpers::getPath($this->rootFolder, $this->cvsFolder);
+		FileSystem::createDir($folder);
+
+		$this->documentsFolder = $config['documents_folder'];
+		$folder = Helpers::getPath($this->rootFolder, $this->documentsFolder);
 		FileSystem::createDir($folder);
 		return $this;
 	}

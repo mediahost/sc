@@ -7,8 +7,10 @@ use Nette\DI\CompilerExtension;
 class UploadExtension extends CompilerExtension
 {
 	public $defaults = [
-		'folder' => '%wwwDir%',
-		'url' => '/'
+		'root_folder' => '%wwwDir%',
+		'cvs_folder' => 'files/cvs',
+		'documents_folder' => 'documents',
+		'root_url' => '/'
 	];
 
 	public function loadConfiguration()
@@ -17,8 +19,8 @@ class UploadExtension extends CompilerExtension
 		$config = $this->getConfig($this->defaults);
 		$builder->addDefinition($this->prefix('upload'))
 			->setClass('App\Extensions\UploadService')
-			->addSetup('setFolder', [$config['folder']])
-			->addSetup('setUrl', [$config['url']])
+			->addSetup('setFolders', [$config])
+			->addSetup('setUrl', [$config['root_url']])
 			->setInject(TRUE);
 	}
 }

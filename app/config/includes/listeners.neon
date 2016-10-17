@@ -6,4 +6,5 @@ services:
 	- {class: App\Listeners\Model\Entity\CvListener, inject: yes}
 	- {class: App\Listeners\Model\Entity\ImageListener, inject: yes}
 	- {class: App\Listeners\Model\Entity\DocumentListener, inject: yes}
+	- {class: App\Listeners\Model\Entity\CandidateListener, inject: yes}
 	- {class: App\Listeners\Model\Entity\MessageListener, inject: yes}
