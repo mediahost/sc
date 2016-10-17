@@ -120,9 +120,11 @@ abstract class BasePresenter extends Presenter
 		$session = $this->getSession('Nette.Application/requests');
 		/** @var Request $request */
 		$request = $session[$key][1];
-		$params = $request->getParameters();
-		unset($params[self::ACCESS_ID_PARAM]);
-		$request->setParameters($params);
+		if ($request && $request instanceof Request) {
+			$params = $request->getParameters();
+			unset($params[self::ACCESS_ID_PARAM]);
+			$request->setParameters($params);
+		}
 		return parent::restoreRequest($key);
 	}
 
