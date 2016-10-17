@@ -9,6 +9,7 @@ use App\Model\Entity\Address;
 use App\Model\Entity\Person;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
+use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
 
 class CompletePerson extends BaseControl
@@ -139,7 +140,10 @@ class CompletePerson extends BaseControl
 		$person->birthday = $values->birthday;
 		$person->nationality = $values->nationality;
 		$person->phone = $values->phone;
-		$person->setPhoto($values->photo);
+
+		if ($values->photo->isImage()) {
+			$person->setPhoto($values->photo);
+		}
 
 		if ($person->address) {
 			$address = $person->address;
