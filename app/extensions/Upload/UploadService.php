@@ -3,6 +3,7 @@
 namespace App\Extensions;
 
 use App\Helpers;
+use App\Model\Entity\Document;
 use Latte\Object;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
@@ -22,23 +23,6 @@ class UploadService extends Object
 	/** @var string */
 	private $url;
 
-	public function uploadFile(FileUpload $file)
-	{
-		$dateTime = new DateTime();
-		$uploadName = $file->getSanitizedName();
-		$fileName = sprintf('%s_%s', $dateTime->getTimestamp(), $uploadName);
-		$path = Helpers::getPath($this->rootFolder, $fileName);
-		$file->move($path);
-		return $fileName;
-	}
-
-	public function deleteFile($fileName)
-	{
-		$path = Helpers::getPath($this->rootFolder, $fileName);
-		if (file_exists($path)) {
-			unlink($path);
-		}
-	}
 
 	public function uploadCv(FileUpload $file, $userId)
 	{
@@ -56,6 +40,27 @@ class UploadService extends Object
 		if (file_exists($path)) {
 			unlink($path);
 		}
+	}
+
+	public function uploadDocument(FileUpload $file) {
+		$dateTime = new DateTime();
+		$uploadName = $file->getSanitizedName();
+		$fileName = sprintf('%s_%s', $dateTime->getTimestamp(), $uploadName);
+		$path = Helpers::getPath($this->rootFolder, $this->documentsFolder, $fileName);
+		$file->move($path);
+		return $fileName;
+	}
+
+	public function deleteDocument($fileName) {
+		$path = Helpers::getPath($this->rootFolder, $this->documentsFolder, $fileName);
+		if(file_exists($path)) {
+			unlink($path);
+		}
+	}
+
+	public function applyWebPath(Document $document) {
+		$path = Helpers::getPath($this->url, $this->documentsFolder, $document->name);
+		$document->setWebPath($path);
 	}
 
 	public function setFolders($config)

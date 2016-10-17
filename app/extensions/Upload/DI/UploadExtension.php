@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Extensions\Document\DI;
+namespace App\Extensions\Upload\DI;
 
 use Nette\DI\CompilerExtension;
 
