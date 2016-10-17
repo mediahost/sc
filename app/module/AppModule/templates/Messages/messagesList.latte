@@ -11,24 +11,6 @@
 
 {block content}
 
-{control communicationDataView}
+{control communicationGrid}
 
 {/block content}
-
-
-{block jsPage}
-<script>
-    $(document).ready(function () {
-        Global.handleDataTables('#communicationTable', {
-            aoColumns: [
-                null, null, null, null,
-                {
-                    bSortable: false
-                }
-            ]
-        });
-        $.fn.dataTable.ext.search.push(function() {
-        });
-    });
-</script>
-{/block jsPage}

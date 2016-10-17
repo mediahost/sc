@@ -28,7 +28,7 @@ class JobsGrid extends BaseControl
 			'name' => 'ASC',
 		]);
 
-		$grid->addColumnNumber('id', 'ID #')
+		$grid->addColumnNumber('id', 'Id')
 			->setSortable()
 			->setFilterNumber();
 		$grid->getColumn('id')->headerPrototype->width = '5%';

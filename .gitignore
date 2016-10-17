@@ -88,3 +88,4 @@
 ################
 /www/wp/*
 !/www/wp/.htaccess
+/www/files/cvs

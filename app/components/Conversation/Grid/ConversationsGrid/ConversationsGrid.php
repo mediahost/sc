@@ -23,9 +23,10 @@ class ConversationsGrid extends BaseControl {
 	    $grid->setTheme(BaseGrid::THEME_SUPR);
 	    $grid->model = $this->getModel();
 
-	    $grid->addColumnNumber('id', 'ID #')
-		    ->setSortable()
-		    ->setFilterNumber();
+	    $col = $grid->addColumnNumber('id', 'Id')
+		    ->setSortable();
+	    $col->setFilterNumber();
+	    $col->getHeaderPrototype()->width = '5%';
 
 	    $grid->addColumnText('subject', 'Subject')
 		    ->setSortable()
@@ -37,7 +38,8 @@ class ConversationsGrid extends BaseControl {
 
 	    $grid->addActionHref('view', 'Messages', ':App:Messages:')
 		    ->setIcon('fa fa-edit');
-
+	    
+	    $grid->setActionWidth("20%");
 	    return $grid;
     }
 

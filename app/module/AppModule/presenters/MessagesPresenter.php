@@ -147,7 +147,7 @@ class MessagesPresenter extends BasePresenter
 	}
 
 	/** @return ConversationsGrid */
-	public function createComponentCommunicationDataView()
+	public function createComponentCommunicationGrid()
 	{
 		$control = $this->iConversationsGridFactory->create();
 		return $control;

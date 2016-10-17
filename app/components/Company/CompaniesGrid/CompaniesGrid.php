@@ -20,9 +20,9 @@ class CompaniesGrid extends BaseControl
 			'id' => 'DESC',
 		]);
 
-		$col = $grid->addColumnText('companyId', 'ID');
+		$col = $grid->addColumnText('companyId', 'Id');
 		$col->setSortable()->setFilterText();
-		$col->headerPrototype->width = '10%';
+		$col->headerPrototype->width = '5%';
 
 		$col = $grid->addColumnText('name', 'Name');
 		$col->setSortable()->setFilterText()->setSuggestion();
@@ -50,7 +50,7 @@ class CompaniesGrid extends BaseControl
 			->setConfirm([$this, 'getConfirmMessage'])
 			->getElementPrototype()->class[] = 'red';
 
-		$grid->setActionWidth("25%");
+		$grid->setActionWidth("20%");
 		return $grid;
 	}
 
