@@ -57,5 +57,4 @@ extensions:
 	installer: App\Extensions\Installer\DI\InstallerExtension
 	settings: App\Extensions\Settings\DI\SettingsExtension
 	foto: App\Extensions\Foto\DI\FotoExtension
-	document: App\Extensions\Document\DI\DocumentExtension
-	upload: App\Extensions\Document\DI\UploadExtension
+	upload: App\Extensions\Upload\DI\UploadExtension

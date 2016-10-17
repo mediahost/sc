@@ -2,15 +2,16 @@
 
 namespace App\Listeners\Model\Entity;
 
-use App\Extensions\DocumentService;
+use App\Extensions\UploadService;
 use App\Model\Entity\Document;
+use Doctrine\ORM\Events;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
 
 class DocumentListener extends Object implements Subscriber
 {
-	/** @var DocumentService @inject */
-	public $documentService;
+	/** @var UploadService @inject */
+	public $uploadService;
 
 	public function getSubscribedEvents()
 	{
@@ -34,15 +35,15 @@ class DocumentListener extends Object implements Subscriber
 	}
 
 	private function uploadFile(Document $document) {
-		$fileName = $this->documentService->uploadFile($document->file);
+		$fileName = $this->uploadService->uploadDocument($document->file);
 		$document->name = $fileName;
 	}
 
 	private function deleteFile(Document $document) {
-		$this->documentService->deleteFile($document->name);
+		$this->uploadService->deleteDocument($document->name);
 	}
 
 	private function injectProperties(Document $document) {
-		$this->documentService->applyWebPath($document);
+		$this->uploadService->applyWebPath($document);
 	}
 }
