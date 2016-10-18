@@ -146,6 +146,14 @@ class ServicePresenter extends BasePresenter
 		$this->redirect('this');
 	}
 
+	public function handleCreateJobCategories()
+	{
+		$this->importDbJobCategories();
+		$message = $this->translator->translate('Job categories was succesfully created');
+		$this->flashMessage($message, 'success');
+		$this->redirect('this');
+	}
+
 	private function reinstall()
 	{
 		$this->uninstall();
@@ -176,6 +184,7 @@ class ServicePresenter extends BasePresenter
 		$this->importDbSkills();
 		$this->importDbCandidates();
 		$this->importDbCompanies();
+		$this->importDbJobCategories();
 		return $this;
 	}
 
@@ -204,6 +213,12 @@ class ServicePresenter extends BasePresenter
 	private function importDbCompanies()
 	{
 		$this->importDbDataFromFile(realpath('./../sql/companies.sql'));
+		return $this;
+	}
+
+	private function importDbJobCategories()
+	{
+		$this->importDbDataFromFile(realpath('./../sql/jobCategories.sql'));
 		return $this;
 	}
 
