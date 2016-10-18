@@ -4,7 +4,6 @@ namespace App\Components\Job;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Job;
 use App\Model\Facade\CompanyFacade;
@@ -92,13 +91,13 @@ class BasicInfo extends BaseControl
 
 	protected function load(ArrayHash $values, Form $form)
 	{
+		$salaryFrom = $salaryTo = 0;
 		sscanf($values['salary'], '%d,%d', $salaryFrom, $salaryTo);
 		$this->job->name = $values->name;
 		$this->job->type = $this->jobFacade->findJobType($values->type);
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
 		$this->job->salaryFrom = $salaryFrom;
 		$this->job->salaryTo = $salaryTo;
-		$this->job->location = $form['location']->getValue();
 		return $this;
 	}
 
