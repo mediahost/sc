@@ -66,10 +66,10 @@ class JobPresenter extends BasePresenter
 	// <editor-fold desc="variables">
 
 	/** @var EntityDao */
-	private $jobDao;
+	private $jobRepository;
 
 	/** @var EntityDao */
-	private $companyDao;
+	private $companyRepository;
 
 
 	// </editor-fold>
@@ -77,8 +77,8 @@ class JobPresenter extends BasePresenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->jobDao = $this->em->getDao(Job::getClassName());
-		$this->companyDao = $this->em->getDao(Company::getClassName());
+		$this->jobRepository = $this->em->getRepository(Job::getClassName());
+		$this->companyRepository = $this->em->getRepository(Company::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -90,7 +90,7 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionView($id)
 	{
-		$job = $this->jobDao->find($id);
+		$job = $this->jobRepository->find($id);
 		if ($job) {
 			$this->template->job = $job;
 			$this->template->matchedCvs = $this->jobFacade->findCvs($job);
@@ -108,7 +108,7 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionAdd($companyId)
 	{
-		$company = $this->companyDao->find($companyId);
+		$company = $this->companyRepository->find($companyId);
 		if ($company) {
 			$this->job = new Job;
 			$this->job->company = $company;
@@ -133,7 +133,7 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->job = $this->jobDao->find($id);
+		$this->job = $this->jobRepository->find($id);
 		if ($this->job) {
 			$this['jobInfoForm']->setJob($this->job);
 			$this['jobOffersForm']->setJob($this->job);
