@@ -2,6 +2,7 @@
 
 namespace App\Extensions\Installer\Model;
 
+use App\Model\Entity\JobType;
 use App\Model\Entity\SkillLevel;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\JobFacade;
@@ -76,6 +77,14 @@ class InstallerModel extends Object
 			$skillLevel->name = $levelName;
 			$skillLevel->priority = $levelId;
 			$skillLevelRepo->save($skillLevel);
+		}
+		return TRUE;
+	}
+
+	public function installJobTypes(array $types)
+	{
+		foreach ($types as $type) {
+			$this->jobFacade->createJobType($type);
 		}
 		return TRUE;
 	}
