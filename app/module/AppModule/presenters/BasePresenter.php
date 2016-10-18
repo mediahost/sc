@@ -10,6 +10,9 @@ use App\Model\Entity\User;
 use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\CompanyFacade;
 
+/**
+ * @secured
+ */
 abstract class BasePresenter extends BaseBasePresenter
 {
 
@@ -48,9 +51,6 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	private function checkCompleteAccount()
 	{
-		if (!$this->user->loggedIn) {
-			$this->redirect(':Front:Sign:in');
-		}
 		$isInRoles = $this->user->isInRole(Role::CANDIDATE) || $this->user->isInRole(Role::COMPANY);
 		if ($isInRoles && !$this->isCompleteAccount() && $this->name !== 'App:CompleteAccount') {
 			$this->redirect(':App:CompleteAccount:');

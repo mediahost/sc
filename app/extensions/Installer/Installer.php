@@ -230,7 +230,7 @@ class Installer extends Object
 
 	private function runInstall($method, $prefix, array $params = [])
 	{
-		$lockName =$this->getLockName($method);
+		$lockName = $this->getLockName($method);
 		$name = $prefix . $lockName;
 		$function = 'install' . $lockName;
 		if ($this->lock($name)) {
