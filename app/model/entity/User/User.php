@@ -2,6 +2,7 @@
 
 namespace App\Model\Entity;
 
+use App\Model\Entity\Traits\AdminJobs;
 use App\Model\Entity\Traits\IUserSocials;
 use App\Model\Entity\Traits\UserPassword;
 use App\Model\Entity\Traits\UserRoles;
@@ -22,7 +23,7 @@ use Nette\Security\IIdentity;
  */
 class User extends BaseEntity implements IIdentity, IUserSocials
 {
-
+	use AdminJobs;
 	use Identifier;
 	use UserRoles;
 	use UserPassword;
