@@ -1,76 +1,81 @@
 {block pageTitle}
-{_'Job'} - {$job->name}
+	{_'Job'} - {$job->name}
 {/block}
 
 {block breadcrumbItems}
-<li>
-    <a n:href="Companies:">{_'Companies'}</a>
-</li>
-<li>
-    <a n:href="Company: $job->company->id">{$job->company}</a>
-</li>
-<li>
-    <a n:href="Jobs: $job->company->id">{_'Jobs'}</a>
-</li>
-<li>
-    <a n:href="this">{if $job->isNew()}{_'Add'}{else}{_'Edit'} {$job}{/if}</a>
-</li>
+	<li>
+		<a n:href="Companies:">{_'Companies'}</a>
+	</li>
+	<li>
+		<a n:href="Company: $job->company->id">{$job->company}</a>
+	</li>
+	<li>
+		<a n:href="Jobs: $job->company->id">{_'Jobs'}</a>
+	</li>
+	<li>
+		<a n:href="this">{if $job->isNew()}{_'Add'}{else}{_'Edit'} {$job}{/if}</a>
+	</li>
 {/block}
 
 {block content}
 
-<div class="row">
-    <div class="col-md-8">
-        <div class="page-header">
-            <h4>{_'Info'}</h4>
-        </div>
-        {control jobInfoForm}
-        </br>
-        
-        <div class="page-header">
-            <h4>{_'Offers & Requirments'}</h4>
-        </div>
-        {control jobOffersForm}
-        </br>
-        
-        <div class="page-header">
-            <h4>{_'Descriptions'}</h4>
-        </div>
-        {control jobDescriptionsForm}
-        </br>
-        
-        <div class="page-header">
-            <h4>{_'Skills'}</h4>
-        </div>
-        {control jobSkillsForm}
-        </br>
+	<div class="row">
+		<div class="col-md-8">
+			<div class="page-header">
+				<h4>{_'Info'}</h4>
+			</div>
+			{control jobInfoForm}
+			</br>
 
-        <div class="page-header">
-            <h4>{_'Pre-Screening Questions'}</h4>
-        </div>
-        {control jobQuestionsForm}
-        </br>
-    </div>
+			<div class="page-header">
+				<h4>{_'Offers & Requirments'}</h4>
+			</div>
+			{control jobOffersForm}
+			</br>
 
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">{_'Notes'}</h4>
-                <small class="pull-right m10">{$job->notes_updated|date:'d/m/Y'}</small>
-            </div>
-            <div class="panel-body">
-                {control notes}
-            </div>    
-        </div>
-            
-        <div class="page-header">
-            <h4>{_'Candidates'}</h4>
-        </div>
-        <div>{control candidateFilter}</div>
-        <div n:inner-foreach="$job->cvs as $cv" class="panel-body">
-            {control candidatePreview-$cv->id:jobView $job}
-        </div>  
-    </div>
-</div>
+			<div class="page-header">
+				<h4>{_'Descriptions'}</h4>
+			</div>
+			{control jobDescriptionsForm}
+			</br>
+
+			<div class="page-header">
+				<h4>{_'Skills'}</h4>
+			</div>
+			{control jobSkillsForm}
+			</br>
+
+			<div class="page-header">
+				<h4>{_'Pre-Screening Questions'}</h4>
+			</div>
+			{control jobQuestionsForm}
+			</br>
+		</div>
+
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">{_'Notes'}</h4>
+					<small class="pull-right m10">{$job->notes_updated|date:'d/m/Y'}</small>
+				</div>
+				<div class="panel-body">
+					{control notes}
+				</div>
+			</div>
+
+			<div class="page-header">
+				<h4>{_'Account manager'}</h4>
+			</div>
+			<div>{control accountAdmin}</div>
+
+			<div class="page-header">
+				<h4>{_'Candidates'}</h4>
+			</div>
+			<div>{control candidateFilter}</div>
+			<div n:inner-foreach="$job->cvs as $cv" class="panel-body">
+				{control candidatePreview-$cv->id:jobView $job}
+			</div>
+		</div>
+	</div>
 
 {/block content}

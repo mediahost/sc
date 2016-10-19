@@ -7,6 +7,7 @@ use App\Components\Candidate\ICandidateFilterFactory;
 use App\Components\Candidate\ICandidatePreviewFactory;
 use App\Components\Job\BasicInfo;
 use App\Components\Job\Descriptions;
+use App\Components\Job\IAccountAdminFactory;
 use App\Components\Job\IBasicInfoFactory;
 use App\Components\Job\IDescriptionsFactory;
 use App\Components\Job\INotesFactory;
@@ -61,6 +62,9 @@ class JobPresenter extends BasePresenter
 
 	/** @var INotesFactory @inject */
 	public $notesFactory;
+
+	/** @var IAccountAdminFactory @inject */
+	public $accountAdminFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -118,6 +122,7 @@ class JobPresenter extends BasePresenter
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
 			$this['notes']->setJob($this->job);
+			$this['accountAdmin']->setJob($this->job);
 		} else {
 			$message = $this->translator->translate('Finded company isn\'t exists.');
 			$this->flashMessage($message, 'danger');
@@ -141,6 +146,7 @@ class JobPresenter extends BasePresenter
 			$this['jobSkillsForm']->setJob($this->job);
 			$this['jobQuestionsForm']->setJob($this->job);
 			$this['notes']->setJob($this->job);
+			$this['accountAdmin']->setJob($this->job);
 		} else {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
@@ -177,7 +183,7 @@ class JobPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold desc="edit/delete priviledges">
+	// <editor-fold desc="edit/delete privileges">
 	// </editor-fold>
 	// <editor-fold desc="forms">
 
@@ -186,9 +192,7 @@ class JobPresenter extends BasePresenter
 	{
 		$control = $this->iJobBasicInfoFactory->create();
 		$control->setAjax(TRUE, TRUE);
-		$control->onAfterSave = function ($job) {
-			$this->afterJobSave($job);
-		};
+		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 
@@ -240,9 +244,16 @@ class JobPresenter extends BasePresenter
 	{
 		$control = $this->notesFactory->create();
 		$control->setAjax(TRUE, TRUE);
-		$control->onAfterSave = function ($job) {
-			$this->afterJobSave($job);
-		};
+		$control->onAfterSave = $this->afterJobSave;
+		return $control;
+	}
+
+	/** @return \App\Components\Job\AccountAdmin */
+	public function createComponentAccountAdmin()
+	{
+		$control = $this->accountAdminFactory->create();
+		$control->setAjax(TRUE, TRUE);
+		$control->onAfterSave = $this->afterJobSave;
 		return $control;
 	}
 
