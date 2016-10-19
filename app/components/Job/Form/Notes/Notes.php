@@ -64,8 +64,8 @@ class Notes extends BaseControl
 
 	private function save()
 	{
-		$cvRepo = $this->em->getRepository(Job::getClassName());
-		$cvRepo->save($this->job);
+		$jobRepo = $this->em->getRepository(Job::getClassName());
+		$jobRepo->save($this->job);
 	}
 
 	protected function load($values)
