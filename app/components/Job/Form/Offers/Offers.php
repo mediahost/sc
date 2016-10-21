@@ -2,15 +2,13 @@
 
 namespace App\Components\Job;
 
+use App\Components\BaseControl;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
+use App\Model\Entity\Job;
 use App\Model\Entity\TagJob;
 use App\Model\Entity\Tag;
 
-/**
- * Description of OffersControl
- *
- */
-class Offers extends \App\Components\BaseControl
+class Offers extends BaseControl
 {
 	/** @var Job */
 	private $job;

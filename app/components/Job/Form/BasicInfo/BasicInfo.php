@@ -30,28 +30,31 @@ class BasicInfo extends BaseControl
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
-	
+
 	/** @var JobFacade @inject */
 	public $jobFacade;
 
 	// </editor-fold>
 
-    public function render() {
-        $this->template->job = $this->job;
-        if ($this->job->isNew()) {
-            $this->setTemplateFile('edit');
-        }
-        parent::render();
-    }
-    
-    public function handleEdit() {
-        $this->setTemplateFile('edit');
-        $this->redrawControl('jobInfo');
-    }
-    
-    public function handlePreview() {
-        $this->redrawControl('jobInfo');
-    }
+	public function render()
+	{
+		$this->template->job = $this->job;
+		if ($this->job->isNew()) {
+			$this->setTemplateFile('edit');
+		}
+		parent::render();
+	}
+
+	public function handleEdit()
+	{
+		$this->setTemplateFile('edit');
+		$this->redrawControl('jobInfo');
+	}
+
+	public function handlePreview()
+	{
+		$this->redrawControl('jobInfo');
+	}
 
 	protected function createComponentForm()
 	{
@@ -63,10 +66,12 @@ class BasicInfo extends BaseControl
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
 		$form->addText('name', 'Name')
-				->setAttribute('placeholder', 'Job title')
-				->setRequired('Please enter job\'s name.');
-		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes());
-		$form->addSelect('category', 'Category', $this->jobFacade->getJobCategories());
+			->setAttribute('placeholder', 'Job title')
+			->setRequired('Please enter job\'s name.');
+//		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes())
+//			->setRequired($this->translator->translate('Type is required'));
+		$form->addSelect('category', 'Category', $this->jobFacade->getJobCategories())
+			->setRequired($this->translator->translate('Category is required'));
 		$form->addText('salary', 'Salary')
 			->setAttribute('class', 'slider')
 			->setAttribute('data-slider-min', self::SALARY_FROM)
@@ -94,11 +99,11 @@ class BasicInfo extends BaseControl
 	{
 		sscanf($values['salary'], '%d,%d', $salaryFrom, $salaryTo);
 		$this->job->name = $values->name;
-		$this->job->type = $this->jobFacade->findJobType($values->type);
+//		$this->job->type = $this->jobFacade->findJobType($values->type);
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
 		$this->job->salaryFrom = $salaryFrom;
 		$this->job->salaryTo = $salaryTo;
-		$this->job->location = $form['location']->getValue();
+//		$this->job->location = $form['location']->getValue();
 		return $this;
 	}
 
@@ -111,13 +116,13 @@ class BasicInfo extends BaseControl
 
 	protected function getDefaults()
 	{
-		$salaryFrom = isset($this->job->salaryFrom)  ?  $this->job->salaryFrom : self::SALARY_FROM;
-		$salaryTo = isset($this->job->salaryTo)  ?  $this->job->salaryTo : self::SALARY_TO;
+		$salaryFrom = isset($this->job->salaryFrom) ? $this->job->salaryFrom : self::SALARY_FROM;
+		$salaryTo = isset($this->job->salaryTo) ? $this->job->salaryTo : self::SALARY_TO;
 		$salary = sprintf('[%d,%d]', $salaryFrom, $salaryTo);
 		$values = [
 			'name' => $this->job->name,
-			'type' => $this->job->type  ?  $this->job->type->id : NULL,
-			'category' => $this->job->category  ?  $this->job->category->id : NULL,
+			'type' => $this->job->type ? $this->job->type->id : NULL,
+			'category' => $this->job->category ? $this->job->category->id : NULL,
 			'salary' => $salary,
 			'location' => $this->job->location
 		];

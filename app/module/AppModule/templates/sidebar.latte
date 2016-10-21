@@ -1,211 +1,223 @@
 {block sidebar}
 <!-- BEGIN SIDEBAR -->
 <div id="sidebar" class="page-sidebar hidden-lg hidden-md hidden-sm hidden-xs">
-    <div class="shortcuts" n:if="$isCandidate && $isCompleteAccount">
-        <ul>
-            <li>
-                <a href="{link CvEditor:}" title="{_'Your CV'}" class="tip">
-                    <i class="s24 icomoon-icon-clipboard"></i>
-                </a>
-            </li>
-            <li>
-                <a href="{link Profile:}" title="{_'Your profile'}" class="tip">
-                    <i class="s24 icomoon-icon-vcard"></i>
-                </a>
-            </li>
-            <li>
-                <a href={link Messages:}" title="{_'Messages'}" class="tip">
-                    <i class="s24 icomoon-icon-bubbles-5"></i>
-                </a>
-            </li>
-        </ul>
-    </div>
-    <div class="sidebar-inner">
-        <div class="sidebar-scrollarea">
-            <div class="sidenav">
-                <div class="sidebar-widget mb0">
-                    <h6 class="title mb0">{_'Navigation'}</h6>
-                </div>
-                <div class="mainnav">
-                    <ul>
-                        <li n:if="$user->isAllowed('dashboard', 'default')">
-                            <a n:href="Dashboard:" n:class="$presenter->isLinkCurrent('Dashboard:*') ? active">
-                                <i class="s16 icomoon-icon-screen-2"></i>
-                                <span class="txt">{_'Dashboard'}</span>
-                            </a>
-                        </li>
+	<div class="shortcuts" n:if="$isCandidate && $isCompleteAccount">
+		<ul>
+			<li>
+				<a href="{link CvEditor:}" title="{_'Your CV'}" class="tip">
+					<i class="s24 icomoon-icon-clipboard"></i>
+				</a>
+			</li>
+			<li>
+				<a href="{link Profile:}" title="{_'Your profile'}" class="tip">
+					<i class="s24 icomoon-icon-vcard"></i>
+				</a>
+			</li>
+			<li>
+				<a href={link Messages:}" title="{_'Messages'}" class="tip">
+				<i class="s24 icomoon-icon-bubbles-5"></i>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="sidebar-inner">
+		<div class="sidebar-scrollarea">
+			<div class="sidenav">
+				<div class="sidebar-widget mb0">
+					<h6 class="title mb0">{_'Navigation'}</h6>
+				</div>
+				<div class="mainnav">
+					<ul>
+						<li n:if="$user->isAllowed('dashboard', 'default')">
+							<a n:href="Dashboard:" n:class="$presenter->isLinkCurrent('Dashboard:*') ? active">
+								<i class="s16 icomoon-icon-screen-2"></i>
+								<span class="txt">{_'Dashboard'}</span>
+							</a>
+						</li>
 
-                        <li n:if="$user->isAllowed('messages', 'default') && $isCompleteAccount">
-                            <a n:href="Messages:" n:class="$presenter->isLinkCurrent('Messages:*') && !$presenter->isLinkCurrent('Messages:MessagesList') ? active">
-                                <i class="s16 icomoon-icon-envelop"></i>
-                                <span class="txt">{_'Messages'}</span>
-                                <span n:if="$unreadMessagesCount" class="notification red">{$unreadMessagesCount}</span>
-                            </a>
-                        </li>
+						{if $isCompleteAccount}
 
-                        <li n:if="$isCandidate && $isCompleteAccount">
-                            <a n:href="CvEditor:" 
-                               n:class="$presenter->isLinkCurrent('CvEditor:*') && !$presenter->isLinkCurrent('CvEditor:Skills') && !$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
-                                <i class="s16 icomoon-icon-clipboard"></i>
-                                <span class="txt">{_'CV Editor'}</span>
-                            </a>
-                        </li>
+							<li n:if="$user->isAllowed('messages', 'default')">
+								<a n:href="Messages:" n:class="$presenter->isLinkCurrent('Messages:*') && !$presenter->isLinkCurrent('Messages:MessagesList') ? active">
+									<i class="s16 icomoon-icon-envelop"></i>
+									<span class="txt">{_'Messages'}</span>
+									<span n:if="$unreadMessagesCount"
+											class="notification red">{$unreadMessagesCount}</span>
+								</a>
+							</li>
 
-                        <li n:if="$isCandidate && $isCompleteAccount">
-                            <a n:href="CvEditor:Skills" n:class="$presenter->isLinkCurrent('CvEditor:Skills') ? active">
-                                <i class="s16 icomoon-icon-clipboard"></i>
-                                <span class="txt">{_'IT Skills'}</span>
-                            </a>
-                        </li>
+							<li n:if="$isCandidate">
+								<a n:href="CvEditor:"
+										n:class="$presenter->isLinkCurrent('CvEditor:*') && !$presenter->isLinkCurrent('CvEditor:Skills') && !$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
+									<i class="s16 icomoon-icon-clipboard"></i>
+									<span class="txt">{_'CV Editor'}</span>
+								</a>
+							</li>
 
-                        <li n:if="$isCandidate && $isCompleteAccount">
-                            <a n:href="CvEditor:CareerDocs" n:class="$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
-                                <i class="s16 icomoon-icon-clipboard"></i>
-                                <span class="txt">{_'Career Docs'}</span>
-                            </a>
-                        </li>
-                        
-                        <li n:if="$isCompleteAccount">
-                            <a n:href="Jobs:showAll" n:class="$presenter->isLinkCurrent('Jobs:*') ? active">
-                                <i class="fa fa-briefcase"></i>
-                                <span class="txt">{_'Jobs'}</span>
-                            </a>
-                        </li>
+							<li n:if="$isCandidate">
+								<a n:href="CvEditor:Skills" n:class="$presenter->isLinkCurrent('CvEditor:Skills') ? active">
+									<i class="s16 icomoon-icon-clipboard"></i>
+									<span class="txt">{_'IT Skills'}</span>
+								</a>
+							</li>
 
-                        <!-- BEGIN ADMIN -->
-                        <li n:if="$isCompleteAccount && $user->isAllowed('users', 'default')">
-                            <a n:href="Users:" n:class="$presenter->isLinkCurrent('Users:*') ? active">
-                                <i class="fa fa-users"></i>
-                                <span class="txt">{_'Users'}</span>
-                            </a>
-                        </li>
-                        <li n:if="$isCompleteAccount && $user->isAllowed('cvs', 'default')">
-                            <a n:href="Cvs:candidates" n:class="$presenter->isLinkCurrent('Cvs:*') ? active">
-                                <i class="fa fa-file-text"></i>
-                                <span class="txt">{_'Candidates'}</span>
-                            </a>
-                        </li>
-                        <li n:if="$isCompleteAccount && $user->isAllowed('companies', 'default')">
-                            <a n:href="Companies:" n:class="$presenter->isLinkCurrent('Companies:*') ? active">
-                                <i class="fa fa-building"></i>
-                                <span class="txt">{_'Companies'}</span>
-                            </a>
-                        </li>
-                        <li n:if="$isCompleteAccount && $user->isAllowed('skills', 'view')">
-                            <a href="#">
-                                <i class="s16 icomoon-icon-star-5"></i>
-                                <span class="txt">{_'Skills'}</span>
-                            </a>
-                            <ul n:class="sub, $presenter->isLinkCurrent('Skills:*') || $presenter->isLinkCurrent('SkillCategories?*') ? show">
-                                <li>
-                                    <a n:href="Skills:" n:class="$presenter->isLinkCurrent('Skills:*') ? active">
-                                        <i class="s16 icomoon-icon-star-5"></i>
-                                        <span class="txt">{_'Skills'}</span>
-                                    </a>
-                                </li>
-                                <li n:if="$user->isAllowed('skillCategories', 'default')">
-                                    <a n:href="SkillCategories:" n:class="$presenter->isLinkCurrent('SkillCategories:*') ? active">
-                                        <i class="s16 icomoon-icon-books"></i>
-                                        <span class="txt">{_'Skill categories'}</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- END ADMIN -->
-                    </ul>
-                </div>
+							<li n:if="$isCandidate">
+								<a n:href="CvEditor:CareerDocs" n:class="$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
+									<i class="s16 icomoon-icon-clipboard"></i>
+									<span class="txt">{_'Career Docs'}</span>
+								</a>
+							</li>
 
-                <!-- BEGIN SUPERADMIN -->		
-                {if $user->isAllowed('examples') || $user->isAllowed('service')}
-                    <div class="sidebar-widget mb0">
-                        <h6 class="title mb0">{_'Superadmin'}</h6>
-                    </div>
-                    <div class="mainnav">
-                        <ul>
-                            <li n:if="$user->isAllowed('messagesList')">
-                                <a n:href="Messages:MessagesList" n:class="$presenter->isLinkCurrent('Messages:MessagesList') ? active">
-                                    <i class="s16 icomoon-icon-envelop"></i>
-                                    <span class="txt">{_'Messages list'}</span>
-                                </a>
-                            </li>
-                            <li n:if="$user->isAllowed('jobCategories', 'default')">
-                                <a n:href="JobCategories:" n:class="$presenter->isLinkCurrent('JobCategories:*') ? active">
-                                    <i class="fa fa-briefcase"></i>
-                                    <span class="txt">{_'Job categories'}</span>
-                                </a>
-                            </li>
-                            <li n:if="$user->isAllowed('examples', 'default')">
-                                <a href="#">
-                                    <i class="s16 fa fa-life-ring"></i>
-                                    <span class="txt">{_'Examples'}</span>
-                                </a>
-                                <ul n:class="sub, $presenter->isLinkCurrent('Examples:*') ? show">
-                                    <li>
-                                        <a n:href="Examples:form" n:class="$presenter->isLinkCurrent('Examples:form') ? active">
-                                            <i class="s16 fa fa-file-text-o"></i>
-                                            <span class="txt">{_'Form'}</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li n:if="$user->isAllowed('service', 'tools')">
-                                <a href="#">
-                                    <i class="s16 fa fa-gears"></i>
-                                    <span class="txt">{_'Service'}</span>
-                                </a>
-                                <ul n:class="sub, $presenter->isLinkCurrent('Service:*') ? show">
-                                    <li>
-                                        <a n:href="Service:tools" n:class="$presenter->isLinkCurrent('Service:tools') ? active">
-                                            <i class="s16 fa fa-code"></i>
-                                            <span class="txt">{_'Tools'}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a n:href="Service:creators" n:class="$presenter->isLinkCurrent('Service:creators') ? active">
-                                            <i class="s16 fa fa-bolt"></i>
-                                            <span class="txt">{_'Creators'}</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                {/if}
-                <!-- END SUPERADMIN -->
+							<li>
+								<a n:href="Jobs:showAll" n:class="$presenter->isLinkCurrent('Jobs:*') ? active">
+									<i class="fa fa-briefcase"></i>
+									<span class="txt">{_'Jobs'}</span>
+								</a>
+							</li>
 
-                <!-- BEGIN TOGETHER AREA -->
-                {if $user->isAllowed('profile', 'default') && $isCompleteAccount}		
-                    <div class="sidebar-widget mb0">
-                        <h6 class="title mb0">{_'Settings'}</h6>
-                    </div>
-                    <div class="mainnav">
-                        <ul>
-                            <li>
-                                <a href="#">
-                                    <i class="s16 fa fa-user"></i>
-                                    <span class="txt">{_'My Profile'}</span>
-                                </a>
-                                <ul n:class="sub, $presenter->isLinkCurrent('Profile:*') ? show">
-                                    <li>
-                                        <a n:href="Profile:" n:class="$presenter->isLinkCurrent('Profile:default') ? active">
-                                            <i class="s16 fa fa-eye"></i>
-                                            <span class="txt">{_'Overview'}</span>
-                                        </a>
-                                    </li>
-                                    <li n:if="$user->isAllowed('profile', 'settings')">
-                                        <a n:href="Profile:settings" n:class="$presenter->isLinkCurrent('Profile:settings') ? active">
-                                            <i class="s16 fa fa-gears"></i>
-                                            <span class="txt">{_'Settings'}</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                {/if}
-                <!-- END TOGETHER AREA -->
-            </div>
-        </div>
-    </div>
+							<!-- BEGIN ADMIN -->
+							<li n:if="$user->isAllowed('users', 'default')">
+								<a n:href="Users:" n:class="$presenter->isLinkCurrent('Users:*') ? active">
+									<i class="fa fa-users"></i>
+									<span class="txt">{_'Users'}</span>
+								</a>
+							</li>
+							<li n:if="$user->isAllowed('cvs', 'default')">
+								<a n:href="Cvs:candidates" n:class="$presenter->isLinkCurrent('Cvs:*') ? active">
+									<i class="fa fa-file-text"></i>
+									<span class="txt">{_'Candidates'}</span>
+								</a>
+							</li>
+							<li n:if="$user->isAllowed('candidates', 'default')">
+								<a n:href="Candidates:" n:class="$presenter->isLinkCurrent('Candidates:*') ? active">
+									<i class="fa fa-file-text"></i>
+									<span class="txt">{_'Candidates'}</span>
+								</a>
+							</li>
+							<li n:if="$user->isAllowed('companies', 'default')">
+								<a n:href="Companies:" n:class="$presenter->isLinkCurrent('Companies:*') ? active">
+									<i class="fa fa-building"></i>
+									<span class="txt">{_'Companies'}</span>
+								</a>
+							</li>
+							<li n:if="$user->isAllowed('skills', 'view')">
+								<a href="#">
+									<i class="s16 icomoon-icon-star-5"></i>
+									<span class="txt">{_'Skills'}</span>
+								</a>
+								<ul n:class="sub, $presenter->isLinkCurrent('Skills:*') || $presenter->isLinkCurrent('SkillCategories?*') ? show">
+									<li>
+										<a n:href="Skills:" n:class="$presenter->isLinkCurrent('Skills:*') ? active">
+											<i class="s16 icomoon-icon-star-5"></i>
+											<span class="txt">{_'Skills'}</span>
+										</a>
+									</li>
+									<li n:if="$user->isAllowed('skillCategories', 'default')">
+										<a n:href="SkillCategories:" n:class="$presenter->isLinkCurrent('SkillCategories:*') ? active">
+											<i class="s16 icomoon-icon-books"></i>
+											<span class="txt">{_'Skill categories'}</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<!-- END ADMIN -->
+
+						{/if}
+
+					</ul>
+				</div>
+
+				<!-- BEGIN SUPERADMIN -->
+				{if $user->isAllowed('examples') || $user->isAllowed('service')}
+					<div class="sidebar-widget mb0">
+						<h6 class="title mb0">{_'Superadmin'}</h6>
+					</div>
+					<div class="mainnav">
+						<ul>
+							<li n:if="$user->isAllowed('messagesList')">
+								<a n:href="Messages:MessagesList" n:class="$presenter->isLinkCurrent('Messages:MessagesList') ? active">
+									<i class="s16 icomoon-icon-envelop"></i>
+									<span class="txt">{_'Messages list'}</span>
+								</a>
+							</li>
+							<li n:if="$user->isAllowed('jobCategories', 'default')">
+								<a n:href="JobCategories:" n:class="$presenter->isLinkCurrent('JobCategories:*') ? active">
+									<i class="fa fa-briefcase"></i>
+									<span class="txt">{_'Job categories'}</span>
+								</a>
+							</li>
+							<li n:if="$user->isAllowed('examples', 'default')">
+								<a href="#">
+									<i class="s16 fa fa-life-ring"></i>
+									<span class="txt">{_'Examples'}</span>
+								</a>
+								<ul n:class="sub, $presenter->isLinkCurrent('Examples:*') ? show">
+									<li>
+										<a n:href="Examples:form" n:class="$presenter->isLinkCurrent('Examples:form') ? active">
+											<i class="s16 fa fa-file-text-o"></i>
+											<span class="txt">{_'Form'}</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<li n:if="$user->isAllowed('service', 'tools')">
+								<a href="#">
+									<i class="s16 fa fa-gears"></i>
+									<span class="txt">{_'Service'}</span>
+								</a>
+								<ul n:class="sub, $presenter->isLinkCurrent('Service:*') ? show">
+									<li>
+										<a n:href="Service:tools" n:class="$presenter->isLinkCurrent('Service:tools') ? active">
+											<i class="s16 fa fa-code"></i>
+											<span class="txt">{_'Tools'}</span>
+										</a>
+									</li>
+									<li>
+										<a n:href="Service:creators" n:class="$presenter->isLinkCurrent('Service:creators') ? active">
+											<i class="s16 fa fa-bolt"></i>
+											<span class="txt">{_'Creators'}</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				{/if}
+				<!-- END SUPERADMIN -->
+
+				<!-- BEGIN TOGETHER AREA -->
+				{if $user->isAllowed('profile', 'default') && $isCompleteAccount}
+					<div class="sidebar-widget mb0">
+						<h6 class="title mb0">{_'Settings'}</h6>
+					</div>
+					<div class="mainnav">
+						<ul>
+							<li>
+								<a href="#">
+									<i class="s16 fa fa-user"></i>
+									<span class="txt">{_'My Profile'}</span>
+								</a>
+								<ul n:class="sub, $presenter->isLinkCurrent('Profile:*') ? show">
+									<li>
+										<a n:href="Profile:" n:class="$presenter->isLinkCurrent('Profile:default') ? active">
+											<i class="s16 fa fa-eye"></i>
+											<span class="txt">{_'Overview'}</span>
+										</a>
+									</li>
+									<li n:if="$user->isAllowed('profile', 'settings')">
+										<a n:href="Profile:settings" n:class="$presenter->isLinkCurrent('Profile:settings') ? active">
+											<i class="s16 fa fa-gears"></i>
+											<span class="txt">{_'Settings'}</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				{/if}
+				<!-- END TOGETHER AREA -->
+			</div>
+		</div>
+	</div>
 </div>
 <!-- END SIDEBAR -->

@@ -27,6 +27,8 @@ class SettingsExtension extends CompilerExtension
 			'description' => 'description',
 		],
 		'pageConfig' => [
+			'itemsPerRow' => 4,
+			'rowsPerPage' => 4,
 		],
 		'expiration' => [
 			'recovery' => '30 minutes',

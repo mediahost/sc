@@ -1,0 +1,38 @@
+{snippet candidatesPaginator}
+	{if $paginator->getItemCount()}
+		<div class="row">
+			<div n:block="paginator" class="col-md-12" n:if="count($paginator->getSteps()) > 1">
+				<nav>
+					<ul class="pagination category-pagination pull-right">
+						<li>
+							<a n:href="page! page => $paginator->page - 1"
+									n:class="$paginator->isFirst() ? disabled, $ajax && !$paginator->isFirst() ? ajax">
+								<i class="fa fa-long-arrow-left"></i>
+							</a>
+						</li>
+						{foreach $paginator->getSteps() as $step}
+						<li n:class="$step == $control->page ? active">
+							{if $step == $control->page}
+								<a n:href="this">{$step}</a>
+							{else}
+								<a n:href="page! page => $step" n:class="$ajax ? ajax">{$step}</a>
+							{/if}
+							{if $iterator->nextValue > $step + 1}
+								</li>
+								<li>
+								<a n:href="this" class="disabled">...</a>
+							{/if}
+							</li>
+						{/foreach}
+						<li class="last">
+							<a n:href="page! page => $paginator->page + 1"
+									n:class="$paginator->isLast() ? disabled, $ajax && !$paginator->isLast() ? ajax">
+								<i class="fa fa-long-arrow-right"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	{/if}
+{/snippet}

@@ -1,0 +1,11 @@
+{form form data-target-loading=>"#mainContainer", data-target-move=>"#snippet-products-productList"}
+	{? $form->render('begin')}
+	<ul class="category-selections clearfix">
+		<li n:foreach="$form->getComponents() as $name => $component"
+				n:if="$component instanceof Nette\Forms\Controls\SelectBox">
+			{label $form[$name] class => 'category-selections-sign'/}
+			{input $form[$name]}
+		</li>
+	</ul>
+	{? $form->render('end')}
+{/form}

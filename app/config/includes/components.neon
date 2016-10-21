@@ -2,6 +2,9 @@
 # !!!must have "crete:" for components with events!!!
 
 services:
+	- {implement: App\Extensions\Candidates\ICandidatesListFactory, inject: yes}
+	- {implement: App\Extensions\Candidates\Components\ISortingFormFactory, inject: yes}
+
 	# Auth
 	- {implement: App\Components\Auth\ISignOutFactory, inject: yes}
 	- {create: App\Components\Auth\ConnectManager, implement: App\Components\Auth\IConnectManagerFactory, inject: yes}
@@ -53,6 +56,7 @@ services:
 	- {implement: App\Components\Candidate\ISocialFactory, inject: yes}
 	- {implement: App\Components\Candidate\ILocationFilterFactory, inject: yes}
 	- {implement: App\Components\Candidate\ISearchFilterFactory, inject: yes}
+	- {implement: App\Components\Candidate\Form\IPrintCandidateFactory, inject: yes}
 
 	# Cv
 	- {implement: App\Components\Cv\IAdditionalFactory, inject: yes}

@@ -35,8 +35,7 @@ class Job extends BaseEntity
 	use Identifier;
 	use JobSkillsUsing;
 	use JobTagsUsing;
-    use JobMatching;
-	
+	use JobMatching;
 
 	/** @ORM\ManyToOne(targetEntity="Company", inversedBy="jobs") */
 	protected $company;
@@ -73,7 +72,9 @@ class Job extends BaseEntity
     
     /** @ORM\Column(type="datetime", nullable=true) */
 	protected $notes_updated;
-	
+
+	/** @ORM\OneToMany(targetEntity="Match", mappedBy="job") */
+	protected $matches;
 
 	public function __construct($name = NULL)
 	{

@@ -9,7 +9,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Http\FileUpload;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Model\Repository\CandidateRepository")
  * @ORM\EntityListeners({"App\Listeners\Model\Entity\CandidateListener"})
  *
  * @property Person $person
@@ -47,7 +47,8 @@ class Candidate extends BaseEntity
 	/** @ORM\Column(type="string", length=64, nullable=true) */
 	protected $tags;
 
-
+	/** @ORM\OneToMany(targetEntity="Match", mappedBy="candidate") */
+	protected $matches;
 
 	public function __construct($name = NULL)
 	{

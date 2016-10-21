@@ -9,6 +9,7 @@ services:
 	- {class: App\Model\Facade\SkillFacade, inject: yes}
 	- {class: App\Model\Facade\CvFacade, inject: yes}
 	- {class: App\Model\Facade\JobFacade, inject: yes}
+	- {class: App\Model\Facade\CandidateFacade, inject: yes}
 
 	# TODO: remove!!!
 	-

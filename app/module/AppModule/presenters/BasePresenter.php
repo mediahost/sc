@@ -3,6 +3,7 @@
 namespace App\AppModule\Presenters;
 
 use App\BaseModule\Presenters\BasePresenter as BaseBasePresenter;
+use App\Extensions\Candidates\ICandidatesListFactory;
 use App\Model\Entity\Company;
 use App\Model\Entity\Role;
 use App\Model\Entity\Sender;
@@ -21,6 +22,9 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
+
+	/** @var ICandidatesListFactory @inject */
+	public $iCandidatesListFactory;
 
 	/** @var Sender */
 	protected $sender;
@@ -101,4 +105,15 @@ abstract class BasePresenter extends BaseBasePresenter
 	{
 		$this->showRightSideBar = false;
 	}
+
+	public function createComponentCandidatesList()
+	{
+		$list = $this->iCandidatesListFactory->create();
+		$list->setTranslator($this->translator)
+			->setItemsPerPage($this->settings->pageConfig->itemsPerRow, $this->settings->pageConfig->rowsPerPage)
+			->setAjax();
+
+		return $list;
+	}
+
 }

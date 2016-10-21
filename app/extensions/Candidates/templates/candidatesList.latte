@@ -1,0 +1,17 @@
+<div n:snippet="candidatesList" class="row">
+	<!-- BEGIN PRODUCT LIST -->
+	{foreach $candidates as $candidate}
+		{var $candidateId => $candidate->id}
+		<!-- PRODUCT ITEM START -->
+		<div class="col-md-3">
+			{control candidate-$candidateId}
+		</div>
+		<!-- PRODUCT ITEM END -->
+	{/foreach}
+	{if !count($candidates)}
+		<div class="note note-info">
+			<h4 class="block">{_'Despite our efforts, we found no candidates.'}</h4>
+		</div>
+	{/if}
+	<!-- END PRODUCT LIST -->
+</div>
