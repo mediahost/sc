@@ -1,3 +1,7 @@
+annotations:
+	ignore:
+		- secured
+
 services:
 	doctrine: Kdyby\Doctrine\DI\OrmExtension
 	annotations: Kdyby\Annotations\DI\AnnotationsExtension
