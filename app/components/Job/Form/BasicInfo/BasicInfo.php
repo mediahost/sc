@@ -68,8 +68,8 @@ class BasicInfo extends BaseControl
 		$form->addText('name', 'Name')
 			->setAttribute('placeholder', 'Job title')
 			->setRequired('Please enter job\'s name.');
-//		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes())
-//			->setRequired($this->translator->translate('Type is required'));
+		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes())
+			->setRequired($this->translator->translate('Type is required'));
 		$form->addSelect('category', 'Category', $this->jobFacade->getJobCategories())
 			->setRequired($this->translator->translate('Category is required'));
 		$form->addText('salary', 'Salary')
@@ -97,13 +97,13 @@ class BasicInfo extends BaseControl
 
 	protected function load(ArrayHash $values, Form $form)
 	{
+		$salaryFrom = $salaryTo = 0;
 		sscanf($values['salary'], '%d,%d', $salaryFrom, $salaryTo);
 		$this->job->name = $values->name;
-//		$this->job->type = $this->jobFacade->findJobType($values->type);
+		$this->job->type = $this->jobFacade->findJobType($values->type);
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
 		$this->job->salaryFrom = $salaryFrom;
 		$this->job->salaryTo = $salaryTo;
-//		$this->job->location = $form['location']->getValue();
 		return $this;
 	}
 

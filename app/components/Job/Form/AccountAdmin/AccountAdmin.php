@@ -3,14 +3,24 @@
 namespace App\Components\Job;
 
 use App\Components\BaseControl;
+use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Job;
-use Nette\Application\UI\Form;
+use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use App\Model\Facade\RoleFacade;
+use App\Model\Facade\UserFacade;
 
-class Notes extends BaseControl
+class AccountAdmin extends BaseControl
 {
 	/** @var array */
 	public $onAfterSave = [];
+
+	/** @var UserFacade @inject */
+	public $userFacade;
+
+	/** @var RoleFacade @inject */
+	public $roleFacade;
 
 	/** @var Job */
 	private $job;
@@ -18,6 +28,7 @@ class Notes extends BaseControl
 
 	public function render()
 	{
+		$this->getAdmins();
 		$this->template->job = $this->job;
 		parent::render();
 	}
@@ -25,12 +36,12 @@ class Notes extends BaseControl
 	public function handleEdit()
 	{
 		$this->setTemplateFile('edit');
-		$this->redrawControl('notes');
+		$this->redrawControl('accountAdmin');
 	}
 
 	public function handlePreview()
 	{
-		$this->redrawControl('notes');
+		$this->redrawControl('accountAdmin');
 	}
 
 	public function createComponentForm()
@@ -40,7 +51,7 @@ class Notes extends BaseControl
 		$form->setRenderer(new Bootstrap3FormRenderer());
 		$form->getElementPrototype()->addClass('ajax');
 
-		$form->addTextArea('notes')->setAttribute('rows', '8');
+		$form->addSelect('admin', 'User', $this->getAdmins());
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
@@ -52,13 +63,13 @@ class Notes extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		$this->redrawControl('notes');
+		$this->redrawControl('accountAdmin');
 	}
 
 	protected function getDefaults()
 	{
 		return [
-			'notes' => $this->job->notes
+			'admin' => $this->job->accountManager->id
 		];
 	}
 
@@ -68,10 +79,18 @@ class Notes extends BaseControl
 		$jobRepo->save($this->job);
 	}
 
-	protected function load($values)
+	private function load($values)
 	{
-		$this->job->notes = $values->notes;
+		$user = $this->em->getRepository(User::getClassName())->find($values->admin);
+		$this->job->accountManager = $user;
 		return $this;
+	}
+
+	private function getAdmins()
+	{
+		$role = $this->em->getRepository(Role::getClassName())->findOneByName(Role::ADMIN);
+		$users = $this->em->getRepository(User::getClassName())->findPairsByRoleId($role->id, 'mail');
+		return $users;
 	}
 
 	public function setJob(Job $job)
@@ -81,9 +100,9 @@ class Notes extends BaseControl
 	}
 }
 
-interface INotesFactory
+interface IAccountAdminFactory
 {
 
-	/** @return Notes */
+	/** @return AccountAdmin */
 	function create();
 }

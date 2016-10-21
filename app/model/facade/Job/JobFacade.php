@@ -2,8 +2,7 @@
 
 namespace App\Model\Facade;
 
-use App\Components\User\User;
-use App\Model\Entity\Company;
+
 use App\Model\Entity\JobCategory;
 use App\Model\Entity\JobType;
 use App\Model\Facade\Traits\JobCategoryFacade;
@@ -11,8 +10,8 @@ use App\Model\Facade\Traits\JobMatchingFacade;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
 use App\Model\Repository\CvRepository;
+use App\Model\Repository\JobRepository;
 use Kdyby\Doctrine\EntityManager;
-use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Object;
 
 class JobFacade extends Object
@@ -62,6 +61,15 @@ class JobFacade extends Object
 			$typeRepo->save($entity);
 		}
 		return $entity;
+	}
+
+	public function createJobType($type)
+	{
+		$repo = $this->em->getRepository(JobType::getClassName());
+		$entity = new JobType();
+		$entity->name = $type;
+		$repo->save($entity);
+		return $repo;
 	}
 	
 	public function getJobTypes()

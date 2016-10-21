@@ -31,12 +31,11 @@ class UploadService extends Object
 		$fileName = sprintf('%s_%s', $dateTime->getTimestamp(), $uploadName);
 		$path = Helpers::getPath($this->rootFolder, $this->cvsFolder, $userId, $fileName);
 		$file->move($path);
-		return $fileName;
+		return $path;
 	}
 
-	public function deleteCv($fileName, $userId)
+	public function deleteCv($path)
 	{
-		$path = Helpers::getPath($this->rootFolder, $this->cvsFolder, $userId, $fileName);
 		if (file_exists($path)) {
 			unlink($path);
 		}

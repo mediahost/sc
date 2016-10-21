@@ -57,7 +57,6 @@ class Offers extends BaseControl
 	{
 		$this->load($values);
 		$this->save();
-		//$this->invalidateControl();
 		$this->onAfterSave($this->job);
 	}
 

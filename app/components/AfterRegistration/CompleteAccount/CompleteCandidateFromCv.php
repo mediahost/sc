@@ -4,11 +4,8 @@ namespace App\Components\AfterRegistration;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicHorizontalFormRenderer;
-use App\Model\Entity\Candidate;
-use App\Model\Entity\Person;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\User;
-use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
 
 class CompleteCandidateFromCv extends BaseControl
@@ -19,35 +16,35 @@ class CompleteCandidateFromCv extends BaseControl
 	public function render()
 	{
 		$this->setTemplateFile('candidateFromCv');
+		$this->template->form = $this['form'];
 		parent::render();
 	}
 
 	protected function createComponentForm()
 	{
 		$form = new Form();
-		$form->setRenderer(new MetronicHorizontalFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addGroup('Cv file');
-		$form->addUpload('cvFile', 'Cv')->addRule([$this, 'validateFileType'], 'Wrong file type!');
-		$form->addSubmit('save', 'Continue');
+		$form->getElementPrototype()->setClass('dropzone dz-clickable dz-started');
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
+		$file = $form->getHttpData()['file'];
 		$userRepo = $this->em->getRepository(User::getClassName());
 		$user = $this->user->getIdentity();
 		$candidate = $user->getPerson()->getCandidate();
-		$candidate->cvFile = $values->cvFile;
+		$candidate->cvFile = $file;
 		$userRepo->save($user, $candidate);
 	}
 
-	public function validateFileType(IControl $control)
+	public function onErrorHandler()
 	{
-		$ext = strtolower(pathinfo($control->value->getName(), PATHINFO_EXTENSION));
-		return in_array($ext, ['pdf', 'doc']);
+		$this->presenter->flashMessage('Wrong file type!', 'error');
+		$this->redrawControl();
 	}
 }
 

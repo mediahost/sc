@@ -133,6 +133,15 @@ class Installer extends Object
 		];
 	}
 
+	private function getJobTypes()
+	{
+		return [
+			'Full-Time',
+			'Part-Time',
+			'Contract'
+		];
+	}
+
 	// </editor-fold>
 
 	/**
@@ -199,6 +208,7 @@ class Installer extends Object
 		$this->installUsers($prefix);
 		$this->installCompany($prefix);
 		$this->installSkillLevels($prefix);
+		$this->installJobTypes($prefix);
 	}
 
 	private function installDoctrine($lockPrefix = NULL)
@@ -226,6 +236,11 @@ class Installer extends Object
 	private function installSkillLevels($lockPrefix = NULL)
 	{
 		$this->runInstall(__METHOD__, $lockPrefix, [$this->getSkillLevels()]);
+	}
+
+	private function installJobTypes($lockPrefix = NULL)
+	{
+		$this->runInstall(__METHOD__, $lockPrefix, [$this->getJobTypes()]);
 	}
 
 	private function runInstall($method, $prefix, array $params = [])

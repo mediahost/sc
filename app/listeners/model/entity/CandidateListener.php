@@ -45,7 +45,6 @@ class CandidateListener extends Object implements Subscriber
 	}
 
 	private function deleteFile(Candidate $candidate) {
-		$userId = $candidate->person->user->id;
-		$this->uploadService->deleteCv($candidate->cvFile, $userId);
+		$this->uploadService->deleteCv($candidate->cvFile);
 	}
 }

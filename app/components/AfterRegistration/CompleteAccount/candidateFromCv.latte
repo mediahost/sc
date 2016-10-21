@@ -1,1 +1,10 @@
-{control form}
+{snippet cvUpload}
+	<legend>{_'Cv file'}</legend>
+
+	<ul class="errors" n:if="$form->hasErrors()">
+		<li n:foreach="$form->errors as $error">{$error}</li>
+	</ul>
+
+	{control form}
+	<br>
+{/snippet}

@@ -29,7 +29,7 @@ class Candidate extends BaseEntity
 	/** @ORM\OneToOne(targetEntity="Cv", mappedBy="candidate", fetch="EAGER", cascade={"persist", "remove"}) */
 	protected $cv;
 
-	/** @ORM\Column(type="string", length=64, nullable=true) */
+	/** @ORM\Column(type="string", length=128, nullable=true) */
 	protected $cvFile;
 
 	/** @ORM\Column(type="boolean") */

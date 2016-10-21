@@ -40,6 +40,9 @@ class Job extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="Company", inversedBy="jobs") */
 	protected $company;
 
+	/** @ORM\ManyToOne(targetEntity="User", inversedBy="jobs") */
+	protected $accountManager;
+
 	/** @ORM\Column(type="string", length=512, nullable=false) */
 	protected $name;
 	
