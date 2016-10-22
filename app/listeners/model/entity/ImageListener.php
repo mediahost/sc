@@ -66,7 +66,7 @@ class ImageListener extends Object implements Subscriber
 	{
 		$requestedFormat = ImageUtils::PNG;
 		$filename = $image->requestedFilename;
-		$this->fotoService->create($image->file, $filename, $folder, $requestedFormat);
+		$this->fotoService->create($image->source, $filename, $folder, $requestedFormat);
 		return $filename;
 	}
 

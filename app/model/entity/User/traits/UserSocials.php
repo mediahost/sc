@@ -78,6 +78,14 @@ trait UserSocials
 		return NULL;
 	}
 
+	public function getSocialPhotoUrl()
+	{
+		if ($this->linkedin) {
+			return $this->linkedin->pictureUrl;
+		}
+		return NULL;
+	}
+
 	public function hasSocialConnection($socialConnectionName)
 	{
 		switch ($socialConnectionName) {

@@ -2,6 +2,9 @@
 
 namespace App\Listeners;
 
+use App\Components\Auth\Facebook;
+use App\Components\Auth\Linkedin;
+use App\Components\Auth\Twitter;
 use App\Extensions\Settings\SettingsStorage;
 use App\Mail\Messages\ICreateRegistrationMessageFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
@@ -66,8 +69,8 @@ class SignListener extends Object implements Subscriber
 		return array(
 			'App\Components\Auth\Facebook::onSuccess' => 'onStartup',
 			'App\Components\Auth\Linkedin::onSuccess' => 'onStartup',
-			'App\Components\Auth\SignUp::onSuccess' => 'onStartup',
 			'App\Components\Auth\Twitter::onSuccess' => 'onStartup',
+			'App\Components\Auth\SignUp::onSuccess' => 'onStartup',
 			'App\Components\Auth\Required::onSuccess' => 'onRequiredSuccess',
 			'App\Components\Auth\SignIn::onSuccess' => 'onSuccess',
 			'App\Components\Auth\Recovery::onSuccess' => 'onRecovery',
@@ -86,6 +89,9 @@ class SignListener extends Object implements Subscriber
 	 */
 	public function onStartup(Control $control, User $user, $rememberMe = FALSE)
 	{
+		if ($control instanceof Facebook || $control instanceof Linkedin || $control instanceof Twitter) {
+			$this->userFacade->importSocialData($user);
+		}
 		if ($user->id) {
 			$this->onSuccess($control->presenter, $user, $rememberMe);
 		} else {

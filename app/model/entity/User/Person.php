@@ -2,6 +2,7 @@
 
 namespace App\Model\Entity;
 
+use App\Helpers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -142,10 +143,10 @@ class Person extends BaseEntity
 
 	public function isRequiredOtherFilled()
 	{
-		return  count($this->workLocations)  && count($this->jobCategories);
+		return count($this->workLocations) && count($this->jobCategories);
 	}
 
-	public function setPhoto(FileUpload $file)
+	public function setPhoto($file)
 	{
 		if (!$this->photo instanceof Image) {
 			$this->photo = new Image($file);
@@ -157,17 +158,35 @@ class Person extends BaseEntity
 		return $this;
 	}
 
-	public function getPhoto() {
+	public function getPhoto($rawValue = FALSE)
+	{
+		$defaultImage = 'assets/img/avatar3.jpeg';
 		if ($this->photo) {
 			return $this->photo;
 		} else {
-			return 'assets/img/avatar3.jpeg'; // default image
+			return $rawValue ? NULL : $defaultImage;
 		}
+	}
+
+	public function setFullName($value)
+	{
+		$splitted = preg_split('/\s+/', $value, -1, PREG_SPLIT_NO_EMPTY);
+		if (count($splitted) >= 3) {
+			$this->firstname = array_shift($splitted);
+			$this->middlename = array_shift($splitted);
+			$this->surname = implode(' ', $splitted);
+		} else if (count($splitted) == 2) {
+			$this->firstname = array_shift($splitted);
+			$this->surname = implode(' ', $splitted);
+		} else {
+			$this->firstname = implode(' ', $splitted);
+		}
+		return $this;
 	}
 
 	public function getFullName()
 	{
-		return sprintf('%s %s %s', $this->firstname, $this->middlename, $this->surname);
+		return Helpers::concatStrings(' ', $this->firstname, $this->middlename, $this->surname);
 	}
 
 	public static function getGenderList()
