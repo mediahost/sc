@@ -144,8 +144,16 @@ var Global = function () {
 				});
 			}
 		}
-		Dropzone.options.frmCompleteCandidateFromCvForm = {
-			acceptedFiles: '.doc, .pdf'
+		Dropzone.options.frmCompleteCvForm = {
+			acceptedFiles: 'application/pdf,' +
+			'application/msword,' +
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			uploadMultiple: false,
+			init: function () {
+				this.on("success", function (file) {
+					location.reload();
+				});
+			}
 		}
 	};
 

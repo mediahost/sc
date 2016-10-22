@@ -8,15 +8,25 @@ use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\User;
 use Nette\Utils\ArrayHash;
 
-class CompleteCandidateFromCv extends BaseControl
+class CompleteCv extends BaseControl
 {
+
+	// <editor-fold desc="events">
+
+	/** @var array */
+	public $onSuccess = [];
+
+	// </editor-fold>
+	// <editor-fold desc="injects">
+
 	/** @var \Nette\Security\User @inject */
 	public $user;
 
+	// </editor-fold>
+
 	public function render()
 	{
-		$this->setTemplateFile('candidateFromCv');
-		$this->template->form = $this['form'];
+		$this->setTemplateFile('cv');
 		parent::render();
 	}
 
@@ -27,18 +37,22 @@ class CompleteCandidateFromCv extends BaseControl
 		$form->setTranslator($this->translator);
 
 		$form->getElementPrototype()->setClass('dropzone dz-clickable dz-started');
+
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$file = $form->getHttpData()['file'];
-		$userRepo = $this->em->getRepository(User::getClassName());
 		$user = $this->user->getIdentity();
 		$candidate = $user->getPerson()->getCandidate();
-		$candidate->cvFile = $file;
+
+		$candidate->cvFile = $form->getHttpData()['file'];
+
+		$userRepo = $this->em->getRepository(User::getClassName());
 		$userRepo->save($user, $candidate);
+
+		$this->onSuccess($this, $candidate);
 	}
 
 	public function onErrorHandler()
@@ -48,8 +62,8 @@ class CompleteCandidateFromCv extends BaseControl
 	}
 }
 
-interface ICompleteCandidateFromCvFactory
+interface ICompleteCvFactory
 {
-	/** @return CompleteCandidateFromCv */
+	/** @return CompleteCv */
 	public function create();
 }

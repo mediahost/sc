@@ -1,0 +1,11 @@
+{snippet cvUpload}
+	<legend>{_'Upload Your CV File'} {_'(.doc or .pdf)'}</legend>
+	{form form}
+
+		<ul class="errors" n:if="$form->hasErrors()">
+			<li n:foreach="$form->errors as $error">{$error}</li>
+		</ul>
+
+		{$form->render('body')}
+	{/form}
+{/snippet}

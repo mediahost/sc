@@ -4,8 +4,9 @@ namespace App\AppModule\Presenters;
 
 use App\Components\AfterRegistration\CompleteCandidate;
 use App\Components\AfterRegistration\CompleteCompany;
+use App\Components\AfterRegistration\CompleteCv;
 use App\Components\AfterRegistration\CompletePerson;
-use App\Components\AfterRegistration\ICompleteCandidateFromCvFactory;
+use App\Components\AfterRegistration\ICompleteCvFactory;
 use App\Components\AfterRegistration\ICompletePersonFactory;
 use App\Components\AfterRegistration\ICompleteCandidateFactory;
 use App\Components\AfterRegistration\ICompleteCompanyFactory;
@@ -24,8 +25,8 @@ class CompleteAccountPresenter extends BasePresenter
 	/** @var ICompletePersonFactory @inject */
 	public $iCompletePersonFactory;
 
-	/** @var ICompleteCandidateFromCvFactory @inject */
-	public $iCompleteCandidateFromCvFactory;
+	/** @var ICompleteCvFactory @inject */
+	public $iCompleteCvFactory;
 
 	/** @var ICompleteCandidateFactory @inject */
 	public $iCompleteCandidateFactory;
@@ -71,28 +72,14 @@ class CompleteAccountPresenter extends BasePresenter
 				$userRepo = $this->em->getRepository(User::getClassName());
 				$userRepo->save($user->getIdentity());
 			}
-			if ($user->getIdentity()->getPerson()->isFilled()) {
-				$this->redirect('step2');
+			if ($candidate->isFilled()) {
+				$this->redirect('verify');
 			}
 		}
 		if ($user->isInRole(Role::COMPANY)) {
 			if ($this->company) {
 				$this->redirect('verify');
 			}
-		}
-	}
-
-	/**
-	 * @secured
-	 * @resource('registration')
-	 * @privilege('step2')
-	 */
-	public function actionStep2()
-	{
-		$user = $this->getUser();
-		$candidate = $user->getIdentity()->getCandidate();
-		if ($user->isInRole(Role::CANDIDATE) && $candidate->isFilled()) {
-			$this->redirect('verify');
 		}
 	}
 
@@ -108,10 +95,10 @@ class CompleteAccountPresenter extends BasePresenter
 		$candidate = $person->getCandidate();
 		if ($identity->verificated) {
 			if ($this->user->isInRole(Role::CANDIDATE)) {
-				if (!$person->isFilled()) {
+				if (!$candidate->isFilled()) {
+					$message = $this->translator->translate('Your CV file is missing. Please fill this item!');
+					$this->flashMessage($message);
 					$this->redirect('default');
-				} elseif (!$candidate->isFilled()) {
-					$this->redirect('step2');
 				}
 				$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
 				$this->flashMessage($message);
@@ -154,33 +141,12 @@ class CompleteAccountPresenter extends BasePresenter
 
 	// <editor-fold desc="components">
 
-	/** @return CompletePerson */
-	protected function createComponentCompletePerson()
+	/** @return CompleteCv */
+	protected function createComponentCompleteCv()
 	{
-		$control = $this->iCompletePersonFactory->create();
-		$control->onSuccess[] = function (CompletePerson $control, Person $person) {
-			$message = $this->translator->translate('Your data was saved. Your candidate account is almost complete.');
-			$this->flashMessage($message, 'success');
-			$this->redirect('step2');
-		};
-		return $control;
-	}
-
-	/**
-	 * @return \App\Components\AfterRegistration\CompleteCandidateFromCv
-	 */
-	protected function createComponentCompleteCandidateFromCv()
-	{
-		$control = $this->iCompleteCandidateFromCvFactory->create();
-		return $control;
-	}
-
-	/** @return CompleteCandidate */
-	protected function createComponentCompleteCandidate()
-	{
-		$control = $this->iCompleteCandidateFactory->create();
-		$control->onSuccess[] = function (CompleteCandidate $control, Candidate $candidate) {
-			if (!$candidate->getUser()->verificated) {
+		$control = $this->iCompleteCvFactory->create();
+		$control->onSuccess[] = function (CompleteCv $control, Candidate $candidate) {
+			if (!$candidate->getPerson()->getUser()->verificated) {
 				$message = $this->translator->translate('Your data was saved. Please verify your mail!');
 				$this->flashMessage($message, 'success');
 				$this->redirect('verify');

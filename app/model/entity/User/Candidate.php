@@ -74,7 +74,7 @@ class Candidate extends BaseEntity
 
 	public function isFilled()
 	{
-		return count($this->workLocations) && count($this->jobCategories);
+		return (bool)$this->cvFile;
 	}
 
 	public function addDocument($document)
