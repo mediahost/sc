@@ -108,13 +108,13 @@ trait UserPassword
 		return $this;
 	}
 
-	public function setAccess($expirationTime, $generateToken = TRUE)
+	public function setAccess($expirationTime, $regenerateToken = FALSE)
 	{
 		if (!($expirationTime instanceof DateTime)) {
 			$expirationTime = new DateTime($expirationTime);
 		}
 
-		if ($generateToken) {
+		if (!$this->accessToken || $regenerateToken) {
 			$this->accessToken = Random::generate(100);
 		}
 		$this->accessExpiration = $expirationTime;

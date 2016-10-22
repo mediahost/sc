@@ -3,6 +3,7 @@
 namespace App\Mail\Messages;
 
 use App\Extensions\Settings\SettingsStorage;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Translation\Translator;
 use Latte\Engine;
 use Nette\Application\LinkGenerator;
@@ -31,6 +32,9 @@ abstract class BaseMessage extends Message
 
 	/** @var Translator @inject */
 	public $translator;
+
+	/** @var EntityManager @inject */
+	public $em;
 
 	/** @var array */
 	protected $params = [];

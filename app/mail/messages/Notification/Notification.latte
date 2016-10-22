@@ -13,6 +13,11 @@
 						<p>
 							{$message->text}
 						</p>
+						<p>
+							<a n:href="App:Messages: $message->communication->id, App\BaseModule\Presenters\BasePresenter::ACCESS_ID_PARAM => $token">
+								{_'Reply'}
+							</a>
+						</p>
 					</td>
 				</tr>
 			</table>

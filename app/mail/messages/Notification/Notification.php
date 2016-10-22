@@ -4,6 +4,7 @@ namespace App\Mail\Messages;
 
 use App\Model\Entity\Message;
 use App\Model\Entity\Sender;
+use App\Model\Entity\User;
 
 class Notification extends BaseMessage
 {
@@ -16,7 +17,13 @@ class Notification extends BaseMessage
 
 	public function setReciever(Sender $reciever)
 	{
-		$this->addTo($reciever->user->mail, $reciever->name);
+		$user = $reciever->user;
+		$this->addTo($user->mail, $reciever->name);
+
+		$user->setAccess('now + ' . $this->settings->expiration->linkAccess);
+		$this->em->persist($user);
+
+		$this->addParameter('token', $user->accessToken);
 		return $this;
 	}
 

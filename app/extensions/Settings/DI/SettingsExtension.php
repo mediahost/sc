@@ -34,6 +34,7 @@ class SettingsExtension extends CompilerExtension
 			'recovery' => '30 minutes',
 			'verification' => '1 hour',
 			'registration' => '1 hour',
+			'linkAccess' => '24 hour',
 			'remember' => '14 days',
 			'notRemember' => '30 minutes',
 		],

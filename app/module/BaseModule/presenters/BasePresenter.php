@@ -22,7 +22,7 @@ use WebLoader\Nette\LoaderFactory;
 abstract class BasePresenter extends Presenter
 {
 
-	const ACCESS_ID_PARAM = 'accessId';
+	const ACCESS_ID_PARAM = 'accessid';
 
 	/** @persistent */
 	public $lang;
