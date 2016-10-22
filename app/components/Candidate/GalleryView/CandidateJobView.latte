@@ -1,21 +1,14 @@
-{**
- * CandidatePreview control template
- *
- * @param   Cv     $cv	
- * @param   Job    $job	
-*}
-
 <div data-state="{$control->getCvState($cv, $job)}"
     class="panel panel-default plain draggable gallery-item">
     <div class="panel-heading">
         <h4 class="panel-title ui-widget-content">
             <strong>{$cv->candidate}</strong> 
-            <small n:if="$cv->candidate->address">&nbsp;{$cv->candidate->address->city}</small>
+            <small n:ifset="$cv->candidate->address">{$cv->candidate->address->city}</small>
         </h4>
         </br>
 
-        <div class="btn-group" role="group">
-            <a n:if="$template->canAccess($user, $cv->candidate->user)" 
+        <div class="btn-group" role="group" n:ifset="$cv->candidate->user">
+            <a n:if="$template->canAccess($user, $cv->candidate->user)"
                href="{plink Users:access $cv->candidate->user->id}" 
                class="btn btn-default btn-link btn-sm">{_'Access'}
             </a>
@@ -25,5 +18,5 @@
         </div>
     </div>
 
-    {include 'CandidatePreviewBody.latte'}
+    {include 'CandidatePreview.latte'}
 </div>
