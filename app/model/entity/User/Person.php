@@ -138,7 +138,7 @@ class Person extends BaseEntity
 
 	public function isFilled()
 	{
-		return $this->photo && $this->address && $this->firstname && $this->surname && $this->phone;
+		return TRUE;
 	}
 
 	public function isRequiredOtherFilled()

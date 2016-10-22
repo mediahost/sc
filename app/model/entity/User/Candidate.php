@@ -77,6 +77,11 @@ class Candidate extends BaseEntity
 		return (bool)$this->cvFile;
 	}
 
+	public function isCompleted()
+	{
+		return $this->isFilled() && $this->person->isFilled();
+	}
+
 	public function addDocument($document)
 	{
 		$this->documents->add($document);

@@ -93,7 +93,7 @@ abstract class BasePresenter extends BaseBasePresenter
 		$identity = $this->user->identity;
 		$person = $identity->getPerson();
 		$candidate = $person->getCandidate();
-		$isCompleteCandidateAccount = $person->isFilled() && $candidate->isFilled() && $identity->verificated;
+		$isCompleteCandidateAccount = $candidate->isCompleted() && $identity->verificated;
 		$isCompleteCompanyAccount = $this->company && $identity->verificated;
 		return ($this->getUser()->isInRole(Role::CANDIDATE) && $isCompleteCandidateAccount)
 		|| ($this->getUser()->isInRole(Role::COMPANY) && $isCompleteCompanyAccount)

@@ -2,18 +2,15 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\AfterRegistration\CompleteCandidate;
 use App\Components\AfterRegistration\CompleteCompany;
 use App\Components\AfterRegistration\CompleteCv;
-use App\Components\AfterRegistration\CompletePerson;
-use App\Components\AfterRegistration\ICompleteCvFactory;
-use App\Components\AfterRegistration\ICompletePersonFactory;
 use App\Components\AfterRegistration\ICompleteCandidateFactory;
 use App\Components\AfterRegistration\ICompleteCompanyFactory;
+use App\Components\AfterRegistration\ICompleteCvFactory;
+use App\Components\AfterRegistration\ICompletePersonFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
-use App\Model\Entity\Person;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
