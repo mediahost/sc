@@ -12,7 +12,7 @@
 	<div class="row">
 		<div class="col-md-5 col-sm-4" n:snippet="messages-list">
 			{control conversationList}
-			<a n:href="this#newMessage" class="btn btn-info" data-toggle="modal">
+			<a n:if="$newMessageAllowed" n:href="this#newMessage" class="btn btn-info" data-toggle="modal">
 				<i class="fa fa-envelope"></i>
 				{_'New Message'}
 			</a>
@@ -33,7 +33,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="newMessage" tabindex="-1" aria-hidden="true">
+	<div n:if="$newMessageAllowed" class="modal fade" id="newMessage" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

@@ -6,6 +6,7 @@ use App\Components\BaseControl;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
+use Tracy\Debugger;
 
 class ConversationList extends BaseControl
 {
@@ -44,7 +45,7 @@ class ConversationList extends BaseControl
 		$this->template->activeCommunication = $this->activeCommunication;
 		$this->template->communicationCount = $this->count;
 		$this->template->communicationsPerPage = self::CONVERSATIONS_PER_PAGE;
-		$this->template->allowSearchBox = $this->allowSearchBox;
+		$this->template->allowSearchBox = $this->allowSearchBox && count($this->communications);
 		parent::render();
 	}
 

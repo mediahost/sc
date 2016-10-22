@@ -9,7 +9,9 @@ use App\Components\Conversation\Form\IConversationListFactory;
 use App\Components\Conversation\Form\INewConversationFactory;
 use App\Components\Conversation\Form\NewConversation;
 use App\Components\IConversationsGridFactory;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Communication;
+use App\Model\Entity\Role;
 use App\Model\Entity\Sender;
 use App\Model\Facade\UserFacade;
 
@@ -30,9 +32,6 @@ class MessagesPresenter extends BasePresenter
 
 	/** @var IConversationsGridFactory @inject */
 	public $iConversationsGridFactory;
-
-	/** @var Communication */
-	private $communication;
 
 	/**
 	 * @secured
@@ -61,6 +60,11 @@ class MessagesPresenter extends BasePresenter
 				$this->redirect('this', NULL);
 			}
 		}
+	}
+
+	public function renderDefault()
+	{
+		$this->template->newMessageAllowed = $this->user->isAllowed('messages', 'create');
 	}
 
 	/**
@@ -152,4 +156,5 @@ class MessagesPresenter extends BasePresenter
 		$control = $this->iConversationsGridFactory->create();
 		return $control;
 	}
+
 }
