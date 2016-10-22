@@ -29,8 +29,9 @@ class UploadService extends Object
 		$dateTime = new DateTime();
 		$uploadName = $file->getSanitizedName();
 		$fileName = sprintf('%s_%s', $dateTime->getTimestamp(), $uploadName);
-		$path = Helpers::getPath($this->rootFolder, $this->cvsFolder, $userId, $fileName);
-		$file->move($path);
+		$path = Helpers::getPath($this->cvsFolder, $userId, $fileName);
+		$fullPath = Helpers::getPath($this->rootFolder, $path);
+		$file->move($fullPath);
 		return $path;
 	}
 
