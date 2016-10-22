@@ -23,7 +23,8 @@ class CandidateListener extends Object implements Subscriber
 		);
 	}
 
-	public function prePersist($params) {
+	public function prePersist($params)
+	{
 		$this->uploadFile($params);
 	}
 
@@ -32,11 +33,13 @@ class CandidateListener extends Object implements Subscriber
 		$this->uploadFile($params);
 	}
 
-	public function postRemove($params) {
+	public function postRemove($params)
+	{
 		$this->deleteFile($params);
 	}
 
-	private function uploadFile(Candidate $candidate) {
+	private function uploadFile(Candidate $candidate)
+	{
 		if ($candidate->cvFile instanceof FileUpload) {
 			$userId = $candidate->person->user->id;
 			$fileName = $this->uploadService->uploadCv($candidate->cvFile, $userId);
@@ -44,7 +47,8 @@ class CandidateListener extends Object implements Subscriber
 		}
 	}
 
-	private function deleteFile(Candidate $candidate) {
+	private function deleteFile(Candidate $candidate)
+	{
 		$this->uploadService->deleteCv($candidate->cvFile);
 	}
 }

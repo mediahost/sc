@@ -41,7 +41,8 @@ class UploadService extends Object
 		}
 	}
 
-	public function uploadDocument(FileUpload $file) {
+	public function uploadDocument(FileUpload $file)
+	{
 		$dateTime = new DateTime();
 		$uploadName = $file->getSanitizedName();
 		$fileName = sprintf('%s_%s', $dateTime->getTimestamp(), $uploadName);
@@ -50,14 +51,16 @@ class UploadService extends Object
 		return $fileName;
 	}
 
-	public function deleteDocument($fileName) {
+	public function deleteDocument($fileName)
+	{
 		$path = Helpers::getPath($this->rootFolder, $this->documentsFolder, $fileName);
-		if(file_exists($path)) {
+		if (file_exists($path)) {
 			unlink($path);
 		}
 	}
 
-	public function applyWebPath(Document $document) {
+	public function applyWebPath(Document $document)
+	{
 		$path = Helpers::getPath($this->url, $this->documentsFolder, $document->name);
 		$document->setWebPath($path);
 	}

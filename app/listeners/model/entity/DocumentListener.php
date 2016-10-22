@@ -22,28 +22,34 @@ class DocumentListener extends Object implements Subscriber
 		);
 	}
 
-	public function prePersist($params) {
+	public function prePersist($params)
+	{
 		$this->uploadFile($params);
 	}
 
-	public function postRemove($params) {
+	public function postRemove($params)
+	{
 		$this->deleteFile($params);
 	}
 
-	public function postLoad($params) {
+	public function postLoad($params)
+	{
 		$this->injectProperties($params);
 	}
 
-	private function uploadFile(Document $document) {
+	private function uploadFile(Document $document)
+	{
 		$fileName = $this->uploadService->uploadDocument($document->file);
 		$document->name = $fileName;
 	}
 
-	private function deleteFile(Document $document) {
+	private function deleteFile(Document $document)
+	{
 		$this->uploadService->deleteDocument($document->name);
 	}
 
-	private function injectProperties(Document $document) {
+	private function injectProperties(Document $document)
+	{
 		$this->uploadService->applyWebPath($document);
 	}
 }
