@@ -6,8 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
-use Nette\Utils\DateTime;
 use Knp\DoctrineBehaviors\Model;
+use Nette\Utils\DateTime;
 
 /**
  * @ORM\Entity
@@ -55,7 +55,8 @@ class Message extends BaseEntity
 		$isRead = function ($key, Read $read) use ($reader) {
 			return $read->reader->id === $reader->id;
 		};
-		return $this->reads->exists($isRead);
+		$isSender = $reader->id === $this->sender->id;
+		return $isSender || $this->reads->exists($isRead);
 	}
 
 	public function addRead(Read $read)
