@@ -145,17 +145,6 @@ class CvEditorPresenter extends BasePresenter
 		$this['careerDocs']->setCandidate($candidate);
 	}
 
-	/**
-	 * @secured
-	 * @resource('cvEditor')
-	 * @privilege('jobs')
-	 */
-	public function actionJobs($id = NULL)
-	{
-		$this->getCv($id);
-		$this->template->matchedJobs = $this->cvFacade->findJobs($this->cv);
-	}
-
 	public function afterCvSave()
 	{
 		$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$this->cv]);
