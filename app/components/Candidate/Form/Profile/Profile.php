@@ -59,6 +59,10 @@ class Profile extends BaseControl
 		$form->addRadioList('gender', 'Gender', Person::getGenderList())
 			->setDefaultValue('x');
 
+		$form->addText('tags', 'Tags')
+			->setAttribute('data-role', 'tagsinput')
+			->getControlPrototype()->class[] = 'input-small';
+
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
@@ -82,6 +86,7 @@ class Profile extends BaseControl
 		$this->person->gender = $values->gender;
 		$this->person->degreeBefore = $values->degreebefore;
 		$this->person->degreeAfter = $values->degreeafter;
+		$this->candidate->tags = $values->tags;
 		return $this;
 	}
 
@@ -104,6 +109,7 @@ class Profile extends BaseControl
 			'gender' => $this->person->gender,
 			'degreebefore' => $this->person->degreeBefore,
 			'degreeafter' => $this->person->degreeAfter,
+			'tags' => $this->person->getCandidate()->tags
 		];
 		return $values;
 	}
