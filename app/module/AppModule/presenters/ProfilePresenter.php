@@ -98,8 +98,29 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
+		if (in_array(Entity\Role::ADMIN, $this->getUser()->getRoles()) || in_array(Entity\Role::SUPERADMIN, $this->getUser()->getRoles())) {
+			$this->redirect('connectManager');
+		}
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
+	}
+
+	/**
+	 * @secured
+	 * @resource('profile')
+	 * @privilege('candidate')
+	 *
+	 * @param int $userId
+	 */
+	public function actionCandidate($userId)
+	{
+		$user = $this->em->getRepository(Entity\User::getClassName())->find($userId);
+		$this->person = $user->getPerson();
+		$this->candidate = $this->person->getCandidate();
+		$this->cv = $this->candidate->getCv();
+		$this->template->person = $this->person;
+		$this->template->candidate = $this->candidate;
+		$this->setView('default');
 	}
 
 	/**

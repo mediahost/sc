@@ -1,10 +1,6 @@
 {block pageTitle}
-	{if $isCandidate}
-		{_'Overview of candidate %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $identity->mail]}
-		<a href="{link Messages:}" class="dropdown-toggle"><i class="s16 minia-icon-envelope"></i></a>
-	{else}
-		{_'Overview'}
-	{/if}
+	{_'Overview of candidate %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $identity->mail]}
+	<a href="{link Messages:}" class="dropdown-toggle"><i class="s16 minia-icon-envelope"></i></a>
 {/block}
 
 {block breadcrumbItems}
@@ -15,9 +11,6 @@
 {/block}
 
 {block content}
-{if $isCompany || $isAdmin}
-	{_'Not implemented for this role'}
-{else}
 <div class="row">
 	<div class="col-lg-6 col-md-12">
 		{snippet personalDetails}
@@ -44,7 +37,7 @@
 		{control recentMessages}
 	</div>
 </div>
-{/if}
+
 
 {define personalDetailsPanel}
 	<div n:if="$person" class="panel panel-default">

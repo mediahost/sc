@@ -35,7 +35,7 @@
                href="{plink Users:access $cv->candidate->person->user->id}"
                class="btn btn-default btn-link btn-sm">{_'Access'}
             </a>
-            <a href="{plink Profile:}" target="_blank"
+            <a href="{plink Profile:candidate 'userId' => $cv->candidate->person->user->id}" target="_blank"
                class="btn btn-default btn-link btn-sm delete-image">
                 {_'Profile'}
             </a>
