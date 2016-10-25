@@ -68,9 +68,11 @@ class AccountAdmin extends BaseControl
 
 	protected function getDefaults()
 	{
-		return [
-			'admin' => $this->job->accountManager->id
-		];
+		$result = [];
+		if ($this->job->accountManager) {
+			$result['admin'] = $this->job->accountManager->id;
+		}
+		return $result;
 	}
 
 	private function save()

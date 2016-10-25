@@ -7,6 +7,8 @@ use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Job;
 use App\Model\Entity\TagJob;
 use App\Model\Entity\Tag;
+use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
 
 class Offers extends BaseControl
 {
@@ -62,15 +64,17 @@ class Offers extends BaseControl
 
 	protected function load(ArrayHash $values)
 	{
-		$tagRepo = $this->em->getRepository(Tag::getClassName());
-
 		foreach (explode(',', $values['offers']) as $offer) {
-			$tagJob = $this->createTagIfNotExits($offer, TagJob::TYPE_OFFERS);
-			$this->job->tag = $tagJob;
+			if ($offer != '') {
+				$tagJob = $this->createTagIfNotExits($offer, TagJob::TYPE_OFFERS);
+				$this->job->tag = $tagJob;
+			}
 		}
 		foreach (explode(',', $values['requirements']) as $requirement) {
-			$tagJob = $this->createTagIfNotExits($requirement, TagJob::TYPE_REQUIREMENTS);
-			$this->job->tag = $tagJob;
+			if ($requirement != '') {
+				$tagJob = $this->createTagIfNotExits($requirement, TagJob::TYPE_REQUIREMENTS);
+				$this->job->tag = $tagJob;
+			}
 		}
 		$this->job->removeOldTags();
 		return $this;
