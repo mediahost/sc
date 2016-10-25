@@ -62,15 +62,6 @@ class JobFacade extends Object
 		}
 		return $entity;
 	}
-
-	public function createJobType($type)
-	{
-		$repo = $this->em->getRepository(JobType::getClassName());
-		$entity = new JobType();
-		$entity->name = $type;
-		$repo->save($entity);
-		return $repo;
-	}
 	
 	public function getJobTypes()
 	{

@@ -1,9 +1,5 @@
 {block pageTitle}
-	{if $job->id}
-		{_'Job #%id%', ['id' => $job->id]}
-	{else}
-		{_'New job'}
-	{/if}
+	{_'Skills for Job #%id%', ['id' => $job->id]}
 {/block}
 
 {block content}
@@ -13,15 +9,11 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						{if $job->id}
-							{_'Job #%id%', ['id' => $job->id]}
-						{else}
-							{_'New job'}
-						{/if}
+						{_'Skills for Job #%id%', ['id' => $job->id]}
 					</h4>
 				</div>
 				<div class="panel-body">
-					{control jobInfoForm}
+					{control jobSkillsForm}
 				</div>
 			</div>
 

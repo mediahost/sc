@@ -1,21 +1,3 @@
 {snippet jobInfo}
-<a href="{link edit}" class="ajax right"><i class="fa fa-edit"></i></a>
-</br>
-<dl n:if="!$job->isNew()" class="dl-horizontal">
-    {*<dt>{_'Type: '}</dt>*}
-    {*<dd>{$job->type->name}</dd>*}
-    {*<dd class="divider"></dd>*}
-    
-    <dt>{_'Category: '}</dt>
-    <dd>{$job->category}</dd>
-    <dd class="divider"></dd>
-    
-    <dt>{_'Salary: '}</dt>
-    <dd>{$job->salaryFrom}-{$job->salaryTo}</dd>
-    <dd class="divider"></dd>
-    
-    <dt>{_'Location: '}</dt>
-    <dd>{$job->location}</dd>
-    <dd class="divider"></dd>
-</dl>
+{control form}
 {/snippet}

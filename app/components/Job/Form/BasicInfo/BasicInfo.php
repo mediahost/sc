@@ -6,16 +6,23 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
+use App\Helpers;
 use App\Model\Entity\Job;
+use App\Model\Entity\Role;
+use App\Model\Entity\Tag;
+use App\Model\Entity\TagJob;
+use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\JobFacade;
 use Nette\Utils\ArrayHash;
 
 class BasicInfo extends BaseControl
 {
+
 	const SALARY_FROM = 0;
 	const SALARY_TO = 10000;
 	const SALARY_STEP = 10;
+	const QUESTIONS_COUNT = 5;
 
 	/** @var Job */
 	private $job;
@@ -39,21 +46,7 @@ class BasicInfo extends BaseControl
 	public function render()
 	{
 		$this->template->job = $this->job;
-		if ($this->job->isNew()) {
-			$this->setTemplateFile('edit');
-		}
 		parent::render();
-	}
-
-	public function handleEdit()
-	{
-		$this->setTemplateFile('edit');
-		$this->redrawControl('jobInfo');
-	}
-
-	public function handlePreview()
-	{
-		$this->redrawControl('jobInfo');
 	}
 
 	protected function createComponentForm()
@@ -65,9 +58,13 @@ class BasicInfo extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
+		$form->addGroup('Basic Info');
 		$form->addText('name', 'Name')
 			->setAttribute('placeholder', 'Job title')
 			->setRequired('Please enter job\'s name.');
+		$form->addSelect('accountManager', 'Account manager', $this->getAdminUsers())
+			->setRequired($this->translator->translate('Manager is required'));
+
 		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes())
 			->setRequired($this->translator->translate('Type is required'));
 		$form->addSelect('category', 'Category', $this->jobFacade->getJobCategories())
@@ -79,9 +76,36 @@ class BasicInfo extends BaseControl
 			->setAttribute('data-slider-step', self::SALARY_STEP)
 			->setAttribute('data-slider-value', $defaultValues['salary'])
 			->setAttribute('data-slider-id', 'slider-primary');
-		$form->addMapView('location', 'Location');
 
-		$form->addSubmit('save', 'Save');
+		$form->addGroup('Offers');
+		$form->addText('offers', 'Offers')
+			->setAttribute('data-role', 'tagsinput')
+			->setAttribute('placeholder', 'add a tag');
+		$form->addText('requirements', 'Requirements')
+			->setAttribute('data-role', 'tagsinput')
+			->setAttribute('placeholder', 'add a tag');
+
+		$form->addGroup('Description');
+		$form->addTextArea('description', 'Description')
+			->setAttribute('placeholder', 'Job description')
+			->setAttribute('id', 'jobDescription');
+		$form->addTextArea('summary', 'Summary')
+			->setAttribute('placeholder', 'Job summary')
+			->setAttribute('id', 'jobSummary');
+
+		$form->addGroup('Pre-Screening Questions');
+		$questions = $form->addContainer('questions');
+		for ($i = 1; $i <= self::QUESTIONS_COUNT; $i++) {
+			$questions->addText($i, 'Question ' . $i);
+		}
+
+		$form->addGroup('Notes');
+		$form->addTextArea('notes')->setAttribute('rows', '8');
+
+		if (!$this->job->isNew()) {
+			$form->addSubmit('save', 'Save');
+		}
+		$form->addSubmit('next', 'Save & Next');
 
 		$form->setDefaults($defaultValues);
 		$form->onSuccess[] = $this->formSucceeded;
@@ -92,18 +116,47 @@ class BasicInfo extends BaseControl
 	{
 		$this->load($values, $form);
 		$this->save();
-		$this->onAfterSave($this->job);
+		$this->onAfterSave($this->job, $form['next']->submittedBy);
 	}
 
 	protected function load(ArrayHash $values, Form $form)
 	{
-		$salaryFrom = $salaryTo = 0;
-		sscanf($values['salary'], '%d,%d', $salaryFrom, $salaryTo);
 		$this->job->name = $values->name;
 		$this->job->type = $this->jobFacade->findJobType($values->type);
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
+		$this->job->notes = $values->notes;
+		$this->job->questions = (array)$values->questions;
+
+		$salaryFrom = $salaryTo = 0;
+		sscanf($values['salary'], '%d,%d', $salaryFrom, $salaryTo);
 		$this->job->salaryFrom = $salaryFrom;
 		$this->job->salaryTo = $salaryTo;
+
+		$userRepo = $this->em->getRepository(User::getClassName());
+		$user = $userRepo->find($values->accountManager);
+		$this->job->accountManager = $user;
+
+		foreach (explode(',', $values['offers']) as $offer) {
+			if ($offer != '') {
+				$tagJob = $this->createTagIfNotExits($offer, TagJob::TYPE_OFFERS);
+				$this->job->tag = $tagJob;
+			}
+		}
+		foreach (explode(',', $values['requirements']) as $requirement) {
+			if ($requirement != '') {
+				$tagJob = $this->createTagIfNotExits($requirement, TagJob::TYPE_REQUIREMENTS);
+				$this->job->tag = $tagJob;
+			}
+		}
+		$this->job->removeOldTags();
+
+		if (isset($values->description)) {
+			$this->job->description = $values->description;
+		}
+		if (isset($values->summary)) {
+			$this->job->summary = $values->summary;
+		}
+
 		return $this;
 	}
 
@@ -124,8 +177,20 @@ class BasicInfo extends BaseControl
 			'type' => $this->job->type ? $this->job->type->id : NULL,
 			'category' => $this->job->category ? $this->job->category->id : NULL,
 			'salary' => $salary,
-			'location' => $this->job->location
+			'accountManager' => $this->job->accountManager ? $this->job->accountManager->id : NULL,
+			'offers' => $this->getTags(TagJob::TYPE_OFFERS),
+			'requirements' => $this->getTags(TagJob::TYPE_REQUIREMENTS),
+			'notes' => $this->job->notes,
+			'description' => $this->job->description,
+			'summary' => $this->job->summary,
 		];
+		if ($this->job->questions) {
+			$i = 1;
+			foreach ($this->job->questions as $question) {
+				$values['questions'][$i] = $question;
+				$i++;
+			}
+		}
 		return $values;
 	}
 
@@ -142,6 +207,45 @@ class BasicInfo extends BaseControl
 	{
 		$this->job = $job;
 		return $this;
+	}
+
+	private function getAdminUsers()
+	{
+		$roleRepo = $this->em->getRepository(Role::getClassName());
+		$userRepo = $this->em->getRepository(User::getClassName());
+
+		$role = $roleRepo->findOneByName(Role::ADMIN);
+		$users = $userRepo->findPairsByRoleId($role->id, 'mail');
+
+		return $users;
+	}
+
+	private function getTags($tagType)
+	{
+		$tags = [];
+		foreach ($this->job->tags as $tagJob) {
+			if ($tagJob->type == $tagType) {
+				$tags[] = $tagJob->tag->name;
+			}
+		}
+		return implode(',', $tags);
+	}
+
+	private function createTagIfNotExits($tagName, $tagType)
+	{
+		foreach ($this->job->tags as $tagJob) {
+			if ($tagJob->tag == $tagName && $tagJob->type == $tagType) {
+				return $tagJob;
+			}
+		}
+		$tagRepo = $this->em->getRepository(Tag::getClassName());
+		$newTag = new Tag($tagName);
+		$tagRepo->save($newTag);
+		$newTagJob = new TagJob();
+		$newTagJob->job = $this->job;
+		$newTagJob->tag = $newTag;
+		$newTagJob->type = $tagType;
+		return $newTagJob;
 	}
 
 	// </editor-fold>

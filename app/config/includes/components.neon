@@ -34,16 +34,12 @@ services:
 	# Company
 	- {implement: App\Components\Company\ICompanyInfoFactory, inject: yes}
 	- {implement: App\Components\Company\ICompanyImagesFactory, inject: yes}
+	- {implement: App\Components\Company\ICompanySelectorFactory, inject: yes}
 
 	# Job
 	- {implement: App\Components\Job\IBasicInfoFactory, inject: yes}
-	- {implement: App\Components\Job\IOffersFactory, inject: yes}
-	- {implement: App\Components\Job\IDescriptionsFactory, inject: yes}
 	- {implement: App\Components\Job\ISkillsFactory, inject: yes}
-	- {implement: App\Components\Job\IQuestionsFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFactory, inject: yes}
-	- {implement: App\Components\Job\INotesFactory, inject: yes}
-	- {implement: App\Components\Job\IAccountAdminFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFilterFactory, inject: yes}
 
 	# Candidate

@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Company\CompanySelector;
+use App\Components\Company\ICompanySelectorFactory;
 use App\Components\Grids\Job\IJobsGridFactory;
 use App\Components\Grids\Job\JobsGrid;
 use App\Model\Entity\Company;
@@ -17,12 +19,15 @@ class JobsPresenter extends BasePresenter
 	/** @var EntityManager @inject */
 	public $em;
 
+	/** @var ICompanySelectorFactory @inject */
+	public $iCompanySelectorFactory;
+
 	/** @var IJobsGridFactory @inject */
 	public $iJobsGridFactory;
-	
+
 	/** @var JobFacade @inject */
 	public $jobFacade;
-	
+
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
@@ -47,16 +52,12 @@ class JobsPresenter extends BasePresenter
 	 * @resource('jobs')
 	 * @privilege('default')
 	 */
-	public function actionDefault($id)
+	public function actionDefault()
 	{
-		$company = $this->companyRepo->find($id);
-		if ($company) {
-			$this['jobsGrid']->setCompany($company);
-			$this->template->company = $company;
+		if ($this->user->isAllowed('jobs', 'showAll')) {
+			$this->redirect('showAll');
 		} else {
-			$message = $this->translator->translate('Finded company isn\'t exists.');
-			$this->flashMessage($message, 'danger');
-			$this->redirect('Dashboard:');
+			$this->redirect('myList');
 		}
 	}
 
@@ -72,6 +73,17 @@ class JobsPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('jobs')
+	 * @privilege('myList')
+	 */
+	public function actionMyList()
+	{
+		$this->template->jobs = $this->jobRepo->findAll();
+		$this->template->suggested = [];
+	}
+
+	/**
+	 * @secured
+	 * @resource('jobs')
 	 * @privilege('edit')
 	 */
 	public function actionEdit($id)
@@ -82,7 +94,17 @@ class JobsPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold desc="grids">
+	// <editor-fold desc="controls">
+
+	/** @return CompanySelector */
+	public function createComponentCompanySelector()
+	{
+		$control = $this->iCompanySelectorFactory->create();
+		$control->onAfterSelect = function (Company $company) {
+			$this->redirect('Job:add', $company->id);
+		};
+		return $control;
+	}
 
 	/** @return JobsGrid */
 	public function createComponentJobsGrid()

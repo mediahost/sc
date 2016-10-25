@@ -1,0 +1,53 @@
+{block pageTitle}
+	{_'My Jobs'}
+{/block}
+
+{block content}
+	<div class="row">
+
+		<div class="col-md-4">
+			<div class="panel panel-default plain">
+				<div class="panel-heading">
+					<h4 class="panel-title">{_'All Jobs'}</h4>
+				</div>
+				<div class="panel-body">
+					<div class="list-group" n:if="count($jobs)">
+						<a n:foreach="$jobs as $job" n:href="Job:view $job->id" class="list-group-item">
+							<h4 class="list-group-item-heading">{$job}</h4>
+							<p class="list-group-item-text">
+								{$job->description|truncate:50}
+							</p>
+						</a>
+					</div>
+					<div class="alert alert-info" n:if="!count($jobs)">
+						<i class="glyphicon glyphicon-info-sign alert-icon"></i>
+						{_'There are no jobs for you'}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="panel panel-default plain">
+				<div class="panel-heading">
+					<h4 class="panel-title">{_'Job invitations'}</h4>
+				</div>
+				<div class="panel-body">
+					<div class="list-group" n:if="count($suggested)">
+						<a n:foreach="$suggested as $job" n:href="Job:view $job->id" class="list-group-item">
+							<h4 class="list-group-item-heading">{$job}</h4>
+							<p class="list-group-item-text">
+								{$job->description|truncate:50}
+							</p>
+						</a>
+					</div>
+					<div class="alert alert-info" n:if="!count($suggested)">
+						<i class="glyphicon glyphicon-info-sign alert-icon"></i>
+						{_'We are searching job position for You'}
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+{/block content}

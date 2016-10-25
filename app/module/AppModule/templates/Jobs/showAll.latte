@@ -3,34 +3,37 @@
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="this">{_'Jobs'}</a>
-</li>
+	<li>
+		<a n:href="this">{_'Jobs'}</a>
+	</li>
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-12">
-		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption">
-					<i class="icon-briefcase"></i>
-					<span class="caption-subject bold uppercase">{_'Jobs'}</span>
+	<div class="row">
+		<div class="col-md-12">
+			<a n:href="this#addJob" data-toggle="modal" class="btn btn-success mr5 mb10">
+				<i class="fa fa-plus"></i>
+				{_'New Job'}
+			</a>
+			{control jobsGrid}
+		</div>
+	</div>
+
+	<div class="modal fade" id="addJob" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel2">{_'Select Company'}</h4>
 				</div>
-				<div class="actions">
-					<a n:ifset="$company" n:href="Job:add, 'companyId' => $company->id" class="btn btn-circle green-sharp">
-						<i class="fa fa-plus"></i> {_'Add Job'}
-					</a>
-					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
-					</a>
+				<div class="modal-body">
+					{control companySelector}
 				</div>
-			</div>
-			<div class="portlet-body">
-				{control jobsGrid}
 			</div>
 		</div>
 	</div>
-</div>
 {/block content}
 			
 
