@@ -19,10 +19,10 @@ class JobsPresenter extends BasePresenter
 
 	/** @var IJobsGridFactory @inject */
 	public $iJobsGridFactory;
-	
+
 	/** @var JobFacade @inject */
 	public $jobFacade;
-	
+
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
@@ -47,16 +47,12 @@ class JobsPresenter extends BasePresenter
 	 * @resource('jobs')
 	 * @privilege('default')
 	 */
-	public function actionDefault($id)
+	public function actionDefault()
 	{
-		$company = $this->companyRepo->find($id);
-		if ($company) {
-			$this['jobsGrid']->setCompany($company);
-			$this->template->company = $company;
+		if ($this->user->isAllowed('jobs', 'showAll')) {
+			$this->redirect('showAll');
 		} else {
-			$message = $this->translator->translate('Finded company isn\'t exists.');
-			$this->flashMessage($message, 'danger');
-			$this->redirect('Dashboard:');
+			$this->redirect('myList');
 		}
 	}
 
@@ -67,6 +63,17 @@ class JobsPresenter extends BasePresenter
 	 */
 	public function actionShowAll()
 	{
+	}
+
+	/**
+	 * @secured
+	 * @resource('jobs')
+	 * @privilege('myList')
+	 */
+	public function actionMyList()
+	{
+		$this->template->jobs = $this->jobRepo->findAll();
+		$this->template->suggested = [];
 	}
 
 	/**

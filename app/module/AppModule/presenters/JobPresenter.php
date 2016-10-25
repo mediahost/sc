@@ -97,7 +97,6 @@ class JobPresenter extends BasePresenter
 		$job = $this->jobRepository->find($id);
 		if ($job) {
 			$this->template->job = $job;
-			$this->template->matchedCvs = $this->jobFacade->findCvs($job);
 		} else {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');

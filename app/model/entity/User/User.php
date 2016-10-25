@@ -23,7 +23,6 @@ use Nette\Security\IIdentity;
  */
 class User extends BaseEntity implements IIdentity, IUserSocials
 {
-	use AdminJobs;
 	use Identifier;
 	use UserRoles;
 	use UserPassword;

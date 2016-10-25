@@ -53,7 +53,7 @@ class JobsGrid extends BaseControl
 		}
 
 
-		$grid->addActionHref('view', 'View')
+		$grid->addActionHref('view', 'View', 'Job:view')
 			->setIcon('fa fa-eye');
 
 		$grid->addActionHref('edit', 'Edit', 'Job:edit')
