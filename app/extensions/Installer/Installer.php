@@ -136,9 +136,9 @@ class Installer extends Object
 	private function getJobTypes()
 	{
 		return [
-			'Full-Time',
-			'Part-Time',
-			'Contract'
+			1 => 'Full-Time',
+			2 => 'Part-Time',
+			3 => 'Contract',
 		];
 	}
 

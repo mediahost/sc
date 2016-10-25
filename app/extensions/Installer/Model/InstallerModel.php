@@ -72,7 +72,7 @@ class InstallerModel extends Object
 		foreach ($levels as $levelId => $levelName) {
 			$skillLevel = $skillLevelRepo->find($levelId);
 			if (!$skillLevel) {
-				$skillLevel = new SkillLevel;
+				$skillLevel = new SkillLevel();
 			}
 			$skillLevel->name = $levelName;
 			$skillLevel->priority = $levelId;
@@ -81,10 +81,21 @@ class InstallerModel extends Object
 		return TRUE;
 	}
 
+	/**
+	 * Create all nested job types
+	 * @return boolean
+	 */
 	public function installJobTypes(array $types)
 	{
-		foreach ($types as $type) {
-			$this->jobFacade->createJobType($type);
+		$jobTypeRepo = $this->em->getRepository(JobType::getClassName());
+		foreach ($types as $typeId => $typeName) {
+			$jobType = $jobTypeRepo->find($typeId);
+			if (!$jobType) {
+				$jobType = new JobType($typeName);
+			} else {
+				$jobType->name = $typeName;
+			}
+			$jobTypeRepo->save($jobType);
 		}
 		return TRUE;
 	}
