@@ -5,8 +5,8 @@ namespace App\Components\AfterRegistration;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Person;
-use App\Model\Entity\User;
 use App\Model\Facade\JobFacade;
 
 class CompleteCandidatePreview extends BaseControl
@@ -18,9 +18,13 @@ class CompleteCandidatePreview extends BaseControl
 	/** @var \Nette\Security\User @inject */
 	public $user;
 
+	/** @var Candidate */
+	private $candidate;
+
 	public function render()
 	{
-		$this->template->freelancer = $this->user->getIdentity()->getCandidate()->freelancer ? 'yes' : 'no';
+		$candidate = isset($this->candidate)  ?  $this->candidate : $this->user->getIdentity()->getCandidate();
+		$this->template->freelancer = $candidate->freelancer ? 'yes' : 'no';
 		$this->setTemplateFile('candidateSecondPreview');
 		parent::render();
 	}
@@ -44,7 +48,7 @@ class CompleteCandidatePreview extends BaseControl
 
 	public function getDefaults()
 	{
-		$candidate = $this->user->getIdentity()->getCandidate();
+		$candidate = isset($this->candidate)  ?  $this->candidate  :  $this->user->getIdentity()->getCandidate();
 		$categories = $this->jobFacade->findCandidatePreferedCategories($candidate);
 
 		$localities = [];
@@ -60,6 +64,12 @@ class CompleteCandidatePreview extends BaseControl
 			'categories' => implode(',', $categories),
 			'countries' => implode(',', $localities)
 		];
+	}
+
+	public function setCandidate(Candidate $candidate)
+	{
+		$this->candidate = $candidate;
+		return $this;
 	}
 }
 

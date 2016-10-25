@@ -113,6 +113,8 @@ class ProfilePresenter extends BasePresenter
 		$this->candidate = $this->person->getCandidate();
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
+		$this['completeCandidatePreview']->setCandidate($this->candidate);
+		$this['completeCandidate']->setCandidate($this->candidate);
 		$this->setView('default');
 	}
 

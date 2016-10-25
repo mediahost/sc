@@ -5,6 +5,7 @@ namespace App\Components\AfterRegistration;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\JobCategory;
 use App\Model\Entity\Person;
 use App\Model\Entity\User;
@@ -36,6 +37,9 @@ class CompleteCandidate extends BaseControl
 	/** @var \Nette\Security\User @inject */
 	public $user;
 
+	/** @var Candidate */
+	private $candidate;
+
 	// </editor-fold>
 
 	public function render()
@@ -53,7 +57,7 @@ class CompleteCandidate extends BaseControl
 			$jsonLocalities[] = $this->loacationToLeaf($localityId, $locality);
 		}
 
-		$candidate = $this->user->getIdentity()->getCandidate();
+		$candidate = isset($this->candidate)  ?  $this->candidate  :  $this->user->getIdentity()->getCandidate();
 
 		$this->template->jobCategories = $this->jobFacade->findCategoriesPairs();
 		$this->template->jsonJobCategories = $jsonJobCategories;
@@ -104,7 +108,7 @@ class CompleteCandidate extends BaseControl
 		$userRepo = $this->em->getRepository(User::getClassName());
 
 		$user = $this->user->getIdentity();
-		$candidate = $user->getCandidate();
+		$candidate = isset($this->candidate)  ?  $this->candidate  :  $user->getCandidate();
 
 		$categoryList = [];
 		foreach ($values->categories as $categoryId => $checked) {
@@ -139,7 +143,7 @@ class CompleteCandidate extends BaseControl
 
 	private function jobCategoryToLeaf(JobCategory $category)
 	{
-		$candidate = $this->user->getIdentity()->getCandidate();
+		$candidate = isset($this->candidate)  ?  $this->candidate  :  $this->user->getIdentity()->getCandidate();
 		$leaf = [
 			'id' => $category->id,
 			'text' => $category->name,
@@ -157,7 +161,7 @@ class CompleteCandidate extends BaseControl
 
 	private function loacationToLeaf($id, $location)
 	{
-		$candidate = $this->user->getIdentity()->getCandidate();
+		$candidate = isset($this->candidate)  ?  $this->candidate  :  $this->user->getIdentity()->getCandidate();
 		$children = [];
 		if (is_array($location)) {
 			$leaf = [
@@ -177,6 +181,12 @@ class CompleteCandidate extends BaseControl
 		];
 		$leaf['children'] = $children;
 		return $leaf;
+	}
+
+	public function setCandidate(Candidate $candidate)
+	{
+		$this->candidate = $candidate;
+		return $this;
 	}
 }
 

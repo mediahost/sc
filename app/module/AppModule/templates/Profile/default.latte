@@ -1,5 +1,5 @@
 {block pageTitle}
-	{_'Overview of candidate %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $identity->mail]}
+	{_'Overview of candidate %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $person->user->mail]}
 	<a href="{link Messages:}" class="dropdown-toggle"><i class="s16 minia-icon-envelope"></i></a>
 {/block}
 

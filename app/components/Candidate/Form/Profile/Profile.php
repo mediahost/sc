@@ -87,7 +87,7 @@ class Profile extends BaseControl
 		$this->person->degreeBefore = $values->degreebefore;
 		$this->person->degreeAfter = $values->degreeafter;
 		if ($values->tags) {
-			$this->candidate->tags = $values->tags;
+			$this->person->getCandidate()->tags = $values->tags;
 		}
 		return $this;
 	}
