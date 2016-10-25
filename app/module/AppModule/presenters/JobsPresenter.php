@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Company\CompanySelector;
+use App\Components\Company\ICompanySelectorFactory;
 use App\Components\Grids\Job\IJobsGridFactory;
 use App\Components\Grids\Job\JobsGrid;
 use App\Model\Entity\Company;
@@ -16,6 +18,9 @@ class JobsPresenter extends BasePresenter
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	/** @var ICompanySelectorFactory @inject */
+	public $iCompanySelectorFactory;
 
 	/** @var IJobsGridFactory @inject */
 	public $iJobsGridFactory;
@@ -89,7 +94,17 @@ class JobsPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
-	// <editor-fold desc="grids">
+	// <editor-fold desc="controls">
+
+	/** @return CompanySelector */
+	public function createComponentCompanySelector()
+	{
+		$control = $this->iCompanySelectorFactory->create();
+		$control->onAfterSelect = function (Company $company) {
+			$this->redirect('Job:add', $company->id);
+		};
+		return $control;
+	}
 
 	/** @return JobsGrid */
 	public function createComponentJobsGrid()

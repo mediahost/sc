@@ -28,7 +28,7 @@ use Knp\DoctrineBehaviors\Model;
  * @property-write SkillKnowRequest $skillRequest
  * @property-read ArrayCollection $tags
  * @property-write TagJob $tag
- * @property string $questions
+ * @property array $questions
  */
 class Job extends BaseEntity
 {
@@ -69,7 +69,7 @@ class Job extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="Location", cascade="all") */
 	protected $location;
 
-	/** @ORM\Column(type="text", nullable=true) */
+	/** @ORM\Column(type="array", nullable=true) */
 	protected $questions;
 
 	/** @ORM\Column(type="text", nullable=true) */

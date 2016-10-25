@@ -7,13 +7,13 @@ use App\Extensions\Grido\BaseGrid;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use Grido\DataSources\Doctrine;
+use Nette\Utils\Strings;
 
 class JobsGrid extends BaseControl
 {
 
 	/** @var Company */
 	private $company;
-
 
 	protected function createComponentGrid()
 	{
@@ -39,19 +39,20 @@ class JobsGrid extends BaseControl
 			->setSuggestion();
 
 		$grid->addColumnText('description', 'Description')
+			->setCustomRender(function (Job $item) {
+				return Strings::truncate($item->description, 30);
+			})
 			->setSortable()
 			->setFilterText()
 			->setSuggestion();
-		$grid->getColumn('description')
-			->setTruncate(30);
 
+		$companyRepo = $this->em->getRepository(Company::getClassName());
+		$companies = $companyRepo->findPairs('name');
 		if (!$this->company) {
 			$grid->addColumnText('company', 'Company')
 				->setSortable()
-				->setFilterText()
-				->setSuggestion();
+				->setFilterSelect([NULL => '--- any ---'] + $companies);
 		}
-
 
 		$grid->addActionHref('view', 'View', 'Job:view')
 			->setIcon('fa fa-eye');
@@ -72,9 +73,10 @@ class JobsGrid extends BaseControl
 		return $grid;
 	}
 
-	public function getModel() {
-		$repo = $this->em->getRepository(Job::getClassName());
-		$qb = $repo->createQueryBuilder('j')
+	public function getModel()
+	{
+		$jobRepo = $this->em->getRepository(Job::getClassName());
+		$qb = $jobRepo->createQueryBuilder('j')
 			->select('j, c')
 			->innerJoin('j.company', 'c');
 		if ($this->company) {
@@ -82,7 +84,7 @@ class JobsGrid extends BaseControl
 				->setParameter('company', $this->company);
 		}
 		$model = new Doctrine($qb, [
-			'company' => 'c.name'
+			'company' => 'c'
 		]);
 		return $model;
 	}

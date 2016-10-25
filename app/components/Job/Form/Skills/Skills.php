@@ -42,6 +42,15 @@ class Skills extends BaseControl
 
 	// </editor-fold>
 
+	public function render()
+	{
+		$skillRepo = $this->em->getDao(Skill::getClassName());
+		$this->template->skills = $skillRepo->findAll();
+		$this->template->categories = $this->skillFacade->getTopCategories();
+		$this->template->job = $this->job;
+		parent::render();
+	}
+
 	/** @return Form */
 	protected function createComponentForm()
 	{
@@ -179,24 +188,6 @@ class Skills extends BaseControl
 
 	// </editor-fold>
 
-	public function render()
-	{
-		$this->template->job = $this->job;
-		parent::render();
-	}
-
-	public function handleEdit()
-	{
-		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
-		$this->template->categories = $this->skillFacade->getTopCategories();
-		$this->setTemplateFile('edit');
-		$this->redrawControl('skillControl');
-	}
-
-	public function handlePreview()
-	{
-		$this->redrawControl('skillControl');
-	}
 }
 
 interface ISkillsFactory
