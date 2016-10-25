@@ -37,7 +37,7 @@
 	<div class="form-group">
 		<label class="col-lg-3 col-md-3 control-label">{_'Degree after name'}</label>
 		<div class="col-lg-9 col-md-9">
-                    <input n:name="degreeafter" type="text" class="form-control input-small">
+			<input n:name="degreeafter" type="text" class="form-control input-small">
 		</div>
 	</div>
 	<div class="form-group">
@@ -55,20 +55,19 @@
 		<label class="col-lg-3 col-md-3  control-label">{_'Date of Birth'}</label>
 		<div class="col-lg-9 col-md-9">
 			<div class="input-daterange input-group" data-date-format="dd.mm.yyyy">
-				<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 				{input $form['birthday']}
 			</div>
 		</div>
 	</div>
-        <div n:if="$user->isInRole('superadmin')" class="form-group">
+	<div n:if="$user->isInRole('superadmin')" class="form-group">
 		<label class="col-lg-3 col-md-3  control-label">{_'Tags'}</label>
 		<div class="col-lg-9 col-md-9">
 			<input n:name="tags" type="text" class="form-control input-small" data-role="tagsinput" placeholder="{_'Add a tag'}">
 		</div>
-	</div>                
+	</div>
 	<div class="form-group">
 		<div class="col-lg-offset-3">
-			<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save" />
+			<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save"/>
 		</div>
 	</div>
 {/form}

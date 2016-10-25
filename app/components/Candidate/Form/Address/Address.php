@@ -58,7 +58,7 @@ class Address extends BaseControl
 	protected function load(ArrayHash $values)
 	{
 		if (!$this->person->address) {
-			$this->person->address = new Address();
+			$this->person->address = new Entity\Address();
 		}
 		$this->person->address->house = $values->house;
 		$this->person->address->street = $values->street;

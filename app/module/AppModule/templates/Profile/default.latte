@@ -21,8 +21,6 @@
 			{snippet interestedIn}
 				{include interestedInPanel}
 			{/snippet}
-
-			{include cvPanel}
 		{/if}
 	</div>
 	<div class="col-lg-6 col-md-12" n:if="$candidate">
@@ -64,7 +62,7 @@
 							{if $person && $person->fullName}
 								{$person->fullName}
 							{else}
-								{$user->getIdentity()->mail}
+								{$person->user->mail}
 							{/if}
 							<a href="#edit-personal" class="edit">
 								<i class="fa fa-edit"></i>
@@ -140,17 +138,6 @@
 		</div>
 		<div class="panel-body social-editor">
 			{control socialForm}
-		</div>
-	</div>
-{/define}
-
-{define cvPanel}
-	<div class="panel panel-default cvCheckZoom">
-		<div class="panel-heading">
-			<h4 class="panel-title">CV</h4>
-		</div>
-		<div class="panel-body preview-tab">
-			{control cvPreview}
 		</div>
 	</div>
 {/define}

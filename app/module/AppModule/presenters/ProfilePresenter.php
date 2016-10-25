@@ -16,17 +16,15 @@ use App\Components\Candidate\IProfileFactory;
 use App\Components\Candidate\ISocialFactory;
 use App\Components\Conversation\Form\ConversationList;
 use App\Components\Conversation\Form\IConversationListFactory;
-use App\Components\Cv\ILivePreviewFactory;
 use App\Components\Cv\ISkillsFactory;
-use App\Components\Cv\LivePreview;
 use App\Components\Cv\Skills;
 use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Cv;
-use App\Model\Facade\CantDeleteUserException;
 use App\Model\Facade\CvFacade;
+use App\Model\Facade\Traits\CantDeleteUserException;
 use App\Model\Facade\UserFacade;
 
 class ProfilePresenter extends BasePresenter
@@ -55,9 +53,6 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var ISocialFactory @inject */
 	public $iSocialFactory;
-
-	/** @var ILivePreviewFactory @inject */
-	public $iLivePreviewFactory;
 
 	/** @var ICareerDocsFactory @inject */
 	public $iCareerDocsFactory;
@@ -88,7 +83,6 @@ class ProfilePresenter extends BasePresenter
 		parent::startup();
 		$this->person = $this->getUser()->getIdentity()->getPerson();
 		$this->candidate = $this->person->getCandidate();
-		$this->cv = $this->candidate->getCv();
 	}
 
 	/**
@@ -117,7 +111,6 @@ class ProfilePresenter extends BasePresenter
 		$user = $this->em->getRepository(Entity\User::getClassName())->find($userId);
 		$this->person = $user->getPerson();
 		$this->candidate = $this->person->getCandidate();
-		$this->cv = $this->candidate->getCv();
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
 		$this->setView('default');
@@ -278,7 +271,7 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->iSkillsFactory->create();
 		$control->setTemplateFile('overview');
 		$control->onlyFilledSkills = true;
-		$control->setCv($this->cv);
+		$control->setCv($this->candidate->cv);
 		$control->setAjax(TRUE, TRUE);
 		return $control;
 	}
@@ -326,15 +319,6 @@ class ProfilePresenter extends BasePresenter
 		$control->onAfterSave = function (Entity\Person $saved) {
 			$this->redrawControl('socialLinks');
 		};
-		return $control;
-	}
-
-	/** @return LivePreview */
-	public function createComponentCvPreview()
-	{
-		$control = $this->iLivePreviewFactory->create();
-		$control->setScale(0.8, 0.8, 1);
-		$control->setCv($this->cv);
 		return $control;
 	}
 
