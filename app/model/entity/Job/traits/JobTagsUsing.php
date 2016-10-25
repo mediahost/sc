@@ -39,13 +39,15 @@ trait JobTagsUsing
 	public function removeOldTags() 
 	{
 		foreach($this->tags as $tagJob) {
-			if (!$this->newTags->contains($tagJob)) {
+			if (!$this->newTags  ||  !$this->newTags->contains($tagJob)) {
 				$this->removeTag($tagJob);
 			}
 		}
-		foreach ($this->newTags as $tagJob) {
-			if (!$this->tags->contains($tagJob)) {
-				$this->tags->add($tagJob);
+		if ($this->newTags) {
+			foreach ($this->newTags as $tagJob) {
+				if (!$this->tags->contains($tagJob)) {
+					$this->tags->add($tagJob);
+				}
 			}
 		}
 		return $this;

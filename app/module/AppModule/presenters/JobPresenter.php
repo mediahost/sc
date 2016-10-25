@@ -117,18 +117,11 @@ class JobPresenter extends BasePresenter
 			$this->job = new Job;
 			$this->job->company = $company;
 			$this['jobInfoForm']->setJob($this->job);
-			$this['jobOffersForm']->setJob($this->job);
-			$this['jobDescriptionsForm']->setJob($this->job);
-			$this['jobSkillsForm']->setJob($this->job);
-			$this['jobQuestionsForm']->setJob($this->job);
-			$this['notes']->setJob($this->job);
-			$this['accountAdmin']->setJob($this->job);
 		} else {
 			$message = $this->translator->translate('Finded company isn\'t exists.');
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Dashboard:');
 		}
-		$this->setView('edit');
 	}
 
 	/**
@@ -192,7 +185,11 @@ class JobPresenter extends BasePresenter
 	{
 		$control = $this->iJobBasicInfoFactory->create();
 		$control->setAjax(TRUE, TRUE);
-		$control->onAfterSave = $this->afterJobSave;
+		$control->onAfterSave = function($job) {
+			$message = $this->translator->translate('Job \'%job%\' was successfully saved.', ['job' => (string)$job]);
+			$this->flashMessage($message, 'success');
+			$this->forward('edit', $job->id);
+		};
 		return $control;
 	}
 
