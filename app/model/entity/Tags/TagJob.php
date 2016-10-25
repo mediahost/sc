@@ -33,4 +33,9 @@ class TagJob extends \Kdyby\Doctrine\Entities\BaseEntity
 	
 	/** @ORM\Column(type="smallint", nullable=false) */
 	protected $type;
+
+	public function __toString()
+	{
+		return (string)$this->tag;
+	}
 }
