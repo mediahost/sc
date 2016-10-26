@@ -13,8 +13,12 @@
 	</ul>
 </div>
 <p n:if="!count($control->getUploadedDocs())" class="row p10 mb0">
-	{_'No career documents - click to add your career docs'}
-</p>
-<p class="row text-right p10 mb0">
-	{*<a href="{plink CvEditor:CareerDocs $control->getCandidate()->user->id}">{_'Add files'}</a>*}
+	{if $user->isInRole('superadmin')  ||  $user->isInRole('admin')}
+		{_'No career documents'}
+	{else}
+		{_'No career documents - click to add your career docs'}
+		<p class="row text-right p10 mb0">
+			<a href="{plink CvEditor:CareerDocs $candidate->person->user->id}">{_'Add files'}</a>
+		</p>
+	{/if}
 </p>

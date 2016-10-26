@@ -21,6 +21,11 @@ class CareerDocs extends BaseControl
 	/** @var Candidate */
 	private $candidate;
 
+	public function render()
+	{
+		$this->template->candidate = $this->candidate;
+		parent::render();
+	}
 
 	public function createComponentForm()
 	{
