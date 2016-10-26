@@ -72,10 +72,12 @@
 										class="tag label label-info">{$tag}</span>
 							</div>
 						</div>
-						<div class="profile-info bt">
-							<h5 class="text-muted">{_'Pre-Screening Questions'}</h5>
-							<p n:foreach="$job->questions as $question">{$question}</p>
-						</div>
+						{if $job->questions}
+							<div class="profile-info bt">
+								<h5 class="text-muted">{_'Pre-Screening Questions'}</h5>
+								<p n:foreach="$job->questions as $question">{$question}</p>
+							</div>
+						{/if}
 						<div class="profile-info bt">
 							<h5 class="text-muted">{_'Notes'}</h5>
 							<p>{$job->notes}</p>
