@@ -37,6 +37,9 @@ class ConversationList extends BaseControl
 	/** @var Communication|NULL */
 	protected $activeCommunication;
 
+	/** @var bool */
+	private $readMode;
+
 	public function render()
 	{
 		$this->template->addFilter('mark', $this->markSearchString);
@@ -47,6 +50,15 @@ class ConversationList extends BaseControl
 		$this->template->communicationsPerPage = self::CONVERSATIONS_PER_PAGE;
 		$this->template->allowSearchBox = $this->allowSearchBox && count($this->communications);
 		parent::render();
+	}
+
+	public function handleChooseCommunication($id)
+	{
+		if ($this->readMode) {
+			$this->presenter->redirect('Messages:browse', $id);
+		} else {
+			$this->presenter->redirect('Messages:', $id);
+		}
 	}
 
 	/** @return FulltextSearch */
@@ -90,6 +102,11 @@ class ConversationList extends BaseControl
 		return $this;
 	}
 
+	public function setReadMode($value)
+	{
+		$this->readMode = $value;
+		return $this;
+	}
 }
 
 interface IConversationListFactory
