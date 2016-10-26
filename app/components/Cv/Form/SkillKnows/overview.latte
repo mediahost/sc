@@ -40,6 +40,6 @@
 
 <p n:if="!count($categories)" class="row p10 mb0">{_'No IT skills filled - click to add your IT skills'}</p>
 
-<p class="row text-right p10 mb0">
+<p n:if="!$user->isInRole('superadmin') && !$user->isInRole('admin')" class="row text-right p10 mb0">
     <a href="{plink CvEditor:Skills $control->getCv()->id}">{_'More skills'}</a>
 </p>

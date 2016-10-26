@@ -81,8 +81,9 @@
 							</p>
 							<a href="#" class="btn btn-primary btn-large mr10"> <i
 										class="icomoon-icon-bubble-video-chat"></i> Watch video</a>
-							<a href="{link :App:Messages:default#newMessage}"
-							   class="btn btn-default btn-alt btn-large">{_'Send Message'}</a>
+							<a n:if="!$user->isInRole('superadmin') && !$user->isInRole('admin')"
+									href="{link :App:Messages:default#newMessage}"
+									class="btn btn-default btn-alt btn-large">{_'Send Message'}</a>
 						{/if}
 					</div>
 				</div>
