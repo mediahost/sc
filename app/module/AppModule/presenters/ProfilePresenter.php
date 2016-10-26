@@ -111,10 +111,16 @@ class ProfilePresenter extends BasePresenter
 		$user = $this->em->getRepository(Entity\User::getClassName())->find($userId);
 		$this->person = $user->getPerson();
 		$this->candidate = $this->person->getCandidate();
+		
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
+
 		$this['completeCandidatePreview']->setCandidate($this->candidate);
 		$this['completeCandidate']->setCandidate($this->candidate);
+
+		$senders = $this->communicationFacade->findSenders($user);
+		$this['recentMessages']->setSender(current($senders));
+
 		$this->setView('default');
 	}
 
@@ -355,10 +361,8 @@ class ProfilePresenter extends BasePresenter
 	/** @return ConversationList */
 	public function createComponentRecentMessages()
 	{
-		$senders = $this->communicationFacade->findSenders($this->person->user);
 		$control = $this->iConversationListFactory->create();
-		$control->setSender(current($senders))
-			->setReadMode(true)
+		$control->setReadMode(true)
 			->disableSearchBox();
 		return $control;
 	}
