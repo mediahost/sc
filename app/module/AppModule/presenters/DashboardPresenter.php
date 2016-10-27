@@ -2,6 +2,7 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Candidate\IJobListFactory;
 use App\Components\Candidate\ISocialFactory;
 use App\Components\Conversation\Form\IConversationListFactory;
 use App\Components\User\ICareerDocsFactory;
@@ -11,6 +12,9 @@ class DashboardPresenter extends BasePresenter
 {
 	/** @var IConversationListFactory @inject */
 	public $conversationListFactory;
+
+	/** @var IJobListFactory @inject */
+	public $jobListFactory;
 
 	/** @var ISocialFactory @inject */
 	public $socialFactory;
@@ -45,6 +49,13 @@ class DashboardPresenter extends BasePresenter
 		$control = $this->conversationListFactory->create();
 		$control->setSender(current($senders))
 			->disableSearchBox();
+		return $control;
+	}
+
+	/** @return \App\Components\Candidate\JobList */
+	public function createComponentJobList()
+	{
+		$control = $this->jobListFactory->create();
 		return $control;
 	}
 

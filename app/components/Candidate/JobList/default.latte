@@ -1,0 +1,13 @@
+
+<div n:if="empty($jobs)">
+	{_'We are searching job position for You'}
+</div>
+
+<div class="reminder">
+	<ul>
+		<li n:foreach="$jobs as $job" class="clearfix">
+			<span class="txt">{$job}</span>
+			<a href="{plink Job:view $job->id}" class="btn btn-warning">{_'GO'}</a>
+		</li>
+	</ul>
+</div>
