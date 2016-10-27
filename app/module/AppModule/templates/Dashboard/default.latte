@@ -1,144 +1,80 @@
 {block pageTitle}
-{if $isAdmin}
-	{_'Administration section'}
-{elseif $isCandidate}
-	{_'Candidate section'}
-{elseif $isCompany}
-	{_'Company section'}
-{else}
-	{_'Dashboard'}
-{/if}
+	{if $isAdmin}
+		{_'Administration section'}
+	{elseif $isCandidate}
+		{_'Candidate section'}
+	{elseif $isCompany}
+		{_'Company section'}
+	{else}
+		{_'Dashboard'}
+	{/if}
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="Dashboard:">{_'Dashboard'}</a>
-</li>
+	<li>
+		<a n:href="Dashboard:">{_'Dashboard'}</a>
+	</li>
 {/block}
 
 {block content}
-{if $isAdmin}
-	{include adminDashboard}
-{elseif $isCandidate}
-	{include candidateDashboard}
-{elseif $isCompany}
-	{include companyDashboard}
-{/if}
+	{if $isAdmin}
+		{include adminDashboard}
+	{elseif $isCandidate}
+		{include candidateDashboard}
+	{elseif $isCompany}
+		{include companyDashboard}
+	{/if}
 {/block}
 
 {define adminDashboard}
-admin dashboard
+	admin dashboard
 {/define}
 
 {define candidateDashboard}
-<div class="row">
-	<div class="col-lg-6 col-md-12">
-		{include todoListPanel}
+	<div class="row">
+		<div class="col-lg-6 col-md-12">
+			{control recentMessages}
+		</div>
+		<div class="col-lg-6 col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">{_'Jobs'}</h4>
+				</div>
+				<div class="panel-body social-editor">
+					{control jobList}
+				</div>
+			</div>
+		</div>
 	</div>
-	<div class="col-lg-6 col-md-12">
-		{include jobsPanel}
+
+	<div class="row">
+		<div n:snippet="socialLinks" class="col-lg-6 col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">{_'Social Links'}</h4>
+				</div>
+				<div class="panel-body social-editor">
+					{control socialForm}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-6 col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">{_'Career docs'}</h4>
+				</div>
+				<div class="panel-body social-editor">
+					{control docsForm}
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
-<div class="row">
-	<div class="col-lg-12">
-		{include appliedJobsPanel}
-	</div>
-</div>
-<div class="row">
-	<div class="col-lg-12">
-		{include invitationsPanel}
-	</div>
-</div>
 {/define}
 
 {define companyDashboard}
-company dashboard
+	company dashboard
 {/define}
 
-{define todoListPanel}
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h4 class="panel-title">Things TO DO</h4>
-	</div>
-	<div class="panel-body">
-		<ul class="progressbars-stats list-unstyled">
-			<li>
-				<div class="progressbar-icon"><i class="glyphicon glyphicon-user"></i> 
-				</div>
-				<span class="progressbar-text">Profile complete</span>
-				<div class="progress">
-					<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 30%;"></div>
-				</div>
-			</li>
-			<li>
-				<div class="progressbar-icon"><i class="glyphicon glyphicon-comment"></i> 
-				</div>
-				<span class="progressbar-text">Answer to messages</span>
-				<div class="progress">
-					<div class="progress-bar progress-bar-info" role="progressbar" style="width: 83%;"></div>
-				</div>
-			</li>
-			<li>
-				<div class="progressbar-icon"><i class="glyphicon glyphicon-hdd"></i> 
-				</div>
-				<span class="progressbar-text">CV complete</span>
-				<div class="progress">
-					<div class="progress-bar progress-bar-danger" role="progressbar" style="width: 98%;"></div>
-				</div>
-			</li>
-			<li>
-				<div class="progressbar-icon"><i class="fa fa-pie-chart"></i> 
-				</div>
-				<span class="progressbar-text">Overall</span>
-				<div class="progress">
-					<div class="progress-bar progress-bar-success" role="progressbar" style="width: 62%;"></div>
-				</div>
-			</li>
-		</ul>
-	</div>
-</div>
-{/define}
 
-{define jobsPanel}
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h4 class="panel-title">You may be interested</h4>
-	</div>
-	<div class="panel-body">
 
-	</div>
-</div>
-{/define}
-
-{define appliedJobsPanel}
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h4 class="panel-title">List of applied jobs</h4>
-	</div>
-	<div class="panel-body">
-
-	</div>
-</div>
-{/define}
-
-{define invitationsPanel}
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h4 class="panel-title">Invitations</h4>
-	</div>
-	<div class="panel-body">
-
-	</div>
-</div>
-{/define}
-
-{define inviteFriendsPanel}
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h4 class="panel-title">Invite Friends</h4>
-	</div>
-	<div class="panel-body">
-
-	</div>
-</div>
-{/define}

@@ -22,8 +22,6 @@ use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity;
 use App\Model\Entity\Candidate;
-use App\Model\Entity\Cv;
-use App\Model\Facade\CvFacade;
 use App\Model\Facade\Traits\CantDeleteUserException;
 use App\Model\Facade\UserFacade;
 
@@ -66,22 +64,22 @@ class ProfilePresenter extends BasePresenter
 	/** @var IConversationListFactory @inject */
 	public $iConversationListFactory;
 
-	/** @var CvFacade @inject */
-	public $cvFacade;
-
 	/** @var Person */
 	private $person;
 
 	/** @var Candidate */
 	private $candidate;
 
-	/** @var Cv */
-	private $cv;
-
 	protected function startup()
 	{
 		parent::startup();
-		$this->person = $this->getUser()->getIdentity()->getPerson();
+		$userId = $this->getParameter('userId');
+		if ($userId) {
+			$user = $this->em->getRepository(Entity\User::getClassName())->find($userId);
+		} else {
+			$user = $this->user->identity;
+		}
+		$this->person = $user->getPerson();
 		$this->candidate = $this->person->getCandidate();
 	}
 
@@ -108,13 +106,8 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionCandidate($userId)
 	{
-		$user = $this->em->getRepository(Entity\User::getClassName())->find($userId);
-		$this->person = $user->getPerson();
-		$this->candidate = $this->person->getCandidate();
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
-		$this['completeCandidatePreview']->setCandidate($this->candidate);
-		$this['completeCandidate']->setCandidate($this->candidate);
 		$this->setView('default');
 	}
 
@@ -336,7 +329,8 @@ class ProfilePresenter extends BasePresenter
 	/** @return CompleteCandidate */
 	protected function createComponentCompleteCandidate()
 	{
-		$control = $this->iCompleteCandidateFactory->create();
+		$control = $this->iCompleteCandidateFactory->create()
+			->setCandidate($this->candidate);
 		$control->onSuccess[] = function (CompleteCandidate $control, Candidate $candidate) {
 			$message = $this->translator->translate('Your data was saved.');
 			$this->flashMessage($message, 'success');
@@ -348,7 +342,8 @@ class ProfilePresenter extends BasePresenter
 	/** @return CompleteCandidatePreview */
 	protected function createComponentCompleteCandidatePreview()
 	{
-		$control = $this->completeCandidatePreview->create();
+		$control = $this->completeCandidatePreview->create()
+			->setCandidate($this->candidate);
 		return $control;
 	}
 
