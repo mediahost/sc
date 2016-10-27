@@ -22,8 +22,6 @@ use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity;
 use App\Model\Entity\Candidate;
-use App\Model\Entity\Cv;
-use App\Model\Facade\CvFacade;
 use App\Model\Facade\Traits\CantDeleteUserException;
 use App\Model\Facade\UserFacade;
 
@@ -66,17 +64,11 @@ class ProfilePresenter extends BasePresenter
 	/** @var IConversationListFactory @inject */
 	public $iConversationListFactory;
 
-	/** @var CvFacade @inject */
-	public $cvFacade;
-
 	/** @var Person */
 	private $person;
 
 	/** @var Candidate */
 	private $candidate;
-
-	/** @var Cv */
-	private $cv;
 
 	protected function startup()
 	{
