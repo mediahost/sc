@@ -23,8 +23,8 @@ use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Multiplier;
 use Nette\Localization\ITranslator;
+use Nette\Security\User;
 use Nette\Utils\ArrayHash;
-use Tracy\Debugger;
 
 class CandidatesList extends Control
 {
@@ -36,6 +36,9 @@ class CandidatesList extends Control
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	/** @var User @inject */
+	public $user;
 
 	/** @var Translator @inject */
 	public $translator;
@@ -371,7 +374,7 @@ class CandidatesList extends Control
 	{
 		return new Multiplier(function ($itemId) {
 			$control = $this->iCandidatePrint->create();
-			$control->setCandidateById($itemId);
+			$control->setCandidateById($itemId, $this->user->isAllowed('candidatesList', 'showAll'));
 			return $control;
 		});
 	}

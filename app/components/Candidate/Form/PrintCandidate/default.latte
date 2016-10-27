@@ -1,16 +1,28 @@
 {snippet candidatePrint}
-	<div id="{$id}" class="panel panel-default plain gallery-item">
+	<div id="{$id}" class="panel panel-default plain gallery-item candidate-item candidate-long">
 		<div class="panel-heading">
 			<h4 class="panel-title ui-widget-content">
-				<strong>{$candidate}</strong>
-				<small n:if="$person && $person->address">{$person->address->city}</small>
+				<strong n:if="$person->fullName">{$person->fullName}</strong>
+				<strong n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</strong>
+				<small n:if="$person && $person->address">
+					{$person->address->city}
+					<a n:if="isset($user) && $template->canAccess($identity, $user)"
+							href="{plink Users:access $user->id}">
+						<i class="fa fa-key"></i>
+					</a>
+				</small>
 			</h4>
 		</div>
 
 		<div class="panel-body">
-			<div class="row">
+			<div class="row mb10">
 				<div class="col-md-6">
-					<p>
+					<p n:if="$canShowAll">
+						<b>{_'E-mail'}:</b>
+						<br/>
+						<span class="tip">{$user->mail}</span>
+					</p>
+					<p n:if="$preferedJobCategories">
 						<b>{_'Prefered job categories'}:</b>
 						<br/>
 						<span class="tip">{$preferedJobCategories|truncate:70,'...'}</span>
@@ -20,32 +32,75 @@
 						<br/>
 						<span class="tip">{$skills|truncate:70,'...'}</span>
 					</p>
-					<div class="btn-group" role="group">
-						<a n:if="isset($user) && $template->canAccess($identity, $cv->candidate->person->user)"
-								href="{plink Users:access $user->id}"
-								class="btn btn-default btn-link btn-sm">
-							{_'Access'}
-						</a>
-						{*<a href="{plink Profile: $user->id}" target="_blank"*}
-						<a href="{plink Profile:}" target="_blank"
-						   class="btn btn-default btn-link btn-sm">
-							{_'Profile'}
-						</a>
-					</div>
 				</div>
 				<div class="col-md-6">
-					{*<a n:ifset="$user" href="{plink cvDetail $cv->candidate->person->user->id}">*}
-					<img src="{$basePath}/foto/{$person->photo|size:150,150}" class="center img-responsive"
-						 alt="image alt">
-					{*</a>*}
+					<a n:ifset="$user" href="{plink Profile:candidate $user->id}">
+						<img src="{$basePath}/foto/{$person->photo|size:150,150}" class="center img-responsive photo-rounded"
+							 alt="image alt">
+					</a>
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row bt pt10">
 				<div class="col-md-12">
 					<p>
-						<b>{_'Jobs'}:</b>
+						<b>{_'Job matches'}</b>
+						| <a href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
 					</p>
+					<table class="jobs">
+						{var maxCount => 3}
+						<tr n:foreach="$jobs as $job">
+							{var match => $control->findMatch($job)}
+							<th>
+								{$job|truncate:20}
+							</th>
+							{if $match && $match->fullApprove}
+								<td colspan="2">
+									<span class="fa fa-check"></span> {_'Matched'}
+								</td>
+							{else}
+								<td>
+									{if $match && $match->candidateApprove}
+										<span class="fa fa-check"></span> {_'Applied'}
+									{else}
+										<span class="fa fa-times"></span> {_'Not applied'}
+									{/if}
+								</td>
+								<td>
+									{if $match && $match->adminApprove}
+										{if $match->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
+										<span class="fa fa-check"></span>
+									{else}
+										<a n:href="match! $job->id" class="ajax">
+											{if $match && $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
+										</a>
+									{/if}
+								</td>
+							{/if}
+							{breakIf $iterator->counter >= $maxCount}
+						</tr>
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="modal fade jobMatches" id="matches-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						<span n:if="$person->fullName">{$person->fullName}</span>
+						<span n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</span>
+						- {_'Job matches'}
+					</h4>
+				</div>
+				<div class="modal-body">
 					<table class="jobs">
 						<tr n:foreach="$jobs as $job">
 							{var match => $control->findMatch($job)}
@@ -64,11 +119,11 @@
 								</td>
 								<td>
 									{if $match && $match->adminApprove}
+										{if $match->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
 										<span class="fa fa-check"></span>
-										{if $match->candidateApprove}{_'Approved'}{else}{_'Suggested'}{/if}
 									{else}
-										<a n:href="match! $job->id" class="ajax">
-											{if $match && $match->candidateApprove}{_'Approve'}{else}{_'Suggest'}{/if}
+										<a n:href="match! $job->id">
+											{if $match && $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
 										</a>
 									{/if}
 								</td>
@@ -77,7 +132,6 @@
 					</table>
 				</div>
 			</div>
-
 		</div>
 	</div>
 {/snippet}

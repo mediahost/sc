@@ -36,6 +36,9 @@ class PrintCandidate extends BaseControl
 	/** @var Candidate */
 	private $candidate;
 
+	/** @var bool */
+	private $canShowAll;
+
 	// <editor-fold defaultstate="collapsed" desc="template">
 
 	public function render()
@@ -45,6 +48,7 @@ class PrintCandidate extends BaseControl
 		$this->template->cv = $this->candidate->cv;
 		$this->template->person = $this->candidate->person;
 		$this->template->user = $this->candidate->person->user;
+		$this->template->canShowAll = $this->canShowAll;
 
 		$this->template->preferedJobCategories = $this->getPreferedJobCategories();
 		$this->template->skills = $this->getItSkills();
@@ -60,19 +64,20 @@ class PrintCandidate extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="setters & getters">
 
-	public function setCandidateById($candidateId)
+	public function setCandidateById($candidateId, $canShowAll = FALSE)
 	{
 		$candidateRepo = $this->em->getRepository(Candidate::getClassName());
 		$candidate = $candidateRepo->find($candidateId);
 		if ($candidate) {
-			$this->setCandidate($candidate);
+			$this->setCandidate($candidate, $canShowAll);
 		}
 		return $this;
 	}
 
-	public function setCandidate(Candidate $candidate)
+	public function setCandidate(Candidate $candidate, $canShowAll = FALSE)
 	{
 		$this->candidate = $candidate;
+		$this->canShowAll = $canShowAll;
 		return $this;
 	}
 

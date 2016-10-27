@@ -1,7 +1,50 @@
 {snippet candidatesFilter}
 	{form filterForm}
 		{? $form->render('begin')}
+		<div class="panel panel-default panel-closed toggle">
+			<div class="panel-heading">
+				<h4 class="panel-title">{_'Filter'}</h4>
+				<div class="panel-controls panel-controls-right">
+					<a href="#" class="toggle panel-minimize">
+						<i class="icomoon-icon-plus"></i>
+					</a>
+				</div>
+			</div>
+			<div class="panel-body p0">
+				<ul class="activity">
+					<li class="p0 pt10">
+						<div class="row">
+							<div class="col-md-2">
 
+								<i class="s16 icomoon-icon-binoculars gray"></i>
+								<strong>{_'Search'}</strong>
+							</div>
+							<div class="col-md-5">
+								<input type="text" class="form-control input-xlarge" name="default">
+							</div>
+							<div class="col-md-5">
+								<button type="button" class="btn btn-primary mr5 mb10">Primary</button>
+							</div>
+						</div>
+					</li>
+					<li>
+						<i class="s16 icomoon-icon-briefcase gray"></i>
+						<a href="#"><strong>{_'Category'}</strong></a> add <a href="#">3 posts</a>
+						<a href="#" class="btn btn-default btn-xs">View posts</a>
+					</li>
+					<li>
+						<i class="s16 icomoon-icon-office gray"></i>
+						<a href="#"><strong>{_'Job or Account Manager'}</strong></a> add <a href="#">3 posts</a>
+						<a href="#" class="btn btn-default btn-xs">View posts</a>
+					</li>
+					<li>
+						<i class="s16  icomoon-icon-keyboard gray"></i>
+						<a href="#"><strong>{_'IT skills'}</strong></a> add <a href="#">3 posts</a>
+						<a href="#" class="btn btn-default btn-xs">View posts</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		{? $form->render('end')}
 	{/form}
 {/snippet}

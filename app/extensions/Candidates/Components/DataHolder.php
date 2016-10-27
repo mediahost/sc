@@ -117,8 +117,6 @@ class DataHolder extends Object
 
 	public function filterNotEmpty()
 	{
-		$this->candidateCriteria['person.photo NOT'] = NULL;
-		$this->candidateCriteria['person.firstname NOT'] = NULL;
 		return $this;
 	}
 

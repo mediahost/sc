@@ -18,6 +18,7 @@ services:
 
 			- addResource('candidate')
 			- addResource('candidates')
+			- addResource('candidatesList')
 			- addResource('cvEditor')
 			- addResource('cvViewer')
 			- addResource('company')
@@ -58,6 +59,7 @@ services:
 			- allow('admin', 'skillCategories')
 			- allow('admin', 'candidate')
 			- allow('admin', 'candidates')
+			- allow('admin', 'candidatesList')
 			- allow('admin', 'company')
 			- allow('admin', 'companies')
 			- allow('admin', 'jobs')
