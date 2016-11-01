@@ -235,6 +235,11 @@ span {
 			}
 		}
 	}
+	&.candidate-short {
+		.panel-body {
+			height: 220px;
+		}
+	}
 	&.candidate-long {
 		.panel-body {
 			height: 320px;
@@ -254,6 +259,20 @@ span {
 				font-style: italic;
 				padding-left: 0px;
 				width: 45%;
+			}
+		}
+	}
+}
+
+.candidate-filter {
+	.table {
+		td {
+			&.name {
+				width: 200px;
+				label {
+					font-weight: normal;
+					margin-top: 6px;
+				}
 			}
 		}
 	}

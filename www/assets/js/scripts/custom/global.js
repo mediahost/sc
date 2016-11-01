@@ -101,10 +101,10 @@ var Global = function () {
 	};
 
 	var handleModals = function () {
-		$('body').on('click', 'button[data-action="modal"]', function () {
+		$(document).on('click', 'button[data-action="modal"]', function () {
 			$(this).closest('.modal-content').find('form').submit();
 		});
-		$('body').on('click', 'a[data-action="modal"]', function (e) {
+		$(document).on('click', 'a[data-action="modal"]', function (e) {
 			$.nette.ajax({}, this, e);
 		});
 	};

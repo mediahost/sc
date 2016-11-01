@@ -72,6 +72,24 @@ class JobPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('jobs')
+	 * @privilege('candidates')
+	 */
+	public function actionCandidates($id)
+	{
+		$job = $this->jobRepository->find($id);
+		if ($job) {
+			$this['candidatesList']->addFilterJob($job);
+			$this->template->job = $job;
+		} else {
+			$message = $this->translator->translate('Finded job isn\'t exists.');
+			$this->flashMessage($message, 'danger');
+			$this->redirect('Dashboard:');
+		}
+	}
+
+	/**
+	 * @secured
+	 * @resource('jobs')
 	 * @privilege('add')
 	 */
 	public function actionAdd($companyId)

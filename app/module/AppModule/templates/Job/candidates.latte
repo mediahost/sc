@@ -1,0 +1,18 @@
+{block pageTitle}
+	{$job}
+{/block}
+
+{block breadcrumbItems}
+	<li>
+		<a n:href="Jobs:">{_'Jobs'}</a>
+	</li>
+{/block}
+
+{block content}
+<div class="row">
+	<div class="col-md-12">
+		{control candidatesList:filter}
+		{control candidatesList}
+		{control candidatesList:paginator}
+	</div>
+</div>

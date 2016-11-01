@@ -18,7 +18,7 @@
             </div>
             <div id="{$category->name|webalize}_{$category->id}" 
                  class="panel-collapse collapse">
-                <div class="panel-body">
+                <div class="panel-body p0">
                     <table class="table">
                         {if count($category->skills)}
                             {include blockSkills, skills=>$category->skills, form=>$form, categoryName=>''}

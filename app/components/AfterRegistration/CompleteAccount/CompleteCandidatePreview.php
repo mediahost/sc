@@ -23,8 +23,7 @@ class CompleteCandidatePreview extends BaseControl
 
 	public function render()
 	{
-		$candidate = isset($this->candidate)  ?  $this->candidate : $this->user->getIdentity()->getCandidate();
-		$this->template->freelancer = $candidate->freelancer ? 'yes' : 'no';
+		$this->template->freelancer = $this->candidate->freelancer ? 'yes' : 'no';
 		$this->setTemplateFile('candidateSecondPreview');
 		parent::render();
 	}
@@ -48,20 +47,17 @@ class CompleteCandidatePreview extends BaseControl
 
 	public function getDefaults()
 	{
-		$candidate = isset($this->candidate)  ?  $this->candidate  :  $this->user->getIdentity()->getCandidate();
-		$categories = $this->jobFacade->findCandidatePreferedCategories($candidate);
-
 		$localities = [];
 		foreach (Person::getLocalities() as $group) {
 			foreach ($group as $localityId => $locality) {
-				if (in_array($localityId, $candidate->workLocations)) {
+				if (in_array($localityId, $this->candidate->workLocations)) {
 					$localities[] = $locality;
 				}
 			}
 		}
 
 		return [
-			'categories' => implode(',', $categories),
+			'categories' => implode(',', $this->candidate->jobCategoriesArray),
 			'countries' => implode(',', $localities)
 		];
 	}

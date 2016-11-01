@@ -1,7 +1,7 @@
 {snippet candidatesFilter}
 	{form filterForm}
 		{? $form->render('begin')}
-		<div class="panel panel-default panel-closed toggle">
+		<div class="panel panel-default panel-closed toggle candidate-filter">
 			<div class="panel-heading">
 				<h4 class="panel-title">{_'Filter'}</h4>
 				<div class="panel-controls panel-controls-right">
@@ -11,40 +11,117 @@
 				</div>
 			</div>
 			<div class="panel-body p0">
-				<ul class="activity">
-					<li class="p0 pt10">
-						<div class="row">
-							<div class="col-md-2">
-
-								<i class="s16 icomoon-icon-binoculars gray"></i>
-								<strong>{_'Search'}</strong>
+				<table class="table table-hover">
+					<tbody>
+					<tr>
+						<td colspan="2">
+							{input search}
+						</td>
+						<td>
+							{input send}
+							<a n:href="resetFilter!" class="btn btn-default">{_'Reset filter'}</a>
+						</td>
+					</tr>
+					<tr n:if="!$denyCompany">
+						<td class="name">
+							{label job/}
+						</td>
+						<td>
+							{input job}
+						</td>
+						<td>
+							{input send}
+						</td>
+					</tr>
+					{*<tr n:if="!$denyCompany">*}
+						{*<td class="name">*}
+							{*{_'Account Manager'}*}
+						{*</td>*}
+						{*<td></td>*}
+						{*<td></td>*}
+					{*</tr>*}
+					<tr>
+						<td class="name">
+							{_'Category'}
+						</td>
+						<td class="tags">
+							<div>
+								<span n:foreach="$selectedCategories as $tag"
+										class="tag label label-info">{$tag}</span>
 							</div>
-							<div class="col-md-5">
-								<input type="text" class="form-control input-xlarge" name="default">
+						</td>
+						<td>
+							<a href="#categoryFilter" data-toggle="modal">{_'Set'}</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="name">
+							{_'IT skills'}
+						</td>
+						<td class="tags">
+							<div>
+								<span n:foreach="$selectedSkills as $tag"
+										class="tag label label-info">{$tag}</span>
 							</div>
-							<div class="col-md-5">
-								<button type="button" class="btn btn-primary mr5 mb10">Primary</button>
-							</div>
-						</div>
-					</li>
-					<li>
-						<i class="s16 icomoon-icon-briefcase gray"></i>
-						<a href="#"><strong>{_'Category'}</strong></a> add <a href="#">3 posts</a>
-						<a href="#" class="btn btn-default btn-xs">View posts</a>
-					</li>
-					<li>
-						<i class="s16 icomoon-icon-office gray"></i>
-						<a href="#"><strong>{_'Job or Account Manager'}</strong></a> add <a href="#">3 posts</a>
-						<a href="#" class="btn btn-default btn-xs">View posts</a>
-					</li>
-					<li>
-						<i class="s16  icomoon-icon-keyboard gray"></i>
-						<a href="#"><strong>{_'IT skills'}</strong></a> add <a href="#">3 posts</a>
-						<a href="#" class="btn btn-default btn-xs">View posts</a>
-					</li>
-				</ul>
+						</td>
+						<td>
+							<a href="#skillsFilter" data-toggle="modal">{_'Set'}</a>
+						</td>
+					</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 		{? $form->render('end')}
 	{/form}
+
+	<div class="modal fade" id="categoryFilter">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Category filter'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control categoryFilter}
+				</div>
+				<div class="modal-footer">
+					<a href="{link resetFilter! 'category'}" class="btn btn-primary btn-warning"
+					   data-dismiss="modal" data-action="modal">{_'Reset'}</a>
+					<button type="button" class="btn btn-primary"
+							data-dismiss="modal" data-action="modal">{_'Filter'}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="skillsFilter">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Skills filter'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control skillsFilter}
+				</div>
+				<div class="modal-footer">
+					<a href="{link resetFilter! 'skills'}" class="btn btn-primary btn-warning"
+					   data-dismiss="modal" data-action="modal">{_'Reset'}</a>
+					<button type="button" class="btn btn-primary"
+							data-dismiss="modal" data-action="modal">{_'Filter'}</button>
+				</div>
+			</div>
+		</div>
+	</div>
 {/snippet}

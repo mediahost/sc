@@ -1,13 +1,18 @@
 {snippet candidatePrint}
-	<div id="{$id}" class="panel panel-default plain gallery-item candidate-item candidate-long">
+	<div id="{$id}" n:class="panel, panel-default, plain, gallery-item, candidate-item, $selectedJob ? candidate-short : candidate-long">
 		<div class="panel-heading">
 			<h4 class="panel-title ui-widget-content">
+				<small n:if="$candidate->cvFile">
+					<a href="{$basePath}/{$candidate->cvFile}"
+					   target="_blank" title="{_'CV file'}"><i class="icomoon-icon-file-download"></i></a>
+				</small>
 				<strong n:if="$person->fullName">{$person->fullName}</strong>
 				<strong n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</strong>
 				<small n:if="$person && $person->address">
 					{$person->address->city}
-					<a n:if="isset($user) && $template->canAccess($identity, $user)"
-							href="{plink Users:access $user->id}">
+				</small>
+				<small n:if="isset($user) && $template->canAccess($identity, $user)">
+					<a href="{plink Users:access $user->id}">
 						<i class="fa fa-key"></i>
 					</a>
 				</small>
@@ -22,7 +27,7 @@
 						<br/>
 						<span class="tip">{$user->mail}</span>
 					</p>
-					<p n:if="$preferedJobCategories">
+					<p n:if="count($candidate->jobCategories)">
 						<b>{_'Prefered job categories'}:</b>
 						<br/>
 						<span class="tip">{$preferedJobCategories|truncate:70,'...'}</span>
@@ -35,7 +40,8 @@
 				</div>
 				<div class="col-md-6">
 					<a n:ifset="$user" href="{plink Profile:candidate $user->id}">
-						<img src="{$basePath}/foto/{$person->photo|size:150,150}" class="center img-responsive photo-rounded"
+						<img src="{$basePath}/foto/{$person->photo|size:150,150}"
+							 class="center img-responsive photo-rounded"
 							 alt="image alt">
 					</a>
 				</div>
@@ -43,43 +49,49 @@
 
 			<div class="row bt pt10">
 				<div class="col-md-12">
-					<p>
-						<b>{_'Job matches'}</b>
-						| <a href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
-					</p>
-					<table class="jobs">
-						{var maxCount => 3}
-						<tr n:foreach="$jobs as $job">
-							{var match => $control->findMatch($job)}
-							<th>
-								{$job|truncate:20}
-							</th>
-							{if $match && $match->fullApprove}
-								<td colspan="2">
-									<span class="fa fa-check"></span> {_'Matched'}
-								</td>
-							{else}
-								<td>
-									{if $match && $match->candidateApprove}
-										<span class="fa fa-check"></span> {_'Applied'}
-									{else}
-										<span class="fa fa-times"></span> {_'Not applied'}
-									{/if}
-								</td>
-								<td>
-									{if $match && $match->adminApprove}
-										{if $match->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
-										<span class="fa fa-check"></span>
-									{else}
-										<a n:href="match! $job->id" class="ajax">
-											{if $match && $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
-										</a>
-									{/if}
-								</td>
-							{/if}
-							{breakIf $iterator->counter >= $maxCount}
-						</tr>
-					</table>
+					{if !$selectedJob}
+						<p>
+							<b>{_'Job matches'}</b>
+							| <a href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
+						</p>
+						<table class="jobs">
+							{var maxCount => 3}
+							<tr n:foreach="$jobs as $job">
+								{var match => $control->findMatch($job)}
+								<th>
+									{$job|truncate:20}
+								</th>
+								{if $match && $match->fullApprove}
+									<td colspan="2">
+										<span class="fa fa-check"></span> {_'Matched'}
+									</td>
+								{else}
+									<td>
+										{if $match && $match->candidateApprove}
+											<span class="fa fa-check"></span> {_'Applied'}
+										{else}
+											<span class="fa fa-times"></span> {_'Not applied'}
+										{/if}
+									</td>
+									<td>
+										{if $match && $match->adminApprove}
+											{if $match->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
+											<span class="fa fa-check"></span>
+										{else}
+											<a n:href="match! $job->id" class="ajax">
+												{if $match && $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
+											</a>
+										{/if}
+									</td>
+								{/if}
+								{breakIf $iterator->counter >= $maxCount}
+							</tr>
+						</table>
+					{else}
+						<p>
+							{_'State for'} '<i>{$selectedJob}</i>'
+						</p>
+					{/if}
 				</div>
 			</div>
 

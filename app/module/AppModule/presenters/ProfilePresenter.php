@@ -70,17 +70,18 @@ class ProfilePresenter extends BasePresenter
 	/** @var Candidate */
 	private $candidate;
 
-	protected function startup()
+	private function setUser($userId = NULL)
 	{
-		parent::startup();
-		$userId = $this->getParameter('userId');
+		$user = NULL;
+		$userRepo = $this->em->getRepository(Entity\User::getClassName());
 		if ($userId) {
-			$user = $this->em->getRepository(Entity\User::getClassName())->find($userId);
-		} else {
+			$user = $userRepo->find($userId);
+		}
+		if (!$user) {
 			$user = $this->user->identity;
 		}
-		$this->person = $user->getPerson();
-		$this->candidate = $this->person->getCandidate();
+		$this->person = $user->person;
+		$this->candidate = $this->person->candidate;
 	}
 
 	/**
@@ -90,9 +91,15 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		if (in_array(Entity\Role::ADMIN, $this->getUser()->getRoles()) || in_array(Entity\Role::SUPERADMIN, $this->getUser()->getRoles())) {
+		if (in_array(Entity\Role::ADMIN, $this->getUser()->getRoles()) || in_array(Entity\Role::SUPERADMIN, $this->getUser()->getRoles())
+		) {
 			$this->redirect('connectManager');
 		}
+		$this->setUser();
+	}
+
+	public function renderDefault()
+	{
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
 	}
@@ -106,8 +113,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionCandidate($userId)
 	{
-		$this->template->person = $this->person;
-		$this->template->candidate = $this->candidate;
+		$this->setUser($userId);
 		$this->setView('default');
 	}
 
@@ -352,8 +358,10 @@ class ProfilePresenter extends BasePresenter
 	{
 		$senders = $this->communicationFacade->findSenders($this->person->user);
 		$control = $this->iConversationListFactory->create();
-		$control->setSender(current($senders))
-			->setReadMode(true)
+		if (count($senders)) {
+			$control->setSender(current($senders));
+		}
+		$control->setReadMode(TRUE)
 			->disableSearchBox();
 		return $control;
 	}

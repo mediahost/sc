@@ -3,8 +3,7 @@
 namespace App\Components\Candidate\Form;
 
 use App\Components\BaseControl;
-use App\Components\BaseControlException;
-use App\Extensions\Candidates\CandidatesList;
+use App\Helpers;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
 use App\Model\Entity\Sign;
@@ -16,7 +15,6 @@ use App\Model\Facade\JobFacade;
 use App\Model\Facade\UserFacade;
 use Nette\Security\User;
 use Nette\Utils\Random;
-use Tracy\Debugger;
 
 class PrintCandidate extends BaseControl
 {
@@ -36,6 +34,9 @@ class PrintCandidate extends BaseControl
 	/** @var Candidate */
 	private $candidate;
 
+	/** @var Job */
+	private $selectedJob;
+
 	/** @var bool */
 	private $canShowAll;
 
@@ -48,6 +49,7 @@ class PrintCandidate extends BaseControl
 		$this->template->cv = $this->candidate->cv;
 		$this->template->person = $this->candidate->person;
 		$this->template->user = $this->candidate->person->user;
+		$this->template->selectedJob = $this->selectedJob;
 		$this->template->canShowAll = $this->canShowAll;
 
 		$this->template->preferedJobCategories = $this->getPreferedJobCategories();
@@ -64,20 +66,21 @@ class PrintCandidate extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="setters & getters">
 
-	public function setCandidateById($candidateId, $canShowAll = FALSE)
+	public function setCandidateById($candidateId, $canShowAll = FALSE, Job $job = NULL)
 	{
 		$candidateRepo = $this->em->getRepository(Candidate::getClassName());
 		$candidate = $candidateRepo->find($candidateId);
 		if ($candidate) {
-			$this->setCandidate($candidate, $canShowAll);
+			$this->setCandidate($candidate, $canShowAll, $job);
 		}
 		return $this;
 	}
 
-	public function setCandidate(Candidate $candidate, $canShowAll = FALSE)
+	public function setCandidate(Candidate $candidate, $canShowAll = FALSE, Job $job = NULL)
 	{
 		$this->candidate = $candidate;
 		$this->canShowAll = $canShowAll;
+		$this->selectedJob = $job;
 		return $this;
 	}
 
@@ -88,9 +91,11 @@ class PrintCandidate extends BaseControl
 
 	private function getPreferedJobCategories()
 	{
-		$categories = $this->jobFacade->findCandidatePreferedCategories($this->candidate);
-		$result = implode(', ', $categories);
-		return $result;
+		$prefered = NULL;
+		foreach ($this->candidate->jobCategories as $category) {
+			$prefered = Helpers::concatStrings(', ', $prefered, (string)$category);
+		}
+		return $prefered;
 	}
 
 	private function getItSkills()

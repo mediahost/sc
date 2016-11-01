@@ -15,7 +15,8 @@ use Nette\Http\FileUpload;
  * @property Person $person
  * @property Cv $cv
  * @property bool $freelancer
- * @property Document[] $documents
+ * @property ArrayCollection $documents
+ * @property ArrayCollection $jobCategories
  * @property FileUpload|string $cvFile
  */
 class Candidate extends BaseEntity
@@ -38,7 +39,7 @@ class Candidate extends BaseEntity
 	/** @ORM\Column(type="array") */
 	protected $workLocations;
 
-	/** @ORM\Column(type="array") */
+	/** @ORM\ManyToMany(targetEntity="JobCategory", cascade={"all"}) */
 	protected $jobCategories;
 
 	/** @ORM\OneToMany(targetEntity="Document", mappedBy="candidate", fetch="EAGER", cascade={"all"}) */
@@ -53,7 +54,7 @@ class Candidate extends BaseEntity
 	public function __construct($name = NULL)
 	{
 		$this->workLocations = [];
-		$this->jobCategories = [];
+		$this->jobCategories = new ArrayCollection();
 		$this->documents = new ArrayCollection();
 		parent::__construct($name);
 	}
@@ -86,10 +87,49 @@ class Candidate extends BaseEntity
 	{
 		$this->documents->add($document);
 		$document->setCandidate($this);
+		return $this;
 	}
 
 	public function getDocuments()
 	{
 		return $this->documents;
+	}
+
+	public function addJobCategory(JobCategory $category)
+	{
+		$this->jobCategories->add($category);
+		return $this;
+	}
+
+	public function clearJobCategories()
+	{
+		return $this->jobCategories->clear();
+	}
+
+	public function getJobCategories()
+	{
+		return $this->jobCategories;
+	}
+
+	public function getJobCategoriesIds()
+	{
+		$ids = [];
+		$fillIds = function ($key, JobCategory $category) use (&$ids) {
+			$ids[$category->id] = $category->id;
+			return TRUE;
+		};
+		$this->jobCategories->forAll($fillIds);
+		return $ids;
+	}
+
+	public function getJobCategoriesArray()
+	{
+		$ids = [];
+		$fillIds = function ($key, JobCategory $category) use (&$ids) {
+			$ids[$category->id] = (string)$category;
+			return TRUE;
+		};
+		$this->jobCategories->forAll($fillIds);
+		return $ids;
 	}
 }
