@@ -4,7 +4,7 @@
 	<div class="shortcuts" n:if="$isCandidate && $isCompleteAccount">
 		<ul>
 			<li>
-				<a href="{link CvEditor:}" title="{_'Your CV'}" class="tip">
+				<a href="{link CvEditor:skills}" title="{_'Your Skills'}" class="tip">
 					<i class="s24 icomoon-icon-clipboard"></i>
 				</a>
 			</li>
@@ -47,22 +47,14 @@
 							</li>
 
 							<li n:if="$isCandidate">
-								<a n:href="CvEditor:"
-										n:class="$presenter->isLinkCurrent('CvEditor:*') && !$presenter->isLinkCurrent('CvEditor:Skills') && !$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
-									<i class="s16 icomoon-icon-clipboard"></i>
-									<span class="txt">{_'CV Editor'}</span>
-								</a>
-							</li>
-
-							<li n:if="$isCandidate">
-								<a n:href="CvEditor:Skills" n:class="$presenter->isLinkCurrent('CvEditor:Skills') ? active">
+								<a n:href="CvEditor:skills" n:class="$presenter->isLinkCurrent('CvEditor:Skills') ? active">
 									<i class="s16 icomoon-icon-clipboard"></i>
 									<span class="txt">{_'IT Skills'}</span>
 								</a>
 							</li>
 
 							<li n:if="$isCandidate">
-								<a n:href="CvEditor:CareerDocs" n:class="$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
+								<a n:href="CvEditor:careerDocs" n:class="$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
 									<i class="s16 icomoon-icon-clipboard"></i>
 									<span class="txt">{_'Career Docs'}</span>
 								</a>
@@ -80,12 +72,6 @@
 								<a n:href="Users:" n:class="$presenter->isLinkCurrent('Users:*') ? active">
 									<i class="fa fa-users"></i>
 									<span class="txt">{_'Users'}</span>
-								</a>
-							</li>
-							<li n:if="$user->isAllowed('cvs', 'default')">
-								<a n:href="Cvs:candidates" n:class="$presenter->isLinkCurrent('Cvs:*') || $presenter->isLinkCurrent('Profile:candidate') ? active">
-									<i class="fa fa-file-text"></i>
-									<span class="txt">{_'Candidates'}</span>
 								</a>
 							</li>
 							<li n:if="$user->isAllowed('candidates', 'default')">
