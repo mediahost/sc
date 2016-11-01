@@ -4,7 +4,11 @@ namespace App\AppModule\Presenters;
 
 use App\Components\Candidate\IJobListFactory;
 use App\Components\Candidate\ISocialFactory;
+use App\Components\Candidate\JobList;
+use App\Components\Candidate\Social;
+use App\Components\Conversation\Form\ConversationList;
 use App\Components\Conversation\Form\IConversationListFactory;
+use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity\Person;
 
@@ -25,7 +29,6 @@ class DashboardPresenter extends BasePresenter
 	/** @var Person */
 	private $person;
 
-
 	protected function startup()
 	{
 		parent::startup();
@@ -42,7 +45,7 @@ class DashboardPresenter extends BasePresenter
 
 	}
 
-	/** @return \App\Components\Conversation\Form\ConversationList */
+	/** @return ConversationList */
 	public function createComponentRecentMessages()
 	{
 		$senders = $this->communicationFacade->findSenders($this->user->getIdentity());
@@ -52,14 +55,15 @@ class DashboardPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return \App\Components\Candidate\JobList */
+	/** @return JobList */
 	public function createComponentJobList()
 	{
 		$control = $this->jobListFactory->create();
+		$control->setLimit(5);
 		return $control;
 	}
 
-	/** @return \App\Components\Candidate\Social */
+	/** @return Social */
 	public function createComponentSocialForm()
 	{
 		$control = $this->socialFactory->create();
@@ -70,7 +74,7 @@ class DashboardPresenter extends BasePresenter
 		return $control;
 	}
 
-	/** @return \App\Components\User\CareerDocs */
+	/** @return CareerDocs */
 	public function createComponentDocsForm()
 	{
 		$control = $this->careerDocFactory->create();
@@ -78,4 +82,5 @@ class DashboardPresenter extends BasePresenter
 		$control->setTemplateFile('overView');
 		return $control;
 	}
+
 }
