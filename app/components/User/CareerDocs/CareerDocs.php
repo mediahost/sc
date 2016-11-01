@@ -8,6 +8,7 @@ use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Document;
 use Doctrine\ORM\EntityManager;
+use Nette\Security\User;
 use Nette\Utils\ArrayHash;
 
 class CareerDocs extends BaseControl
@@ -18,12 +19,19 @@ class CareerDocs extends BaseControl
 	/** @var EntityManager @inject */
 	public $em;
 
+	/** @var User @inject */
+	public $user;
+
 	/** @var Candidate */
 	private $candidate;
+
+	/** @var bool */
+	private $isSameUser;
 
 	public function render()
 	{
 		$this->template->candidate = $this->candidate;
+		$this->template->isSameUser = $this->isSameUser;
 		parent::render();
 	}
 
@@ -37,13 +45,15 @@ class CareerDocs extends BaseControl
 		return $form;
 	}
 
-	public function formSucceeded(Form $form, ArrayHash $values) {
+	public function formSucceeded(Form $form, ArrayHash $values)
+	{
 		$this->load($form);
 		$this->save();
 		$this->onAfterSave($this->candidate);
 	}
 
-	protected function load(Form $form) {
+	protected function load(Form $form)
+	{
 		$file = $form->getHttpData()['file'];
 		$document = new Document();
 		$document->setFile($file);
@@ -51,7 +61,8 @@ class CareerDocs extends BaseControl
 		$this->candidate->addDocument($document);
 	}
 
-	protected function save() {
+	protected function save()
+	{
 		$this->em->persist($this->candidate);
 		$this->em->flush();
 		return $this;
@@ -97,6 +108,8 @@ class CareerDocs extends BaseControl
 	public function setCandidate(Candidate $candidate)
 	{
 		$this->candidate = $candidate;
+		$this->isSameUser = $candidate->person->user->id && $this->user->id;
+		return $this;
 	}
 
 	public function setTemplateFile($name)
