@@ -5,7 +5,7 @@ namespace App\Components\AfterRegistration;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
-use App\Model\Entity\User;
+use App\Model\Entity\Candidate;
 use Nette\Utils\ArrayHash;
 
 class CompleteCv extends BaseControl
@@ -14,19 +14,20 @@ class CompleteCv extends BaseControl
 	// <editor-fold desc="events">
 
 	/** @var array */
-	public $onSuccess = [];
+	public $onAfterSave = [];
 
 	// </editor-fold>
 	// <editor-fold desc="injects">
 
-	/** @var \Nette\Security\User @inject */
-	public $user;
+	/** @var Candidate */
+	private $candidate;
 
 	// </editor-fold>
 
 	public function render()
 	{
 		$this->setTemplateFile('cv');
+		$this->template->candidate = $this->candidate;
 		parent::render();
 	}
 
@@ -36,7 +37,16 @@ class CompleteCv extends BaseControl
 		$form->setRenderer(new Bootstrap3FormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->getElementPrototype()->setClass('dropzone dz-clickable dz-started');
+		$acceptedFiles = [
+			'application/pdf',
+			'application/msword',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		];
+		$form->addUpload('cvFile', 'Your CV')
+			->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles))
+			->setRequired('Please enter file with %label');
+
+		$form->addSubmit('send', 'Upload');
 
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
@@ -44,21 +54,18 @@ class CompleteCv extends BaseControl
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$user = $this->user->getIdentity();
-		$candidate = $user->getPerson()->getCandidate();
+		$this->candidate->cvFile = $values->cvFile;
 
-		$candidate->cvFile = $form->getHttpData()['file'];
+		$candidateRepo = $this->em->getRepository(Candidate::getClassName());
+		$candidateRepo->save($this->candidate);
 
-		$userRepo = $this->em->getRepository(User::getClassName());
-		$userRepo->save($user, $candidate);
-
-		$this->onSuccess($this, $candidate);
+		$this->onAfterSave($this, $this->candidate);
 	}
 
-	public function onErrorHandler()
+	public function setCandidate(Candidate $candidate)
 	{
-		$this->presenter->flashMessage('Wrong file type!', 'error');
-		$this->redrawControl();
+		$this->candidate = $candidate;
+		return $this;
 	}
 }
 

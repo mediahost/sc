@@ -54,6 +54,13 @@
 							</li>
 
 							<li n:if="$isCandidate">
+								<a n:href="CvEditor:file" n:class="$presenter->isLinkCurrent('CvEditor:file') ? active">
+									<i class="s16 icomoon-icon-clipboard"></i>
+									<span class="txt">{_'My CV'}</span>
+								</a>
+							</li>
+
+							<li n:if="$isCandidate">
 								<a n:href="CvEditor:careerDocs" n:class="$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
 									<i class="s16 icomoon-icon-clipboard"></i>
 									<span class="txt">{_'Career Docs'}</span>

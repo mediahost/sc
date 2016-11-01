@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\AfterRegistration\CompleteCv;
+use App\Components\AfterRegistration\ICompleteCvFactory;
 use App\Components\Cv;
 use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
@@ -61,6 +63,9 @@ class CvEditorPresenter extends BasePresenter
 
 	/** @var ICareerDocsFactory @inject */
 	public $iCareerDocsFactory;
+
+	/** @var ICompleteCvFactory @inject */
+	public $iCompleteCvFactory;
 
 	/** @var Entity\Cv */
 	private $cv;
@@ -143,6 +148,16 @@ class CvEditorPresenter extends BasePresenter
 			$candidate = $this->user->identity->candidate;
 		}
 		$this['careerDocs']->setCandidate($candidate);
+	}
+
+	public function actionFile($userId = NULL)
+	{
+		if ($userId && $this->user->isAllowed('cvEditor', 'editForeign')) {
+			$candidate = $this->userFacade->findById($userId)->candidate;
+		} else {
+			$candidate = $this->user->identity->candidate;
+		}
+		$this['changeCv']->setCandidate($candidate);
 	}
 
 	public function afterCvSave()
@@ -298,6 +313,16 @@ class CvEditorPresenter extends BasePresenter
 	public function createComponentCareerDocs()
 	{
 		$control = $this->iCareerDocsFactory->create();
+		$control->onAfterSave[] = function () {
+			$this->redirect('this');
+		};
+		return $control;
+	}
+
+	/** @return CompleteCv */
+	public function createComponentChangeCv()
+	{
+		$control = $this->iCompleteCvFactory->create();
 		$control->onAfterSave[] = function () {
 			$this->redirect('this');
 		};
