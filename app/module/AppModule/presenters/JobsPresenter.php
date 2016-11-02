@@ -8,16 +8,27 @@ use App\Components\Grids\Job\IJobsGridFactory;
 use App\Components\Grids\Job\JobsGrid;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
+use App\Model\Entity\Role;
+use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
+use App\Model\Repository\CompanyRepository;
+use App\Model\Repository\JobRepository;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 
 class JobsPresenter extends BasePresenter
 {
+
 	// <editor-fold desc="injects">
 
 	/** @var EntityManager @inject */
 	public $em;
+
+	/** @var JobFacade @inject */
+	public $jobFacade;
+
+	/** @var CandidateFacade @inject */
+	public $candidateFacade;
 
 	/** @var ICompanySelectorFactory @inject */
 	public $iCompanySelectorFactory;
@@ -25,17 +36,15 @@ class JobsPresenter extends BasePresenter
 	/** @var IJobsGridFactory @inject */
 	public $iJobsGridFactory;
 
-	/** @var JobFacade @inject */
-	public $jobFacade;
-
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
-	/** @var EntityDao */
+	/** @var CompanyRepository */
 	private $companyRepo;
 
-	/** @var EntityDao */
+	/** @var JobRepository */
 	private $jobRepo;
+
 	// </editor-fold>
 
 	protected function startup()
@@ -77,8 +86,17 @@ class JobsPresenter extends BasePresenter
 	 */
 	public function actionMyList()
 	{
+		if (!$this->user->isInRole(Role::CANDIDATE)) {
+			$this->flashMessage($this->translator->translate('This section is only for candidate'));
+			$this->redirect('Dashboard:');
+		}
+		$candidate = $this->user->getIdentity()->candidate;
+		$this->template->candidate = $candidate;
 		$this->template->jobs = $this->jobRepo->findAll();
-		$this->template->suggested = [];
+		$this->template->invitations = $this->candidateFacade->findApprovedJobs($candidate, FALSE);
+		$this->template->applied = $this->candidateFacade->findAppliedJobs($candidate, FALSE);
+		$this->template->matches = $this->candidateFacade->findMatchedJobs($candidate);
+		$this->template->candidateFacade = $this->candidateFacade;
 	}
 
 	/**
@@ -112,5 +130,6 @@ class JobsPresenter extends BasePresenter
 		$control = $this->iJobsGridFactory->create();
 		return $control;
 	}
+
 	// </editor-fold>
 }

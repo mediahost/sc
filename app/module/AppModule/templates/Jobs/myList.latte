@@ -5,49 +5,63 @@
 {block content}
 	<div class="row">
 
-		<div class="col-md-4">
-			<div class="panel panel-default plain">
-				<div class="panel-heading">
-					<h4 class="panel-title">{_'All Jobs'}</h4>
-				</div>
-				<div class="panel-body">
-					<div class="list-group" n:if="count($jobs)">
-						<a n:foreach="$jobs as $job" n:href="Job:view $job->id" class="list-group-item">
-							<h4 class="list-group-item-heading">{$job}</h4>
-							<p class="list-group-item-text">
-								{$job->description|striptags|truncate:50}
-							</p>
-						</a>
-					</div>
-					<div class="alert alert-info" n:if="!count($jobs)">
-						<i class="glyphicon glyphicon-info-sign alert-icon"></i>
-						{_'There are no jobs for you'}
-					</div>
-				</div>
+		<div class="col-md-3">
+			<div class="page-header">
+				<h4>{_'All jobs'}</h4>
+			</div>
+			<div class="list-group" n:if="count($jobs)">
+				{include jobPreview jobs => $jobs}
+			</div>
+			<div class="alert alert-info" n:if="!count($jobs)">
+				<i class="glyphicon glyphicon-info-sign alert-icon"></i>
+				{_'There are no jobs for you'}
 			</div>
 		</div>
 
-		<div class="col-md-4">
-			<div class="panel panel-default plain">
-				<div class="panel-heading">
-					<h4 class="panel-title">{_'Job invitations'}</h4>
-				</div>
-				<div class="panel-body">
-					<div class="list-group" n:if="count($suggested)">
-						<a n:foreach="$suggested as $job" n:href="Job:view $job->id" class="list-group-item">
-							<h4 class="list-group-item-heading">{$job}</h4>
-							<p class="list-group-item-text">
-								{$job->description|truncate:50}
-							</p>
-						</a>
-					</div>
-					<div class="alert alert-info" n:if="!count($suggested)">
-						<i class="glyphicon glyphicon-info-sign alert-icon"></i>
-						{_'We are searching job position for You'}
-					</div>
-				</div>
+		<div class="col-md-3" n:if="count($invitations)">
+			<div class="page-header">
+				<h4>{_'Job invitations'}</h4>
+			</div>
+			<div class="list-group" n:if="count($invitations)">
+				{include jobPreview jobs => $invitations}
+			</div>
+		</div>
+
+		<div class="col-md-3" n:if="count($applied)">
+			<div class="page-header">
+				<h4>{_'Job applies'}</h4>
+			</div>
+			<div class="list-group" n:if="count($applied)">
+				{include jobPreview jobs => $applied}
+			</div>
+		</div>
+
+		<div class="col-md-3" n:if="count($matches)">
+			<div class="page-header">
+				<h4>{_'Matches'}</h4>
+			</div>
+			<div class="list-group" n:if="count($matches)">
+				{include jobPreview jobs => $matches}
 			</div>
 		</div>
 
 	</div>
-{/block content}
+{/block}
+
+{block jobPreview}
+	<a n:foreach="$jobs as $job" n:href="Job:view $job->id" class="list-group-item">
+		<h4 class="list-group-item-heading">{$job}</h4>
+		<p class="list-group-item-text pb5">
+			{$job->description|striptags|truncate:50}
+		</p>
+		{ifset $candidateFacade}
+			{if $candidateFacade->isMatched($candidate, $job)}
+				<span class="label label-danger">{_'Matched'}</span>
+			{elseif $candidateFacade->isApproved($candidate, $job)}
+				<span class="label label-success">{_'Invited'}</span>
+			{elseif $candidateFacade->isApplied($candidate, $job)}
+				<span class="label label-warning">{_'Applied'}</span>
+			{/if}
+		{/ifset}
+	</a>
+{/block}

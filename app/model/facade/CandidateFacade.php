@@ -10,7 +10,6 @@ use App\Model\Repository\JobRepository;
 use App\Model\Repository\MatchRepository;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
-use Tracy\Debugger;
 
 class CandidateFacade extends Object
 {
@@ -40,7 +39,7 @@ class CandidateFacade extends Object
 		return $this->match($candidate, $job, FALSE, $approve);
 	}
 
-	public function matchIntern(Candidate $candidate, Job $job, $approve = TRUE)
+	public function matchApprove(Candidate $candidate, Job $job, $approve = TRUE)
 	{
 		return $this->match($candidate, $job, TRUE, $approve);
 	}
@@ -67,6 +66,68 @@ class CandidateFacade extends Object
 			'job' => $job,
 			'candidate' => $candidate,
 		]);
+	}
+
+	public function isApproved(Candidate $candidate, Job $job)
+	{
+		return $this->isMatched($candidate, $job, TRUE, FALSE);
+	}
+
+	public function isApplied(Candidate $candidate, Job $job)
+	{
+		return $this->isMatched($candidate, $job, FALSE, TRUE);
+	}
+
+	public function isMatched(Candidate $candidate, Job $job, $checkIntern = TRUE, $checkApply = TRUE)
+	{
+		/** @var Match $match */
+		$match = $this->findMatch($candidate, $job);
+		if ($match) {
+			$isApplied = $checkApply && $match->candidateApprove;
+			$isApproved = $checkIntern && $match->adminApprove;
+			if (!$checkApply) {
+				return $isApproved;
+			} else if (!$checkIntern) {
+				return $isApplied;
+			} else {
+				return $match->candidateApprove && $match->adminApprove;
+			}
+		}
+		return FALSE;
+	}
+
+	public function findAppliedJobs(Candidate $candidate, $approved = NULL)
+	{
+		$criteria = [
+			'matches.candidate' => $candidate,
+			'matches.candidateApprove' => TRUE,
+		];
+		if ($approved === TRUE || $approved === FALSE) {
+			$criteria['matches.adminApprove'] = $approved;
+		}
+		return $this->jobRepo->findBy($criteria);
+	}
+
+	public function findApprovedJobs(Candidate $candidate, $applied = NULL)
+	{
+		$criteria = [
+			'matches.candidate' => $candidate,
+			'matches.adminApprove' => TRUE,
+		];
+		if ($applied === TRUE || $applied === FALSE) {
+			$criteria['matches.candidateApprove'] = $applied;
+		}
+		return $this->jobRepo->findBy($criteria);
+	}
+
+	public function findMatchedJobs(Candidate $candidate)
+	{
+		$criteria = [
+			'matches.candidate' => $candidate,
+			'matches.candidateApprove' => TRUE,
+			'matches.adminApprove' => TRUE,
+		];
+		return $this->jobRepo->findBy($criteria);
 	}
 
 }

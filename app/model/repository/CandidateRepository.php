@@ -88,7 +88,11 @@ class CandidateRepository extends BaseRepository
 					}
 					break;
 				case 'skills':
-					if (is_array($value) && isset($value['skillRange'])) {
+					if (is_array($value) &&
+						isset($value['skillRange']) &&
+						is_array($value['skillRange']) &&
+						count($value['skillRange'])
+					) {
 						$joins['c.cv'] = 'cv';
 						$joins['cv.skillKnows'] = 'sk';
 

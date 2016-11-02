@@ -16,6 +16,8 @@
 			<div class="panel-heading clearfix">
 				<h4 class="panel-title pull-left">
 					<span>{$job}</span>
+					<span n:if="$isCandidate && !$isMatched && $isInvited"
+							class="label label-warning">{_'You have invitation'}</span>
 				</h4>
 				<div class="invoice-info">
 					<strong class="color-red">{$job->company}</strong>
@@ -36,13 +38,21 @@
 									<dd>{$job->accountManager}</dd>
 								</dl>
 							</div>
-							<div class="col-md-8">
+							<div class="col-md-4">
 								<dl>
 									<dt class="text-muted">{_'Type'}</dt>
 									<dd>{$job->type}</dd>
 									<dt class="text-muted">{_'Salary'}</dt>
 									<dd>{$job->salaryFrom}&nbsp;€ - {$job->salaryTo}&nbsp;€</dd>
 								</dl>
+							</div>
+							<div class="col-md-4 text-right" n:if="$isCandidate" n:snippet="applyBox">
+								<a n:if="!$isApplied" n:href="apply! $job->id"
+										class="btn btn-lg btn-success ajax">{_'Apply'}</a>
+								<button n:if="!$isMatched && $isApplied"
+										class="btn btn-lg btn-warning disabled">{_'Applied'}</button>
+								<button n:if="$isMatched"
+										class="btn btn-lg btn-danger disabled">{_'Matched'}</button>
 							</div>
 						</div>
 					</div>
