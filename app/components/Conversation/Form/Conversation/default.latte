@@ -35,7 +35,7 @@
 						<a href="#" class="avatar">
 							<img src="{$basePath}/foto/{$message->sender->image|size:50,50}" alt=""/>
 						</a>
-						<div class="message">
+						<div n:class="message, $message->isSystem() ? message-system">
 							<div class="head clearfix">
 							<span class="name">
 								<strong>
@@ -46,6 +46,19 @@
 							</div>
 							<p>
 								{!$message->text|escape|nl2br}
+							</p>
+							<p class="system-submessage" n:if="$message->job">
+								<a href="{plink :App:Job:view $message->job->id}">{$message->job}</a>
+								{if $message->candidate && $identity->isAllowed('profile', 'candidate')}
+									|
+									<a href="{plink Candidate:view $message->candidate->person->user->id}">
+										{if $message->candidate->person->fullName}
+											{$message->candidate->person->fullName}
+										{else}
+											{_'Candidate #%id%', ['id' => $message->candidate->id]}
+										{/if}
+									</a>
+								{/if}
 							</p>
 						</div>
 					</li>

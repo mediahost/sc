@@ -8,6 +8,7 @@ use App\Model\Entity\Notification;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
 use Nette\Application\UI\Form;
+use Nette\Security\User;
 
 class Conversation extends BaseControl
 {
@@ -16,6 +17,9 @@ class Conversation extends BaseControl
 
 	/** @var array */
 	public $onSend = [];
+
+	/** @var User @inject */
+	public $identity;
 
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
@@ -75,6 +79,7 @@ class Conversation extends BaseControl
 		$this->template->messageCount = $this->count;
 		$this->template->messagesPerPage = self::MESSAGES_PER_PAGE;
 		$this->template->notification = $notification ? $notification->enabled : NULL;
+		$this->template->identity = $this->identity;
 		parent::render();
 	}
 

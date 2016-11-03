@@ -14,6 +14,9 @@ use Nette\Object;
 class CandidateFacade extends Object
 {
 
+	/** @var array */
+	public $onMatch = [];
+
 	/** @var EntityManager @inject */
 	public $em;
 
@@ -56,6 +59,8 @@ class CandidateFacade extends Object
 			$match->candidateApprove = $approve;
 		}
 		$this->matchRepo->save($match);
+
+		$this->onMatch($match);
 
 		return $this;
 	}

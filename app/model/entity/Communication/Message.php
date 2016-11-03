@@ -18,9 +18,16 @@ use Nette\Utils\DateTime;
  * @property string $text
  * @property DateTime $createdAt
  * @property DateTime $updatedAt
+ * @property int $state
+ * @property Candidate $candidate
+ * @property Job $job
  */
 class Message extends BaseEntity
 {
+
+	const STATE_NORMAL = 1;
+	const STATE_SYSTEM = 2;
+	const STATE_DEFAULT = self::STATE_NORMAL;
 
 	use Identifier;
 	use Model\Timestampable\Timestampable;
@@ -37,12 +44,22 @@ class Message extends BaseEntity
 	/** @ORM\Column(type="text") */
 	protected $text;
 
-	public function __construct(Sender $sender, $text)
+	/** @ORM\Column(type="smallint", nullable=true) */
+	protected $state;
+
+	/** @ORM\ManyToOne(targetEntity="Candidate") */
+	protected $candidate;
+
+	/** @ORM\ManyToOne(targetEntity="Job") */
+	protected $job;
+
+	public function __construct(Sender $sender, $text, $state = self::STATE_DEFAULT)
 	{
 		$this->reads = new ArrayCollection();
 		parent::__construct();
 		$this->sender = $sender;
 		$this->text = $text;
+		$this->state = $state;
 	}
 
 	public function __toString()
@@ -63,6 +80,11 @@ class Message extends BaseEntity
 	{
 		$read->message = $this;
 		$this->reads->add($read);
+	}
+
+	public function isSystem()
+	{
+		return $this->state === self::STATE_SYSTEM;
 	}
 
 }

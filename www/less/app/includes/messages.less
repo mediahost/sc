@@ -18,8 +18,13 @@
 }
 
 .messages {
-	.user {
-
+	.message {
+		&.message-system {
+			background-image: linear-gradient(to bottom, #ffffff 0%, rgba(79, 187, 219, 0.22) 100%);
+			.system-submessage {
+				margin-bottom: 0px;
+			}
+		}
 	}
 	.user {
 		.name {

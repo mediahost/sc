@@ -115,10 +115,16 @@ class Communication extends BaseEntity
 		return $this->messages->forAll($markAsRead);
 	}
 
-	public function addMessage(Sender $sender, $text)
+	public function addMessage(Sender $sender, $text, $state = Message::STATE_DEFAULT, Job $job = NULL, Candidate $candidate = NULL)
 	{
-		$message = new Message($sender, $text);
+		$message = new Message($sender, $text, $state);
 		$message->communication = $this;
+		if ($job) {
+			$message->job = $job;
+		}
+		if ($candidate) {
+			$message->candidate = $candidate;
+		}
 		$this->messages->add($message);
 	}
 

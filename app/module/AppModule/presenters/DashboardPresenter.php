@@ -48,10 +48,12 @@ class DashboardPresenter extends BasePresenter
 	/** @return ConversationList */
 	public function createComponentRecentMessages()
 	{
-		$senders = $this->communicationFacade->findSenders($this->user->getIdentity());
+		$sender = $this->communicationFacade->findSender($this->user->getIdentity());
 		$control = $this->conversationListFactory->create();
-		$control->setSender(current($senders))
-			->disableSearchBox();
+		if ($sender) {
+			$control->setSender($sender);
+		}
+		$control->disableSearchBox();
 		return $control;
 	}
 

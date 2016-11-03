@@ -70,20 +70,6 @@ class ProfilePresenter extends BasePresenter
 	/** @var Candidate */
 	private $candidate;
 
-	private function setUser($userId = NULL)
-	{
-		$user = NULL;
-		$userRepo = $this->em->getRepository(Entity\User::getClassName());
-		if ($userId) {
-			$user = $userRepo->find($userId);
-		}
-		if (!$user) {
-			$user = $this->user->identity;
-		}
-		$this->person = $user->person;
-		$this->candidate = $this->person->candidate;
-	}
-
 	/**
 	 * @secured
 	 * @resource('profile')
@@ -95,26 +81,16 @@ class ProfilePresenter extends BasePresenter
 		) {
 			$this->redirect('connectManager');
 		}
-		$this->setUser();
+
+		$user = $this->user->identity;
+		$this->person = $user->person;
+		$this->candidate = $this->person->candidate;
 	}
 
 	public function renderDefault()
 	{
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
-	}
-
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('candidate')
-	 *
-	 * @param int $userId
-	 */
-	public function actionCandidate($userId)
-	{
-		$this->setUser($userId);
-		$this->setView('default');
 	}
 
 	/**
@@ -356,10 +332,10 @@ class ProfilePresenter extends BasePresenter
 	/** @return ConversationList */
 	public function createComponentRecentMessages()
 	{
-		$senders = $this->communicationFacade->findSenders($this->person->user);
+		$sender = $this->communicationFacade->findSender($this->person->user);
 		$control = $this->iConversationListFactory->create();
-		if (count($senders)) {
-			$control->setSender(current($senders));
+		if ($sender) {
+			$control->setSender($sender);
 		}
 		$control->setReadMode(TRUE)
 			->disableSearchBox();
