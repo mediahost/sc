@@ -82,7 +82,8 @@
 								</a>
 							</li>
 							<li n:if="$user->isAllowed('candidates', 'default')">
-								<a n:href="Candidates:" n:class="$presenter->isLinkCurrent('Candidates:*') ? active">
+								<a n:href="Candidates:"
+										n:class="$presenter->isLinkCurrent('Candidates:*') || $presenter->isLinkCurrent('Candidate:*') ? active">
 									<i class="fa fa-file-text"></i>
 									<span class="txt">{_'Candidates'}</span>
 								</a>

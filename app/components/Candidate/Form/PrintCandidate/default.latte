@@ -39,7 +39,7 @@
 					</p>
 				</div>
 				<div class="col-md-6">
-					<a n:ifset="$user" href="{plink Profile:candidate $user->id}">
+					<a n:ifset="$user" href="{plink Candidate:view $user->id}">
 						<img src="{$basePath}/foto/{$person->photo|size:150,150}"
 							 class="center img-responsive photo-rounded"
 							 alt="image alt">
