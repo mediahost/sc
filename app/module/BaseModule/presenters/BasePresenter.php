@@ -95,7 +95,7 @@ abstract class BasePresenter extends Presenter
 	private function checkSecured($resource, $privilege)
 	{
 		if (!$this->user->loggedIn) {
-			if ($this->getParameter('accessId')) {
+			if ($this->getParameter(self::ACCESS_ID_PARAM)) {
 				$this->redirect(':Front:Sign:access', [
 					'token' => $this->getParameter(self::ACCESS_ID_PARAM),
 					'backlink' => $this->storeRequest(),
