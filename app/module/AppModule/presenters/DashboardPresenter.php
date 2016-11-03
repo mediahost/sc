@@ -2,23 +2,23 @@
 
 namespace App\AppModule\Presenters;
 
-use App\Components\Candidate\IJobListFactory;
 use App\Components\Candidate\ISocialFactory;
-use App\Components\Candidate\JobList;
 use App\Components\Candidate\Social;
 use App\Components\Conversation\Form\ConversationList;
 use App\Components\Conversation\Form\IConversationListFactory;
 use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity\Person;
+use App\Model\Facade\CandidateFacade;
 
 class DashboardPresenter extends BasePresenter
 {
+
+	/** @var CandidateFacade @inject */
+	public $candidateFacade;
+
 	/** @var IConversationListFactory @inject */
 	public $conversationListFactory;
-
-	/** @var IJobListFactory @inject */
-	public $jobListFactory;
 
 	/** @var ISocialFactory @inject */
 	public $socialFactory;
@@ -42,7 +42,10 @@ class DashboardPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-
+		$candidate = $this->user->getIdentity()->candidate;
+		$this->template->candidate = $candidate;
+		$this->template->invitations = $this->candidateFacade->findApprovedJobs($candidate, FALSE);
+		$this->template->candidateFacade = $this->candidateFacade;
 	}
 
 	/** @return ConversationList */
@@ -54,14 +57,6 @@ class DashboardPresenter extends BasePresenter
 			$control->setSender($sender);
 		}
 		$control->disableSearchBox();
-		return $control;
-	}
-
-	/** @return JobList */
-	public function createComponentJobList()
-	{
-		$control = $this->jobListFactory->create();
-		$control->setLimit(5);
 		return $control;
 	}
 
