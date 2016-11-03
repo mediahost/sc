@@ -351,8 +351,9 @@ class ProfilePresenter extends BasePresenter
 	public function createComponentRecentMessages()
 	{
 		$senders = $this->communicationFacade->findSenders($this->person->user);
+		$sender = count($senders) ? current($senders) : $this->communicationFacade->createSender($this->person->user);
 		$control = $this->iConversationListFactory->create();
-		$control->setSender(current($senders))
+		$control->setSender($sender)
 			->setReadMode(true)
 			->disableSearchBox();
 		return $control;
