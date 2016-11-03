@@ -45,6 +45,12 @@ class CandidateRepository extends BaseRepository
 		foreach ($criteria as $key => $value) {
 			$condition = new Andx();
 			switch ($key) {
+				case 'active':
+					$joins['c.person'] = 'p';
+					$joins['p.user'] = 'u';
+					$condition->add('u.verificated = :verificated');
+					$params[':verificated'] = (bool)$value;
+					break;
 				case 'role':
 					if ($value instanceof Role) {
 						$joins['c.person'] = 'p';

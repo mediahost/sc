@@ -115,6 +115,7 @@ class DataHolder extends Object
 	public function filterNotEmpty()
 	{
 		$roleRepo = $this->em->getRepository(Role::getClassName());
+		$this->candidateCriteria['active'] = TRUE;
 		$this->candidateCriteria['role'] = $roleRepo->findOneByName(Role::CANDIDATE);
 		return $this;
 	}
