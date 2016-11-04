@@ -7,6 +7,7 @@ use App\Model\Entity\Candidate;
 use App\Model\Entity\Competences;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Education;
+use App\Model\Entity\JobCategory;
 use App\Model\Entity\Language;
 use App\Model\Entity\Person;
 use App\Model\Entity\Referee;
@@ -119,10 +120,13 @@ class CandidateGenerator extends Object
 		foreach (Person::getLocalities() as $group) {
 			$localities = array_merge($localities, $group);
 		}
-		$candidate->workLocations = $this->selectMultiFromList($localities);
+		$candidate->workLocations = $this->selectMultiIndexFromList($localities);
 
-		$jobCategories = $this->jobFacade->findCategoriesPairs();
-		$candidate->jobCategories = $this->selectMultiFromList($jobCategories);
+		$jobCategories = $this->em->getRepository(JobCategory::getClassName())->findAll();
+		$selectedCategories = $this->selectMultiValuesFromList($jobCategories);
+		foreach ($selectedCategories as $category) {
+			$candidate->addJobCategory($category);
+		}
 		return $candidate;
 	}
 
@@ -148,7 +152,7 @@ class CandidateGenerator extends Object
 		$competence->technical = $this->generateName();
 		$competence->artictic = $this->generateName();
 		$competence->other = $this->generateName();
-		$competence->drivingLicenses = $this->selectMultiFromList(Competences::getDrivingLicensesList());
+		$competence->drivingLicenses = $this->selectMultiIndexFromList(Competences::getDrivingLicensesList());
 		$cv->competence = $competence;
 
 		$cv->careerObjective = $this->generateText();
@@ -194,7 +198,7 @@ class CandidateGenerator extends Object
 	{
 		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
 		$skillLevels = $this->em->getRepository(SkillLevel::getClassName())->findAll();
-		$selectedSkills = $this->selectMultiFromList($skills);
+		$selectedSkills = $this->selectMultiIndexFromList($skills);
 		foreach ($selectedSkills as $idSkill) {
 			$skillKnow = new SkillKnow();
 			$skillKnow->skill = $skills[$idSkill];
@@ -208,7 +212,7 @@ class CandidateGenerator extends Object
 	private function fillLanguages(Cv $cv)
 	{
 		$cv->motherLanguage = $this->selectIndexFromList(Language::getLanguagesList());
-		$languages = $this->selectMultiFromList(Language::getLanguagesList(), rand(0, 5));
+		$languages = $this->selectMultiIndexFromList(Language::getLanguagesList(), rand(0, 5));
 		foreach ($languages as $selectedLanguage) {
 			$language = new Language();
 			$language->language = $selectedLanguage;
@@ -245,13 +249,30 @@ class CandidateGenerator extends Object
 		return $list[$key];
 	}
 
-	private function selectMultiFromList($list, $valuesCount=null)
+	private function selectMultiIndexFromList($list, $valuesCount=null)
 	{
 		$result = [];
 		$keys = array_keys($list);
 		$valuesCount = $valuesCount  ?  $valuesCount : rand(0, count($keys)-1);
 		while ($valuesCount--) {
-			$result[] = $keys[rand(0, count($keys)-1)];
+			$key = $keys[rand(0, count($keys)-1)];
+			if (!in_array($key, $result)) {
+				$result[] = $key;
+			}
+		}
+		return $result;
+	}
+
+	private function selectMultiValuesFromList($list, $valuesCount=null)
+	{
+		$result = [];
+		$keys = array_keys($list);
+		$valuesCount = $valuesCount  ?  $valuesCount : rand(0, count($keys)-1);
+		while ($valuesCount--) {
+			$key = $keys[rand(0, count($keys)-1)];
+			if (!in_array($list[$key], $list)) {
+				$result[] = $list[$key];
+			}
 		}
 		return $result;
 	}
