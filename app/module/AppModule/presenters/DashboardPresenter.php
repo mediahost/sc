@@ -9,6 +9,7 @@ use App\Components\Conversation\Form\IConversationListFactory;
 use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity\Person;
+use App\Model\Entity\Role;
 use App\Model\Facade\CandidateFacade;
 
 class DashboardPresenter extends BasePresenter
@@ -42,10 +43,12 @@ class DashboardPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$candidate = $this->user->getIdentity()->candidate;
-		$this->template->candidate = $candidate;
-		$this->template->invitations = $this->candidateFacade->findApprovedJobs($candidate, FALSE);
-		$this->template->candidateFacade = $this->candidateFacade;
+		if ($this->user->isInRole(Role::CANDIDATE)) {
+			$candidate = $this->user->getIdentity()->candidate;
+			$this->template->candidate = $candidate;
+			$this->template->invitations = $this->candidateFacade->findApprovedJobs($candidate, FALSE);
+			$this->template->candidateFacade = $this->candidateFacade;
+		}
 	}
 
 	/** @return ConversationList */

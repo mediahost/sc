@@ -1,4 +1,12 @@
-<div id="docs">
+<p>
+	<a href="{$basePath}/{$candidate->cvFile}" target="_blank" class="btn btn-default">
+		<span class="fa fa-download"></span>{_'My CV'}
+	</a>
+	<a href="{plink CvEditor:file}" class="btn btn-default">
+		<span class="fa fa-edit"></span>{_'Change CV'}
+	</a>
+</p>
+<div n:if="count($control->getUploadedDocs())" id="docs">
 	<ul class="files">
 		<li n:foreach="$control->getUploadedDocs() as $doc" class="file {$doc->fileExtension()}">
 			<a href="{$basePath}/{$doc->getWebPath()}" target="_blank" class="thumbnail">
@@ -12,14 +20,19 @@
 		</li>
 	</ul>
 </div>
-<div n:if="!count($control->getUploadedDocs())" class="row p10 mb0">
+<div n:if="!count($control->getUploadedDocs())" class="alert alert-info">
 	{if $user->isInRole('superadmin') || $user->isInRole('admin')}
-		{_'No career documents'}
+		{_'No career documents.'}
 	{else}
-		{_'No career documents - click to add your career docs'}
-		<p class="row text-right p10 mb0">
-			<a href="{plink CvEditor:CareerDocs}" n:if="$isSameUser">{_'Add files'}</a>
-			<a href="{plink CvEditor:CareerDocs $candidate->person->user->id}" n:if="!$isSameUser">{_'Add files'}</a>
-		</p>
+		{_'No career documents.'}
+		{if $isSameUser}
+			<a href="{plink CvEditor:CareerDocs}">
+				<span class="fa fa-upload"></span>{_'Add files'}
+			</a>
+		{else}
+			<a href="{plink CvEditor:CareerDocs $candidate->person->user->id}">
+				<span class="fa fa-upload"></span>{_'Add files'}
+			</a>
+		{/if}
 	{/if}
 </div>
