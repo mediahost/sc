@@ -1,45 +1,45 @@
 {form form}
-    {? $form->errors}
-    <div class="row skills-changer">
-        <div n:class="col-xs-6">
-            <div n:foreach="$categories as $key=>$category" n:if="$iterator->isOdd()">
-            {include blockCategory, category=>$category, form=>$form}
-            </div>
-        </div>
-        <div n:class="col-xs-6">
-            <div n:foreach="$categories as $key=>$category" n:if="$iterator->isEven()">
-            {include blockCategory, category=>$category, form=>$form}
-            </div>
-        </div>
-    </div>
+	{? $form->errors}
+	<div class="row skills-changer">
+		<div n:class="col-xs-6">
+			<div n:foreach="$categories as $key=>$category" n:if="$iterator->isOdd()">
+				{include blockCategory, category=>$category, form=>$form}
+			</div>
+		</div>
+		<div n:class="col-xs-6">
+			<div n:foreach="$categories as $key=>$category" n:if="$iterator->isEven()">
+				{include blockCategory, category=>$category, form=>$form}
+			</div>
+		</div>
+	</div>
 
-{define blockCategory}
-    <h5>{$category->name}</h5>
-    <p class="rate-line">
-        <div n:if="$category->skills" n:foreach="$category->skills as $skill">
-            {include blockskill, skill=>$skill, form=>$form}
-        </div>
-        {foreach $category->childs as $child}
-            {foreach $child->skills as $skill}
-                {if isset($form['skillLevel'][$skill->id])  &&  $form['skillLevel'][$skill->id]->value > 0}
-                    <div>{include blockskill, skill=>$skill, form=>$form}</div>
-                {/if}
-            {/foreach}
-        {/foreach}
-    </p>
-{/define}
+	{define blockCategory}
+		<h5>{$category->name}</h5>
+		<p class="rate-line">
+		<div n:if="$category->skills" n:foreach="$category->skills as $skill">
+			{include blockskill, skill=>$skill, form=>$form}
+		</div>
+		{foreach $category->childs as $child}
+			{foreach $child->skills as $skill}
+				{if isset($form['skillLevel'][$skill->id])  &&  $form['skillLevel'][$skill->id]->value > 0}
+					<div>{include blockskill, skill=>$skill, form=>$form}</div>
+				{/if}
+			{/foreach}
+		{/foreach}
+		</p>
+	{/define}
 
-{define blockskill}
-{input $form['skillLevel'][$skill->id]
+	{define blockskill}
+		{input $form['skillLevel'][$skill->id]
         class=>"rating",
         data-filled => "fa fa-circle green-circle",
         data-empty => "fa fa-circle green-circle-o"}
-<span class="rate-name">{$skill}</span>
-{/define}
+		<span class="rate-name">{$skill}</span>
+	{/define}
 {/form}
 
-<p n:if="!count($categories)" class="row p10 mb0">{_'No IT skills filled - click to add your IT skills'}</p>
-
-<p n:if="!$user->isInRole('superadmin') && !$user->isInRole('admin')" class="row text-right p10 mb0">
-    <a href="{plink CvEditor:Skills $control->getCv()->id}">{_'More skills'}</a>
-</p>
+<div n:if="!count($categories)" class="alert alert-info">
+	{_'No IT skills filled.'}
+	<a n:if="!$user->isInRole('superadmin') && !$user->isInRole('admin')"
+			href="{plink CvEditor:Skills $control->getCv()->id}">{_'More skills'}</a>
+</div>
