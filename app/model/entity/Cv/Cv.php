@@ -134,6 +134,7 @@ class Cv extends BaseEntity
 		$this->works = new ArrayCollection();
 		$this->experiences = new ArrayCollection();
 		$this->educations = new ArrayCollection();
+		$this->languages = new ArrayCollection();
 		parent::__construct();
 	}
 

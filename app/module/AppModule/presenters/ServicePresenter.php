@@ -12,12 +12,12 @@ use App\Model\Entity\SkillCategory;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
+use App\Model\Service\CandidateGenerator;
 use Doctrine\ORM\Tools\SchemaTool;
 use Kdyby\Doctrine\Connection;
 use Kdyby\Doctrine\Helpers;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
-use Tracy\Debugger;
 
 class ServicePresenter extends BasePresenter
 {
@@ -36,6 +36,9 @@ class ServicePresenter extends BasePresenter
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
+
+	/** @var CandidateGenerator @inject */
+	public $candidateGenerator;
 
 	/**
 	 * @secured
@@ -63,6 +66,16 @@ class ServicePresenter extends BasePresenter
 	 * @privilege('creators')
 	 */
 	public function actionCreators()
+	{
+
+	}
+
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('testData')
+	 */
+	public function actionTestData()
 	{
 
 	}
@@ -123,19 +136,6 @@ class ServicePresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('service')
-	 * @privilege('createCandidates')
-	 */
-	public function handleCreateCandidates($candidateCnt)
-	{
-		$this->createCandidates($candidateCnt);
-		$message = $this->translator->translate('Candidates and their CVs was succesfully created');
-		$this->flashMessage($message, 'success');
-		$this->redirect('this');
-	}
-
-	/**
-	 * @secured
-	 * @resource('service')
 	 * @privilege('createCompanies')
 	 */
 	public function handleCreateCompanies($companiesCnt, $jobsCnt)
@@ -152,6 +152,24 @@ class ServicePresenter extends BasePresenter
 		$message = $this->translator->translate('Job categories was succesfully created');
 		$this->flashMessage($message, 'success');
 		$this->redirect('this');
+	}
+
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('generateCandidates')
+	 */
+	public function handleGenerateCandidates($candidateCnt)
+	{
+		$this->createCandidates($candidateCnt);
+		$message = $this->translator->translate('Candidates and their CVs was succesfully created');
+		$this->flashMessage($message, 'success');
+		$this->redirect('this');
+	}
+
+	public function handleClearTestData()
+	{
+
 	}
 
 	private function reinstall()
@@ -256,12 +274,8 @@ class ServicePresenter extends BasePresenter
 
 	private function createCandidates($candidateCnt)
 	{
-		$roleCandidate = $this->roleFacade->findByName(Role::CANDIDATE);
-		// TODO: Start value to max ID
-		$start = 0;
-		for ($i = $start + 1; $i <= $start + $candidateCnt; $i++) {
-			$this->userFacade->create("user{$i}@candidate.com", "user{$i}", $roleCandidate);
-			// TODO: create CV
+		for ($i=0; $i<$candidateCnt; $i++) {
+			$this->candidateGenerator->createCandidate();
 		}
 		return $this;
 	}

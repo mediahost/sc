@@ -1,0 +1,36 @@
+{block pageTitle}
+	{_'Service Test data'}
+{/block}
+
+{block breadcrumbItems}
+	<li>
+		<a n:href="Service:">{_'Services'}</a>
+	</li>
+	<li><span>{_'Test data'}</span></li>
+{/block}
+
+{block content}
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="list-group">
+			<a n:href="generateCandidates! 10" class="list-group-item delete-confirm">
+				<h4 class="list-group-item-heading">
+					{_'Candidates'}
+				</h4>
+				<p class="list-group-item-text">
+					{_'Create 5000 candidates and their CVs with random selected skills'}
+				</p>
+			</a>
+
+			<a n:href="clearTestData!" class="list-group-item delete-confirm">
+				<h4 class="list-group-item-heading">
+					{_'Clear test data'}
+				</h4>
+				<p class="list-group-item-text">
+					{_'Delete generated candidates and cvs'}
+				</p>
+			</a>
+		</div>
+	</div>
+</div>
