@@ -12,7 +12,6 @@ use App\Model\Entity\Language;
 use App\Model\Entity\Person;
 use App\Model\Entity\Referee;
 use App\Model\Entity\Role;
-use App\Model\Entity\Sender;
 use App\Model\Entity\Skill;
 use App\Model\Entity\SkillKnow;
 use App\Model\Entity\SkillLevel;
@@ -21,9 +20,9 @@ use App\Model\Entity\Work;
 use App\Model\Facade\JobFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
+use App\ValuesGenerator;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
-use Nette\Utils\DateTime;
 
 class CandidateGenerator extends Object
 {
@@ -39,28 +38,6 @@ class CandidateGenerator extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-
-	public function removeGeneratedCandidates()
-	{
-		$useRepo = $this->em->getRepository(User::getClassName());
-		$users = $useRepo->createQueryBuilder('u')
-			->where("u.mail LIKE '%example.dev'")
-			->getQuery()->getResult();
-
-		$senders = $this->em->getRepository(Sender::getClassName())->createQueryBuilder('s')
-			->leftJoin('s.user', "u")
-			->where('u IN(:user)')
-			->setParameter('user', $users)
-			->getQuery()->getResult();
-
-		foreach ($senders as $sender) {
-			$this->em->remove($sender);
-		}
-		foreach ($users as $user) {
-			$this->em->remove($user);
-		}
-		$this->em->flush();
-	}
 
 	public function createCandidate()
 	{
@@ -79,7 +56,7 @@ class CandidateGenerator extends Object
 	private function createUser()
 	{
 		$roleCandidate = $this->roleFacade->findByName(Role::CANDIDATE);
-		$name = $this->generateName(100);
+		$name = ValuesGenerator::generateName(100);
 		$user = $this->userFacade->create("{$name}@example.dev", "randomuser", $roleCandidate);
 		return $user;
 	}
@@ -88,23 +65,23 @@ class CandidateGenerator extends Object
 	{
 		$person = $user->getPerson();
 
-		$person->title = $this->selectIndexFromList(Person::getTitleList());
-		$person->degreeBefore = $this->generateName(60);
-		$person->firstname = $this->generateName();
-		$person->middlename = $this->generateName(10);
-		$person->surname = $this->generateName();
-		$person->degreeAfter = $this->generateName(20);
-		$person->gender = $this->selectIndexFromList(Person::getGenderList());
-		$person->birthday = $this->generatePastDate();
-		$person->nationality = $this->selectIndexFromList(Person::getNationalityList());
-		$person->phone = $this->generateNumberString(9);
+		$person->title = ValuesGenerator::selectIndexFromList(Person::getTitleList());
+		$person->degreeBefore = ValuesGenerator::generateName(60);
+		$person->firstname = ValuesGenerator::generateName();
+		$person->middlename =  ValuesGenerator::generateName(10);
+		$person->surname =  ValuesGenerator::generateName();
+		$person->degreeAfter =  ValuesGenerator::generateName(20);
+		$person->gender =  ValuesGenerator::selectIndexFromList(Person::getGenderList());
+		$person->birthday =  ValuesGenerator::generatePastDate();
+		$person->nationality =  ValuesGenerator::selectIndexFromList(Person::getNationalityList());
+		$person->phone =  ValuesGenerator::generateNumberString(9);
 
 		$address = new Address();
-		$address->house = $this->generateNumberString(3);
-		$address->street = $this->generateName();
-		$address->zipcode = $this->generateNumberString(5);
-		$address->city = $this->generateName();
-		$address->country = $this->selectIndexFromList(Person::getLocalities());
+		$address->house =  ValuesGenerator::generateNumberString(3);
+		$address->street =  ValuesGenerator::generateName();
+		$address->zipcode =  ValuesGenerator::generateNumberString(5);
+		$address->city =  ValuesGenerator::generateName();
+		$address->country =  ValuesGenerator::selectIndexFromList(Person::getLocalities());
 		$person->address = $address;
 
 		return $person;
@@ -114,16 +91,16 @@ class CandidateGenerator extends Object
 	{
 		$candidate = $person->getCandidate();
 		$candidate->cvFile = 'default';
-		$candidate->freelancer = $this->isFilled();
+		$candidate->freelancer =  ValuesGenerator::isFilled();
 
 		$localities = [];
 		foreach (Person::getLocalities() as $group) {
 			$localities = array_merge($localities, $group);
 		}
-		$candidate->workLocations = $this->selectMultiIndexFromList($localities);
+		$candidate->workLocations =  ValuesGenerator::selectMultiIndexFromList($localities);
 
 		$jobCategories = $this->em->getRepository(JobCategory::getClassName())->findAll();
-		$selectedCategories = $this->selectMultiValuesFromList($jobCategories);
+		$selectedCategories = ValuesGenerator::selectMultiValuesFromList($jobCategories);
 		foreach ($selectedCategories as $category) {
 			$candidate->addJobCategory($category);
 		}
@@ -135,34 +112,34 @@ class CandidateGenerator extends Object
 		$cv = $candidate->getCv();
 
 		$education = new Education();
-		$education->institution = $this->generateName(100);
-		$education->title = $this->generateName();
-		$education->dateStart = $this->generatePastDate();
+		$education->institution =  ValuesGenerator::generateName(100);
+		$education->title =  ValuesGenerator::generateName();
+		$education->dateStart =  ValuesGenerator::generatePastDate();
 		$interval = rand(30, 1000);
 		$education->dateEnd = $education->dateStart->modifyClone("+{$interval} days");
-		$education->subjects = $this->generateName();
+		$education->subjects =  ValuesGenerator::generateName();
 		$education->address = new Address();
-		$education->address->city = $this->generateName();
-		$education->address->country = $this->selectIndexFromList(Person::getLocalities());
+		$education->address->city =  ValuesGenerator::generateName();
+		$education->address->country =  ValuesGenerator::selectIndexFromList(Person::getLocalities());
 		$cv->addEducation($education);
 
 		$competence = new Competences();
-		$competence->social = $this->generateName();
-		$competence->organisation = $this->generateName();
-		$competence->technical = $this->generateName();
-		$competence->artictic = $this->generateName();
-		$competence->other = $this->generateName();
-		$competence->drivingLicenses = $this->selectMultiIndexFromList(Competences::getDrivingLicensesList());
+		$competence->social =  ValuesGenerator::generateName();
+		$competence->organisation =  ValuesGenerator::generateName();
+		$competence->technical =  ValuesGenerator::generateName();
+		$competence->artictic =  ValuesGenerator::generateName();
+		$competence->other =  ValuesGenerator::generateName();
+		$competence->drivingLicenses =  ValuesGenerator::selectMultiIndexFromList(Competences::getDrivingLicensesList());
 		$cv->competence = $competence;
 
-		$cv->careerObjective = $this->generateText();
-		$cv->careerSummary = $this->generateText();
-		$cv->additionalInfo = $this->generateText();
+		$cv->careerObjective =  ValuesGenerator::generateText();
+		$cv->careerSummary =  ValuesGenerator::generateText();
+		$cv->additionalInfo =  ValuesGenerator::generateText();
 
 		$jobCategories = $this->jobFacade->findCategoriesPairs();
-		$cv->desiredPosition = $this->selectValueFromList($jobCategories);
-		$cv->availableFrom = $this->generateFeatureDate();
-		$cv->salaryFrom = $this->generateNumberString(4);
+		$cv->desiredPosition =  ValuesGenerator::selectValueFromList($jobCategories);
+		$cv->availableFrom =  ValuesGenerator::generateFeatureDate();
+		$cv->salaryFrom =  ValuesGenerator::generateNumberString(4);
 		$interval = rand(5, 50) * 0.01 * $cv->salaryFrom;
 		$cv->salaryTo = $cv->salaryFrom + $interval;
 
@@ -174,22 +151,23 @@ class CandidateGenerator extends Object
 		$count = rand(0, 3);
 		while ($count--) {
 			$work = new Work();
-			$work->isExperience = $this->isFilled();
+			$work->isExperience =  ValuesGenerator::isFilled();
 
-			$work->company = $this->generateName(100);
-			$work->position = $this->generateName();
-			$work->dateStart = $this->generatePastDate();
+			$work->company =  ValuesGenerator::generateName(100);
+			$work->position =  ValuesGenerator::generateName();
+			$work->dateStart =  ValuesGenerator::generatePastDate();
 			$interval = rand(30, 1000);
-			$work->dateEnd = $work->dateStart->modifyClone("+{$interval} days");
-			$work->activities = $this->generateName();
-			$work->achievment = $this->generateName();
-			$work->refereeIsPublic = $this->isFilled();
+			$work->dateEnd =  $work->dateStart->modifyClone("+{$interval} days");
+			$work->activities =  ValuesGenerator::generateName();
+			$work->achievment =  ValuesGenerator::generateName();
+			$work->refereeIsPublic =  ValuesGenerator::isFilled();
 
 			$work->referee = new Referee();
-			$work->referee->name = $this->generateName();
-			$work->referee->position = $this->generateName();
-			$work->referee->phone = $this->generateNumberString(9, 100);
-			$work->referee->mail = "{$this->generateName(100)}@example.dev";
+			$work->referee->name =  ValuesGenerator::generateName();
+			$work->referee->position =  ValuesGenerator::generateName();
+			$work->referee->phone =  ValuesGenerator::generateNumberString(9, 100);
+			$mail = ValuesGenerator::generateName(100);
+			$work->referee->mail = "{$mail}@example.dev";
 			$cv->addWork($work);
 		}
 	}
@@ -198,7 +176,7 @@ class CandidateGenerator extends Object
 	{
 		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
 		$skillLevels = $this->em->getRepository(SkillLevel::getClassName())->findAll();
-		$selectedSkills = $this->selectMultiIndexFromList($skills);
+		$selectedSkills = ValuesGenerator::selectMultiIndexFromList($skills);
 		foreach ($selectedSkills as $idSkill) {
 			$skillKnow = new SkillKnow();
 			$skillKnow->skill = $skills[$idSkill];
@@ -211,8 +189,8 @@ class CandidateGenerator extends Object
 
 	private function fillLanguages(Cv $cv)
 	{
-		$cv->motherLanguage = $this->selectIndexFromList(Language::getLanguagesList());
-		$languages = $this->selectMultiIndexFromList(Language::getLanguagesList(), rand(0, 5));
+		$cv->motherLanguage = ValuesGenerator::selectIndexFromList(Language::getLanguagesList());
+		$languages = ValuesGenerator::selectMultiIndexFromList(Language::getLanguagesList(), rand(0, 5));
 		foreach ($languages as $selectedLanguage) {
 			$language = new Language();
 			$language->language = $selectedLanguage;
@@ -223,115 +201,5 @@ class CandidateGenerator extends Object
 			$language->writing = rand(0, 4);
 			$cv->addLanguage($language);
 		}
-	}
-
-	private function isFilled($fillProbability=50)
-	{
-		return rand(0, 99) < $fillProbability;
-	}
-
-	private function selectIndexFromList($list, $fillProbability=50)
-	{
-		if (!$this->isFilled($fillProbability)) {
-			return null;
-		}
-		$keys = array_keys($list);
-		return $keys[rand(0, count($keys)-1)];
-	}
-
-	private function selectValueFromList($list, $fillProbability=50)
-	{
-		if (!$this->isFilled($fillProbability)) {
-			return null;
-		}
-		$keys = array_keys($list);
-		$key = $keys[rand(0, count($keys)-1)];
-		return $list[$key];
-	}
-
-	private function selectMultiIndexFromList($list, $valuesCount=null)
-	{
-		$result = [];
-		$keys = array_keys($list);
-		$valuesCount = $valuesCount  ?  $valuesCount : rand(0, count($keys)-1);
-		while ($valuesCount--) {
-			$key = $keys[rand(0, count($keys)-1)];
-			if (!in_array($key, $result)) {
-				$result[] = $key;
-			}
-		}
-		return $result;
-	}
-
-	private function selectMultiValuesFromList($list, $valuesCount=null)
-	{
-		$result = [];
-		$keys = array_keys($list);
-		$valuesCount = $valuesCount  ?  $valuesCount : rand(0, count($keys)-1);
-		while ($valuesCount--) {
-			$key = $keys[rand(0, count($keys)-1)];
-			if (!in_array($list[$key], $list)) {
-				$result[] = $list[$key];
-			}
-		}
-		return $result;
-	}
-
-	private function generatePastDate()
-	{
-		$daysToPast = rand(20*365, 60*365);
-		$date = new DateTime();
-		return $date->modify("-{$daysToPast}days");
-	}
-
-	private function generateFeatureDate()
-	{
-		$daysInFeature = rand(10, 100);
-		$date = new DateTime();
-		return $date->modify("+{$daysInFeature}days");
-	}
-
-	private function generateNumberString($length, $fillProbability=50)
-	{
-		if (!$this->isFilled($fillProbability)) {
-			return null;
-		}
-		$digits = '1234567890';
-		$result = '';
-		while ($length--) {
-			$result .= $digits[rand(0, strlen($digits)-1)];
-		}
-		return $result;
-	}
-
-	private function generateName($fillProbability=50)
-	{
-		if (!$this->isFilled($fillProbability)) {
-			return '';
-		}
-		$result = '';
-		$vowels = 'aeiouy';
-		$consonants = 'bcdfghjklmnprstvwz';
-
-		$syllableCount = rand(2, 4);
-		while ($syllableCount--) {
-			$syllable = $consonants[rand(0, strlen($consonants)-1)]
-				. $vowels[rand(0, strlen($vowels)-1)];
-			$result .= $syllable;
-		}
-		return $result;
-	}
-
-	private function generateText($fillProbability=50)
-	{
-		if (!$this->isFilled($fillProbability)) {
-			return '';
-		}
-		$result = '';
-		$wordsCount = rand(1, 50);
-		while ($wordsCount--) {
-			$result .= $this->generateName(100);
-		}
-		return $result;
 	}
 }

@@ -5,6 +5,8 @@ services:
 	- {implement: App\Extensions\Candidates\ICandidatesListFactory, inject: yes}
 	- {implement: App\Extensions\Candidates\Components\ISortingFormFactory, inject: yes}
 	- {create: App\Model\Service\CandidateGenerator, inject: yes}
+	- {create: App\Model\Service\CandidateCleaner, inject: yes}
+	- {create: App\Model\Service\CvGenerator, inject: yes}
 
 	# Auth
 	- {implement: App\Components\Auth\ISignOutFactory, inject: yes}

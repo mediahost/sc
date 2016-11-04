@@ -12,6 +12,7 @@ use App\Model\Entity\SkillCategory;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
+use App\Model\Service\CandidateCleaner;
 use App\Model\Service\CandidateGenerator;
 use Doctrine\ORM\Tools\SchemaTool;
 use Kdyby\Doctrine\Connection;
@@ -39,6 +40,9 @@ class ServicePresenter extends BasePresenter
 
 	/** @var CandidateGenerator @inject */
 	public $candidateGenerator;
+
+	/** @var CandidateCleaner @inject */
+	public $candidateCleaner;
 
 	/**
 	 * @secured
@@ -167,9 +171,14 @@ class ServicePresenter extends BasePresenter
 		$this->redirect('this');
 	}
 
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('clearTestData')
+	 */
 	public function handleClearTestData()
 	{
-
+		$this->candidateCleaner->removeGeneratedCandidates();
 	}
 
 	private function reinstall()
