@@ -154,6 +154,11 @@ class ServicePresenter extends BasePresenter
 		$this->redirect('this');
 	}
 
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('createJobCategories')
+	 */
 	public function handleCreateJobCategories()
 	{
 		$this->importDbJobCategories();
@@ -169,7 +174,10 @@ class ServicePresenter extends BasePresenter
 	 */
 	public function handleGenerateCandidates($candidateCnt)
 	{
-		$this->createCandidates($candidateCnt);
+		for ($i = 0; $i < $candidateCnt; $i++) {
+			$candidate = $this->candidateGenerator->createCandidate();
+			$this->cvGenerator->createCv($candidate);
+		}
 		$message = $this->translator->translate('Candidates and their CVs was succesfully created');
 		$this->flashMessage($message, 'success');
 		$this->redirect('this');
@@ -204,8 +212,8 @@ class ServicePresenter extends BasePresenter
 	{
 		FileSystem::delete(realpath('./../temp/install/'));
 		$this->installer
-				->setInstallAdminer(FALSE)
-				->setInstallComposer(FALSE);
+			->setInstallAdminer(FALSE)
+			->setInstallComposer(FALSE);
 		$this->installer->install();
 		return $this;
 	}
@@ -282,15 +290,6 @@ class ServicePresenter extends BasePresenter
 			}
 		}
 		$this->em->flush();
-		return $this;
-	}
-
-	private function createCandidates($candidateCnt)
-	{
-		for ($i=0; $i<$candidateCnt; $i++) {
-			$candidate = $this->candidateGenerator->createCandidate();
-			$this->cvGenerator->createCv($candidate);
-		}
 		return $this;
 	}
 

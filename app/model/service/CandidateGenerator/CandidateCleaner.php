@@ -16,11 +16,12 @@ class CandidateCleaner extends Object
 	{
 		$useRepo = $this->em->getRepository(User::getClassName());
 		$users = $useRepo->createQueryBuilder('u')
-			->where("u.mail LIKE '%example.dev'")
+			->where('u.mail LIKE :suffix')
+			->setParameter('suffix', '%' . CandidateGenerator::USER_MAIL_SUFFIX)
 			->getQuery()->getResult();
 
 		$senders = $this->em->getRepository(Sender::getClassName())->createQueryBuilder('s')
-			->leftJoin('s.user', "u")
+			->leftJoin('s.user', 'u')
 			->where('u IN(:user)')
 			->setParameter('user', $users)
 			->getQuery()->getResult();

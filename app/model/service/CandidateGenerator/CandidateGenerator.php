@@ -15,6 +15,10 @@ use Nette\Object;
 
 class CandidateGenerator extends Object
 {
+
+	const USER_MAIL_SUFFIX = '@example.dev';
+	const USER_PASSWORD = 'user';
+
 	/** @var UserFacade @inject */
 	public $userFacade;
 
@@ -23,7 +27,6 @@ class CandidateGenerator extends Object
 
 	/** @var EntityManager @inject */
 	public $em;
-
 
 	public function createCandidate()
 	{
@@ -39,7 +42,7 @@ class CandidateGenerator extends Object
 	{
 		$roleCandidate = $this->roleFacade->findByName(Role::CANDIDATE);
 		$name = ValuesGenerator::generateName(100);
-		$user = $this->userFacade->create("{$name}@example.dev", "randomuser", $roleCandidate);
+		$user = $this->userFacade->create($name . self::USER_MAIL_SUFFIX, self::USER_PASSWORD, $roleCandidate);
 		return $user;
 	}
 
@@ -50,20 +53,20 @@ class CandidateGenerator extends Object
 		$person->title = ValuesGenerator::selectIndexFromList(Person::getTitleList());
 		$person->degreeBefore = ValuesGenerator::generateName(60);
 		$person->firstname = ValuesGenerator::generateName();
-		$person->middlename =  ValuesGenerator::generateName(10);
-		$person->surname =  ValuesGenerator::generateName();
-		$person->degreeAfter =  ValuesGenerator::generateName(20);
-		$person->gender =  ValuesGenerator::selectIndexFromList(Person::getGenderList());
-		$person->birthday =  ValuesGenerator::generatePastDate();
-		$person->nationality =  ValuesGenerator::selectIndexFromList(Person::getNationalityList());
-		$person->phone =  ValuesGenerator::generateNumberString(9);
+		$person->middlename = ValuesGenerator::generateName(10);
+		$person->surname = ValuesGenerator::generateName();
+		$person->degreeAfter = ValuesGenerator::generateName(20);
+		$person->gender = ValuesGenerator::selectIndexFromList(Person::getGenderList());
+		$person->birthday = ValuesGenerator::generatePastDate();
+		$person->nationality = ValuesGenerator::selectIndexFromList(Person::getNationalityList());
+		$person->phone = ValuesGenerator::generateNumberString(9);
 
 		$address = new Address();
-		$address->house =  ValuesGenerator::generateNumberString(3);
-		$address->street =  ValuesGenerator::generateName();
-		$address->zipcode =  ValuesGenerator::generateNumberString(5);
-		$address->city =  ValuesGenerator::generateName();
-		$address->country =  ValuesGenerator::selectIndexFromList(Person::getLocalities());
+		$address->house = ValuesGenerator::generateNumberString(3);
+		$address->street = ValuesGenerator::generateName();
+		$address->zipcode = ValuesGenerator::generateNumberString(5);
+		$address->city = ValuesGenerator::generateName();
+		$address->country = ValuesGenerator::selectIndexFromList(Person::getLocalities());
 		$person->address = $address;
 
 		return $person;
@@ -73,13 +76,13 @@ class CandidateGenerator extends Object
 	{
 		$candidate = $person->getCandidate();
 		$candidate->cvFile = 'default';
-		$candidate->freelancer =  ValuesGenerator::isFilled();
+		$candidate->freelancer = ValuesGenerator::isFilled();
 
 		$localities = [];
 		foreach (Person::getLocalities() as $group) {
 			$localities = array_merge($localities, $group);
 		}
-		$candidate->workLocations =  ValuesGenerator::selectMultiIndexFromList($localities);
+		$candidate->workLocations = ValuesGenerator::selectMultiIndexFromList($localities);
 
 		$jobCategories = $this->em->getRepository(JobCategory::getClassName())->findAll();
 		$selectedCategories = ValuesGenerator::selectMultiValuesFromList($jobCategories);
