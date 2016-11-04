@@ -48,12 +48,14 @@ class ValuesGenerator
 	public static function selectMultiValuesFromList($list, $valuesCount = null)
 	{
 		$result = [];
+		$selectedKeys = [];
 		$keys = array_keys($list);
 		$valuesCount = $valuesCount ? $valuesCount : rand(0, count($keys) - 1);
 		while ($valuesCount--) {
 			$key = $keys[rand(0, count($keys) - 1)];
-			if (!in_array($list[$key], $list)) {
+			if (!in_array($key, $selectedKeys)) {
 				$result[] = $list[$key];
+				$selectedKeys[] = $key;
 			}
 		}
 		return $result;
