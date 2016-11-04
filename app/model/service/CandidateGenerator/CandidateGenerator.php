@@ -18,6 +18,7 @@ class CandidateGenerator extends Object
 
 	const USER_MAIL_SUFFIX = '@example.dev';
 	const USER_PASSWORD = 'user';
+	const TMP_CV = 'files/example.pdf';
 
 	/** @var UserFacade @inject */
 	public $userFacade;
