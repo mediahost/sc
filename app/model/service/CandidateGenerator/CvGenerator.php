@@ -69,8 +69,8 @@ class CvGenerator extends Object
 			$work->refereeIsPublic = ValuesGenerator::isFilled();
 
 			$work->referee = new Referee();
-			$work->referee->name = ValuesGenerator::generateName();
-			$work->referee->position = ValuesGenerator::generateName();
+			$work->referee->name = ValuesGenerator::generateName(100);
+			$work->referee->position = ValuesGenerator::generateName(100);
 			$work->referee->phone = ValuesGenerator::generateNumberString(9, 100);
 			$mail = ValuesGenerator::generateName(100);
 			$work->referee->mail = "{$mail}@example.dev";
