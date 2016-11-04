@@ -5,7 +5,7 @@
 		<ul>
 			<li>
 				<a href="{link CvEditor:skills}" title="{_'Your Skills'}" class="tip">
-					<i class="s24 icomoon-icon-clipboard"></i>
+					<i class="s24 icomoon-icon-star-5"></i>
 				</a>
 			</li>
 			<li>
@@ -48,27 +48,27 @@
 
 							<li n:if="$isCandidate">
 								<a n:href="CvEditor:skills" n:class="$presenter->isLinkCurrent('CvEditor:Skills') ? active">
-									<i class="s16 icomoon-icon-clipboard"></i>
+									<i class="s16 icomoon-icon-star-5"></i>
 									<span class="txt">{_'IT Skills'}</span>
 								</a>
 							</li>
 
 							<li n:if="$isCandidate">
 								<a n:href="CvEditor:file" n:class="$presenter->isLinkCurrent('CvEditor:file') ? active">
-									<i class="s16 icomoon-icon-clipboard"></i>
+									<i class="s16 entypo-icon-leaf"></i>
 									<span class="txt">{_'My CV'}</span>
 								</a>
 							</li>
 
 							<li n:if="$isCandidate">
 								<a n:href="CvEditor:careerDocs" n:class="$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
-									<i class="s16 icomoon-icon-clipboard"></i>
+									<i class="s16 brocco-icon-paperclip"></i>
 									<span class="txt">{_'Career Docs'}</span>
 								</a>
 							</li>
 
 							<li>
-								<a n:href="Jobs:" n:class="$presenter->isLinkCurrent('Jobs:*') ? active">
+								<a n:href="Jobs:" n:class="$presenter->isLinkCurrent('Jobs:*') || $presenter->isLinkCurrent('Job:*') ? active">
 									<i class="fa fa-briefcase"></i>
 									<span class="txt">{_'Jobs'}</span>
 								</a>
@@ -84,7 +84,7 @@
 							<li n:if="$user->isAllowed('candidates', 'default')">
 								<a n:href="Candidates:"
 										n:class="$presenter->isLinkCurrent('Candidates:*') || $presenter->isLinkCurrent('Candidate:*') ? active">
-									<i class="fa fa-file-text"></i>
+									<i class="fa entypo-icon-users"></i>
 									<span class="txt">{_'Candidates'}</span>
 								</a>
 							</li>
