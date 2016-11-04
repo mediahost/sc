@@ -53,9 +53,11 @@ class CandidateGenerator extends Object
 
 		$person->title = ValuesGenerator::selectIndexFromList(Person::getTitleList());
 		$person->degreeBefore = ValuesGenerator::generateName(60);
-		$person->firstname = ValuesGenerator::generateName();
 		$person->middlename = ValuesGenerator::generateName(10);
-		$person->surname = ValuesGenerator::generateName();
+		if (ValuesGenerator::isFilled(90)) {
+			$person->firstname = ValuesGenerator::generateName(100);
+			$person->surname = ValuesGenerator::generateName(100);
+		}
 		$person->degreeAfter = ValuesGenerator::generateName(20);
 		$person->gender = ValuesGenerator::selectIndexFromList(Person::getGenderList());
 		$person->birthday = ValuesGenerator::generatePastDate();

@@ -160,7 +160,8 @@ class Person extends BaseEntity
 
 	public function getPhoto($rawValue = FALSE)
 	{
-		$defaultImage = 'assets/img/avatar3.jpeg';
+		$id = $this->user->mail;
+		$defaultImage = 'https://api.adorable.io/avatars/300/' . $id . '.png';
 		if ($this->photo) {
 			return $this->photo;
 		} else {

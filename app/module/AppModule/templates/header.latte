@@ -39,11 +39,15 @@
 				<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
 					<li n:class="$isCompleteAccount ? dropdown">
 						<a href="#" n:class="$isCompleteAccount ? dropdown-toggle, avatar"{if $isCompleteAccount} data-toggle="dropdown"{/if}>
+							{if $person->getPhoto(TRUE)}
+								<img src="{$basePath}/foto/{$person->photo|size:50,50}"
+									 alt="" class="image"/>
+							{else}
+								<img src="{$person->photo}"
+									 alt="" class="image"/>
+							{/if}
 							<img n:ifset="$person->photo" src="{$basePath}/foto/{$person->photo|size:50,50}"
-															 alt="" class="image"/>
-							{var defaultImage = \App\Model\Entity\Image::DEFAULT_IMAGE}
-							<img n:if="!isset($person->photo)" src="{$basePath}/foto/{$defaultImage|size:50,50}"
-																  alt="" class="image"/>
+														  alt="" class="image"/>
 							<span class="txt">{$user->getIdentity()->mail}</span>
 							<b class="caret" n:if="$isCompleteAccount"></b>
 						</a>
