@@ -25,11 +25,8 @@ use App\Model\Entity\Candidate;
 use App\Model\Facade\Traits\CantDeleteUserException;
 use App\Model\Facade\UserFacade;
 
-class ProfilePresenter extends BasePresenter
+class CandidatePresenter extends BasePresenter
 {
-
-	/** @var UserFacade @inject */
-	public $userFacade;
 
 	/** @var ISetPasswordFactory @inject */
 	public $iSetPasswordFactory;
@@ -72,175 +69,30 @@ class ProfilePresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('profile')
-	 * @privilege('default')
+	 * @resource('candidate')
+	 * @privilege('view')
 	 */
-	public function actionDefault()
+	public function actionView($id)
 	{
-		if (in_array(Entity\Role::ADMIN, $this->getUser()->getRoles()) || in_array(Entity\Role::SUPERADMIN, $this->getUser()->getRoles())
-		) {
-			$this->redirect('connectManager');
+		$userRepo = $this->em->getRepository(Entity\User::getClassName());
+		if ($id) {
+			$user = $userRepo->find($id);
+			$this->person = $user->person;
+			$this->candidate = $this->person->candidate;
 		}
-
-		$user = $this->user->identity;
-		$this->person = $user->person;
-		$this->candidate = $this->person->candidate;
+		if (!$this->candidate) {
+			$this->flashMessage($this->translator->translate('Candidate wasn\'t found'));
+			$this->redirect('Dashboard:');
+		}
 	}
 
-	public function renderDefault()
+	public function renderView()
 	{
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
 	}
 
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('settings')
-	 */
-	public function actionSettings()
-	{
-		$this->redirect('connectManager');
-	}
-
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('settings')
-	 */
-	public function actionConnectManager()
-	{
-
-	}
-
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('settings')
-	 */
-	public function actionSetPassword()
-	{
-
-	}
-
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('delete')
-	 */
-	public function actionDelete()
-	{
-
-	}
-
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('delete')
-	 */
-	public function handleDelete()
-	{
-		try {
-			$this->userFacade->deleteById($this->getUser()->id);
-			$this->user->logout();
-			$message = $this->translator->translate('Your account has been deleted');
-			$this->flashMessage($message, 'success');
-			$this->redirect(":Front:Homepage:");
-		} catch (CantDeleteUserException $ex) {
-			$message = $this->translator->translate('You can\'t delete account, because you are only one admin for your company.');
-			$this->flashMessage($message, 'danger');
-			$this->redirect("this");
-		}
-	}
-
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('notifications')
-	 */
-	public function actionNotifications()
-	{
-
-	}
-
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('notifications')
-	 */
-	public function handleNotifyChange($bool)
-	{
-		if (is_numeric($bool)) {
-			$bool = (bool)$bool;
-		} else {
-			$bool = NULL;
-		}
-		$userDao = $this->em->getDao(Entity\User::getClassName());
-		$user = $userDao->find($this->user->id);
-		$user->beNotified = $bool;
-		$this->em->flush();
-		$this->redrawControl('notifiButtons');
-	}
-
 	// <editor-fold desc="components">
-
-	/** @return SetPassword */
-	protected function createComponentSetPassword()
-	{
-		$control = $this->iSetPasswordFactory->create();
-		$control->setUser($this->user);
-		$control->onSuccess[] = function () {
-			$message = $this->translator->translate('Password has been successfuly set!');
-			$this->flashMessage($message, 'success');
-			$this->redirect('this');
-		};
-		return $control;
-	}
-
-	/** @return ConnectManager */
-	protected function createComponentConnect()
-	{
-		$userDao = $this->em->getDao(Entity\User::getClassName());
-		$control = $this->iConnectManagerFactory->create();
-		$control->setUser($userDao->find($this->user->id));
-		$control->setAppActivateRedirect($this->link('setPassword'));
-		$control->onConnect[] = function ($type) {
-			$message = $this->translator->translate('%type% was connected.', ['type' => $type]);
-			$this->flashMessage($message, 'success');
-			if (!$this->isAjax()) {
-				$this->redirect('this');
-			}
-		};
-		$control->onDisconnect[] = function (Entity\User $user, $type) {
-			$message = $this->translator->translate('%type% was disconnected.', ['type' => $type]);
-			$this->flashMessage($message, 'success');
-			if (!$this->isAjax()) {
-				$this->redirect('this');
-			}
-		};
-		$control->onLastConnection[] = function () {
-			$message = $this->translator->translate('Last login method is not possible deactivate.');
-			$this->flashMessage($message, 'danger');
-			if (!$this->isAjax()) {
-				$this->redirect('this');
-			}
-		};
-		$control->onInvalidType[] = function ($type) {
-			$message = $this->translator->translate('We can\'t find \'%type%\' to disconnect.', ['type' => $type]);
-			$this->flashMessage($message, 'danger');
-			if (!$this->isAjax()) {
-				$this->redirect('this');
-			}
-		};
-		$control->onUsingConnection[] = function ($type) {
-			$message = $this->translator->translate('Logged %type% account is using by another account.', ['type' => $type]);
-			$this->flashMessage($message, 'danger');
-			if (!$this->isAjax()) {
-				$this->redirect('this');
-			}
-		};
-		return $control;
-	}
 
 	/** @return Skills */
 	public function createComponentSkillsForm()

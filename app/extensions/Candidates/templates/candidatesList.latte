@@ -9,8 +9,10 @@
 		<!-- PRODUCT ITEM END -->
 	{/foreach}
 	{if !count($candidates)}
-		<div class="note note-info">
-			<h4 class="block">{_'Despite our efforts, we found no candidates.'}</h4>
+		<div class="col-md-12">
+			<div class="alert alert-warning">
+				{_'We found no candidates.'}
+			</div>
 		</div>
 	{/if}
 	<!-- END PRODUCT LIST -->

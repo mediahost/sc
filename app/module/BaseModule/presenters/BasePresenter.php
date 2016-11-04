@@ -69,9 +69,9 @@ abstract class BasePresenter extends Presenter
 		$this->template->identity = $this->getUser()->getIdentity();
 		$this->template->pageInfo = $this->settings->getPageInfo();
 
-		$this->template->isCandidate = in_array(Entity\Role::CANDIDATE, $this->getUser()->getRoles());
-		$this->template->isCompany = in_array(Entity\Role::COMPANY, $this->getUser()->getRoles());
-		$this->template->isAdmin = in_array(Entity\Role::ADMIN, $this->getUser()->getRoles()) || in_array(Entity\Role::SUPERADMIN, $this->getUser()->getRoles());
+		$this->template->isCandidate = $this->user->isInRole(Entity\Role::CANDIDATE);
+		$this->template->isCompany = $this->user->isInRole(Entity\Role::COMPANY);
+		$this->template->isAdmin = $this->user->isInRole(Entity\Role::ADMIN) || $this->user->isInRole(Entity\Role::SUPERADMIN);
 	}
 	// <editor-fold desc="requirments">
 
@@ -95,7 +95,7 @@ abstract class BasePresenter extends Presenter
 	private function checkSecured($resource, $privilege)
 	{
 		if (!$this->user->loggedIn) {
-			if ($this->getParameter('accessId')) {
+			if ($this->getParameter(self::ACCESS_ID_PARAM)) {
 				$this->redirect(':Front:Sign:access', [
 					'token' => $this->getParameter(self::ACCESS_ID_PARAM),
 					'backlink' => $this->storeRequest(),

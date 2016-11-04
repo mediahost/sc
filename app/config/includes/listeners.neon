@@ -8,3 +8,5 @@ services:
 	- {class: App\Listeners\Model\Entity\DocumentListener, inject: yes}
 	- {class: App\Listeners\Model\Entity\CandidateListener, inject: yes}
 	- {class: App\Listeners\Model\Entity\MessageListener, inject: yes}
+	# Facade Listeners
+	- {class: App\Listeners\Model\Facade\CandidateListener, tags: [kdyby.subscriber], inject: yes}

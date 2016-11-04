@@ -1,15 +1,14 @@
 {block pageTitle}
-{_'Candidates'}
+	{$job}
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="Candidates:">{_'Candidates'}</a>
-</li>
+	<li>
+		<a n:href="Jobs:">{_'Jobs'}</a>
+	</li>
 {/block}
 
 {block content}
-
 <div class="row">
 	<div class="col-md-12">
 		{control candidatesList:filter}

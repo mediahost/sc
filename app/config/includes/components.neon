@@ -55,7 +55,6 @@ services:
 	- {implement: App\Components\Candidate\ILocationFilterFactory, inject: yes}
 	- {implement: App\Components\Candidate\ISearchFilterFactory, inject: yes}
 	- {implement: App\Components\Candidate\Form\IPrintCandidateFactory, inject: yes}
-	- {implement: App\Components\Candidate\IJobListFactory, inject: yes}
 
 	# Cv
 	- {implement: App\Components\Cv\IAdditionalFactory, inject: yes}

@@ -1,31 +1,34 @@
-{**
- * JobCategoryFilter control template
- *	
-*}
 {form form}
-    <table>
-        <tbody>
-        <tr>
-            <th style="vertical-align: top; padding-top: 6px;"></th>
-            <td>
-                <div id="jobCategoriesTree"></div>
-                <div id="categoryInputs" style="display: none;">
-                    {foreach $jobCategories as $categoryId => $categoryName}
-                        {input "categories-$categoryId" }{$categoryName}
-                    {/foreach}
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <th>&nbsp;</th>
-            <td>
-                {$form->render('errors')}
-            </td>
-        </tr>
-        </tbody>
-    </table>
+	<table>
+		<tbody>
+		<tr>
+			<th style="vertical-align: top; padding-top: 6px;"></th>
+			<td>
+				<div id="jobCategoriesTree"></div>
+				<div id="categoryInputs" style="display: none;">
+					{foreach $jobCategories as $categoryId => $categoryName}
+						{input "categories-$categoryId" }{$categoryName}
+					{/foreach}
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th>&nbsp;</th>
+			<td>
+				{$form->render('errors')}
+			</td>
+		</tr>
+		<tr>
+			<th>&nbsp;</th>
+			<td>
+				<p>&nbsp;</p>
+				{input send}
+			</td>
+		</tr>
+		</tbody>
+	</table>
 {/form}
 
 <script n:syntax="double">
-    var jsonJobCategories = {{? echo json_encode($jsonJobCategories); }};
+	var jsonJobCategories = {{? echo json_encode($jsonJobCategories); }};
 </script>

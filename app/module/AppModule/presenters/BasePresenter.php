@@ -74,10 +74,8 @@ abstract class BasePresenter extends BaseBasePresenter
 	private function chooseSender()
 	{
 		if ($this->user->loggedIn) {
-			$senders = $this->communicationFacade->findSenders($this->user->identity, $this->company);
-			if (count($senders)) {
-				$this->sender = current($senders);
-			} else {
+			$this->sender = $this->communicationFacade->findSender($this->user->identity, $this->company);
+			if (!$this->sender) {
 				$this->sender = $this->communicationFacade->createSender($this->user->identity, $this->company);
 			}
 		}

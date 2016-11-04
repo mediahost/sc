@@ -14,6 +14,9 @@ use Nette\Utils\ArrayHash;
 
 class SignUp extends BaseControl
 {
+	/** @var bool */
+	private $registerCandidate = TRUE;
+
 	// <editor-fold desc="events">
 
 	/** @var array */
@@ -52,7 +55,7 @@ class SignUp extends BaseControl
 			->setRequired('Please enter your e-mail.')
 			->setAttribute('placeholder', 'E-mail')
 			->addRule(Form::EMAIL, 'E-mail has not valid format.')
-			->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'))
+			->addServerRule([$this, 'validateMail'], $this->translator->translate('%value is already registered.'))
 			->setOption('description', 'for example: example@domain.com');
 
 		$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
@@ -67,10 +70,31 @@ class SignUp extends BaseControl
 			->setRequired('Please enter your password')
 			->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
 
+		if ($this->registerCandidate) {
+			$acceptedFiles = [
+				'application/pdf',
+				'application/msword',
+				'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			];
+			$form->addUpload('cvFile', 'Your CV')
+				->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles))
+				->setRequired('Please enter file with %label');
+		}
+
 		$form->addSubmit('continue', 'Continue');
 
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
+	}
+
+	public function setRegisterCandidate($value = TRUE)
+	{
+		$this->registerCandidate = $value;
+	}
+
+	public function setRegisterCompany($value = TRUE)
+	{
+		$this->registerCandidate = !$value;
 	}
 
 	public function validateMail(IControl $control, $arg = NULL)
@@ -83,12 +107,17 @@ class SignUp extends BaseControl
 		$user = new User($values->mail, FALSE);
 		$user->setPassword($values->password);
 
+		if (isset($values->cvFile) && $values->cvFile->isOk()) {
+			$user->person->candidate->cvFile = $values->cvFile;
+		}
+
 		$this->onSuccess($this, $user);
 	}
 
 	public function renderLogin()
 	{
 		$this->setTemplateFile('login');
+		$this->template->registerCandidate = $this->registerCandidate;
 		parent::render();
 	}
 

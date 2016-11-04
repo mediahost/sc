@@ -62,105 +62,130 @@ span {
 }
 
 #docs .files {
-	padding-top:20px
+	padding-top: 20px
 }
+
 #docs .files .file {
-	display:block;
-	float:left;
-	width:154px;
-	min-height:100px;
-	margin-right:20px;
-	margin-left:20px
+	display: block;
+	float: left;
+	width: 154px;
+	min-height: 100px;
+	margin-right: 20px;
+	margin-left: 20px
 }
+
 #docs .files .file .thumbnail {
-	display:block;
-	background-color:transparent;
+	display: block;
+	background-color: transparent;
 	border: none;
 }
+
 #docs .files .file .thumbnail .icon {
-	display:block;
-	margin:0 auto;
-	height:64px;
-	width:64px;
-	background-color:transparent;
-	background-position:center center;
-	background-repeat:no-repeat
+	display: block;
+	margin: 0 auto;
+	height: 64px;
+	width: 64px;
+	background-color: transparent;
+	background-position: center center;
+	background-repeat: no-repeat
 }
+
 #docs .files .file .name {
-	display:block;
-	text-align:center;
-	padding-top:5px;
-	font-size:14px
+	display: block;
+	text-align: center;
+	padding-top: 5px;
+	font-size: 14px
 }
+
 #docs .files .file .actions {
-	margin:0 auto;
-	width:70px;
-	margin-bottom:20px
+	margin: 0 auto;
+	width: 70px;
+	margin-bottom: 20px
 }
+
 #docs .files .file .actions a {
-	display:block;
-	float:left;
-	width:30px;
-	height:30px;
-	background-color:transparent;
-	background-position:center center;
-	background-repeat:no-repeat
+	display: block;
+	float: left;
+	width: 30px;
+	height: 30px;
+	background-color: transparent;
+	background-position: center center;
+	background-repeat: no-repeat
 }
+
 #docs .files .file .actions a.switch {
-	padding-right:10px
+	padding-right: 10px
 }
+
 #docs .files .file .actions a.switch.public {
-	background-image:url('../../images/visible.png')
+	background-image: url('../../images/visible.png')
 }
+
 #docs .files .file .actions a.switch.private {
-	background-image:url('../../images/invisible.png')
+	background-image: url('../../images/invisible.png')
 }
+
 #docs .files .file .actions a.delete {
-	background-image:url('../../images/close.png')
+	background-image: url('../../images/close.png')
 }
+
 #docs .files .file .actions:after {
-	display:block;clear:both;content:""
+	display: block;
+	clear: both;
+	content: ""
 }
+
 #docs .files .file.jpg .thumbnail .icon {
-	background-image:url('../../images/files/jpg.png')
+	background-image: url('../../images/files/jpg.png')
 }
+
 #docs .files .file.png .thumbnail .icon {
-	background-image:url('../../images/files/png.png')
+	background-image: url('../../images/files/png.png')
 }
+
 #docs .files .file.pdf .thumbnail .icon {
-	background-image:url('../../images/files/pdf.png')
+	background-image: url('../../images/files/pdf.png')
 }
+
 #docs .files .file.default .thumbnail .icon {
-	background-image:url('../../images/files/default.png')
+	background-image: url('../../images/files/default.png')
 }
+
 #docs .files:after {
-	display:block;
-	clear:both;
-	content:""
+	display: block;
+	clear: both;
+	content: ""
 }
+
 #docs .actions-all {
-	text-align:right
+	text-align: right
 }
+
 #docs .actions-all .delete-all {
-	display:inline-block;
-	padding-right:21px;
-	background:transparent url('../../images/erase.png') center right no-repeat;
-	height:16px;line-height:16px
+	display: inline-block;
+	padding-right: 21px;
+	background: transparent url('../../images/erase.png') center right no-repeat;
+	height: 16px;
+	line-height: 16px
 }
+
 #docs .rest {
 	background-color: #f0f0f0;
 	padding: 10px;
 	padding-left: 0;
 }
-#docs .rest>.rest {
+
+#docs .rest > .rest {
 	margin-left: 10px;
 }
+
 #docs .restContent {
 	background-color: #fff;
 	border: 1px #d1d1d1 solid;
 	padding: 20px;
 	margin-bottom: 15px;
 }
+
 .dz-message {
 	opacity: 1 !important;
 }
@@ -189,9 +214,12 @@ span {
 	}
 }
 
-.gallery-item {
+.candidate-item {
 	.panel-body {
 		height: auto;
+		.photo-rounded {
+			border-radius: 50%;
+		}
 		.jobs {
 			width: 100%;
 			tr {
@@ -199,9 +227,59 @@ span {
 					padding: 5px;
 				}
 				th {
+					font-weight: normal;
+					font-style: italic;
 					padding-left: 0px;
+					width: 45%;
 				}
 			}
 		}
+	}
+	&.candidate-short {
+		.panel-body {
+			height: 220px;
+		}
+	}
+	&.candidate-long {
+		.panel-body {
+			height: 320px;
+		}
+	}
+}
+
+.jobMatches {
+	.jobs {
+		width: 100%;
+		tr {
+			th, td {
+				padding: 5px;
+			}
+			th {
+				font-weight: normal;
+				font-style: italic;
+				padding-left: 0px;
+				width: 45%;
+			}
+		}
+	}
+}
+
+.candidate-filter {
+	.table {
+		td {
+			&.name {
+				width: 200px;
+				label {
+					font-weight: normal;
+					margin-top: 6px;
+				}
+			}
+		}
+	}
+}
+
+.twitter-widget {
+	.twitter-widget-tweets {
+		float: none;
 	}
 }

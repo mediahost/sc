@@ -4,27 +4,24 @@ namespace App\Extensions\Candidates\Components;
 
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Category;
+use App\Model\Entity\Job;
 use App\Model\Entity\Parameter;
 use App\Model\Entity\Price;
 use App\Model\Entity\Producer;
 use App\Model\Entity\ProducerLine;
 use App\Model\Entity\ProducerModel;
 use App\Model\Entity\Product;
+use App\Model\Entity\Role;
 use App\Model\Entity\Stock;
 use App\Model\Entity\Vat;
-use App\Model\Repository\BaseRepository;
 use App\Model\Repository\CandidateRepository;
 use App\Model\Repository\CategoryRepository;
 use App\Model\Repository\ProductRepository;
 use App\Model\Repository\StockRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Query\Expr\Andx;
-use Doctrine\ORM\Query\Expr\Orx;
 use Exception;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
-use Nette\Utils\DateTime;
-use Tracy\Debugger;
 
 class DataHolder extends Object
 {
@@ -91,7 +88,7 @@ class DataHolder extends Object
 	{
 		if (!$this->candidates) {
 			try {
-				$this->candidates = $this->candidateRepo->findBy($this->candidateCriteria, $this->orderBy, $this->limit, $this->offset);
+				$this->candidates = $this->candidateRepo->findByFilter($this->candidateCriteria, $this->orderBy, $this->limit, $this->offset);
 			} catch (DataHolderException $e) {
 				$this->candidates = [];
 			}
@@ -103,7 +100,7 @@ class DataHolder extends Object
 	{
 		if ($this->count === NULL) {
 			try {
-				$this->count = $this->candidateRepo->countBy($this->candidateCriteria);
+				$this->count = $this->candidateRepo->countByFilter($this->candidateCriteria);
 			} catch (DataHolderException $e) {
 				$this->count = 0;
 			}
@@ -117,14 +114,36 @@ class DataHolder extends Object
 
 	public function filterNotEmpty()
 	{
-		$this->candidateCriteria['person.photo NOT'] = NULL;
-		$this->candidateCriteria['person.firstname NOT'] = NULL;
+		$roleRepo = $this->em->getRepository(Role::getClassName());
+		$this->candidateCriteria['active'] = TRUE;
+		$this->candidateCriteria['role'] = $roleRepo->findOneByName(Role::CANDIDATE);
 		return $this;
 	}
 
 	public function filterFulltext($text)
 	{
 		$words = preg_split('/\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
+		if (count($words)) {
+			$this->candidateCriteria['fulltext'] = $words;
+		}
+		return $this;
+	}
+
+	public function filterJob(Job $job)
+	{
+		$this->candidateCriteria['job'] = $job;
+		return $this;
+	}
+
+	public function filterCategories(array $categories)
+	{
+		$this->candidateCriteria['categories'] = $categories;
+		return $this;
+	}
+
+	public function filterItSkills(array $skills)
+	{
+		$this->candidateCriteria['skills'] = $skills;
 		return $this;
 	}
 

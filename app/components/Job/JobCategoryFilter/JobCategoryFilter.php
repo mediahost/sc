@@ -40,7 +40,7 @@ class JobCategoryFilter extends \App\Components\BaseControl
         $form = new \App\Forms\Form();
 		$form->setRenderer(new MetronicHorizontalFormRenderer());
 		$form->setTranslator($this->translator);
-        $form->getElementPrototype()->class('ajax');
+//        $form->getElementPrototype()->class('ajax');
         
         $categories = $this->jobFacade->findCategoriesPairs();
         $categoriesContainer = $form->addContainer('categories');
@@ -48,6 +48,9 @@ class JobCategoryFilter extends \App\Components\BaseControl
 			$categoriesContainer->addCheckbox($categoryId, $categoryName)
 				->setAttribute('class', 'inCategoryTree');
 		}
+
+		$form->addSubmit('send', 'Filter')
+			->setAttribute('class', 'btn btn-primary');
 
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;

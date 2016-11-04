@@ -38,10 +38,15 @@
 		<div class="col-lg-6 col-md-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="panel-title">{_'Jobs'}</h4>
+					<h4 class="panel-title">{_'Job invitations'}</h4>
 				</div>
-				<div class="panel-body social-editor">
-					{control jobList}
+				<div class="panel-body p0 bn" n:if="count($invitations)">
+					{include jobPreview jobs => $invitations}
+				</div>
+				<div class="panel-body" n:if="!count($invitations)">
+					<div class="alert alert-info fade in">
+						{_'We are searching job positions for you.'}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -75,6 +80,24 @@
 {define companyDashboard}
 	company dashboard
 {/define}
+
+{block jobPreview}
+	<a n:foreach="$jobs as $job" n:href="Job:view $job->id" n:class="list-group-item, brad0, $iterator->first ? bnt">
+		<h4 class="list-group-item-heading">{$job}</h4>
+		<p class="list-group-item-text pb5">
+			{$job->description|striptags|truncate:50}
+		</p>
+		{ifset $candidateFacade}
+			{if $candidateFacade->isMatched($candidate, $job)}
+				<span class="label label-danger">{_'Matched'}</span>
+			{elseif $candidateFacade->isApproved($candidate, $job)}
+				<span class="label label-success">{_'Invited'}</span>
+			{elseif $candidateFacade->isApplied($candidate, $job)}
+				<span class="label label-warning">{_'Applied'}</span>
+			{/if}
+		{/ifset}
+	</a>
+{/block}
 
 
 

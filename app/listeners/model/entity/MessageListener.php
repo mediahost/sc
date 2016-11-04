@@ -9,6 +9,7 @@ use App\Model\Entity\Sender;
 use Doctrine\ORM\Events;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
+use Nette\Utils\Validators;
 
 class MessageListener extends Object implements Subscriber
 {
@@ -61,10 +62,12 @@ class MessageListener extends Object implements Subscriber
 		unset($senderForNotification[$message->sender->id]);
 
 		foreach ($senderForNotification as $sender) {
-			$notificationMessage = $this->iNotificationMessage->create();
-			$notificationMessage->setReciever($sender);
-			$notificationMessage->setMessage($message);
-			$notificationMessage->send();
+			if (Validators::isEmail($sender)) {
+				$notificationMessage = $this->iNotificationMessage->create();
+				$notificationMessage->setReciever($sender);
+				$notificationMessage->setMessage($message);
+				$notificationMessage->send();
+			}
 		}
 	}
 

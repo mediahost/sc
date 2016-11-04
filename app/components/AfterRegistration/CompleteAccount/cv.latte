@@ -1,11 +1,31 @@
 {snippet cvUpload}
-	<legend>{_'Upload Your CV File'} {_'(.doc or .pdf)'}</legend>
-	{form form}
+	{form form class => 'form-horizontal group-border stripped'}
+		<div n:if="$form->errors" class="alert alert-danger">
+			{foreach $form->errors as $error}
+				<span>{$error}</span><br/>
+			{/foreach}
+		</div>
 
-		<ul class="errors" n:if="$form->hasErrors()">
-			<li n:foreach="$form->errors as $error">{$error}</li>
-		</ul>
+		<div class="form-group" n:if="$candidate->cvFile">
+			<label class="col-lg-2 col-md-3 control-label">{_'Actual CV file'}</label>
+			<div class="col-lg-10 col-md-9">
+				<p class="form-control-static">
+					<a href="{$basePath}/{$candidate->cvFile}" target="_blank">{_'Open Your File'}</a>
+				</p>
+			</div>
+		</div>
 
-		{$form->render('body')}
+		<div class="form-group">
+			{label cvFile class => 'col-lg-2 col-md-3 control-label' /}
+			<div class="col-lg-10 col-md-9">
+				{input cvFile}
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				{button send class => 'btn btn-primary'}{caption}{/button}
+			</div>
+		</div>
 	{/form}
 {/snippet}

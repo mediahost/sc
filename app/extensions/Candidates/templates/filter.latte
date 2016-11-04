@@ -1,7 +1,127 @@
 {snippet candidatesFilter}
 	{form filterForm}
 		{? $form->render('begin')}
-
+		<div class="panel panel-default panel-closed toggle candidate-filter">
+			<div class="panel-heading">
+				<h4 class="panel-title">{_'Filter'}</h4>
+				<div class="panel-controls panel-controls-right">
+					<a href="#" class="toggle panel-minimize">
+						<i class="icomoon-icon-plus"></i>
+					</a>
+				</div>
+			</div>
+			<div class="panel-body p0">
+				<table class="table table-hover">
+					<tbody>
+					<tr>
+						<td colspan="2">
+							{input search}
+						</td>
+						<td>
+							{input send}
+							<a n:href="resetFilter!" class="btn btn-default">{_'Reset filter'}</a>
+						</td>
+					</tr>
+					<tr n:if="!$denyCompany">
+						<td class="name">
+							{label job/}
+						</td>
+						<td>
+							{input job}
+						</td>
+						<td>
+							{input send}
+						</td>
+					</tr>
+					{*<tr n:if="!$denyCompany">*}
+						{*<td class="name">*}
+							{*{_'Account Manager'}*}
+						{*</td>*}
+						{*<td></td>*}
+						{*<td></td>*}
+					{*</tr>*}
+					<tr>
+						<td class="name">
+							{_'Category'}
+						</td>
+						<td class="tags">
+							<div>
+								<span n:foreach="$selectedCategories as $tag"
+										class="tag label label-info">{$tag}</span>
+							</div>
+						</td>
+						<td>
+							<a href="#categoryFilter" data-toggle="modal">{_'Set'}</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="name">
+							{_'IT skills'}
+						</td>
+						<td class="tags">
+							<div>
+								<span n:foreach="$selectedSkills as $tag"
+										class="tag label label-info">{$tag}</span>
+							</div>
+						</td>
+						<td>
+							<a href="#skillsFilter" data-toggle="modal">{_'Set'}</a>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 		{? $form->render('end')}
 	{/form}
+
+	<div class="modal fade" id="categoryFilter">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Category filter'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control categoryFilter}
+				</div>
+				<div class="modal-footer">
+					<a href="{link resetFilter! 'category'}" class="btn btn-primary btn-warning"
+					   data-dismiss="modal" data-action="modal">{_'Reset'}</a>
+					<button type="button" class="btn btn-primary"
+							data-dismiss="modal" data-action="modal">{_'Filter'}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="skillsFilter">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Skills filter'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control skillsFilter}
+				</div>
+				<div class="modal-footer">
+					<a href="{link resetFilter! 'skills'}" class="btn btn-primary btn-warning"
+					   data-dismiss="modal" data-action="modal">{_'Reset'}</a>
+					<button type="button" class="btn btn-primary"
+							data-dismiss="modal" data-action="modal">{_'Filter'}</button>
+				</div>
+			</div>
+		</div>
+	</div>
 {/snippet}

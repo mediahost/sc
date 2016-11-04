@@ -11,10 +11,10 @@ use App\Model\Entity\SkillKnowRequest;
 use App\Model\Entity\SkillLevel;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\SkillFacade;
-use Nette\Utils\ArrayHash;
 
 class SkillsFilter extends BaseControl
 {
+	const SEPARATOR = ',';
 	const SKILL_MIN = 1;
 	const SKILL_MAX = 5;
 	const SKILL_STEP = 1;
@@ -47,12 +47,10 @@ class SkillsFilter extends BaseControl
 		$form = new Form();
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
-		if ($this->isAjax) {
-			$form->getElementPrototype()->addClass('ajax');
-		}
-		if ($this->isSendOnChange) {
-			$form->getElementPrototype()->addClass('sendOnChange');
-		}
+		$form->getElementPrototype()->class = [
+			!$this->isAjax ?: 'ajax',
+			!$this->isSendOnChange ?: 'sendOnChange',
+		];
 
 		$defaultValues = $this->getDefaults();
 		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
@@ -64,16 +62,16 @@ class SkillsFilter extends BaseControl
 
 		$ranges = $form->addContainer('skillRange');
 		$yearRange = $form->addContainer('yearRange');
-		
+
 		foreach ($skills as $skill) {
-			if(isset($defaultValues['skillRange'][$skill->id])) {
+			if (isset($defaultValues['skillRange'][$skill->id])) {
 				$from = $defaultValues['skillRange'][$skill->id][0];
 				$to = $defaultValues['skillRange'][$skill->id][1];
 				$skil_range = sprintf('[%d,%d]', $from, $to);
 			} else {
 				$skil_range = sprintf('[%d,%d]', $levelFromId, $levelToId);
 			}
-			
+
 			$ranges->addText($skill->id, $skill->name)
 				->setAttribute('class', 'slider')
 				->setAttribute('data-slider-min', $levelFromId)
@@ -81,13 +79,13 @@ class SkillsFilter extends BaseControl
 				->setAttribute('data-slider-step', self::SKILL_STEP)
 				->setAttribute('data-slider-value', $skil_range)
 				->setAttribute('data-slider-id', 'slider-primary');
-			
+
 			$minYear = isset($defaultValues['skillMinYear'][$skill->id]) ?
 				$defaultValues['skillMinYear'][$skill->id] : self::YEARS_MIN;
 			$maxYear = isset($defaultValues['skillMaxYear'][$skill->id]) ?
 				$defaultValues['skillMaxYear'][$skill->id] : self::YEARS_MAX;
 			$year_range = sprintf('[%d,%d]', $minYear, $maxYear);
-			
+
 			$yearRange->addText($skill->id, $skill->name)
 				->setAttribute('class', 'slider')
 				->setAttribute('data-slider-min', self::YEARS_MIN)
@@ -127,7 +125,7 @@ class SkillsFilter extends BaseControl
 				$this->skillRequests[] = $newSkillRequest;
 			}
 		}
-		
+
 		return $this;
 	}
 
@@ -160,9 +158,9 @@ class SkillsFilter extends BaseControl
 
 	public function setSkillRequests($values)
 	{
-        if (count($values)) {
-            $this->load($values);
-        }
+		if (count($values)) {
+			$this->load($values);
+		}
 		return $this->skillRequests;
 	}
 
@@ -172,15 +170,31 @@ class SkillsFilter extends BaseControl
 	{
 		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$this->template->categories = $this->skillFacade->getTopCategories();
-        $this->setTemplateFile('default');
+		$this->setTemplateFile('default');
 		parent::render();
 	}
 
-    public function renderPreview() {
-        $this->template->skillRequests = $this->skillRequests;
-        $this->setTemplateFile('SkillFilterPreview');
-        parent::render();
-    }
+	public function renderPreview()
+	{
+		$this->template->skillRequests = $this->skillRequests;
+		$this->setTemplateFile('SkillFilterPreview');
+		parent::render();
+	}
+
+	public static function getDefaultRangeValue()
+	{
+		return self::SKILL_MIN . self::SEPARATOR . self::SKILL_MAX;
+	}
+
+	public static function getDefaultYearsValue()
+	{
+		return self::YEARS_MIN . self::SEPARATOR . self::YEARS_MAX;
+	}
+
+	public static function separateValues($values)
+	{
+		return preg_split('/' . preg_quote(self::SEPARATOR, '/') . '/', $values, 2, PREG_SPLIT_NO_EMPTY);
+	}
 }
 
 interface ISkillsFilterFactory

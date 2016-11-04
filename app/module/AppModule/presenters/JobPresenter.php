@@ -8,7 +8,11 @@ use App\Components\Job\ISkillsFactory;
 use App\Components\Job\Skills;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
+use App\Model\Entity\Role;
+use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
+use App\Model\Repository\CompanyRepository;
+use App\Model\Repository\JobRepository;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 
@@ -26,6 +30,9 @@ class JobPresenter extends BasePresenter
 	/** @var JobFacade @inject */
 	public $jobFacade;
 
+	/** @var CandidateFacade @inject */
+	public $candidateFacade;
+
 	/** @var IBasicInfoFactory @inject */
 	public $iJobBasicInfoFactory;
 
@@ -35,19 +42,19 @@ class JobPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
-	/** @var EntityDao */
-	private $jobRepository;
+	/** @var JobRepository */
+	private $jobRepo;
 
-	/** @var EntityDao */
-	private $companyRepository;
+	/** @var CompanyRepository */
+	private $companyRepo;
 
 	// </editor-fold>
 
 	protected function startup()
 	{
 		parent::startup();
-		$this->jobRepository = $this->em->getRepository(Job::getClassName());
-		$this->companyRepository = $this->em->getRepository(Company::getClassName());
+		$this->jobRepo = $this->em->getRepository(Job::getClassName());
+		$this->companyRepo = $this->em->getRepository(Company::getClassName());
 	}
 
 	// <editor-fold desc="actions & renderers">
@@ -59,8 +66,37 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionView($id)
 	{
-		$job = $this->jobRepository->find($id);
+		$this->job = $this->jobRepo->find($id);
+		if (!$this->job) {
+			$message = $this->translator->translate('Finded job isn\'t exists.');
+			$this->flashMessage($message, 'danger');
+			$this->redirect('Dashboard:');
+		}
+	}
+
+	public function renderView()
+	{
+		if ($this->job) {
+			$this->template->job = $this->job;
+			if ($this->user->isInRole(Role::CANDIDATE)) {
+				$candidate = $this->user->getIdentity()->candidate;
+				$this->template->isApplied = $this->candidateFacade->isApplied($candidate, $this->job);
+				$this->template->isInvited = $this->candidateFacade->isApproved($candidate, $this->job);
+				$this->template->isMatched = $this->candidateFacade->isMatched($candidate, $this->job);
+			}
+		}
+	}
+
+	/**
+	 * @secured
+	 * @resource('jobs')
+	 * @privilege('candidates')
+	 */
+	public function actionCandidates($id)
+	{
+		$job = $this->jobRepo->find($id);
 		if ($job) {
+			$this['candidatesList']->addFilterJob($job);
 			$this->template->job = $job;
 		} else {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
@@ -76,7 +112,7 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionAdd($companyId)
 	{
-		$company = $this->companyRepository->find($companyId);
+		$company = $this->companyRepo->find($companyId);
 		if ($company) {
 			$this->job = new Job();
 			$this->job->company = $company;
@@ -96,7 +132,7 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$this->job = $this->jobRepository->find($id);
+		$this->job = $this->jobRepo->find($id);
 		if ($this->job) {
 			$this['jobInfoForm']->setJob($this->job);
 		} else {
@@ -118,7 +154,7 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionEditSkills($id)
 	{
-		$this->job = $this->jobRepository->find($id);
+		$this->job = $this->jobRepo->find($id);
 		if ($this->job) {
 			$this['jobSkillsForm']->setJob($this->job);
 		} else {
@@ -138,6 +174,21 @@ class JobPresenter extends BasePresenter
 	{
 		$this->jobFacade->delete($id);
 		$this->redirect('Jobs:showAll');
+	}
+
+	// </editor-fold>
+	// <editor-fold desc="handlers">
+
+	public function handleApply($jobId)
+	{
+		if ($this->user->isInRole(Role::CANDIDATE) && $jobId) {
+			$job = $this->jobRepo->find($jobId);
+			$identity = $this->user->getIdentity();
+			if ($job && isset($identity->person->candidate)) {
+				$this->candidateFacade->matchApply($identity->person->candidate, $job);
+			}
+		}
+		$this->redrawControl('applyBox');
 	}
 
 	// </editor-fold>

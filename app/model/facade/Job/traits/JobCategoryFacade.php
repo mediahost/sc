@@ -52,14 +52,7 @@ trait JobCategoryFacade
 
 	public function findCandidatePreferedCategories(Candidate $candidate)
 	{
-		$categories = [];
-		$allCategories = $this->findCategoriesPairs();
-		foreach ($allCategories as $id => $category) {
-			if (in_array($id, $candidate->jobCategories)) {
-				$categories[] = $category;
-			}
-		}
-		return $categories;
+		return $candidate->getJobCategoriesIds();
 	}
 
 	public function findJobCategory($id)

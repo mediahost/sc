@@ -57,7 +57,7 @@ class CompleteCandidate extends BaseControl
 			$jsonLocalities[] = $this->loacationToLeaf($localityId, $locality);
 		}
 
-		$candidate = isset($this->candidate)  ?  $this->candidate  :  $this->user->getIdentity()->getCandidate();
+		$candidate = isset($this->candidate) ? $this->candidate : $this->user->getIdentity()->getCandidate();
 
 		$this->template->jobCategories = $this->jobFacade->findCategoriesPairs();
 		$this->template->jsonJobCategories = $jsonJobCategories;
@@ -106,17 +106,19 @@ class CompleteCandidate extends BaseControl
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		$userRepo = $this->em->getRepository(User::getClassName());
+		$jobCategoryRepo = $this->em->getRepository(JobCategory::getClassName());
 
 		$user = $this->user->getIdentity();
-		$candidate = isset($this->candidate)  ?  $this->candidate  :  $user->getCandidate();
+		$candidate = isset($this->candidate) ? $this->candidate : $user->getCandidate();
 
-		$categoryList = [];
+		$candidate->clearJobCategories();
 		foreach ($values->categories as $categoryId => $checked) {
 			if ($checked) {
-				$categoryList[$categoryId] = $categoryId;
+				$jobCategory = $jobCategoryRepo->find($categoryId);
+				$candidate->addJobCategory($jobCategory);
 			}
 		}
-		if (!count($categoryList)) {
+		if (!count($candidate->getJobCategories())) {
 			$form->addError('Enter at least one category');
 		}
 
@@ -130,7 +132,6 @@ class CompleteCandidate extends BaseControl
 			$form->addError('Enter at least one country');
 		}
 
-		$candidate->jobCategories = $categoryList;
 		$candidate->workLocations = $countryList;
 		$candidate->freelancer = $values->freelancer;
 
@@ -143,7 +144,7 @@ class CompleteCandidate extends BaseControl
 
 	private function jobCategoryToLeaf(JobCategory $category)
 	{
-		$candidate = isset($this->candidate)  ?  $this->candidate  :  $this->user->getIdentity()->getCandidate();
+		$candidate = isset($this->candidate) ? $this->candidate : $this->user->getIdentity()->getCandidate();
 		$leaf = [
 			'id' => $category->id,
 			'text' => $category->name,
@@ -153,7 +154,7 @@ class CompleteCandidate extends BaseControl
 			$children[] = $this->jobCategoryToLeaf($child);
 		}
 		$leaf['state'] = [
-			'selected' => in_array($category->id, $candidate->jobCategories),
+			'selected' => in_array($category->id, $candidate->getJobCategoriesIds()),
 		];
 		$leaf['children'] = $children;
 		return $leaf;
@@ -161,7 +162,7 @@ class CompleteCandidate extends BaseControl
 
 	private function loacationToLeaf($id, $location)
 	{
-		$candidate = isset($this->candidate)  ?  $this->candidate  :  $this->user->getIdentity()->getCandidate();
+		$candidate = isset($this->candidate) ? $this->candidate : $this->user->getIdentity()->getCandidate();
 		$children = [];
 		if (is_array($location)) {
 			$leaf = [
