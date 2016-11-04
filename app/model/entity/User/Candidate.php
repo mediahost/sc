@@ -39,7 +39,7 @@ class Candidate extends BaseEntity
 	/** @ORM\Column(type="array") */
 	protected $workLocations;
 
-	/** @ORM\ManyToMany(targetEntity="JobCategory", cascade={"all"}) */
+	/** @ORM\ManyToMany(targetEntity="JobCategory") */
 	protected $jobCategories;
 
 	/** @ORM\OneToMany(targetEntity="Document", mappedBy="candidate", fetch="EAGER", cascade={"all"}) */
