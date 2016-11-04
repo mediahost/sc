@@ -76,7 +76,7 @@ class ValuesGenerator
 	public static function generateNumberString($length, $fillProbability = 50)
 	{
 		if (!self::isFilled($fillProbability)) {
-			return null;
+			return NULL;
 		}
 		$digits = '1234567890';
 		$result = '';
@@ -89,7 +89,7 @@ class ValuesGenerator
 	public static function generateName($fillProbability = 50)
 	{
 		if (!self::isFilled($fillProbability)) {
-			return '';
+			return NULL;
 		}
 		$result = '';
 		$vowels = 'aeiouy';
@@ -107,7 +107,7 @@ class ValuesGenerator
 	public static function generateText($fillProbability = 50)
 	{
 		if (!self::isFilled($fillProbability)) {
-			return '';
+			return NULL;
 		}
 		$result = '';
 		$wordsCount = rand(1, 50);
