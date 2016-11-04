@@ -14,6 +14,7 @@ use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\Model\Service\CandidateCleaner;
 use App\Model\Service\CandidateGenerator;
+use App\Model\Service\CvGenerator;
 use Doctrine\ORM\Tools\SchemaTool;
 use Kdyby\Doctrine\Connection;
 use Kdyby\Doctrine\Helpers;
@@ -40,6 +41,9 @@ class ServicePresenter extends BasePresenter
 
 	/** @var CandidateGenerator @inject */
 	public $candidateGenerator;
+
+	/** @var CvGenerator @inject */
+	public $cvGenerator;
 
 	/** @var CandidateCleaner @inject */
 	public $candidateCleaner;
@@ -284,7 +288,8 @@ class ServicePresenter extends BasePresenter
 	private function createCandidates($candidateCnt)
 	{
 		for ($i=0; $i<$candidateCnt; $i++) {
-			$this->candidateGenerator->createCandidate();
+			$candidate = $this->candidateGenerator->createCandidate();
+			$this->cvGenerator->createCv($candidate);
 		}
 		return $this;
 	}
