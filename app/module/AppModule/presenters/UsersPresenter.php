@@ -68,7 +68,13 @@ class UsersPresenter extends BasePresenter
 	public function actionAdd()
 	{
 		$this->userEntity = new Entity\User();
-		$this['userForm']->setUser($this->userEntity);
+		$this['userForm']->setUser($this->userEntity)
+			->setDisabledRoles([
+				Entity\Role::GUEST,
+				Entity\Role::SIGNED,
+				Entity\Role::CANDIDATE,
+				Entity\Role::COMPANY,
+			]);
 		$this->setView('edit');
 	}
 
@@ -95,7 +101,7 @@ class UsersPresenter extends BasePresenter
 
 	public function renderEdit()
 	{
-		$this->template->isAdd = $this->userEntity->isNew();
+		$this->template->userEntity = $this->userEntity;
 	}
 
 	/**
@@ -163,7 +169,6 @@ class UsersPresenter extends BasePresenter
 	public function createComponentUserForm()
 	{
 		$control = $this->iUserFactory->create();
-		$control->setIdentityRoles($this->user->roles);
 		$control->onAfterSave = function (Entity\User $savedUser) {
 			$message = $this->translator->translate('User \'%user%\' was successfully saved.', ['user' => (string)$savedUser]);
 			$this->flashMessage($message, 'success');

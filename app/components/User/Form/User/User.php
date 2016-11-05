@@ -12,12 +12,13 @@ use Exception;
 use Kdyby\Doctrine\DuplicateEntryException;
 use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 class User extends BaseControl
 {
 
-	/** @var Entity\User */
-	private $user;
+	/** @var \Nette\Security\User @inject */
+	public $identity;
 
 	// <editor-fold desc="events">
 
@@ -27,8 +28,11 @@ class User extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
+	/** @var Entity\User */
+	private $user;
+
 	/** @var array */
-	private $identityRoles = [];
+	private $disabledRoles = [];
 
 	/** @var array */
 	private $roles;
@@ -50,8 +54,8 @@ class User extends BaseControl
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
 		$mail = $form->addServerValidatedText('mail', 'E-mail')
-				->addRule(Form::EMAIL, 'Fill right format')
-				->addRule(Form::FILLED, 'Mail must be filled');
+			->addRule(Form::EMAIL, 'Fill right format')
+			->addRule(Form::FILLED, 'Mail must be filled');
 		if ($this->user->isNew()) {
 			$mail->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'));
 		} else {
@@ -61,21 +65,20 @@ class User extends BaseControl
 		$password = $form->addText('password', 'Password');
 		if ($this->user->isNew()) {
 			$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
-			$helpText->setTranslator($this->translator);
 			$password->addRule(Form::FILLED, 'Password must be filled')
-					->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
-					->setOption('description', (string) $helpText);
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
+				->setOption('description', $helpText);
 		}
 
-		$role = $form->addMultiSelectBoxes('roles', 'Roles', $this->getRoles())
-				->setRequired('Select any role');
-        if (!$this->user->isNew()) {
-            $role->setDisabled();
-        }
-        
+		$role = $form->addMultiSelectBoxes('roles', 'Roles', $this->getAllRoles())
+			->setRequired('Select any role');
+		if (!$this->user->isNew()) {
+			$role->setDisabled();
+		}
+
 
 		$defaultRole = $this->roleFacade->findByName(Entity\Role::CANDIDATE);
-		if ($defaultRole && in_array($defaultRole->getId(), $this->getRoles())) {
+		if ($defaultRole && in_array($defaultRole->getId(), $this->getAllRoles())) {
 			$role->setDefaultValue($defaultRole->getId());
 		}
 
@@ -112,21 +115,21 @@ class User extends BaseControl
 			$this->user->setPassword($values->password);
 		}
 		$this->user->clearRoles();
-        if (isset($values->roles)) {
-            foreach ($values->roles as $id) {
-                $roleDao = $this->em->getDao(Entity\Role::getClassName());
-                $item = $roleDao->find($id);
-                if ($item) {
-                    $this->user->addRole($item);
-                }
-            }
-        }
+		if (isset($values->roles)) {
+			foreach ($values->roles as $id) {
+				$roleDao = $this->em->getDao(Entity\Role::getClassName());
+				$item = $roleDao->find($id);
+				if ($item) {
+					$this->user->addRole($item);
+				}
+			}
+		}
 		return $this;
 	}
 
 	private function save()
 	{
-        $this->userFacade->setVerification($this->user);
+		$this->userFacade->setVerification($this->user);
 		$userRepo = $this->em->getRepository(Entity\User::getClassName());
 		$userRepo->save($this->user);
 		return $this;
@@ -156,15 +159,17 @@ class User extends BaseControl
 		return $this;
 	}
 
-	public function setIdentityRoles(array $roles)
+	public function setDisabledRoles(array $roles)
 	{
-		$this->identityRoles = $roles;
+		$this->disabledRoles = $roles;
+		return $this;
 	}
 
-	private function getRoles()
+	private function getAllRoles()
 	{
 		if ($this->roles === NULL) {
-			$this->roles = $this->userFacade->findLowerRoles($this->identityRoles);
+			$this->roles = $this->userFacade->findLowerRoles($this->identity->roles, TRUE);
+			$this->roles = array_diff($this->roles, $this->disabledRoles);
 		}
 		return $this->roles;
 	}
