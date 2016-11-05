@@ -46,7 +46,7 @@ class SetPassword extends BaseControl
 				->setAttribute('placeholder', 'Password')
 				->setRequired('Please enter your password')
 				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
-				->setOption('description', (string) $helpText);
+				->setOption('description', $helpText);
 
 		$form->addPassword('passwordAgain', 'Re-type Your Password', NULL, 255)
 				->setAttribute('placeholder', 'Re-type Your Password')

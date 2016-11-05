@@ -32,12 +32,11 @@ class Recovery extends BaseControl
 		$form->setTranslator($this->translator);
 
 		$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
-		$helpText->setTranslator($this->translator);
 		$form->addPassword('newPassword', 'New password', NULL, 255)
 			->setAttribute('placeholder', 'Password')
 			->setRequired('Please enter your password')
 			->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
-			->setOption('description', (string)$helpText);
+			->setOption('description', $helpText);
 
 		$form->addPassword('passwordAgain', 'Re-type Your Password', NULL, 255)
 			->setAttribute('placeholder', 'Re-type Your Password')

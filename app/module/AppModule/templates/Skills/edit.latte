@@ -2,34 +2,25 @@
 	{_'Skills'}
 {/block}
 
-{block breadcrumbItems}
-<li>
-	<a n:href="Skills:">{_'Skills'}</a>
-</li>
-<li>
-	<a n:href="this">{if $skill->isNew()}{_'Add'}{else}{_'Edit'}{/if}</a>
-</li>
-{/block}
-
 {block content}
-<div class="row">
-	<div class="col-md-8">
-		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption font-green-sharp">
-					<i class="fa fa-edit font-green-sharp"></i>
-					<span class="caption-subject bold uppercase">
-						{if $skill->isNew()}{_'Add'}{else}{_'Edit'}{/if} {_'skill'}
-					</span>
+	<div class="row">
+		<div class="col-md-8">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						{if $skill->isNew()}
+							{_'New skill'}
+						{else}
+							{_'Skill #%id%', ['id' => $skill->id]}
+						{/if}
+					</h4>
 				</div>
-				<div class="actions">
-					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="">
-					</a>
+				<div class="panel-body">
+					{control skillForm}
 				</div>
 			</div>
-			<div class="portlet-body form border">
-				{control skillForm}
-			</div>
+
 		</div>
 	</div>
-</div>
+{/block}

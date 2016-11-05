@@ -68,7 +68,7 @@ class CompanyUser extends BaseControl
 			$form->addText('password', 'Password')
 					->addRule(Form::FILLED, 'Password must be filled')
 					->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
-					->setOption('description', (string) $helpText);
+					->setOption('description', $helpText);
 		}
 
 		$form->addServerMultiSelectBoxes('roles', 'Roles', $this->getRoles())

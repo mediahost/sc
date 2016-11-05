@@ -6,10 +6,11 @@ use Nette\Security\User as IdentityUser;
 use App\Model\Entity\User;
 use App\Model\Entity\Role;
 
-trait UserFacadeAccess {
-    
-    
-    /**
+trait UserFacadeAccess
+{
+
+
+	/**
 	 * Decides if identity user can access user
 	 * @param IdentityUser $identityUser
 	 * @param User $user
@@ -17,10 +18,15 @@ trait UserFacadeAccess {
 	 */
 	public function canAccess(IdentityUser $identityUser, User $user)
 	{
-		return $this->canEdit($identityUser, $user);
+		if ($identityUser->id === $user->id) {
+			return FALSE; // cant acces to myself
+		} else {
+			$identityLowerRoles = $this->findLowerRoles($identityUser->roles); // can acces to only lower roles
+			return in_array($user->maxRole->name, $identityLowerRoles);
+		}
 	}
-    
-    /**
+
+	/**
 	 * Decides if identity user can delete user
 	 * @param IdentityUser $identityUser
 	 * @param User $user
@@ -28,11 +34,15 @@ trait UserFacadeAccess {
 	 */
 	public function canDelete(IdentityUser $identityUser, User $user)
 	{
-		$isDeletable = $this->isDeletable($user);
-		return $this->canEdit($identityUser, $user) && $isDeletable;
+		if ($identityUser->id === $user->id) {
+			return FALSE; // cant delete myself
+		} else {
+			$isDeletable = $this->isDeletable($user);
+			return $this->canEdit($identityUser, $user) && $isDeletable;
+		}
 	}
-    
-    /**
+
+	/**
 	 * Decides if identity user can edit user
 	 * @param IdentityUser $identityUser
 	 * @param User $user
@@ -41,16 +51,14 @@ trait UserFacadeAccess {
 	public function canEdit(IdentityUser $identityUser, User $user)
 	{
 		if ($identityUser->id === $user->id) {
-			return FALSE;
+			return TRUE; // can edit myself
 		} else {
-			// pokud je nejvyšší uživatelova role v nižších rolích přihlášeného uživatele
-			// tedy může editovat pouze uživatele s nižšími rolemi
-			$identityLowerRoles = $this->findLowerRoles($identityUser->roles);
+			$identityLowerRoles = $this->findLowerRoles($identityUser->roles, TRUE); // can edit lower or same roles
 			return in_array($user->maxRole->name, $identityLowerRoles);
 		}
 	}
-    
-    public function findLowerRoles(array $roles, $includeMax = FALSE)
+
+	public function findLowerRoles(array $roles, $includeMax = FALSE)
 	{
 		$allRoles = $this->roleDao->findPairs('name'); // expect roles by priority (first is the lowest)
 		$lowerRoles = [];
