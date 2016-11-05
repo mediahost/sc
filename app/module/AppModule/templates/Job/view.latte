@@ -2,12 +2,6 @@
 	{$job}
 {/block}
 
-{block breadcrumbItems}
-	<li>
-		<a n:href="Jobs:">{_'Jobs'}</a>
-	</li>
-{/block}
-
 {block content}
 <div class="row">
 	<div class="col-md-6">
@@ -18,6 +12,9 @@
 					<span>{$job}</span>
 					<span n:if="$isCandidate && !$isMatched && $isInvited"
 							class="label label-warning">{_'You have invitation'}</span>
+					<a n:href="Job:edit $job->id" n:if="$user->isAllowed('job', 'edit')">
+						<span class="fa fa-edit"></span>
+					</a>
 				</h4>
 				<div class="invoice-info">
 					<strong class="color-red">{$job->company}</strong>
