@@ -2,13 +2,9 @@
 
 namespace App\Model\Facade\Traits;
 
-use App\Model\Entity\Facebook;
 use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
-use App\Model\Entity\Twitter;
 use App\Model\Entity\User;
-use Nette\Utils\DateTime;
-use Nette\Utils\Random;
 
 trait UserFacadeCreates
 {
