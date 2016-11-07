@@ -7,13 +7,13 @@
 			<div class="tab-content col-lg-7 col-md-7 col-sm-7 col-xs-7">
 				<div class="tab-pane fade active in" id="work-exp">
 					<div class="btn-group" n:snippet="notifiButtons">
-						<a n:class="btn, btn-default, ajax, $user->identity->beNotified === TRUE ? active" n:href="notifyChange! 1">
+						<a n:class="btn, btn-default, ajax, $identity->beNotified === TRUE ? active" n:href="notifyChange! 1">
 							Yes
 						</a>
-						<a n:class="btn, btn-default, ajax, $user->identity->beNotified === FALSE ? active" n:href="notifyChange! 0">
+						<a n:class="btn, btn-default, ajax, $identity->beNotified === FALSE ? active" n:href="notifyChange! 0">
 							No
 						</a>
-						<a n:class="btn, btn-default, ajax, $user->identity->beNotified === NULL ? active" n:href="notifyChange!">
+						<a n:class="btn, btn-default, ajax, $identity->beNotified === NULL ? active" n:href="notifyChange!">
 							By your global settings
 						</a>
 					</div>

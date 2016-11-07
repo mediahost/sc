@@ -108,11 +108,14 @@ class InstallerModel extends Object
 	public function installUsers(array $users)
 	{
 		foreach ($users as $initUserMail => $initUserData) {
+			if (is_array($initUserData)) {
+				$initUserData = each($initUserData);
+			}
 			if (!is_array($initUserData) || !array_key_exists(0, $initUserData) || !array_key_exists(1, $initUserData)) {
 				throw new InvalidArgumentException('Invalid users array. Must be [user_mail => [password, role]].');
 			}
-			$pass = $initUserData[0];
-			$role = $initUserData[1];
+			$pass = isset($initUserData['password']) ? $initUserData['password'] : $initUserData[0];
+			$role = isset($initUserData['role']) ? $initUserData['role'] : $initUserData[1];
 			$roleEntity = $this->roleFacade->findByName($role);
 			if (!$roleEntity) {
 				throw new InvalidArgumentException('Invalid name of role. Check if exists role with name \'' . $role . '\'.');

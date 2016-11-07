@@ -2,30 +2,25 @@
 	{_'Users'}
 {/block}
 
-{block breadcrumbItems}
-<li>
-	<a n:href="Users:">{_'Users'}</a>
-</li>
-<li>
-	<a n:href="this">{if $isAdd}{_'Add'}{else}{_'Edit'}{/if}</a>
-</li>
-{/block}
-
 {block content}
-<div class="row">
-	<div class="col-md-8">
-		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption font-green-sharp">
-					<i class="fa fa-edit font-green-sharp"></i>
-					<span class="caption-subject bold uppercase">
-						{if $isAdd}{_'Add'}{else}{_'Edit'}{/if} {_'user'}
-					</span>
+	<div class="row">
+		<div class="col-md-8">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						{if $userEntity->isNew()}
+							{_'New user'}
+						{else}
+							{_'User #%id%', ['id' => $userEntity->id]}
+						{/if}
+					</h4>
+				</div>
+				<div class="panel-body">
+					{control userForm}
 				</div>
 			</div>
-			<div class="portlet-body form border">
-				{control userForm}
-			</div>
+
 		</div>
 	</div>
-</div>
+{/block}

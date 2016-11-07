@@ -35,7 +35,7 @@
 						</a>
 					</li>
 				</ul>
-				{var $person => $user->getIdentity()->getPerson()}
+				{var $person => $identity->getPerson()}
 				<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
 					<li n:class="$isCompleteAccount ? dropdown">
 						<a href="#" n:class="$isCompleteAccount ? dropdown-toggle, avatar"{if $isCompleteAccount} data-toggle="dropdown"{/if}>
@@ -48,7 +48,7 @@
 							{/if}
 							<img n:ifset="$person->photo" src="{$basePath}/foto/{$person->photo|size:50,50}"
 														  alt="" class="image"/>
-							<span class="txt">{$user->getIdentity()->mail}</span>
+							<span class="txt">{$identity->mail}</span>
 							<b class="caret" n:if="$isCompleteAccount"></b>
 						</a>
 						<ul class="dropdown-menu right" n:if="$isCompleteAccount">

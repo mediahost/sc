@@ -158,10 +158,10 @@ class Person extends BaseEntity
 		return $this;
 	}
 
-	public function getPhoto($rawValue = FALSE)
+	public function getPhoto($rawValue = FALSE, $size = 150)
 	{
 		$id = $this->user->mail;
-		$defaultImage = 'https://api.adorable.io/avatars/300/' . $id . '.png';
+		$defaultImage = 'https://api.adorable.io/avatars/' . $size . '/' . $id . '.png';
 		if ($this->photo) {
 			return $this->photo;
 		} else {

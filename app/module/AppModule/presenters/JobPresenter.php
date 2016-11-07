@@ -218,7 +218,7 @@ class JobPresenter extends BasePresenter
 		$control->onAfterSave = function (Job $job) {
 			$message = $this->translator->translate('Job \'%job%\' was successfully saved.', ['job' => (string)$job]);
 			$this->flashMessage($message, 'success');
-			$this->redirect('editSkills', $job->id);
+			$this->redirect('view', $job->id);
 		};
 		return $control;
 	}
