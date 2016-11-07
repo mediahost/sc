@@ -2,10 +2,6 @@
 
 namespace App\Model\Entity;
 
-use App\Model\Entity\Traits\JobSkillsUsing;
-use App\Model\Entity\Traits\JobTagsUsing;
-use App\Model\Entity\Traits\JobMatching;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;

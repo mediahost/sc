@@ -49,10 +49,7 @@ services:
 	- {implement: App\Components\Candidate\IProfileFactory, inject: yes}
 	- {implement: App\Components\Candidate\IAddressFactory, inject: yes}
 	- {implement: App\Components\Candidate\IPhotoFactory, inject: yes}
-	- {implement: App\Components\Candidate\ICandidateGalleryViewFactory, inject: yes}
 	- {implement: App\Components\Candidate\ICandidateFilterFactory, inject: yes}
-	- {implement: App\Components\Candidate\ICandidatePreviewFactory, inject: yes}
-	- {implement: App\Components\Candidate\IMatchingFactory, inject: yes}
 	- {implement: App\Components\Candidate\ISocialFactory, inject: yes}
 	- {implement: App\Components\Candidate\ILocationFilterFactory, inject: yes}
 	- {implement: App\Components\Candidate\ISearchFilterFactory, inject: yes}
@@ -75,7 +72,6 @@ services:
 	- {implement: App\Components\Cv\ILivePreviewFactory, inject: yes}
 	- {implement: App\Components\Cv\ISendEmailFactory, inject: yes}
 	- {implement: App\Components\Cv\ICvDocumentFactory, inject: yes}
-	- {implement: App\Components\Cv\ICvDataViewFactory, inject: yes}
 
 	# Skills
 	- {implement: App\Components\Skills\ISkillFactory, inject: yes}

@@ -6,7 +6,6 @@ namespace App\Model\Facade;
 use App\Model\Entity\JobCategory;
 use App\Model\Entity\JobType;
 use App\Model\Facade\Traits\JobCategoryFacade;
-use App\Model\Facade\Traits\JobMatchingFacade;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
 use App\Model\Repository\CvRepository;
@@ -17,7 +16,6 @@ use Nette\Object;
 class JobFacade extends Object
 {
     use JobCategoryFacade;
-    use JobMatchingFacade;
 
 	/** @var EntityManager @inject */
 	public $em;

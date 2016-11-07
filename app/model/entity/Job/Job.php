@@ -2,7 +2,6 @@
 
 namespace App\Model\Entity;
 
-use App\Model\Entity\Traits\JobMatching;
 use App\Model\Entity\Traits\JobSkillsUsing;
 use App\Model\Entity\Traits\JobTagsUsing;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,7 +36,6 @@ class Job extends BaseEntity
 	use Model\Timestampable\Timestampable;
 	use JobSkillsUsing;
 	use JobTagsUsing;
-	use JobMatching;
 
 	/** @ORM\ManyToOne(targetEntity="Company", inversedBy="jobs") */
 	protected $company;

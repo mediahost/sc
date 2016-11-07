@@ -26,7 +26,6 @@ services:
 			- addResource('job')
 			- addResource('jobs')
 			- addResource('jobCategories')
-			- addResource('cvs')
 			- addResource('editForeign')
 			- addResource('messages')
 			- addResource('messagesList')
@@ -66,7 +65,6 @@ services:
 			- allow('admin', 'job')
 			- allow('admin', 'cvViewer')
 			- allow('admin', 'cvEditor')
-			- allow('admin', 'cvs')
 			- allow('admin', 'messages')
 			- allow('admin', 'profile')
 
