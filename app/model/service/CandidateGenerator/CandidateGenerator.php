@@ -23,11 +23,31 @@ class CandidateGenerator extends Object
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var RoleFacade @inject */
-	public $roleFacade;
+	/** @var RoleFacade */
+	private $roleFacade;
 
-	/** @var EntityManager @inject */
-	public $em;
+	/** @var EntityManager */
+	private $em;
+
+	/** @var JobCategory[] */
+	private $jobCategories;
+
+	/** @var Role */
+	private $roleCandidate;
+
+	/** @var array */
+	private $localities = [];
+
+	public function __construct(EntityManager $em, RoleFacade $roleFacade)
+	{
+		$this->em = $em;
+		$this->roleFacade = $roleFacade;
+		$this->jobCategories = $this->em->getRepository(JobCategory::getClassName())->findAll();
+		$this->roleCandidate = $this->roleFacade->findByName(Role::CANDIDATE);
+		foreach (Person::getLocalities() as $group) {
+			$this->localities = array_merge($this->localities, $group);
+		}
+	}
 
 	public function createCandidate()
 	{
@@ -41,9 +61,8 @@ class CandidateGenerator extends Object
 
 	private function createUser()
 	{
-		$roleCandidate = $this->roleFacade->findByName(Role::CANDIDATE);
 		$name = ValuesGenerator::generateName(100);
-		$user = $this->userFacade->create($name . self::USER_MAIL_SUFFIX, self::USER_PASSWORD, $roleCandidate);
+		$user = $this->userFacade->create($name . self::USER_MAIL_SUFFIX, self::USER_PASSWORD, $this->roleCandidate);
 		return $user;
 	}
 
@@ -69,7 +88,7 @@ class CandidateGenerator extends Object
 		$address->street = ValuesGenerator::generateName();
 		$address->zipcode = ValuesGenerator::generateNumberString(5);
 		$address->city = ValuesGenerator::generateName();
-		$address->country = ValuesGenerator::selectIndexFromList(Person::getLocalities());
+		$address->country = ValuesGenerator::selectIndexFromList(Address::getCountriesList());
 		$person->address = $address;
 
 		return $person;
@@ -80,15 +99,9 @@ class CandidateGenerator extends Object
 		$candidate = $person->getCandidate();
 		$candidate->cvFile = 'default';
 		$candidate->freelancer = ValuesGenerator::isFilled();
+		$candidate->workLocations = ValuesGenerator::selectMultiIndexFromList($this->localities);
 
-		$localities = [];
-		foreach (Person::getLocalities() as $group) {
-			$localities = array_merge($localities, $group);
-		}
-		$candidate->workLocations = ValuesGenerator::selectMultiIndexFromList($localities);
-
-		$jobCategories = $this->em->getRepository(JobCategory::getClassName())->findAll();
-		$selectedCategories = ValuesGenerator::selectMultiValuesFromList($jobCategories);
+		$selectedCategories = ValuesGenerator::selectMultiValuesFromList($this->jobCategories);
 		foreach ($selectedCategories as $category) {
 			$candidate->addJobCategory($category);
 		}

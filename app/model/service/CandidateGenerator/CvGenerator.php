@@ -7,6 +7,7 @@ use App\Model\Entity\Candidate;
 use App\Model\Entity\Competences;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Education;
+use App\Model\Entity\JobCategory;
 use App\Model\Entity\Language;
 use App\Model\Entity\Person;
 use App\Model\Entity\Referee;
@@ -25,8 +26,18 @@ class CvGenerator extends Object
 	/** @var EntityManager @inject */
 	public $em;
 
-	/** @var JobFacade @inject */
-	public $jobFacade;
+	/** @var JobFacade */
+	private $jobFacade;
+
+	/** @var JobCategory[] */
+	private $jobCategories;
+
+
+	public function __construct(JobFacade $jobFacade)
+	{
+		$this->jobFacade = $jobFacade;
+		$this->jobCategories = $this->jobFacade->findCategoriesPairs();
+	}
 
 	public function createCv(Candidate $candidate)
 	{
@@ -41,8 +52,7 @@ class CvGenerator extends Object
 		$cv->careerSummary = ValuesGenerator::generateText();
 		$cv->additionalInfo = ValuesGenerator::generateText();
 
-		$jobCategories = $this->jobFacade->findCategoriesPairs();
-		$cv->desiredPosition = ValuesGenerator::selectValueFromList($jobCategories);
+		$cv->desiredPosition = ValuesGenerator::selectValueFromList($this->jobCategories);
 		$cv->availableFrom = ValuesGenerator::generateFeatureDate();
 		$cv->salaryFrom = ValuesGenerator::generateNumberString(4);
 		$interval = rand(5, 50) * 0.01 * $cv->salaryFrom;
