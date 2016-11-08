@@ -25,7 +25,7 @@ class Photo extends BaseControl
 
 	public function render()
 	{
-		$this->template->photo = $this->person->photo ? $this->person->photo : Image::DEFAULT_IMAGE;
+		$this->template->person = $this->person;
 		parent::render();
 	}
 

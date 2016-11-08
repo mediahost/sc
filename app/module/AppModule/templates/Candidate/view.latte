@@ -39,11 +39,13 @@
 				<div class="col-md-4">
 					<div class="profile-avatar">
 						<a href="#edit-photo" class="edit">
-							<img n:if="$person->photo" alt="{$person->degreeName}" class="responsive"
-													   src="{$basePath}/foto/{$person->photo|size:150,150}">
-							{var defaultImage = \App\Model\Entity\Image::DEFAULT_IMAGE}
-							<img n:if="!$person->photo" alt="{$person->degreeName}" class="responsive"
-														src="{$basePath}/foto/{$defaultImage|size:150,150}">
+							{if $person->getPhoto(TRUE)}
+								<img src="{$basePath}/foto/{$person->photo|size:150,150}"
+									 alt="{$person->fullName}"  class="responsive"/>
+							{else}
+								<img src="{$person->photo}"
+									 alt="{$person->fullName}"  class="responsive"/>
+							{/if}
 							<i class="fa fa-edit"></i>
 						</a>
 					</div>
