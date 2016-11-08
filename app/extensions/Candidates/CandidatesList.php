@@ -612,7 +612,6 @@ class CandidatesList extends Control
 	public function createComponentSkillsFilter()
 	{
 		$control = $this->skillsFilterFactory->create();
-		$control->setAjax(TRUE, TRUE);
 		$control->setSkillRequests(ArrayHash::from($this->getSerializedFilter(self::FILTER_SKILLS)));
 		$control->onAfterSend = function ($skillRequests) {
 			$this->persistFilter(self::FILTER_SKILLS, (array)$skillRequests);

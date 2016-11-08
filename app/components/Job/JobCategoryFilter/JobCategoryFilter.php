@@ -84,7 +84,7 @@ class JobCategoryFilter extends \App\Components\BaseControl
 			$children[] = $this->jobCategoryToLeaf($child);
 		}
         $leaf['state'] = [
-			'selected' => false,
+			'selected' => key_exists($category->id, $this->categoryRequests),
 		];
 		$leaf['children'] = $children;
 		return $leaf;
