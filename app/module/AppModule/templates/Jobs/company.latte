@@ -1,0 +1,23 @@
+{block pageTitle}
+	{_'Jobs'}
+{/block}
+
+{block breadcrumbItems}
+	<li>
+		<a n:href="this">{_'Jobs'}</a>
+	</li>
+{/block}
+
+{block content}
+	<div class="row">
+		<div class="col-md-12">
+			<a n:href="Job:add 'companyId' => $company->id" data-toggle="modal" class="btn btn-success mr5 mb10">
+				<i class="fa fa-plus"></i>
+				{_'New Job'}
+			</a>
+			{control jobsGrid}
+		</div>
+	</div>
+{/block content}
+			
+
