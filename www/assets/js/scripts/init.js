@@ -1,11 +1,11 @@
 jQuery(document).ready(function () {
 	$.nette.ext('netteAjax', {
-		init: function() {
+		init: function () {
 			Global.initAccordion();
 		},
 		complete: function (data) {
 			Global.init();
-			if(data.reloadPreview) {
+			if (data.reloadPreview) {
 				PdfViewer.renderPage();
 			}
 		}
@@ -13,20 +13,21 @@ jQuery(document).ready(function () {
 
 	$.nette.ext('closePopup', {
 		complete: function (data) {
-			if(data.closePopup) {
+			if (data.closePopup) {
 				$('.bootbox-close-button').click();
 			}
 		}
 	});
 
 	$.nette.init();
-	
-        Global.handleModals();
+
+	Global.handleModals();
 	Global.handleRightbar();
 	Global.init();
-        Global.handleJobPage();
+	Global.handleJobPage();
 	Login.init();
 	PdfPreview.init();
+	LoadingButtons.init();
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {
