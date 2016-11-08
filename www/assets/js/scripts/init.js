@@ -10,7 +10,7 @@ jQuery(document).ready(function () {
 			}
 		}
 	});
-	
+
 	$.nette.ext('closePopup', {
 		complete: function (data) {
 			if(data.closePopup) {
@@ -18,7 +18,7 @@ jQuery(document).ready(function () {
 			}
 		}
 	});
-	
+
 	$.nette.init();
 	
         Global.handleModals();

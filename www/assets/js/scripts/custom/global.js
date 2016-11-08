@@ -161,9 +161,6 @@ var Global = function () {
 				}
 			});
 		});
-		$('#jobDescription, #jobSummary').summernote({
-			height: 200
-		});
 		if ($('#mapView').length) {
 			$('#mapView').mapView();
 		}
