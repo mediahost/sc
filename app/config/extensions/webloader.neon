@@ -88,7 +88,6 @@ webloader:
 				- %wwwDir%/assets/js/scripts/config.js
 				- %wwwDir%/assets/js/scripts/custom/global.js
 				- %wwwDir%/assets/js/scripts/custom/login.js
-				- %wwwDir%/assets/js/scripts/custom/loading-buttons.js
 				- %wwwDir%/assets/js/scripts/custom/pdf-preview.js
 				- %wwwDir%/assets/js/scripts/custom/jstree.js
 				- %wwwDir%/assets/js/scripts/custom/custom-init.js

@@ -3,6 +3,16 @@ jQuery(document).ready(function () {
 		init: function () {
 			Global.initAccordion();
 		},
+		start: function (jqXHR, settings) {
+			var el = settings.nette.el;
+			if (el.hasClass('loadingOnClick')) {
+				var message = el.attr('data-loading-text') ? el.attr('data-loading-text') : 'Loading...';
+				if (el.is('input')) {
+					el.val(message);
+					el.addClass('disabled');
+				}
+			}
+		},
 		complete: function (data) {
 			Global.init();
 			if (data.reloadPreview) {
@@ -27,7 +37,6 @@ jQuery(document).ready(function () {
 	Global.handleJobPage();
 	Login.init();
 	PdfPreview.init();
-	LoadingButtons.init();
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {
