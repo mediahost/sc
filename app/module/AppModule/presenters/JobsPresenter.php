@@ -99,18 +99,6 @@ class JobsPresenter extends BasePresenter
 		$this->template->candidateFacade = $this->candidateFacade;
 	}
 
-	/**
-	 * @secured
-	 * @resource('jobs')
-	 * @privilege('edit')
-	 */
-	public function actionEdit($id)
-	{
-		$message = $this->translator->translate('Not implemented yet');
-		$this->flashMessage($message, 'warning');
-		$this->redirect('Dashboard:');
-	}
-
 	// </editor-fold>
 	// <editor-fold desc="controls">
 
