@@ -324,6 +324,8 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$control = $this->iCompleteCvFactory->create();
 		$control->onAfterSave[] = function () {
+			$message = $this->translator->translate('File was successfully uploaded.');
+			$this->flashMessage($message, 'success');
 			$this->redirect('this');
 		};
 		return $control;

@@ -1,11 +1,5 @@
 {snippet cvUpload}
 	{form form class => 'form-horizontal group-border stripped'}
-		<div n:if="$form->errors" class="alert alert-danger">
-			{foreach $form->errors as $error}
-				<span>{$error}</span><br/>
-			{/foreach}
-		</div>
-
 		<div class="form-group" n:if="$candidate->cvFile">
 			<label class="col-lg-2 col-md-3 control-label">{_'Actual CV file'}</label>
 			<div class="col-lg-10 col-md-9">
@@ -26,6 +20,12 @@
 			<div class="col-sm-offset-2 col-sm-10">
 				{button send class => 'btn btn-primary'}{caption}{/button}
 			</div>
+		</div>
+
+		<div n:if="$form->errors" class="alert alert-danger mt15">
+			{foreach $form->errors as $error}
+				<span>{$error}</span><br/>
+			{/foreach}
 		</div>
 	{/form}
 {/snippet}

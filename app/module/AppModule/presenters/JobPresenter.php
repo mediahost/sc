@@ -61,7 +61,7 @@ class JobPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('jobs')
+	 * @resource('job')
 	 * @privilege('view')
 	 */
 	public function actionView($id)
@@ -89,7 +89,7 @@ class JobPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('jobs')
+	 * @resource('job')
 	 * @privilege('candidates')
 	 */
 	public function actionCandidates($id)
@@ -107,7 +107,7 @@ class JobPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('jobs')
+	 * @resource('job')
 	 * @privilege('add')
 	 */
 	public function actionAdd($companyId)
@@ -127,7 +127,7 @@ class JobPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('jobs')
+	 * @resource('job')
 	 * @privilege('edit')
 	 */
 	public function actionEdit($id)
@@ -149,7 +149,7 @@ class JobPresenter extends BasePresenter
 
 	/**
 	 * @secured
-	 * @resource('jobs')
+	 * @resource('job')
 	 * @privilege('editSkills')
 	 */
 	public function actionEditSkills($id)
