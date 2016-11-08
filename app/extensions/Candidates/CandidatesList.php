@@ -98,10 +98,10 @@ class CandidatesList extends Control
 	protected $perPageList = [16, 32, 48, 96];
 
 	/** @var int */
-	protected $itemsPerRow = 3;
+	protected $itemsPerRow = 4;
 
 	/** @var int */
-	protected $rowsPerPage = 3;
+	protected $rowsPerPage = 4;
 
 	/** @var bool */
 	protected $ajax;
