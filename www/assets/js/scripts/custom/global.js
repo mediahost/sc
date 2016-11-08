@@ -18,7 +18,20 @@ var Global = function () {
 	};
 
 	var hadleSlider = function () {
-		$('input.slider:not([data])').slider();
+		$('input.slider[data-skill]').slider({
+			formatter: function(val) {
+				if (typeof val == "number"  &&  skillLevels[val] != undefined) {
+					return skillLevels[val];
+				}
+				var val1 = skillLevels[val[0]-1];
+				var val2 = skillLevels[val[1]-1];
+				if (val1 != undefined && val2 != undefined) {
+					return val1 + '-' + val2;
+				}
+				return val;
+			}
+		});
+		$('input.slider:not([data]):not([data-skill])').slider();
 	};
 
 	var handleImagUpload = function () {
