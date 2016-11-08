@@ -86,8 +86,8 @@ $(document).ready(function() {
             collapseIcon: 'icomoon-icon-plus s12'//collapse icon for accrodion
         },
         tables: {
-            responsive: true, //make tables resposnive
-            customscroll: true //ativate custom scroll for responsive tables
+            responsive: false, //make tables resposnive
+            customscroll: false //ativate custom scroll for responsive tables
         },
         alerts: {
             animation: true, //animation effect toggle
