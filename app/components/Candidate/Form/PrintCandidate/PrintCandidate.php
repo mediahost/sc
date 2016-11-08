@@ -6,11 +6,8 @@ use App\Components\BaseControl;
 use App\Helpers;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
-use App\Model\Entity\Sign;
-use App\Model\Entity\Stock;
-use App\Model\Facade\BasketFacade;
+use App\Model\Entity\User as UserEntity;
 use App\Model\Facade\CandidateFacade;
-use App\Model\Facade\Exception\InsufficientQuantityException;
 use App\Model\Facade\JobFacade;
 use App\Model\Facade\UserFacade;
 use Nette\Security\User;
@@ -18,6 +15,8 @@ use Nette\Utils\Random;
 
 class PrintCandidate extends BaseControl
 {
+
+	const PRIMARY_JOBS_COUNT = 3;
 
 	/** @var User @inject */
 	public $user;
@@ -37,6 +36,9 @@ class PrintCandidate extends BaseControl
 	/** @var Job */
 	private $selectedJob;
 
+	/** @var UserEntity */
+	private $selectedManager;
+
 	/** @var bool */
 	private $canShowAll;
 
@@ -50,13 +52,21 @@ class PrintCandidate extends BaseControl
 		$this->template->person = $this->candidate->person;
 		$this->template->user = $this->candidate->person->user;
 		$this->template->selectedJob = $this->selectedJob;
+		$this->template->selectedManager = $this->selectedManager;
 		$this->template->canShowAll = $this->canShowAll;
+		$this->template->primaryJobsCount = self::PRIMARY_JOBS_COUNT;
 
 		$this->template->preferedJobCategories = $this->getPreferedJobCategories();
 		$this->template->skills = $this->getItSkills();
 
 		$jobRepo = $this->em->getRepository(Job::getClassName());
 		$this->template->jobs = $jobRepo->findAll();
+		$this->template->primaryJobs = $this->template->jobs;
+		if ($this->selectedManager) {
+			$this->template->primaryJobs = $jobRepo->findBy([
+				'accountManager' => $this->selectedManager,
+			], [], self::PRIMARY_JOBS_COUNT);
+		}
 
 		$this->template->identity = $this->user;
 		$this->template->addFilter('canAccess', $this->userFacade->canAccess);
@@ -66,21 +76,22 @@ class PrintCandidate extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="setters & getters">
 
-	public function setCandidateById($candidateId, $canShowAll = FALSE, Job $job = NULL)
+	public function setCandidateById($candidateId, $canShowAll = FALSE, Job $job = NULL, UserEntity $manager = NULL)
 	{
 		$candidateRepo = $this->em->getRepository(Candidate::getClassName());
 		$candidate = $candidateRepo->find($candidateId);
 		if ($candidate) {
-			$this->setCandidate($candidate, $canShowAll, $job);
+			$this->setCandidate($candidate, $canShowAll, $job, $manager);
 		}
 		return $this;
 	}
 
-	public function setCandidate(Candidate $candidate, $canShowAll = FALSE, Job $job = NULL)
+	public function setCandidate(Candidate $candidate, $canShowAll = FALSE, Job $job = NULL, UserEntity $manager = NULL)
 	{
 		$this->candidate = $candidate;
 		$this->canShowAll = $canShowAll;
 		$this->selectedJob = $job;
+		$this->selectedManager = $manager;
 		return $this;
 	}
 

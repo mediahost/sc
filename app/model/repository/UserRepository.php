@@ -2,6 +2,7 @@
 
 namespace App\Model\Repository;
 
+use App\Model\Entity\Job;
 use App\Model\Entity\User;
 use Doctrine\ORM\Query\QueryException;
 use Exception;
@@ -21,13 +22,13 @@ class UserRepository extends BaseRepository
 		}
 
 		$query = $this->createQueryBuilder()
-				->select("e.$value", "e.$key")
-				->from($this->getEntityName(), 'e', 'e.' . $key)
-				->innerJoin('e.roles', 'r')
-				->where('r.id = :roleid')
-				->setParameter('roleid', $roleId)
-				->autoJoinOrderBy((array) $orderBy)
-				->getQuery();
+			->select("e.$value", "e.$key")
+			->from($this->getEntityName(), 'e', 'e.' . $key)
+			->innerJoin('e.roles', 'r')
+			->where('r.id = :roleid')
+			->setParameter('roleid', $roleId)
+			->autoJoinOrderBy((array)$orderBy)
+			->getQuery();
 
 		try {
 			$getFirst = function ($row) {
@@ -47,6 +48,21 @@ class UserRepository extends BaseRepository
 	{
 		$className = UserRepository::getClassName();
 		throw new RepositoryException('Use ' . $className . '::delete() instead.');
+	}
+
+	public function findAccountManagers(array $criteria = [], array $orderBy = [], $limit = null, $offset = null)
+	{
+		$key = $this->getClassMetadata()->getSingleIdentifierFieldName();
+		$qb = $this->createQueryBuilder('e')
+			->whereCriteria($criteria)
+			->resetDQLPart('from')->from($this->getEntityName(), 'e', 'e.' . $key)
+			->join(Job::getClassName(), 'j', 'WITH', 'e = j.accountManager')
+			->autoJoinOrderBy((array)$orderBy);
+
+		return $qb->getQuery()
+			->setMaxResults($limit)
+			->setFirstResult($offset)
+			->getResult();
 	}
 
 }

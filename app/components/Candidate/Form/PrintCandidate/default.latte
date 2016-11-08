@@ -61,7 +61,6 @@
 							| <a href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
 						</p>
 						<table class="jobs">
-							{var maxCount => 3}
 							<tr n:foreach="$jobs as $job">
 								{var match => $control->findMatch($job)}
 								<th>
@@ -90,7 +89,7 @@
 										{/if}
 									</td>
 								{/if}
-								{breakIf $iterator->counter >= $maxCount}
+								{breakIf $iterator->counter >= $primaryJobsCount}
 							</tr>
 						</table>
 					{else}

@@ -33,13 +33,17 @@
 							{input send}
 						</td>
 					</tr>
-					{*<tr n:if="!$denyCompany">*}
-						{*<td class="name">*}
-							{*{_'Account Manager'}*}
-						{*</td>*}
-						{*<td></td>*}
-						{*<td></td>*}
-					{*</tr>*}
+					<tr n:if="!$denyCompany">
+						<td class="name">
+							{label manager/}
+						</td>
+						<td>
+							{input manager}
+						</td>
+						<td>
+							{input send}
+						</td>
+					</tr>
 					<tr>
 						<td class="name">
 							{_'Category'}
