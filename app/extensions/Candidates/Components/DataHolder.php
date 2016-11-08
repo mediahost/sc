@@ -135,6 +135,12 @@ class DataHolder extends Object
 		return $this;
 	}
 
+	public function filterJobs(array $jobs)
+	{
+		$this->candidateCriteria['jobs'] = $jobs;
+		return $this;
+	}
+
 	public function filterCategories(array $categories)
 	{
 		$this->candidateCriteria['categories'] = $categories;

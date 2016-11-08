@@ -7,24 +7,15 @@ use App\Components\Cv\ISkillsFilterFactory;
 use App\Components\Cv\SkillsFilter;
 use App\Components\Job\IJobCategoryFilterFactory;
 use App\Extensions\Candidates\Components\DataHolder;
-use App\Extensions\Candidates\Components\IProducerFilterFactory;
 use App\Extensions\Candidates\Components\ISortingFormFactory;
 use App\Extensions\Candidates\Components\Paginator;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Category;
 use App\Model\Entity\Job;
 use App\Model\Entity\JobCategory;
-use App\Model\Entity\Parameter;
-use App\Model\Entity\Producer;
-use App\Model\Entity\ProducerLine;
-use App\Model\Entity\ProducerModel;
-use App\Model\Entity\Product;
 use App\Model\Entity\Skill;
 use App\Model\Entity\SkillLevel;
-use App\Model\Facade\BasketFacade;
-use App\Model\Facade\ProductFacade;
-use App\Model\Facade\StockFacade;
+use App\Model\Entity\User as UserEntity;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
@@ -43,6 +34,7 @@ class CandidatesList extends Control
 	const FILTER_PART_COMPANY = 'company';
 	const FILTER_SEARCH = 'search';
 	const FILTER_JOB = 'job';
+	const FILTER_MANAGER = 'manager';
 	const FILTER_CATEGORIES = 'categories';
 	const FILTER_SKILLS = 'skills';
 
@@ -120,6 +112,9 @@ class CandidatesList extends Control
 	/** @var Job */
 	protected $selectedJob;
 
+	/** @var UserEntity */
+	protected $selectedManager;
+
 	// </editor-fold>
 
 	private function getHolder()
@@ -174,6 +169,7 @@ class CandidatesList extends Control
 		$result = [];
 		$result[self::FILTER_SEARCH] = isset($session[self::FILTER_SEARCH]) ? $session[self::FILTER_SEARCH] : NULL;
 		$result[self::FILTER_JOB] = isset($session[self::FILTER_JOB]) ? $session[self::FILTER_JOB] : NULL;
+		$result[self::FILTER_MANAGER] = isset($session[self::FILTER_MANAGER]) ? $session[self::FILTER_MANAGER] : NULL;
 		$result[self::FILTER_SKILLS] = isset($session[self::FILTER_SKILLS]) ? $session[self::FILTER_SKILLS] : [];
 		$result[self::FILTER_CATEGORIES] = isset($session[self::FILTER_CATEGORIES]) ? $session[self::FILTER_CATEGORIES] : [];
 
@@ -249,6 +245,20 @@ class CandidatesList extends Control
 			if ($job) {
 				$this->selectedJob = $job;
 				$this->getHolder()->filterJob($job);
+			}
+		}
+
+		$managerId = $this->getSerializedFilter(self::FILTER_MANAGER);
+		if ($managerId) {
+			$userRepo = $this->em->getRepository(UserEntity::getClassName());
+			$manager = $userRepo->find($managerId);
+			if ($manager) {
+				$jobRepo = $this->em->getRepository(Job::getClassName());
+				$jobs = $jobRepo->findBy([
+					'accountManager' => $manager,
+				]);
+				$this->selectedManager = $manager;
+				$this->getHolder()->filterJobs($jobs);
 			}
 		}
 
@@ -528,7 +538,7 @@ class CandidatesList extends Control
 	{
 		return new Multiplier(function ($itemId) {
 			$control = $this->iCandidatePrint->create();
-			$control->setCandidateById($itemId, $this->user->isAllowed('candidatesList', 'showAll'), $this->selectedJob);
+			$control->setCandidateById($itemId, $this->user->isAllowed('candidatesList', 'showAll'), $this->selectedJob, $this->selectedManager);
 			return $control;
 		});
 	}
@@ -567,6 +577,11 @@ class CandidatesList extends Control
 		$form->addSelect('job', 'Job', [NULL => '--- All Jobs ---'] + $jobs)
 			->setDefaultValue($this->getSerializedFilter(self::FILTER_JOB));
 
+		$userRepo = $this->em->getRepository(UserEntity::getClassName());
+		$managers = $userRepo->findAccountManagers();
+		$form->addSelect('manager', 'Account manager', [NULL => '--- All Managers ---'] + $managers)
+			->setDefaultValue($this->getSerializedFilter(self::FILTER_MANAGER));
+
 		$form->addSubmit('send', 'Search');
 
 		$defaultValues = [];
@@ -579,6 +594,7 @@ class CandidatesList extends Control
 	{
 		$this->persistFilter(self::FILTER_SEARCH, $values->search);
 		$this->persistFilter(self::FILTER_JOB, $values->job);
+		$this->persistFilter(self::FILTER_MANAGER, $values->manager);
 		$this->reload();
 	}
 

@@ -85,6 +85,19 @@ class CandidateRepository extends BaseRepository
 						$params[':job'] = $value->id;
 					}
 					break;
+				case 'jobs':
+					if (is_array($value) && count($value)) {
+						$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate AND m.adminApprove = TRUE'];
+						$partOr = new Orx();
+						foreach ($value as $i => $val) {
+							if ($val instanceof Job) {
+								$partOr->add('m.job = :job' . $i);
+								$params[':job' . $i] = $val->id;
+							}
+						}
+						$condition->add($partOr);
+					}
+					break;
 				case 'categories':
 					if (is_array($value) && count($value)) {
 						foreach ($value as $key => $item) {
