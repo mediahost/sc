@@ -41,6 +41,9 @@
     {/if}
 {/form}
 
+<script n:syntax="double">
+    var skillLevels = {{? echo json_encode($skillLevels); }};
+</script>
 
 {define blockSkills}
 <thead class="btn-default">
@@ -57,13 +60,11 @@
             {label $form['skillRange'][$skill->id]/}
         </td>
         <td style="padding-right: 25px;">
-            {input $form['skillRange'][$skill->id]}
+            {input $form['skillRange'][$skill->id], data-skill=>true}
         </td>
         <td>
             {input $form['yearRange'][$skill->id]}
         </td>
     </tr>
 </tbody>
-
-
 {/define}
