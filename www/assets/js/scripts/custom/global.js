@@ -122,20 +122,6 @@ var Global = function () {
 		});
 	};
 
-	var handleDataTables = function (selector, options) {
-		if (options.iDisplayLength == undefined) {
-			options.iDisplayLength = 25;
-		}
-		if ($(selector).attr('data-filter')) {
-			options.serverSide = true;
-			options.ajax = {
-				url: $(selector).attr('data-filter'),
-				type: 'POST'
-			}
-		}
-		$(selector).DataTable(options);
-	};
-
 	var handleDropzone = function () {
 		Dropzone.options.frmCareerDocsControlForm = {
 			init: function () {
@@ -208,7 +194,6 @@ var Global = function () {
 		},
 		handleRightbar: handleRightbar,
 		initAccordion: initAccordion,
-		handleDataTables: handleDataTables,
 		handleModals: handleModals,
 		handleJobPage: handleJobPage
 	};

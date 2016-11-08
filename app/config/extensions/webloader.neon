@@ -81,7 +81,6 @@ webloader:
 				- %wwwDir%/assets/js/live-form-validation.js
 				- %wwwDir%/assets/js/nette.serversidevalidation.js
 				- %wwwDir%/assets/js/scripts/custom/mapView.js
-				- %wwwDir%/assets/js/scripts/custom/gallery.js
 				- %wwwDir%/assets/js/supr/main.js
 				- %wwwDir%/assets/js/phpjs/functions/filesystem/file_exists.js
 			filters:

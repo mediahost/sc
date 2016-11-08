@@ -27,7 +27,6 @@ jQuery(document).ready(function () {
         Global.handleJobPage();
 	Login.init();
 	PdfPreview.init();
-        Gallery.init();
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {
