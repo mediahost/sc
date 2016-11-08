@@ -45,6 +45,9 @@ class JobsPresenter extends BasePresenter
 	/** @var JobRepository */
 	private $jobRepo;
 
+	/** @var Company */
+	private $viewedCompany;
+
 	// </editor-fold>
 
 	protected function startup()
@@ -97,6 +100,30 @@ class JobsPresenter extends BasePresenter
 		$this->template->applied = $this->candidateFacade->findAppliedJobs($candidate, FALSE);
 		$this->template->matches = $this->candidateFacade->findMatchedJobs($candidate);
 		$this->template->candidateFacade = $this->candidateFacade;
+	}
+
+	/**
+	 * @secured
+	 * @resource('jobs')
+	 * @privilege('company')
+	 */
+	public function actionCompany($id)
+	{
+		if ($id) {
+			$this->viewedCompany = $this->companyRepo->find($id);
+			if ($this->viewedCompany) {
+				$this['jobsGrid']->setCompany($this->viewedCompany);
+			}
+		}
+		if (!$this->viewedCompany) {
+			$this->flashMessage($this->translator->translate('No such company'), 'warning');
+			$this->redirect('default');
+		}
+	}
+
+	public function renderCompany()
+	{
+		$this->template->company = $this->viewedCompany;
 	}
 
 	// </editor-fold>

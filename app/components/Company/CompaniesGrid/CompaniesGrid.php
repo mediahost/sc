@@ -36,7 +36,7 @@ class CompaniesGrid extends BaseControl
 		$grid->addActionHref('view', 'Public Profile', ':Front:CompanyProfile:')
 			->setIcon('fa fa-eye');
 
-		$grid->addActionHref('jobs', 'Jobs', 'Jobs:')
+		$grid->addActionHref('jobs', 'Jobs', 'Jobs:company')
 			->setIcon('fa fa-briefcase');
 
 		$grid->addActionHref('editImages', 'Images')
