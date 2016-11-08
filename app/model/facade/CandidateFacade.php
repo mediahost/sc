@@ -62,7 +62,7 @@ class CandidateFacade extends Object
 
 		$this->onMatch($match);
 
-		return $this;
+		return $match;
 	}
 
 	public function findMatch(Candidate $candidate, Job $job)

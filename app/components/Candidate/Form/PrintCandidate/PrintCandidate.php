@@ -127,7 +127,13 @@ class PrintCandidate extends BaseControl
 			$jobRepo = $this->em->getRepository(Job::getClassName());
 			$job = $jobRepo->find($jobId);
 			if ($job) {
-				$this->candidateFacade->matchApprove($this->candidate, $job);
+				$match = $this->candidateFacade->matchApprove($this->candidate, $job);
+				if (!$match->candidateApprove) {
+					$message = 'Candidate was invited';
+				} else {
+					$message = 'Candidate was approved';
+				}
+				$this->flashMessage($this->translator->translate($message), 'info');
 			}
 		}
 
