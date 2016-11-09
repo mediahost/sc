@@ -64,7 +64,8 @@ class UsersGrid extends BaseControl
 		return $this;
 	}
 
-	private function getModel() {
+	private function getModel()
+	{
 		$repo = $this->em->getRepository(User::getClassName());
 		$qb = $repo->createQueryBuilder('u')
 			->select('u, r')
@@ -75,30 +76,36 @@ class UsersGrid extends BaseControl
 		return $model;
 	}
 
-	private function getRoles() {
+	private function getRoles()
+	{
 		$roleRepo = $this->em->getRepository(Role::getClassName());
 		$roles = $roleRepo->findPairs('name');
-		$roles = [null => 'All'] + $roles;
+		$roles = [NULL => '--- all ---'] + $roles;
 		return $roles;
 	}
 
-	private function joinRoles($item) {
+	private function joinRoles($item)
+	{
 		return Helpers::concatStrings(', ', $item->roles);
 	}
 
-	public function checkAccess($item) {
+	public function checkAccess($item)
+	{
 		return !$this->presenter->userFacade->canAccess($this->identity, $item);
 	}
 
-	public function checkEdit($item) {
+	public function checkEdit($item)
+	{
 		return !$this->presenter->userFacade->canEdit($this->identity, $item);
 	}
 
-	public function checkDelete($item) {
+	public function checkDelete($item)
+	{
 		return !$this->presenter->userFacade->canDelete($this->identity, $item);
 	}
 
-	public function getConfirmMessage($item) {
+	public function getConfirmMessage($item)
+	{
 		$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
 		return sprintf($message, (string)$item);
 	}
