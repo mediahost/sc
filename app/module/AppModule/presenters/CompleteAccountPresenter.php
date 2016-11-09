@@ -65,6 +65,7 @@ class CompleteAccountPresenter extends BasePresenter
 		$user = $this->getUser();
 		if ($user->isInRole(Role::CANDIDATE)) {
 			$candidate = $user->getIdentity()->getCandidate();
+			$this['completeCv']->setCandidate($candidate);
 			if (!$candidate->id) {
 				$userRepo = $this->em->getRepository(User::getClassName());
 				$userRepo->save($user->getIdentity());
@@ -142,7 +143,7 @@ class CompleteAccountPresenter extends BasePresenter
 	protected function createComponentCompleteCv()
 	{
 		$control = $this->iCompleteCvFactory->create();
-		$control->onSuccess[] = function (CompleteCv $control, Candidate $candidate) {
+		$control->onAfterSave[] = function (CompleteCv $control, Candidate $candidate) {
 			if (!$candidate->getPerson()->getUser()->verificated) {
 				$message = $this->translator->translate('Your data was saved. Please verify your mail!');
 				$this->flashMessage($message, 'success');
