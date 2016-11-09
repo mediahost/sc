@@ -7,6 +7,7 @@ use App\Model\Entity\JobCategory;
 use App\Model\Entity\Person;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use App\ValuesGenerator;
@@ -15,13 +16,16 @@ use Nette\Object;
 
 class CandidateGenerator extends Object
 {
-
+	const COUNT_GENERATED = 10;
 	const USER_MAIL_SUFFIX = '@example.dev';
 	const USER_PASSWORD = 'user';
 	const TMP_CV = 'files/example.pdf';
 
 	/** @var UserFacade @inject */
 	public $userFacade;
+
+	/** @var CommunicationFacade @inject */
+	public $communicationFacade;
 
 	/** @var RoleFacade */
 	private $roleFacade;
@@ -53,6 +57,7 @@ class CandidateGenerator extends Object
 	{
 		$user = $this->createUser();
 		$user->verificated = 1;
+		$this->communicationFacade->createSender($user);
 		$person = $this->completePerson($user);
 		$candidate = $this->completeCandidate($person);
 		$this->em->getRepository(User::getClassName())->save($user);

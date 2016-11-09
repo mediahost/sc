@@ -172,9 +172,9 @@ class ServicePresenter extends BasePresenter
 	 * @resource('service')
 	 * @privilege('generateCandidates')
 	 */
-	public function handleGenerateCandidates($candidateCnt)
+	public function handleGenerateCandidates()
 	{
-		for ($i = 0; $i < $candidateCnt; $i++) {
+		for ($i = 0; $i < CandidateGenerator::COUNT_GENERATED; $i++) {
 			$candidate = $this->candidateGenerator->createCandidate();
 			$this->cvGenerator->createCv($candidate);
 		}
