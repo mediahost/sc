@@ -46,6 +46,7 @@ class Skills extends BaseControl
 	{
 		$skillRepo = $this->em->getDao(Skill::getClassName());
 		$this->template->skills = $skillRepo->findAll();
+		$this->template->skillLevels = $this->skillFacade->getSkillLevelNames();
 		$this->template->categories = $this->skillFacade->getTopCategories();
 		$this->template->job = $this->job;
 		parent::render();

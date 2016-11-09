@@ -170,7 +170,7 @@ class SkillsFilter extends BaseControl
 	{
 		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$this->template->categories = $this->skillFacade->getTopCategories();
-		$this->template->skillLevels = $this->getSkillLevels();
+		$this->template->skillLevels = $this->skillFacade->getSkillLevelNames();
 		$this->setTemplateFile('default');
 		parent::render();
 	}
@@ -180,16 +180,6 @@ class SkillsFilter extends BaseControl
 		$this->template->skillRequests = $this->skillRequests;
 		$this->setTemplateFile('SkillFilterPreview');
 		parent::render();
-	}
-
-	private function getSkillLevels()
-	{
-		$result = [];
-		$skillLevels = $this->em->getRepository(SkillLevel::getClassName())->findAll();
-		foreach ($skillLevels as $level) {
-			$result[] = $level->name;
-		}
-		return $result;
 	}
 
 	public static function getDefaultRangeValue()

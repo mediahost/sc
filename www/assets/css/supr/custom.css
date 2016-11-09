@@ -117,3 +117,7 @@ section.content {
 .checkbox-custom {
     display: inline-block;
 }
+
+.slider .tooltip-min, .slider .tooltip-max {
+	display: none;
+}

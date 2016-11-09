@@ -77,7 +77,9 @@ class UsersGrid extends BaseControl
 
 	private function getRoles() {
 		$roleRepo = $this->em->getRepository(Role::getClassName());
-		return $roleRepo->findPairs('name');
+		$roles = $roleRepo->findPairs('name');
+		$roles = [null => 'All'] + $roles;
+		return $roles;
 	}
 
 	private function joinRoles($item) {
