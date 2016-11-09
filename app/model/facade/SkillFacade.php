@@ -3,6 +3,7 @@
 namespace App\Model\Facade;
 
 use App\Model\Entity\SkillCategory;
+use App\Model\Entity\SkillLevel;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
@@ -28,6 +29,16 @@ class SkillFacade extends Object
 		return $this->skillCategoryDao->findBy([
 				'parent' => NULL,
 		]);
+	}
+
+	public function getSkillLevelNames()
+	{
+		$result = [];
+		$skillLevels = $this->em->getRepository(SkillLevel::getClassName())->findAll();
+		foreach ($skillLevels as $level) {
+			$result[] = $level->name;
+		}
+		return $result;
 	}
 	
 	/**
