@@ -62,7 +62,7 @@ class MessageListener extends Object implements Subscriber
 		unset($senderForNotification[$message->sender->id]);
 
 		foreach ($senderForNotification as $sender) {
-			if (Validators::isEmail($sender)) {
+			if (Validators::isEmail($sender->user->mail)) {
 				$notificationMessage = $this->iNotificationMessage->create();
 				$notificationMessage->setReciever($sender);
 				$notificationMessage->setMessage($message);
