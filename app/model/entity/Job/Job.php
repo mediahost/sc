@@ -22,7 +22,6 @@ use Knp\DoctrineBehaviors\Model;
  * @property JobType $type
  * @property JobCategory $category
  * @property Location $location
- * @property Collection $cvs
  * @property-read ArrayCollection $skillRequests
  * @property-write SkillKnowRequest $skillRequest
  * @property-read ArrayCollection $tags
@@ -86,7 +85,6 @@ class Job extends BaseEntity
 		}
 		$this->skillRequests = new ArrayCollection();
 		$this->tags = new ArrayCollection();
-		$this->cvs = new ArrayCollection();
 		parent::__construct();
 	}
 
