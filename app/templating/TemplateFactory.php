@@ -2,6 +2,7 @@
 
 namespace App\Templating;
 
+use App\Extensions\FotoPathHelper;
 use Latte\Engine;
 use Latte\Macros\MacroSet;
 use Nette\Localization\ITranslator;
@@ -29,10 +30,13 @@ class TemplateFactory extends ParentTemplateFactory
 		$template = parent::createTemplate($control);
 		$template->setTranslator($this->translator);
 
+		$fotoPathHelper = new FotoPathHelper($template->basePath, $template->baseUri);
+
 		$latte = $template->getLatte();
 		$latte->onCompile[] = $this->addMacros;
 		$latte->addFilter('concat', ['App\Helpers', 'concatArray']);
 		$latte->addFilter('size', ['App\Model\Entity\Image', 'returnSizedFilename']);
+		$latte->addFilter('foto', [$fotoPathHelper, 'returnImagePath']);
 		$latte->addFilter('jsonEncode', ['Nette\Utils\Json', 'encode']);
 		return $template;
 	}

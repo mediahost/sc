@@ -3,6 +3,10 @@
 namespace App\Extensions;
 
 use App\Helpers;
+use App\Model\Entity\Candidate;
+use App\Model\Entity\Image as ImageEntity;
+use App\Model\Entity\Person;
+use App\Model\Entity\Sender;
 use Exception;
 use Nette\Http\FileUpload;
 use Nette\IOException;
@@ -84,7 +88,7 @@ class Foto extends Object
 		if (preg_match('@^(\d+)' . preg_quote(FotoHelpers::getSizeSeparator()) . '(\d+)$@', $size, $matches)) {
 			$sizeX = $matches[1];
 			$sizeY = $matches[2];
-			if ((int) $sizeY === 0) {
+			if ((int)$sizeY === 0) {
 				$resizeMethod = Image::EXACT;
 			}
 		}
@@ -282,7 +286,49 @@ class FotoHelpers extends Object
 
 }
 
+class FotoPathHelper extends Object
+{
+
+	/** @var string */
+	private $basePath;
+
+	/** @var string */
+	private $baseUri;
+
+	public function __construct($basePath, $baseUri)
+	{
+		$this->basePath = $basePath;
+		$this->baseUri = $baseUri;
+	}
+
+	public function returnImagePath($entity, $sizeX = NULL, $sizeY = NULL)
+	{
+		$id = NULL;
+		$image = $entity;
+		if ($entity instanceof Person) {
+			$image = $entity->getPhoto();
+			$id = $entity->user->getId();
+		} else if ($entity instanceof Candidate) {
+			$image = $entity->person->getPhoto();
+			$id = $entity->person->user->getId();
+		} else if ($entity instanceof Sender) {
+			$image = $entity->getPhoto();
+			$id = $entity->user->getId();
+		}
+
+		if ($image instanceof ImageEntity) {
+			if ($image->filename) {
+				$path = ImageEntity::returnSizedFilename($image, $sizeX, $sizeY);
+				return Helpers::getPath($this->basePath, 'foto', $path);
+			}
+		}
+
+		return ImageEntity::getDefaultImage($id, $sizeX);
+	}
+
+}
+
 class FotoException extends Exception
 {
-	
+
 }

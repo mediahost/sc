@@ -115,6 +115,9 @@ class CandidatesList extends Control
 	/** @var UserEntity */
 	protected $selectedManager;
 
+	/** @var bool */
+	protected $showAsCompany = FALSE;
+
 	// </editor-fold>
 
 	private function getHolder()
@@ -135,10 +138,11 @@ class CandidatesList extends Control
 
 	// <editor-fold defaultstate="collapsed" desc="add filters">
 
-	public function addFilterJob(Job $job)
+	public function addFilterJob(Job $job, $showAsCompany = FALSE)
 	{
 		$this->filterDeny[self::FILTER_PART_COMPANY] = TRUE;
 		$this->selectedJob = $job;
+		$this->showAsCompany = $showAsCompany;
 		$this->getHolder()->filterJob($job);
 		return $this;
 	}
@@ -538,7 +542,10 @@ class CandidatesList extends Control
 	{
 		return new Multiplier(function ($itemId) {
 			$control = $this->iCandidatePrint->create();
-			$control->setCandidateById($itemId, $this->user->isAllowed('candidatesList', 'showAll'), $this->selectedJob, $this->selectedManager);
+			$control->setCandidateById($itemId);
+			$control->setJob($this->selectedJob);
+			$control->setAccountManager($this->selectedManager);
+			$control->setShow($this->user->isAllowed('candidatesList', 'showAll'), $this->showAsCompany);
 			return $control;
 		});
 	}
@@ -582,7 +589,8 @@ class CandidatesList extends Control
 		$form->addSelect('manager', 'Account manager', [NULL => '--- All Managers ---'] + $managers)
 			->setDefaultValue($this->getSerializedFilter(self::FILTER_MANAGER));
 
-		$form->addSubmit('send', 'Search');
+		$form->addSubmit('send', 'Search')
+		->getControlPrototype()->setClass('loadingOnClick');
 
 		$defaultValues = [];
 		$form->setDefaults($defaultValues);

@@ -2,13 +2,7 @@
 	<div class="form-group">
 		<label class="col-lg-3 col-md-3 control-label">{_'Photo'}</label>
 		<div class="col-lg-2 col-md-2">
-			{if $person->getPhoto(TRUE)}
-				<img src="{$basePath}/foto/{$person->photo|size:50,50}"
-					 alt="" class="responsive imageUploadPreview"/>
-			{else}
-				<img src="{$person->photo}"
-					 alt="" class="responsive imageUploadPreview"/>
-			{/if}
+				<img src="{$person|foto:50,50}" alt="{$person->fullName}" class="responsive imageUploadPreview"/>
 		</div>
 		<div class="col-lg-7 col-md-7">
 			<input n:name="photo" type="file" class="form-control imageUpload">

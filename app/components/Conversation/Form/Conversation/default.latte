@@ -33,7 +33,7 @@
 					{continueIf $iterator->counter <= $skipCount}
 					<li n:class="$control->isViewer($message->sender) ? admin : user, clearfix">
 						<a href="#" class="avatar">
-							<img src="{$basePath}/foto/{$message->sender->image|size:50,50}" alt=""/>
+							<img src="{$message->sender|foto:50,50}" alt=""/>
 						</a>
 						<div n:class="message, $message->isSystem() ? message-system">
 							<div class="head clearfix">

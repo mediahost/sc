@@ -82,6 +82,12 @@ class Communication extends BaseEntity
 		return $opposites;
 	}
 
+	public function getOpposite(Sender $me)
+	{
+		$opposites = $this->getOpposites($me);
+		return $opposites->first();
+	}
+
 	public function getOppositesName(Sender $me)
 	{
 		$opposites = $this->getOpposites($me);

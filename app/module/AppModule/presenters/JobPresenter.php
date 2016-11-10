@@ -96,7 +96,7 @@ class JobPresenter extends BasePresenter
 	{
 		$job = $this->jobRepo->find($id);
 		if ($job) {
-			$this['candidatesList']->addFilterJob($job);
+			$this['candidatesList']->addFilterJob($job, TRUE);
 			$this->template->job = $job;
 		} else {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
