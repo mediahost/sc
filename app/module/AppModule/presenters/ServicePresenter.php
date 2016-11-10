@@ -176,7 +176,9 @@ class ServicePresenter extends BasePresenter
 	{
 		for ($i = 0; $i < CandidateGenerator::COUNT_GENERATED; $i++) {
 			$candidate = $this->candidateGenerator->createCandidate();
-			$this->cvGenerator->createCv($candidate);
+			if ($candidate) {
+				$this->cvGenerator->createCv($candidate);
+			}
 		}
 		$message = $this->translator->translate('Candidates and their CVs was succesfully created');
 		$this->flashMessage($message, 'success');
