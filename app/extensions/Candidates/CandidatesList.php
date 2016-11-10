@@ -601,6 +601,7 @@ class CandidatesList extends Control
 	public function createComponentCategoryFilter()
 	{
 		$control = $this->jobCategoryFilterFactory->create();
+		$control->setAjax(true, true);
 		$control->setCategoryRequests($this->getSerializedFilter(self::FILTER_CATEGORIES));
 		$control->onAfterSend = function (array $categoryRequests) {
 			$this->persistFilter(self::FILTER_CATEGORIES, $categoryRequests);
@@ -612,6 +613,7 @@ class CandidatesList extends Control
 	public function createComponentSkillsFilter()
 	{
 		$control = $this->skillsFilterFactory->create();
+		$control->setAjax(true, true);
 		$control->setSkillRequests(ArrayHash::from($this->getSerializedFilter(self::FILTER_SKILLS)));
 		$control->onAfterSend = function ($skillRequests) {
 			$this->persistFilter(self::FILTER_SKILLS, (array)$skillRequests);
