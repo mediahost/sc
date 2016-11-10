@@ -161,7 +161,11 @@ class SignPresenter extends BasePresenter
 	private function isLoggedIn($redirect = TRUE)
 	{
 		$isLogged = $this->user->isLoggedIn();
-		if ($this->action !== 'verify' && $isLogged && $redirect) {
+		$allowedActions = [
+			'verify',
+			'access',
+		];
+		if (!in_array($this->action, $allowedActions) && $isLogged && $redirect) {
 			$this->redirect(self::REDIRECT_IS_LOGGED);
 		}
 		return $isLogged;
