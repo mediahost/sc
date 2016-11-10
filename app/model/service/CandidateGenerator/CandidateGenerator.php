@@ -24,9 +24,6 @@ class CandidateGenerator extends Object
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var CommunicationFacade @inject */
-	public $communicationFacade;
-
 	/** @var RoleFacade */
 	private $roleFacade;
 
@@ -57,7 +54,6 @@ class CandidateGenerator extends Object
 	{
 		$user = $this->createUser();
 		$user->verificated = 1;
-		$this->communicationFacade->createSender($user);
 		$person = $this->completePerson($user);
 		$candidate = $this->completeCandidate($person);
 		$this->em->getRepository(User::getClassName())->save($user);

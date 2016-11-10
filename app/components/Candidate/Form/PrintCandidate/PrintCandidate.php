@@ -133,7 +133,7 @@ class PrintCandidate extends BaseControl
 				} else {
 					$message = 'Candidate was approved';
 				}
-				$this->flashMessage($this->translator->translate($message), 'info');
+				$this->flashMessage($this->translator->translate($message), 'success');
 			}
 		}
 

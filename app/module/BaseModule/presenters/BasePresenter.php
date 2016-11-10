@@ -73,6 +73,7 @@ abstract class BasePresenter extends Presenter
 		$this->template->isCompany = $this->user->isInRole(Entity\Role::COMPANY);
 		$this->template->isAdmin = $this->user->isInRole(Entity\Role::ADMIN) || $this->user->isInRole(Entity\Role::SUPERADMIN);
 	}
+
 	// <editor-fold desc="requirments">
 
 	public function checkRequirements($element)
@@ -94,13 +95,13 @@ abstract class BasePresenter extends Presenter
 
 	private function checkSecured($resource, $privilege)
 	{
+		if ($this->getParameter(self::ACCESS_ID_PARAM)) {
+			$this->redirect(':Front:Sign:access', [
+				'token' => $this->getParameter(self::ACCESS_ID_PARAM),
+				'backlink' => $this->storeRequest(),
+			]);
+		}
 		if (!$this->user->loggedIn) {
-			if ($this->getParameter(self::ACCESS_ID_PARAM)) {
-				$this->redirect(':Front:Sign:access', [
-					'token' => $this->getParameter(self::ACCESS_ID_PARAM),
-					'backlink' => $this->storeRequest(),
-				]);
-			}
 			if ($this->user->logoutReason === IUserStorage::INACTIVITY) { // can redirect to lock screen
 				$message = $this->translator->translate('You have been signed out, because you have been inactive for long time.');
 				$this->flashMessage($message);
@@ -210,7 +211,7 @@ abstract class BasePresenter extends Presenter
 	protected function createComponentCssPrint()
 	{
 		$css = $this->webLoader->createCssLoader('print')
-				->setMedia('print');
+			->setMedia('print');
 		return $css;
 	}
 
