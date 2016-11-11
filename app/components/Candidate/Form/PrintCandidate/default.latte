@@ -30,12 +30,12 @@
 					<p n:if="count($candidate->jobCategories)">
 						<b>{_'Prefered job categories'}:</b>
 						<br/>
-						<span class="tip">{$preferedJobCategories|truncate:70,'...'}</span>
+						<span class="tip">{$preferedJobCategories|truncate:40,'...'}</span>
 					</p>
 					<p n:if="$skills">
 						<b>{_'IT Skills'}:</b>
 						<br/>
-						<span class="tip">{$skills|truncate:70,'...'}</span>
+						<span class="tip">{$skills|truncate:40,'...'}</span>
 					</p>
 				</div>
 				<div class="col-md-6">
