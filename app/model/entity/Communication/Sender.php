@@ -49,7 +49,7 @@ class Sender extends BaseEntity
 		return (bool)$this->company;
 	}
 
-	public function getImage()
+	public function getPhoto()
 	{
 		if ($this->isCompany()) {
 			return $this->company->logo;

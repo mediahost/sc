@@ -8,7 +8,7 @@
 				<tr>
 					<td class="name">{$person->degreeName}</td>
 					<td class="photo" rowspan="5" n:if="$person->photo">
-						<img src="{$basePath}foto/{$person->photo|size:150,150}"
+						<img src="{$person|foto:150,150}"
                          alt="{$person->degreeName}" />
 					</td>
 				</tr>

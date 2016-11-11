@@ -39,15 +39,7 @@
 				<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
 					<li n:class="$isCompleteAccount ? dropdown">
 						<a href="#" n:class="$isCompleteAccount ? dropdown-toggle, avatar"{if $isCompleteAccount} data-toggle="dropdown"{/if}>
-							{if $person->getPhoto(TRUE)}
-								<img src="{$basePath}/foto/{$person->photo|size:50,50}"
-									 alt="" class="image"/>
-							{else}
-								<img src="{$person->photo}"
-									 alt="" class="image"/>
-							{/if}
-							<img n:ifset="$person->photo" src="{$basePath}/foto/{$person->photo|size:50,50}"
-														  alt="" class="image"/>
+							<img src="{$person|foto:50,50}" alt="" class="image"/>
 							<span class="txt">{$identity->mail}</span>
 							<b class="caret" n:if="$isCompleteAccount"></b>
 						</a>
@@ -98,8 +90,8 @@
 		<li n:foreach="$communications as $communication">
 		<span class="icon avatar">
 			<a n:href="Messages: $communication->id">
-				<img src="{$basePath}/foto/{$communication->getOpposites($sender)->first()->image|size:25,25}"
-					 alt="photo"/>
+				<img src="{$basePath}/foto/{$communication->getOpposite($sender)|size:25,25}"
+					 alt="{$communication->getOppositesName($sender)}"/>
 			</a>
 		</span>
 			<span class="name">

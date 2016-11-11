@@ -27,6 +27,7 @@ class Image extends BaseEntity
 	const FOLDER_COMPANY_LOGO = 'companies/logos';
 	const FOLDER_CANDIDATE_IMAGE = 'candidates/images';
 	const DEFAULT_IMAGE = 'default.jpeg';
+	const DEFAULT_IMAGE_URL = 'https://api.adorable.io/avatars';
 
 	use Identifier;
 
@@ -56,7 +57,7 @@ class Image extends BaseEntity
 
 	public function __toString()
 	{
-		return (string) $this->filename ? $this->filename : Image::DEFAULT_IMAGE;
+		return $this->filename ? (string)$this->filename : self::getDefaultImage();
 	}
 
 	public function setSource($source)
@@ -140,7 +141,7 @@ class Image extends BaseEntity
 	public function isChanged()
 	{
 		if ($this->file instanceof FileUpload) {
-			return (bool) $this->file->isImage();
+			return (bool)$this->file->isImage();
 		} else if ($this->image instanceof ImageUtils) {
 			return TRUE;
 		}
@@ -154,11 +155,17 @@ class Image extends BaseEntity
 			$sizeY = $sizeY ? $sizeY : '0';
 			$size = $sizeX . FotoHelpers::getSizeSeparator() . $sizeY;
 		}
-		$filename = Image::DEFAULT_IMAGE;
+		$filename = self::getDefaultImage();
 		if ($image instanceof Image) {
-			$filename = (string) $image;
+			$filename = (string)$image;
 		}
 		return Helpers::getPath($size, $filename);
+	}
+
+	public static function getDefaultImage($id = NULL, $size = NULL)
+	{
+		$id = $id ? $id : 'default';
+		return Helpers::concatStrings('/', 'https://api.adorable.io/avatars', $size, $id . '.png');
 	}
 
 }

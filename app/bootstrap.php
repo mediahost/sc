@@ -9,6 +9,7 @@ $configurator->setDebugMode([
     '94.112.129.121', // Petr - Brno
     '149.62.146.153', // Petr - Brno2
     '89.176.41.80', // Petr - Brno3
+    '89.102.3.159', // Petr - Brno4
 	'37.221.251.252', // Petr - Svetla n.S.
 	'213.81.220.69', // Kapco
 ]);

@@ -42,6 +42,9 @@ class PrintCandidate extends BaseControl
 	/** @var bool */
 	private $canShowAll;
 
+	/** @var bool */
+	private $showAsCompany;
+
 	// <editor-fold defaultstate="collapsed" desc="template">
 
 	public function render()
@@ -54,6 +57,7 @@ class PrintCandidate extends BaseControl
 		$this->template->selectedJob = $this->selectedJob;
 		$this->template->selectedManager = $this->selectedManager;
 		$this->template->canShowAll = $this->canShowAll;
+		$this->template->showJobList = !$this->showAsCompany;
 		$this->template->primaryJobsCount = self::PRIMARY_JOBS_COUNT;
 
 		$this->template->preferedJobCategories = $this->getPreferedJobCategories();
@@ -76,22 +80,38 @@ class PrintCandidate extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="setters & getters">
 
-	public function setCandidateById($candidateId, $canShowAll = FALSE, Job $job = NULL, UserEntity $manager = NULL)
+	public function setCandidateById($candidateId, Job $job = NULL, UserEntity $manager = NULL)
 	{
 		$candidateRepo = $this->em->getRepository(Candidate::getClassName());
 		$candidate = $candidateRepo->find($candidateId);
 		if ($candidate) {
-			$this->setCandidate($candidate, $canShowAll, $job, $manager);
+			$this->setCandidate($candidate, $job, $manager);
 		}
 		return $this;
 	}
 
-	public function setCandidate(Candidate $candidate, $canShowAll = FALSE, Job $job = NULL, UserEntity $manager = NULL)
+	public function setCandidate(Candidate $candidate)
 	{
 		$this->candidate = $candidate;
-		$this->canShowAll = $canShowAll;
+		return $this;
+	}
+
+	public function setJob(Job $job = NULL)
+	{
 		$this->selectedJob = $job;
+		return $this;
+	}
+
+	public function setAccountManager(UserEntity $manager = NULL)
+	{
 		$this->selectedManager = $manager;
+		return $this;
+	}
+
+	public function setShow($canShowAll = FALSE, $showAsCompany = FALSE)
+	{
+		$this->canShowAll = $canShowAll;
+		$this->showAsCompany = $showAsCompany;
 		return $this;
 	}
 

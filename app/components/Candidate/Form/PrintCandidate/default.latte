@@ -1,5 +1,5 @@
 {snippet candidatePrint}
-	<div id="{$id}" n:class="panel, panel-default, plain, gallery-item, candidate-item, $selectedJob ? candidate-short : candidate-long">
+	<div id="{$id}" n:class="panel, panel-default, plain, gallery-item, candidate-item, $showJobList ? candidate-long : candidate-short">
 		<div class="panel-heading">
 			<h4 class="panel-title ui-widget-content">
 				<small n:if="$candidate->cvFile">
@@ -30,32 +30,25 @@
 					<p n:if="count($candidate->jobCategories)">
 						<b>{_'Prefered job categories'}:</b>
 						<br/>
-						<span class="tip">{$preferedJobCategories|truncate:70,'...'}</span>
+						<span class="tip">{$preferedJobCategories|truncate:40,'...'}</span>
 					</p>
 					<p n:if="$skills">
 						<b>{_'IT Skills'}:</b>
 						<br/>
-						<span class="tip">{$skills|truncate:70,'...'}</span>
+						<span class="tip">{$skills|truncate:40,'...'}</span>
 					</p>
 				</div>
 				<div class="col-md-6">
 					<a n:ifset="$user" href="{plink Candidate:view $user->id}">
-						{if $person->getPhoto(TRUE)}
-							<img src="{$basePath}/foto/{$person->photo|size:150,150}"
-								 class="center img-responsive photo-rounded"
-								 alt="image alt"/>
-						{else}
-							<img src="{$person->photo}"
-								 class="center img-responsive photo-rounded"
-								 alt="image alt"/>
-						{/if}
+						<img src="{$person|foto:150,150}"
+							 class="center img-responsive photo-rounded" alt="{$person->fullName}"/>
 					</a>
 				</div>
 			</div>
 
 			<div class="row bt pt10">
 				<div class="col-md-12">
-					{if !$selectedJob}
+					{if $showJobList}
 						<p>
 							<b>{_'Job matches'}</b>
 							| <a href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
@@ -92,7 +85,7 @@
 								{breakIf $iterator->counter >= $primaryJobsCount}
 							</tr>
 						</table>
-					{else}
+					{elseif $selectedJob}
 						<p>
 							{_'State for'} '<i>{$selectedJob}</i>'
 						</p>
@@ -110,7 +103,8 @@
 		</div>
 	</div>
 
-	<div class="modal fade jobMatches" id="matches-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
+	<div n:if="$showJobList" class="modal fade jobMatches" id="matches-{$id}" tabindex="-1" role="dialog"
+							 aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

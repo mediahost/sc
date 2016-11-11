@@ -53,11 +53,14 @@ class CandidateGenerator extends Object
 	public function createCandidate()
 	{
 		$user = $this->createUser();
-		$user->verificated = 1;
-		$person = $this->completePerson($user);
-		$candidate = $this->completeCandidate($person);
-		$this->em->getRepository(User::getClassName())->save($user);
-		return $candidate;
+		if ($user) {
+			$user->verificated = 1;
+			$person = $this->completePerson($user);
+			$candidate = $this->completeCandidate($person);
+			$this->em->getRepository(User::getClassName())->save($user);
+			return $candidate;
+		}
+		return NULL;
 	}
 
 	private function createUser()

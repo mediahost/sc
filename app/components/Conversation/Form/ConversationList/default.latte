@@ -15,8 +15,8 @@
 				<li n:class="list-group-item, clearfix, $activeCommunication && $communication->id === $activeCommunication->id ? comment-info : (!$communication->lastMessage->isReadBy($sender) ? comment-danger : comment-default)">
 					<a href="{link chooseCommunication $communication->id}">
 						<div class="avatar pull-left mr15">
-							<img src="{$basePath}/foto/{$communication->getOpposites($sender)->first()->image|size:50,50}"
-								 width="50" alt="sender">
+							<img src="{$communication->getOpposite($sender)|foto:50,50}"
+								 width="50" alt="{$communication->getOppositesName($sender)}">
 						</div>
 						<p class="text-ellipsis">
                             <span class="name strong">

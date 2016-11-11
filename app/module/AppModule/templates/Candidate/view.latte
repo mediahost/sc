@@ -39,13 +39,8 @@
 				<div class="col-md-4">
 					<div class="profile-avatar">
 						<a href="#edit-photo" class="edit">
-							{if $person->getPhoto(TRUE)}
-								<img src="{$basePath}/foto/{$person->photo|size:150,150}"
-									 alt="{$person->fullName}"  class="responsive"/>
-							{else}
-								<img src="{$person->photo}"
-									 alt="{$person->fullName}"  class="responsive"/>
-							{/if}
+							<img src="{$person|foto:150,150}"
+								 alt="{$person->fullName}" class="responsive"/>
 							<i class="fa fa-edit"></i>
 						</a>
 					</div>
