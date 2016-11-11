@@ -18,7 +18,7 @@ var Global = function () {
 	};
 
 	var hadleSlider = function () {
-		$('input.slider[data-skill]').slider({
+		$('input.slider[data-skill]:not([data])').slider({
 			formatter: function(val) {
 				if (typeof val == "number"  &&  skillLevels[val] != undefined) {
 					return skillLevels[val];

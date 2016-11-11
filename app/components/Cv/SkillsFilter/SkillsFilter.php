@@ -39,7 +39,11 @@ class SkillsFilter extends BaseControl
 	/** @var SkillFacade @inject */
 	public $skillFacade;
 
+	/** @var SkillLevel[] */
+	private $skillLevels = [];
+
 	// </editor-fold>
+
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -52,47 +56,13 @@ class SkillsFilter extends BaseControl
 			!$this->isSendOnChange ?: 'sendOnChange',
 		];
 
-		$defaultValues = $this->getDefaults();
-		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
-		$skillLevels = $this->em->getRepository(SkillLevel::getClassName())->findPairsName();
-		reset($skillLevels);
-		$levelFromId = key($skillLevels);
-		end($skillLevels);
-		$levelToId = key($skillLevels);
-
-		$ranges = $form->addContainer('skillRange');
+		$skillRange = $form->addContainer('skillRange');
 		$yearRange = $form->addContainer('yearRange');
 
+		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
 		foreach ($skills as $skill) {
-			if (isset($defaultValues['skillRange'][$skill->id])) {
-				$from = $defaultValues['skillRange'][$skill->id][0];
-				$to = $defaultValues['skillRange'][$skill->id][1];
-				$skil_range = sprintf('[%d,%d]', $from, $to);
-			} else {
-				$skil_range = sprintf('[%d,%d]', $levelFromId, $levelToId);
-			}
-
-			$ranges->addText($skill->id, $skill->name)
-				->setAttribute('class', 'slider')
-				->setAttribute('data-slider-min', $levelFromId)
-				->setAttribute('data-slider-max', $levelToId)
-				->setAttribute('data-slider-step', self::SKILL_STEP)
-				->setAttribute('data-slider-value', $skil_range)
-				->setAttribute('data-slider-id', 'slider-primary');
-
-			$minYear = isset($defaultValues['skillMinYear'][$skill->id]) ?
-				$defaultValues['skillMinYear'][$skill->id] : self::YEARS_MIN;
-			$maxYear = isset($defaultValues['skillMaxYear'][$skill->id]) ?
-				$defaultValues['skillMaxYear'][$skill->id] : self::YEARS_MAX;
-			$year_range = sprintf('[%d,%d]', $minYear, $maxYear);
-
-			$yearRange->addText($skill->id, $skill->name)
-				->setAttribute('class', 'slider')
-				->setAttribute('data-slider-min', self::YEARS_MIN)
-				->setAttribute('data-slider-max', self::YEARS_MAX)
-				->setAttribute('data-slider-step', self::YEARS_STEP)
-				->setAttribute('data-slider-value', $year_range)
-				->setAttribute('data-slider-id', 'slider-primary');
+			$skillRange->addText($skill->id, $skill->name);
+			$yearRange->addText($skill->id, $skill->name);
 		}
 
 		$form->onSuccess[] = $this->formSucceeded;
@@ -107,20 +77,23 @@ class SkillsFilter extends BaseControl
 
 	protected function load($values)
 	{
+		$this->skillRequests = [];
 		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
-		$skilLevelRepo = $this->em->getRepository(SkillLevel::getClassName());
 
 		foreach ($skills as $skill) {
 			$newSkillRequest = new SkillKnowRequest();
 			$newSkillRequest->skill = $skill;
 
 			if (isset($values->skillRange->{$skill->id})) {
+				$levelFromId = $levelToId = '';
 				sscanf($values->skillRange->{$skill->id}, '%d,%d', $levelFromId, $levelToId);
-				$newSkillRequest->setLevels($skilLevelRepo->find($levelFromId), $skilLevelRepo->find($levelToId));
+				$newSkillRequest->setLevels($this->getSkillLevel($levelFromId), $this->getSkillLevel($levelToId));
 			}
-			sscanf($values->yearRange->{$skill->id}, '%d,%d', $yearMin, $yearMax);
-			$newSkillRequest->setYears($yearMin, $yearMax);
-
+			if (isset($values->yearRange->{$skill->id})) {
+				$yearMin = $yearMax = '';
+				sscanf($values->yearRange->{$skill->id}, '%d,%d', $yearMin, $yearMax);
+				$newSkillRequest->setYears($yearMin, $yearMax);
+			}
 			if ($newSkillRequest->isLevelsMatter()) {
 				$this->skillRequests[] = $newSkillRequest;
 			}
@@ -129,23 +102,47 @@ class SkillsFilter extends BaseControl
 		return $this;
 	}
 
-	/** @return array */
-	protected function getDefaults()
+	protected function setSliders()
 	{
-		$values = [
-			'skillRange' => [],
-			'skillMinYear' => [],
-			'skillMaxYear' => [],
+		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
+
+		foreach ($skills as $skill) {
+			$default = $this->getDefault($skill->id);
+
+			$this['form']['skillRange'][$skill->id]
+				->setAttribute('class', 'slider')
+				->setAttribute('data-slider-min', self::SKILL_MIN)
+				->setAttribute('data-slider-max', self::SKILL_MAX)
+				->setAttribute('data-slider-step', self::SKILL_STEP)
+				->setAttribute('data-slider-value', $default['skillRange'])
+				->setAttribute('data-slider-id', 'slider-primary');
+
+			$this['form']['yearRange'][$skill->id]
+				->setAttribute('class', 'slider')
+				->setAttribute('data-slider-min', self::YEARS_MIN)
+				->setAttribute('data-slider-max', self::YEARS_MAX)
+				->setAttribute('data-slider-step', self::YEARS_STEP)
+				->setAttribute('data-slider-value', $default['yearRange'])
+				->setAttribute('data-slider-id', 'slider-primary');
+		}
+	}
+
+	protected function getDefault($skillId)
+	{
+		$result = [
+			'skillRange' => sprintf('[%d%s%d]', self::SKILL_MIN, self::SEPARATOR, self::SKILL_MAX),
+			'yearRange' => sprintf('[%d%s%d]', self::YEARS_MIN, self::SEPARATOR, self::YEARS_MAX)
 		];
 		foreach ($this->skillRequests as $skillRequest) {
-			$values['skillRange'][$skillRequest->skill->id] = [
-				$skillRequest->levelFrom->id,
-				$skillRequest->levelTo->id,
-			];
-			$values['skillMinYear'][$skillRequest->skill->id] = $skillRequest->yearsFrom;
-			$values['skillMaxYear'][$skillRequest->skill->id] = $skillRequest->yearsTo;
+			if ($skillRequest->skill->id == $skillId) {
+				$result = [
+					'skillRange' => sprintf('[%d%s%d]',  $skillRequest->levelFrom->id, self::SEPARATOR, $skillRequest->levelTo->id),
+					'yearRange' => sprintf('[%d%s%d]', $skillRequest->yearsFrom, self::SEPARATOR, $skillRequest->yearsTo)
+				];
+				return $result;
+			}
 		}
-		return $values;
+		return $result;
 	}
 
 	// <editor-fold desc="setters & getters">
@@ -164,10 +161,22 @@ class SkillsFilter extends BaseControl
 		return $this->skillRequests;
 	}
 
+	private function getSkillLevel($levelId)
+	{
+		if (!$this->skillLevels) {
+			$levels = $this->em->getRepository(SkillLevel::getClassName())->findAll();
+			foreach ($levels as $level) {
+				$this->skillLevels[$level->id] = $level;
+			}
+		}
+		return $this->skillLevels[$levelId];
+	}
+
 	// </editor-fold>
 
 	public function render()
 	{
+		$this->setSliders();
 		$this->template->skills = $this->em->getDao(Skill::getClassName())->findAll();
 		$this->template->categories = $this->skillFacade->getTopCategories();
 		$this->template->skillLevels = $this->skillFacade->getSkillLevelNames();
