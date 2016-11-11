@@ -49,7 +49,7 @@ class CandidateFacade extends Object
 
 	private function match(Candidate $candidate, Job $job, $isIntern = TRUE, $approve = TRUE)
 	{
-		$match = $this->findMatch($candidate, $job);
+		$match = $candidate->findMatch($job);
 		if (!$match) {
 			$match = new Match($job, $candidate);
 		}
@@ -65,14 +65,6 @@ class CandidateFacade extends Object
 		return $match;
 	}
 
-	public function findMatch(Candidate $candidate, Job $job)
-	{
-		return $this->matchRepo->findOneBy([
-			'job' => $job,
-			'candidate' => $candidate,
-		]);
-	}
-
 	public function isApproved(Candidate $candidate, Job $job)
 	{
 		return $this->isMatched($candidate, $job, TRUE, FALSE);
@@ -86,7 +78,7 @@ class CandidateFacade extends Object
 	public function isMatched(Candidate $candidate, Job $job, $checkIntern = TRUE, $checkApply = TRUE)
 	{
 		/** @var Match $match */
-		$match = $this->findMatch($candidate, $job);
+		$match = $candidate->findMatch($job);
 		if ($match) {
 			$isApplied = $checkApply && $match->candidateApprove;
 			$isApproved = $checkIntern && $match->adminApprove;

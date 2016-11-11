@@ -115,11 +115,6 @@ class PrintCandidate extends BaseControl
 		return $this;
 	}
 
-	public function findMatch(Job $job)
-	{
-		return $this->candidateFacade->findMatch($this->candidate, $job);
-	}
-
 	private function getPreferedJobCategories()
 	{
 		$prefered = NULL;

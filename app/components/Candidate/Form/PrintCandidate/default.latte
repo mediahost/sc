@@ -55,7 +55,7 @@
 						</p>
 						<table class="jobs">
 							<tr n:foreach="$jobs as $job">
-								{var match => $control->findMatch($job)}
+								{var match => $candidate->findMatch($job)}
 								<th>
 									{$job|truncate:20}
 								</th>
@@ -121,7 +121,7 @@
 				<div class="modal-body">
 					<table class="jobs">
 						<tr n:foreach="$jobs as $job">
-							{var match => $control->findMatch($job)}
+							{var match => $candidate->findMatch($job)}
 							<th>{$job}</th>
 							{if $match && $match->fullApprove}
 								<td colspan="2">

@@ -132,4 +132,14 @@ class Candidate extends BaseEntity
 		$this->jobCategories->forAll($fillIds);
 		return $ids;
 	}
+
+	public function findMatch(Job $job)
+	{
+		foreach ($this->matches as $match) {
+			if ($match->job->id == $job->id) {
+				return $match;
+			}
+		}
+		return null;
+	}
 }
