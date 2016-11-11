@@ -80,6 +80,7 @@ webloader:
 				- %wwwDir%/assets/js/scripts/custom/mapView.js
 				- %wwwDir%/assets/js/supr/main.js
 				- %wwwDir%/assets/js/phpjs/functions/filesystem/file_exists.js
+				- %wwwDir%/assets/js/phpjs/functions/url/urlencode.js
 			filters:
 				- @varFilter
 

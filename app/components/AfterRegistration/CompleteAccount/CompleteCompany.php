@@ -54,9 +54,15 @@ class CompleteCompany extends BaseControl
 
 		// TODO: do it by addAddress() (do this control)
 		$form->addTextArea('address', 'Address')
-			->setAttribute('placeholder', 'Company full address');
+			->setAttribute('placeholder', 'Company full address')
+			->setRequired();
 
-		$form->addSubmit('confirm', 'Confirm');
+		$form->addUpload('logo', 'Logo')
+			->addRule(Form::IMAGE, 'Logo must be image')
+			->setRequired();
+
+		$form->addSubmit('confirm', 'Confirm')
+			->getControlPrototype()->setClass('loadingOnClick');
 
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
@@ -79,6 +85,7 @@ class CompleteCompany extends BaseControl
 		$company->name = $values->name;
 		$company->companyId = $values->companyId;
 		$company->address = $values->address;
+		$company->logo = $values->logo;
 		$createdCompany = $this->companyFacade->create($company, $this->user->identity);
 
 		$this->onSuccess($this, $createdCompany);
