@@ -2,16 +2,12 @@
 	{_'Jobs'}
 {/block}
 
-{block breadcrumbItems}
-	<li>
-		<a n:href="this">{_'Jobs'}</a>
-	</li>
-{/block}
-
 {block content}
+	{var hasCompany => isset($company) && $company}
 	<div class="row">
 		<div class="col-md-12">
-			<a n:href="this#addJob" data-toggle="modal" class="btn btn-success mr5 mb10">
+			<a {if $hasCompany}href="{link Job:add $company->id}" {else}href="#addJob" data-toggle="modal"{/if}
+			   class="btn btn-success mr5 mb10">
 				<i class="fa fa-plus"></i>
 				{_'New Job'}
 			</a>
@@ -19,7 +15,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="addJob" tabindex="-1" role="dialog" aria-hidden="true">
+	<div n:if="!$hasCompany" class="modal fade" id="addJob" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

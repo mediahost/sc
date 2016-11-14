@@ -52,7 +52,7 @@ services:
 			- allow('candidate', 'messages')
 			- deny('candidate', 'messages', ['create', 'browse'])
 
-			- allow('company', ['company', 'job', 'jobs', 'companies'])
+			- allow('company', ['company', 'job', 'jobs'])
 			- allow('company', 'messages')
 			- deny('company', 'messages', ['browse'])
 

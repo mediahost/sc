@@ -80,6 +80,10 @@ class JobsPresenter extends BasePresenter
 	 */
 	public function actionShowAll()
 	{
+		if ($this->company) {
+			$this->template->company = $this->company;
+			$this['jobsGrid']->setCompany($this->company);
+		}
 	}
 
 	/**
