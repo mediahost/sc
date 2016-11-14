@@ -37,6 +37,28 @@
 				</ul>
 				{var $person => $identity->getPerson()}
 				<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
+					{var showCompanyDropdown => count($allowedCompaniesPermissions) > 1}
+					<li n:if="$isCompleteAccount && $company" n:class="$showCompanyDropdown ? dropdown">
+						<a href="#" class="dropdown-toggle avatar"{if $showCompanyDropdown} data-toggle="dropdown"{/if}>
+							<img src="{$company|foto:50,50}" alt="" class="image"/>
+							<span class="txt">{$company}</span>
+							<b class="caret" n:if="$showCompanyDropdown"></b>
+						</a>
+						<ul class="dropdown-menu right" n:if="$showCompanyDropdown">
+							<li class="menu">
+								<ul>
+									<li n:foreach="$allowedCompaniesPermissions as $permission"
+											n:if="$company->id !== $permission->company->id">
+										<a n:href="switchCompany! $permission->company->id">
+											<img src="{$permission->company|foto:25,25}"
+												 alt="{$permission->company}"
+												 class="image mr10"/>{$permission->company}
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
 					<li n:class="$isCompleteAccount ? dropdown">
 						<a href="#" n:class="$isCompleteAccount ? dropdown-toggle, avatar"{if $isCompleteAccount} data-toggle="dropdown"{/if}>
 							<img src="{$person|foto:50,50}" alt="" class="image"/>

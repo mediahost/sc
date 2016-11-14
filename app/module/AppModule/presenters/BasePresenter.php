@@ -32,6 +32,10 @@ abstract class BasePresenter extends BaseBasePresenter
 	/** @var Company */
 	protected $company;
 
+	/** @var array */
+	protected $allowedCompaniesPermissions = [];
+
+	/** @var bool */
 	private $showRightSideBar = false;
 
 	protected function startup()
@@ -49,6 +53,8 @@ abstract class BasePresenter extends BaseBasePresenter
 		$this->template->showRightSidebar = $this->showRightSideBar;
 
 		$this->template->sender = $this->sender;
+		$this->template->company = $this->company;
+		$this->template->allowedCompaniesPermissions = $this->allowedCompaniesPermissions;
 		$this->template->communications = $this->sender->communications;
 		$this->template->unreadMessagesCount = $this->sender->unreadCount;
 	}
@@ -67,6 +73,9 @@ abstract class BasePresenter extends BaseBasePresenter
 			$companies = $this->companyFacade->findByUser($this->user);
 			if ($companies->count()) {
 				$this->company = $companies->first();
+				if ($this->company) {
+					$this->allowedCompaniesPermissions = $this->companyFacade->findPermissions($this->company, $this->user->identity);
+				}
 			}
 		}
 	}
@@ -102,6 +111,22 @@ abstract class BasePresenter extends BaseBasePresenter
 	protected function hideRightSidebar()
 	{
 		$this->showRightSideBar = false;
+	}
+
+	public function handleSwitchCompany($id)
+	{
+		$companyRepo = $this->em->getRepository(Company::getClassName());
+		$company = $companyRepo->find($id);
+		if ($company && $this->companyFacade->isAllowed($company, $this->user->identity)) {
+			$this->company = $company;
+			$message = 'Company was changed';
+			$type = 'successs';
+		} else {
+			$message = 'No such company wasn\'t found for you';
+			$type = 'warning';
+		}
+		$this->flashMessage($this->translator->translate($message), $type);
+		$this->redirect('Dashboard:');
 	}
 
 	public function createComponentCandidatesList()

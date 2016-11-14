@@ -2,6 +2,9 @@
 
 namespace App\Model\Facade\Traits;
 
+use App\Model\Entity\Company;
+use App\Model\Entity\User;
+
 trait CompanyFacadeCheckers
 {
 
@@ -21,6 +24,11 @@ trait CompanyFacadeCheckers
 			return $finded->id === $id;
 		}
 		return TRUE;
+	}
+
+	public function isAllowed(Company $company, User $user)
+	{
+		return (bool)$this->findPermission($company, $user);
 	}
 
 }
