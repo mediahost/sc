@@ -4,6 +4,7 @@ namespace App\Extensions;
 
 use App\Helpers;
 use App\Model\Entity\Candidate;
+use App\Model\Entity\Company;
 use App\Model\Entity\Image as ImageEntity;
 use App\Model\Entity\Person;
 use App\Model\Entity\Sender;
@@ -314,6 +315,9 @@ class FotoPathHelper extends Object
 		} else if ($entity instanceof Sender) {
 			$image = $entity->getPhoto();
 			$id = $entity->user->getId();
+		} else if ($entity instanceof Company) {
+			$image = $entity->getLogo();
+			$id = $entity->getId();
 		}
 
 		if ($image instanceof ImageEntity) {

@@ -77,13 +77,4 @@ class Company extends BaseEntity
 		return $this;
 	}
 
-	public function getLogo()
-	{
-		if ($this->logo) {
-			return $this->logo;
-		} else {
-			return 'assets/img/avatar3.jpeg'; // default image
-		}
-	}
-
 }
