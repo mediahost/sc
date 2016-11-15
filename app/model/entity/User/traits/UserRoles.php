@@ -5,6 +5,7 @@ namespace App\Model\Entity\Traits;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyPermission;
+use App\Model\Entity\CompanyRole;
 use App\Model\Entity\Person;
 use App\Model\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -60,17 +61,17 @@ trait UserRoles
 
 	public function isCompany()
 	{
-		return !$this->isCandidate() && $this->isInRole(Role::COMPANY);
+		return !$this->isInRole(Role::CANDIDATE) && $this->isInRole(Role::COMPANY);
 	}
 
-	public function isInRole($role)
+	public function isCandidate()
 	{
-		switch ($role) {
-			case Role::COMPANY:
-				return !parent::isInRole(Role::CANDIDATE) && parent::isInRole($role);
-			default:
-				return parent::isInRole($role);
-		}
+		return $this->isInRole(Role::CANDIDATE);
+	}
+
+	private function isInRole($role)
+	{
+		return in_array($role, $this->getRoles(), TRUE);
 	}
 
 	public function getPerson()
@@ -115,15 +116,17 @@ trait UserRoles
 		return Role::getMaxRole($this->roles->toArray());
 	}
 
-	/**
-	 * @return Company[]
-	 */
-	public function getCompanies()
+	/** @return Company[] */
+	public function getCompanies(CompanyRole $role = NULL)
 	{
 		$companies = [];
 		/** @var CompanyPermission $companyPermission */
 		foreach ($this->allowedCompanies as $companyPermission) {
-			$companies[$companyPermission->company->id] = $companyPermission->company;
+			if ($role && $companyPermission->isInRole($role)) {
+				$companies[$companyPermission->company->id] = $companyPermission->company;
+			} else {
+				$companies[$companyPermission->company->id] = $companyPermission->company;
+			}
 		}
 		return $companies;
 	}

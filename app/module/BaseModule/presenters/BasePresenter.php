@@ -66,7 +66,7 @@ abstract class BasePresenter extends Presenter
 		$this->template->defaultLocale = $this->translator->getDefaultLocale();
 		$this->template->allowedLanguages = $this->translator->getAvailableLocales();
 
-		$this->template->identity = $this->getUser()->getIdentity();
+		$this->template->identity = $this->user->identity;
 		$this->template->pageInfo = $this->settings->getPageInfo();
 
 		$this->template->isCandidate = $this->user->isInRole(Entity\Role::CANDIDATE);

@@ -6,6 +6,7 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity;
+use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Exception;
@@ -20,6 +21,15 @@ class User extends BaseControl
 	/** @var \Nette\Security\User @inject */
 	public $identity;
 
+	/** @var CompanyFacade @inject */
+	public $companyFacade;
+
+	/** @var RoleFacade @inject */
+	public $roleFacade;
+
+	/** @var UserFacade @inject */
+	public $userFacade;
+
 	// <editor-fold desc="events">
 
 	/** @var array */
@@ -31,17 +41,20 @@ class User extends BaseControl
 	/** @var Entity\User */
 	private $user;
 
+	/** @var Entity\Company */
+	private $company;
+
 	/** @var array */
 	private $disabledRoles = [];
+
+	/** @var bool */
+	private $disableChangeRoles = FALSE;
 
 	/** @var array */
 	private $roles;
 
-	/** @var RoleFacade @inject */
-	public $roleFacade;
-
-	/** @var UserFacade @inject */
-	public $userFacade;
+	/** @var array */
+	private $loadedCompanies = [];
 
 	// </editor-fold>
 
@@ -70,21 +83,41 @@ class User extends BaseControl
 				->setOption('description', $helpText);
 		}
 
-		$role = $form->addMultiSelectBoxes('roles', 'Roles', $this->getAllRoles())
-			->setRequired('Select any role');
+		if ($this->user->isNew()) {
+			$role = $form->addMultiSelect('roles', 'Roles', $this->getAllRoles())
+				->setRequired('Select any role');
+			if ($this->disabledRoles) {
+				$role->setDisabled();
+				$role->setOmitted(FALSE);
+			}
+
+			$form->setDefaults($this->getDefaults());
+			$defaultRole = $this->roleFacade->findByName(Entity\Role::CANDIDATE);
+			$firstRole = $this->roleFacade->findByName(current($this->getAllRoles()));
+			if ($defaultRole && array_key_exists($defaultRole->id, $this->getAllRoles())) {
+				$role->setDefaultValue($defaultRole->id);
+				if ($role->isDisabled()) {
+					$role->setValue($defaultRole->id);
+				}
+			} else if ($firstRole && array_key_exists($firstRole->id, $this->getAllRoles())) {
+				$role->setDefaultValue($firstRole->id);
+				if ($role->isDisabled()) {
+					$role->setValue($firstRole->id);
+				}
+			}
+		}
+
+		if (!$this->company) {
+			$compayRepo = $this->em->getRepository(Entity\Company::getClassName());
+			$companies = $compayRepo->findPairs('name');
+			$form->addMultiSelect('companyAdmin', 'Admin for companies', $companies);
+		}
+
 		if (!$this->user->isNew()) {
-			$role->setDisabled();
+			$form->setDefaults($this->getDefaults());
 		}
-
-
-		$defaultRole = $this->roleFacade->findByName(Entity\Role::CANDIDATE);
-		if ($defaultRole && in_array($defaultRole->getId(), $this->getAllRoles())) {
-			$role->setDefaultValue($defaultRole->getId());
-		}
-
 		$form->addSubmit('save', 'Save');
 
-		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
@@ -114,8 +147,9 @@ class User extends BaseControl
 		if ($values->password !== NULL && $values->password !== "") {
 			$this->user->setPassword($values->password);
 		}
-		$this->user->clearRoles();
+
 		if (isset($values->roles)) {
+			$this->user->clearRoles();
 			foreach ($values->roles as $id) {
 				$roleDao = $this->em->getDao(Entity\Role::getClassName());
 				$item = $roleDao->find($id);
@@ -124,22 +158,51 @@ class User extends BaseControl
 				}
 			}
 		}
+
+		if (isset($values->companyAdmin)) {
+			$this->loadedCompanies[Entity\CompanyRole::ADMIN] = $values->companyAdmin;
+		}
+
 		return $this;
 	}
 
 	private function save()
 	{
-		$this->userFacade->setVerification($this->user);
+		if ($this->user->isNew()) {
+			$this->userFacade->setVerification($this->user);
+		}
 		$userRepo = $this->em->getRepository(Entity\User::getClassName());
 		$userRepo->save($this->user);
+
+		$companies = [];
+		if ($this->company) {
+			$companies[$this->company->id] = $this->company;
+		} else if(isset($this->loadedCompanies[Entity\CompanyRole::ADMIN])) {
+			foreach ($this->loadedCompanies[Entity\CompanyRole::ADMIN] as $companyId) {
+				$companyRepo = $this->em->getRepository(Entity\Company::getClassName());
+				$company = $companyRepo->find($companyId);
+				if ($company) {
+					$companies[$company->id] = $company;
+				}
+			}
+		}
+		foreach ($companies as $company) {
+			$companyPermission = $this->companyFacade->findPermission($company, $this->user);
+			if (!$companyPermission) {
+				$this->companyFacade->createPermission($company, $this->user);
+			}
+		}
+
 		return $this;
 	}
 
 	protected function getDefaults()
 	{
+		$adminRole = $this->companyFacade->findRoleByName(Entity\CompanyRole::ADMIN);
 		$values = [
 			'mail' => $this->user->mail,
 			'roles' => $this->user->getRolesKeys(),
+			'companyAdmin' => $adminRole ? array_keys($this->user->getCompanies($adminRole)) : [],
 		];
 		return $values;
 	}
@@ -159,9 +222,16 @@ class User extends BaseControl
 		return $this;
 	}
 
-	public function setDisabledRoles(array $roles)
+	public function setCompany(Entity\Company $company)
+	{
+		$this->company = $company;
+		return $this;
+	}
+
+	public function setDisabledRoles(array $roles, $disableChange = FALSE)
 	{
 		$this->disabledRoles = $roles;
+		$this->disableChangeRoles = $disableChange;
 		return $this;
 	}
 

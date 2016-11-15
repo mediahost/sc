@@ -13,17 +13,17 @@ trait CompanyFacadeFinders
 	/**
 	 * @return ArrayCollection
 	 */
-	public function findAll() 
+	public function findAll()
 	{
 		$companies = $this->companyDao->findAll();
 		return new ArrayCollection($companies);
 	}
-	
+
 	/**
 	 * @param \Nette\Security\User $user
 	 * @return ArrayCollection
 	 */
-	public function findByUser(\Nette\Security\User $user) 
+	public function findByUser(\Nette\Security\User $user)
 	{
 		$companies = new ArrayCollection();
 		$alowedCompanies = new ArrayCollection($user->identity->allowedCompanies);
@@ -32,10 +32,10 @@ trait CompanyFacadeFinders
 		}
 		return $companies;
 	}
-	
+
 	public function find($companyIdOrEntity)
 	{
-		$id = $companyIdOrEntity instanceof Company ? $companyIdOrEntity->id : (string) $companyIdOrEntity;
+		$id = $companyIdOrEntity instanceof Company ? $companyIdOrEntity->id : (string)$companyIdOrEntity;
 		return $this->companyDao->find($id);
 	}
 
@@ -52,20 +52,26 @@ trait CompanyFacadeFinders
 	public function findPermission(Company $company, User $user)
 	{
 		return $this->companyPermissionRepo->findOneBy([
-				'company' => $company,
-				'user'    => $user,
+			'company' => $company,
+			'user' => $user,
 		]);
 	}
 
 	public function findPermissions($company = NULL, $user = NULL)
 	{
+		$conditions = [];
 		if ($company instanceof Company) {
-			return $this->companyPermissionRepo->findBy(['company' => $company]);
+			$conditions['company'] = $company;
 		}
 		if ($user instanceof User) {
-			return $this->companyPermissionRepo->findBy(['user' => $user]);
+			$conditions['user'] = $user;
 		}
-		return [];
+
+		if (count($conditions)) {
+			return $this->companyPermissionRepo->findBy($conditions);
+		} else {
+			return [];
+		}
 	}
 
 	public function findRoleByName($name)
@@ -82,7 +88,7 @@ trait CompanyFacadeFinders
 	public function findUsersByCompany($company, $onlyIds = FALSE)
 	{
 		$permissions = $this->companyPermissionRepo->findBy([
-				'company' => $this->find($company),
+			'company' => $this->find($company),
 		]);
 		$users = [];
 		foreach ($permissions as $permission) {

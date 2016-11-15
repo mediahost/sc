@@ -3,6 +3,7 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\Grids\User\IUsersGridFactory;
+use App\Components\Grids\User\UsersGrid;
 use App\Components\User;
 use App\Model\Entity;
 use App\Model\Facade\RoleFacade;
@@ -53,11 +54,9 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		$this->template->users = $this->userDao->findAll();
-		$this->template->identity = $this->user;
-		$this->template->addFilter('canEdit', $this->userFacade->canEdit);
-		$this->template->addFilter('canDelete', $this->userFacade->canDelete);
-		$this->template->addFilter('canAccess', $this->userFacade->canAccess);
+		if ($this->company) {
+			$this['usersGrid']->setCompany($this->company, TRUE);
+		}
 	}
 
 	/**
@@ -68,13 +67,29 @@ class UsersPresenter extends BasePresenter
 	public function actionAdd()
 	{
 		$this->userEntity = new Entity\User();
-		$this['userForm']->setUser($this->userEntity)
-			->setDisabledRoles([
+		$disabledRoles = [
+			Entity\Role::GUEST,
+			Entity\Role::SIGNED,
+			Entity\Role::CANDIDATE,
+			Entity\Role::COMPANY,
+		];
+
+		if ($this->company) {
+			$disabledRoles = [
 				Entity\Role::GUEST,
 				Entity\Role::SIGNED,
 				Entity\Role::CANDIDATE,
-				Entity\Role::COMPANY,
-			]);
+			];
+		}
+
+		/** @var User\User $form */
+		$form = $this['userForm'];
+		$form->setUser($this->userEntity);
+		$form->setDisabledRoles($disabledRoles, (bool)$this->company);
+		if ($this->company) {
+			$form->setCompany($this->company);
+		}
+
 		$this->setView('edit');
 	}
 
@@ -177,10 +192,10 @@ class UsersPresenter extends BasePresenter
 		return $control;
 	}
 
+	/** @return UsersGrid */
 	public function createComponentUsersGrid()
 	{
 		$control = $this->iUsersGridFactory->create();
-		$control->setIdentity($this->user);
 		return $control;
 	}
 }

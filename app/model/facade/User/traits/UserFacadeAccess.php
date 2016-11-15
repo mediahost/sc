@@ -9,7 +9,6 @@ use App\Model\Entity\Role;
 trait UserFacadeAccess
 {
 
-
 	/**
 	 * Decides if identity user can access user
 	 * @param IdentityUser $identityUser
@@ -20,6 +19,8 @@ trait UserFacadeAccess
 	{
 		if ($identityUser->id === $user->id) {
 			return FALSE; // cant acces to myself
+		} else if ($identityUser->isInRole(Role::COMPANY)) {
+			return FALSE;
 		} else {
 			$identityLowerRoles = $this->findLowerRoles($identityUser->roles); // can acces to only lower roles
 			return in_array($user->maxRole->name, $identityLowerRoles);
@@ -36,6 +37,8 @@ trait UserFacadeAccess
 	{
 		if ($identityUser->id === $user->id) {
 			return FALSE; // cant delete myself
+		} else if ($identityUser->isInRole(Role::COMPANY)) {
+			return FALSE;
 		} else {
 			$isDeletable = $this->isDeletable($user);
 			return $this->canEdit($identityUser, $user) && $isDeletable;
@@ -52,6 +55,8 @@ trait UserFacadeAccess
 	{
 		if ($identityUser->id === $user->id) {
 			return TRUE; // can edit myself
+		} else if ($identityUser->isInRole(Role::COMPANY)) {
+			return $user->isCompany();
 		} else {
 			$identityLowerRoles = $this->findLowerRoles($identityUser->roles, TRUE); // can edit lower or same roles
 			return in_array($user->maxRole->name, $identityLowerRoles);

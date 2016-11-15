@@ -5,16 +5,27 @@ namespace App\Components\Grids\User;
 use App\Components\BaseControl;
 use App\Extensions\Grido\BaseGrid;
 use App\Helpers;
+use App\Model\Entity\Company;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Facade\UserFacade;
 use Grido\DataSources\Doctrine;
 use Nette\Security\User as Identity;
 
 class UsersGrid extends BaseControl
 {
 
-	/** @var Identity */
-	private $identity;
+	/** @var Identity @inject */
+	public $identity;
+
+	/** @var UserFacade @inject */
+	public $userFacade;
+
+	/** @var Company */
+	private $company;
+
+	/** @var bool */
+	private $asCompany;
 
 	protected function createComponentGrid()
 	{
@@ -35,12 +46,13 @@ class UsersGrid extends BaseControl
 		$col = $grid->addColumnEmail('mail', 'Mail');
 		$col->setSortable()->setFilterText()->setSuggestion();
 
-		$col = $grid->addColumnText('roles', 'Roles');
-		$col->setSortable()->setFilterSelect($this->getRoles());
-		$col->setCustomRender(__DIR__ . '/tag.latte')
-			->setCustomRenderExport([$this, 'joinRoles']);
-		$col->getHeaderPrototype()->width = '10%';
-
+		if (!$this->asCompany) {
+			$col = $grid->addColumnText('roles', 'Roles');
+			$col->setSortable()->setFilterSelect($this->getRoles());
+			$col->setCustomRender(__DIR__ . '/tag.latte')
+				->setCustomRenderExport([$this, 'joinRoles']);
+			$col->getHeaderPrototype()->width = '10%';
+		}
 
 		$grid->addActionHref('access', 'Access')->setIcon('fa fa-key')
 			->setDisable([$this, 'checkAccess']);
@@ -53,14 +65,15 @@ class UsersGrid extends BaseControl
 			->setDisable([$this, 'checkDelete'])
 			->getElementPrototype()->class[] = 'red';
 
-		$grid->setActionWidth("22%");
+		$grid->setActionWidth($this->asCompany ? '180px' : '280px');
 		$grid->setExport('users');
 		return $grid;
 	}
 
-	public function setIdentity(Identity $identity)
+	public function setCompany(Company $company, $asCompany = FALSE)
 	{
-		$this->identity = $identity;
+		$this->company = $company;
+		$this->asCompany = $asCompany;
 		return $this;
 	}
 
@@ -70,6 +83,12 @@ class UsersGrid extends BaseControl
 		$qb = $repo->createQueryBuilder('u')
 			->select('u, r')
 			->leftJoin('u.roles', 'r');
+		if ($this->company) {
+			$qb->leftJoin('u.allowedCompanies', 'ac');
+			$qb->where('ac.company = :company');
+			$qb->setParameter('company', $this->company);
+		}
+
 		$model = new Doctrine($qb, [
 			'roles' => 'r.id'
 		]);
@@ -84,24 +103,24 @@ class UsersGrid extends BaseControl
 		return $roles;
 	}
 
-	private function joinRoles($item)
+	public function joinRoles($item)
 	{
 		return Helpers::concatStrings(', ', $item->roles);
 	}
 
 	public function checkAccess($item)
 	{
-		return !$this->presenter->userFacade->canAccess($this->identity, $item);
+		return !$this->userFacade->canAccess($this->identity, $item);
 	}
 
 	public function checkEdit($item)
 	{
-		return !$this->presenter->userFacade->canEdit($this->identity, $item);
+		return !$this->userFacade->canEdit($this->identity, $item);
 	}
 
 	public function checkDelete($item)
 	{
-		return !$this->presenter->userFacade->canDelete($this->identity, $item);
+		return !$this->userFacade->canDelete($this->identity, $item);
 	}
 
 	public function getConfirmMessage($item)

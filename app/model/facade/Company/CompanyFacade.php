@@ -62,13 +62,20 @@ class CompanyFacade extends Object
 		$this->em->persist($company);
 		$this->em->flush();
 
+		$this->createPermission($company, $user, CompanyRole::ADMIN);
+
+		return $company;
+	}
+
+	public function createPermission(Company $company, User $user, $role = CompanyRole::ADMIN)
+	{
 		$adminAccess = new CompanyPermission();
 		$adminAccess->user = $user;
 		$adminAccess->company = $company;
-		$adminAccess->addRole($this->findRoleByName(CompanyRole::ADMIN));
+		$adminAccess->addRole($this->findRoleByName($role));
 		$this->companyPermissionRepo->save($adminAccess);
 
-		return $company;
+		return $adminAccess;
 	}
 
 	/**

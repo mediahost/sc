@@ -52,7 +52,10 @@ services:
 			- allow('candidate', 'messages')
 			- deny('candidate', 'messages', ['create', 'browse'])
 
-			- allow('company', ['company', 'job', 'jobs'])
+			- allow('company', 'company')
+			- allow('company', 'job')
+			- allow('company', 'jobs')
+			- allow('company', 'users')
 			- allow('company', 'messages')
 			- deny('company', 'messages', ['browse'])
 

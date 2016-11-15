@@ -65,6 +65,14 @@ trait CompanyPermissionRoles
 		return $array;
 	}
 
+	public function isInRole(CompanyRole $role)
+	{
+		$isSame = function ($key, CompanyRole $item) use ($role) {
+			return $role->id === $item->id;
+		};
+		return $this->getRoles()->exists($isSame);
+	}
+
 	/**
 	 * Has a user effective access to the company Resource?
 	 * @param  string  resource
@@ -91,7 +99,7 @@ trait CompanyPermissionRoles
 	private function getAuthorizator()
 	{
 		if (!$this->authorizator) {
-			$this->authorizator = new Authorizator;
+			$this->authorizator = new Authorizator();
 		}
 		return $this->authorizator;
 	}

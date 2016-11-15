@@ -40,25 +40,26 @@ class MessagesPresenter extends BasePresenter
 	 */
 	public function actionDefault($id = NULL)
 	{
-		if (!$id) {
+		if ($id) {
+			$communicationRepo = $this->em->getRepository(Communication::getClassName());
+			$communication = $communicationRepo->find($id);
+		} else {
 			$communication = $this->sender->lastCommunication;
 			if ($communication) {
 				$this->redirect('this', ['id' => $communication->id]);
 			}
-		} else {
-			$communicationRepo = $this->em->getRepository(Communication::getClassName());
-			$communication = $communicationRepo->find($id);
-			if ($communication && $communication->isContributor($this->sender)) {
-				$this['conversation']->setSender($this->sender);
-				$this['conversation']->setCommunication($communication);
-				$this['conversationList']->setCommunication($communication);
-				$this->template->conversation = $communication;
-				$this->communicationFacade->markAsRead($communication, $this->sender);
-			} else {
-				$message = $this->translator->translate('Requested conversation was\'t find for you.');
-				$this->flashMessage($message, 'danger');
-				$this->redirect('this', NULL);
-			}
+		}
+
+		if ($communication && $communication->isContributor($this->sender)) {
+			$this['conversation']->setSender($this->sender);
+			$this['conversation']->setCommunication($communication);
+			$this['conversationList']->setCommunication($communication);
+			$this->template->conversation = $communication;
+			$this->communicationFacade->markAsRead($communication, $this->sender);
+		} else if ($id) {
+			$message = $this->translator->translate('Requested conversation was\'t find for you.');
+			$this->flashMessage($message, 'danger');
+			$this->redirect('this', NULL);
 		}
 	}
 

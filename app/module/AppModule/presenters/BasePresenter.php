@@ -17,6 +17,8 @@ use App\Model\Facade\CompanyFacade;
 abstract class BasePresenter extends BaseBasePresenter
 {
 
+	const SECTION_FOR_COMPANY = 'company_section';
+
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
 
@@ -33,7 +35,7 @@ abstract class BasePresenter extends BaseBasePresenter
 	protected $company;
 
 	/** @var array */
-	protected $allowedCompaniesPermissions = [];
+	protected $allowedCompanies = [];
 
 	/** @var bool */
 	private $showRightSideBar = false;
@@ -54,7 +56,7 @@ abstract class BasePresenter extends BaseBasePresenter
 
 		$this->template->sender = $this->sender;
 		$this->template->company = $this->company;
-		$this->template->allowedCompaniesPermissions = $this->allowedCompaniesPermissions;
+		$this->template->allowedCompanies = $this->allowedCompanies;
 		$this->template->communications = $this->sender->communications;
 		$this->template->unreadMessagesCount = $this->sender->unreadCount;
 	}
@@ -70,11 +72,21 @@ abstract class BasePresenter extends BaseBasePresenter
 	private function chooseCompany()
 	{
 		if ($this->user->loggedIn && $this->user->isInRole(Role::COMPANY)) {
-			$companies = $this->companyFacade->findByUser($this->user);
-			if ($companies->count()) {
-				$this->company = $companies->first();
-				if ($this->company) {
-					$this->allowedCompaniesPermissions = $this->companyFacade->findPermissions($this->company, $this->user->identity);
+			$this->allowedCompanies = $this->companyFacade->findByUser($this->user);
+			if ($this->allowedCompanies->count()) {
+				$session = $this->session->getSection(self::SECTION_FOR_COMPANY);
+				if (isset($session->companyId)) {
+					$setCompany = function ($key, Company $company) use ($session) {
+						if ($company->id === $session->companyId) {
+							$this->company = $company;
+							return FALSE;
+						}
+						return TRUE;
+					};
+					$this->allowedCompanies->forAll($setCompany);
+				}
+				if (!$this->company) {
+					$this->company = $this->allowedCompanies->first();
 				}
 			}
 		}
@@ -113,20 +125,22 @@ abstract class BasePresenter extends BaseBasePresenter
 		$this->showRightSideBar = false;
 	}
 
-	public function handleSwitchCompany($id)
+	public function handleSwitchCompany($companyId)
 	{
 		$companyRepo = $this->em->getRepository(Company::getClassName());
-		$company = $companyRepo->find($id);
+		$company = $companyRepo->find($companyId);
 		if ($company && $this->companyFacade->isAllowed($company, $this->user->identity)) {
 			$this->company = $company;
+			$session = $this->session->getSection(self::SECTION_FOR_COMPANY);
+			$session->companyId = $this->company->id;
 			$message = 'Company was changed';
-			$type = 'successs';
+			$type = 'success';
 		} else {
 			$message = 'No such company wasn\'t found for you';
 			$type = 'warning';
 		}
 		$this->flashMessage($this->translator->translate($message), $type);
-		$this->redirect('Dashboard:');
+		$this->redirect('this');
 	}
 
 	public function createComponentCandidatesList()
