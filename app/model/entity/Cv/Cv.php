@@ -12,7 +12,6 @@ use Nette\Utils\DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="App\Model\Repository\CvRepository")
- * @ORM\EntityListeners({"App\Listeners\Model\Entity\CvListener"})
  *
  * @property string $name
  * @property integer $lastOpenedPreviewPage Get last opened preview page
