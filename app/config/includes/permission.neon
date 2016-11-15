@@ -40,7 +40,7 @@ services:
 			# Privilegies
 			- deny('guest')
 
-			- allow('signed', 'dashboard', 'default')
+			- allow('signed', 'dashboard', ['default'])
 			- allow('signed', 'registration')
 			- allow('signed', 'profile', ['default', 'settings', 'notifications', 'delete'])
 
@@ -54,6 +54,7 @@ services:
 
 			- allow('company', 'company')
 			- allow('company', 'job')
+			- deny('company', 'job', ['addAdmin'])
 			- allow('company', 'jobs')
 			- allow('company', 'users')
 			- allow('company', 'messages')

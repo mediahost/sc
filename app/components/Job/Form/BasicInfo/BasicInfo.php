@@ -4,9 +4,7 @@ namespace App\Components\Job;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\MetronicFormRenderer;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
-use App\Helpers;
 use App\Model\Entity\Job;
 use App\Model\Entity\Role;
 use App\Model\Entity\Tag;
@@ -35,6 +33,9 @@ class BasicInfo extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="injects">
 
+	/** @var \Nette\Security\User @inject */
+	public $user;
+
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
 
@@ -62,7 +63,7 @@ class BasicInfo extends BaseControl
 		$form->addText('name', 'Name')
 			->setAttribute('placeholder', 'Job title')
 			->setRequired('Please enter job\'s name.');
-		$form->addSelect('accountManager', 'Account manager', $this->getAdminUsers())
+		$form->addSelect('accountManager', 'Account manager', $this->getAccountManagers())
 			->setRequired($this->translator->translate('Manager is required'));
 
 		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes())
@@ -209,13 +210,22 @@ class BasicInfo extends BaseControl
 		return $this;
 	}
 
-	private function getAdminUsers()
+	private function getAccountManagers()
 	{
 		$roleRepo = $this->em->getRepository(Role::getClassName());
 		$userRepo = $this->em->getRepository(User::getClassName());
 
-		$role = $roleRepo->findOneByName(Role::ADMIN);
-		$users = $userRepo->findPairsByRoleId($role->id, 'mail');
+		if ($this->user->isAllowed('job', 'addAdmin')) {
+			$adminRole = $roleRepo->findOneByName(Role::ADMIN);
+			$users = $userRepo->findPairsByRoleId($adminRole->id, 'mail');
+		} else {
+			$users = [];
+		}
+
+		$permissions = $this->companyFacade->findPermissions($this->job->company);
+		foreach ($permissions as $permission) {
+			$users[$permission->user->id] = $permission->user->mail;
+		}
 
 		return $users;
 	}

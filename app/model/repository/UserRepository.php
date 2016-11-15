@@ -4,8 +4,8 @@ namespace App\Model\Repository;
 
 use App\Model\Entity\Job;
 use App\Model\Entity\User;
-use Doctrine\ORM\Query\QueryException;
 use Exception;
+use Kdyby\Doctrine\QueryException;
 
 class UserRepository extends BaseRepository
 {
@@ -21,13 +21,18 @@ class UserRepository extends BaseRepository
 			$key = $this->getClassMetadata()->getSingleIdentifierFieldName();
 		}
 
-		$query = $this->createQueryBuilder()
+		$qb = $this->createQueryBuilder()
 			->select("e.$value", "e.$key")
 			->from($this->getEntityName(), 'e', 'e.' . $key)
 			->innerJoin('e.roles', 'r')
-			->where('r.id = :roleid')
-			->setParameter('roleid', $roleId)
-			->autoJoinOrderBy((array)$orderBy)
+			->autoJoinOrderBy((array)$orderBy);
+		if (is_array($roleId)) {
+			$qb->where('r.id IN (:roleId)');
+		} else {
+			$qb->where('r.id = :roleId');
+		}
+		$query = $qb
+			->setParameter('roleId', $roleId)
 			->getQuery();
 
 		try {
