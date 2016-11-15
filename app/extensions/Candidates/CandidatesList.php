@@ -143,7 +143,7 @@ class CandidatesList extends Control
 		$this->filterDeny[self::FILTER_PART_COMPANY] = TRUE;
 		$this->selectedJob = $job;
 		$this->showAsCompany = $showAsCompany;
-		$this->getHolder()->filterJob($job);
+		$this->getHolder()->filterJob($job, $showAsCompany, $showAsCompany);
 		return $this;
 	}
 
@@ -262,7 +262,7 @@ class CandidatesList extends Control
 					'accountManager' => $manager,
 				]);
 				$this->selectedManager = $manager;
-				$this->getHolder()->filterJobs($jobs);
+				$this->getHolder()->filterJob($jobs);
 			}
 		}
 

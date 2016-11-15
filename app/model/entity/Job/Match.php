@@ -16,6 +16,7 @@ use Nette\Utils\DateTime;
  * @property bool $adminApprove
  * @property bool $candidateApprove
  * @property bool $fullApprove
+ * @property bool $accept
  * @property int $state
  */
 class Match extends BaseEntity
@@ -50,6 +51,9 @@ class Match extends BaseEntity
 
 	/** @ORM\Column(type="datetime", nullable=true) */
 	private $candidateApprovedAt;
+
+	/** @ORM\Column(type="boolean", nullable=true) */
+	protected $accept;
 
 	/** @ORM\Column(type="smallint", nullable=true) */
 	protected $state;

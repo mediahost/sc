@@ -37,6 +37,16 @@ class CandidateFacade extends Object
 		$this->matchRepo = $this->em->getRepository(Match::getClassName());
 	}
 
+	public function accept(Candidate $candidate, Job $job, $accept = TRUE)
+	{
+		$match = $candidate->findMatch($job);
+		if ($match) {
+			$match->accept = $accept;
+			$this->matchRepo->save($match);
+		}
+		return $match;
+	}
+
 	public function matchApply(Candidate $candidate, Job $job, $approve = TRUE)
 	{
 		return $this->match($candidate, $job, FALSE, $approve);

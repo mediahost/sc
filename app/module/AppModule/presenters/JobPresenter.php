@@ -67,10 +67,10 @@ class JobPresenter extends BasePresenter
 	public function actionView($id)
 	{
 		$this->job = $this->jobRepo->find($id);
-		if (!$this->job) {
+		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
-			$this->redirect('Dashboard:');
+			$this->redirect('Jobs:');
 		}
 	}
 
@@ -94,14 +94,14 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionCandidates($id)
 	{
-		$job = $this->jobRepo->find($id);
-		if ($job) {
-			$this['candidatesList']->addFilterJob($job, TRUE);
-			$this->template->job = $job;
-		} else {
+		$this->job = $this->jobRepo->find($id);
+		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
-			$this->redirect('Dashboard:');
+			$this->redirect('Jobs:');
+		} else {
+			$this['candidatesList']->addFilterJob($this->job, TRUE);
+			$this->template->job = $this->job;
 		}
 	}
 

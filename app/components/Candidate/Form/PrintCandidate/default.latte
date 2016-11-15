@@ -86,9 +86,15 @@
 							</tr>
 						</table>
 					{elseif $selectedJob}
-						<p>
-							{_'State for'} '<i>{$selectedJob}</i>'
-						</p>
+					{var match => $candidate->findMatch($selectedJob)}
+						{if $match->accept === NULL}
+							<a n:href="accept! $selectedJob->id" class="ajax btn btn-success">{_'Accept'}</a>
+							<a n:href="reject! $selectedJob->id" class="ajax btn btn-danger">{_'Reject'}</a>
+						{elseif $match->accept}
+							<p>
+								{_'State for'} '<i>{$selectedJob}</i>'
+							</p>
+						{/if}
 					{/if}
 					<div n:snippet="flashMessages">
 						<div n:foreach="$flashes as $flash"

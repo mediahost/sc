@@ -115,8 +115,8 @@ class DataHolder extends Object
 	public function filterNotEmpty()
 	{
 		$roleRepo = $this->em->getRepository(Role::getClassName());
-		$this->candidateCriteria['active'] = TRUE;
-		$this->candidateCriteria['role'] = $roleRepo->findOneByName(Role::CANDIDATE);
+		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_ACTIVE] = TRUE;
+		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_ROLE] = $roleRepo->findOneByName(Role::CANDIDATE);
 		return $this;
 	}
 
@@ -124,32 +124,32 @@ class DataHolder extends Object
 	{
 		$words = preg_split('/\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
 		if (count($words)) {
-			$this->candidateCriteria['fulltext'] = $words;
+			$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_FULLTEXT] = $words;
 		}
 		return $this;
 	}
 
-	public function filterJob(Job $job)
+	public function filterJob($job, $matchRequired = FALSE, $onlyNonRejected = FALSE)
 	{
-		$this->candidateCriteria['job'] = $job;
-		return $this;
-	}
-
-	public function filterJobs(array $jobs)
-	{
-		$this->candidateCriteria['jobs'] = $jobs;
+		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_JOB] = $job;
+		if ($matchRequired) {
+			$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_MATCH] = TRUE;
+		}
+		if ($onlyNonRejected) {
+			$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_NOT_REJECT] = TRUE;
+		}
 		return $this;
 	}
 
 	public function filterCategories(array $categories)
 	{
-		$this->candidateCriteria['categories'] = $categories;
+		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_CATEGORIES] = $categories;
 		return $this;
 	}
 
 	public function filterItSkills(array $skills)
 	{
-		$this->candidateCriteria['skills'] = $skills;
+		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_SKILLS] = $skills;
 		return $this;
 	}
 

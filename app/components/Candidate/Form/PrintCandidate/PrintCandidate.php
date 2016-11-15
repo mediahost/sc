@@ -162,6 +162,39 @@ class PrintCandidate extends BaseControl
 			$this->redirect('this');
 		}
 	}
+
+	public function handleAccept($jobId, $value = TRUE)
+	{
+		if ($jobId) {
+			$jobRepo = $this->em->getRepository(Job::getClassName());
+			$job = $jobRepo->find($jobId);
+			if ($job) {
+				$this->candidateFacade->accept($this->candidate, $job, $value);
+				$message = 'Candidate was ' . ($value ? 'accepted' : 'rejected');
+				if ($value) {
+					$this->flashMessage($this->translator->translate($message), 'success');
+				} else {
+					$this->presenter->flashMessage($this->translator->translate($message), 'success');
+				}
+			}
+		}
+
+		if ($this->presenter->isAjax()) {
+			$this->redrawControl();
+			$this->presenter->redrawControl();
+			if (isset($this->presenter['candidatesList'])) {
+				$this->presenter['candidatesList']->redrawControl();
+			}
+		} else {
+			$this->redirect('this');
+		}
+	}
+
+	public function handleReject($jobId)
+	{
+		$this->handleAccept($jobId, FALSE);
+	}
+
 }
 
 interface IPrintCandidateFactory

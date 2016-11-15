@@ -13,6 +13,16 @@ use Doctrine\ORM\Query\Expr\Orx;
 class CandidateRepository extends BaseRepository
 {
 
+	const CRITERIA_KEY_ACTIVE = 'active';
+	const CRITERIA_KEY_ROLE = 'role';
+	const CRITERIA_KEY_FULLTEXT = 'fulltext';
+	const CRITERIA_KEY_JOB = 'job';
+	const CRITERIA_KEY_MATCH = 'match';
+	const CRITERIA_KEY_ACCEPT = 'accept';
+	const CRITERIA_KEY_NOT_REJECT = 'notReject';
+	const CRITERIA_KEY_CATEGORIES = 'categories';
+	const CRITERIA_KEY_SKILLS = 'skills';
+
 	public function findByFilter(array $criteria, array $orderBy = null, $limit = null, $offset = null)
 	{
 		$qb = $this->createFiltredQueryBuilder($criteria);
@@ -45,13 +55,13 @@ class CandidateRepository extends BaseRepository
 		foreach ($criteria as $key => $value) {
 			$condition = new Andx();
 			switch ($key) {
-				case 'active':
+				case self::CRITERIA_KEY_ACTIVE:
 					$joins['c.person'] = 'p';
 					$joins['p.user'] = 'u';
 					$condition->add('u.verificated = :verificated');
 					$params[':verificated'] = (bool)$value;
 					break;
-				case 'role':
+				case self::CRITERIA_KEY_ROLE:
 					if ($value instanceof Role) {
 						$joins['c.person'] = 'p';
 						$joins['p.user'] = 'u';
@@ -60,7 +70,7 @@ class CandidateRepository extends BaseRepository
 						$params[':role'] = $value;
 					}
 					break;
-				case 'fulltext':
+				case self::CRITERIA_KEY_FULLTEXT:
 					$joins['c.person'] = 'p';
 					$joins['p.user'] = 'u';
 
@@ -78,16 +88,13 @@ class CandidateRepository extends BaseRepository
 						$params[':word' . $i] = '%' . $word . '%';
 					}
 					break;
-				case 'job':
+				case self::CRITERIA_KEY_JOB:
 					if ($value instanceof Job) {
-						$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate AND m.adminApprove = TRUE'];
+						$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
 						$condition->add('m.job = :job');
 						$params[':job'] = $value->id;
-					}
-					break;
-				case 'jobs':
-					if (is_array($value) && count($value)) {
-						$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate AND m.adminApprove = TRUE'];
+					} else if (is_array($value) && count($value)) {
+						$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
 						$partOr = new Orx();
 						foreach ($value as $i => $val) {
 							if ($val instanceof Job) {
@@ -98,7 +105,22 @@ class CandidateRepository extends BaseRepository
 						$condition->add($partOr);
 					}
 					break;
-				case 'categories':
+				case self::CRITERIA_KEY_MATCH:
+					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
+					$condition->add('m.candidateApprove = :match AND m.adminApprove = :match');
+					$params[':match'] = (bool)$value;
+					break;
+				case self::CRITERIA_KEY_ACCEPT:
+					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
+					$condition->add('m.accept = :accept');
+					$params[':accept'] = (bool)$value;
+					break;
+				case self::CRITERIA_KEY_NOT_REJECT:
+					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
+					$condition->add('m.accept != :notReject OR m.accept IS NULL');
+					$params[':notReject'] = FALSE;
+					break;
+				case self::CRITERIA_KEY_CATEGORIES:
 					if (is_array($value) && count($value)) {
 						foreach ($value as $key => $item) {
 							$condition->add(':jobCategory' . $key . ' MEMBER OF c.jobCategories');
@@ -106,7 +128,7 @@ class CandidateRepository extends BaseRepository
 						}
 					}
 					break;
-				case 'skills':
+				case self::CRITERIA_KEY_SKILLS:
 					if (is_array($value) &&
 						isset($value['skillRange']) &&
 						is_array($value['skillRange']) &&
