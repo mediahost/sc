@@ -22,8 +22,9 @@ use Nette\Utils\DateTime;
 class Match extends BaseEntity
 {
 
-	const STATE_REJECTED = 1;
-	const STATE_FAVORITE = 2;
+	const STATE_INVITED = 1;
+	const STATE_COMPLETE = 2;
+	const STATE_OFFERED = 3;
 
 	use Identifier;
 
@@ -85,6 +86,15 @@ class Match extends BaseEntity
 	public function getCandidateApprovedAt()
 	{
 		return $this->candidateApprovedAt;
+	}
+
+	public static function getStates()
+	{
+		return [
+			self::STATE_INVITED => 'Invited for IV',
+			self::STATE_COMPLETE => 'IV process completed',
+			self::STATE_OFFERED => 'Offer made',
+		];
 	}
 
 }

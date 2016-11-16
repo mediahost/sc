@@ -6,6 +6,7 @@ use App\Components\BaseControl;
 use App\Helpers;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
+use App\Model\Entity\Match;
 use App\Model\Entity\User as UserEntity;
 use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
@@ -62,6 +63,7 @@ class PrintCandidate extends BaseControl
 
 		$this->template->preferedJobCategories = $this->getPreferedJobCategories();
 		$this->template->skills = $this->getItSkills();
+		$this->template->matchStates = Match::getStates();
 
 		$jobRepo = $this->em->getRepository(Job::getClassName());
 		$this->template->jobs = $jobRepo->findAll();
@@ -169,13 +171,14 @@ class PrintCandidate extends BaseControl
 			$jobRepo = $this->em->getRepository(Job::getClassName());
 			$job = $jobRepo->find($jobId);
 			if ($job) {
-				$this->candidateFacade->accept($this->candidate, $job, $value);
-				$message = 'Candidate was ' . ($value ? 'accepted' : 'rejected');
-				if ($value) {
-					$this->flashMessage($this->translator->translate($message), 'success');
-				} else {
-					$this->presenter->flashMessage($this->translator->translate($message), 'success');
+				$matchRepo = $this->em->getRepository(Match::getClassName());
+				$match = $this->candidate->findMatch($job);
+				if ($match) {
+					$match->accept = $value;
+					$matchRepo->save($match);
 				}
+				$message = 'Candidate was ' . ($value ? 'accepted' : 'rejected');
+				$this->presenter->flashMessage($this->translator->translate($message), 'success');
 			}
 		}
 
@@ -193,6 +196,34 @@ class PrintCandidate extends BaseControl
 	public function handleReject($jobId)
 	{
 		$this->handleAccept($jobId, FALSE);
+	}
+
+	public function handleChangeState($jobId, $state)
+	{
+		if ($jobId && $state) {
+			$jobRepo = $this->em->getRepository(Job::getClassName());
+			$job = $jobRepo->find($jobId);
+			if ($job) {
+				$matchRepo = $this->em->getRepository(Match::getClassName());
+				$match = $this->candidate->findMatch($job);
+				if ($match) {
+					$match->state = $state;
+					$matchRepo->save($match);
+				}
+				$message = 'Candidate state was changed';
+				$this->presenter->flashMessage($this->translator->translate($message), 'success');
+			}
+		}
+
+		if ($this->presenter->isAjax()) {
+			$this->redrawControl();
+			$this->presenter->redrawControl();
+			if (isset($this->presenter['candidatesList'])) {
+				$this->presenter['candidatesList']->redrawControl();
+			}
+		} else {
+			$this->redirect('this');
+		}
 	}
 
 }
