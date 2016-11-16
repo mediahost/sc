@@ -138,12 +138,12 @@ class CandidatesList extends Control
 
 	// <editor-fold defaultstate="collapsed" desc="add filters">
 
-	public function addFilterJob(Job $job, $showAsCompany = FALSE)
+	public function addFilterJob(Job $job, $showAsCompany = FALSE, $state = NULL)
 	{
 		$this->filterDeny[self::FILTER_PART_COMPANY] = TRUE;
 		$this->selectedJob = $job;
 		$this->showAsCompany = $showAsCompany;
-		$this->getHolder()->filterJob($job, $showAsCompany, $showAsCompany);
+		$this->getHolder()->filterJob($job, $state, $showAsCompany);
 		return $this;
 	}
 

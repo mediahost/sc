@@ -27,6 +27,7 @@ use Knp\DoctrineBehaviors\Model;
  * @property-read ArrayCollection $tags
  * @property-write TagJob $tag
  * @property array $questions
+ * @property ArrayCollection $matches
  */
 class Job extends BaseEntity
 {
@@ -73,7 +74,7 @@ class Job extends BaseEntity
 	protected $notes;
 
 	/** @ORM\Column(type="datetime", nullable=true) */
-	protected $notes_updated;
+	protected $notesUpdated;
 
 	/** @ORM\OneToMany(targetEntity="Match", mappedBy="job") */
 	protected $matches;
@@ -85,6 +86,7 @@ class Job extends BaseEntity
 		}
 		$this->skillRequests = new ArrayCollection();
 		$this->tags = new ArrayCollection();
+		$this->matches = new ArrayCollection();
 		parent::__construct();
 	}
 
@@ -97,4 +99,44 @@ class Job extends BaseEntity
 	{
 		return $this->id === NULL;
 	}
+
+	public function getMatchedCount()
+	{
+		$count = 0;
+		$isMatch = function ($key, Match $match) use (&$count) {
+			if ($match->matched) {
+				$count++;
+			}
+			return TRUE;
+		};
+		$this->matches->forAll($isMatch);
+		return $count;
+	}
+
+	public function getAcceptedCount()
+	{
+		$count = 0;
+		$isAccepted = function ($key, Match $match) use (&$count) {
+			if ($match->accepted) {
+				$count++;
+			}
+			return TRUE;
+		};
+		$this->matches->forAll($isAccepted);
+		return $count;
+	}
+
+	public function getInStateCount($state)
+	{
+		$count = 0;
+		$isInState = function ($key, Match $match) use (&$count, $state) {
+			if ($match->getInState($state)) {
+				$count++;
+			}
+			return TRUE;
+		};
+		$this->matches->forAll($isInState);
+		return $count;
+	}
+
 }

@@ -8,6 +8,7 @@ use App\Components\Job\ISkillsFactory;
 use App\Components\Job\Skills;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
+use App\Model\Entity\Match;
 use App\Model\Entity\Role;
 use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
@@ -92,7 +93,7 @@ class JobPresenter extends BasePresenter
 	 * @resource('job')
 	 * @privilege('candidates')
 	 */
-	public function actionCandidates($id)
+	public function actionCandidates($id, $state = NULL)
 	{
 		$this->job = $this->jobRepo->find($id);
 		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
@@ -100,7 +101,10 @@ class JobPresenter extends BasePresenter
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Jobs:');
 		} else {
-			$this['candidatesList']->addFilterJob($this->job, TRUE);
+			if (!Match::isAcceptedState($state)) {
+				$state = Match::STATE_APPROVED;
+			}
+			$this['candidatesList']->addFilterJob($this->job, TRUE, $state);
 			$this->template->job = $this->job;
 		}
 	}

@@ -17,11 +17,16 @@ use Nette\Utils\DateTime;
  * @property bool $candidateApprove
  * @property bool $fullApprove
  * @property bool $accept
+ * @property-read bool $accepted
+ * @property-read bool $matched
  * @property int $state
  */
 class Match extends BaseEntity
 {
 
+	const STATE_APPROVED = 'approved';
+	const STATE_MATCHED = 'matched';
+	const STATE_ACCEPTED = 'accepted';
 	const STATE_INVITED = 1;
 	const STATE_COMPLETE = 2;
 	const STATE_OFFERED = 3;
@@ -73,11 +78,6 @@ class Match extends BaseEntity
 		return $this;
 	}
 
-	public function getFullApprove()
-	{
-		return $this->candidateApprove && $this->adminApprove;
-	}
-
 	public function getAdminApprovedAt()
 	{
 		return $this->adminApprovedAt;
@@ -88,6 +88,26 @@ class Match extends BaseEntity
 		return $this->candidateApprovedAt;
 	}
 
+	public function getFullApprove()
+	{
+		return $this->candidateApprove && $this->adminApprove;
+	}
+
+	public function getMatched()
+	{
+		return $this->fullApprove && $this->accept === NULL;
+	}
+
+	public function getAccepted()
+	{
+		return $this->fullApprove && $this->accept === TRUE;
+	}
+
+	public function getInState($state)
+	{
+		return $this->getAccepted() && $this->state === $state;
+	}
+
 	public static function getStates()
 	{
 		return [
@@ -95,6 +115,19 @@ class Match extends BaseEntity
 			self::STATE_COMPLETE => 'IV process completed',
 			self::STATE_OFFERED => 'Offer made',
 		];
+	}
+
+	public static function isAcceptedState($state)
+	{
+		$accptedStates = [
+			self::STATE_APPROVED,
+			self::STATE_MATCHED,
+			self::STATE_ACCEPTED,
+			self::STATE_INVITED,
+			self::STATE_COMPLETE,
+			self::STATE_OFFERED,
+		];
+		return in_array($state, $accptedStates);
 	}
 
 }

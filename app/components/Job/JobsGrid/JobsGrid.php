@@ -6,7 +6,11 @@ use App\Components\BaseControl;
 use App\Extensions\Grido\BaseGrid;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
+use App\Model\Entity\Match;
+use App\Model\Entity\User;
+use App\Model\Facade\UserFacade;
 use Grido\DataSources\Doctrine;
+use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
 class JobsGrid extends BaseControl
@@ -31,20 +35,18 @@ class JobsGrid extends BaseControl
 		$grid->addColumnNumber('id', 'Id')
 			->setSortable()
 			->setFilterNumber();
-		$grid->getColumn('id')->headerPrototype->width = '5%';
+		$grid->getColumn('id')->getHeaderPrototype()->setWidth('5%');
 
 		$grid->addColumnText('name', 'Name')
 			->setSortable()
 			->setFilterText()
 			->setSuggestion();
 
-		$grid->addColumnText('description', 'Description')
-			->setCustomRender(function (Job $item) {
-				return Strings::truncate($item->description, 30);
-			})
+		$userRepo = $this->em->getRepository(User::getClassName());
+		$accountManagers = $userRepo->findAccountManagers();
+		$grid->addColumnText('accountManager', 'Account Manager')
 			->setSortable()
-			->setFilterText()
-			->setSuggestion();
+			->setFilterSelect([NULL => '--- any ---'] + $accountManagers);
 
 		$companyRepo = $this->em->getRepository(Company::getClassName());
 		$companies = $companyRepo->findPairs('name');
@@ -52,6 +54,44 @@ class JobsGrid extends BaseControl
 			$grid->addColumnText('company', 'Company')
 				->setSortable()
 				->setFilterSelect([NULL => '--- any ---'] + $companies);
+		}
+
+		$grid->addColumnText('matched', 'Matched')
+			->setCustomRender(function (Job $item) {
+				return Html::el('a class="btn btn-xs"')
+					->setHref($this->presenter->link('Job:candidates', [
+						'id' => $item->id,
+						'state' => Match::STATE_MATCHED,
+					]))->setHtml($item->getMatchedCount());
+			});
+		$grid->getColumn('matched')->getHeaderPrototype()->setWidth('100px');
+		$grid->getColumn('matched')->getHeaderPrototype()->class[] = 'center';
+		$grid->getColumn('matched')->getCellPrototype()->class[] = 'center';
+
+		$grid->addColumnText('accepted', 'Accepted')
+			->setCustomRender(function (Job $item) {
+				return Html::el('a class="btn btn-xs"')
+					->setHref($this->presenter->link('Job:candidates', [
+						'id' => $item->id,
+						'state' => Match::STATE_ACCEPTED,
+					]))->setHtml($item->getAcceptedCount());
+			});
+		$grid->getColumn('accepted')->getHeaderPrototype()->setWidth('100px');
+		$grid->getColumn('accepted')->getHeaderPrototype()->class[] = 'center';
+		$grid->getColumn('accepted')->getCellPrototype()->class[] = 'center';
+
+		foreach (Match::getStates() as $id => $name) {
+			$grid->addColumnText('state' . $id, $name)
+				->setCustomRender(function (Job $item) use ($id) {
+					return Html::el('a class="btn btn-xs"')
+						->setHref($this->presenter->link('Job:candidates', [
+							'id' => $item->id,
+							'state' => $id,
+						]))->setHtml($item->getInStateCount($id));
+				});
+			$grid->getColumn('state' . $id)->getHeaderPrototype()->setWidth('100px');
+			$grid->getColumn('state' . $id)->getHeaderPrototype()->class[] = 'center';
+			$grid->getColumn('state' . $id)->getCellPrototype()->class[] = 'center';
 		}
 
 		$grid->addActionHref('view', 'View', 'Job:view')

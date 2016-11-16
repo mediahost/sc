@@ -23,8 +23,8 @@
 
 		/* TWITTER BOOTSTRAP 2/3 */
 		$buttons = $form->getComponent('buttons');
-		$buttons->getComponent('search')->getControlPrototype()->class[] = 'btn btn-primary btn-sm search';
-		$buttons->getComponent('reset')->getControlPrototype()->class[] = 'btn btn-default btn-sm reset';
+		$buttons->getComponent('search')->getControlPrototype()->class[] = 'btn btn-primary btn-sm';
+		$buttons->getComponent('reset')->getControlPrototype()->class[] = 'btn btn-default btn-sm';
 
 		$form['count']->controlPrototype->class[] = 'form-control';
 		$operation ? $form['operations']['operations']->controlPrototype->class[] = 'form-control' : NULL
@@ -37,7 +37,7 @@
     {foreach $actions as $action}
         {?
             $element = $action->getElementPrototype();
-            $element->class[] = 'btn btn-xs btn-mini';
+            $element->class[] = 'btn btn-xs';
         }
         {if $icon = $action->getOption('icon')}
 			{?
@@ -83,16 +83,16 @@
 							</div>
 						</th>
 						{foreach $columns as $column}
+							{var thClass => implode($column->getHeaderPrototype()->class, ' ')}
+							{var thRestAttrs => ''}
+							{foreach $column->getHeaderPrototype()->attrs as $thAttrName => $thAttrValue}
+								{continueIf $thAttrName == 'class'}
+								{if is_array($thAttrValue)}
+									{var thAttrValue => implode($thAttrValue, ' ')}
+								{/if}
+								{var thRestAttrs .= ' ' . $thAttrName . '="' . $thAttrValue . '"'}
+							{/foreach}
 							{if $column->isSortable()}
-								{var thClass => implode($column->getHeaderPrototype()->class, ' ')}
-								{var thRestAttrs => ''}
-								{foreach $column->getHeaderPrototype()->attrs as $thAttrName => $thAttrValue}
-									{continueIf $thAttrName == 'class'}
-									{if is_array($thAttrValue)}
-										{var thAttrValue => implode($thAttrValue, ' ')}
-									{/if}
-									{var thRestAttrs .= ' ' . $thAttrName . '="' . $thAttrValue . '"'}
-								{/foreach}
 								<th n:if="!$column->getSort()" class="sorting {$thClass}"{$thRestAttrs|noescape}>
 									<a n:href="sort! [$column->getName() => \Grido\Components\Columns\Column::ORDER_ASC]" 
 									   class="ajax">{$column->getLabel()|noescape}</a></th>
@@ -104,7 +104,7 @@
 									   class="ajax">{$column->getLabel()|noescape}</a>
 								</th>
 							{else}
-								<th>{$column->getLabel()|noescape}</th>
+								<th class="{$thClass}"{$thRestAttrs|noescape}>{$column->getLabel()|noescape}</th>
 							{/if}
 						{/foreach}
 						<th n:if="$showActionsColumn" class="actions"{ifset $actionWidth} width="{$actionWidth}"{/ifset}>
