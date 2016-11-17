@@ -6,6 +6,7 @@ use App\Components\Job\BasicInfo;
 use App\Components\Job\IBasicInfoFactory;
 use App\Components\Job\ISkillsFactory;
 use App\Components\Job\Skills;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
@@ -80,7 +81,7 @@ class JobPresenter extends BasePresenter
 		if ($this->job) {
 			$this->template->job = $this->job;
 			if ($this->user->isInRole(Role::CANDIDATE)) {
-				$candidate = $this->user->getIdentity()->candidate;
+				$candidate = $this->user->getIdentity()->person->candidate;
 				$this->template->isApplied = $this->candidateFacade->isApplied($candidate, $this->job);
 				$this->template->isInvited = $this->candidateFacade->isApproved($candidate, $this->job);
 				$this->template->isMatched = $this->candidateFacade->isMatched($candidate, $this->job);
@@ -189,10 +190,18 @@ class JobPresenter extends BasePresenter
 			$job = $this->jobRepo->find($jobId);
 			$identity = $this->user->getIdentity();
 			if ($job && isset($identity->person->candidate)) {
-				$this->candidateFacade->matchApply($identity->person->candidate, $job);
+				$candidate = $identity->person->candidate;
+				$this->candidateFacade->matchApply($candidate, $job);
+				$message = $this->translator->translate('Thank you for applying for this job, someone will be in touch with you soon');
+				$this->flashMessage($message, 'info');
+				$this->em->refresh($candidate);
 			}
 		}
-		$this->redrawControl('applyBox');
+		if ($this->isAjax()) {
+			$this->redrawControl();
+		} else {
+			$this->redirect('this');
+		}
 	}
 
 	// </editor-fold>

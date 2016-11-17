@@ -7,7 +7,7 @@
 
 		<div class="col-md-3">
 			<div class="page-header">
-				<h4>{_'All jobs'}</h4>
+				<h4>{_'All Jobs'}</h4>
 			</div>
 			<div class="list-group" n:if="count($jobs)">
 				{include jobPreview jobs => $jobs}
@@ -20,7 +20,7 @@
 
 		<div class="col-md-3" n:if="count($invitations)">
 			<div class="page-header">
-				<h4>{_'Job invitations'}</h4>
+				<h4>{_'Job Invitations'}</h4>
 			</div>
 			<div class="list-group" n:if="count($invitations)">
 				{include jobPreview jobs => $invitations}
@@ -29,7 +29,7 @@
 
 		<div class="col-md-3" n:if="count($applied)">
 			<div class="page-header">
-				<h4>{_'Job applies'}</h4>
+				<h4>{_'Jobs Applied For'}</h4>
 			</div>
 			<div class="list-group" n:if="count($applied)">
 				{include jobPreview jobs => $applied}
