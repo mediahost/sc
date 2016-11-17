@@ -33,9 +33,6 @@ class BasicInfo extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="injects">
 
-	/** @var \Nette\Security\User @inject */
-	public $user;
-
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
 
@@ -215,17 +212,8 @@ class BasicInfo extends BaseControl
 		$roleRepo = $this->em->getRepository(Role::getClassName());
 		$userRepo = $this->em->getRepository(User::getClassName());
 
-		if ($this->user->isAllowed('job', 'addAdmin')) {
-			$adminRole = $roleRepo->findOneByName(Role::ADMIN);
-			$users = $userRepo->findPairsByRoleId($adminRole->id, 'mail');
-		} else {
-			$users = [];
-		}
-
-		$permissions = $this->companyFacade->findPermissions($this->job->company);
-		foreach ($permissions as $permission) {
-			$users[$permission->user->id] = $permission->user->mail;
-		}
+		$role = $roleRepo->findOneByName(Role::ADMIN);
+		$users = $userRepo->findPairsByRoleId($role->id, 'mail');
 
 		return $users;
 	}
