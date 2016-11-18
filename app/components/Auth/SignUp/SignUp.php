@@ -55,7 +55,6 @@ class SignUp extends BaseControl
 			->setRequired('Please enter your e-mail.')
 			->setAttribute('placeholder', 'E-mail')
 			->addRule(Form::EMAIL, 'E-mail has not valid format.')
-			->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'))
 			->setOption('description', 'for example: example@domain.com');
 
 		$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
@@ -83,6 +82,7 @@ class SignUp extends BaseControl
 
 		$form->addSubmit('continue', 'Continue');
 
+		$form->onValidate[] = $this->formValidate;
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
@@ -97,11 +97,6 @@ class SignUp extends BaseControl
 		$this->registerCandidate = !$value;
 	}
 
-	public function validateMail(IControl $control, $arg = NULL)
-	{
-		return $this->userFacade->isUnique($control->getValue());
-	}
-
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
 		$user = new User($values->mail, FALSE);
@@ -112,6 +107,14 @@ class SignUp extends BaseControl
 		}
 
 		$this->onSuccess($this, $user);
+	}
+
+	public function formValidate(Form $form)
+	{
+		$values = $form->getValues();
+		if (!$this->userFacade->isUnique($values['mail'])) {
+			$form->addError($this->translator->translate('Email is already registered.'));
+		}
 	}
 
 	public function renderLogin()
