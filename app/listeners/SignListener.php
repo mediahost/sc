@@ -19,13 +19,14 @@ use Nette\Application\Application;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Object;
+use Tracy\Debugger;
 
 class SignListener extends Object implements Subscriber
 {
 
 	const REDIRECT_AFTER_LOGIN = ':App:Dashboard:';
 	const REDIRECT_AFTER_REGISTER = ':App:CompleteAccount:';
-	const REDIRECT_SIGNIN_PAGE = ':Front:Sign:in';
+	const REDIRECT_SIGN_IN_PAGE = ':Front:Sign:in';
 	const REDIRECT_SIGN_UP_REQUIRED = ':Front:Sign:upRequired';
 
 	// <editor-fold desc="variables">
@@ -59,11 +60,6 @@ class SignListener extends Object implements Subscriber
 
 	// </editor-fold>
 
-	public function __construct(Application $application)
-	{
-		$this->application = $application->presenter;
-	}
-
 	public function getSubscribedEvents()
 	{
 		return array(
@@ -93,7 +89,12 @@ class SignListener extends Object implements Subscriber
 			$this->userFacade->importSocialData($user);
 		}
 		if ($user->id) {
-			$this->onSuccess($control->presenter, $user, $rememberMe);
+			$presenter = $this->application->presenter;
+			if ($presenter->name == 'Front:Sign' && $presenter->action == 'up') {
+				$this->onRegistered($control->presenter, $user);
+			} else {
+				$this->onSuccess($control->presenter, $user, $rememberMe);
+			}
 		} else {
 			$this->session->user = $user;
 			$this->checkRequire($control, $user);
@@ -128,7 +129,7 @@ class SignListener extends Object implements Subscriber
 		} else {
 			$message = $this->translator->translate('%mail% is already registered.', ['mail' => $user->mail]);
 			$control->presenter->flashMessage($message);
-			$control->presenter->redirect(self::REDIRECT_SIGNIN_PAGE, ['role' => $this->session->redirectRole]);
+			$control->presenter->redirect(self::REDIRECT_SIGN_IN_PAGE, ['role' => $this->session->redirectRole]);
 		}
 	}
 
@@ -187,6 +188,20 @@ class SignListener extends Object implements Subscriber
 		$messageText = $this->translator->translate('Your account has been seccessfully created.');
 		$presenter->flashMessage($messageText, 'success');
 		$this->onSuccess($presenter, $user);
+	}
+
+	/**
+	 * After user is registered
+	 * @param Presenter $presenter
+	 * @param User $user
+	 */
+	public function onRegistered(Presenter $presenter, User $user)
+	{
+		$message = $this->translator->translate('User \'%mail%\' is already registered.', [
+			'mail' => $user->mail,
+		]);
+		$presenter->flashMessage($message, 'info');
+		$presenter->redirect(self::REDIRECT_SIGN_IN_PAGE);
 	}
 
 	/**
