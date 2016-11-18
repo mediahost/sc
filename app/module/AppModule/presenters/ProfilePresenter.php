@@ -10,18 +10,26 @@ use App\Components\Auth\ConnectManager;
 use App\Components\Auth\IConnectManagerFactory;
 use App\Components\Auth\ISetPasswordFactory;
 use App\Components\Auth\SetPassword;
+use App\Components\Candidate\Address;
 use App\Components\Candidate\IAddressFactory;
 use App\Components\Candidate\IPhotoFactory;
 use App\Components\Candidate\IProfileFactory;
 use App\Components\Candidate\ISocialFactory;
+use App\Components\Candidate\Photo;
+use App\Components\Candidate\Profile;
+use App\Components\Candidate\Social;
+use App\Components\Company\CompanyProfile;
+use App\Components\Company\ICompanyProfileFactory;
 use App\Components\Conversation\Form\ConversationList;
 use App\Components\Conversation\Form\IConversationListFactory;
 use App\Components\Cv\ISkillsFactory;
 use App\Components\Cv\Skills;
 use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
-use App\Model\Entity;
 use App\Model\Entity\Candidate;
+use App\Model\Entity\Person;
+use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Facade\Traits\CantDeleteUserException;
 use App\Model\Facade\UserFacade;
 
@@ -64,6 +72,9 @@ class ProfilePresenter extends BasePresenter
 	/** @var IConversationListFactory @inject */
 	public $iConversationListFactory;
 
+	/** @var ICompanyProfileFactory @inject */
+	public $companyProfileFactory;
+
 	/** @var Person */
 	private $person;
 
@@ -77,7 +88,7 @@ class ProfilePresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
-		if (in_array(Entity\Role::ADMIN, $this->getUser()->getRoles()) || in_array(Entity\Role::SUPERADMIN, $this->getUser()->getRoles())
+		if (in_array(Role::ADMIN, $this->getUser()->getRoles()) || in_array(Role::SUPERADMIN, $this->getUser()->getRoles())
 		) {
 			$this->redirect('connectManager');
 		}
@@ -175,7 +186,7 @@ class ProfilePresenter extends BasePresenter
 		} else {
 			$bool = NULL;
 		}
-		$userDao = $this->em->getDao(Entity\User::getClassName());
+		$userDao = $this->em->getDao(User::getClassName());
 		$user = $userDao->find($this->user->id);
 		$user->beNotified = $bool;
 		$this->em->flush();
@@ -200,7 +211,7 @@ class ProfilePresenter extends BasePresenter
 	/** @return ConnectManager */
 	protected function createComponentConnect()
 	{
-		$userDao = $this->em->getDao(Entity\User::getClassName());
+		$userDao = $this->em->getDao(User::getClassName());
 		$control = $this->iConnectManagerFactory->create();
 		$control->setUser($userDao->find($this->user->id));
 		$control->setAppActivateRedirect($this->link('setPassword'));
@@ -211,7 +222,7 @@ class ProfilePresenter extends BasePresenter
 				$this->redirect('this');
 			}
 		};
-		$control->onDisconnect[] = function (Entity\User $user, $type) {
+		$control->onDisconnect[] = function (User $user, $type) {
 			$message = $this->translator->translate('%type% was disconnected.', ['type' => $type]);
 			$this->flashMessage($message, 'success');
 			if (!$this->isAjax()) {
@@ -258,7 +269,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iPhotoFactory->create();
 		$control->setPerson($this->person);
-		$control->onAfterSave = function (Entity\Person $saved) {
+		$control->onAfterSave = function (Person $saved) {
 			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
 			$this->redrawControl('personalDetails');
@@ -271,7 +282,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iProfileFactory->create();
 		$control->setPerson($this->person);
-		$control->onAfterSave = function (Entity\Person $saved) {
+		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('personalDetails');
 		};
 		return $control;
@@ -282,7 +293,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iAddressFactory->create();
 		$control->setPerson($this->person);
-		$control->onAfterSave = function (Entity\Person $saved) {
+		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('personalDetails');
 		};
 		return $control;
@@ -293,7 +304,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->iSocialFactory->create();
 		$control->setPerson($this->person);
-		$control->onAfterSave = function (Entity\Person $saved) {
+		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('socialLinks');
 		};
 		return $control;
@@ -332,13 +343,22 @@ class ProfilePresenter extends BasePresenter
 	/** @return ConversationList */
 	public function createComponentRecentMessages()
 	{
-		$sender = $this->communicationFacade->findSender($this->person->user);
+		$sender = $this->communicationFacade->findSender($this->person->user, $this->company);
 		$control = $this->iConversationListFactory->create();
 		if ($sender) {
 			$control->setSender($sender);
 		}
 		$control->setReadMode(TRUE)
 			->disableSearchBox();
+		return $control;
+	}
+
+	/**  @return CompanyProfile */
+	public function createComponentCompanyDetails()
+	{
+		$control = $this->companyProfileFactory->create();
+		$control->setAjax(true, true);
+		$control->setCompany($this->company);
 		return $control;
 	}
 

@@ -1,0 +1,23 @@
+
+<div n:snippet="companyBlock">
+	<div class="row profile">
+		<a href="{link edit}" class="ajax fa fa-edit"></a>
+		<div class="col-md-4">
+			<div class="profile-avatar">
+				<a href="#edit-photo" class="edit">
+					<img alt="{$company}" class="responsive"
+						 src="{$company|foto:150,150}">
+				</a>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="profile-name">
+				<h3>{$company}</h3>
+				<p class="job-title mb0">
+					<i class="fa fa-building"></i>
+					{if $company->address}{$company->address}{/if}
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

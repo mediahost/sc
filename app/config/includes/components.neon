@@ -38,6 +38,7 @@ services:
 	- {implement: App\Components\Company\ICompanyInfoFactory, inject: yes}
 	- {implement: App\Components\Company\ICompanyImagesFactory, inject: yes}
 	- {implement: App\Components\Company\ICompanySelectorFactory, inject: yes}
+	- {implement: App\Components\Company\ICompanyProfileFactory, inject: yes}
 
 	# Job
 	- {implement: App\Components\Job\IBasicInfoFactory, inject: yes}
