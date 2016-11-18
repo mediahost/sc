@@ -26,7 +26,7 @@ class Image extends BaseEntity
 	const FOLDER_DEFAULT = 'others';
 	const FOLDER_COMPANY_LOGO = 'companies/logos';
 	const FOLDER_CANDIDATE_IMAGE = 'candidates/images';
-	const DEFAULT_IMAGE = 'default.jpeg';
+	const DEFAULT_IMAGE = 'default.png';
 	const DEFAULT_IMAGE_URL = 'https://api.adorable.io/avatars';
 
 	use Identifier;
@@ -155,17 +155,26 @@ class Image extends BaseEntity
 			$sizeY = $sizeY ? $sizeY : '0';
 			$size = $sizeX . FotoHelpers::getSizeSeparator() . $sizeY;
 		}
-		$filename = self::getDefaultImage();
 		if ($image instanceof Image) {
 			$filename = (string)$image;
+		} else if (is_string($image) && !empty($image)) {
+			$filename = $image;
+		} else {
+			$filename = self::getDefaultImage();
 		}
 		return Helpers::getPath($size, $filename);
 	}
 
-	public static function getDefaultImage($id = NULL, $size = NULL)
+	public static function getDefaultImage($id = NULL, $size = NULL, $gender = NULL)
 	{
-		$id = $id ? $id : 'default';
-		return Helpers::concatStrings('/', 'https://api.adorable.io/avatars', $size, $id . '.png');
+		if ($gender === 'f') {
+			$gender = 'female';
+			$id %= 2;
+		} else {
+			$gender = 'male';
+			$id %= 4;
+		}
+		return Helpers::concatStrings('/', 'avatars', $gender, 'user' . $id . '.png');
 	}
 
 }
