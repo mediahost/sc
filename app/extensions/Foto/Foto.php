@@ -304,30 +304,32 @@ class FotoPathHelper extends Object
 
 	public function returnImagePath($entity, $sizeX = NULL, $sizeY = NULL)
 	{
-		$id = NULL;
-		$image = $entity;
 		if ($entity instanceof Person) {
 			$image = $entity->getPhoto();
-			$id = $entity->user->getId();
+			$defaultImg = ImageEntity::getDefaultImage($entity->user->getId(), NULL, $entity->gender);
 		} else if ($entity instanceof Candidate) {
-			$image = $entity->person->getPhoto();
-			$id = $entity->person->user->getId();
+			$person = $entity->person;
+			$image = $person->getPhoto();
+			$defaultImg = ImageEntity::getDefaultImage($person->user->getId(), NULL, $person->gender);
 		} else if ($entity instanceof Sender) {
 			$image = $entity->getPhoto();
-			$id = $entity->user->getId();
+			$defaultImg = ImageEntity::getDefaultImage($entity->user->getId());
 		} else if ($entity instanceof Company) {
 			$image = $entity->getLogo();
-			$id = $entity->getId();
+			$defaultImg = 'avatars/company.png';
+		} else {
+			$image = $entity;
+			$defaultImg = ImageEntity::getDefaultImage();
 		}
 
 		if ($image instanceof ImageEntity) {
 			if ($image->filename) {
-				$path = ImageEntity::returnSizedFilename($image, $sizeX, $sizeY);
-				return Helpers::getPath($this->basePath, 'foto', $path);
+				$defaultImg = $image;
 			}
 		}
 
-		return ImageEntity::getDefaultImage($id, $sizeX);
+		$path = ImageEntity::returnSizedFilename($defaultImg, $sizeX, $sizeY);
+		return Helpers::getPath($this->basePath, 'foto', $path);
 	}
 
 }

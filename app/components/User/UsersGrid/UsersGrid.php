@@ -46,6 +46,14 @@ class UsersGrid extends BaseControl
 		$col = $grid->addColumnEmail('mail', 'Mail');
 		$col->setSortable()->setFilterText()->setSuggestion();
 
+		$col = $grid->addColumnBoolean('verificated', 'Verified');
+		$col->setSortable()->setFilterSelect([
+			NULL => '--- all ---',
+			TRUE => 'Yes',
+			FALSE => 'No',
+		]);
+		$col->getHeaderPrototype()->width = '90px';
+
 		if (!$this->asCompany) {
 			$col = $grid->addColumnText('roles', 'Roles');
 			$col->setSortable()->setFilterSelect($this->getRoles());
