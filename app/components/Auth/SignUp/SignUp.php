@@ -51,7 +51,7 @@ class SignUp extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addServerValidatedText('mail', 'E-mail')
+		$form->addText('mail', 'E-mail')
 			->setRequired('Please enter your e-mail.')
 			->setAttribute('placeholder', 'E-mail')
 			->addRule(Form::EMAIL, 'E-mail has not valid format.')
@@ -113,7 +113,7 @@ class SignUp extends BaseControl
 	{
 		$values = $form->getValues();
 		if (!$this->userFacade->isUnique($values['mail'])) {
-			$form->addError($this->translator->translate('Email is already registered.'));
+			$form->addError($this->translator->translate('E-mail \'%mail%\' is already registered.', ['mail' => $values['mail']]));
 		}
 	}
 

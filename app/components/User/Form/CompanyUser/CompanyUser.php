@@ -57,10 +57,9 @@ class CompanyUser extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
         $form->getElementPrototype()->class('ajax');
                     
-		$user = $form->addServerValidatedText('mail', 'E-mail')
+		$user = $form->addText('mail', 'E-mail')
 				->addRule(Form::EMAIL, 'Fill right format')
-				->addRule(Form::FILLED, 'Mail must be filled')
-				->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'));
+				->addRule(Form::FILLED, 'Mail must be filled');
 		if ($this->user) {
 			$user->setDisabled();
 		} else {
@@ -71,20 +70,14 @@ class CompanyUser extends BaseControl
 					->setOption('description', $helpText);
 		}
 
-		$form->addServerMultiSelectBoxes('roles', 'Roles', $this->getRoles())
-				->setRequired('Please select some role')
-				->addServerRule([$this, 'validateAdminRoles'], $this->translator->translate('Company must have administrator.'));
+		$form->addMultiSelectBoxes('roles', 'Roles', $this->getRoles())
+				->setRequired('Please select some role');
 
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
-	}
-
-	public function validateMail(IControl $control, $arg = NULL)
-	{
-		return $this->userFacade->isUnique($control->getValue());
 	}
 
 	public function validateAdminRoles(IControl $control, $arg = NULL)
@@ -110,14 +103,20 @@ class CompanyUser extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
-		// user
-		if ($this->user) {
-			$user = $this->em->getDao(User::getClassName())->find($this->user->id);
-		} else {
-			$role = $this->roleFacade->findByName(Role::COMPANY);
-			$user = $this->userFacade->create($values->mail, $values->password, $role);
+		if ($this->userFacade->isUnique($values->mail)) {
+			$message = $this->translator->translate('E-mail \'%mail%\' is already registered.', ['mail' => $values['mail']]);
+			$form['mail']->addError($message);
 		}
-		$this->onAfterSave($user);
+
+		if (!$form->hasErrors()) {
+			if ($this->user) {
+				$user = $this->em->getDao(User::getClassName())->find($this->user->id);
+			} else {
+				$role = $this->roleFacade->findByName(Role::COMPANY);
+				$user = $this->userFacade->create($values->mail, $values->password, $role);
+			}
+			$this->onAfterSave($user);
+		}
 	}
 
 	/** @return array */

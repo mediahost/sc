@@ -74,14 +74,12 @@ class CompanyInfo extends BaseControl
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
 		if ($this->canEditInfo) {
-			$form->addServerValidatedText('companyId', 'Company ID')
+			$form->addText('companyId', 'Company ID')
 				->setAttribute('placeholder', 'Company identification')
-				->setRequired('Please enter company\'s identification.')
-				->addServerRule([$this, 'validateCompanyId'], $this->translator->translate('%s is already registered.'));
-			$form->addServerValidatedText('name', 'Name')
+				->setRequired('Please enter company\'s identification.');
+			$form->addText('name', 'Name')
 				->setAttribute('placeholder', 'Company name')
-				->setRequired('Please enter your company\'s name.')
-				->addServerRule([$this, 'validateCompanyName'], $this->translator->translate('%s is already registered.'));
+				->setRequired('Please enter your company\'s name.');
 			$form->addTextArea('address', 'Address')
 				->setAttribute('placeholder', 'Company Address');
 		}
@@ -106,23 +104,23 @@ class CompanyInfo extends BaseControl
 		return $form;
 	}
 
-	public function validateCompanyId(IControl $control, $arg = NULL)
-	{
-		$id = $this->company ? $this->company->id : NULL;
-		return $this->companyFacade->isUniqueId($control->getValue(), $id);
-	}
-
-	public function validateCompanyName(IControl $control, $arg = NULL)
-	{
-		$id = $this->company ? $this->company->id : NULL;
-		return $this->companyFacade->isUniqueName($control->getValue(), $id);
-	}
-
 	public function formSucceeded(Form $form, $values)
 	{
-		$this->load($values);
-		$this->save();
-		$this->onAfterSave($this->company);
+		$id = $this->company ? $this->company->id : NULL;
+		if ($this->companyFacade->isUniqueId($values->companyId, $id)) {
+			$message = $this->translator->translate('\'%name%\' is already registered.', ['name' => $values->companyId]);
+			$form['companyId']->addError($message);
+		}
+		if ($this->companyFacade->isUniqueName($values->name, $id)) {
+			$message = $this->translator->translate('\'%name%\' is already registered.', ['name' => $values->name]);
+			$form['companyId']->addError($message);
+		}
+
+		if (!$form->hasErrors()) {
+			$this->load($values);
+			$this->save();
+			$this->onAfterSave($this->company);
+		}
 	}
 
 	private function load(ArrayHash $values)

@@ -41,15 +41,14 @@ class CompanyProfile extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addServerValidatedText('name', 'Company')
+		$form->addText('name', 'Company')
 			->setAttribute('placeholder', 'Company name')
 			->setRequired('Please enter your company\'s name.');
 
-		$form->addServerValidatedText('companyId', 'Company ID')
+		$form->addText('companyId', 'Company ID')
 			->setAttribute('placeholder', 'Company identification')
 			->setRequired('Please enter company identification.');
 
-		// TODO: do it by addAddress() (do this control)
 		$form->addTextArea('address', 'Address')
 			->setAttribute('placeholder', 'Company full address')
 			->setRequired();

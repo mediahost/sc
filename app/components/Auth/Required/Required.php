@@ -28,11 +28,10 @@ class Required extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addServerValidatedText('mail', 'E-mail')
+		$form->addText('mail', 'E-mail')
 			->setAttribute('placeholder', 'E-mail')
 			->setRequired('Please enter your e-mail.')
 			->addRule(Form::EMAIL, 'E-mail has not valid format.')
-			->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'))
 			->setOption('description', 'for example: example@domain.com');
 
 		$form->addSubmit('continue', 'Continue');
@@ -48,9 +47,15 @@ class Required extends BaseControl
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$this->session->user->mail = $values->mail;
-		$this->session->verification = FALSE;
-		$this->onSuccess($this, $this->session->user);
+		if (!$this->userFacade->isUnique($values->mail)) {
+			$message = $this->translator->translate('E-mail \'%mail\' is already registered.', ['mail' => $values->mail]);
+			$form['mail']->addError($message);
+		}
+		if (!$form->hasErrors()) {
+			$this->session->user->mail = $values->mail;
+			$this->session->verification = FALSE;
+			$this->onSuccess($this, $this->session->user);
+		}
 	}
 
 	public function renderLogin()

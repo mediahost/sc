@@ -66,12 +66,10 @@ class User extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		$mail = $form->addServerValidatedText('mail', 'E-mail')
+		$mail = $form->addText('mail', 'E-mail')
 			->addRule(Form::EMAIL, 'Fill right format')
 			->addRule(Form::FILLED, 'Mail must be filled');
-		if ($this->user->isNew()) {
-			$mail->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'));
-		} else {
+		if (!$this->user->isNew()) {
 			$mail->setDisabled();
 		}
 

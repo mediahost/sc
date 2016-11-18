@@ -4,6 +4,7 @@ namespace App\Components\AfterRegistration;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
+use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Company;
 use App\Model\Facade\CompanyFacade;
@@ -39,20 +40,17 @@ class CompleteCompany extends BaseControl
 	protected function createComponentForm()
 	{
 		$form = new Form();
-		$form->setRenderer(new MetronicFormRenderer());
+		$form->setRenderer(new Bootstrap3FormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addServerValidatedText('name', 'Company')
+		$form->addText('name', 'Company')
 			->setAttribute('placeholder', 'Company name')
-			->setRequired('Please enter your company\'s name.')
-			->addServerRule([$this, 'validateCompanyName'], $this->translator->translate('%s is already registered.'));
+			->setRequired('Please enter your company\'s name.');
 
-		$form->addServerValidatedText('companyId', 'Company ID')
+		$form->addText('companyId', 'Company ID')
 			->setAttribute('placeholder', 'Company identification')
-			->setRequired('Please enter company identification.')
-			->addServerRule([$this, 'validateCompanyId'], $this->translator->translate('%s is already registered.'));
+			->setRequired('Please enter company identification.');
 
-		// TODO: do it by addAddress() (do this control)
 		$form->addTextArea('address', 'Address')
 			->setAttribute('placeholder', 'Company full address')
 			->setRequired();
@@ -68,27 +66,28 @@ class CompleteCompany extends BaseControl
 		return $form;
 	}
 
-	public function validateCompanyName(IControl $control, $arg = NULL)
-	{
-		return $this->companyFacade->isUniqueName($control->getValue());
-	}
-
-	public function validateCompanyId(IControl $control, $arg = NULL)
-	{
-		return $this->companyFacade->isUniqueId($control->getValue());
-	}
-
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		// create company with admin access
-		$company = new Company();
-		$company->name = $values->name;
-		$company->companyId = $values->companyId;
-		$company->address = $values->address;
-		$company->logo = $values->logo;
-		$createdCompany = $this->companyFacade->create($company, $this->user->identity);
+		if (!$this->companyFacade->isUniqueName($values->name)) {
+			$message = $this->translator->translate('\'%name%\' is already registered.', ['name' => $values->name]);
+			$form['name']->addError($message);
+		}
+		if (!$this->companyFacade->isUniqueId($values->companyId)) {
+			$message = $this->translator->translate('\'%name%\' is already registered.', ['name' => $values->companyId]);
+			$form['companyId']->addError($message);
+		}
 
-		$this->onSuccess($this, $createdCompany);
+		if (!$form->hasErrors()) {
+			// create company with admin access
+			$company = new Company();
+			$company->name = $values->name;
+			$company->companyId = $values->companyId;
+			$company->address = $values->address;
+			$company->logo = $values->logo;
+			$createdCompany = $this->companyFacade->create($company, $this->user->identity);
+
+			$this->onSuccess($this, $createdCompany);
+		}
 	}
 
 }
