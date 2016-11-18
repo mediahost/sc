@@ -70,7 +70,7 @@ class User extends BaseControl
 			->addRule(Form::EMAIL, 'Fill right format')
 			->addRule(Form::FILLED, 'Mail must be filled');
 		if ($this->user->isNew()) {
-			$mail->addServerRule([$this, 'validateMail'], $this->translator->translate('%s is already registered.'));
+			$form->onValidate[] = $this->formValidate;
 		} else {
 			$mail->setDisabled();
 		}
@@ -121,10 +121,14 @@ class User extends BaseControl
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
-
-	public function validateMail(IControl $control, $arg = NULL)
+	
+	public function formValidate(Form $form)
 	{
-		return $this->userFacade->isUnique($control->getValue());
+		$values = $form->getValues();
+		if (!$this->userFacade->isUnique($values['mail'])) {
+			$message = $this->translator->translate('Mail is already registered.');
+			$form->addError($message);
+		}
 	}
 
 	public function formSucceeded(Form $form, $values)
