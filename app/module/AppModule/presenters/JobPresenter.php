@@ -17,6 +17,7 @@ use App\Model\Repository\CompanyRepository;
 use App\Model\Repository\JobRepository;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
+use Nette\Application\UI\Multiplier;
 
 class JobPresenter extends BasePresenter
 {
@@ -73,6 +74,17 @@ class JobPresenter extends BasePresenter
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Jobs:');
+		} else {
+			$allowedStates = [
+				Match::STATE_MATCHED => 'Matched',
+				Match::STATE_INVITED => 'Invited',
+				Match::STATE_COMPLETE => 'Complete',
+				Match::STATE_OFFERED => 'Offered',
+			];
+			$this->template->allowedStates = $allowedStates;
+			foreach ($allowedStates as $stateKey => $name) {
+				$this['jobCandidates-' . $stateKey]->addFilterJob($this->job, TRUE, $stateKey);
+			}
 		}
 	}
 
@@ -237,4 +249,18 @@ class JobPresenter extends BasePresenter
 	}
 
 	// </editor-fold>
+	// <editor-fold desc="forms">
+
+	public function createComponentJobCandidates()
+	{
+		return new Multiplier(function ($state) {
+			$control = $this->iCandidatesListFactory->create();;
+			$control->setTranslator($this->translator)
+				->setItemsPerPage(4, 15);
+			return $control;
+		});
+	}
+
+	// </editor-fold>
+
 }

@@ -146,4 +146,10 @@
 		</div>
 	</div>
 
+	<div class="col-md-12" n:foreach="$allowedStates as $stateKey => $name">
+		<div class="page-header">
+			<h4>{_$name}</h4>
+		</div>
+		{control jobCandidates-$stateKey}
+	</div>
 </div>
