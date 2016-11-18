@@ -113,7 +113,7 @@
 		<li n:foreach="$communications as $communication">
 		<span class="icon avatar">
 			<a n:href="Messages: $communication->id">
-				<img src="{$basePath}/foto/{$communication->getOpposite($sender)|size:25,25}"
+				<img src="{$communication->getOpposite($sender)|foto:25,25}"
 					 alt="{$communication->getOppositesName($sender)}"/>
 			</a>
 		</span>

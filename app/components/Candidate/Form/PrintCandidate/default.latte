@@ -1,5 +1,6 @@
 {snippet candidatePrint}
-	<div id="{$id}" n:class="panel, panel-default, plain, gallery-item, candidate-item, $showJobList ? candidate-long : candidate-short">
+	<div id="{$id}"
+			n:class="panel, panel-default, plain, gallery-item, candidate-item, $showJobList ? candidate-long : candidate-short">
 		<div class="panel-heading">
 			<h4 class="panel-title ui-widget-content">
 				<small n:if="$candidate->cvFile">
@@ -91,9 +92,9 @@
 							<a n:href="accept! $selectedJob->id" class="ajax btn btn-success">{_'Accept'}</a>
 							<a n:href="reject! $selectedJob->id" class="ajax btn btn-danger">{_'Reject'}</a>
 						{elseif $match->accept}
-							<p>
-								{_'State for'} '<i>{$selectedJob}</i>'
-							</p>
+							<a n:foreach="$matchStates as $stateId => $stateName"
+									n:href="changeState! $selectedJob->id, $stateId"
+									n:class="ajax, btn, $stateId == $match->state ? btn-info">{_$stateName}</a>
 						{/if}
 					{/if}
 					<div n:snippet="flashMessages">

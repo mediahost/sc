@@ -6,8 +6,10 @@ use App\Components\Job\BasicInfo;
 use App\Components\Job\IBasicInfoFactory;
 use App\Components\Job\ISkillsFactory;
 use App\Components\Job\Skills;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
+use App\Model\Entity\Match;
 use App\Model\Entity\Role;
 use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
@@ -79,7 +81,7 @@ class JobPresenter extends BasePresenter
 		if ($this->job) {
 			$this->template->job = $this->job;
 			if ($this->user->isInRole(Role::CANDIDATE)) {
-				$candidate = $this->user->getIdentity()->candidate;
+				$candidate = $this->user->getIdentity()->person->candidate;
 				$this->template->isApplied = $this->candidateFacade->isApplied($candidate, $this->job);
 				$this->template->isInvited = $this->candidateFacade->isApproved($candidate, $this->job);
 				$this->template->isMatched = $this->candidateFacade->isMatched($candidate, $this->job);
@@ -92,7 +94,7 @@ class JobPresenter extends BasePresenter
 	 * @resource('job')
 	 * @privilege('candidates')
 	 */
-	public function actionCandidates($id)
+	public function actionCandidates($id, $state = NULL)
 	{
 		$this->job = $this->jobRepo->find($id);
 		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
@@ -100,7 +102,10 @@ class JobPresenter extends BasePresenter
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Jobs:');
 		} else {
-			$this['candidatesList']->addFilterJob($this->job, TRUE);
+			if (!Match::isAcceptedState($state)) {
+				$state = Match::STATE_APPROVED;
+			}
+			$this['candidatesList']->addFilterJob($this->job, TRUE, $state);
 			$this->template->job = $this->job;
 		}
 	}
@@ -185,10 +190,18 @@ class JobPresenter extends BasePresenter
 			$job = $this->jobRepo->find($jobId);
 			$identity = $this->user->getIdentity();
 			if ($job && isset($identity->person->candidate)) {
-				$this->candidateFacade->matchApply($identity->person->candidate, $job);
+				$candidate = $identity->person->candidate;
+				$this->candidateFacade->matchApply($candidate, $job);
+				$message = $this->translator->translate('Thank you for applying for this job, someone will be in touch with you soon');
+				$this->flashMessage($message, 'info');
+				$this->em->refresh($candidate);
 			}
 		}
-		$this->redrawControl('applyBox');
+		if ($this->isAjax()) {
+			$this->redrawControl();
+		} else {
+			$this->redirect('this');
+		}
 	}
 
 	// </editor-fold>

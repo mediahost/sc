@@ -107,8 +107,23 @@ class CandidateRepository extends BaseRepository
 					break;
 				case self::CRITERIA_KEY_MATCH:
 					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
-					$condition->add('m.candidateApprove = :match AND m.adminApprove = :match');
-					$params[':match'] = (bool)$value;
+					$fullApprove = 'm.candidateApprove = TRUE AND m.adminApprove = TRUE';
+					$accepted = $fullApprove . ' AND m.accept = TRUE';
+					switch ($value) {
+						case Match::STATE_APPROVED:
+							$condition->add($fullApprove);
+							break;
+						case Match::STATE_MATCHED:
+							$condition->add($fullApprove . ' AND m.accept IS NULL');
+							break;
+						case Match::STATE_ACCEPTED:
+							$condition->add($accepted);
+							break;
+						default:
+							$condition->add($accepted . ' AND m.state = :state');
+							$params[':state'] = $value;
+							break;
+					}
 					break;
 				case self::CRITERIA_KEY_ACCEPT:
 					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];

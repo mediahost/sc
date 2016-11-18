@@ -74,7 +74,7 @@ class CandidatesList extends Control
 	public $sorting = self::SORT_BY_NAME_ASC;
 
 	/** @var int @persistent */
-	public $perPage = 15;
+	public $perPage = 16;
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
@@ -138,12 +138,12 @@ class CandidatesList extends Control
 
 	// <editor-fold defaultstate="collapsed" desc="add filters">
 
-	public function addFilterJob(Job $job, $showAsCompany = FALSE)
+	public function addFilterJob(Job $job, $showAsCompany = FALSE, $state = NULL)
 	{
 		$this->filterDeny[self::FILTER_PART_COMPANY] = TRUE;
 		$this->selectedJob = $job;
 		$this->showAsCompany = $showAsCompany;
-		$this->getHolder()->filterJob($job, $showAsCompany, $showAsCompany);
+		$this->getHolder()->filterJob($job, $state, $showAsCompany);
 		return $this;
 	}
 
@@ -590,7 +590,7 @@ class CandidatesList extends Control
 			->setDefaultValue($this->getSerializedFilter(self::FILTER_MANAGER));
 
 		$form->addSubmit('send', 'Search')
-		->getControlPrototype()->setClass('loadingOnClick');
+			->getControlPrototype()->setClass('loadingOnClick');
 
 		$defaultValues = [];
 		$form->setDefaults($defaultValues);

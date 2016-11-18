@@ -5,6 +5,7 @@ namespace App\Extensions\Candidates\Components;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Category;
 use App\Model\Entity\Job;
+use App\Model\Entity\Match;
 use App\Model\Entity\Parameter;
 use App\Model\Entity\Price;
 use App\Model\Entity\Producer;
@@ -129,11 +130,11 @@ class DataHolder extends Object
 		return $this;
 	}
 
-	public function filterJob($job, $matchRequired = FALSE, $onlyNonRejected = FALSE)
+	public function filterJob($job, $state = NULL, $onlyNonRejected = NULL)
 	{
 		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_JOB] = $job;
-		if ($matchRequired) {
-			$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_MATCH] = TRUE;
+		if ($state) {
+			$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_MATCH] = $state;
 		}
 		if ($onlyNonRejected) {
 			$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_NOT_REJECT] = TRUE;

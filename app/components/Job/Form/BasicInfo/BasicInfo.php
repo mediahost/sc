@@ -63,8 +63,11 @@ class BasicInfo extends BaseControl
 		$form->addText('name', 'Name')
 			->setAttribute('placeholder', 'Job title')
 			->setRequired('Please enter job\'s name.');
-		$form->addSelect('accountManager', 'Account manager', $this->getAccountManagers())
-			->setRequired($this->translator->translate('Manager is required'));
+
+		if ($this->user->isAllowed('job', 'addAdmin')) {
+			$form->addSelect('accountManager', 'Account manager', $this->getAccountManagers())
+				->setRequired($this->translator->translate('Manager is required'));
+		}
 
 		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes())
 			->setRequired($this->translator->translate('Type is required'));
@@ -133,9 +136,8 @@ class BasicInfo extends BaseControl
 		$this->job->salaryFrom = $salaryFrom;
 		$this->job->salaryTo = $salaryTo;
 
-		$userRepo = $this->em->getRepository(User::getClassName());
-		$user = $userRepo->find($values->accountManager);
-		$this->job->accountManager = $user;
+		$accountManager = $this->getAccountManager(isset($values->accountManager) ? $values->accountManager : NULL);
+		$this->job->accountManager = $accountManager;
 
 		foreach (explode(',', $values['offers']) as $offer) {
 			if ($offer != '') {
@@ -215,19 +217,25 @@ class BasicInfo extends BaseControl
 		$roleRepo = $this->em->getRepository(Role::getClassName());
 		$userRepo = $this->em->getRepository(User::getClassName());
 
-		if ($this->user->isAllowed('job', 'addAdmin')) {
-			$adminRole = $roleRepo->findOneByName(Role::ADMIN);
-			$users = $userRepo->findPairsByRoleId($adminRole->id, 'mail');
-		} else {
-			$users = [];
-		}
-
-		$permissions = $this->companyFacade->findPermissions($this->job->company);
-		foreach ($permissions as $permission) {
-			$users[$permission->user->id] = $permission->user->mail;
-		}
+		$role = $roleRepo->findOneByName(Role::ADMIN);
+		$users = $userRepo->findPairsByRoleId($role->id, 'mail');
 
 		return $users;
+	}
+
+	private function getAccountManager($id)
+	{
+		$roleRepo = $this->em->getRepository(Role::getClassName());
+		$userRepo = $this->em->getRepository(User::getClassName());
+
+		if ($id) {
+			return $userRepo->find($id);
+		} else {
+			$role = $roleRepo->findOneByName(Role::ADMIN);
+			return $userRepo->findOneBy([
+				'role' => $role->id,
+			]);
+		}
 	}
 
 	private function getTags($tagType)
