@@ -116,13 +116,18 @@ class User extends BaseControl
 		}
 		$form->addSubmit('save', 'Save');
 
+		$form->onValidate[] = $this->formValidate;
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
 
-	public function validateMail(IControl $control, $arg = NULL)
+	public function formValidate(Form $form)
 	{
-		return $this->userFacade->isUnique($control->getValue());
+		$values = $form->getValues();
+		if ($this->user->isNew() && !$this->userFacade->isUnique($values['mail'])) {
+			$message = $this->translator->translate('E-mail \'%mail%\' is already registered.', ['mail' => $values['mail']]);
+			$form['mail']->addError($message);
+		}
 	}
 
 	public function formSucceeded(Form $form, $values)
@@ -132,7 +137,7 @@ class User extends BaseControl
 			$this->save();
 			$this->onAfterSave($this->user);
 		} catch (DuplicateEntryException $exc) {
-			$message = $this->translator->translate('\'%mail%\' is already registred', ['mail' => $values->mail]);
+			$message = $this->translator->translate('E-mail \'%mail%\' is already registred', ['mail' => $values->mail]);
 			$form['mail']->addError($message);
 		}
 	}
