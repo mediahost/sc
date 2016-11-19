@@ -101,10 +101,14 @@
 							<a n:foreach="$matchStates as $stateId => $stateName"
 									n:href="changeState! $selectedJob->id, $stateId"
 									n:class="ajax, btn, $stateId == $match->state ? btn-info">{_$stateName}</a>
-						{else}
+						{elseif $match->fullApprove}
 							<a n:href="accept! $selectedJob->id" class="ajax btn btn-success">{_'Accept'}</a>
 							<a n:href="reject! $selectedJob->id" class="ajax btn btn-danger"
 									n:if="$match->accept !== FALSE">{_'Reject'}</a>
+						{elseif !$match->adminApprove}
+							<a n:href="match! $selectedJob->id" class="ajax btn btn-success">
+								{if $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
+							</a>
 						{/if}
 					{/if}
 					<div n:snippet="flashMessages">

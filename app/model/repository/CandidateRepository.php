@@ -106,12 +106,28 @@ class CandidateRepository extends BaseRepository
 					break;
 				case self::CRITERIA_KEY_MATCH:
 					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
-					$match = 'm.candidateApprove = TRUE AND m.adminApprove = TRUE';
+					$applied = 'm.candidateApprove = TRUE';
+					$appliedOnly = $applied . ' AND m.adminApprove = FALSE AND m.accept IS NULL';
+					$invited = 'm.adminApprove = TRUE';
+					$invitedOnly = $invited . ' AND m.candidateApprove = FALSE AND m.accept IS NULL';
+					$match = $invited . ' AND ' . $applied;
 					$matchOnly = $match . ' AND m.accept IS NULL';
 					$accepted = $match . ' AND m.accept = TRUE';
 					$rejected = $match . ' AND m.accept = FALSE';
 					$acceptedOnly = $accepted . ' AND m.state IS NULL';
 					switch ($value) {
+						case Match::STATE_APPLIED:
+							$condition->add($applied);
+							break;
+						case Match::STATE_APPLIED_ONLY:
+							$condition->add($appliedOnly);
+							break;
+						case Match::STATE_INVITED:
+							$condition->add($invited);
+							break;
+						case Match::STATE_INVITED_ONLY:
+							$condition->add($invitedOnly);
+							break;
 						case Match::STATE_APPROVED:
 						case Match::STATE_MATCHED:
 							$condition->add($match);

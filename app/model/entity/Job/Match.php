@@ -30,14 +30,18 @@ use Nette\Utils\DateTime;
 class Match extends BaseEntity
 {
 
+	const STATE_INVITED = 'invited';
+	const STATE_INVITED_ONLY = 'invitedOnly';
+	const STATE_APPLIED = 'applied';
+	const STATE_APPLIED_ONLY = 'appliedOnly';
 	const STATE_APPROVED = 'approved';
 	const STATE_MATCHED = 'matched';
 	const STATE_MATCHED_ONLY = 'matchedOnly';
 	const STATE_REJECTED = 'rejected';
 	const STATE_ACCEPTED = 'accepted';
 	const STATE_ACCEPTED_ONLY = 'acceptedOnly';
-	const STATE_INVITED = 1;
-	const STATE_COMPLETE = 2;
+	const STATE_INVITED_FOR_IV = 1;
+	const STATE_COMPLETE_IV = 2;
 	const STATE_OFFERED = 3;
 
 	use Identifier;
@@ -176,8 +180,8 @@ class Match extends BaseEntity
 	public static function getStates()
 	{
 		return [
-			self::STATE_INVITED => 'Invited for IV',
-			self::STATE_COMPLETE => 'IV process completed',
+			self::STATE_INVITED_FOR_IV => 'Invited for IV',
+			self::STATE_COMPLETE_IV => 'IV process completed',
 			self::STATE_OFFERED => 'Offer made',
 		];
 	}
@@ -185,14 +189,18 @@ class Match extends BaseEntity
 	public static function isAcceptedState($state)
 	{
 		$accptedStates = [
+			self::STATE_APPLIED,
+			self::STATE_APPLIED_ONLY,
+			self::STATE_INVITED,
+			self::STATE_INVITED_ONLY,
 			self::STATE_APPROVED,
 			self::STATE_MATCHED,
 			self::STATE_MATCHED_ONLY,
 			self::STATE_REJECTED,
 			self::STATE_ACCEPTED,
 			self::STATE_ACCEPTED_ONLY,
-			self::STATE_INVITED,
-			self::STATE_COMPLETE,
+			self::STATE_INVITED_FOR_IV,
+			self::STATE_COMPLETE_IV,
 			self::STATE_OFFERED,
 		];
 		return in_array($state, $accptedStates);

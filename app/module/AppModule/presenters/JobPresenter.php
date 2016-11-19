@@ -78,11 +78,18 @@ class JobPresenter extends BasePresenter
 		} else {
 			$allowedStates = [
 				Match::STATE_MATCHED_ONLY => 'Matched',
+				Match::STATE_REJECTED => 'Rejected',
 				Match::STATE_ACCEPTED_ONLY => 'Accepted',
-				Match::STATE_INVITED => 'Invited',
-				Match::STATE_COMPLETE => 'Complete',
+				Match::STATE_INVITED_FOR_IV => 'Invited for IV',
+				Match::STATE_COMPLETE_IV => 'Completed IV',
 				Match::STATE_OFFERED => 'Offered',
 			];
+			if ($this->user->isAllowed('job', 'showNotMatched')) {
+				$allowedStates = [
+						Match::STATE_APPLIED_ONLY => 'Applied',
+						Match::STATE_INVITED_ONLY => 'Invited',
+					] + $allowedStates;
+			}
 			$this->template->allowedStates = $allowedStates;
 			foreach ($allowedStates as $stateKey => $name) {
 				$this['jobCandidates-' . $stateKey]->setCandidateOnReload(function () use ($stateKey, $allowedStates) {
