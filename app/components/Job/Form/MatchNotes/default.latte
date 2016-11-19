@@ -1,0 +1,24 @@
+<ul class="messages" n:ifset="$notes">
+	<li n:foreach="$notes as $note" class="user clearfix">
+		<a href="#" class="avatar">
+			<img src="{$note->user|foto:50,50}" alt=""/>
+		</a>
+		<div class="message">
+			<div class="head clearfix">
+				<span class="name">
+					<strong>
+						{$note->user}
+					</strong>
+				</span>
+				<span class="time">{$note->createdAt|date:'H:i d.m.Y'}</span>
+			</div>
+			{$note->text|stripTags|nl2br}
+		</div>
+	</li>
+	<li class="sendMsg">
+		{form form}
+			{input message}
+			{input send}
+		{/form}
+	</li>
+</ul>

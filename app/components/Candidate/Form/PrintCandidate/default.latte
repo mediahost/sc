@@ -13,8 +13,18 @@
 					{$person->address->city}
 				</small>
 				<small n:if="isset($user) && $template->canAccess($identity, $user)">
-					<a href="{plink Users:access $user->id}">
-						<i class="fa fa-key"></i>
+					<a href="{plink Users:access $user->id}"><i class="fa fa-key"></i></a>
+				</small>
+				<small n:if="$showNotes && isset($match)">
+					<a href="#notes-{$id}" data-toggle="modal" class="btn btn-xs">
+						<span class="icomoon-icon-quill"></span><span
+								class="label label-info">
+							{if $identity->isAllowed('adminNotes')}
+								{$match->adminNotes->count()}
+							{elseif $identity->isAllowed('companyNotes')}
+								{$match->companyNotes->count()}
+							{/if}
+						</span>
 					</a>
 				</small>
 			</h4>
@@ -56,29 +66,29 @@
 						</p>
 						<table class="jobs">
 							<tr n:foreach="$jobs as $job">
-								{var match => $candidate->findMatch($job)}
+								{var matchItem => $candidate->findMatch($job)}
 								<th>
 									{$job|truncate:20}
 								</th>
-								{if $match && $match->fullApprove}
+								{if $matchItem && $matchItem->fullApprove}
 									<td colspan="2">
 										<span class="fa fa-check"></span> {_'Matched'}
 									</td>
 								{else}
 									<td>
-										{if $match && $match->candidateApprove}
+										{if $matchItem && $matchItem->candidateApprove}
 											<span class="fa fa-check"></span> {_'Applied'}
 										{else}
 											<span class="fa fa-times"></span> {_'Not applied'}
 										{/if}
 									</td>
 									<td>
-										{if $match && $match->adminApprove}
-											{if $match->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
+										{if $matchItem && $matchItem->adminApprove}
+											{if $matchItem->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
 											<span class="fa fa-check"></span>
 										{else}
 											<a n:href="match! $job->id" class="ajax">
-												{if $match && $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
+												{if $matchItem && $matchItem->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
 											</a>
 										{/if}
 									</td>
@@ -86,8 +96,7 @@
 								{breakIf $iterator->counter >= $primaryJobsCount}
 							</tr>
 						</table>
-					{elseif $selectedJob}
-					{var match => $candidate->findMatch($selectedJob)}
+					{elseif $selectedJob && isset($match)}
 						{if $match->accept}
 							<a n:foreach="$matchStates as $stateId => $stateName"
 									n:href="changeState! $selectedJob->id, $stateId"
@@ -129,33 +138,56 @@
 				<div class="modal-body">
 					<table class="jobs">
 						<tr n:foreach="$jobs as $job">
-							{var match => $candidate->findMatch($job)}
+							{var matchItem => $candidate->findMatch($job)}
 							<th>{$job}</th>
-							{if $match && $match->fullApprove}
+							{if $matchItem && $matchItem->fullApprove}
 								<td colspan="2">
 									<span class="fa fa-check"></span> {_'Matched'}
 								</td>
 							{else}
 								<td>
-									{if $match && $match->candidateApprove}
+									{if $matchItem && $matchItem->candidateApprove}
 										<span class="fa fa-check"></span> {_'Applied'}
 									{else}
 										<span class="fa fa-times"></span> {_'Not applied'}
 									{/if}
 								</td>
 								<td>
-									{if $match && $match->adminApprove}
-										{if $match->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
+									{if $matchItem && $matchItem->adminApprove}
+										{if $matchItem->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
 										<span class="fa fa-check"></span>
 									{else}
 										<a n:href="match! $job->id">
-											{if $match && $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
+											{if $matchItem && $matchItem->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
 										</a>
 									{/if}
 								</td>
 							{/if}
 						</tr>
 					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div n:if="$showNotes && isset($match)" class="modal fade jobNotes" id="notes-{$id}" tabindex="-1" role="dialog"
+							 aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Notes:'}
+						<span n:if="$person->fullName">{$person->fullName}</span>
+						<span n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</span>
+						- {$selectedJob}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control notes}
 				</div>
 			</div>
 		</div>

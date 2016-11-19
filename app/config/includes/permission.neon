@@ -26,6 +26,8 @@ services:
 			- addResource('job')
 			- addResource('jobs')
 			- addResource('jobCategories')
+			- addResource('companyNotes')
+			- addResource('adminNotes')
 			- addResource('editForeign')
 			- addResource('messages')
 			- addResource('messagesList')
@@ -56,6 +58,7 @@ services:
 			- allow('company', 'job')
 			- deny('company', 'job', ['addAdmin'])
 			- allow('company', 'jobs')
+			- allow('company', 'companyNotes')
 			- allow('company', 'users')
 			- allow('company', 'messages')
 			- deny('company', 'messages', ['browse'])
@@ -74,5 +77,6 @@ services:
 			- allow('admin', 'cvEditor')
 			- allow('admin', 'messages')
 			- allow('admin', 'profile')
+			- allow('admin', 'adminNotes')
 
 			- allow('superadmin') # Full access for superadmin

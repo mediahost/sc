@@ -118,6 +118,9 @@ class CandidatesList extends Control
 	/** @var bool */
 	protected $showAsCompany = FALSE;
 
+	/** @var bool */
+	protected $prefilteredJob = FALSE;
+
 	/** @var array */
 	protected $candidateOnReload = [];
 
@@ -145,6 +148,7 @@ class CandidatesList extends Control
 	{
 		$this->filterDeny[self::FILTER_PART_COMPANY] = TRUE;
 		$this->selectedJob = $job;
+		$this->prefilteredJob = TRUE;
 		$this->showAsCompany = $showAsCompany;
 		$this->getHolder()->filterJob($job, $state, $showAsCompany);
 		return $this;
@@ -552,7 +556,7 @@ class CandidatesList extends Control
 		return new Multiplier(function ($itemId) {
 			$control = $this->iCandidatePrint->create();
 			$control->setCandidateById($itemId);
-			$control->setJob($this->selectedJob);
+			$control->setJob($this->selectedJob, $this->prefilteredJob);
 			$control->setAccountManager($this->selectedManager);
 			$control->setShow($this->user->isAllowed('candidatesList', 'showAll'), $this->showAsCompany);
 			$control->onReload = $this->candidateOnReload;

@@ -45,6 +45,7 @@ services:
 	- {implement: App\Components\Job\ISkillsFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFactory, inject: yes}
 	- {implement: App\Components\Job\IJobCategoryFilterFactory, inject: yes}
+	- {implement: App\Components\Job\IMatchNotesFactory, inject: yes}
 
 	# Candidate
 	- {implement: App\Components\Candidate\IProfileFactory, inject: yes}

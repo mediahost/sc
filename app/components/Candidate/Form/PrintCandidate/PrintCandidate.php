@@ -3,11 +3,13 @@
 namespace App\Components\Candidate\Form;
 
 use App\Components\BaseControl;
+use App\Components\Job\IMatchNotesFactory;
 use App\Extensions\Candidates\CandidatesList;
 use App\Helpers;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
+use App\Model\Entity\Role;
 use App\Model\Entity\User as UserEntity;
 use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
@@ -36,6 +38,9 @@ class PrintCandidate extends BaseControl
 	/** @var CandidateFacade @inject */
 	public $candidateFacade;
 
+	/** @var IMatchNotesFactory @inject */
+	public $iMatchNotesFactory;
+
 	/** @var Candidate */
 	private $candidate;
 
@@ -51,6 +56,9 @@ class PrintCandidate extends BaseControl
 	/** @var bool */
 	private $showAsCompany;
 
+	/** @var bool */
+	private $showNotes = FALSE;
+
 	// <editor-fold defaultstate="collapsed" desc="template">
 
 	public function render()
@@ -61,9 +69,13 @@ class PrintCandidate extends BaseControl
 		$this->template->person = $this->candidate->person;
 		$this->template->user = $this->candidate->person->user;
 		$this->template->selectedJob = $this->selectedJob;
+		if ($this->selectedJob) {
+			$this->template->match = $this->candidate->findMatch($this->selectedJob);
+		}
 		$this->template->selectedManager = $this->selectedManager;
 		$this->template->canShowAll = $this->canShowAll;
 		$this->template->showJobList = !$this->showAsCompany;
+		$this->template->showNotes = $this->showNotes;
 		$this->template->primaryJobsCount = self::PRIMARY_JOBS_COUNT;
 
 		$this->template->preferedJobCategories = $this->getPreferedJobCategories();
@@ -103,9 +115,10 @@ class PrintCandidate extends BaseControl
 		return $this;
 	}
 
-	public function setJob(Job $job = NULL)
+	public function setJob(Job $job = NULL, $showNotes = FALSE)
 	{
 		$this->selectedJob = $job;
+		$this->showNotes = $showNotes;
 		return $this;
 	}
 
@@ -142,6 +155,7 @@ class PrintCandidate extends BaseControl
 	}
 
 	// </editor-fold>
+	// <editor-fold desc="handlers">
 
 	public function handleMatch($jobId)
 	{
@@ -220,6 +234,21 @@ class PrintCandidate extends BaseControl
 			$this->redirect('this');
 		}
 	}
+
+	// </editor-fold>
+	// <editor-fold desc="forms">
+
+	public function createComponentNotes()
+	{
+		$control = $this->iMatchNotesFactory->create();
+		$control->setMatch($this->candidate->findMatch($this->selectedJob));
+		$control->onAfterSave[] = function (Match $match) {
+			$this->reload();
+		};
+		return $control;
+	}
+
+	// </editor-fold>
 
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
@@ -23,6 +24,8 @@ use Nette\Utils\DateTime;
  * @property-read bool $accepted
  * @property-read bool $acceptedOnly
  * @property int $state
+ * @property-read ArrayCollection $adminNotes
+ * @property-read ArrayCollection $companyNotes
  */
 class Match extends BaseEntity
 {
@@ -44,6 +47,7 @@ class Match extends BaseEntity
 		parent::__construct();
 		$this->job = $job;
 		$this->candidate = $candidate;
+		$this->notes = new ArrayCollection();
 	}
 
 	/** @ORM\ManyToOne(targetEntity="Candidate", inversedBy="matches") */
@@ -69,6 +73,46 @@ class Match extends BaseEntity
 
 	/** @ORM\Column(type="smallint", nullable=true) */
 	protected $state;
+
+	/** @ORM\OneToMany(targetEntity="Note", mappedBy="match", cascade="all") */
+	private $notes;
+
+	public function getAdminNotes()
+	{
+		$filter = function (Note $note) {
+			return $note->isAdmin();
+		};
+		return $this->notes->filter($filter);
+	}
+
+	public function getCompanyNotes()
+	{
+		$filter = function (Note $note) {
+			return $note->isCompany();
+		};
+		return $this->notes->filter($filter);
+	}
+
+	public function addAdminNote(User $user, $text)
+	{
+		return $this->addNote($user, $text, Note::TYPE_ADMIN);
+	}
+
+	public function addCompanyNote(User $user, $text)
+	{
+		return $this->addNote($user, $text, Note::TYPE_COMPANY);
+	}
+
+	private function addNote(User $user, $text, $type)
+	{
+		$note = new Note();
+		$note->match = $this;
+		$note->user = $user;
+		$note->text = $text;
+		$note->type = $type;
+		$this->notes->add($note);
+		return $this;
+	}
 
 	public function setAdminApprove($value)
 	{
