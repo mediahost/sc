@@ -225,17 +225,8 @@ class BasicInfo extends BaseControl
 
 	private function getAccountManager($id)
 	{
-		$roleRepo = $this->em->getRepository(Role::getClassName());
 		$userRepo = $this->em->getRepository(User::getClassName());
-
-		if ($id) {
-			return $userRepo->find($id);
-		} else {
-			$role = $roleRepo->findOneByName(Role::ADMIN);
-			return $userRepo->findOneBy([
-				'role' => $role->id,
-			]);
-		}
+		return $userRepo->find($id ? $id : $this->settings->modules->jobs->defaultAccountManagerId);
 	}
 
 	private function getTags($tagType)

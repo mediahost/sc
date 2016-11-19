@@ -18,6 +18,9 @@ class SettingsExtension extends CompilerExtension
 				'from' => 'info@source-code.com',
 				'newMessage' => TRUE,
 			],
+			'jobs' => [
+				'defaultAccountManagerId' => 1,
+			],
 		],
 		'pageInfo' => [
 			'projectName' => 'SourceCode',
