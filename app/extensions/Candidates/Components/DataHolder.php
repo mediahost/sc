@@ -135,8 +135,7 @@ class DataHolder extends Object
 		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_JOB] = $job;
 		if ($state) {
 			$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_MATCH] = $state;
-		}
-		if ($onlyNonRejected) {
+		} else if ($onlyNonRejected) {
 			$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_NOT_REJECT] = TRUE;
 		}
 		return $this;

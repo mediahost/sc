@@ -73,9 +73,6 @@ class CandidatesList extends Control
 	/** @var int @persistent */
 	public $sorting = self::SORT_BY_NAME_ASC;
 
-	/** @var int @persistent */
-	public $perPage = 16;
-
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
 
@@ -90,6 +87,9 @@ class CandidatesList extends Control
 
 	/** @var Paginator */
 	protected $paginator;
+
+	/** @var int */
+	protected $perPage = 16;
 
 	/** @var array */
 	protected $perPageListMultiples = [1, 2, 3, 6];
@@ -117,6 +117,9 @@ class CandidatesList extends Control
 
 	/** @var bool */
 	protected $showAsCompany = FALSE;
+
+	/** @var array */
+	protected $candidateOnReload = [];
 
 	// </editor-fold>
 
@@ -352,6 +355,12 @@ class CandidatesList extends Control
 		return $this;
 	}
 
+	public function setCandidateOnReload($callable)
+	{
+		$this->candidateOnReload = $callable;
+		return $this;
+	}
+
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="protected setters">
 
@@ -546,6 +555,7 @@ class CandidatesList extends Control
 			$control->setJob($this->selectedJob);
 			$control->setAccountManager($this->selectedManager);
 			$control->setShow($this->user->isAllowed('candidatesList', 'showAll'), $this->showAsCompany);
+			$control->onReload = $this->candidateOnReload;
 			return $control;
 		});
 	}

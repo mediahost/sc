@@ -38,6 +38,7 @@ class JobsGrid extends BaseControl
 		$grid->getColumn('id')->getHeaderPrototype()->setWidth('5%');
 
 		$grid->addColumnText('name', 'Name')
+			->setTruncate(20)
 			->setSortable()
 			->setFilterText()
 			->setSuggestion();
@@ -61,10 +62,10 @@ class JobsGrid extends BaseControl
 				return Html::el('a class="btn btn-xs"')
 					->setHref($this->presenter->link('Job:candidates', [
 						'id' => $item->id,
-						'state' => Match::STATE_MATCHED,
+						'state' => Match::STATE_MATCHED_ONLY,
 					]))->setHtml($item->getMatchedCount());
 			});
-		$grid->getColumn('matched')->getHeaderPrototype()->setWidth('100px');
+		$grid->getColumn('matched')->getHeaderPrototype()->setWidth('90px');
 		$grid->getColumn('matched')->getHeaderPrototype()->class[] = 'center';
 		$grid->getColumn('matched')->getCellPrototype()->class[] = 'center';
 
@@ -73,12 +74,24 @@ class JobsGrid extends BaseControl
 				return Html::el('a class="btn btn-xs"')
 					->setHref($this->presenter->link('Job:candidates', [
 						'id' => $item->id,
-						'state' => Match::STATE_ACCEPTED,
+						'state' => Match::STATE_ACCEPTED_ONLY,
 					]))->setHtml($item->getAcceptedCount());
 			});
-		$grid->getColumn('accepted')->getHeaderPrototype()->setWidth('100px');
+		$grid->getColumn('accepted')->getHeaderPrototype()->setWidth('90px');
 		$grid->getColumn('accepted')->getHeaderPrototype()->class[] = 'center';
 		$grid->getColumn('accepted')->getCellPrototype()->class[] = 'center';
+
+		$grid->addColumnText('rejected', 'Rejected')
+			->setCustomRender(function (Job $item) {
+				return Html::el('a class="btn btn-xs"')
+					->setHref($this->presenter->link('Job:candidates', [
+						'id' => $item->id,
+						'state' => Match::STATE_REJECTED,
+					]))->setHtml($item->getRejectedCount());
+			});
+		$grid->getColumn('rejected')->getHeaderPrototype()->setWidth('90px');
+		$grid->getColumn('rejected')->getHeaderPrototype()->class[] = 'center';
+		$grid->getColumn('rejected')->getCellPrototype()->class[] = 'center';
 
 		foreach (Match::getStates() as $id => $name) {
 			$grid->addColumnText('state' . $id, $name)

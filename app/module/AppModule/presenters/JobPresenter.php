@@ -6,6 +6,7 @@ use App\Components\Job\BasicInfo;
 use App\Components\Job\IBasicInfoFactory;
 use App\Components\Job\ISkillsFactory;
 use App\Components\Job\Skills;
+use App\Extensions\Candidates\CandidatesList;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
@@ -76,14 +77,21 @@ class JobPresenter extends BasePresenter
 			$this->redirect('Jobs:');
 		} else {
 			$allowedStates = [
-				Match::STATE_MATCHED => 'Matched',
+				Match::STATE_MATCHED_ONLY => 'Matched',
+				Match::STATE_ACCEPTED_ONLY => 'Accepted',
 				Match::STATE_INVITED => 'Invited',
 				Match::STATE_COMPLETE => 'Complete',
 				Match::STATE_OFFERED => 'Offered',
 			];
 			$this->template->allowedStates = $allowedStates;
 			foreach ($allowedStates as $stateKey => $name) {
-				$this['jobCandidates-' . $stateKey]->addFilterJob($this->job, TRUE, $stateKey);
+				$this['jobCandidates-' . $stateKey]->setCandidateOnReload(function () use ($stateKey, $allowedStates) {
+					foreach ($allowedStates as $key => $name) {
+						if ($key != $stateKey) {
+							$this['jobCandidates-' . $key]->reload();
+						}
+					}
+				});
 			}
 		}
 	}
@@ -251,12 +259,15 @@ class JobPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="forms">
 
+	/** @return CandidatesList */
 	public function createComponentJobCandidates()
 	{
 		return new Multiplier(function ($state) {
 			$control = $this->iCandidatesListFactory->create();;
 			$control->setTranslator($this->translator)
-				->setItemsPerPage(4, 15);
+				->setItemsPerPage(4, 15)
+				->setAjax()
+				->addFilterJob($this->job, TRUE, $state);
 			return $control;
 		});
 	}

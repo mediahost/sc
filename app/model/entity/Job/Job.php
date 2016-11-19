@@ -100,11 +100,11 @@ class Job extends BaseEntity
 		return $this->id === NULL;
 	}
 
-	public function getMatchedCount()
+	public function getMatchedCount($only = TRUE)
 	{
 		$count = 0;
-		$isMatch = function ($key, Match $match) use (&$count) {
-			if ($match->matched) {
+		$isMatch = function ($key, Match $match) use (&$count, $only) {
+			if ($only ? $match->matchedOnly : $match->matched) {
 				$count++;
 			}
 			return TRUE;
@@ -113,11 +113,24 @@ class Job extends BaseEntity
 		return $count;
 	}
 
-	public function getAcceptedCount()
+	public function getAcceptedCount($only = TRUE)
+	{
+		$count = 0;
+		$isAccepted = function ($key, Match $match) use (&$count, $only) {
+			if ($only ? $match->acceptedOnly : $match->accepted) {
+				$count++;
+			}
+			return TRUE;
+		};
+		$this->matches->forAll($isAccepted);
+		return $count;
+	}
+
+	public function getRejectedCount()
 	{
 		$count = 0;
 		$isAccepted = function ($key, Match $match) use (&$count) {
-			if ($match->accepted) {
+			if ($match->rejected) {
 				$count++;
 			}
 			return TRUE;

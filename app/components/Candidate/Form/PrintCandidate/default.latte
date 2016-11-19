@@ -88,13 +88,14 @@
 						</table>
 					{elseif $selectedJob}
 					{var match => $candidate->findMatch($selectedJob)}
-						{if $match->accept === NULL}
-							<a n:href="accept! $selectedJob->id" class="ajax btn btn-success">{_'Accept'}</a>
-							<a n:href="reject! $selectedJob->id" class="ajax btn btn-danger">{_'Reject'}</a>
-						{elseif $match->accept}
+						{if $match->accept}
 							<a n:foreach="$matchStates as $stateId => $stateName"
 									n:href="changeState! $selectedJob->id, $stateId"
 									n:class="ajax, btn, $stateId == $match->state ? btn-info">{_$stateName}</a>
+						{else}
+							<a n:href="accept! $selectedJob->id" class="ajax btn btn-success">{_'Accept'}</a>
+							<a n:href="reject! $selectedJob->id" class="ajax btn btn-danger"
+									n:if="$match->accept !== FALSE">{_'Reject'}</a>
 						{/if}
 					{/if}
 					<div n:snippet="flashMessages">

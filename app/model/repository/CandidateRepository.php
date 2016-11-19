@@ -18,7 +18,6 @@ class CandidateRepository extends BaseRepository
 	const CRITERIA_KEY_FULLTEXT = 'fulltext';
 	const CRITERIA_KEY_JOB = 'job';
 	const CRITERIA_KEY_MATCH = 'match';
-	const CRITERIA_KEY_ACCEPT = 'accept';
 	const CRITERIA_KEY_NOT_REJECT = 'notReject';
 	const CRITERIA_KEY_CATEGORIES = 'categories';
 	const CRITERIA_KEY_SKILLS = 'skills';
@@ -107,17 +106,27 @@ class CandidateRepository extends BaseRepository
 					break;
 				case self::CRITERIA_KEY_MATCH:
 					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
-					$fullApprove = 'm.candidateApprove = TRUE AND m.adminApprove = TRUE';
-					$accepted = $fullApprove . ' AND m.accept = TRUE';
+					$match = 'm.candidateApprove = TRUE AND m.adminApprove = TRUE';
+					$matchOnly = $match . ' AND m.accept IS NULL';
+					$accepted = $match . ' AND m.accept = TRUE';
+					$rejected = $match . ' AND m.accept = FALSE';
+					$acceptedOnly = $accepted . ' AND m.state IS NULL';
 					switch ($value) {
 						case Match::STATE_APPROVED:
-							$condition->add($fullApprove);
-							break;
 						case Match::STATE_MATCHED:
-							$condition->add($fullApprove . ' AND m.accept IS NULL');
+							$condition->add($match);
+							break;
+						case Match::STATE_MATCHED_ONLY:
+							$condition->add($matchOnly);
+							break;
+						case Match::STATE_REJECTED:
+							$condition->add($rejected);
 							break;
 						case Match::STATE_ACCEPTED:
 							$condition->add($accepted);
+							break;
+						case Match::STATE_ACCEPTED_ONLY:
+							$condition->add($acceptedOnly);
 							break;
 						default:
 							$condition->add($accepted . ' AND m.state = :state');
@@ -125,15 +134,9 @@ class CandidateRepository extends BaseRepository
 							break;
 					}
 					break;
-				case self::CRITERIA_KEY_ACCEPT:
-					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
-					$condition->add('m.accept = :accept');
-					$params[':accept'] = (bool)$value;
-					break;
 				case self::CRITERIA_KEY_NOT_REJECT:
 					$joins[Match::getClassName()] = ['m', 'WITH', 'c = m.candidate'];
-					$condition->add('m.accept != :notReject OR m.accept IS NULL');
-					$params[':notReject'] = FALSE;
+					$condition->add('m.accept != FALSE OR m.accept IS NULL');
 					break;
 				case self::CRITERIA_KEY_CATEGORIES:
 					if (is_array($value) && count($value)) {

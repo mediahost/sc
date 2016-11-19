@@ -3,6 +3,7 @@
 namespace App\Components\Candidate\Form;
 
 use App\Components\BaseControl;
+use App\Extensions\Candidates\CandidatesList;
 use App\Helpers;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
@@ -11,6 +12,7 @@ use App\Model\Entity\User as UserEntity;
 use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
 use App\Model\Facade\UserFacade;
+use Nette\Application\UI\Multiplier;
 use Nette\Security\User;
 use Nette\Utils\Random;
 
@@ -18,6 +20,9 @@ class PrintCandidate extends BaseControl
 {
 
 	const PRIMARY_JOBS_COUNT = 3;
+
+	/** @var array */
+	public $onReload = [];
 
 	/** @var User @inject */
 	public $user;
@@ -153,16 +158,7 @@ class PrintCandidate extends BaseControl
 				$this->flashMessage($this->translator->translate($message), 'success');
 			}
 		}
-
-		if ($this->presenter->isAjax()) {
-			$this->redrawControl();
-			$this->presenter->redrawControl();
-			if (isset($this->presenter['candidatesList'])) {
-				$this->presenter['candidatesList']->redrawControl();
-			}
-		} else {
-			$this->redirect('this');
-		}
+		$this->reload();
 	}
 
 	public function handleAccept($jobId, $value = TRUE)
@@ -181,16 +177,7 @@ class PrintCandidate extends BaseControl
 				$this->presenter->flashMessage($this->translator->translate($message), 'success');
 			}
 		}
-
-		if ($this->presenter->isAjax()) {
-			$this->redrawControl();
-			$this->presenter->redrawControl();
-			if (isset($this->presenter['candidatesList'])) {
-				$this->presenter['candidatesList']->redrawControl();
-			}
-		} else {
-			$this->redirect('this');
-		}
+		$this->reload();
 	}
 
 	public function handleReject($jobId)
@@ -214,13 +201,21 @@ class PrintCandidate extends BaseControl
 				$this->presenter->flashMessage($this->translator->translate($message), 'success');
 			}
 		}
+		$this->reload();
+	}
 
+	private function reload()
+	{
 		if ($this->presenter->isAjax()) {
 			$this->redrawControl();
-			$this->presenter->redrawControl();
-			if (isset($this->presenter['candidatesList'])) {
-				$this->presenter['candidatesList']->redrawControl();
+			$parent = $this->getParent();
+			if ($parent instanceof Multiplier) {
+				$parent = $parent->getParent();
 			}
+			if ($parent instanceof CandidatesList) {
+				$parent->reload();
+			}
+			$this->onReload($this);
 		} else {
 			$this->redirect('this');
 		}
