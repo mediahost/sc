@@ -64,7 +64,7 @@ class BasicInfo extends BaseControl
 			->setAttribute('placeholder', 'Job title')
 			->setRequired('Please enter job\'s name.');
 
-		if ($this->user->isAllowed('job', 'addAdmin')) {
+		if ($this->user->isAllowed('job', 'accountManager')) {
 			$form->addSelect('accountManager', 'Account manager', $this->getAccountManagers())
 				->setRequired($this->translator->translate('Manager is required'));
 		}

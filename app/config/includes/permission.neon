@@ -57,7 +57,7 @@ services:
 
 			- allow('company', 'company')
 			- allow('company', 'job')
-			- deny('company', 'job', ['addAdmin', 'showNotMatched'])
+			- deny('company', 'job', ['accountManager', 'showNotMatched'])
 			- allow('company', 'jobs')
 			- allow('company', 'companyNotes')
 			- allow('company', 'users')

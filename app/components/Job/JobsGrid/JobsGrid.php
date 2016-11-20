@@ -16,6 +16,9 @@ use Nette\Utils\Strings;
 class JobsGrid extends BaseControl
 {
 
+	/** @var \Nette\Security\User @inject */
+	public $user;
+
 	/** @var Company */
 	private $company;
 
@@ -43,11 +46,13 @@ class JobsGrid extends BaseControl
 			->setFilterText()
 			->setSuggestion();
 
-		$userRepo = $this->em->getRepository(User::getClassName());
-		$accountManagers = $userRepo->findAccountManagers();
-		$grid->addColumnText('accountManager', 'Account Manager')
-			->setSortable()
-			->setFilterSelect([NULL => '--- any ---'] + $accountManagers);
+		if ($this->user->isAllowed('job', 'accountManager')) {
+			$userRepo = $this->em->getRepository(User::getClassName());
+			$accountManagers = $userRepo->findAccountManagers();
+			$grid->addColumnText('accountManager', 'Account Manager')
+				->setSortable()
+				->setFilterSelect([NULL => '--- any ---'] + $accountManagers);
+		}
 
 		$companyRepo = $this->em->getRepository(Company::getClassName());
 		$companies = $companyRepo->findPairs('name');
