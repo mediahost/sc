@@ -6,6 +6,7 @@ use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\Bootstrap3FormRenderer;
 use App\Model\Entity;
+use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
@@ -29,6 +30,9 @@ class User extends BaseControl
 
 	/** @var UserFacade @inject */
 	public $userFacade;
+
+	/** @var CommunicationFacade @inject */
+	public $communicationFacade;
 
 	// <editor-fold desc="events">
 
@@ -177,6 +181,10 @@ class User extends BaseControl
 		$userRepo = $this->em->getRepository(Entity\User::getClassName());
 		$userRepo->save($this->user);
 
+		if (!$this->communicationFacade->findSender($this->user)) {
+			$this->communicationFacade->createSender($this->user);
+		}
+
 		$companies = [];
 		if ($this->company) {
 			$companies[$this->company->id] = $this->company;
@@ -193,6 +201,9 @@ class User extends BaseControl
 			$companyPermission = $this->companyFacade->findPermission($company, $this->user);
 			if (!$companyPermission) {
 				$this->companyFacade->createPermission($company, $this->user);
+			}
+			if (!$this->communicationFacade->findSender($this->user, $company)) {
+				$this->communicationFacade->createSender($this->user, $company);
 			}
 		}
 

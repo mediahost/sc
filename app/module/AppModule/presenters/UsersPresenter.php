@@ -66,7 +66,7 @@ class UsersPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$this->userEntity = new Entity\User();
+		$this->userEntity = new Entity\User(NULL, TRUE);
 		$disabledRoles = [
 			Entity\Role::GUEST,
 			Entity\Role::SIGNED,
