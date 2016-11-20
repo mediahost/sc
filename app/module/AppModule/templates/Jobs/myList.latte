@@ -18,30 +18,39 @@
 			</div>
 		</div>
 
-		<div class="col-md-3" n:if="count($invitations)">
-			<div class="page-header">
-				<h4>{_'Job Invitations'}</h4>
-			</div>
-			<div class="list-group" n:if="count($invitations)">
-				{include jobPreview jobs => $invitations}
-			</div>
-		</div>
-
-		<div class="col-md-3" n:if="count($applied)">
+		<div class="col-md-3">
 			<div class="page-header">
 				<h4>{_'Jobs Applied For'}</h4>
 			</div>
 			<div class="list-group" n:if="count($applied)">
 				{include jobPreview jobs => $applied}
 			</div>
+			<div class="alert alert-info" n:if="!count($applied)">
+				{_'You have to applied for some job.'}
+			</div>
 		</div>
 
-		<div class="col-md-3" n:if="count($matches)">
+		<div class="col-md-3">
+			<div class="page-header">
+				<h4>{_'Job Invitations'}</h4>
+			</div>
+			<div class="list-group" n:if="count($invitations)">
+				{include jobPreview jobs => $invitations}
+			</div>
+			<div class="alert alert-info" n:if="!count($invitations)">
+				{_'No suitable job for you right now.'}
+			</div>
+		</div>
+
+		<div class="col-md-3">
 			<div class="page-header">
 				<h4>{_'Matches'}</h4>
 			</div>
 			<div class="list-group" n:if="count($matches)">
 				{include jobPreview jobs => $matches}
+			</div>
+			<div class="alert alert-info" n:if="!count($matches)">
+				{_'No sitable applied job for you right now.'}
 			</div>
 		</div>
 
