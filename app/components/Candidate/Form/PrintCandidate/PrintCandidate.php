@@ -172,6 +172,7 @@ class PrintCandidate extends BaseControl
 					$message = 'Candidate was approved';
 				}
 				$this->flashMessage($this->translator->translate($message), 'success');
+				$this->em->refresh($this->candidate);
 			}
 		}
 		$this->reload();
@@ -191,6 +192,7 @@ class PrintCandidate extends BaseControl
 				}
 				$message = 'Candidate was ' . ($value ? 'accepted' : 'rejected');
 				$this->presenter->flashMessage($this->translator->translate($message), 'success');
+				$this->em->refresh($this->candidate);
 			}
 		}
 		$this->reload();
@@ -215,6 +217,7 @@ class PrintCandidate extends BaseControl
 				}
 				$message = 'Candidate state was changed';
 				$this->presenter->flashMessage($this->translator->translate($message), 'success');
+				$this->em->refresh($this->candidate);
 			}
 		}
 		$this->reload();
