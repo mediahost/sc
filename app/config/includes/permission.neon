@@ -26,6 +26,7 @@ services:
 			- addResource('job')
 			- addResource('jobs')
 			- addResource('jobCategories')
+			- addResource('match')
 			- addResource('companyNotes')
 			- addResource('adminNotes')
 			- addResource('editForeign')
@@ -62,6 +63,7 @@ services:
 			- allow('company', 'users')
 			- allow('company', 'messages')
 			- deny('company', 'messages', ['browse'])
+			- allow('company', 'match')
 
 			- allow('admin', 'users')
 			- allow('admin', 'skills')
@@ -73,6 +75,7 @@ services:
 			- allow('admin', 'companies')
 			- allow('admin', 'jobs')
 			- allow('admin', 'job')
+			- allow('admin', 'match')
 			- allow('admin', 'cvViewer')
 			- allow('admin', 'cvEditor')
 			- allow('admin', 'messages')

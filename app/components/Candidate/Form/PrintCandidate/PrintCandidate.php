@@ -159,7 +159,7 @@ class PrintCandidate extends BaseControl
 
 	public function handleMatch($jobId)
 	{
-		if ($jobId) {
+		if ($jobId && $this->user->isAllowed('match')) {
 			$jobRepo = $this->em->getRepository(Job::getClassName());
 			$job = $jobRepo->find($jobId);
 			if ($job) {
@@ -177,7 +177,7 @@ class PrintCandidate extends BaseControl
 
 	public function handleAccept($jobId, $value = TRUE)
 	{
-		if ($jobId) {
+		if ($jobId && $this->user->isAllowed('match')) {
 			$jobRepo = $this->em->getRepository(Job::getClassName());
 			$job = $jobRepo->find($jobId);
 			if ($job) {
@@ -201,7 +201,7 @@ class PrintCandidate extends BaseControl
 
 	public function handleChangeState($jobId, $state)
 	{
-		if ($jobId && $state) {
+		if ($jobId && $state && $this->user->isAllowed('match')) {
 			$jobRepo = $this->em->getRepository(Job::getClassName());
 			$job = $jobRepo->find($jobId);
 			if ($job) {

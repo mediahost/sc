@@ -75,7 +75,7 @@ class JobPresenter extends BasePresenter
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Jobs:');
-		} else {
+		} else if ($this->user->isAllowed('match')) {
 			$allowedStates = [
 				Match::STATE_MATCHED_ONLY => 'Matched',
 				Match::STATE_REJECTED => 'Rejected',
