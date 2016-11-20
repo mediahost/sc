@@ -56,8 +56,7 @@ class CompleteCompany extends BaseControl
 			->setRequired();
 
 		$form->addUpload('logo', 'Logo')
-			->addRule(Form::IMAGE, 'Logo must be image')
-			->setRequired();
+			->addRule(Form::IMAGE, 'Logo must be image');
 
 		$form->addSubmit('confirm', 'Confirm')
 			->getControlPrototype()->setClass('loadingOnClick');
