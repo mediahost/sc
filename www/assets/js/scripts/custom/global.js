@@ -1,5 +1,9 @@
 var Global = function () {
 
+	var handleInitSelect2 = function () {
+		$('.select2').select2();
+	};
+
 	var handleInitPickers = function () {
 		$('.input-daterange, .input-datepicker input').datepicker();
 		$('.input-daterange span').on('click', function () {
@@ -182,6 +186,7 @@ var Global = function () {
 	return {
 		init: function () {
 			$(document).ready(function () {
+				handleInitSelect2();
 				handleInitPickers();
 				handleRating();
 				hadleSlider();
@@ -197,7 +202,6 @@ var Global = function () {
 				// Global components
 				CustomTrees.init();
 			});
-
 
 			handleJobPage();
 			handleTagsInput();

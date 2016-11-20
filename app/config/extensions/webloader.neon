@@ -67,6 +67,7 @@ webloader:
 				- %wwwDir%/assets/js/supr/plugins/ui/bootbox/bootbox.js
 				- %wwwDir%/assets/js/supr/plugins/ui/waypoint/waypoints.js
 				- %wwwDir%/assets/js/supr/plugins/ui/bootstrap-slider/bootstrap-slider.min.js
+				- %wwwDir%/assets/js/supr/plugins/forms/select2/select2.js
 				- %wwwDir%/assets/js/supr/plugins/forms/autosize/jquery.autosize.js
 				- %wwwDir%/assets/js/supr/plugins/forms/bootstrap-tagsinput/bootstrap-tagsinput.min.js
 				- %wwwDir%/assets/js/supr/plugins/forms/bootstrap-datepicker/bootstrap-datepicker.js
