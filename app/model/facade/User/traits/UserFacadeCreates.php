@@ -9,7 +9,7 @@ use App\Model\Entity\User;
 trait UserFacadeCreates
 {
 
-	public function create($mail, $password, Role $role, $createSender = TRUE)
+	public function create($mail, $password, Role $role)
 	{
 		if ($this->isUnique($mail)) {
 			$user = new User();
@@ -18,7 +18,7 @@ trait UserFacadeCreates
 				->addRole($role);
 			$this->setVerification($user);
 			$this->userRepo->save($user);
-			if ($createSender) {
+			if (!$this->communicationFacade->findSender($user)) {
 				$this->communicationFacade->createSender($user);
 			}
 
