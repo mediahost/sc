@@ -61,6 +61,29 @@ class JobPresenter extends BasePresenter
 		$this->companyRepo = $this->em->getRepository(Company::getClassName());
 	}
 
+	private function getStatesWithNames($state)
+	{
+		$states = [
+			Match::STATE_APPLIED_ONLY => 'Applied',
+			Match::STATE_INVITED_ONLY => 'Invited',
+			Match::STATE_MATCHED_ONLY => 'Matched',
+			Match::STATE_REJECTED => 'Rejected',
+			Match::STATE_ACCEPTED_ONLY => 'Accepted',
+			Match::STATE_INVITED_FOR_IV => 'Invited for IV',
+			Match::STATE_COMPLETE_IV => 'Completed IV',
+			Match::STATE_OFFERED => 'Offered',
+		];
+		if (is_array($state)) {
+			$newStates = [];
+			foreach ($state as $key => $item) {
+				$newStates[$item] = array_key_exists($item, $states) ? $states[$item] : $item;
+			}
+			return $newStates;
+		} else {
+			return array_key_exists($state, $states) ? $states[$state] : NULL;
+		}
+	}
+
 	// <editor-fold desc="actions & renderers">
 
 	/**
@@ -77,23 +100,23 @@ class JobPresenter extends BasePresenter
 			$this->redirect('Jobs:');
 		} else if ($this->user->isAllowed('match')) {
 			$allowedStates = [
-				Match::STATE_MATCHED_ONLY => 'Matched',
-				Match::STATE_REJECTED => 'Rejected',
-				Match::STATE_ACCEPTED_ONLY => 'Accepted',
-				Match::STATE_INVITED_FOR_IV => 'Invited for IV',
-				Match::STATE_COMPLETE_IV => 'Completed IV',
-				Match::STATE_OFFERED => 'Offered',
+				Match::STATE_MATCHED_ONLY,
+				Match::STATE_REJECTED,
+				Match::STATE_ACCEPTED_ONLY,
+				Match::STATE_INVITED_FOR_IV,
+				Match::STATE_COMPLETE_IV,
+				Match::STATE_OFFERED,
 			];
 			if ($this->user->isAllowed('job', 'showNotMatched')) {
 				$allowedStates = [
-						Match::STATE_APPLIED_ONLY => 'Applied',
-						Match::STATE_INVITED_ONLY => 'Invited',
+						Match::STATE_APPLIED_ONLY,
+						Match::STATE_INVITED_ONLY,
 					] + $allowedStates;
 			}
-			$this->template->allowedStates = $allowedStates;
-			foreach ($allowedStates as $stateKey => $name) {
+			$this->template->allowedStates = $this->getStatesWithNames($allowedStates);
+			foreach ($allowedStates as $stateKey) {
 				$this['jobCandidates-' . $stateKey]->setCandidateOnReload(function () use ($stateKey, $allowedStates) {
-					foreach ($allowedStates as $key => $name) {
+					foreach ($allowedStates as $key) {
 						if ($key != $stateKey) {
 							$this['jobCandidates-' . $key]->reload();
 						}
@@ -134,6 +157,9 @@ class JobPresenter extends BasePresenter
 			}
 			$this['candidatesList']->addFilterJob($this->job, TRUE, $state);
 			$this->template->job = $this->job;
+			if ($state) {
+				$this->template->stateName = $this->getStatesWithNames($state);
+			}
 		}
 	}
 
