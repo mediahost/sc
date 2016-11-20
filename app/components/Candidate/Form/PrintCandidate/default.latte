@@ -12,21 +12,18 @@
 				<small n:if="$person && $person->address">
 					{$person->address->city}
 				</small>
-				<small n:if="isset($user) && $template->canAccess($identity, $user)">
+				<span n:if="isset($user) && $template->canAccess($identity, $user)">
 					<a href="{plink Users:access $user->id}"><i class="fa fa-key"></i></a>
-				</small>
-				<small n:if="$showNotes && isset($match)">
-					<a href="#notes-{$id}" data-toggle="modal" class="btn btn-xs">
-						<span class="icomoon-icon-quill"></span><span
-								class="label label-info">
-							{if $identity->isAllowed('adminNotes')}
-								{$match->adminNotes->count()}
-							{elseif $identity->isAllowed('companyNotes')}
-								{$match->companyNotes->count()}
-							{/if}
-						</span>
+				</span>
+				<span n:if="$showNotes && isset($match)">
+					<a href="#notes-{$id}" data-toggle="modal" class="btn btn-xs btn-primary">
+						{if $identity->isAllowed('adminNotes')}
+							{$match->adminNotes->count()}
+						{elseif $identity->isAllowed('companyNotes')}
+							{$match->companyNotes->count()}
+						{/if}
 					</a>
-				</small>
+				</span>
 			</h4>
 		</div>
 
@@ -68,7 +65,9 @@
 							<tr n:foreach="$jobs as $job">
 								{var matchItem => $candidate->findMatch($job)}
 								<th>
-									{$job|truncate:20}
+									<a href="{plink Job:view $job->id}">
+										{$job|truncate:20}
+									</a>
 								</th>
 								{if $matchItem && $matchItem->fullApprove}
 									<td colspan="2">
@@ -143,7 +142,11 @@
 					<table class="jobs">
 						<tr n:foreach="$jobs as $job">
 							{var matchItem => $candidate->findMatch($job)}
-							<th>{$job}</th>
+							<th>
+								<a href="{plink Job:view $job->id}">
+									{$job}
+								</a>
+							</th>
 							{if $matchItem && $matchItem->fullApprove}
 								<td colspan="2">
 									<span class="fa fa-check"></span> {_'Matched'}
@@ -175,7 +178,7 @@
 	</div>
 
 	<div n:if="$showNotes && isset($match)" class="modal fade jobNotes" id="notes-{$id}" tabindex="-1" role="dialog"
-							 aria-hidden="true">
+											aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
