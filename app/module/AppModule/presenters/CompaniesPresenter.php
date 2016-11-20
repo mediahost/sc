@@ -43,6 +43,9 @@ class CompaniesPresenter extends BasePresenter
 	/** @var EntityDao */
 	private $userRepo;
 
+	/** @var Company */
+	private $companyEntity;
+
 	// </editor-fold>
 
 	protected function startup()
@@ -70,8 +73,8 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionAdd()
 	{
-		$company = new Company();
-		$this['companyInfoForm']->setCompany($company);
+		$this->companyEntity = new Company();
+		$this['companyInfoForm']->setCompany($this->companyEntity);
 		$this->setView('edit');
 	}
 
@@ -82,15 +85,19 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionEdit($id)
 	{
-		$company = $this->companyRepo->find($id);
-		if (!$company) {
+		$this->companyEntity = $this->companyRepo->find($id);
+		if ($this->companyEntity) {
+			$this['companyInfoForm']->setCompany($this->companyEntity);
+		} else {
 			$message = $this->translator->translate('This company wasn\'t found.');
 			$this->flashMessage($message, 'error');
 			$this->redirect('default');
-		} else {
-			$this['companyInfoForm']->setCompany($company);
 		}
-		$this->template->company = $company;
+	}
+
+	public function renderEdit()
+	{
+		$this->template->companyEntity = $this->companyEntity;
 	}
 
 	/**
@@ -100,14 +107,14 @@ class CompaniesPresenter extends BasePresenter
 	 */
 	public function actionEditImages($id)
 	{
-		$company = $this->companyRepo->find($id);
-		if (!$company) {
+		$this->companyEntity = $this->companyRepo->find($id);
+		if (!$this->companyEntity) {
 			$message = $this->translator->translate('This company wasn\'t found.');
 			$this->flashMessage($message, 'error');
 			$this->redirect('default');
 		} else {
-			$this['companyImagesForm']->setCompany($company);
-			$this->template->company = $company;
+			$this['companyImagesForm']->setCompany($this->companyEntity);
+			$this->template->companyEntity = $this->companyEntity;
 		}
 	}
 

@@ -1,5 +1,9 @@
 {block pageTitle}
-{$company}
+	{if $companyEntity->isNew()}
+		{_'New company'}
+	{else}
+		{_'Company #%id%', ['id' => $companyEntity->id]}
+	{/if}
 {/block}
 
 {block breadcrumbItems}
@@ -7,37 +11,35 @@
 	<a n:href="Companies:">{_'Companies'}</a>
 </li>
 <li>
-	<a n:href="this">{if $company->isNew()}{_'Add'}{else}{_'Edit'} {$company}{/if}</a>
+	<a n:href="this">
+		{if $companyEntity->isNew()}
+			{_'New company'}
+		{else}
+			{_'Company #%id%', ['id' => $companyEntity->id]}
+		{/if}
+	</a>
 </li>
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-8">
-		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption font-green-sharp">
-					<i class="fa fa-edit font-green-sharp"></i>
-					<span class="caption-subject bold uppercase">
-						{if $company->isNew()}
-							{_'Add'}
+	<div class="row">
+		<div class="col-md-7">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						{if $companyEntity->isNew()}
+							{_'New company'}
 						{else}
-							{_'Edit'}
-						{/if} 
-						{_'company'}
-					</span>
+							{_'Company #%id%', ['id' => $companyEntity->id]}
+						{/if}
+					</h4>
 				</div>
-				<div n:if="!$company->isNew()" class="actions">
-					{includeblock 'blocks.defines.latte'}
-					{include editActions}
-					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title=""></a>
+				<div class="panel-body">
+					{control companyInfoForm}
 				</div>
 			</div>
-			<div class="portlet-body form border">
-				{control companyInfoForm}
-			</div>
+
 		</div>
 	</div>
-</div>
-
-
+{/block}
