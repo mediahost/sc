@@ -32,10 +32,6 @@ class CompaniesGrid extends BaseControl
 		$col->setCustomRender(__DIR__ . '/users.latte');
 		$col->headerPrototype->width = '20%';
 
-
-		$grid->addActionHref('view', 'Public Profile', ':Front:CompanyProfile:')
-			->setIcon('fa fa-eye');
-
 		$grid->addActionHref('jobs', 'Jobs', 'Jobs:company')
 			->setIcon('fa fa-briefcase');
 
