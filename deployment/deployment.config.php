@@ -44,17 +44,17 @@ return array(
 		',
 		'allowdelete' => TRUE,
 		'before' => array(
-				'local:composer install --no-dev -d ./../'
+				'local:composer install --no-dev -d ./../',
 		),
 		'after' => array(
 				$domain . '/install?printHtml=0',
-				'local:composer install --dev -d ./../'
+				'local:composer install --dev -d ./../',
 		),
 		'purge' => array(
 			'temp/cache',
 			'temp/install',
 			'temp/deployment',
-			'tmp/'
+			'tmp/',
 		),
 		'preprocess' => FALSE,
 	),

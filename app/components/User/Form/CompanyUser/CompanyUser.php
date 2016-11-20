@@ -8,7 +8,7 @@ use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
 use App\Model\Entity\Role;
-use App\Model\Entity\User;
+use App\Model\Entity\User as UserEntity;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
@@ -39,7 +39,7 @@ class CompanyUser extends BaseControl
 	/** @var Company */
 	private $company;
 
-	/** @var User */
+	/** @var UserEntity */
 	private $user;
 
 	/** @var array */
@@ -55,23 +55,23 @@ class CompanyUser extends BaseControl
 		$form = new Form();
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
-        $form->getElementPrototype()->class('ajax');
-                    
+		$form->getElementPrototype()->class('ajax');
+
 		$user = $form->addText('mail', 'E-mail')
-				->addRule(Form::EMAIL, 'Fill right format')
-				->addRule(Form::FILLED, 'Mail must be filled');
+			->addRule(Form::EMAIL, 'Fill right format')
+			->addRule(Form::FILLED, 'Mail must be filled');
 		if ($this->user) {
 			$user->setDisabled();
 		} else {
 			$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
 			$form->addText('password', 'Password')
-					->addRule(Form::FILLED, 'Password must be filled')
-					->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
-					->setOption('description', $helpText);
+				->addRule(Form::FILLED, 'Password must be filled')
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
+				->setOption('description', $helpText);
 		}
 
 		$form->addMultiSelectBoxes('roles', 'Roles', $this->getRoles())
-				->setRequired('Please select some role');
+			->setRequired('Please select some role');
 
 		$form->addSubmit('save', 'Save');
 
@@ -110,7 +110,7 @@ class CompanyUser extends BaseControl
 
 		if (!$form->hasErrors()) {
 			if ($this->user) {
-				$user = $this->em->getDao(User::getClassName())->find($this->user->id);
+				$user = $this->em->getRepository(UserEntity::getClassName())->find($this->user->id);
 			} else {
 				$role = $this->roleFacade->findByName(Role::COMPANY);
 				$user = $this->userFacade->create($values->mail, $values->password, $role);
@@ -144,7 +144,7 @@ class CompanyUser extends BaseControl
 		return $this;
 	}
 
-	public function setUser(User $user)
+	public function setUser(UserEntity $user)
 	{
 		$this->user = $user;
 		return $this;
