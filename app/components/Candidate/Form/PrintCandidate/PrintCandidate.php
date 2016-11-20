@@ -83,7 +83,9 @@ class PrintCandidate extends BaseControl
 		$this->template->matchStates = Match::getStates();
 
 		$jobRepo = $this->em->getRepository(Job::getClassName());
-		$this->template->jobs = $jobRepo->findAll();
+		$this->template->jobs = $jobRepo->findBy([], [
+			'id' => 'DESC',
+		]);
 		$this->template->primaryJobs = $this->template->jobs;
 		if ($this->selectedManager) {
 			$this->template->primaryJobs = $jobRepo->findBy([
