@@ -3,6 +3,7 @@
 namespace App\Components\Candidate\Form;
 
 use App\Components\BaseControl;
+use App\Components\Job\ICustomStateFactory;
 use App\Components\Job\IMatchNotesFactory;
 use App\Extensions\Candidates\CandidatesList;
 use App\Helpers;
@@ -40,6 +41,9 @@ class PrintCandidate extends BaseControl
 
 	/** @var IMatchNotesFactory @inject */
 	public $iMatchNotesFactory;
+
+	/** @var ICustomStateFactory @inject */
+	public $iCustomStateFactory;
 
 	/** @var Candidate */
 	private $candidate;
@@ -171,8 +175,7 @@ class PrintCandidate extends BaseControl
 				} else {
 					$message = 'Candidate was approved';
 				}
-				$this->flashMessage($this->translator->translate($message), 'success');
-				$this->em->refresh($this->candidate);
+				$this->presenter->flashMessage($this->translator->translate($message), 'success');
 			}
 		}
 		$this->reload();
@@ -192,7 +195,6 @@ class PrintCandidate extends BaseControl
 				}
 				$message = 'Candidate was ' . ($value ? 'accepted' : 'rejected');
 				$this->presenter->flashMessage($this->translator->translate($message), 'success');
-				$this->em->refresh($this->candidate);
 			}
 		}
 		$this->reload();
@@ -217,7 +219,6 @@ class PrintCandidate extends BaseControl
 				}
 				$message = 'Candidate state was changed';
 				$this->presenter->flashMessage($this->translator->translate($message), 'success');
-				$this->em->refresh($this->candidate);
 			}
 		}
 		$this->reload();
@@ -226,6 +227,7 @@ class PrintCandidate extends BaseControl
 	private function reload()
 	{
 		if ($this->presenter->isAjax()) {
+			$this->em->refresh($this->candidate);
 			$this->redrawControl();
 			$parent = $this->getParent();
 			if ($parent instanceof Multiplier) {
@@ -248,6 +250,19 @@ class PrintCandidate extends BaseControl
 		$control = $this->iMatchNotesFactory->create();
 		$control->setMatch($this->candidate->findMatch($this->selectedJob));
 		$control->onAfterSave[] = function (Match $match) {
+			$this->reload();
+		};
+		return $control;
+	}
+
+	public function createComponentCustomState()
+	{
+		$control = $this->iCustomStateFactory->create();
+		$control->setMatch($this->candidate->findMatch($this->selectedJob));
+		$control->setAjax(TRUE, FALSE);
+		$control->onAfterSave[] = function (Match $match) {
+			$message = 'Candidate state was changed';
+			$this->presenter->flashMessage($this->translator->translate($message), 'success');
 			$this->reload();
 		};
 		return $control;
