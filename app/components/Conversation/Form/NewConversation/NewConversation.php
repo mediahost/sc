@@ -7,12 +7,16 @@ use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
+use App\Model\Facade\CompanyFacade;
 
 class NewConversation extends BaseControl
 {
 
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
+
+	/** @var CompanyFacade @inject */
+	public $companyFacade;
 
 	/** @var Sender */
 	public $sender;
@@ -22,13 +26,11 @@ class NewConversation extends BaseControl
 
 	public function createComponentForm()
 	{
-		$recipients = $this->communicationFacade->getSenders($this->sender);
-
 		$form = new Form();
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addSelect('recipient', 'Recipient', $recipients)
+		$form->addSelect2('recipient', 'Recipient', $this->getRecipients())
 			->addRule(Form::FILLED, 'Select recipient');
 		$form->addTextArea('message', 'Message', NULL, 5)
 			->addRule(Form::FILLED, 'Insert message');
@@ -55,6 +57,20 @@ class NewConversation extends BaseControl
 	public function setSender(Sender $sender)
 	{
 		$this->sender = $sender;
+	}
+
+	private function getRecipients()
+	{
+		if ($this->sender->isCompany) {
+			$recipients = [];
+			$candidates = $this->companyFacade->findMatchedCandidates($this->sender->company);
+			if (count($candidates)) {
+				$recipients = $this->communicationFacade->getSendersFromCandidates($candidates);
+			}
+		} else {
+			$recipients = $this->communicationFacade->getSenders($this->sender);
+		}
+		return $recipients;
 	}
 }
 

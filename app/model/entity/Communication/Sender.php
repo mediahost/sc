@@ -15,6 +15,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
  * @property ArrayCollection $communications
  * @property Communication $lastCommunication
  * @property bool|NULL $beNotified
+ * @property bool $isCompany
  * @property-read int $unreadCount
  */
 class Sender extends BaseEntity
@@ -44,14 +45,14 @@ class Sender extends BaseEntity
 		$this->user = $user;
 	}
 
-	public function isCompany()
+	public function getIsCompany()
 	{
 		return (bool)$this->company;
 	}
 
 	public function getPhoto()
 	{
-		if ($this->isCompany()) {
+		if ($this->getIsCompany()) {
 			return $this->company->logo;
 		} else {
 			return $this->user->person->photo;

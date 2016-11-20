@@ -81,6 +81,20 @@ class CommunicationFacade extends Object
 		return $this->senderRepo->findAssoc($criteria, 'id');
 	}
 
+	public function getSendersFromCandidates(array $candidates)
+	{
+		$userIds = [];
+		foreach ($candidates as $candidate) {
+			/** @var Candidate $candidate */
+			$user = $candidate->person->user;
+			$userIds[] = $user->id;
+		}
+		$criteria = [
+			'user IN' => $userIds,
+		];
+		return $this->senderRepo->findAssoc($criteria, 'id');
+	}
+
 	public function sendMessage(Sender $sender, $recipient, $message, $state = Message::STATE_DEFAULT, Job $job = NULL, Candidate $candidate = NULL)
 	{
 		if ($recipient instanceof Communication) {

@@ -113,4 +113,14 @@ trait CompanyFacadeFinders
 		return $users;
 	}
 
+	public function findMatchedCandidates(Company $company)
+	{
+		$criteria = [
+			'matches.job.company' => $company,
+			'matches.candidateApprove' => TRUE,
+			'matches.adminApprove' => TRUE,
+		];
+		return $this->candidateRepo->findBy($criteria);
+	}
+
 }

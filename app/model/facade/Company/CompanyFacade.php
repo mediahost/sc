@@ -2,6 +2,7 @@
 
 namespace App\Model\Facade;
 
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyPermission;
 use App\Model\Entity\CompanyRole;
@@ -9,6 +10,7 @@ use App\Model\Entity\User;
 use App\Model\Facade\Traits\CompanyFacadeCheckers;
 use App\Model\Facade\Traits\CompanyFacadeFinders;
 use App\Model\Facade\Traits\CompanyFacadeGetters;
+use App\Model\Repository\CandidateRepository;
 use App\Model\Repository\CompanyPermissionRepository;
 use App\Model\Repository\UserRepository;
 use Kdyby\Doctrine\EntityDao;
@@ -37,6 +39,9 @@ class CompanyFacade extends Object
 	/** @var EntityDao */
 	private $companyRoleDao;
 
+	/** @var CandidateRepository */
+	private $candidateRepo;
+
 	public function __construct(EntityManager $em)
 	{
 		$this->em = $em;
@@ -44,6 +49,7 @@ class CompanyFacade extends Object
 		$this->userRepo = $this->em->getRepository(User::getClassName());
 		$this->companyDao = $this->em->getDao(Company::getClassName());
 		$this->companyRoleDao = $this->em->getDao(CompanyRole::getClassName());
+		$this->candidateRepo = $this->em->getRepository(Candidate::getClassName());
 	}
 
 	/**
