@@ -72,8 +72,8 @@ class SortingForm extends BaseControl
 	private function getSortingMethods()
 	{
 		return [
-			CandidatesList::SORT_BY_NAME_ASC => 'Name (A - Z)',
-			CandidatesList::SORT_BY_NAME_DESC => 'Name (Z - A)',
+			CandidatesList::SORT_BY_ID_ASC => 'Older -> Newer',
+			CandidatesList::SORT_BY_ID_DESC => 'Newer -> Older',
 		];
 	}
 

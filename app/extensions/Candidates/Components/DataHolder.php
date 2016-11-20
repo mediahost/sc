@@ -27,7 +27,7 @@ use Nette\Object;
 class DataHolder extends Object
 {
 
-	const ORDER_BY_NAME = 'name';
+	const ORDER_BY_ID = 'id';
 
 	/** @var EntityManager @inject */
 	public $em;
@@ -68,12 +68,12 @@ class DataHolder extends Object
 		$this->offset = $offset;
 	}
 
-	public function setSorting($by, $dir = Criteria::ASC)
+	public function setSorting($by, $dir = Criteria::DESC)
 	{
 		switch ($by) {
-//			case self::ORDER_BY_NAME:
-//				$by = 'name';
-//				break;
+			case self::ORDER_BY_ID:
+				$by = 'id';
+				break;
 			default:
 				return $this;
 		}

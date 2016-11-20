@@ -26,7 +26,7 @@ class CandidateRepository extends BaseRepository
 	{
 		$qb = $this->createFiltredQueryBuilder($criteria);
 		if ($orderBy) {
-			$qb->orderBy((array)$orderBy);
+			$qb->autoJoinOrderBy((array)$orderBy);
 		}
 
 		return $qb->getQuery()

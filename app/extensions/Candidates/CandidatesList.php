@@ -29,8 +29,8 @@ use Nette\Utils\ArrayHash;
 class CandidatesList extends Control
 {
 
-	const SORT_BY_NAME_ASC = 1;
-	const SORT_BY_NAME_DESC = 2;
+	const SORT_BY_ID_ASC = 1;
+	const SORT_BY_ID_DESC = 2;
 	const FILTER_PART_COMPANY = 'company';
 	const FILTER_SEARCH = 'search';
 	const FILTER_JOB = 'job';
@@ -71,7 +71,7 @@ class CandidatesList extends Control
 	public $page = 1;
 
 	/** @var int @persistent */
-	public $sorting = self::SORT_BY_NAME_ASC;
+	public $sorting = self::SORT_BY_ID_DESC;
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="variables">
@@ -233,10 +233,10 @@ class CandidatesList extends Control
 	protected function applySorting()
 	{
 		switch ($this->sorting) {
-			case self::SORT_BY_NAME_ASC:
-			case self::SORT_BY_NAME_DESC:
-				$dir = $this->sorting === self::SORT_BY_NAME_ASC ? 'ASC' : 'DESC';
-				$this->getHolder()->setSorting(DataHolder::ORDER_BY_NAME, $dir);
+			case self::SORT_BY_ID_ASC:
+			case self::SORT_BY_ID_DESC:
+				$dir = $this->sorting === self::SORT_BY_ID_ASC ? 'ASC' : 'DESC';
+				$this->getHolder()->setSorting(DataHolder::ORDER_BY_ID, $dir);
 				break;
 		}
 		return $this;
@@ -323,8 +323,8 @@ class CandidatesList extends Control
 	public function setSorting($sort)
 	{
 		switch ($sort) {
-			case self::SORT_BY_NAME_ASC:
-			case self::SORT_BY_NAME_DESC:
+			case self::SORT_BY_ID_ASC:
+			case self::SORT_BY_ID_DESC:
 				$this->sorting = $sort;
 				break;
 		}
