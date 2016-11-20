@@ -7,6 +7,10 @@
 					<a href="{$basePath}/{$candidate->cvFile}"
 					   target="_blank" title="{_'CV file'}"><i class="icomoon-icon-file-download"></i></a>
 				</small>
+				<small n:if="!$candidate->cvFile && $identity->isAllowed('candidate', 'edit')">
+					<a href="{plink CvEditor:file $user->id}"
+					   title="{_'Upload CV file'}"><i class="icomoon-icon-file-upload color-red"></i></a>
+				</small>
 				<strong n:if="$person->fullName">{$person->fullName}</strong>
 				<strong n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</strong>
 				<small n:if="$person && $person->address">
@@ -47,7 +51,8 @@
 					</p>
 				</div>
 				<div class="col-md-6">
-					<a n:ifset="$user" href="{plink Candidate:view $user->id}">
+					<a n:ifset="$user" n:tag-if="$identity->isAllowed('candidate', 'edit')"
+							href="{plink Candidate:view $user->id}">
 						<img src="{$person|foto:150,150}"
 							 class="center img-responsive photo-rounded" alt="{$person->fullName}"/>
 					</a>

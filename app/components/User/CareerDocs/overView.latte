@@ -1,8 +1,8 @@
 <p>
-	<a href="{$basePath}/{$candidate->cvFile}" target="_blank" class="btn btn-default">
+	<a href="{$basePath}/{$candidate->cvFile}" target="_blank" class="btn btn-default" n:if="$candidate->cvFile">
 		<span class="fa fa-download"></span>{_'My CV'}
 	</a>
-	<a href="{plink CvEditor:file}" class="btn btn-default">
+	<a href="{plink CvEditor:file ($isSameUser ? NULL : $candidate->person->user->id)}" class="btn btn-default">
 		<span class="fa fa-edit"></span>{_'Change CV'}
 	</a>
 </p>
@@ -25,14 +25,8 @@
 		{_'No career documents.'}
 	{else}
 		{_'No career documents.'}
-		{if $isSameUser}
-			<a href="{plink CvEditor:CareerDocs}">
-				<span class="fa fa-upload"></span>{_'Add files'}
-			</a>
-		{else}
-			<a href="{plink CvEditor:CareerDocs $candidate->person->user->id}">
-				<span class="fa fa-upload"></span>{_'Add files'}
-			</a>
-		{/if}
+		<a href="{plink CvEditor:CareerDocs $isSameUser ? NULL : $candidate->person->user->id}">
+			<span class="fa fa-upload"></span>{_'Add files'}
+		</a>
 	{/if}
 </div>

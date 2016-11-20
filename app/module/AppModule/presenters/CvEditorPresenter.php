@@ -154,10 +154,14 @@ class CvEditorPresenter extends BasePresenter
 	{
 		if ($userId && $this->user->isAllowed('cvEditor', 'editForeign')) {
 			$candidate = $this->userFacade->findById($userId)->candidate;
+			$editMine = FALSE;
 		} else {
 			$candidate = $this->user->identity->candidate;
+			$editMine = TRUE;
 		}
 		$this['changeCv']->setCandidate($candidate);
+		$this->template->editMine = $editMine;
+		$this->template->candidate = $candidate;
 	}
 
 	public function afterCvSave()

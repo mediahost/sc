@@ -108,7 +108,7 @@ class CareerDocs extends BaseControl
 	public function setCandidate(Candidate $candidate)
 	{
 		$this->candidate = $candidate;
-		$this->isSameUser = $candidate->person->user->id && $this->user->id;
+		$this->isSameUser = $candidate->person->user->id === $this->user->id;
 		return $this;
 	}
 

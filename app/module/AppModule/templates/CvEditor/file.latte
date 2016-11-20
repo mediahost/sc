@@ -1,5 +1,9 @@
 {block pageTitle}
-	{_'My CV'}
+	{if $editMine}
+		{_'My CV'}
+	{else}
+		{_'CV for \'%candidate%\'', ['candidate' => $candidate]}
+	{/if}
 {/block}
 
 {block content}
@@ -7,7 +11,9 @@
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="panel-title">{_'My CV file'}</h4>
+					<h4 class="panel-title">
+						{_'CV file'}
+					</h4>
 				</div>
 				<div class="panel-body pt0 pb0">
 					{control changeCv}
