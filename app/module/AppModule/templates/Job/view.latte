@@ -29,18 +29,20 @@
 						<div class="row">
 							<div class="col-md-4">
 								<dl>
-									<dt class="text-muted">{_'Category'}</dt>
-									<dd>{$job->category}</dd>
-									<dt class="text-muted">{_'Account Manager'}</dt>
-									<dd>{$job->accountManager}</dd>
-								</dl>
-							</div>
-							<div class="col-md-4">
-								<dl>
 									<dt class="text-muted">{_'Type'}</dt>
 									<dd>{$job->type}</dd>
 									<dt class="text-muted">{_'Salary'}</dt>
 									<dd>{$job->salaryFrom}&nbsp;€ - {$job->salaryTo}&nbsp;€</dd>
+								</dl>
+							</div>
+							<div class="col-md-4">
+								<dl>
+									<dt class="text-muted">{_'Category'}</dt>
+									<dd>{$job->category}</dd>
+									{if $user->isAllowed('job', 'accountManager')}
+										<dt class="text-muted">{_'Account Manager'}</dt>
+										<dd>{$job->accountManager}</dd>
+									{/if}
 								</dl>
 							</div>
 							<div n:snippet="applyBox">
