@@ -19,7 +19,7 @@ class BasicInfo extends BaseControl
 
 	const SALARY_FROM = 0;
 	const SALARY_TO = 10000;
-	const SALARY_STEP = 10;
+	const SALARY_STEP = 100;
 	const QUESTIONS_COUNT = 5;
 
 	/** @var Job */
@@ -73,29 +73,27 @@ class BasicInfo extends BaseControl
 			->setRequired($this->translator->translate('Type is required'));
 		$form->addSelect('category', 'Category', $this->jobFacade->getJobCategories())
 			->setRequired($this->translator->translate('Category is required'));
-		$form->addText('salary', 'Salary')
+		$form->addText('salary', 'Salary (per mth)')
 			->setAttribute('class', 'slider')
 			->setAttribute('data-slider-min', self::SALARY_FROM)
 			->setAttribute('data-slider-max', self::SALARY_TO)
 			->setAttribute('data-slider-step', self::SALARY_STEP)
 			->setAttribute('data-slider-value', $defaultValues['salary'])
 			->setAttribute('data-slider-id', 'slider-primary');
-
-		$form->addGroup('Offers');
-		$form->addText('offers', 'Offers')
+		$form->addText('offers', 'Benefits')
 			->setAttribute('data-role', 'tagsinput')
 			->setAttribute('placeholder', 'add a tag');
-		$form->addText('requirements', 'Requirements')
+		$form->addText('requirements', 'Technical Requirements')
 			->setAttribute('data-role', 'tagsinput')
 			->setAttribute('placeholder', 'add a tag');
 
-		$form->addGroup('Description');
-		$form->addTextArea('description', 'Description')
-			->setAttribute('placeholder', 'Job description')
-			->setAttribute('id', 'jobDescription');
-		$form->addTextArea('summary', 'Summary')
+		$form->addGroup('Job Description');
+		$form->addTextArea('summary', 'Position Summary')
 			->setAttribute('placeholder', 'Job summary')
 			->setAttribute('id', 'jobSummary');
+		$form->addTextArea('description', 'Position Description')
+			->setAttribute('placeholder', 'Job description')
+			->setAttribute('id', 'jobDescription');
 
 		$form->addGroup('Pre-Screening Questions');
 		$questions = $form->addContainer('questions');
@@ -103,8 +101,8 @@ class BasicInfo extends BaseControl
 			$questions->addText($i, 'Question ' . $i);
 		}
 
-		$form->addGroup('Notes');
-		$form->addTextArea('notes')->setAttribute('rows', '8');
+//		$form->addGroup('Notes');
+//		$form->addTextArea('notes')->setAttribute('rows', '8');
 
 		if (!$this->job->isNew()) {
 			$form->addSubmit('save', 'Save');
@@ -128,7 +126,7 @@ class BasicInfo extends BaseControl
 		$this->job->name = $values->name;
 		$this->job->type = $this->jobFacade->findJobType($values->type);
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
-		$this->job->notes = $values->notes;
+//		$this->job->notes = $values->notes;
 		$this->job->questions = (array)$values->questions;
 
 		$salaryFrom = $salaryTo = 0;
@@ -183,7 +181,7 @@ class BasicInfo extends BaseControl
 			'accountManager' => $this->job->accountManager ? $this->job->accountManager->id : NULL,
 			'offers' => $this->getTags(TagJob::TYPE_OFFERS),
 			'requirements' => $this->getTags(TagJob::TYPE_REQUIREMENTS),
-			'notes' => $this->job->notes,
+//			'notes' => $this->job->notes,
 			'description' => $this->job->description,
 			'summary' => $this->job->summary,
 		];

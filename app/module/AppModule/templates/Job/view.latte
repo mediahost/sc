@@ -31,7 +31,7 @@
 								<dl>
 									<dt class="text-muted">{_'Type'}</dt>
 									<dd>{$job->type}</dd>
-									<dt class="text-muted">{_'Salary'}</dt>
+									<dt class="text-muted">{_'Salary (per mth)'}</dt>
 									<dd>{$job->salaryFrom}&nbsp;€ - {$job->salaryTo}&nbsp;€</dd>
 								</dl>
 							</div>
@@ -60,15 +60,15 @@
 
 					<div class="col-md-12">
 						<div class="profile-info bt">
-							<h5 class="text-muted">{_'Description'}</h5>
+							<h5 class="text-muted">{_'Position Description'}</h5>
 							{$job->description|noescape}
 						</div>
 						<div class="profile-info">
-							<h5 class="text-muted">{_'Summary'}</h5>
+							<h5 class="text-muted">{_'Position Summary'}</h5>
 							{$job->summary|noescape}
 						</div>
 						<div class="profile-tags">
-							<h5 class="text-muted">{_'Offers'}</h5>
+							<h5 class="text-muted">{_'Benefits'}</h5>
 							<div>
 								<span n:foreach="$job->tags as $tag"
 										n:if="$tag->type === \App\Model\Entity\TagJob::TYPE_OFFERS"
@@ -76,7 +76,7 @@
 							</div>
 						</div>
 						<div class="profile-tags mb20">
-							<h5 class="text-muted">{_'Requirments'}</h5>
+							<h5 class="text-muted">{_'Technical Requirements'}</h5>
 							<div>
 								<span n:foreach="$job->tags as $tag"
 										n:if="$tag->type === \App\Model\Entity\TagJob::TYPE_REQUIREMENTS"
