@@ -153,6 +153,12 @@ class Match extends BaseEntity
 		return $this;
 	}
 
+	public function setCustomState($value)
+	{
+		$this->customStateName = $value;
+		return $this;
+	}
+
 	public function getAdminNotes()
 	{
 		$filter = function (Note $note) {

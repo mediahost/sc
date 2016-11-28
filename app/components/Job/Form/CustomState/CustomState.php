@@ -41,7 +41,7 @@ class CustomState extends BaseControl
 			->setDefaultValue($customValue)
 			->getControlPrototype()->class = 'form-control';
 
-		$form->addSubmit('send', 'Custom State')
+		$form->addSubmit('send', 'Custom Status')
 			->getControlPrototype()->class[] = 'btn ' . ($customValue ? 'btn-info' : 'btn-default');
 
 		$form->onSuccess[] = $this->formSucceeded;
@@ -57,7 +57,7 @@ class CustomState extends BaseControl
 
 	protected function load(ArrayHash $values, Form $form)
 	{
-		$this->match->state = $values->state;
+		$this->match->customState = $values->state;
 		return $this;
 	}
 

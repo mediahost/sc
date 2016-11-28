@@ -55,8 +55,8 @@
 						<img src="{$person|foto:150,150}"
 							 class="center img-responsive photo-rounded" alt="{$person->fullName}"/>
 					</a>
-					<p n:if="isset($match) && $match->totalStateName" class="text-right">
-						{_'%state% at', ['state' => $match->totalStateName]}<br/>
+					<p n:if="isset($match) && $match->state" class="text-right">
+						{_'%state% at', ['state' => $match->getStateName($match->state)]}<br/>
 						{$match->totalStateTime|date:'d.m.Y'}&nbsp;{$match->totalStateTime|date:'H:i:s'}
 					</p>
 				</div>
