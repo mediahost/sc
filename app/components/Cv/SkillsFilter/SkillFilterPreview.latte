@@ -5,7 +5,10 @@
 *}
 <ul n:inner-foreach="$skillRequests as $skillRequest">
     <li>{$skillRequest->skill} {$skillRequest->levelFrom} - {$skillRequest->levelTo}, 
-        {$skillRequest->yearsFrom} - {$skillRequest->yearsTo} {_'years'}
+        {$skillRequest->yearsFrom} -
+        {$skillRequest->yearsTo}
+        {$skillRequest->yearsTo == App\Components\Cv\SkillsFilter::YEARS_MAX ? App\Components\Cv\SkillsFilter::YEARS_POSTFIX}
+        {_'years'}
     </li>
 </ul>
 

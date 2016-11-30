@@ -141,7 +141,7 @@
 							{$skillKnow->yearsFrom}
 						</td>
 						<td>
-							{$skillKnow->yearsTo}
+							{$skillKnow->yearsTo}{$skillKnow->yearsTo == App\Components\Job\Skills::YEARS_MAX ? App\Components\Job\Skills::YEARS_POSTFIX}
 						</td>
 					</tr>
 					</tbody>

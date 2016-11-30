@@ -35,6 +35,14 @@ var Global = function () {
 				return val;
 			}
 		});
+		$('input.slider[data-postfix]:not([data])').slider({
+			formatter: function(val) {
+				if(val[1] == this.max) {
+					return val[0] + '-' + val[1] + '+';
+				}
+				return val;
+			}
+		});
 		$('input.slider:not([data]):not([data-skill])').slider();
 	};
 

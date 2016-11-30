@@ -19,8 +19,9 @@ class SkillsFilter extends BaseControl
 	const SKILL_MAX = 5;
 	const SKILL_STEP = 1;
 	const YEARS_MIN = 0;
-	const YEARS_MAX = 50;
+	const YEARS_MAX = 10;
 	const YEARS_STEP = 1;
+	const YEARS_POSTFIX = '+';
 
 	/** @var SkillKnowRequest[] */
 	private $skillRequests = [];
@@ -123,7 +124,8 @@ class SkillsFilter extends BaseControl
 				->setAttribute('data-slider-max', self::YEARS_MAX)
 				->setAttribute('data-slider-step', self::YEARS_STEP)
 				->setAttribute('data-slider-value', $default['yearRange'])
-				->setAttribute('data-slider-id', 'slider-primary');
+				->setAttribute('data-slider-id', 'slider-primary')
+				->setAttribute('data-postfix', self::YEARS_POSTFIX);
 		}
 	}
 

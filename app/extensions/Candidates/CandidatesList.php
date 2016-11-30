@@ -209,6 +209,9 @@ class CandidatesList extends Control
 					$loaded[$skillId] = (string)$loadedSkill . ' (' . $skillFrom . ' - ' . $skillTo;
 					if ($serializedSkills['yearRange'][$skillId] !== $defaultYears) {
 						$separatedYearsValues = SkillsFilter::separateValues($serializedSkills['yearRange'][$skillId]);
+						if ($separatedYearsValues[1] == SkillsFilter::YEARS_MAX) {
+							$separatedYearsValues[1] .= SkillsFilter::YEARS_POSTFIX;
+						}
 						$loaded[$skillId] .= ' | ' . $separatedYearsValues[0] . '-' . $separatedYearsValues[1] . ' years';
 					}
 					$loaded[$skillId] .= ')';
