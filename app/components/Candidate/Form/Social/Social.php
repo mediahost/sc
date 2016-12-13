@@ -36,9 +36,9 @@ class Social extends BaseControl
 
 		$form->addText('facebook', 'Facebook');
 		$form->addText('twitter', 'Twitter');
-		$form->addText('google', 'Google+:');
+		$form->addText('google', 'Github:');
 		$form->addText('linkedin', 'LinkedIn');
-		$form->addText('pinterest', 'Pinterest');
+		$form->addText('pinterest', 'Stack Overflow');
 
 		$form->addSubmit('save', 'Save');
 
