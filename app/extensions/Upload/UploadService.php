@@ -62,7 +62,11 @@ class UploadService extends Object
 
 	public function applyWebPath(Document $document)
 	{
-		$path = Helpers::getPath($this->url, $this->documentsFolder, $document->name);
+		if ($this->url !== '/') {
+			$path = Helpers::getPath($this->url, $this->documentsFolder, $document->name);
+		} else {
+			$path = Helpers::getPath($this->documentsFolder, $document->name);
+		}
 		$document->setWebPath($path);
 	}
 
