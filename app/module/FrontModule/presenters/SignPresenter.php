@@ -105,12 +105,12 @@ class SignPresenter extends BasePresenter
 	public function actionUp($role = self::ROLE_DEFAULT)
 	{
 		$this->session->wipe();
-		$this->session->role = $this->getValidRole($role);
 
 		if ($role === self::ROLE_CANDIDATE) {
+			$this->session->role = $this->getValidRole($role);
 			$this['signUp']->setRegisterCandidate();
 		} else if ($role === self::ROLE_COMPANY) {
-			$this['signUp']->setRegisterCompany();
+			$this->redirect('this', ['role' => self::ROLE_CANDIDATE]);
 		}
 
 		$this->template->role = $this->session->role;
