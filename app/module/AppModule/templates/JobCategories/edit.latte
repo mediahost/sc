@@ -1,40 +1,40 @@
 {block pageTitle}
-    {_'Job Categories'}
+	{_'Job Categories'}
 {/block}
 
 {block breadcrumbItems}
-    <li>
-        <a n:href="JobCategories:">{_'Job Categories'}</a>
-    </li>
-    <span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
-    <li class="active">
-        {if $jobCategory->isNew()}
-            {_'New job category'}
-        {else}
-            {_'Job category #%id%', ['id' => $jobCategory->id]}
-        {/if}
-    </li>
+	<li>
+		<a n:href="JobCategories:">{_'Job Categories'}</a>
+	</li>
+	<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+	<li class="active">
+		{if $jobCategory->isNew()}
+			{_'New job category'}
+		{else}
+			{_'Job category #%id%', ['id' => $jobCategory->id]}
+		{/if}
+	</li>
 {/block}
 
 {block content}
-    <div class="row">
-        <div class="col-md-8">
+	<div class="row">
+		<div class="col-md-8">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        {if $jobCategory->isNew()}
-                            {_'New job category'}
-                        {else}
-                            {_'Job category #%id%', ['id' => $jobCategory->id]}
-                        {/if}
-                    </h4>
-                </div>
-                <div class="panel-body">
-                    {control jobCategoryForm}
-                </div>
-            </div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						{if $jobCategory->isNew()}
+							{_'New job category'}
+						{else}
+							{_'Job category #%id%', ['id' => $jobCategory->id]}
+						{/if}
+					</h4>
+				</div>
+				<div class="panel-body">
+					{control jobCategoryForm}
+				</div>
+			</div>
 
-        </div>
-    </div>
+		</div>
+	</div>
 {/block}

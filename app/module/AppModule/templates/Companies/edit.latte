@@ -1,45 +1,45 @@
 {block pageTitle}
-    {if $companyEntity->isNew()}
-        {_'New company'}
-    {else}
-        {_'Company #%id%', ['id' => $companyEntity->id]}
-    {/if}
+	{if $companyEntity->isNew()}
+		{_'New company'}
+	{else}
+		{_'Company #%id%', ['id' => $companyEntity->id]}
+	{/if}
 {/block}
 
 {block breadcrumbItems}
-    <li>
-        <a n:href="Companies:">{_'Companies'}</a>
-    </li>
-    <li>
-        <a n:href="this">
-            {if $companyEntity->isNew()}
-                {_'New company'}
-            {else}
-                {_'Company #%id%', ['id' => $companyEntity->id]}
-            {/if}
-        </a>
-    </li>
+	<li>
+		<a n:href="Companies:">{_'Companies'}</a>
+	</li>
+	<li>
+		<a n:href="this">
+			{if $companyEntity->isNew()}
+				{_'New company'}
+			{else}
+				{_'Company #%id%', ['id' => $companyEntity->id]}
+			{/if}
+		</a>
+	</li>
 {/block}
 
 {block content}
-    <div class="row">
-        <div class="col-md-7">
+	<div class="row">
+		<div class="col-md-7">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        {if $companyEntity->isNew()}
-                            {_'New company'}
-                        {else}
-                            {_'Company #%id%', ['id' => $companyEntity->id]}
-                        {/if}
-                    </h4>
-                </div>
-                <div class="panel-body">
-                    {control companyInfoForm}
-                </div>
-            </div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						{if $companyEntity->isNew()}
+							{_'New company'}
+						{else}
+							{_'Company #%id%', ['id' => $companyEntity->id]}
+						{/if}
+					</h4>
+				</div>
+				<div class="panel-body">
+					{control companyInfoForm}
+				</div>
+			</div>
 
-        </div>
-    </div>
+		</div>
+	</div>
 {/block}

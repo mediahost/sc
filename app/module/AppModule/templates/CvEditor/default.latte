@@ -1,10 +1,10 @@
 {block pageTitle}
-{_'CV Editor of candidate '.$cv->candidate.' ('.$cv->candidate->person->user->mail.')'}
-<a href="{link Messages:}" class="dropdown-toggle"><i class="s16 minia-icon-envelope"></i></a>
+	{_'CV Editor of candidate '.$cv->candidate.' ('.$cv->candidate->person->user->mail.')'}
+	<a href="{link Messages:}" class="dropdown-toggle"><i class="s16 minia-icon-envelope"></i></a>
 {/block}
 
 {block bodyClass}
-hide-righ-sidebar
+	hide-righ-sidebar
 {/block}
 
 {block content}
@@ -25,7 +25,7 @@ hide-righ-sidebar
 					<a href="#other-exp" data-toggle="tab">Other Experience</a>
 				</li>
 				<li>
-					<a href="#personal-skills" data-toggle="tab">Personal Skills and<br /> Competence</a>
+					<a href="#personal-skills" data-toggle="tab">Personal Skills and<br/> Competence</a>
 				</li>
 				<li>
 					<a href="#languages" data-toggle="tab">Language Skills</a>
@@ -101,7 +101,7 @@ hide-righ-sidebar
 					</ul>
 				</li>
 				<li class="active">
-					<a href="#sourceCode"  data-toggle="tab">{_'Source-Code format'}</a>
+					<a href="#sourceCode" data-toggle="tab">{_'Source-Code format'}</a>
 				</li>
 				<li>
 					<a href="#europass" data-toggle="tab">{_'Europass'}</a>
@@ -126,7 +126,8 @@ hide-righ-sidebar
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button>
+				<button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×
+				</button>
 				<h4 class="modal-title">{_'Send by e-mail'}</h4>
 			</div>
 			<div class="modal-body">

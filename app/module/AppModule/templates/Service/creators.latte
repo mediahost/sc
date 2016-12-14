@@ -3,44 +3,44 @@
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="Service:">{_'Services'}</a>
-</li>
-<li><span>{_'Creators'}</span></li>
+	<li>
+		<a n:href="Service:">{_'Services'}</a>
+	</li>
+	<li><span>{_'Creators'}</span></li>
 {/block}
 
 {block content}
 
 <div class="row">
 	<div class="col-md-6">
-        <div class="list-group">
+		<div class="list-group">
 
-            <a n:href="createSkills! 7, 3, 5" class="list-group-item delete-confirm">
-                <h4 class="list-group-item-heading">
-                    {_'Skills'}
-                </h4>
-                <p class="list-group-item-text">
-                     {_'Create 7 categories; 3 subcategories in each category; 5 skills in each subcategory'}
-                </p>
-            </a>
+			<a n:href="createSkills! 7, 3, 5" class="list-group-item delete-confirm">
+				<h4 class="list-group-item-heading">
+					{_'Skills'}
+				</h4>
+				<p class="list-group-item-text">
+					{_'Create 7 categories; 3 subcategories in each category; 5 skills in each subcategory'}
+				</p>
+			</a>
 
-            <a n:href="createCompanies! 50, 5" class="list-group-item delete-confirm">
-                <h4 class="list-group-item-heading">
-                    {_'Companies'}
-                </h4>
-                <p class="list-group-item-text">
-                     {_'Create 50 companies with their users and their jobs (5 for each company) with random selected skill requests'}
-                </p>
-            </a>
+			<a n:href="createCompanies! 50, 5" class="list-group-item delete-confirm">
+				<h4 class="list-group-item-heading">
+					{_'Companies'}
+				</h4>
+				<p class="list-group-item-text">
+					{_'Create 50 companies with their users and their jobs (5 for each company) with random selected skill requests'}
+				</p>
+			</a>
 
-            <a n:href="createJobCategories!" class="list-group-item delete-confirm">
-                <h4 class="list-group-item-heading">
-                    {_'Job categories'}
-                </h4>
-                <p class="list-group-item-text">
-                    {_'Create from SQL file'}
-                </p>
-            </a>
-        </div>
+			<a n:href="createJobCategories!" class="list-group-item delete-confirm">
+				<h4 class="list-group-item-heading">
+					{_'Job categories'}
+				</h4>
+				<p class="list-group-item-text">
+					{_'Create from SQL file'}
+				</p>
+			</a>
+		</div>
 	</div>
 </div>

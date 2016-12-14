@@ -8,11 +8,11 @@
 	</li>
 	<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
 	<li class="active">
-        {if $skillCategory->isNew()}
-            {_'New skill category'}
-        {else}
-            {_'Skill category #%id%', ['id' => $skillCategory->id]}
-        {/if}
+		{if $skillCategory->isNew()}
+			{_'New skill category'}
+		{else}
+			{_'Skill category #%id%', ['id' => $skillCategory->id]}
+		{/if}
 	</li>
 {/block}
 
