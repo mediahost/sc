@@ -1,18 +1,18 @@
 {block pageTitle}
-{_'Company section'}
+	{_'Fill your data'}
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<span>{_'Registration'}</span>
-</li>
+	<li>
+		<span>{_'Registration'}</span>
+	</li>
 {/block}
 
 {block content}
 <div class="row">
 	<div class="col-md-6">
 		{if $isCandidate}
-			{control completeCv}
+			{control completePerson}
 		{elseif $isCompany}
 			{control completeCompany}
 		{/if}

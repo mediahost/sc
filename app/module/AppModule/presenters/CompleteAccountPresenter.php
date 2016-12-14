@@ -4,6 +4,7 @@ namespace App\AppModule\Presenters;
 
 use App\Components\AfterRegistration\CompleteCompany;
 use App\Components\AfterRegistration\CompleteCv;
+use App\Components\AfterRegistration\CompletePerson;
 use App\Components\AfterRegistration\ICompleteCandidateFactory;
 use App\Components\AfterRegistration\ICompleteCompanyFactory;
 use App\Components\AfterRegistration\ICompleteCvFactory;
@@ -11,6 +12,7 @@ use App\Components\AfterRegistration\ICompletePersonFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
+use App\Model\Entity\Person;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
@@ -70,7 +72,7 @@ class CompleteAccountPresenter extends BasePresenter
 				$userRepo = $this->em->getRepository(User::getClassName());
 				$userRepo->save($user->getIdentity());
 			}
-			if ($candidate->isFilled()) {
+			if ($candidate->isCompleted()) {
 				$this->redirect('verify');
 			}
 		}
@@ -93,7 +95,7 @@ class CompleteAccountPresenter extends BasePresenter
 		$candidate = $person->getCandidate();
 		if ($identity->verificated) {
 			if ($this->user->isInRole(Role::CANDIDATE)) {
-				if (!$candidate->isFilled()) {
+				if (!$candidate->isCompleted()) {
 					$message = $this->translator->translate('Your CV file is missing. Please fill this item!');
 					$this->flashMessage($message);
 					$this->redirect('default');
@@ -145,6 +147,24 @@ class CompleteAccountPresenter extends BasePresenter
 		$control = $this->iCompleteCvFactory->create();
 		$control->onAfterSave[] = function (CompleteCv $control, Candidate $candidate) {
 			if (!$candidate->getPerson()->getUser()->verificated) {
+				$message = $this->translator->translate('Your data was saved. Please verify your mail!');
+				$this->flashMessage($message, 'success');
+				$this->redirect('verify');
+			} else {
+				$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
+				$this->flashMessage($message, 'success');
+				$this->redirect(':App:Dashboard:');
+			}
+		};
+		return $control;
+	}
+
+	/** @return CompletePerson */
+	protected function createComponentCompletePerson()
+	{
+		$control = $this->iCompletePersonFactory->create();
+		$control->onSuccess[] = function (CompletePerson $control, Person $person) {
+			if (!$person->getUser()->verificated) {
 				$message = $this->translator->translate('Your data was saved. Please verify your mail!');
 				$this->flashMessage($message, 'success');
 				$this->redirect('verify');

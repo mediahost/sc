@@ -51,6 +51,13 @@ class SignUp extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
+		$form->addText('firstname', 'First name')
+			->setRequired('Please enter your first name.')
+			->setAttribute('placeholder', 'First name');
+		$form->addText('surname', 'Surname')
+			->setRequired('Please enter your surname.')
+			->setAttribute('placeholder', 'Surname');
+
 		$form->addText('mail', 'E-mail')
 			->setRequired('Please enter your e-mail.')
 			->setAttribute('placeholder', 'E-mail')
@@ -68,17 +75,6 @@ class SignUp extends BaseControl
 			->setAttribute('placeholder', 'Re-type Your Password')
 			->setRequired('Please enter your password')
 			->addRule(Form::EQUAL, 'Passwords must be equal.', $form['password']);
-
-		if ($this->registerCandidate) {
-			$acceptedFiles = [
-				'application/pdf',
-				'application/msword',
-				'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-			];
-			$form->addUpload('cvFile', 'Your CV')
-				->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles))
-				->setRequired('Please enter file with %label');
-		}
 
 		$form->addSubmit('continue', 'Continue');
 
@@ -101,6 +97,8 @@ class SignUp extends BaseControl
 	{
 		$user = new User($values->mail, FALSE);
 		$user->setPassword($values->password);
+		$user->person->firstname = $values->firstname;
+		$user->person->surname = $values->surname;
 
 		if (isset($values->cvFile) && $values->cvFile->isOk()) {
 			$user->person->candidate->cvFile = $values->cvFile;

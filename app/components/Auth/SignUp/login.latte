@@ -4,7 +4,25 @@
 			<span>{$error}</span><br/>
 		{/foreach}
 	</div>
-	
+
+	<div class="form-group">
+		<div class="col-md-12">
+			{$form->renderer->renderPureLabel($form['firstname'])}
+		</div>
+		<div class="col-lg-12">
+			{input firstname, class=>'form-control', placeholder=>''}
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-md-12">
+			{$form->renderer->renderPureLabel($form['surname'])}
+		</div>
+		<div class="col-lg-12">
+			{input surname, class=>'form-control', placeholder=>''}
+		</div>
+	</div>
+
 	<div class="form-group">
 		<div class="col-md-12">
 			{$form->renderer->renderPureLabel($form['mail'])}
@@ -13,7 +31,7 @@
 			{input mail, class=>'form-control', placeholder=>''}
 		</div>
 	</div>
-				
+
 	<div class="form-group">
 		<div class="col-md-12">
 			{$form->renderer->renderPureLabel($form['password'])}
@@ -36,7 +54,7 @@
 			{input cvFile, class=>'form-control'}
 		</div>
 	</div>
-		
+
 	<div class="form-group mb0">
 		<div class="col-md-12">
 			{button continue, class=>'btn btn-default'}{caption}{/button}
