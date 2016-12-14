@@ -1,31 +1,40 @@
 {block pageTitle}
-{_'Job Categories'}
+    {_'Job Categories'}
 {/block}
 
 {block breadcrumbItems}
-<li>
-    <a n:href="SkillCategories:">{_'Job Categories'}</a>
-</li>
-<li>
-    <a n:href="this">{if $jobCategory->isNew()}{_'Add'}{else}{_'Edit'}{/if}</a>
-</li>
+    <li>
+        <a n:href="JobCategories:">{_'Job Categories'}</a>
+    </li>
+    <span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+    <li class="active">
+        {if $jobCategory->isNew()}
+            {_'New job category'}
+        {else}
+            {_'Job category #%id%', ['id' => $jobCategory->id]}
+        {/if}
+    </li>
 {/block}
 
 {block content}
-<div class="row">
-    <div class="col-md-8">
-        <div class="portlet light">
-            <div class="portlet-title">
-                <div class="caption font-green-sharp">
-                    <i class="fa fa-edit font-green-sharp"></i>
-                    <span class="caption-subject bold uppercase">
-                {if $jobCategory->isNew()}{_'Add'}{else}{_'Edit'}{/if} {_'category'}
-            </span>
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {if $jobCategory->isNew()}
+                            {_'New job category'}
+                        {else}
+                            {_'Job category #%id%', ['id' => $jobCategory->id]}
+                        {/if}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    {control jobCategoryForm}
+                </div>
+            </div>
+
         </div>
     </div>
-    <div class="portlet-body form border">
-        {control jobCategoryForm}
-    </div>
-</div>
-</div>
-</div>
+{/block}

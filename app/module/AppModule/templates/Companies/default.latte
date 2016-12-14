@@ -1,33 +1,33 @@
 {block pageTitle}
-	{_'Companies'}
+    {_'Companies'}
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="this">{_'Companies'}</a>
-</li>
+    <li>
+        <a n:href="this">{_'Companies'}</a>
+    </li>
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-12">
-		<div class="portlet light">
-			<div class="portlet-body">
-				{control companiesGrid}
-			</div>
-		</div>
-	</div>
-</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-body">
+                    {control companiesGrid}
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="modal fade ajax" id="editUser" aria-hidden="true">
-	<div class="page-loading page-loading-boxed">
-		<img src="{$basePath}/assets/global/img/loading-spinner-grey.gif" alt="" class="loading">
-		<span>&nbsp;&nbsp;{_'Loading...'} </span>
-	</div>
-	<div class="modal-dialog">
-		<div class="modal-content">
-		</div>
-	</div>
-</div>
-{/block content}
+    <div class="modal fade ajax" id="editUser" aria-hidden="true">
+        <div class="page-loading page-loading-boxed">
+            <img src="{$basePath}/assets/global/img/loading-spinner-grey.gif" alt="" class="loading">
+            <span>&nbsp;&nbsp;{_'Loading...'} </span>
+        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+{/block}
 	

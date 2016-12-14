@@ -2,6 +2,10 @@
 	{_'Jobs'}
 {/block}
 
+{block breadcrumbItems}
+	<li class="active">{_'Jobs'}</li>
+{/block}
+
 {block content}
 	{var hasCompany => isset($company) && $company}
 	<div class="row">

@@ -1,53 +1,53 @@
 {block pageTitle}{$company->name}{/block}
 
 {block breadcrumbItems}
-	<li>
-		<a n:href="Company:">{_'Company'}</a>
-	</li>
+    <li>
+        <a n:href="Company:">{_'Company'}</a>
+    </li>
 {/block}
 
 {block content}
-
-<div class="row">
-	<div class="col-md-12">
-		<div class="portlet light">
-			<div class="portlet-title tabbable-line">
-				<div class="caption">
-					<i class="icon-home"></i>
-					<span class="caption-subject bold uppercase">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light">
+                <div class="portlet-title tabbable-line">
+                    <div class="caption">
+                        <i class="icon-home"></i>
+                        <span class="caption-subject bold uppercase">
 						{_'Messages'}
 					</span>
-				</div>
-			</div>
-			<div class="portlet-body">
-				<div class="row">
-					<div class="col-md-5 col-sm-4">
-						{control communicationList}
-						<p></p>
-						<a n:href="this#newMessage" class="btn btn-info" data-toggle="modal">
-							<i class="fa fa-envelope"></i>
-							{_'New Message'}
-						</a>
-					</div>
-					<div class="col-md-7 col-sm-8" n:ifset="$conversation">
-						{control communication}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-4">
+                            {control communicationList}
+                            <p></p>
+                            <a n:href="this#newMessage" class="btn btn-info" data-toggle="modal">
+                                <i class="fa fa-envelope"></i>
+                                {_'New Message'}
+                            </a>
+                        </div>
+                        <div class="col-md-7 col-sm-8" n:ifset="$conversation">
+                            {control communication}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="modal fade" id="newMessage" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-				<h4 class="modal-title">{_'Start communication'}</h4>
-			</div>
-			<div class="modal-body">
-				{control newCommunication}
-			</div>
-		</div>
-	</div>
-</div>
+    <div class="modal fade" id="newMessage" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">{_'Start communication'}</h4>
+                </div>
+                <div class="modal-body">
+                    {control newCommunication}
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

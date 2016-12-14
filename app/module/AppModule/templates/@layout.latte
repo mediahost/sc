@@ -68,19 +68,17 @@
 					<div class="heading">
 						<h3>{block pageTitle}{_'Source Code'}{/block}</h3>
 
-						<div class="resBtnSearch">
-							<a href="#"><span class="s16 icomoon-icon-search-3"></span></a>
-						</div>
-						<div class="search">
-							<form id="searchform" class="form-horizontal" action="{link this}">
-								<input type="text" class="top-search from-control" placeholder="Search here ..." />
-								<input type="submit" class="search-btn" value="" />
-							</form>
-						</div>
-
 						<ul class="breadcrumb">
 							<li>{_'You are here'}:</li>
-							<li class="active">{_'Source Code'}</li>
+							<li>
+								<a n:href="Dashboard:" class="tip" title="" data-original-title="{_'Back to dashboard'}">
+									<i class="s16 icomoon-icon-screen-2"></i>
+								</a>
+							</li>
+							<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+							{block breadcrumbItems}
+                                <li class="active">{_'Dashboard'}</li>
+                            {/block}
 						</ul>
 					</div>
 					<!-- END PAGE HEADER-->

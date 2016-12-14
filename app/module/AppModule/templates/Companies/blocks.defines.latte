@@ -1,23 +1,23 @@
 {define editActions}
-<div class="btn-group">
-	<a class="btn btn-circle btn-default " href="#" data-toggle="dropdown">
-		<i class="fa fa-pencil"></i>
-		{_'Edit'}
-		<i class="fa fa-angle-down"></i>
-	</a>
-	<ul class="dropdown-menu pull-right">
-		<li>
-			<a n:href="Companies:edit, $company->id">
-				<i class="fa fa-pencil"></i>
-				{_'Info'}
-			</a>
-		</li>
-		<li>
-			<a n:href="Companies:editImages, $company->id">
-				<i class="fa fa-image"></i>
-				{_'Pictures'}
-			</a>
-		</li>
-	</ul>
-</div>
+    <div class="btn-group">
+        <a class="btn btn-circle btn-default " href="#" data-toggle="dropdown">
+            <i class="fa fa-pencil"></i>
+            {_'Edit'}
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu pull-right">
+            <li>
+                <a n:href="Companies:edit, $company->id">
+                    <i class="fa fa-pencil"></i>
+                    {_'Info'}
+                </a>
+            </li>
+            <li>
+                <a n:href="Companies:editImages, $company->id">
+                    <i class="fa fa-image"></i>
+                    {_'Pictures'}
+                </a>
+            </li>
+        </ul>
+    </div>
 {/define}

@@ -1,32 +1,37 @@
 {block pageTitle}
-	{_'New job'}
+    {_'New job'}
 {/block}
 
 {block breadcrumbItems}
-	<li>
-		<a n:href="Companies:">{_'Companies'}</a>
-	</li>
-	<li>
-		<a n:href="Company: $job->company->id">{$job->company}</a>
-	</li>
-	<li>
-		<a n:href="Jobs: $job->company->id">{_'Jobs'}</a>
-	</li>
-	<li>
-		<a n:href="this">{if $job->isNew()}{_'Add'}{else}{_'Edit'} {$job}{/if}</a>
-	</li>
+    <li>
+        <a n:href="Companies:">{_'Companies'}</a>
+    </li>
+    <span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+    <li>
+        <a n:href="Company: $job->company->id">{$job->company}</a>
+    </li>
+    <span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+    <li>
+        <a n:href="Jobs: $job->company->id">{_'Jobs'}</a>
+    </li>
+    <span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+    <li class="active">
+        {if $job->isNew()}
+            {_'Add new job'}
+        {else}
+            {_'Edit job #%id%', ['id' => $job->id]}
+        {/if}
+    </li>
 {/block}
 
 {block content}
-
-	<div class="row">
-		<div class="col-md-8">
-			<div class="page-header">
-				<h4>{_'Info'}</h4>
-			</div>
-			{control jobInfoForm}
-			</br>
-		</div>
-	</div>
-
-{/block content}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="page-header">
+                <h4>{_'Info'}</h4>
+            </div>
+            {control jobInfoForm}
+            </br>
+        </div>
+    </div>
+{/block}

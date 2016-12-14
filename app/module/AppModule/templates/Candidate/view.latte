@@ -1,140 +1,147 @@
 {block pageTitle}
-	{_'Overview of candidate %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $person->user->mail]}
+    {_'Overview of candidate %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $person->user->mail]}
+{/block}
+
+{block breadcrumbItems}
+    <li>
+        <a n:href="this">{_'Candidate overview'}</a>
+    </li>
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-lg-6 col-md-12">
-		{snippet personalDetails}
-			{include personalDetailsPanel}
-		{/snippet}
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            {snippet personalDetails}
+                {include personalDetailsPanel}
+            {/snippet}
 
-		{if $candidate}
-			{snippet interestedIn}
-				{include interestedInPanel}
-			{/snippet}
-		{/if}
-	</div>
-	<div class="col-lg-6 col-md-12" n:if="$candidate">
-		{include itSkillsPanel}
+            {if $candidate}
+                {snippet interestedIn}
+                    {include interestedInPanel}
+                {/snippet}
+            {/if}
+        </div>
+        <div class="col-lg-6 col-md-12" n:if="$candidate">
+            {include itSkillsPanel}
 
-		{snippet socialLinks}
-			{include socialLinksPanel}
-		{/snippet}
+            {snippet socialLinks}
+                {include socialLinksPanel}
+            {/snippet}
 
-		{include docsPanel}
+            {include docsPanel}
 
-		{control recentMessages}
-	</div>
-</div>
+            {control recentMessages}
+        </div>
+    </div>
+{/block}
 
 
 {define personalDetailsPanel}
-	<div n:if="$person" class="panel panel-default">
-		<div class="panel-heading">
-			<h4 class="panel-title">{_'Personal Details'}</h4>
-		</div>
-		<div class="panel-body personal-detail-editor">
-			<div class="row profile">
-				<div class="col-md-4">
-					<div class="profile-avatar">
-						<a href="#edit-photo" class="edit">
-							<img src="{$person|foto:150,150}"
-								 alt="{$person->fullName}" class="responsive"/>
-							<i class="fa fa-edit"></i>
-						</a>
-					</div>
-				</div>
-				<div class="col-md-8">
-					<div class="profile-name">
-						<h3>
-							{if $person && $person->fullName}
-								{$person->fullName}
-							{else}
-								{$person->user->mail}
-							{/if}
-							<a href="#edit-personal" class="edit">
-								<i class="fa fa-edit"></i>
-							</a>
-						</h3>
-						{if $person}
-							<p class="job-title mb0">
-								<i class="fa fa-building"></i>
-								{if $person->address}{$person->address->format()}{/if}
-								<a href="#edit-address" class="edit">
-									<i class="fa fa-edit"></i>
-								</a>
-							</p>
-							<a n:if="!$user->isInRole('superadmin') && !$user->isInRole('admin')"
-									href="{link :App:Messages:default#newMessage}"
-									class="btn btn-default btn-alt btn-large">{_'Send Message'}</a>
-						{/if}
-					</div>
-				</div>
-			</div>
-			<div class="row profile-edit" id="edit-photo">
-				{control photoForm}
-			</div>
-			<div class="row profile-edit" id="edit-personal">
-				{control profileForm}
-			</div>
-			<div class="row profile-edit" id="edit-address">
-				{control addressForm}
-			</div>
-		</div>
-	</div>
+    <div n:if="$person" class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{_'Personal Details'}</h4>
+        </div>
+        <div class="panel-body personal-detail-editor">
+            <div class="row profile">
+                <div class="col-md-4">
+                    <div class="profile-avatar">
+                        <a href="#edit-photo" class="edit">
+                            <img src="{$person|foto:150,150}"
+                                 alt="{$person->fullName}" class="responsive"/>
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="profile-name">
+                        <h3>
+                            {if $person && $person->fullName}
+                                {$person->fullName}
+                            {else}
+                                {$person->user->mail}
+                            {/if}
+                            <a href="#edit-personal" class="edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </h3>
+                        {if $person}
+                            <p class="job-title mb0">
+                                <i class="fa fa-building"></i>
+                                {if $person->address}{$person->address->format()}{/if}
+                                <a href="#edit-address" class="edit">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                            </p>
+                            <a n:if="!$user->isInRole('superadmin') && !$user->isInRole('admin')"
+                                    href="{link :App:Messages:default#newMessage}"
+                                    class="btn btn-default btn-alt btn-large">{_'Send Message'}</a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            <div class="row profile-edit" id="edit-photo">
+                {control photoForm}
+            </div>
+            <div class="row profile-edit" id="edit-personal">
+                {control profileForm}
+            </div>
+            <div class="row profile-edit" id="edit-address">
+                {control addressForm}
+            </div>
+        </div>
+    </div>
 {/define}
 
 {define itSkillsPanel}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h4 class="panel-title">{_'IT Skills'}</h4>
-		</div>
-		<div class="panel-body pb0">
-			{control skillsForm}
-		</div>
-	</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{_'IT Skills'}</h4>
+        </div>
+        <div class="panel-body pb0">
+            {control skillsForm}
+        </div>
+    </div>
 {/define}
 
 {define interestedInPanel}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h4 class="panel-title">Interested in</h4>
-		</div>
-		<div class="panel-body interestedIn-editor">
-			<div class="row interestedIn">
-				<a href="#edit-interested" class="edit">
-					<i class="fa fa-edit"></i>
-				</a>
-				{control completeCandidatePreview}
-			</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Interested in</h4>
+        </div>
+        <div class="panel-body interestedIn-editor">
+            <div class="row interestedIn">
+                <a href="#edit-interested" class="edit">
+                    <i class="fa fa-edit"></i>
+                </a>
+                {control completeCandidatePreview}
+            </div>
 
-			<div class="row interestedIn-edit" id="edit-interested">
-				{control completeCandidate}
-			</div>
-		</div>
-	</div>
+            <div class="row interestedIn-edit" id="edit-interested">
+                {control completeCandidate}
+            </div>
+        </div>
+    </div>
 {/define}
 
 {define socialLinksPanel}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h4 class="panel-title">{_'Social links'}</h4>
-		</div>
-		<div class="panel-body social-editor">
-			{control socialForm}
-		</div>
-	</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{_'Social links'}</h4>
+        </div>
+        <div class="panel-body social-editor">
+            {control socialForm}
+        </div>
+    </div>
 {/define}
 
 {define docsPanel}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h4 class="panel-title">{_'Career docs'}</h4>
-		</div>
-		<div class="panel-body docs-tab">
-			{control docsForm}
-		</div>
-	</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">{_'Career docs'}</h4>
+        </div>
+        <div class="panel-body docs-tab">
+            {control docsForm}
+        </div>
+    </div>
 {/define}
 

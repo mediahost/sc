@@ -48,7 +48,7 @@ $(document).ready(function() {
             shrink: true //shrink header on scroll ( only when fixed is true.)
         },
         breadcrumbs: {
-            auto: true, //auto populate breadcrumbs via js if is false you need to provide own markup see for example.
+            auto: false, //auto populate breadcrumbs via js if is false you need to provide own markup see for example.
             homeicon: 's16 icomoon-icon-screen-2', //home icon 
             dividerIcon: 's16 icomoon-icon-arrow-right-3' //divider icon
         },

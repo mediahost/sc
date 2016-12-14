@@ -2,6 +2,20 @@
 	{_'Skills'}
 {/block}
 
+{block breadcrumbItems}
+	<li>
+		<a n:href="Skills:">{_'Skills'}</a>
+	</li>
+	<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+	<li class="active">
+        {if $skill->isNew()}
+            {_'New skill'}
+        {else}
+            {_'Skill #%id%', ['id' => $skill->id]}
+        {/if}
+	</li>
+{/block}
+
 {block content}
 	<div class="row">
 		<div class="col-md-8">

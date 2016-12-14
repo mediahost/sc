@@ -1,24 +1,32 @@
 {block pageTitle}
-	{if $editMine}
-		{_'My CV'}
-	{else}
-		{_'CV for \'%candidate%\'', ['candidate' => $candidate]}
-	{/if}
+    {if $editMine}
+        {_'My CV'}
+    {else}
+        {_'CV for \'%candidate%\'', ['candidate' => $candidate]}
+    {/if}
+{/block}
+
+{block breadcrumbItems}
+    {if $editMine}
+        <li class="active">{_'My CV'}</li>
+    {else}
+        <li class="active"> {_'CV for \'%candidate%\'', ['candidate' => $candidate]}</li>
+    {/if}
 {/block}
 
 {block content}
-	<div class="row">
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						{_'CV file'}
-					</h4>
-				</div>
-				<div class="panel-body pt0 pb0">
-					{control changeCv}
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {_'CV file'}
+                    </h4>
+                </div>
+                <div class="panel-body pt0 pb0">
+                    {control changeCv}
+                </div>
+            </div>
+        </div>
+    </div>
 {/block content}

@@ -1,36 +1,38 @@
 {block pageTitle}
-{$company}
+    {$company}
 {/block}
 
 {block breadcrumbItems}
-<li>
-	<a n:href="Companies:">{_'Companies'}</a>
-</li>
-<li>
-	<a n:href="this">{_'Images for'} {$company}</a>
-</li>
+    <li>
+        <a n:href="Companies:">{_'Companies'}</a>
+    </li>
+    <li>
+        <a n:href="this">{_'Images for'} {$company}</a>
+    </li>
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-8">
-		<div class="portlet light">
-			<div class="portlet-title">
-				<div class="caption font-green-sharp">
-					<i class="fa fa-edit font-green-sharp"></i>
-					<span class="caption-subject bold uppercase">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption font-green-sharp">
+                        <i class="fa fa-edit font-green-sharp"></i>
+                        <span class="caption-subject bold uppercase">
 						{_'Edit company images'}
 					</span>
-				</div>
-				<div class="actions">
-					{includeblock 'blocks.defines.latte'}
-					{include editActions}
-					<a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title=""></a>
-				</div>
-			</div>
-			<div class="portlet-body form border">
-				{control companyImagesForm}
-			</div>
-		</div>
-	</div>
-</div>
+                    </div>
+                    <div class="actions">
+                        {includeblock 'blocks.defines.latte'}
+                        {include editActions}
+                        <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title=""
+                           title=""></a>
+                    </div>
+                </div>
+                <div class="portlet-body form border">
+                    {control companyImagesForm}
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

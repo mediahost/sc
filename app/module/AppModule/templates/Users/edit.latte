@@ -1,26 +1,40 @@
 {block pageTitle}
-	{_'Users'}
+    {_'Users'}
+{/block}
+
+{block breadcrumbItems}
+    <li>
+        <a n:href="Users:">{_'Users'}</a>
+    </li>
+    <span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+    <li class="active">
+        {if $userEntity->isNew()}
+            {_'New user'}
+        {else}
+            {_'User #%id%', ['id' => $userEntity->id]}
+        {/if}
+    </li>
 {/block}
 
 {block content}
-	<div class="row">
-		<div class="col-md-8">
+    <div class="row">
+        <div class="col-md-8">
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						{if $userEntity->isNew()}
-							{_'New user'}
-						{else}
-							{_'User #%id%', ['id' => $userEntity->id]}
-						{/if}
-					</h4>
-				</div>
-				<div class="panel-body">
-					{control userForm}
-				</div>
-			</div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {if $userEntity->isNew()}
+                            {_'New user'}
+                        {else}
+                            {_'User #%id%', ['id' => $userEntity->id]}
+                        {/if}
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    {control userForm}
+                </div>
+            </div>
 
-		</div>
-	</div>
+        </div>
+    </div>
 {/block}
