@@ -39,7 +39,6 @@ class Address extends BaseControl
 				->setPrompt('Not disclosed');
 		$form->addSelect2('nationality', 'Nationality', Entity\Person::getNationalityList())
 				->setPrompt('Not disclosed');
-		$form->addText('phone', 'Contact number');
 
 		$form->addSubmit('save', 'Save');
 
@@ -65,7 +64,6 @@ class Address extends BaseControl
 		$this->person->address->zipcode = $values->zipcode;
 		$this->person->address->city = $values->city;
 		$this->person->address->country = $values->country;
-		$this->person->phone = $values->phone;
 		$this->person->nationality = $values->nationality;
 		return $this;
 	}

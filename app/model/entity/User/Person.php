@@ -29,6 +29,9 @@ use Nette\Utils\Strings;
  * @property-read string $degreeName
  * @property string $nationality
  * @property string $phone
+ * @property string $phoneMobile
+ * @property string $mail
+ * @property string $mailHome
  * @property Address $address
  * @property Image $photo
  * @property string $facebookLink
@@ -77,6 +80,15 @@ class Person extends BaseEntity
 
 	/** @ORM\Column(type="string", length=50, nullable=true) */
 	protected $phone;
+
+	/** @ORM\Column(type="string", length=50, nullable=true) */
+	protected $phoneMobile;
+
+	/** @ORM\Column(type="string", length=255, nullable=true) */
+	protected $mail;
+
+	/** @ORM\Column(type="string", length=255, nullable=true) */
+	protected $mailHome;
 
 	/** @ORM\OneToOne(targetEntity="Image", cascade="all") */
 	protected $photo;

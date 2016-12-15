@@ -6,7 +6,6 @@ use App\Components\BaseControl;
 use App\Components\BaseControlException;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
-use App\Model\Entity\Candidate;
 use App\Model\Entity\Person;
 use Nette\Utils\ArrayHash;
 
@@ -56,6 +55,10 @@ class Profile extends BaseControl
 
 		$form->addDatePicker('birthday', 'Birthday');
 
+		$form->addText('phone', 'Mobile number');
+
+		$form->addText('mail2', '2nd e-mail');
+
 		$form->addRadioList('gender', 'Gender', Person::getGenderList())
 			->setDefaultValue('x');
 
@@ -86,6 +89,8 @@ class Profile extends BaseControl
 		$this->person->gender = $values->gender;
 		$this->person->degreeBefore = $values->degreebefore;
 		$this->person->degreeAfter = $values->degreeafter;
+		$this->person->phoneMobile = $values->phone;
+		$this->person->mailHome = $values->mail2;
 		if ($values->tags) {
 			$this->person->getCandidate()->tags = $values->tags;
 		}
@@ -111,6 +116,8 @@ class Profile extends BaseControl
 			'gender' => $this->person->gender,
 			'degreebefore' => $this->person->degreeBefore,
 			'degreeafter' => $this->person->degreeAfter,
+			'phone' => $this->person->phoneMobile,
+			'mail2' => $this->person->mailHome,
 			'tags' => $this->person->getCandidate()->tags
 		];
 		return $values;
