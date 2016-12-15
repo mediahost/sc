@@ -25,9 +25,6 @@ class CvEditorPresenter extends BasePresenter
 	/** @var Cv\IBasicInfoFactory @inject */
 	public $iBasicInfoFactory;
 
-	/** @var Cv\ILivePreviewFactory @inject */
-	public $iLivePreviewFactory;
-
 	/** @var Cv\ISendEmailFactory @inject */
 	public $iSendEmailFactory;
 
@@ -168,12 +165,6 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$this->cv]);
 		$this->flashMessage($message, 'success');
-
-		if ($this->isAjax()) {
-			$this->payload->reloadPreview = true;
-		} else {
-			$this->redirect('this');
-		}
 	}
 
 	/** @return BasicInfo */
@@ -293,15 +284,6 @@ class CvEditorPresenter extends BasePresenter
 		$control->setCv($this->cv);
 		$control->setAjax(true, true);
 		$control->onAfterSave = $this->afterCvSave;
-		return $control;
-	}
-
-	/** @return LivePreview */
-	public function createComponentCvPreview()
-	{
-		$control = $this->iLivePreviewFactory->create();
-		$control->setScale(0.8, 0.8, 1);
-		$control->setCv($this->cv);
 		return $control;
 	}
 

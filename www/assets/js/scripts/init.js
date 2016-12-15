@@ -15,9 +15,6 @@ jQuery(document).ready(function () {
 		},
 		complete: function (data) {
 			Global.init();
-			if (data.reloadPreview) {
-				PdfViewer.renderPage();
-			}
 		}
 	});
 
