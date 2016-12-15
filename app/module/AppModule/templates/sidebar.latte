@@ -188,29 +188,31 @@
 				<!-- BEGIN TOGETHER AREA -->
 				{if $user->isAllowed('profile', 'default') && $isCompleteAccount}
 					<div class="sidebar-widget mb0">
+						<h6 class="title mb0">{_'Profile'}</h6>
+					</div>
+					<div class="mainnav">
+						<ul>
+							<li>
+								<a n:href="Profile:" n:class="$presenter->isLinkCurrent('Profile:default') ? active">
+									<i class="s16 fa fa-user"></i>
+									<span class="txt">{_'My Profile'}</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				{/if}
+
+				{if $user->isAllowed('profile', 'settings')}
+					<div class="sidebar-widget mb0">
 						<h6 class="title mb0">{_'Settings'}</h6>
 					</div>
 					<div class="mainnav">
 						<ul>
 							<li>
-								<a href="#">
-									<i class="s16 fa fa-user"></i>
-									<span class="txt">{_'My Profile'}</span>
+								<a n:href="Profile:settings" n:class="$presenter->isLinkCurrent('Profile:*') && !$presenter->isLinkCurrent('Profile:default') ? active">
+									<i class="s16 fa fa-gears"></i>
+									<span class="txt">{_'Settings'}</span>
 								</a>
-								<ul n:class="sub, $presenter->isLinkCurrent('Profile:*') ? show">
-									<li>
-										<a n:href="Profile:" n:class="$presenter->isLinkCurrent('Profile:default') ? active">
-											<i class="s16 fa fa-eye"></i>
-											<span class="txt">{_'Overview'}</span>
-										</a>
-									</li>
-									<li n:if="$user->isAllowed('profile', 'settings')">
-										<a n:href="Profile:settings" n:class="$presenter->isLinkCurrent('Profile:settings') ? active">
-											<i class="s16 fa fa-gears"></i>
-											<span class="txt">{_'Settings'}</span>
-										</a>
-									</li>
-								</ul>
 							</li>
 						</ul>
 					</div>
