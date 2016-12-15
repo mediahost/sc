@@ -107,13 +107,13 @@ class CompanyInfo extends BaseControl
 	public function formSucceeded(Form $form, $values)
 	{
 		$id = $this->company ? $this->company->id : NULL;
-		if ($this->companyFacade->isUniqueId($values->companyId, $id)) {
+		if (!$this->companyFacade->isUniqueId($values->companyId, $id)) {
 			$message = $this->translator->translate('\'%name%\' is already registered.', ['name' => $values->companyId]);
 			$form['companyId']->addError($message);
 		}
-		if ($this->companyFacade->isUniqueName($values->name, $id)) {
+		if (!$this->companyFacade->isUniqueName($values->name, $id)) {
 			$message = $this->translator->translate('\'%name%\' is already registered.', ['name' => $values->name]);
-			$form['companyId']->addError($message);
+			$form['name']->addError($message);
 		}
 
 		if (!$form->hasErrors()) {
