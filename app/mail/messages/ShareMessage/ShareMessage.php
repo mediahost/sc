@@ -9,7 +9,7 @@ class ShareMessage extends BaseMessage
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setFrom('noreply@sc.com');
+		$this->setFrom('system@source-code.com');
 		$this->setSubject('Curriculum Vitae');
 	}
 }
