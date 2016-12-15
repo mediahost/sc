@@ -30,7 +30,7 @@ var Global = function () {
 				var val1 = skillLevels[val[0]-1];
 				var val2 = skillLevels[val[1]-1];
 				if (val1 != undefined && val2 != undefined) {
-					return val1 + '-' + val2;
+					return val1 + ' - ' + val2;
 				}
 				return val;
 			}
@@ -38,9 +38,9 @@ var Global = function () {
 		$('input.slider[data-postfix]:not([data])').slider({
 			formatter: function(val) {
 				if(val[1] == this.max) {
-					return val[0] + '-' + val[1] + '+';
+					return val[0] + ' - ' + val[1] + '+';
 				}
-				return val;
+				return val[0] + ' - ' + val[1];
 			}
 		});
 		$('input.slider:not([data]):not([data-skill])').slider();
