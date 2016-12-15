@@ -57,7 +57,9 @@
 							</div>
 							<div n:snippet="applyBox">
 								<div class="col-md-4 text-right" n:if="$isCandidate">
-									<a n:if="!$isApplied" n:href="apply! $job->id"
+									<a n:if="!$isApplied && !$candidate->cvFile" href="#fillCvModal" data-toggle="modal"
+											class="btn btn-lg btn-success">{_'Apply'}</a>
+									<a n:if="!$isApplied && $candidate->cvFile" n:href="apply! $job->id"
 											class="btn btn-lg btn-success ajax">{_'Apply'}</a>
 									<button n:if="!$isMatched && $isApplied"
 											class="btn btn-lg btn-warning disabled">{_'Applied'}</button>
@@ -168,4 +170,22 @@
 			{control jobCandidates-$stateKey}
 		</div>
 	{/ifset}
+
+	<!-- Fill CV Modal -->
+	<div n:if="$isCandidate && !$candidate->cvFile" class="modal fade" id="fillCvModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title" id="mySmallModalLabel">{_'Fill your CV file'}</h4>
+				</div>
+				<div class="modal-body">
+					{control uploadCv}
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.modal -->
 </div>

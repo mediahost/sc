@@ -30,6 +30,9 @@ abstract class BaseControl extends UI\Control
 	/** @var bool */
 	protected $isSendOnChange = FALSE;
 
+	/** @var bool */
+	protected $isModal = FALSE;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -48,6 +51,12 @@ abstract class BaseControl extends UI\Control
 		return $this;
 	}
 
+	public function setModal($isModal = TRUE)
+	{
+		$this->isModal = $isModal;
+		return $this;
+	}
+
 	public function getTemplate()
 	{
 		$template = parent::getTemplate();
@@ -57,6 +66,8 @@ abstract class BaseControl extends UI\Control
 
 	public function render()
 	{
+		$this->template->isModal = $this->isModal;
+
 		$dir = dirname($this->getReflection()->getFileName());
 
 		$template = $this->getTemplate();

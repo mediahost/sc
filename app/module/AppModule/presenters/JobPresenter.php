@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\AfterRegistration\CompleteCv;
+use App\Components\AfterRegistration\ICompleteCvFactory;
 use App\Components\Job\BasicInfo;
 use App\Components\Job\IBasicInfoFactory;
 use App\Components\Job\ISkillsFactory;
@@ -42,6 +44,9 @@ class JobPresenter extends BasePresenter
 
 	/** @var ISkillsFactory @inject */
 	public $iJobSkillsFactory;
+
+	/** @var ICompleteCvFactory @inject */
+	public $iCompleteCvFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -101,6 +106,10 @@ class JobPresenter extends BasePresenter
 				});
 			}
 		}
+		if ($this->user->isInRole(Role::CANDIDATE)) {
+			$candidate = $this->user->getIdentity()->person->candidate;
+			$this['uploadCv']->setCandidate($candidate);
+		}
 	}
 
 	public function renderView()
@@ -109,6 +118,7 @@ class JobPresenter extends BasePresenter
 			$this->template->job = $this->job;
 			if ($this->user->isInRole(Role::CANDIDATE)) {
 				$candidate = $this->user->getIdentity()->person->candidate;
+				$this->template->candidate = $candidate;
 				$this->template->isApplied = $this->candidateFacade->isApplied($candidate, $this->job);
 				$this->template->isInvited = $this->candidateFacade->isApproved($candidate, $this->job);
 				$this->template->isMatched = $this->candidateFacade->isMatched($candidate, $this->job);
@@ -280,6 +290,19 @@ class JobPresenter extends BasePresenter
 				->addFilterJob($this->job, TRUE, $state);
 			return $control;
 		});
+	}
+
+	/** @return CompleteCv */
+	public function createComponentUploadCv()
+	{
+		$control = $this->iCompleteCvFactory->create();
+		$control->setModal();
+		$control->onAfterSave[] = function () {
+			$message = $this->translator->translate('File was successfully uploaded.');
+			$this->flashMessage($message, 'success');
+			$this->handleApply($this->job->id);
+		};
+		return $control;
 	}
 
 	// </editor-fold>
