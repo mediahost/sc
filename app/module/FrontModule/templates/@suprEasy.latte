@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js lt-ie8"> <![endif]-->
+<html lang="{$lang}" class="no-js">
+{includeblock '../../BaseModule/templates/metronic.defines.latte'}
+
+<!-- BEGIN HEAD -->
+<head>
+	<meta charset="utf-8">
+	<title>{block title|striptags}{_'Source-Code'}{/block}</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<!--[if IE]><meta http-equiv="x-ua-compatible" content="IE=9" /><![endif]-->
+
+	<meta name="robots" content="noindex,nofollow">
+	<meta content="" name="author"/>
+	<meta content="" name="description"/>
+	<meta content="" name="keywords">
+	<meta content="" name="application-name"/>
+
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="{_'Source-Code'}">
+	<meta property="og:title" content="{include title}">
+	<meta property="og:description" content="">
+	<meta property="og:image" content="{link //:Foto:Foto:}">
+	<meta property="og:url" content="{link //this}">
+
+	{include cssSuprFonts}
+	{control cssSupr}
+	{control cssFront}
+
+	<link rel="shortcut icon" href="{$basePath}/favicon.png" type="image/x-icon" />
+</head>
+
+<body class="{block bodyClass}login-page{/block}">
+
+<div id="header" class="animated fadeInDown">
+	<div class="row">
+		<div class="navbar">
+			<div class="container text-center">
+				<a class="navbar-brand" n:href="Homepage:">{_'Source-Code'}</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+{include content}
+
+<!-- Javascripts -->
+<!-- Load pace first -->
+<script src="{$basePath}/assets/js/supr/plugins/core/pace/pace.min.js"></script>
+
+{control jsSuprCore}
+{include jsSuprCore}
+
+{control jsLibs}
+{control jsCustomScripts}
+
+</body>
+</html>
+
+{define flashMessage}
+	<!-- BEGIN FLASH MESSAGES-->
+	<div n:snippet="flashMessages">
+		<div n:foreach="$flashes as $flash"
+				class="alert alert-{$flash->type} fade in">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			{$flash->message}
+		</div>
+	</div>
+	<!-- END FLASH MESSAGES-->
+{/define}

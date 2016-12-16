@@ -74,6 +74,12 @@ class ProfilePresenter extends BasePresenter
 	/** @var bool */
 	private $canEdit = FALSE;
 
+	protected function beforeRender()
+	{
+		$this->setLayout('supr');
+		parent::beforeRender();
+	}
+
 	public function actionDefault($id)
 	{
 		if ($this->user->isLoggedIn()) {

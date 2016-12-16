@@ -72,7 +72,7 @@ class SignPresenter extends BasePresenter
 
 	protected function beforeRender()
 	{
-		$this->setLayout('supr');
+		$this->setLayout('suprEasy');
 		parent::beforeRender();
 		$this->template->roleCandidate = self::ROLE_CANDIDATE;
 		$this->template->roleCompany = self::ROLE_COMPANY;
