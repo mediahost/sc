@@ -28,11 +28,25 @@ class MatchNotes extends BaseControl
 
 	public function render()
 	{
-		if ($this->user->isAllowed('adminNotes')) {
+		if ($this->user->isAllowed('adminNotes', 'view')) {
 			$this->template->notes = $this->match->adminNotes;
-		} else if ($this->user->isAllowed('companyNotes')) {
+		} else if ($this->user->isAllowed('companyNotes', 'view')) {
 			$this->template->notes = $this->match->companyNotes;
 		}
+		parent::render();
+	}
+
+	public function renderAdmin()
+	{
+		$this->template->notes = $this->match->adminNotes;
+		$this->template->editable = $this->user->isAllowed('adminNotes', 'add');
+		parent::render();
+	}
+
+	public function renderCompany()
+	{
+		$this->template->notes = $this->match->companyNotes;
+		$this->template->editable = $this->user->isAllowed('companyNotes', 'add');
 		parent::render();
 	}
 

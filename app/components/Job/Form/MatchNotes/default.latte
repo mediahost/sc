@@ -15,7 +15,7 @@
 			{$note->text|stripTags|nl2br}
 		</div>
 	</li>
-	<li class="sendMsg">
+	<li n:if="$editable" class="sendMsg">
 		{form form}
 			{input message}
 			{input send}

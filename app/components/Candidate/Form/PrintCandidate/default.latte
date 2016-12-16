@@ -2,29 +2,35 @@
 	<div id="{$id}" class="panel panel-default plain candidate-item">
 		<div class="panel-heading">
 			<h4 class="panel-title ui-widget-content">
-				<small n:if="$candidate->cvFile">
+				<span n:if="$candidate->cvFile"
+						data-toggle="tooltip" data-placement="top" data-original-title="{_'Download CV file'}">
 					<a href="{$basePath}/{$candidate->cvFile}"
 					   target="_blank" title="{_'CV file'}"><i class="icomoon-icon-file-download"></i></a>
-				</small>
-				<small n:if="!$candidate->cvFile && $identity->isAllowed('candidate', 'edit')">
+				</span>
+				<span n:if="!$candidate->cvFile && $identity->isAllowed('candidate', 'edit')"
+						data-toggle="tooltip" data-placement="top" data-original-title="{_'Upload CV file'}">
 					<a href="{plink CvEditor:file $user->id}"
 					   title="{_'Upload CV file'}"><i class="icomoon-icon-file-upload color-red"></i></a>
-				</small>
+				</span>
 				<strong n:if="$person->fullName">{$person->fullName}</strong>
 				<strong n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</strong>
 				<small n:if="$person && $person->address">
 					{$person->address->city}
 				</small>
-				<span n:if="isset($user) && $template->canAccess($identity, $user)">
+				<span n:if="isset($user) && $template->canAccess($identity, $user)"
+						data-toggle="tooltip" data-placement="top" data-original-title="{_'Access to account'}">
 					<a href="{plink Users:access $user->id}"><i class="fa fa-key"></i></a>
 				</span>
-				<span n:if="$showNotes && isset($match) && ($identity->isAllowed('adminNotes') || $identity->isAllowed('companyNotes'))">
-					<a href="#notes-{$id}" data-toggle="modal" class="btn btn-xs btn-primary">
-						{if $identity->isAllowed('adminNotes')}
-							{$match->adminNotes->count()}
-						{elseif $identity->isAllowed('companyNotes')}
-							{$match->companyNotes->count()}
-						{/if}
+				<span n:if="$showNotes && isset($match) && $identity->isAllowed('companyNotes', 'view')"
+						data-toggle="tooltip" data-placement="top" data-original-title="{_'Company notes'}">
+					<a href="#notes-company-{$id}" data-toggle="modal" class="btn btn-xs btn-primary">
+						{$match->companyNotes->count()}
+					</a>
+				</span>
+				<span n:if="$showNotes && isset($match) && $identity->isAllowed('adminNotes', 'view')"
+						data-toggle="tooltip" data-placement="top" data-original-title="{_'Admin notes'}">
+					<a href="#notes-admin-{$id}" data-toggle="modal" class="btn btn-xs btn-warning">
+						{$match->adminNotes->count()}
 					</a>
 				</span>
 			</h4>
@@ -50,10 +56,10 @@
 					</p>
 				</div>
 				<div class="col-md-6">
-					<a n:ifset="$user" n:tag-if="$identity->isAllowed('candidate', 'edit')"
-							href="{plink Profile:user $user->id}">
+					<a n:ifset="$user" href="{plink Profile:user $user->id}">
 						<img src="{$person|foto:150,150}"
-							 class="center img-responsive photo-rounded" alt="{$person->fullName}"/>
+						     class="center img-responsive photo-rounded" alt="{$person->fullName}"
+						     data-toggle="tooltip" data-placement="top" data-original-title="{_'Visit profile'}"/>
 					</a>
 					<p n:if="isset($match) && $match->state" class="text-right">
 						{_'%state% at', ['state' => $match->getStateName($match->state)]}<br/>
@@ -135,7 +141,7 @@
 	</div>
 
 	<div n:if="$showJobList" class="modal fade jobMatches" id="matches-{$id}" tabindex="-1" role="dialog"
-							 aria-hidden="true">
+	                         aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -188,8 +194,8 @@
 		</div>
 	</div>
 
-	<div n:if="$showNotes && isset($match)" class="modal fade jobNotes" id="notes-{$id}" tabindex="-1" role="dialog"
-											aria-hidden="true">
+	<div n:if="$showNotes && isset($match) && $identity->isAllowed('companyNotes', 'view')"
+			class="modal fade jobNotes" id="notes-company-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -198,14 +204,37 @@
 						<span class="sr-only">{_'Close'}</span>
 					</button>
 					<h4 class="modal-title">
-						{_'Notes:'}
+						{_'Company Notes'}:
 						<span n:if="$person->fullName">{$person->fullName}</span>
 						<span n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</span>
 						- {$selectedJob}
 					</h4>
 				</div>
 				<div class="modal-body">
-					{control notes}
+					{control notes:company}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div n:if="$showNotes && isset($match) && $identity->isAllowed('adminNotes', 'view')"
+			class="modal fade jobNotes" id="notes-admin-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Admin Notes'}:
+						<span n:if="$person->fullName">{$person->fullName}</span>
+						<span n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</span>
+						- {$selectedJob}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control notes:admin}
 				</div>
 			</div>
 		</div>

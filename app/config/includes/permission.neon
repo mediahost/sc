@@ -81,5 +81,6 @@ services:
 			- allow('admin', 'messages')
 			- allow('admin', 'profile')
 			- allow('admin', 'adminNotes')
+			- deny('admin', 'companyNotes', 'add')
 
 			- allow('superadmin') # Full access for superadmin
