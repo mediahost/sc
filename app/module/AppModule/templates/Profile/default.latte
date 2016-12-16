@@ -1,8 +1,10 @@
 {block pageTitle}
 	{if $isMine}
 		{_'My Profile'}
-	{else}
+	{elseif $isAdmin}
 		{_'Profile of %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $person->user->mail]}
+	{else}
+		{_'Profile of %candidate%', NULL, ['candidate' => $candidate]}
 	{/if}
 {/block}
 
