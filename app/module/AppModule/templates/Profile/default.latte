@@ -1,46 +1,59 @@
 {block pageTitle}
-	{_'Overview of candidate %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $person->user->mail]}
-	<a href="{link Messages:}" class="dropdown-toggle"><i class="s16 minia-icon-envelope"></i></a>
+	{if $isMine}
+		{_'My Profile'}
+	{else}
+		{_'Profile of %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $person->user->mail]}
+	{/if}
 {/block}
 
 {block breadcrumbItems}
-	<li>
-		<a n:href="Profile:">{_'My Profile'}</a>
-	</li>
-	<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
-	<li>{_'Overview'}</li>
+	{if $isMine}
+		<li>
+			<a n:href="Profile:">{_'My Profile'}</a>
+		</li>
+		<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+		<li class="active">{_'Overview'}</li>
+	{elseif $isAdmin}
+		<li>
+			<a n:href="Candidates:">{_'Candidates'}</a>
+		</li>
+		<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+		<li class="active">{$candidate}</li>
+	{else}
+		<li class="active">{_'Profile'}</li>
+	{/if}
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-lg-6 col-md-12">
-		{snippet personalDetails}
-			{include personalDetailsPanel}
-		{/snippet}
-
-		{ifset $company}
-			{include companyDetailsPanel}
-		{/ifset}
-
-		{if $candidate && !isset($company)}
-			{snippet interestedIn}
-				{include interestedInPanel}
-			{/snippet}
-		{/if}
-	</div>
-	<div class="col-lg-6 col-md-12" n:if="$candidate">
-		{if !isset($company)}
-			{include itSkillsPanel}
-
-			{snippet socialLinks}
-				{include socialLinksPanel}
+	<div class="row">
+		<div class="col-lg-6 col-md-12">
+			{snippet personalDetails}
+				{include personalDetailsPanel}
 			{/snippet}
 
-			{include docsPanel}
-		{/if}
-	</div>
-</div>
+			{ifset $company}
+				{include companyDetailsPanel}
+			{/ifset}
 
+			{if $candidate && !isset($company)}
+				{snippet interestedIn}
+					{include interestedInPanel}
+				{/snippet}
+			{/if}
+		</div>
+		<div class="col-lg-6 col-md-12" n:if="$candidate">
+			{if !isset($company)}
+				{include itSkillsPanel}
+
+				{snippet socialLinks}
+					{include socialLinksPanel}
+				{/snippet}
+
+				{include docsPanel}
+			{/if}
+		</div>
+	</div>
+{/block}
 
 {define personalDetailsPanel}
 	<div n:if="$person" class="panel panel-default">
@@ -51,10 +64,10 @@
 			<div class="row profile">
 				<div class="col-md-4">
 					<div class="profile-avatar">
-						<a href="#edit-photo" class="edit">
+						<a n:tag-if="$canEdit" href="#edit-photo" class="edit">
 							<img alt="{$person->fullName}" class="responsive"
 							     src="{$person|foto:150,150}">
-							<i class="fa fa-edit"></i>
+							<i n:if="$canEdit" class="fa fa-edit"></i>
 						</a>
 					</div>
 				</div>
@@ -66,7 +79,7 @@
 							{else}
 								{$person->user->mail}
 							{/if}
-							<a href="#edit-personal" class="edit">
+							<a n:if="$canEdit" href="#edit-personal" class="edit">
 								<i class="fa fa-edit"></i>
 							</a>
 						</h3>
@@ -74,24 +87,21 @@
 							<p class="job-title mb0">
 								<i class="fa fa-building"></i>
 								{if $person->address}{$person->address->format()}{/if}
-								<a href="#edit-address" class="edit">
+								<a n:if="$canEdit" href="#edit-address" class="edit">
 									<i class="fa fa-edit"></i>
 								</a>
 							</p>
-							<a n:if="!$user->isInRole('superadmin') && !$user->isInRole('admin')"
-									href="{link :App:Messages:default#newMessage}"
-									class="btn btn-default btn-alt btn-large">{_'Send Message'}</a>
 						{/if}
 					</div>
 				</div>
 			</div>
-			<div class="row profile-edit" id="edit-photo">
+			<div n:if="$canEdit" class="row profile-edit" id="edit-photo">
 				{control photoForm}
 			</div>
-			<div class="row profile-edit" id="edit-personal">
+			<div n:if="$canEdit" class="row profile-edit" id="edit-personal">
 				{control profileForm}
 			</div>
-			<div class="row profile-edit" id="edit-address">
+			<div n:if="$canEdit" class="row profile-edit" id="edit-address">
 				{control addressForm}
 			</div>
 		</div>
@@ -123,17 +133,17 @@
 {define interestedInPanel}
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4 class="panel-title">Interested in</h4>
+			<h4 class="panel-title">{_'Interested in'}</h4>
 		</div>
 		<div class="panel-body interestedIn-editor">
 			<div class="row interestedIn">
-				<a href="#edit-interested" class="edit">
+				<a n:if="$canEdit" href="#edit-interested" class="edit">
 					<i class="fa fa-edit"></i>
 				</a>
 				{control completeCandidatePreview}
 			</div>
 
-			<div class="row interestedIn-edit" id="edit-interested">
+			<div n:if="$canEdit" class="row interestedIn-edit" id="edit-interested">
 				{control completeCandidate}
 			</div>
 		</div>

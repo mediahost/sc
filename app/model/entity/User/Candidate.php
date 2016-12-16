@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Nette\Http\FileUpload;
+use Nette\Utils\Random;
 
 /**
  * @ORM\Entity(repositoryClass="App\Model\Repository\CandidateRepository")
@@ -18,6 +19,7 @@ use Nette\Http\FileUpload;
  * @property ArrayCollection $documents
  * @property ArrayCollection $jobCategories
  * @property FileUpload|string $cvFile
+ * @property string $profileId
  */
 class Candidate extends BaseEntity
 {
@@ -51,11 +53,15 @@ class Candidate extends BaseEntity
 	/** @ORM\OneToMany(targetEntity="Match", mappedBy="candidate") */
 	protected $matches;
 
+	/** @ORM\Column(type="string", length=64, nullable=true) */
+	protected $profileId;
+
 	public function __construct($name = NULL)
 	{
 		$this->workLocations = [];
 		$this->jobCategories = new ArrayCollection();
 		$this->documents = new ArrayCollection();
+		$this->profileId = Random::generate(20);
 		parent::__construct($name);
 	}
 

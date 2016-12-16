@@ -11,14 +11,15 @@ use Nette\Utils\ArrayHash;
 
 class Social extends BaseControl
 {
-	/** @var Person */
-	public $person;
-
-	// <editor-fold desc="events">
 
 	/** @var array */
 	public $onAfterSave = [];
 
+	/** @var Person */
+	public $person;
+
+	/** @var bool */
+	private $editable = FALSE;
 
 	public function render()
 	{
@@ -109,7 +110,7 @@ class Social extends BaseControl
 	private function normalizeLinks($links)
 	{
 		foreach ($links as &$link) {
-			if (strlen($link) && strpos($link, 'http') === false) {
+			if (strlen($link) && strpos($link, 'http') === FALSE) {
 				$link = 'http://' . $link;
 			}
 		}
@@ -121,6 +122,13 @@ class Social extends BaseControl
 		$this->person = $person;
 		return $this;
 	}
+
+	public function canEdit($value = TRUE)
+	{
+		$this->editable = $value;
+		return $this;
+	}
+
 }
 
 

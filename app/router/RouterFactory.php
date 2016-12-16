@@ -38,6 +38,12 @@ class RouterFactory
 		// </editor-fold>
 		// <editor-fold desc="App">
 
+		$adminRouter[] = new Route('app/profile[/<id>]', [
+			'presenter' => 'Profile',
+			'action' => 'default',
+			'id' => NULL,
+		]);
+
 		$adminRouter[] = new Route('app/<presenter>/<action>[/<id>]', [
 			'presenter' => 'Dashboard',
 			'action' => 'default',
@@ -49,6 +55,12 @@ class RouterFactory
 		$frontRouter[] = new Route('install', [
 			'presenter' => 'Install',
 			'action' => 'default',
+		]);
+
+		$frontRouter[] = new Route('profile[/<id>]', [
+			'presenter' => 'Profile',
+			'action' => 'default',
+			'id' => NULL,
 		]);
 
 		$roles = preg_quote(SignPresenter::ROLE_CANDIDATE) . '|' . preg_quote(SignPresenter::ROLE_COMPANY);

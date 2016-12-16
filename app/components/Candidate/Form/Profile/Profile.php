@@ -12,15 +12,14 @@ use Nette\Utils\ArrayHash;
 class Profile extends BaseControl
 {
 
-	/** @var Person */
-	public $person;
-
-	// <editor-fold desc="events">
-
 	/** @var array */
 	public $onAfterSave = [];
 
-	// </editor-fold>
+	/** @var Person */
+	public $person;
+
+	/** @var bool */
+	private $editable = FALSE;
 
 	public function render()
 	{
@@ -104,7 +103,6 @@ class Profile extends BaseControl
 		return $this;
 	}
 
-	/** @return array */
 	protected function getDefaults()
 	{
 		$values = [
@@ -135,6 +133,12 @@ class Profile extends BaseControl
 	public function setPerson(Person $person)
 	{
 		$this->person = $person;
+		return $this;
+	}
+
+	public function canEdit($value = TRUE)
+	{
+		$this->editable = $value;
 		return $this;
 	}
 

@@ -25,6 +25,7 @@ use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Person;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 
 class ProfilePresenter extends BasePresenter
@@ -69,25 +70,63 @@ class ProfilePresenter extends BasePresenter
 	/** @var Candidate */
 	private $candidate;
 
+	/** @var bool */
+	private $isMine;
+
+	/** @var bool */
+	private $canEdit;
+
+	public function actionUser($id)
+	{
+		$userRepo = $this->em->getRepository(User::getClassName());
+		$user = $userRepo->find($id);
+		if ($user->person && $user->person->candidate && $user->person->candidate->profileId) {
+			$this->redirect('default', $user->person->candidate->profileId);
+		} else {
+			$message = $this->translator->translate('Candidate wasn\'t found');
+			$this->flashMessage($message, 'warning');
+			$this->redirect('Dashboard:');
+		}
+	}
+
 	/**
 	 * @secured
 	 * @resource('profile')
 	 * @privilege('default')
 	 */
-	public function actionDefault()
+	public function actionDefault($id = NULL)
 	{
-		if (in_array(Role::ADMIN, $this->getUser()->getRoles()) || in_array(Role::SUPERADMIN, $this->getUser()->getRoles())
-		) {
-			$this->redirect('connectManager');
+		if (!$id) {
+			if (!$this->user->isInRole(Role::CANDIDATE)) {
+				$this->redirect('AccountSettings:');
+			} else {
+				$user = $this->user->identity;
+				$this->person = $user->person;
+				$this->candidate = $this->person->candidate;
+				if ($this->candidate->profileId) {
+					$this->redirect('this', $this->candidate->profileId);
+				}
+			}
+		} else {
+			$candidateRepo = $this->em->getRepository(Candidate::getClassName());
+			$this->candidate = $candidateRepo->findOneByProfileId($id);
+			if ($this->candidate) {
+				$this->person = $this->candidate->person;
+			} else {
+				$message = $this->translator->translate('Candidate wasn\'t found');
+				$this->flashMessage($message, 'warning');
+				$this->redirect('Dashboard:');
+			}
 		}
 
-		$user = $this->user->identity;
-		$this->person = $user->person;
-		$this->candidate = $this->person->candidate;
+		$this->isMine = $this->user->id === $this->person->user->id;
+		$this->canEdit = $this->isMine || $this->user->isAllowed('profile', 'edit-others');
 	}
 
 	public function renderDefault()
 	{
+		$this->template->isMine = $this->isMine;
+		$this->template->canEdit = $this->canEdit;
 		$this->template->person = $this->person;
 		$this->template->candidate = $this->candidate;
 	}
@@ -97,19 +136,21 @@ class ProfilePresenter extends BasePresenter
 	/** @return Skills */
 	public function createComponentSkillsForm()
 	{
-		$control = $this->iSkillsFactory->create();
-		$control->setTemplateFile('overview');
-		$control->onlyFilledSkills = true;
-		$control->setCv($this->candidate->cv);
-		$control->setAjax(TRUE, TRUE);
+		$control = $this->iSkillsFactory->create()
+			->canEdit($this->canEdit)
+			->setCv($this->candidate->cv)
+			->setTemplateFile('overview')
+			->setAjax(TRUE, TRUE);
+		$control->onlyFilledSkills = TRUE;
 		return $control;
 	}
 
 	/** @return Photo */
 	public function createComponentPhotoForm()
 	{
-		$control = $this->iPhotoFactory->create();
-		$control->setPerson($this->person);
+		$control = $this->iPhotoFactory->create()
+			->setPerson($this->person)
+			->canEdit($this->canEdit);
 		$control->onAfterSave = function (Person $saved) {
 			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
 			$this->flashMessage($message, 'success');
@@ -121,8 +162,9 @@ class ProfilePresenter extends BasePresenter
 	/** @return Profile */
 	public function createComponentProfileForm()
 	{
-		$control = $this->iProfileFactory->create();
-		$control->setPerson($this->person);
+		$control = $this->iProfileFactory->create()
+			->setPerson($this->person)
+			->canEdit($this->canEdit);
 		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('personalDetails');
 		};
@@ -132,8 +174,9 @@ class ProfilePresenter extends BasePresenter
 	/** @return Address */
 	public function createComponentAddressForm()
 	{
-		$control = $this->iAddressFactory->create();
-		$control->setPerson($this->person);
+		$control = $this->iAddressFactory->create()
+			->setPerson($this->person)
+			->canEdit($this->canEdit);
 		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('personalDetails');
 		};
@@ -143,8 +186,9 @@ class ProfilePresenter extends BasePresenter
 	/** @return Social */
 	public function createComponentSocialForm()
 	{
-		$control = $this->iSocialFactory->create();
-		$control->setPerson($this->person);
+		$control = $this->iSocialFactory->create()
+			->setPerson($this->person)
+			->canEdit($this->canEdit);
 		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('socialLinks');
 		};
@@ -154,9 +198,10 @@ class ProfilePresenter extends BasePresenter
 	/** @return CareerDocs */
 	public function createComponentDocsForm()
 	{
-		$control = $this->iCareerDocsFactory->create();
-		$control->setCandidate($this->candidate);
-		$control->setTemplateFile('overView');
+		$control = $this->iCareerDocsFactory->create()
+			->setCandidate($this->candidate)
+			->canEdit($this->canEdit)
+			->setTemplateFile('overView');
 		return $control;
 	}
 

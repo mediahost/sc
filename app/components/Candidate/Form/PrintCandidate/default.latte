@@ -51,7 +51,7 @@
 				</div>
 				<div class="col-md-6">
 					<a n:ifset="$user" n:tag-if="$identity->isAllowed('candidate', 'edit')"
-							href="{plink Candidate:view $user->id}">
+							href="{plink Profile:user $user->id}">
 						<img src="{$person|foto:150,150}"
 							 class="center img-responsive photo-rounded" alt="{$person->fullName}"/>
 					</a>

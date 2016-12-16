@@ -3,6 +3,7 @@
 namespace App\AppModule\Presenters;
 
 use App\Extensions\Installer;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
 use App\Model\Entity\Job;
@@ -19,6 +20,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Kdyby\Doctrine\Connection;
 use Kdyby\Doctrine\Helpers;
 use Nette\Utils\FileSystem;
+use Nette\Utils\Random;
 use Nette\Utils\Strings;
 
 class ServicePresenter extends BasePresenter
@@ -193,6 +195,18 @@ class ServicePresenter extends BasePresenter
 	public function handleClearTestData()
 	{
 		$this->candidateCleaner->removeGeneratedCandidates();
+		$this->redirect('this');
+	}
+
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('updateCandidates')
+	 */
+	public function handleUpdateCandidates()
+	{
+		$this->updateCandidates();
+		$this->redirect('this');
 	}
 
 	private function reinstall()
@@ -323,6 +337,17 @@ class ServicePresenter extends BasePresenter
 		$job = new Job("Job {$i} for {$company->companyId}");
 		// TODO: finish
 		return $job;
+	}
+
+	private function updateCandidates()
+	{
+		$candidateRepo = $this->em->getRepository(Candidate::getClassName());
+		$candidates = $candidateRepo->findBy(['profileId' => NULL], [], 500);
+		foreach ($candidates as $candidate) {
+			$candidate->profileId = Random::generate(20);
+			$this->em->persist($candidate);
+		}
+		$this->em->flush();
 	}
 
 }

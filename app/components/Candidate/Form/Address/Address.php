@@ -12,15 +12,14 @@ use Nette\Utils\ArrayHash;
 class Address extends BaseControl
 {
 
-	/** @var Entity\Person */
-	private $person;
-
-	// <editor-fold defaultstate="expanded" desc="events">
-
 	/** @var array */
 	public $onAfterSave = [];
 
-	// </editor-fold>
+	/** @var Entity\Person */
+	private $person;
+
+	/** @var bool */
+	private $editable = FALSE;
 
 	/** @return Form */
 	protected function createComponentForm()
@@ -36,9 +35,9 @@ class Address extends BaseControl
 		$form->addText('zipcode', 'Postal code');
 		$form->addText('city', 'City');
 		$form->addSelect2('country', 'Country', Entity\Address::getCountriesList())
-				->setPrompt('Not disclosed');
+			->setPrompt('Not disclosed');
 		$form->addSelect2('nationality', 'Nationality', Entity\Person::getNationalityList())
-				->setPrompt('Not disclosed');
+			->setPrompt('Not disclosed');
 
 		$form->addSubmit('save', 'Save');
 
@@ -75,7 +74,6 @@ class Address extends BaseControl
 		return $this;
 	}
 
-	/** @return array */
 	protected function getDefaults()
 	{
 		$values = [
@@ -106,6 +104,12 @@ class Address extends BaseControl
 	public function setPerson(Entity\Person $person)
 	{
 		$this->person = $person;
+		return $this;
+	}
+
+	public function canEdit($value = TRUE)
+	{
+		$this->editable = $value;
 		return $this;
 	}
 

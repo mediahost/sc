@@ -21,10 +21,14 @@ class Skills extends BaseControl
 	/** @var SkillFacade @inject */
 	public $skillFacade;
 
-	public $onlyFilledSkills = false;
-
 	/** @var Cv */
 	private $cv;
+
+	/** @var bool */
+	public $onlyFilledSkills = FALSE;
+
+	/** @var bool */
+	private $editable = FALSE;
 
 	public function setTemplateFile($name)
 	{
@@ -134,11 +138,6 @@ class Skills extends BaseControl
 		}
 	}
 
-	public function getCv()
-	{
-		return $this->cv;
-	}
-
 	// <editor-fold desc="setters & getters">
 
 	public function setCv(Cv $cv)
@@ -147,8 +146,18 @@ class Skills extends BaseControl
 		return $this;
 	}
 
-	// </editor-fold>
+	public function getCv()
+	{
+		return $this->cv;
+	}
 
+	public function canEdit($value = TRUE)
+	{
+		$this->editable = $value;
+		return $this;
+	}
+
+	// </editor-fold>
 
 }
 

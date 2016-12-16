@@ -28,6 +28,9 @@ class CareerDocs extends BaseControl
 	/** @var bool */
 	private $isSameUser;
 
+	/** @var bool */
+	private $editable = FALSE;
+
 	public function render()
 	{
 		$this->template->candidate = $this->candidate;
@@ -109,6 +112,12 @@ class CareerDocs extends BaseControl
 	{
 		$this->candidate = $candidate;
 		$this->isSameUser = $candidate->person->user->id === $this->user->id;
+		return $this;
+	}
+
+	public function canEdit($value = TRUE)
+	{
+		$this->editable = $value;
 		return $this;
 	}
 

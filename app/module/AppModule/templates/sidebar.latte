@@ -83,7 +83,7 @@
 							</li>
 							<li n:if="$user->isAllowed('candidates', 'default')">
 								<a n:href="Candidates:"
-										n:class="$presenter->isLinkCurrent('Candidates:*') || $presenter->isLinkCurrent('Candidate:*') ? active">
+										n:class="$presenter->isLinkCurrent('Candidates:*') || $presenter->isLinkCurrent('Profile:*') ? active">
 									<i class="fa entypo-icon-users"></i>
 									<span class="txt">{_'Candidates'}</span>
 								</a>
@@ -186,7 +186,7 @@
 				<!-- END SUPERADMIN -->
 
 				<!-- BEGIN TOGETHER AREA -->
-				{if $user->isAllowed('profile', 'default') && $isCompleteAccount}
+				{if $user->isAllowed('profile', 'default') && $isCompleteAccount && $user->isInRole(App\Model\Entity\Role::CANDIDATE)}
 					<div class="sidebar-widget mb0">
 						<h6 class="title mb0">{_'Profile'}</h6>
 					</div>

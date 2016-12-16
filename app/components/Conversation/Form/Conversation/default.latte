@@ -51,7 +51,7 @@
 								<a href="{plink :App:Job:view $message->job->id}">{$message->job}</a>
 								{if $message->candidate && $identity->isAllowed('profile', 'candidate')}
 									|
-									<a href="{plink Candidate:view $message->candidate->person->user->id}">
+									<a href="{plink Profile:user $message->candidate->person->user->id}">
 										{if $message->candidate->person->fullName}
 											{$message->candidate->person->fullName}
 										{else}
