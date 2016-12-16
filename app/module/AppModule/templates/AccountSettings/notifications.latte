@@ -1,0 +1,25 @@
+{block pageTitle}
+	{_'E-mail Notifications'}
+{/block}
+
+{block breadcrumbItems}
+	<li>{_'Settings'}</li>
+	<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
+	<li class="active">{_'Notifications'}</li>
+{/block}
+
+{block content}
+<div class="row">
+	<div class="col-lg-6 col-md-8 col-editor"><div class="btn-group" n:snippet="notifiButtons">
+			<a n:class="btn, btn-default, ajax, $identity->beNotified === TRUE ? active" n:href="notifyChange! 1">
+				{_'Yes'}
+			</a>
+			<a n:class="btn, btn-default, ajax, $identity->beNotified === FALSE ? active" n:href="notifyChange! 0">
+				{_'No'}
+			</a>
+			<a n:class="btn, btn-default, ajax, $identity->beNotified === NULL ? active" n:href="notifyChange!">
+				{_'By your global settings'}
+			</a>
+		</div>
+	</div>
+</div>

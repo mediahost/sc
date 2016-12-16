@@ -193,7 +193,7 @@
 					<div class="mainnav">
 						<ul>
 							<li>
-								<a n:href="Profile:" n:class="$presenter->isLinkCurrent('Profile:default') ? active">
+								<a n:href="Profile:" n:class="$presenter->isLinkCurrent('Profile:*') ? active">
 									<i class="s16 fa fa-user"></i>
 									<span class="txt">{_'My Profile'}</span>
 								</a>
@@ -209,10 +209,36 @@
 					<div class="mainnav">
 						<ul>
 							<li>
-								<a n:href="Profile:settings" n:class="$presenter->isLinkCurrent('Profile:*') && !$presenter->isLinkCurrent('Profile:default') ? active">
+								<a n:href="AccountSettings:" n:class="$presenter->isLinkCurrent('AccountSettings:') ? active">
 									<i class="s16 fa fa-gears"></i>
 									<span class="txt">{_'Settings'}</span>
 								</a>
+								<ul n:class="sub, $presenter->isLinkCurrent('AccountSettings:*') ? show">
+									<li>
+										<a n:href="AccountSettings:connectManager" {ifCurrent AccountSettings:connectManager}class="active"{/ifCurrent}>
+											<i class="s16 icomoon-icon-connection-2"></i>
+											<span class="txt">{_'Social Sign In'}</span>
+										</a>
+									</li>
+									<li>
+										<a n:href="AccountSettings:setPassword" {ifCurrent AccountSettings:setPassword}class="active"{/ifCurrent}>
+											<i class="s16 icomoon-icon-key-2"></i>
+											<span class="txt">{_'Set password'}</span>
+										</a>
+									</li>
+									<li>
+										<a n:href="AccountSettings:notifications" {ifCurrent AccountSettings:notifications}class="active"{/ifCurrent}>
+											<i class="s16 icomoon-icon-bubble-notification"></i>
+											<span class="txt">{_'Notifications'}</span>
+										</a>
+									</li>
+									<li>
+										<a n:href="AccountSettings:delete" {ifCurrent AccountSettings:delete}class="active"{/ifCurrent}>
+											<i class="s16 icomoon-icon-shield"></i>
+											<span class="txt">{_'Delete account'}</span>
+										</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</div>
