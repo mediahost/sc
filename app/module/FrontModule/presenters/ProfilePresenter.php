@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AppModule\Presenters;
+namespace App\FrontModule\Presenters;
 
 use App\Components\AfterRegistration\CompleteCandidate;
 use App\Components\AfterRegistration\CompleteCandidatePreview;
@@ -24,8 +24,6 @@ use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Person;
-use App\Model\Entity\Role;
-use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 
 class ProfilePresenter extends BasePresenter
@@ -71,51 +69,18 @@ class ProfilePresenter extends BasePresenter
 	private $candidate;
 
 	/** @var bool */
-	private $isMine;
+	private $isMine = FALSE;
 
 	/** @var bool */
-	private $canEdit;
+	private $canEdit = FALSE;
 
-	public function startup()
+	public function actionDefault($id)
 	{
-		if (!$this->user->isLoggedIn() && $this->action === 'default') {
-			$this->redirect(':Front:Profile:', ['id' => $this->getParameter('id')]);
+		if ($this->user->isLoggedIn()) {
+			$this->redirect(':App:Profile:', $id);
 		}
-		parent::startup();
-	}
 
-	public function actionUser($id)
-	{
-		$userRepo = $this->em->getRepository(User::getClassName());
-		$user = $userRepo->find($id);
-		if ($user->person && $user->person->candidate && $user->person->candidate->profileId) {
-			$this->redirect('default', $user->person->candidate->profileId);
-		} else {
-			$message = $this->translator->translate('Candidate wasn\'t found');
-			$this->flashMessage($message, 'warning');
-			$this->redirect('Dashboard:');
-		}
-	}
-
-	/**
-	 * @secured
-	 * @resource('profile')
-	 * @privilege('default')
-	 */
-	public function actionDefault($id = NULL)
-	{
-		if (!$id) {
-			if (!$this->user->isInRole(Role::CANDIDATE)) {
-				$this->redirect('AccountSettings:');
-			} else {
-				$user = $this->user->identity;
-				$this->person = $user->person;
-				$this->candidate = $this->person->candidate;
-				if ($this->candidate->profileId) {
-					$this->redirect('this', $this->candidate->profileId);
-				}
-			}
-		} else {
+		if ($id) {
 			$candidateRepo = $this->em->getRepository(Candidate::getClassName());
 			$this->candidate = $candidateRepo->findOneByProfileId($id);
 			if ($this->candidate) {
@@ -123,12 +88,15 @@ class ProfilePresenter extends BasePresenter
 			} else {
 				$message = $this->translator->translate('Candidate wasn\'t found');
 				$this->flashMessage($message, 'warning');
-				$this->redirect('Dashboard:');
+				$this->redirect('Homepage:');
 			}
 		}
 
-		$this->isMine = $this->user->id === $this->person->user->id;
-		$this->canEdit = $this->isMine || $this->user->isAllowed('profile', 'edit-others');
+		if (!$this->person) {
+			$message = $this->translator->translate('Candidate wasn\'t found');
+			$this->flashMessage($message, 'warning');
+			$this->redirect('Homepage:');
+		}
 	}
 
 	public function renderDefault()
