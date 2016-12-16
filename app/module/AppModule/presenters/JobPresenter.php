@@ -9,16 +9,15 @@ use App\Components\Job\IBasicInfoFactory;
 use App\Components\Job\ISkillsFactory;
 use App\Components\Job\Skills;
 use App\Extensions\Candidates\CandidatesList;
-use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
 use App\Model\Entity\Role;
+use App\Model\Facade\ActionFacade;
 use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
 use App\Model\Repository\CompanyRepository;
 use App\Model\Repository\JobRepository;
-use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Multiplier;
 
@@ -35,6 +34,9 @@ class JobPresenter extends BasePresenter
 
 	/** @var JobFacade @inject */
 	public $jobFacade;
+
+	/** @var ActionFacade @inject */
+	public $actionFacade;
 
 	/** @var CandidateFacade @inject */
 	public $candidateFacade;
@@ -106,6 +108,9 @@ class JobPresenter extends BasePresenter
 				});
 			}
 		}
+
+		$this->actionFacade->addJobView($this->user->identity, $this->job);
+
 		if ($this->user->isInRole(Role::CANDIDATE)) {
 			$candidate = $this->user->getIdentity()->person->candidate;
 			$this['uploadCv']->setCandidate($candidate);
@@ -235,6 +240,8 @@ class JobPresenter extends BasePresenter
 				$message = $this->translator->translate('Thank you for applying for this job, someone will be in touch with you soon');
 				$this->flashMessage($message, 'info');
 				$this->em->refresh($candidate);
+
+				$this->actionFacade->addJobApply($this->user->identity, $job);
 			}
 		}
 		if ($this->isAjax()) {

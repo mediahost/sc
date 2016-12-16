@@ -14,6 +14,7 @@ services:
 	- {class: App\Model\Facade\CvFacade, inject: yes}
 	- {class: App\Model\Facade\JobFacade, inject: yes}
 	- {class: App\Model\Facade\CandidateFacade, inject: yes}
+	- {class: App\Model\Facade\ActionFacade, inject: yes}
 
 	# TODO: remove!!!
 	-
