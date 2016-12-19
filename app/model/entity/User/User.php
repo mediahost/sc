@@ -59,6 +59,11 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 		];
 	}
 
+	public function getData()
+	{
+		return $this->toArray();
+	}
+
 	public function isNew()
 	{
 		return $this->id === NULL;
