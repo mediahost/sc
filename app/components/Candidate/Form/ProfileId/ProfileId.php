@@ -39,7 +39,7 @@ class ProfileId extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('profileId', $this->presenter->link(':Front:Profile:'));
+		$form->addText('profileId', $this->presenter->link('//:Front:Profile:', ['backlink' => NULL]));
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());

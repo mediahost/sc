@@ -1,11 +1,13 @@
-
 {snippet profileId}
-<div n:if="!$editable">{plink :Front:Profile: $candidate->profileId}</div>
 
-<div n:if="$editable" class="row">
-	<a href="{link edit}" class="ajax">
-		{plink :Front:Profile: $candidate->profileId}
+<div n:if="!$editable">
+	<a href="{plink //:Front:Profile: $candidate->profileId}">
+		{plink //:Front:Profile: $candidate->profileId}
 	</a>
+</div>
+
+<div n:if="$editable">
+	<a href="{link edit}" class="ajax">{plink //:Front:Profile: $candidate->profileId}</a>
 	<a href="{link edit}" class="ajax edit">
 		<i class="fa fa-edit"></i>
 	</a>
