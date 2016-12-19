@@ -122,10 +122,9 @@
 						</div>
 					{elseif $match->fullApprove}
 						<div class="col-md-12">
-							<a n:href="accept! $selectedJob->id"
-									class="ajax btn btn-success">{_'Accept'}</a>
-							<a n:href="reject! $selectedJob->id" class="ajax btn btn-danger"
-									n:if="$match->accept !== FALSE">{_'Reject'}</a>
+							<a href="#acceptReason-{$id}" data-toggle="modal" class="btn btn-success">{_'Accept'}</a>
+							<a href="#rejectReason-{$id}" data-toggle="modal"
+							   class="btn btn-danger" n:if="$match->accept !== FALSE">{_'Reject'}</a>
 						</div>
 					{elseif !$match->adminApprove}
 						<div class="col-md-12">
@@ -140,8 +139,9 @@
 		</div>
 	</div>
 
-	<div n:if="$showJobList" class="modal fade jobMatches" id="matches-{$id}" tabindex="-1" role="dialog"
-	                         aria-hidden="true">
+	<div n:if="$showJobList"
+			class="modal fade jobMatches" id="matches-{$id}" tabindex="-1" role="dialog"
+			aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -239,4 +239,45 @@
 			</div>
 		</div>
 	</div>
+
+	<div n:if="$selectedJob && isset($match) && !$match->accept && $match->fullApprove"
+			class="modal fade jobNotes" id="acceptReason-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Send a accept message to the candidate'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control acceptReason}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div n:if="$selectedJob && isset($match) && !$match->accept && $match->fullApprove && $match->accept !== FALSE"
+			class="modal fade jobNotes" id="rejectReason-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Send a reject message to the candidate'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control rejectReason}
+				</div>
+			</div>
+		</div>
+	</div>
+
 {/snippet}

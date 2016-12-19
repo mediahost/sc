@@ -21,6 +21,7 @@ class CandidateListener extends Object implements Subscriber
 	{
 		return [
 			'App\Model\Facade\CandidateFacade::onMatch' => 'onMatch',
+			'App\Model\Facade\CandidateFacade::onAccept' => 'onAccept',
 		];
 	}
 
@@ -37,6 +38,15 @@ class CandidateListener extends Object implements Subscriber
 			$this->communicationFacade->sendApplyMessage($match);
 		} else if ($match->adminApprove) {
 			$this->communicationFacade->sendApproveMessage($match);
+		}
+	}
+
+	public function onAccept(Match $match)
+	{
+		if ($match->accepted) {
+			$this->communicationFacade->sendAcceptMessage($match);
+		} else if ($match->rejected) {
+			$this->communicationFacade->sendRejectMessage($match);
 		}
 	}
 

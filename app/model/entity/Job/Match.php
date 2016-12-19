@@ -19,6 +19,7 @@ use Nette\Utils\Strings;
  * @property bool $candidateApprove
  * @property bool $fullApprove
  * @property bool $accept
+ * @property string $acceptReason
  * @property-read bool $matched
  * @property-read bool $matchedOnly
  * @property-read bool $rejected
@@ -80,6 +81,9 @@ class Match extends BaseEntity
 
 	/** @ORM\Column(type="datetime", nullable=true) */
 	private $acceptChangedAt;
+
+	/** @ORM\Column(type="text", nullable=true) */
+	protected $acceptReason;
 
 	/** @ORM\Column(type="smallint", nullable=true) */
 	private $state;

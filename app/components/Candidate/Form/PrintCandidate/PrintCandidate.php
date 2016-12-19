@@ -3,6 +3,7 @@
 namespace App\Components\Candidate\Form;
 
 use App\Components\BaseControl;
+use App\Components\Job\IAcceptReasonFactory;
 use App\Components\Job\ICustomStateFactory;
 use App\Components\Job\IMatchNotesFactory;
 use App\Extensions\Candidates\CandidatesList;
@@ -41,6 +42,9 @@ class PrintCandidate extends BaseControl
 
 	/** @var IMatchNotesFactory @inject */
 	public $iMatchNotesFactory;
+
+	/** @var IAcceptReasonFactory @inject */
+	public $iAcceptReasonFactory;
 
 	/** @var ICustomStateFactory @inject */
 	public $iCustomStateFactory;
@@ -170,11 +174,7 @@ class PrintCandidate extends BaseControl
 			$job = $jobRepo->find($jobId);
 			if ($job) {
 				$match = $this->candidateFacade->matchApprove($this->candidate, $job);
-				if (!$match->candidateApprove) {
-					$message = 'Candidate was invited';
-				} else {
-					$message = 'Candidate was approved';
-				}
+				$message = 'Candidate was ' . ($match->candidateApprove ? 'approved' : 'invited');
 				$this->presenter->flashMessage($this->translator->translate($message), 'success');
 			}
 		}
@@ -187,13 +187,8 @@ class PrintCandidate extends BaseControl
 			$jobRepo = $this->em->getRepository(Job::getClassName());
 			$job = $jobRepo->find($jobId);
 			if ($job) {
-				$matchRepo = $this->em->getRepository(Match::getClassName());
-				$match = $this->candidate->findMatch($job);
-				if ($match) {
-					$match->accept = $value;
-					$matchRepo->save($match);
-				}
-				$message = 'Candidate was ' . ($value ? 'accepted' : 'rejected');
+				$match = $this->candidateFacade->accept($this->candidate, $job, $value);
+				$message = 'Candidate was ' . ($match->accept ? 'accepted' : 'rejected');
 				$this->presenter->flashMessage($this->translator->translate($message), 'success');
 			}
 		}
@@ -251,6 +246,26 @@ class PrintCandidate extends BaseControl
 		$control->setMatch($this->candidate->findMatch($this->selectedJob));
 		$control->onAfterSave[] = function (Match $match) {
 			$this->reload();
+		};
+		return $control;
+	}
+
+	public function createComponentAcceptReason()
+	{
+		$control = $this->iAcceptReasonFactory->create();
+		$control->setMatch($this->candidate->findMatch($this->selectedJob));
+		$control->onAfterSave[] = function (Match $match) {
+			$this->handleAccept($match->job->id, TRUE);
+		};
+		return $control;
+	}
+
+	public function createComponentRejectReason()
+	{
+		$control = $this->iAcceptReasonFactory->create();
+		$control->setMatch($this->candidate->findMatch($this->selectedJob));
+		$control->onAfterSave[] = function (Match $match) {
+			$this->handleAccept($match->job->id, FALSE);
 		};
 		return $control;
 	}

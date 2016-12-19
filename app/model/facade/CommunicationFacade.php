@@ -156,6 +156,30 @@ class CommunicationFacade extends Object
 		}
 	}
 
+	public function sendAcceptMessage(Match $match, $accept = TRUE)
+	{
+		$sender = $this->findSender($match->candidate->person->user);
+		$recipient = $this->findSender($match->job->accountManager);
+
+		if ($sender && $recipient) {
+			if ($accept) {
+				$message = 'I just accepted You for job \'%job%\'';
+			} else {
+				$message = 'I just rejected You for job \'%job%\'';
+			}
+			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job]);
+			$message .= "\n\n";
+			$message .= $match->acceptReason;
+			$state = Message::STATE_SYSTEM;
+			return $this->sendMessage($sender, $recipient, $message, $state, $match->job, $match->candidate);
+		}
+	}
+
+	public function sendRejectMessage(Match $match)
+	{
+		return $this->sendAcceptMessage($match, FALSE);
+	}
+
 	public function findByContributors(Sender $one, Sender $two)
 	{
 		return $this->communicationRepo->findBySenders($one, $two);

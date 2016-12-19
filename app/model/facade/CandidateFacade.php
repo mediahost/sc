@@ -17,6 +17,9 @@ class CandidateFacade extends Object
 	/** @var array */
 	public $onMatch = [];
 
+	/** @var array */
+	public $onAccept = [];
+
 	/** @var EntityManager @inject */
 	public $em;
 
@@ -63,6 +66,25 @@ class CandidateFacade extends Object
 		$this->onMatch($match);
 
 		return $match;
+	}
+
+	public function accept(Candidate $candidate, Job $job, $accept = TRUE)
+	{
+		$match = $candidate->findMatch($job);
+		if (!$match) {
+			$match = new Match($job, $candidate);
+		}
+		$match->accept = $accept;
+		$this->matchRepo->save($match);
+
+		$this->onAccept($match);
+
+		return $match;
+	}
+
+	public function reject(Candidate $candidate, Job $job)
+	{
+		return $this->accept($candidate, $job, FALSE);
 	}
 
 	public function isApproved(Candidate $candidate, Job $job)
