@@ -25,6 +25,9 @@ class SettingsStorage extends Object
 	private $pageInfo;
 
 	/** @var ArrayHash */
+	private $mails;
+
+	/** @var ArrayHash */
 	private $modules;
 
 	public function __construct(User $user)
@@ -36,7 +39,7 @@ class SettingsStorage extends Object
 	 * @param array
 	 * @return SettingsStorage
 	 */
-	public function setExpiration($values)
+	public function setExpiration(array $values)
 	{
 		$this->expiration = ArrayHash::from($values);
 		return $this;
@@ -54,7 +57,7 @@ class SettingsStorage extends Object
 	 * @param array
 	 * @return SettingsStorage
 	 */
-	public function setPasswords($values)
+	public function setPasswords(array $values)
 	{
 		$this->passwords = ArrayHash::from($values);
 		return $this;
@@ -72,7 +75,7 @@ class SettingsStorage extends Object
 	 * @param array
 	 * @return SettingsStorage
 	 */
-	public function setPageConfig($values)
+	public function setPageConfig(array $values)
 	{
 		$this->pageConfig = ArrayHash::from($values);
 		return $this;
@@ -102,6 +105,24 @@ class SettingsStorage extends Object
 	public function getPageInfo()
 	{
 		return $this->pageInfo;
+	}
+
+	/**
+	 * @param array $values
+	 * @return SettingsStorage
+	 */
+	public function setMails(array $values)
+	{
+		$this->mails = ArrayHash::from($values);
+		return $this;
+	}
+
+	/**
+	 * @return ArrayHash
+	 */
+	public function getMails()
+	{
+		return $this->mails;
 	}
 
 	/**

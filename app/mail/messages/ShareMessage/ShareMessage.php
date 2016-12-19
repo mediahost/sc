@@ -9,8 +9,8 @@ class ShareMessage extends BaseMessage
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setFrom('system@source-code.com');
-		$this->setSubject('Curriculum Vitae');
+		$this->setFrom($this->settings->mails->automatFrom, $this->settings->pageInfo->projectName);
+		$this->setSubject($this->translator->translate('Curriculum Vitae'));
 	}
 }
 

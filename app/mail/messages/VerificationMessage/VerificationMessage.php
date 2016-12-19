@@ -8,8 +8,8 @@ class VerificationMessage extends BaseMessage
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setFrom('system@source-code.com');
-		$this->setSubject('Verify your e-mail');
+		$this->setFrom($this->settings->mails->automatFrom, $this->settings->pageInfo->projectName);
+		$this->setSubject($this->translator->translate('Verify your e-mail'));
 	}
 
 }

@@ -8,8 +8,8 @@ class CreateRegistrationMessage extends BaseMessage
 	public function __construct()
 	{
 		parent::__construct();
-		$this->setFrom('system@source-code.com');
-		$this->setSubject('Your registration');
+		$this->setFrom($this->settings->mails->automatFrom, $this->settings->pageInfo->projectName);
+		$this->setSubject($this->translator->translate('Your registration'));
 	}
 
 }

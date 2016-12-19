@@ -44,6 +44,9 @@ class SettingsExtension extends CompilerExtension
 		'passwords' => [
 			'length' => 8,
 		],
+		'mails' => [
+			'automatFrom' => 'system@source-code.com',
+		],
 	];
 
 	public function loadConfiguration()
@@ -57,6 +60,7 @@ class SettingsExtension extends CompilerExtension
 			->addSetup('setPageConfig', [$config['pageConfig']])
 			->addSetup('setExpiration', [$config['expiration']])
 			->addSetup('setPasswords', [$config['passwords']])
+			->addSetup('setMails', [$config['mails']])
 			->addSetup('setModules', [$config['modules']])
 			->setInject(TRUE);
 	}

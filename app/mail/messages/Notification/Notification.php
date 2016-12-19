@@ -11,7 +11,7 @@ class Notification extends BaseMessage
 
 	protected function beforeSend()
 	{
-		$this->setFrom('noreply@source-code.com');
+		$this->setFrom($this->settings->mails->automatFrom, $this->settings->pageInfo->projectName);
 		parent::beforeSend();
 	}
 
