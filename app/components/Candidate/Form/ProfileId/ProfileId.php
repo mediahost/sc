@@ -39,7 +39,11 @@ class ProfileId extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('profileId', $this->presenter->link('//:Front:Profile:', ['backlink' => NULL]));
+		$form->addText('profileId', $this->presenter->link('//:Front:Profile:', ['backlink' => NULL]))
+			->addRule(Form::FILLED, 'Insert some identification')
+			->addRule(Form::MIN_LENGTH, 'Minimum is %d charaters', 5)
+			->addRule(Form::MAX_LENGTH, 'Maximum is %d charaters', 64)
+			->addRule(Form::PATTERN, 'Insert only characters and numbers', '[\d\w\-]+');
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());

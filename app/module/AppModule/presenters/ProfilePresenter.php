@@ -266,6 +266,9 @@ class ProfilePresenter extends BasePresenter
 			->setCandidate($this->candidate)
 			->canEdit($this->canEdit)
 			->setTemplateFile('overview');
+		$control->onAfterSave(function (Candidate $candidate) {
+			$this->redirect('this', ['id' => $candidate->profileId]);
+		});
 		return $control;
 	}
 
