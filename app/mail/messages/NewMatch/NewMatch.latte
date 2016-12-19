@@ -1,0 +1,26 @@
+{layout '../@layout.latte'}
+
+{block subtitle}
+	<font size="+1" color="#00285A">{_'Match notification'}</font>
+{/block}
+
+{block content}
+<table class="container content" align="center">
+	<tr>
+		<td>
+			<table class="row note">
+				<tr>
+					<td class="wrapper last">
+						<h4 style="font-size: 22px;display: block;margin: 5px 0 15px 0;">
+							{_'You have new match'}
+						</h4>
+						<p>
+							{_'\'%candidate%\' has applied for your open \'%job%\' position.', NULL, ['candidate' => $candidate, 'job' => $job]}
+							{_'Please log in to Source-Code to review this candidate and shortlist or reject them.'}
+						</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
