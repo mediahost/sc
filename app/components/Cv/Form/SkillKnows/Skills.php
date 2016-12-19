@@ -47,6 +47,7 @@ class Skills extends BaseControl
 		}
 		$this->template->skills = $skills;
 		$this->template->categories = $categories;
+		$this->template->editable = $this->editable;
 		parent::render();
 	}
 

@@ -42,6 +42,6 @@
 
 <div n:if="!count($categories)" class="alert alert-info">
 	{_'No IT skills filled.'}
-	<a n:if="!$user->isInRole('superadmin') && !$user->isInRole('admin')"
+	<a n:if="$editable && !$user->isInRole('superadmin') && !$user->isInRole('admin')"
 			href="{plink CvEditor:Skills $control->getCv()->id}">{_'More skills'}</a>
 </div>
