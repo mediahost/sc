@@ -35,6 +35,7 @@ class CareerDocs extends BaseControl
 	{
 		$this->template->candidate = $this->candidate;
 		$this->template->isSameUser = $this->isSameUser;
+		$this->template->editable = $this->editable;
 		parent::render();
 	}
 
