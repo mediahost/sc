@@ -10,6 +10,7 @@ use App\Components\Candidate\Address;
 use App\Components\Candidate\IAddressFactory;
 use App\Components\Candidate\IPhotoFactory;
 use App\Components\Candidate\IProfileFactory;
+use App\Components\Candidate\IProfileIdFactory;
 use App\Components\Candidate\ISocialFactory;
 use App\Components\Candidate\Photo;
 use App\Components\Candidate\Profile;
@@ -63,6 +64,9 @@ class ProfilePresenter extends BasePresenter
 
 	/** @var ICompanyProfileFactory @inject */
 	public $companyProfileFactory;
+
+	/** @var IProfileIdFactory @inject */
+	public $profileIdFactory;
 
 	/** @var Person */
 	private $person;
@@ -253,6 +257,15 @@ class ProfilePresenter extends BasePresenter
 		$control = $this->companyProfileFactory->create();
 		$control->setAjax(true, true);
 		$control->setCompany($this->company);
+		return $control;
+	}
+
+	public function createComponentProfileId()
+	{
+		$control = $this->profileIdFactory->create()
+			->setCandidate($this->candidate)
+			->canEdit($this->canEdit)
+			->setTemplateFile('overview');
 		return $control;
 	}
 

@@ -41,6 +41,10 @@
 				{snippet interestedIn}
 					{include interestedInPanel}
 				{/snippet}
+
+				{snippet profileId}
+					{include profileIdPanel}
+				{/snippet}
 			{/if}
 		</div>
 		<div class="col-lg-6 col-md-12" n:if="$candidate">
@@ -174,3 +178,13 @@
 	</div>
 {/define}
 
+{define profileIdPanel}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">{_'Profile id'}</h4>
+		</div>
+		<div class="panel-body">
+			{control profileId}
+		</div>
+	</div>
+{/define}
