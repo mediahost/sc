@@ -55,6 +55,7 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 		return [
 			'id' => $this->id,
 			'mail' => $this->mail,
+			'wp_username' => $this->mail,
 			'role' => $this->roles->toArray(),
 		];
 	}
