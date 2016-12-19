@@ -24,6 +24,7 @@ class Social extends BaseControl
 	public function render()
 	{
 		$this->template->links = $this->getLinks();
+		$this->template->editable = $this->editable;
 		parent::render();
 	}
 

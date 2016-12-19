@@ -7,13 +7,13 @@
 			</th>
 			<td>
 				<div class="data">
-					<a n:if="!$links['facebook']" href="#" class="edit empty">
+					<a n:if="$editable  &&  !$links['facebook']" href="#" class="edit empty">
 						<em>{_'Click here to add your link'}</em>
 					</a>
 					<a n:if="$links['facebook']" href="{$links['facebook']}" target="_blank">
 						{$links['facebook']|truncate:50}
 					</a>
-					<a href="#" class="edit">
+					<a n:if="$editable" href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>
@@ -29,13 +29,13 @@
 			</th>
 			<td>
 				<div class="data">
-					<a n:if="!$links['twitter']" href="#" class="edit empty">
+					<a n:if="$editable  &&  !$links['twitter']" href="#" class="edit empty">
 						<em>{_'Click here to add your link'}</em>
 					</a>
 					<a n:if="$links['twitter']" href="{$links['twitter']}" target="_blank">
 						{$links['twitter']|truncate:50}
 					</a>
-					<a href="#" class="edit">
+					<a n:if="$editable" href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>
@@ -51,13 +51,13 @@
 			</th>
 			<td>
 				<div class="data">
-					<a n:if="!$links['google']" href="#" class="edit empty">
+					<a n:if="$editable  &&  !$links['google']" href="#" class="edit empty">
 						<em>{_'Click here to add your link'}</em>
 					</a>
 					<a  n:if="$links['google']" href="{$links['google']}" target="_blank">
 						{$links['google']|truncate:50}
 					</a>
-					<a href="#" class="edit">
+					<a n:if="$editable" href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>
@@ -73,13 +73,13 @@
 			</th>
 			<td>
 				<div class="data">
-					<a n:if="!$links['linkedin']" href="#" class="edit empty">
+					<a n:if="$editable  &&  !$links['linkedin']" href="#" class="edit empty">
 						<em>{_'Click here to add your link'}</em>
 					</a>
 					<a  n:if="$links['linkedin']" href="{$links['linkedin']}" target="_blank">
 						{$links['linkedin']|truncate:50}
 					</a>
-					<a href="#" class="edit">
+					<a n:if="$editable" href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>
@@ -95,13 +95,13 @@
 			</th>
 			<td>
 				<div class="data">
-					<a n:if="!$links['pinterest']" href="" class="edit empty">
+					<a n:if="$editable  &&  !$links['pinterest']" href="" class="edit empty">
 						<em>{_'Click here to add your link'}</em>
 					</a>
 					<a  n:if="$links['pinterest']" href="{$links['pinterest']}" target="_blank">
 						{$links['pinterest']|truncate:50}
 					</a>
-					<a href="#" class="edit">
+					<a n:if="$editable" href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>
