@@ -27,15 +27,6 @@ class DashboardPresenter extends BasePresenter
 	/** @var ICareerDocsFactory @inject */
 	public $careerDocFactory;
 
-	/** @var Person */
-	private $person;
-
-	protected function startup()
-	{
-		parent::startup();
-		$this->person = $this->user->identity->person;
-	}
-
 	/**
 	 * @secured
 	 * @resource('dashboard')
@@ -44,7 +35,7 @@ class DashboardPresenter extends BasePresenter
 	public function actionDefault()
 	{
 		if ($this->user->isInRole(Role::CANDIDATE)) {
-			$candidate = $this->user->getIdentity()->candidate;
+			$candidate = $this->user->getIdentity()->person->candidate;
 			$this->template->candidate = $candidate;
 			$this->template->invitations = $this->candidateFacade->findApprovedJobs($candidate, FALSE);
 			$this->template->candidateFacade = $this->candidateFacade;
