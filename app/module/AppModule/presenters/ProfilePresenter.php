@@ -264,11 +264,10 @@ class ProfilePresenter extends BasePresenter
 	{
 		$control = $this->profileIdFactory->create()
 			->setCandidate($this->candidate)
-			->canEdit($this->canEdit)
-			->setTemplateFile('overview');
-		$control->onAfterSave(function (Candidate $candidate) {
+			->canEdit($this->canEdit);
+		$control->onAfterSave[] = function (Candidate $candidate) {
 			$this->redirect('this', ['id' => $candidate->profileId]);
-		});
+		};
 		return $control;
 	}
 

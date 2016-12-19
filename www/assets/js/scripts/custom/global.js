@@ -121,6 +121,15 @@ var Global = function () {
 		});
 	};
 
+	var handleProfileId = function () {
+		var main = $('.profileId-editor .profileId');
+		$(document).on('click', '.profileId a.edit', function (e) {
+			e.preventDefault();
+			$('.profileId .editor').show();
+			$(main).hide();
+		});
+	};
+
 	var handleTagsInput = function () {
 		$('input[data-role="tagsinput"]').tagsinput({});
 	};
@@ -202,6 +211,7 @@ var Global = function () {
 				handleSocialLinks();
 				handlePersonalDetails();
 				handleInterestedIn();
+				handleProfileId();
 				handleMessages();
 				handleDropzone();
 				onModalLoad();

@@ -26,12 +26,6 @@ class ProfileId extends BaseControl
 		parent::render();
 	}
 
-	public function handleEdit()
-	{
-		$this->setTemplateFile('default');
-		$this->redrawControl('profileId');
-	}
-
 	/** @return Form */
 	protected function createComponentForm()
 	{
