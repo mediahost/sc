@@ -122,11 +122,10 @@ var Global = function () {
 	};
 
 	var handleProfileId = function () {
-		var main = $('.profileId-editor .profileId');
 		$(document).on('click', '.profileId a.edit', function (e) {
 			e.preventDefault();
 			$('.profileId .editor').show();
-			$(main).hide();
+			$('.profileId .preview').hide();
 		});
 	};
 

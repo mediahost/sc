@@ -1,11 +1,26 @@
-{snippet profileId}
-	{form form class=>'form-inline'}
-		<div class="form-body">
-			<div class="form-group">
+
+<div class="profileId">
+	<div n:if="!$editable">
+		<a href="{plink //:Front:Profile: $candidate->profileId}">
+			{plink //:Front:Profile: $candidate->profileId}
+		</a>
+	</div>
+
+	<div n:if="$editable">
+		<div class="preview">
+			<a href="{plink //:Front:Profile: $candidate->profileId}" class="ajax">
+				{plink //:Front:Profile:}</a>
+			<a href="#" class="edit">
+				<i class="fa fa-edit"></i>
+			</a>
+		</div>
+
+		<div class="editor">
+			{form form}
 				{label profileId/}/
 				{input profileId class=>'form-control text inline input-large'}
 				{input save class=>'btn btn-primary button'}
-			</div>
+			{/form}
 		</div>
-	{/form}
-{/snippet}
+	</div>
+</div>
