@@ -19,6 +19,7 @@ use Nette\Utils\Strings;
  * @property string $address
  * @property Image $logo
  * @property ArrayCollection $jobs
+ * @property-read User $delegate
  */
 class Company extends BaseEntity
 {
