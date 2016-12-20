@@ -15,6 +15,7 @@ use Knp\DoctrineBehaviors\Model;
  *
  * @property Company $company
  * @property string $name
+ * @property integer $wordpressId
  * @property integer $salaryFrom
  * @property integer $salaryTo
  * @property string $description
@@ -45,6 +46,9 @@ class Job extends BaseEntity
 
 	/** @ORM\Column(type="string", length=512, nullable=false) */
 	protected $name;
+
+	/** @ORM\Column(type="integer", nullable=true) */
+	protected $wordpressId;
 
 	/** @ORM\Column(type="integer", nullable=true) */
 	protected $salaryFrom;

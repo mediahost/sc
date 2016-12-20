@@ -63,6 +63,9 @@ class BasicInfo extends BaseControl
 		$form->addText('name', 'Name')
 			->setAttribute('placeholder', 'Job title')
 			->setRequired('Please enter job\'s name.');
+		$form->addText('wp_id', 'Wordpress ID')
+			->addRule(Form::INTEGER, 'Id must be numeric value')
+			->setAttribute('placeholder', 'Wordpress ID');
 
 		if ($this->user->isAllowed('job', 'accountManager')) {
 			$form->addSelect('accountManager', 'Account manager', $this->getAccountManagers())
@@ -124,6 +127,7 @@ class BasicInfo extends BaseControl
 	protected function load(ArrayHash $values, Form $form)
 	{
 		$this->job->name = $values->name;
+		$this->job->wordpressId = $values->wp_id;
 		$this->job->type = $this->jobFacade->findJobType($values->type);
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
 //		$this->job->notes = $values->notes;
@@ -175,6 +179,7 @@ class BasicInfo extends BaseControl
 		$salary = sprintf('[%d,%d]', $salaryFrom, $salaryTo);
 		$values = [
 			'name' => $this->job->name,
+			'wp_id' => $this->job->wordpressId,
 			'type' => $this->job->type ? $this->job->type->id : NULL,
 			'category' => $this->job->category ? $this->job->category->id : NULL,
 			'salary' => $salary,
