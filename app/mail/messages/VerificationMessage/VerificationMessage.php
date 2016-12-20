@@ -5,11 +5,11 @@ namespace App\Mail\Messages;
 class VerificationMessage extends BaseMessage
 {
 
-	public function __construct()
+	protected function beforeSend()
 	{
-		parent::__construct();
 		$this->setFrom($this->settings->mails->automatFrom, $this->settings->pageInfo->projectName);
 		$this->setSubject($this->translator->translate('Verify your e-mail'));
+		parent::beforeSend();
 	}
 
 }
