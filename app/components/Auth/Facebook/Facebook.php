@@ -43,6 +43,18 @@ class Facebook extends BaseControl
 	 */
 	public $remember = FALSE;
 
+	/**
+	 * @var int
+	 * @persistent
+	 */
+	public $jobApplyId;
+
+	/**
+	 * @var string
+	 * @persistent
+	 */
+	public $redirectUrl;
+
 	protected function createComponentDialog()
 	{
 		$dialog = $this->facebook->createDialog('login');
@@ -72,7 +84,7 @@ class Facebook extends BaseControl
 					} else {
 						$user = $this->createUser($me);
 					}
-					$this->onSuccess($this, $user, $this->remember);
+					$this->onSuccess($this, $user, $this->remember, $this->redirectUrl, $this->jobApplyId);
 				}
 			} catch (FacebookApiException $e) {
 				Debugger::log($e->getMessage(), 'facebook');

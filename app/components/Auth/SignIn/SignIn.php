@@ -5,6 +5,7 @@ namespace App\Components\Auth;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Entity\Job;
 use App\Model\Entity\User;
 use App\Model\Facade\UserFacade;
 use Nette\Security\AuthenticationException;
@@ -38,6 +39,12 @@ class SignIn extends BaseControl
 	/** @var User */
 	private $user;
 
+	/** @var Job */
+	private $job;
+
+	/** @var string */
+	private $redirectUrl;
+
 	protected function createComponentForm()
 	{
 		$form = new Form();
@@ -56,6 +63,9 @@ class SignIn extends BaseControl
 
 		$form->addCheckbox('remember', 'Remember')
 			->getLabelPrototype()->class = "rememberme check";
+
+		$form->addHidden('redirectUrl', $this->redirectUrl);
+		$form->addHidden('applyJobId', $this->job ? $this->job->id : NULL);
 
 		$form->addSubmit('signIn', 'Sign in');
 
@@ -86,7 +96,7 @@ class SignIn extends BaseControl
 			}
 			$this->em->flush();
 
-			$this->onSuccess($this->presenter, $user, $values->remember);
+			$this->onSuccess($this->presenter, $user, $values->remember, $values->redirectUrl, $values->applyJobId);
 		} catch (AuthenticationException $e) {
 			$form->addError('Incorrect login or password!');
 		}
@@ -99,6 +109,18 @@ class SignIn extends BaseControl
 	public function setUserToSign(User $user)
 	{
 		$this->user = $user;
+	}
+
+	public function setRedirectUrl($url)
+	{
+		$this->redirectUrl = $url;
+		return $this;
+	}
+
+	public function setJobApply(Job $job)
+	{
+		$this->job = $job;
+		return $this;
 	}
 
 	public function renderLogin()
@@ -148,4 +170,5 @@ interface ISignInFactory
 
 	/** @return SignIn */
 	function create();
+
 }

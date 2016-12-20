@@ -229,23 +229,31 @@ class JobPresenter extends BasePresenter
 	// </editor-fold>
 	// <editor-fold desc="handlers">
 
-	public function handleApply($jobId)
+	public function handleApply($jobId, $redirectUrl = NULL)
 	{
 		if ($this->user->isInRole(Role::CANDIDATE) && $jobId) {
 			$job = $this->jobRepo->find($jobId);
 			$identity = $this->user->getIdentity();
 			if ($job && isset($identity->person->candidate)) {
 				$candidate = $identity->person->candidate;
-				$this->candidateFacade->matchApply($candidate, $job);
-				$message = $this->translator->translate('Thank you for applying for this job, someone will be in touch with you soon');
-				$this->flashMessage($message, 'info');
-				$this->em->refresh($candidate);
 
-				$this->actionFacade->addJobApply($this->user->identity, $job);
+				if ($candidate->isApplyable()) {
+					$this->candidateFacade->matchApply($candidate, $job);
+					$message = $this->translator->translate('Thank you for applying for this job, someone will be in touch with you soon');
+					$this->flashMessage($message, 'info');
+					$this->em->refresh($candidate);
+
+					$this->actionFacade->addJobApply($this->user->identity, $job);
+				} else {
+					$message = $this->translator->translate('You cannot apply for this job. You must upload your CV file before.');
+					$this->flashMessage($message, 'warning');
+				}
 			}
 		}
 		if ($this->isAjax()) {
 			$this->redrawControl();
+		} else if ($redirectUrl) {
+			$this->redirectUrl($redirectUrl);
 		} else {
 			$this->redirect('this');
 		}
@@ -282,9 +290,6 @@ class JobPresenter extends BasePresenter
 		};
 		return $control;
 	}
-
-	// </editor-fold>
-	// <editor-fold desc="forms">
 
 	/** @return CandidatesList */
 	public function createComponentJobCandidates()

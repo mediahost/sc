@@ -83,7 +83,7 @@ class SignListener extends Object implements Subscriber
 	 * @param User $user
 	 * @param bool $rememberMe
 	 */
-	public function onStartup(Control $control, User $user, $rememberMe = FALSE)
+	public function onStartup(Control $control, User $user, $rememberMe = FALSE, $redirectUrl = NULL, $jobApplyId = NULL)
 	{
 		if ($control instanceof Facebook || $control instanceof Linkedin || $control instanceof Twitter) {
 			$this->userFacade->importSocialData($user);
@@ -93,7 +93,7 @@ class SignListener extends Object implements Subscriber
 			if ($presenter->name == 'Front:Sign' && $presenter->action == 'up') {
 				$this->onRegistered($control->presenter, $user);
 			} else {
-				$this->onSuccess($control->presenter, $user, $rememberMe);
+				$this->onSuccess($control->presenter, $user, $rememberMe, $redirectUrl, $jobApplyId);
 			}
 		} else {
 			$this->session->user = $user;
@@ -209,8 +209,10 @@ class SignListener extends Object implements Subscriber
 	 * @param Presenter $presenter
 	 * @param User $user
 	 * @param bool $rememberMe
+	 * @param string|NULL $redirectUrl
+	 * @param int|NULL $jobApplyId
 	 */
-	public function onSuccess(Presenter $presenter, User $user, $rememberMe = FALSE)
+	public function onSuccess(Presenter $presenter, User $user, $rememberMe = FALSE, $redirectUrl = NULL, $jobApplyId = NULL)
 	{
 		$this->session->remove();
 
@@ -224,6 +226,18 @@ class SignListener extends Object implements Subscriber
 		$message = $this->translator->translate('You are logged in.');
 		$presenter->flashMessage($message, 'success');
 
+		// redirections
+		if ($jobApplyId) {
+			$presenter->redirect(":App:Job:view", [
+				'id' => $jobApplyId,
+				'jobId' => $jobApplyId,
+				'redirectUrl' => $redirectUrl,
+				'do' => 'apply',
+			]);
+		}
+		if ($redirectUrl) {
+			$presenter->redirectUrl($redirectUrl);
+		}
 		$presenter->restoreRequest($presenter->backlink);
 		$presenter->redirect(self::REDIRECT_AFTER_LOGIN);
 	}

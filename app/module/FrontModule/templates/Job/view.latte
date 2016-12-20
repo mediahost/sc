@@ -1,0 +1,176 @@
+{block pageTitle}
+	{$job}
+{/block}
+
+{block breadcrumbItems}
+	<li class="active">{$job}</li>
+{/block}
+
+{block content}
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default invoice">
+			<!-- Start .panel -->
+			<div class="panel-heading clearfix">
+				<h4 class="panel-title pull-left">
+					<span>{$job}</span>
+				</h4>
+				<div class="invoice-info">
+					<strong class="color-red">{$job->company}</strong>
+					<span class="data color-gray">{$job->createdAt|date:'F d, Y'}</span>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="row profile">
+					<!-- Start .row -->
+					<div class="col-md-12 contact-info">
+						<div class="row">
+							<div class="col-md-3">
+								<dl>
+									<dt class="text-muted">{_'Type'}</dt>
+									<dd>{$job->type}</dd>
+									<dt class="text-muted">{_'Salary (per mth)'}</dt>
+									<dd>{$job->salaryFrom}&nbsp;€ - {$job->salaryTo}&nbsp;€</dd>
+								</dl>
+							</div>
+							<div class="col-md-3">
+								<dl>
+									<dt class="text-muted">{_'Category'}</dt>
+									<dd>{$job->category}</dd>
+									{if $user->isAllowed('job', 'accountManager')}
+										<dt class="text-muted">{_'Account Manager'}</dt>
+										<dd>{$job->accountManager}</dd>
+									{/if}
+								</dl>
+							</div>
+							<div class="col-md-6 text-right">
+								<div n:snippet="applyBox">
+									<a href="#signInModal" data-toggle="modal"
+									   class="btn btn-success">{_'Apply'}</a>
+									<a href="{control facebook}&facebook-jobApplyId={$job->id}&facebook-redirectUrl={plink //this}"
+											class="btn btn-primary">
+										<i class="fa fa-facebook mr5"></i>
+										{_'Apply with FB'}
+									</a>
+									<a href="{control linkedin}&linkedin-jobApplyId={$job->id}&linkedin-redirectUrl={plink //this}"
+											class="btn btn-primary">
+										<i class="fa fa-linkedin mr5"></i>
+										{_'Apply with LinkedIn'}
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div class="profile-info bt">
+							<h5 class="text-muted">{_'Position Description'}</h5>
+							{$job->description|noescape}
+						</div>
+						<div class="profile-info">
+							<h5 class="text-muted">{_'Position Summary'}</h5>
+							{$job->summary|noescape}
+						</div>
+						<div class="profile-tags">
+							<h5 class="text-muted">{_'Benefits'}</h5>
+							<div>
+								<span n:foreach="$job->tags as $tag"
+										n:if="$tag->type === \App\Model\Entity\TagJob::TYPE_OFFERS"
+										class="tag label label-info">{$tag}</span>
+							</div>
+						</div>
+						<div class="profile-tags mb20">
+							<h5 class="text-muted">{_'Technical Requirements'}</h5>
+							<div>
+								<span n:foreach="$job->tags as $tag"
+										n:if="$tag->type === \App\Model\Entity\TagJob::TYPE_REQUIREMENTS"
+										class="tag label label-info">{$tag}</span>
+							</div>
+						</div>
+						{if $job->questions}
+							<div class="profile-info bt">
+								<h5 class="text-muted">{_'Pre-Screening Questions'}</h5>
+								<p n:foreach="$job->questions as $question">{$question}</p>
+							</div>
+						{/if}
+						{*<div class="profile-info bt">*}
+						{*<h5 class="text-muted">{_'Notes'}</h5>*}
+						{*<p>{$job->notes}</p>*}
+						{*</div>*}
+					</div>
+
+				</div>
+				<!-- End .row -->
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<span>{_'Skill requirments'}</span>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div n:if="!count($job->skillRequests)"
+						class="note note-warning">
+					<div class="alert alert-info">
+						{_'This job has no skill requests'}
+					</div>
+				</div>
+				<table n:if="count($job->skillRequests)"
+						class="table table-bordered table-striped">
+					<thead>
+					<tr>
+						<th>{_'Skill'}</th>
+						<th>{_'Level from'}</th>
+						<th>{_'Level to'}</th>
+						<th>{_'Years from'}</th>
+						<th>{_'Years to'}</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr n:foreach="$job->skillRequests as $skillKnow">
+						<td>
+							{$skillKnow->skill}
+						</td>
+						<td>
+							{$skillKnow->levelFrom}
+						</td>
+						<td>
+							{$skillKnow->levelTo}
+						</td>
+						<td>
+							{$skillKnow->yearsFrom}
+						</td>
+						<td>
+							{$skillKnow->yearsTo}{$skillKnow->yearsTo == App\Components\Job\Skills::YEARS_MAX ? App\Components\Job\Skills::YEARS_POSTFIX}
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- SignIn Modal -->
+	<div class="modal fade" id="signInModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">{_'Sign In'}</h4>
+				</div>
+				<div class="modal-body">
+					{control signIn}
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.modal -->
+
+</div>

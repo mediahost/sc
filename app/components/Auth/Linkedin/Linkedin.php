@@ -43,6 +43,18 @@ class Linkedin extends BaseControl
 	 */
 	public $remember = FALSE;
 
+	/**
+	 * @var int
+	 * @persistent
+	 */
+	public $jobApplyId;
+
+	/**
+	 * @var string
+	 * @persistent
+	 */
+	public $redirectUrl;
+
 	protected function createComponentDialog()
 	{
 		$dialog = $this->linkedin->createDialog();
@@ -88,7 +100,7 @@ class Linkedin extends BaseControl
 					} else {
 						$user = $this->createUser($me);
 					}
-					$this->onSuccess($this, $user, $this->remember);
+					$this->onSuccess($this, $user, $this->remember, $this->redirectUrl, $this->jobApplyId);
 				}
 			} catch (Exception $e) {
 				Debugger::log($e->getMessage(), 'linkedin');
