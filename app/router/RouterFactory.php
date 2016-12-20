@@ -23,6 +23,7 @@ class RouterFactory
 		$router[] = new Route('index.php', 'Front:Default:default', Route::ONE_WAY);
 
 		$router[] = $fotoRouter = new RouteList('Foto');
+		$router[] = $apiRouter = new RouteList('Api');
 		$router[] = $adminRouter = new RouteList('App');
 		$router[] = $frontRouter = new RouteList('Front');
 
@@ -33,6 +34,14 @@ class RouterFactory
 			'action' => 'default',
             'size' => NULL,
             'name' => NULL,
+		]);
+
+		// </editor-fold>
+		// <editor-fold desc="Api">
+
+		$apiRouter[] = new Route('api/<presenter>/<action>[/<id>]', [
+			'action' => 'default',
+			'id' => NULL,
 		]);
 
 		// </editor-fold>
