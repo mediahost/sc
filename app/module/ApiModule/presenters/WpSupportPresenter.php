@@ -2,12 +2,54 @@
 
 namespace App\ApiModule\Presenters;
 
+use App\Model\Entity\Candidate;
+use App\Model\Entity\Job;
+use App\Model\Entity\Match;
+use App\Model\Entity\User;
+
 class WpSupportPresenter extends BasePresenter
 {
 
-	public function renderApplyButtons($postId)
+	/** @var Candidate */
+	private $candidate;
+
+	/** @var Job */
+	private $job;
+
+	/** @var Match */
+	private $match;
+
+	public function actionApplyButtons($postId, $userId, $template)
 	{
-		$this->template->postId = $postId;
+		$jobRepo = $this->em->getRepository(Job::getClassName());
+		$this->job = $jobRepo->findOneByWordpressId($postId);
+
+		if ($userId) {
+			$userRepo = $this->em->getRepository(User::getClassName());
+			$user = $userRepo->find($userId);
+			if ($user && $user->person && $user->person->candidate) {
+				$this->candidate = $user->person->candidate;
+				if ($this->job) {
+					$this->match = $this->candidate->findMatch($this->job);
+				}
+			}
+		}
+	}
+
+	public function renderApplyButtons($postId, $userId, $template)
+	{
+		$bigTemplates = [
+			'2-columns',
+			'3-columns',
+//			'classic',
+			'fancy',
+			'map-view',
+		];
+		$this->template->isBigTemplate = in_array($template, $bigTemplates);
+		$this->template->wordpressId = $postId;
+		$this->template->job = $this->job;
+		$this->template->candidate = $this->candidate;
+		$this->template->match = $this->match;
 	}
 
 }
