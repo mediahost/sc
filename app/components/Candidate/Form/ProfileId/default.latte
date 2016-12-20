@@ -1,22 +1,22 @@
 
 <div class="profileId">
 	<div n:if="!$editable">
-		<a href="{plink //:Front:Profile: $candidate->profileId}">
-			{plink //:Front:Profile: $candidate->profileId}
+		<a href="{plink //:Front:Profile: $candidate->profileId, 'backlink' => NULL}">
+			{plink //:Front:Profile: $candidate->profileId, 'backlink' => NULL}
 		</a>
 	</div>
 
 	<div n:if="$editable">
 		<div class="preview">
-			<a href="{plink //:Front:Profile: $candidate->profileId}" class="ajax">
-				{plink //:Front:Profile:}</a>
+			<a href="{plink //:Front:Profile: $candidate->profileId, 'backlink' => NULL}" class="ajax">
+				{plink //:Front:Profile: $candidate->profileId, 'backlink' => NULL}</a>
 			<a href="#" class="edit">
 				<i class="fa fa-edit"></i>
 			</a>
 		</div>
 
 		<div class="editor">
-			{form form}
+			{form form class=>'form-inline'}
 				{label profileId/}/
 				{input profileId class=>'form-control text inline input-large'}
 				{input save class=>'btn btn-primary button'}
