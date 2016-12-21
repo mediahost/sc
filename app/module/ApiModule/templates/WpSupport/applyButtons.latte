@@ -6,22 +6,32 @@
 			<i class="icon-briefcase4"></i>{_'Applied'}
 		</a>
 	{elseif $job}
-		<a href="javascript:void(0);"
-		   onclick="trigger_func('#btn-header-main-login');"
+		<a href="#" data-toggle="modal" data-target="#sign-in"
+		   data-job-apply-id="{$job->id}"
+		   data-redirect-url="{$thisLink}"
 				n:class="$isBigTemplate ? 'btn large', 'like applied_icon'">
-			<i class="icon-briefcase4"></i>{_'Apply Now'}
+			<span n:tag-if="!$isBigTemplate">
+				<i n:class="$isBigTemplate ? icon-briefcase4 : icon-thumbsup"></i>
+			</span>
+			{_'Apply Now'}
 		</a>
 
 		<a n:class="$isBigTemplate ? 'btn large', 'linkedin social_login_login_linkedin'"
-				href="#" data-applyjobid="{$job->wordpressId}">
-			<div data-applyjobid="{$job->wordpressId}" class="linkedin_jobid_apply"></div>
-			<i class="icon-linkedin4"></i>{_'Apply with Linkedin'}
+				href="{control linkedin}&linkedin-jobApplyId={$job->id}&linkedin-redirectUrl={$thisLink}">
+			<div class="linkedin_jobid_apply"></div>
+			<span n:tag-if="!$isBigTemplate">
+				<i class="icon-linkedin4"></i>
+			</span>
+			{_'Apply with Linkedin'}
 		</a>
 
 		<a n:class="$isBigTemplate ? 'btn large', 'facebook social_login_login_facebook_apply'"
-				href="#" data-applyjobid="{$job->wordpressId}">
-			<div data-applyjobid="{$job->wordpressId}" class="facebook_jobid_apply"></div>
-			<i class="icon-facebook"></i>{_'Apply with Facebook'}
+				href="{control facebook}&facebook-jobApplyId={$job->id}&facebook-redirectUrl={$thisLink}">
+			<div class="facebook_jobid_apply"></div>
+			<span n:tag-if="!$isBigTemplate">
+				<i class="icon-facebook"></i>
+			</span>
+			{_'Apply with Facebook'}
 		</a>
 	{else}
 		{_'No job with ID %id%', NULL, ['id' => $wordpressId]}

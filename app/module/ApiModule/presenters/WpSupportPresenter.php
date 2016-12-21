@@ -2,6 +2,10 @@
 
 namespace App\ApiModule\Presenters;
 
+use App\Components\Auth\Facebook;
+use App\Components\Auth\IFacebookFactory;
+use App\Components\Auth\ILinkedinFactory;
+use App\Components\Auth\Linkedin;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
@@ -9,6 +13,12 @@ use App\Model\Entity\User;
 
 class WpSupportPresenter extends BasePresenter
 {
+
+	/** @var IFacebookFactory @inject */
+	public $iFacebookFactory;
+
+	/** @var ILinkedinFactory @inject */
+	public $iLinkedinFactory;
 
 	/** @var Candidate */
 	private $candidate;
@@ -19,7 +29,7 @@ class WpSupportPresenter extends BasePresenter
 	/** @var Match */
 	private $match;
 
-	public function actionApplyButtons($postId, $userId, $template)
+	public function actionApplyButtons($postId, $userId, $redirectUrl, $template)
 	{
 		$jobRepo = $this->em->getRepository(Job::getClassName());
 		$this->job = $jobRepo->findOneByWordpressId($postId);
@@ -36,7 +46,7 @@ class WpSupportPresenter extends BasePresenter
 		}
 	}
 
-	public function renderApplyButtons($postId, $userId, $template)
+	public function renderApplyButtons($postId, $userId, $redirectUrl, $template)
 	{
 		$bigTemplates = [
 			'2-columns',
@@ -47,9 +57,24 @@ class WpSupportPresenter extends BasePresenter
 		];
 		$this->template->isBigTemplate = in_array($template, $bigTemplates);
 		$this->template->wordpressId = $postId;
+		$this->template->thisLink = $redirectUrl;
 		$this->template->job = $this->job;
 		$this->template->candidate = $this->candidate;
 		$this->template->match = $this->match;
+	}
+
+	/** @return Facebook */
+	protected function createComponentFacebook()
+	{
+		$control = $this->iFacebookFactory->create();
+		return $control;
+	}
+
+	/** @return Linkedin */
+	protected function createComponentLinkedin()
+	{
+		$control = $this->iLinkedinFactory->create();
+		return $control;
 	}
 
 }
