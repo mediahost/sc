@@ -56,7 +56,7 @@ trait UserFacadeDelete
 
 	private function clearCandidate(User $user)
 	{
-		if ($user->person && $user->person->candidate) {
+		if ($user->person && $user->person->candidate->id) {
 			$this->candidateFacade->delete($user->person->candidate);
 		}
 		return TRUE;

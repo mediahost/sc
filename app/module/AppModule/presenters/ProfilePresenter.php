@@ -92,7 +92,7 @@ class ProfilePresenter extends BasePresenter
 	{
 		$userRepo = $this->em->getRepository(User::getClassName());
 		$user = $userRepo->find($id);
-		if ($user->person && $user->person->candidate && $user->person->candidate->profileId) {
+		if ($user && $user->person->candidate->id && $user->person->candidate->profileId) {
 			$this->redirect('default', $user->person->candidate->profileId);
 		} else {
 			$message = $this->translator->translate('Candidate wasn\'t found');
