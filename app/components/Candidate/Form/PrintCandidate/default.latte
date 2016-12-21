@@ -56,7 +56,7 @@
 					</p>
 				</div>
 				<div class="col-md-6">
-					<a n:ifset="$user" href="{plink Profile:user $user->id}">
+					<a n:ifset="$user" href="{plink Profile: $user->person->candidate->profileId}">
 						<img src="{$person|foto:150,150}"
 						     class="center img-responsive photo-rounded" alt="{$person->fullName}"
 						     data-toggle="tooltip" data-placement="top" data-original-title="{_'Visit profile'}"/>
