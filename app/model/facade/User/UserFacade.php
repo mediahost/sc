@@ -42,6 +42,9 @@ class UserFacade extends Object
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
 
+	/** @var CandidateFacade @inject */
+	public $candidateFacade;
+
 	/** @var UserRepository */
 	private $userRepo;
 

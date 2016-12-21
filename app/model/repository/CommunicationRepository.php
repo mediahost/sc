@@ -3,7 +3,6 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Sender;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
 
@@ -26,6 +25,24 @@ class CommunicationRepository extends BaseRepository
 			return $this->find($id);
 		} catch (NoResultException $e) {
 			return NULL;
+		}
+	}
+
+	public function findBySender(Sender $sender)
+	{
+		$rsm = new ResultSetMapping();
+		$rsm->addScalarResult('communication_id', 'id');
+		$nqb = $this->createNativeQuery('SELECT communication_id FROM `communication_sender` WHERE sender_id = :sender', $rsm);
+		$nqb->setParameter('sender', $sender->id);
+		try {
+			$ids = array_map(function ($row) {
+				return reset($row);
+			}, $nqb->getArrayResult());
+			return $this->findBy([
+				'id IN' => $ids
+			]);
+		} catch (NoResultException $e) {
+			return [];
 		}
 	}
 

@@ -29,6 +29,8 @@ trait UserFacadeDelete
 	{
 		if ($this->isDeletable($user)) {
 			$this->clearPermissions($user);
+			$this->clearCommunication($user);
+			$this->clearCandidate($user);
 			$this->em->remove($user);
 			$this->em->flush();
 			return $user;
@@ -40,6 +42,22 @@ trait UserFacadeDelete
 	{
 		foreach ($this->companyFacade->findPermissions(NULL, $user) as $permission) {
 			$this->companyPermissionRepo->delete($permission);
+		}
+		return TRUE;
+	}
+
+	private function clearCommunication(User $user)
+	{
+		foreach ($this->communicationFacade->findSenders($user) as $sender) {
+			$this->communicationFacade->delete($sender);
+		}
+		return TRUE;
+	}
+
+	private function clearCandidate(User $user)
+	{
+		if ($user->person && $user->person->candidate) {
+			$this->candidateFacade->delete($user->person->candidate);
 		}
 		return TRUE;
 	}

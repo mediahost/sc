@@ -72,6 +72,17 @@ class CommunicationFacade extends Object
 		return $this->senderRepo->findOneBy($criteria);
 	}
 
+	public function findSenders(User $user, Company $company = NULL)
+	{
+		$criteria = [
+			'user' => $user,
+		];
+		if ($company) {
+			$criteria['company'] = $company;
+		}
+		return $this->senderRepo->findBy($criteria);
+	}
+
 	public function getSenders(Sender $me = NULL)
 	{
 		$criteria = [];
@@ -194,6 +205,16 @@ class CommunicationFacade extends Object
 	{
 		$communication->markMessagesAsRead($reader);
 		$this->communicationRepo->save($communication);
+	}
+
+	public function delete(Sender $sender)
+	{
+		$communications = $this->communicationRepo->findBySender($sender);
+		foreach ($communications as $communication) {
+			$this->communicationRepo->delete($communication);
+		}
+		$this->senderRepo->delete($sender);
+		return $this;
 	}
 
 }

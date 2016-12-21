@@ -149,4 +149,12 @@ class CandidateFacade extends Object
 		return $this->jobRepo->findBy($criteria);
 	}
 
+	public function delete(Candidate $candidate)
+	{
+		$matches = $this->matchRepo->findByCandidate($candidate);
+		foreach ($matches as $match) {
+			$this->matchRepo->delete($match);
+		}
+	}
+
 }
