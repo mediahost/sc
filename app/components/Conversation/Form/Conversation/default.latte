@@ -32,16 +32,25 @@
 				{foreach $communication->messages as $message}
 					{continueIf $iterator->counter <= $skipCount}
 					<li n:class="$control->isViewer($message->sender) ? admin : user, clearfix">
-						<a href="#" class="avatar">
-							<img src="{$message->sender|foto:50,50}" alt=""/>
-						</a>
+						{if $sender->user->person->candidate->id}
+							<a href="{plink :App:Profile: $sender->user->person->candidate->profileId}" class="avatar">
+								<img src="{$message->sender|foto:50,50}" alt=""/>
+							</a>
+						{else}
+							<a href="#" class="avatar">
+								<img src="{$message->sender|foto:50,50}" alt=""/>
+							</a>
+						{/if}
 						<div n:class="message, $message->isSystem() ? message-system">
 							<div class="head clearfix">
-							<span class="name">
-								<strong>
-									{$message->sender->name}
-								</strong>
-							</span>
+								<a href="{plink :App:Profile: $sender->user->person->candidate->profileId}"
+										n:tag-if="$sender->user->person->candidate->id">
+									<span class="name">
+										<strong>
+											{$message->sender->name}
+										</strong>
+									</span>
+								</a>
 								<span class="time">{$message->createdAt|date:'H:i d.m.Y'}</span>
 							</div>
 							<p>
