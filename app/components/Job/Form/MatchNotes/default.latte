@@ -12,7 +12,7 @@
 				</span>
 				<span class="time">{$note->createdAt|date:'H:i d.m.Y'}</span>
 			</div>
-			{$note->text|stripTags|nl2br}
+			{$note->text|escape|stripTags|nl2br|noescape}
 		</div>
 	</li>
 	<li n:if="$editable" class="sendMsg">
