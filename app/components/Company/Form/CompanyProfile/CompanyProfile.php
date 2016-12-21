@@ -55,9 +55,9 @@ class CompanyProfile extends BaseControl
 
 		$form->addUpload('logo', 'Logo')
 			->addRule(Form::IMAGE, 'Logo must be image')
-			->setRequired();
+			->setRequired($this->company->isNew());
 
-		$form->addSubmit('confirm', 'Confirm');
+		$form->addSubmit('save', 'Save');
 		$form->setDefaults($this->getDefaults());
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;

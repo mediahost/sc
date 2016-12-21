@@ -1,0 +1,26 @@
+{block pageTitle}
+	{_'Profile of %company%', NULL, ['company' => $companyEntity]}
+{/block}
+
+{block breadcrumbItems}
+	<li class="active">{_'Company Profile'}</li>
+{/block}
+
+{block content}
+	<div class="row">
+		<div class="col-lg-6 col-md-12">
+			{include companyDetailsPanel}
+		</div>
+	</div>
+{/block}
+
+{define companyDetailsPanel}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">{_'Company Details'}</h4>
+		</div>
+		<div class="panel-body">
+			{control companyDetails:preview}
+		</div>
+	</div>
+{/define}

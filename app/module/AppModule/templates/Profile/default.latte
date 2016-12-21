@@ -33,30 +33,22 @@
 				{include personalDetailsPanel}
 			{/snippet}
 
-			{ifset $company}
-				{include companyDetailsPanel}
-			{/ifset}
+			{snippet interestedIn}
+				{include interestedInPanel}
+			{/snippet}
 
-			{if $candidate && !isset($company)}
-				{snippet interestedIn}
-					{include interestedInPanel}
-				{/snippet}
-
-				{snippet profileId}
-					{include profileIdPanel}
-				{/snippet}
-			{/if}
+			{snippet profileId}
+				{include profileIdPanel}
+			{/snippet}
 		</div>
-		<div class="col-lg-6 col-md-12" n:if="$candidate">
-			{if !isset($company)}
-				{include itSkillsPanel}
+		<div class="col-lg-6 col-md-12">
+			{include itSkillsPanel}
 
-				{snippet socialLinks}
-					{include socialLinksPanel}
-				{/snippet}
+			{snippet socialLinks}
+				{include socialLinksPanel}
+			{/snippet}
 
-				{include docsPanel}
-			{/if}
+			{include docsPanel}
 		</div>
 	</div>
 {/block}
@@ -110,17 +102,6 @@
 			<div n:if="$canEdit" class="row profile-edit" id="edit-address">
 				{control addressForm}
 			</div>
-		</div>
-	</div>
-{/define}
-
-{define companyDetailsPanel}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h4 class="panel-title">{_'Company Details'}</h4>
-		</div>
-		<div class="panel-body">
-			{control companyDetails:preview}
 		</div>
 	</div>
 {/define}

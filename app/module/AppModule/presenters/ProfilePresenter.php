@@ -62,9 +62,6 @@ class ProfilePresenter extends BasePresenter
 	/** @var IConversationListFactory @inject */
 	public $iConversationListFactory;
 
-	/** @var ICompanyProfileFactory @inject */
-	public $companyProfileFactory;
-
 	/** @var IProfileIdFactory @inject */
 	public $profileIdFactory;
 
@@ -248,15 +245,6 @@ class ProfilePresenter extends BasePresenter
 		}
 		$control->setReadMode(TRUE)
 			->disableSearchBox();
-		return $control;
-	}
-
-	/**  @return CompanyProfile */
-	public function createComponentCompanyDetails()
-	{
-		$control = $this->companyProfileFactory->create();
-		$control->setAjax(true, true);
-		$control->setCompany($this->company);
 		return $control;
 	}
 
