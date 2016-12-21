@@ -88,13 +88,6 @@ class CompanyInfo extends BaseControl
 			$users = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
 			$admins = $form->addMultiSelect2('admins', 'Administrators', $users)
 				->setRequired('Company must have administrator');
-
-			$linkAddUser = Html::el('a')->href($this->presenter->link('this#addUser'))
-				->addAttributes(['data-toggle' => 'modal'])
-				->setText($this->translator->translate('add new user'));
-			$message = Html::el('')->setText($this->translator->translate('You can') . ' ')
-				->add($linkAddUser);
-			$admins->setOption('description', $message);
 		}
 
 		$form->addSubmit('save', 'Save');
