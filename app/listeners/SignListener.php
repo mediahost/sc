@@ -8,6 +8,7 @@ use App\Components\Auth\Twitter;
 use App\Extensions\Settings\SettingsStorage;
 use App\Mail\Messages\ICreateRegistrationMessageFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
@@ -19,7 +20,6 @@ use Nette\Application\Application;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Object;
-use Tracy\Debugger;
 
 class SignListener extends Object implements Subscriber
 {
@@ -129,7 +129,7 @@ class SignListener extends Object implements Subscriber
 		} else {
 			$message = $this->translator->translate('%mail% is already registered.', ['mail' => $user->mail]);
 			$control->presenter->flashMessage($message);
-			$control->presenter->redirect(self::REDIRECT_SIGN_IN_PAGE, ['role' => $this->session->redirectRole]);
+			$control->presenter->redirect(self::REDIRECT_SIGN_IN_PAGE);
 		}
 	}
 
@@ -141,7 +141,7 @@ class SignListener extends Object implements Subscriber
 	 */
 	private function verify(Control $control, User $user)
 	{
-		$role = $this->roleFacade->findByName($this->session->getRole(TRUE));
+		$role = $this->roleFacade->findByName(Role::CANDIDATE);
 		$user->addRole($role);
 
 		$userRepo = $this->em->getRepository(User::getClassName());
