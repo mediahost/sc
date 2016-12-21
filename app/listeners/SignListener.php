@@ -238,7 +238,7 @@ class SignListener extends Object implements Subscriber
 		if ($redirectUrl) {
 			$presenter->redirectUrl($redirectUrl);
 		}
-		$presenter->restoreRequest($presenter->backlink);
+		$presenter->restoreRequest($presenter->backlink, FALSE);
 		$presenter->redirect(self::REDIRECT_AFTER_LOGIN);
 	}
 

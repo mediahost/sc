@@ -12,8 +12,8 @@ use Kdyby\Doctrine\MemberAccessException as DoctrineMemberAccessException;
 use Kdyby\Translation\Translator;
 use Latte\Macros\MacroSet;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\Request;
 use Nette\Application\UI\Presenter;
-use Nette\Http\Request;
 use Nette\MemberAccessException as NetteMemberAccessException;
 use Nette\Security\IUserStorage;
 use WebLoader\Nette\CssLoader;
@@ -116,7 +116,7 @@ abstract class BasePresenter extends Presenter
 		}
 	}
 
-	public function restoreRequest($key)
+	public function restoreRequest($key, $checkUser = TRUE)
 	{
 		$session = $this->getSession('Nette.Application/requests');
 		/** @var Request $request */
@@ -126,7 +126,7 @@ abstract class BasePresenter extends Presenter
 			unset($params[self::ACCESS_ID_PARAM]);
 			$request->setParameters($params);
 		}
-		return parent::restoreRequest($key);
+		return parent::restoreRequest($key, $checkUser);
 	}
 
 	private function checkCompanySecured($resource, $privilege)
