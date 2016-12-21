@@ -120,7 +120,6 @@ class AccountSettingsPresenter extends BasePresenter
 	protected function createComponentSetPassword()
 	{
 		$control = $this->iSetPasswordFactory->create();
-		$control->setUser($this->user);
 		$control->onSuccess[] = function () {
 			$message = $this->translator->translate('Password has been successfuly set!');
 			$this->flashMessage($message, 'success');

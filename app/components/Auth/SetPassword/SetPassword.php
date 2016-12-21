@@ -20,8 +20,8 @@ class SetPassword extends BaseControl
 	/** @var UserFacade @inject */
 	public $userFacade;
 
-	/** @var Security\User */
-	private $presenterUser;
+	/** @var Security\User @inject */
+	public $user;
 
 	protected function createComponentForm()
 	{
@@ -29,24 +29,28 @@ class SetPassword extends BaseControl
 		$form->setRenderer(new Bootstrap3FormRenderer());
 		$form->setTranslator($this->translator);
 
-		if (!$this->presenterUser) {
+		if (!$this->user) {
 			throw new SetPasswordException('Must use method setUser(\Nette\Security\User)');
 		}
-		if (!$this->presenterUser->loggedIn) {
+		if (!$this->user->loggedIn) {
 			throw new SetPasswordException('Only for logged users');
 		}
 
-		$user = $this->presenterUser->identity;
+		$user = $this->user->identity;
 		$form->addText('mail', 'E-mail')
 				->setEmptyValue($user->mail)
 				->setDisabled();
 
+		$form->addPassword('oldPassword', 'Old password', NULL, 255)
+			->setAttribute('placeholder', 'Old password')
+			->setRequired('Please enter your password');
+
 		$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
 		$form->addPassword('newPassword', 'New password', NULL, 255)
-				->setAttribute('placeholder', 'Password')
-				->setRequired('Please enter your password')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
-				->setOption('description', $helpText);
+			->setAttribute('placeholder', 'New password')
+			->setRequired('Please enter your password')
+			->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
+			->setOption('description', $helpText);
 
 		$form->addPassword('passwordAgain', 'Re-type Your Password', NULL, 255)
 				->setAttribute('placeholder', 'Re-type Your Password')
@@ -61,18 +65,19 @@ class SetPassword extends BaseControl
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$user = $this->userFacade->findByMail($this->presenterUser->identity->mail);
-		$user->password = $values->newPassword;
+		$user = $this->user->identity;
+		if (!$user->verifyPassword($values->oldPassword)) {
+			$form['oldPassword']->addError($this->translator->translate('Old password is incorrect'));
+		}
 
-		$userRepo = $this->em->getRepository(Entity\User::getClassName());
-		$savedUser = $userRepo->save($user);
+		if (!$form->hasErrors()) {
+			$user->password = $values->newPassword;
 
-		$this->onSuccess($savedUser);
-	}
+			$userRepo = $this->em->getRepository(Entity\User::getClassName());
+			$savedUser = $userRepo->save($user);
 
-	public function setUser(Security\User $user)
-	{
-		$this->presenterUser = $user;
+			$this->onSuccess($savedUser);
+		}
 	}
 
 	public function renderLogin()
