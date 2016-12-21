@@ -22,11 +22,14 @@ class CompaniesGrid extends BaseControl
 
 		$col = $grid->addColumnText('companyId', 'Id');
 		$col->setSortable()->setFilterText();
-		$col->headerPrototype->width = '5%';
+		$col->headerPrototype->width = '10%';
 
 		$col = $grid->addColumnText('name', 'Name');
 		$col->setSortable()->setFilterText()->setSuggestion();
 		$col->setCustomRender(__DIR__ . '/companyName.latte');
+
+		$col = $grid->addColumnText('address', 'Address');
+		$col->setSortable()->setFilterText()->setSuggestion();;
 
 		$col = $grid->addColumnText('users', 'Users');
 		$col->setCustomRender(__DIR__ . '/users.latte');
@@ -34,9 +37,6 @@ class CompaniesGrid extends BaseControl
 
 		$grid->addActionHref('jobs', 'Jobs', 'Jobs:company')
 			->setIcon('fa fa-briefcase');
-
-//		$grid->addActionHref('editImages', 'Images')
-//			->setIcon('fa fa-image');
 
 		$grid->addActionHref('edit', 'Edit')
 			->setIcon('fa fa-edit');
@@ -46,7 +46,7 @@ class CompaniesGrid extends BaseControl
 			->setConfirm([$this, 'getConfirmMessage'])
 			->getElementPrototype()->class[] = 'red';
 
-		$grid->setActionWidth("20%");
+		$grid->setActionWidth("15%");
 		return $grid;
 	}
 
