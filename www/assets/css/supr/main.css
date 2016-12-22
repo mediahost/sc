@@ -1004,7 +1004,7 @@ body #wrapper {
   transition-duration: 0.3s;
 }
 #header.shrink .navbar .navbar-brand {
-  height: 39px;
+  height: 48px;
   line-height: 40px;
   transition: all;
   transition-duration: 0.3s;
@@ -1049,6 +1049,10 @@ body #wrapper {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
   /*  .transition(all);
            .transition-duration(0.3s); */
+}
+#header .navbar .navbar-brand img {
+  padding-right: 30px;
+  height: 100%
 }
 #header .navbar .navbar-brand .slogan {
   font-size: 14px;
