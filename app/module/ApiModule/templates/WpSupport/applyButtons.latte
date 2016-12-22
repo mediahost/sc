@@ -1,41 +1,31 @@
 {block content}
-{if !$user->loggedIn || $isCandidate}
-	{if $match && $match->candidateApprove}
-		<a href="javascript:void(0);"
-				n:class="$isBigTemplate ? 'btn large', 'like applied_icon disabled'">
-			<i class="icon-briefcase4"></i>{_'Applied'}
-		</a>
-	{elseif $job}
-		<a href="#" data-toggle="modal" data-target="#sign-in"
-		   data-job-apply-id="{$job->id}"
-		   data-redirect-url="{$thisLink}"
-				n:class="$isBigTemplate ? 'btn large', 'like applied_icon'">
-			<span n:tag-if="!$isBigTemplate">
-				<i n:class="$isBigTemplate ? icon-briefcase4 : icon-thumbsup"></i>
-			</span>
-			{_'Apply Now'}
-		</a>
 
-		<a n:class="$isBigTemplate ? 'btn large', 'linkedin social_login_login_linkedin'"
-				href="{control linkedin}&linkedin-jobApplyId={$job->id}&linkedin-redirectUrl={$thisLink}">
-			<div class="linkedin_jobid_apply"></div>
-			<span n:tag-if="!$isBigTemplate">
-				<i class="icon-linkedin4"></i>
-			</span>
-			{_'Apply with Linkedin'}
-		</a>
-
-		<a n:class="$isBigTemplate ? 'btn large', 'facebook social_login_login_facebook_apply'"
-				href="{control facebook}&facebook-jobApplyId={$job->id}&facebook-redirectUrl={$thisLink}">
-			<div class="facebook_jobid_apply"></div>
-			<span n:tag-if="!$isBigTemplate">
-				<i class="icon-facebook"></i>
-			</span>
-			{_'Apply with Facebook'}
-		</a>
-	{else}
-		{_'No job with ID %id%', NULL, ['id' => $wordpressId]}
-	{/if}
-{else}
+{if !$job} {* No Job *}
+	{_'No job with ID %id%', NULL, ['id' => $wordpressId]}
+{elseif !$user->loggedIn} {* No logged user *}
+	<a href="#" data-toggle="modal" data-target="#sign-in"
+	   data-job-apply-id="{$job->id}"
+	   data-redirect-url="{$thisLink}"
+			n:class="$isBigTemplate ? 'btn large', 'like applied_icon'">
+		<span n:tag-if="!$isBigTemplate">
+			<i n:class="$isBigTemplate ? icon-briefcase4 : icon-thumbsup"></i>
+		</span>
+		{_'Apply Now'}
+	</a>
+{elseif !$isCandidate} {* logged in wrong role *}
 	{_'Only candidate can apply for a job'}
+{elseif $match && $match->candidateApprove} {* logged candidate - already applied *}
+	<a href="javascript:void(0);"
+			n:class="$isBigTemplate ? 'btn large', 'like applied_icon disabled'">
+		<i class="icon-briefcase4"></i>
+		{_'Applied'}
+	</a>
+{else} {* logged candidate - can apply *}
+	<a n:href=":App:Job:view 'id' => $job->id, 'jobId' => $job->id, 'redirectUrl' => $thisLink, 'do' => 'apply'"
+			n:class="$isBigTemplate ? 'btn large', 'like applied_icon'">
+		<span n:tag-if="!$isBigTemplate">
+			<i n:class="$isBigTemplate ? icon-briefcase4 : icon-thumbsup"></i>
+		</span>
+		{_'Apply Now'}
+	</a>
 {/if}

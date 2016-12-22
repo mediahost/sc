@@ -2,10 +2,8 @@
 
 namespace App\ApiModule\Presenters;
 
-use App\Components\Auth\Facebook;
 use App\Components\Auth\IFacebookFactory;
 use App\Components\Auth\ILinkedinFactory;
-use App\Components\Auth\Linkedin;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
@@ -61,20 +59,6 @@ class WpSupportPresenter extends BasePresenter
 		$this->template->job = $this->job;
 		$this->template->candidate = $this->candidate;
 		$this->template->match = $this->match;
-	}
-
-	/** @return Facebook */
-	protected function createComponentFacebook()
-	{
-		$control = $this->iFacebookFactory->create();
-		return $control;
-	}
-
-	/** @return Linkedin */
-	protected function createComponentLinkedin()
-	{
-		$control = $this->iLinkedinFactory->create();
-		return $control;
 	}
 
 }
