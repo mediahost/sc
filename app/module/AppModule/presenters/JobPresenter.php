@@ -9,6 +9,7 @@ use App\Components\Job\IBasicInfoFactory;
 use App\Components\Job\ISkillsFactory;
 use App\Components\Job\Skills;
 use App\Extensions\Candidates\CandidatesList;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
@@ -235,6 +236,7 @@ class JobPresenter extends BasePresenter
 			$job = $this->jobRepo->find($jobId);
 			$identity = $this->user->getIdentity();
 			if ($job && isset($identity->person->candidate)) {
+				/** @var Candidate $candidate */
 				$candidate = $identity->person->candidate;
 
 				if ($candidate->isApplyable()) {
@@ -245,7 +247,7 @@ class JobPresenter extends BasePresenter
 
 					$this->actionFacade->addJobApply($this->user->identity, $job);
 				} else {
-					$message = $this->translator->translate('You cannot apply for this job. You must upload your CV file before.');
+					$message = $this->translator->translate('You cannot apply for this job. You must upload your CV file at first.');
 					$this->flashMessage($message, 'warning');
 				}
 			}
