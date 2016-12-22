@@ -249,6 +249,7 @@ class JobPresenter extends BasePresenter
 				} else {
 					$message = $this->translator->translate('You cannot apply for this job. You must upload your CV file at first.');
 					$this->flashMessage($message, 'warning');
+					$redirectUrl = NULL;
 				}
 			}
 		}
