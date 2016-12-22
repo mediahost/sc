@@ -36,6 +36,7 @@ class WpSupportPresenter extends BasePresenter
 			$userRepo = $this->em->getRepository(User::getClassName());
 			$user = $userRepo->find($userId);
 			if ($user && $user->person->candidate->id) {
+				$this->user->login($user);
 				$this->candidate = $user->person->candidate;
 				if ($this->job) {
 					$this->match = $this->candidate->findMatch($this->job);

@@ -2,8 +2,6 @@
 
 namespace App\Extensions\Settings\DI;
 
-use Nette\Configurator;
-use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 
 class SettingsExtension extends CompilerExtension
@@ -12,6 +10,10 @@ class SettingsExtension extends CompilerExtension
 	/** @var array */
 	public $defaults = [
 		'modules' => [
+			'api' => [
+				'enabled' => FALSE,
+				'allowedIps' => ['127.0.0.1'],
+			],
 			'registrableRoles' => ['company', 'candidate'],
 			'notifications' => [
 				'enabled' => TRUE,
