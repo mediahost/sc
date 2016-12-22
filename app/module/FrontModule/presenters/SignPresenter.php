@@ -66,7 +66,9 @@ class SignPresenter extends BasePresenter
 
 	protected function startup()
 	{
-		$this->isLoggedIn();
+		if ($this->action !== 'out') {
+			$this->isLoggedIn();
+		}
 		parent::startup();
 	}
 
@@ -114,6 +116,17 @@ class SignPresenter extends BasePresenter
 		}
 
 		$this->template->role = $this->session->role;
+	}
+
+	public function actionOut($redirectUrl = NULL)
+	{
+		$this->user->logout();
+		$message = $this->translator->translate('You have been successfuly signed out.');
+		$this->flashMessage($message, 'success');
+		if ($redirectUrl) {
+			$this->redirectUrl($redirectUrl);
+		}
+		$this->redirect(Auth\SignOut::REDIRECT_AFTER_LOGOUT);
 	}
 
 	public function renderUpRequired()
