@@ -23,11 +23,11 @@ class Twitter extends BaseControl
 	/** @var bool */
 	private $onlyConnect = FALSE;
 
-	/** @var SignUpStorage @inject */
-	public $session;
-
 	/** @var Authenticator @inject */
 	public $twitter;
+
+	/** @var SignUpStorage @inject */
+	public $session;
 
 	/** @var UserFacade @inject */
 	public $userFacade;
@@ -40,6 +40,18 @@ class Twitter extends BaseControl
 	 * @persistent
 	 */
 	public $remember = FALSE;
+
+	/**
+	 * @var int
+	 * @persistent
+	 */
+	public $jobApplyId;
+
+	/**
+	 * @var string
+	 * @persistent
+	 */
+	public $redirectUrl;
 
 	public function handleAuthenticate()
 	{
@@ -59,7 +71,7 @@ class Twitter extends BaseControl
 					$user = $this->createUser($data);
 				}
 
-				$this->onSuccess($this, $user, $this->remember);
+				$this->onSuccess($this, $user, $this->remember, $this->redirectUrl, $this->jobApplyId);
 			}
 		} catch (AuthenticationException $e) {
 			Debugger::log($e->getMessage(), 'twitter');
