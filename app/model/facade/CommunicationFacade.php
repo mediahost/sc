@@ -127,9 +127,9 @@ class CommunicationFacade extends Object
 	public function sendMatchMessage(Match $match)
 	{
 		if ($match->adminApprovedAt < $match->candidateApprovedAt) {
-			return $this->sendApproveMessage($match, TRUE);
-		} else {
 			return $this->sendApplyMessage($match, TRUE);
+		} else {
+			return $this->sendApproveMessage($match, TRUE);
 		}
 	}
 
