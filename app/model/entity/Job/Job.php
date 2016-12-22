@@ -104,6 +104,32 @@ class Job extends BaseEntity
 		return $this->id === NULL;
 	}
 
+	public function getAppliedCount()
+	{
+		$count = 0;
+		$isMatch = function ($key, Match $match) use (&$count) {
+			if ($match->candidateApprove && !$match->adminApprove) {
+				$count++;
+			}
+			return TRUE;
+		};
+		$this->matches->forAll($isMatch);
+		return $count;
+	}
+
+	public function getInvitedCount()
+	{
+		$count = 0;
+		$isMatch = function ($key, Match $match) use (&$count) {
+			if ($match->adminApprove && !$match->candidateApprove) {
+				$count++;
+			}
+			return TRUE;
+		};
+		$this->matches->forAll($isMatch);
+		return $count;
+	}
+
 	public function getMatchedCount($only = TRUE)
 	{
 		$count = 0;

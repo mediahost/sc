@@ -41,6 +41,12 @@ class JobsGrid extends BaseControl
 		$grid->getColumn('id')->getHeaderPrototype()->setWidth('5%');
 
 		$grid->addColumnText('name', 'Name')
+			->setCustomRender(function (Job $item) {
+				return Html::el('a')
+					->setHref($this->presenter->link('Job:view', [
+						'id' => $item->id,
+					]))->setHtml($item);
+			})
 			->setTruncate(20)
 			->setSortable()
 			->setFilterText()
@@ -62,6 +68,32 @@ class JobsGrid extends BaseControl
 				->setFilterSelect([NULL => '--- any ---'] + $companies);
 		}
 
+		if ($this->user->isAllowed('job', 'showNotMatched')) {
+			$grid->addColumnText('applied', 'Applied')
+				->setCustomRender(function (Job $item) {
+					return Html::el('a class="btn btn-xs"')
+						->setHref($this->presenter->link('Job:candidates', [
+							'id' => $item->id,
+							'state' => Match::STATE_APPLIED_ONLY,
+						]))->setHtml($item->getAppliedCount());
+				});
+			$grid->getColumn('applied')->getHeaderPrototype()->setWidth('80px');
+			$grid->getColumn('applied')->getHeaderPrototype()->class[] = 'center';
+			$grid->getColumn('applied')->getCellPrototype()->class[] = 'center';
+
+			$grid->addColumnText('invited', 'Invited')
+				->setCustomRender(function (Job $item) {
+					return Html::el('a class="btn btn-xs"')
+						->setHref($this->presenter->link('Job:candidates', [
+							'id' => $item->id,
+							'state' => Match::STATE_INVITED_ONLY,
+						]))->setHtml($item->getInvitedCount());
+				});
+			$grid->getColumn('invited')->getHeaderPrototype()->setWidth('80px');
+			$grid->getColumn('invited')->getHeaderPrototype()->class[] = 'center';
+			$grid->getColumn('invited')->getCellPrototype()->class[] = 'center';
+		}
+
 		$grid->addColumnText('matched', 'Matched')
 			->setCustomRender(function (Job $item) {
 				return Html::el('a class="btn btn-xs"')
@@ -70,7 +102,7 @@ class JobsGrid extends BaseControl
 						'state' => Match::STATE_MATCHED_ONLY,
 					]))->setHtml($item->getMatchedCount());
 			});
-		$grid->getColumn('matched')->getHeaderPrototype()->setWidth('90px');
+		$grid->getColumn('matched')->getHeaderPrototype()->setWidth('80px');
 		$grid->getColumn('matched')->getHeaderPrototype()->class[] = 'center';
 		$grid->getColumn('matched')->getCellPrototype()->class[] = 'center';
 
@@ -82,7 +114,7 @@ class JobsGrid extends BaseControl
 						'state' => Match::STATE_ACCEPTED_ONLY,
 					]))->setHtml($item->getAcceptedCount());
 			});
-		$grid->getColumn('accepted')->getHeaderPrototype()->setWidth('90px');
+		$grid->getColumn('accepted')->getHeaderPrototype()->setWidth('80px');
 		$grid->getColumn('accepted')->getHeaderPrototype()->class[] = 'center';
 		$grid->getColumn('accepted')->getCellPrototype()->class[] = 'center';
 
@@ -94,7 +126,7 @@ class JobsGrid extends BaseControl
 						'state' => Match::STATE_REJECTED,
 					]))->setHtml($item->getRejectedCount());
 			});
-		$grid->getColumn('rejected')->getHeaderPrototype()->setWidth('90px');
+		$grid->getColumn('rejected')->getHeaderPrototype()->setWidth('80px');
 		$grid->getColumn('rejected')->getHeaderPrototype()->class[] = 'center';
 		$grid->getColumn('rejected')->getCellPrototype()->class[] = 'center';
 
@@ -128,8 +160,6 @@ class JobsGrid extends BaseControl
 				return sprintf($message, (string)$item);
 			})
 			->getElementPrototype()->class[] = 'red';
-
-		$grid->setActionWidth("20%");
 
 		return $grid;
 	}

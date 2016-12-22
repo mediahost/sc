@@ -93,10 +93,10 @@ class JobPresenter extends BasePresenter
 				Match::STATE_OFFERED,
 			];
 			if ($this->user->isAllowed('job', 'showNotMatched')) {
-				$allowedStates += [
-						Match::STATE_APPLIED_ONLY,
-						Match::STATE_INVITED_ONLY,
-					];
+				$allowedStates = array_merge([
+					Match::STATE_APPLIED_ONLY,
+					Match::STATE_INVITED_ONLY,
+				], $allowedStates);
 			}
 			$this->template->allowedStates = Match::getStateName($allowedStates);
 			foreach ($allowedStates as $stateKey) {
