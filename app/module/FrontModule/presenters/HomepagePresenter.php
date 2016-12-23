@@ -10,7 +10,7 @@ class HomepagePresenter extends BasePresenter
 		if ($this->user->loggedIn) {
 			$this->redirect(':App:Dashboard:');
 		} else {
-			$this->redirect(':Front:Sign:in');
+			$this->redirectUrl('/wp/');
 		}
 	}
 
