@@ -115,6 +115,8 @@ class CvEditorPresenter extends BasePresenter
 		}
 	}
 
+	// <editor-fold desc="actions">
+
 	/**
 	 * @secured
 	 * @resource('cvEditor')
@@ -137,6 +139,11 @@ class CvEditorPresenter extends BasePresenter
 		$this['skillsForm']->setTemplateFile('ItSkills');
 	}
 
+	/**
+	 * @secured
+	 * @resource('cvEditor')
+	 * @privilege('careerDocs')
+	 */
 	public function actionCareerDocs($userId = NULL)
 	{
 		if ($userId && $this->user->isAllowed('cvEditor', 'editForeign')) {
@@ -147,6 +154,11 @@ class CvEditorPresenter extends BasePresenter
 		$this['careerDocs']->setCandidate($candidate);
 	}
 
+	/**
+	 * @secured
+	 * @resource('cvEditor')
+	 * @privilege('file')
+	 */
 	public function actionFile($userId = NULL)
 	{
 		if ($userId && $this->user->isAllowed('cvEditor', 'editForeign')) {
@@ -161,11 +173,8 @@ class CvEditorPresenter extends BasePresenter
 		$this->template->candidate = $candidate;
 	}
 
-	public function afterCvSave()
-	{
-		$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$this->cv]);
-		$this->flashMessage($message, 'success');
-	}
+	// </editor-fold>
+	// <editor-fold desc="forms">
 
 	/** @return BasicInfo */
 	public function createComponentBasicInfoForm()
@@ -287,6 +296,12 @@ class CvEditorPresenter extends BasePresenter
 		return $control;
 	}
 
+	public function afterCvSave()
+	{
+		$message = $this->translator->translate('Cv \'%cv%\' was successfully saved.', ['cv' => (string)$this->cv]);
+		$this->flashMessage($message, 'success');
+	}
+
 	/** @return SendEmail */
 	public function createComponentSendEmail()
 	{
@@ -316,4 +331,6 @@ class CvEditorPresenter extends BasePresenter
 		};
 		return $control;
 	}
+	// </editor-fold>
+
 }

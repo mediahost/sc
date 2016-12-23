@@ -45,6 +45,9 @@ class CompleteCv extends BaseControl
 		$form->addUpload('cvFile', 'Your CV')
 			->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles));
 
+		$form->addHidden('jobApplyId');
+		$form->addHidden('redirectUrl');
+
 		$form->addSubmit('send', 'Upload');
 
 		$form->onSuccess[] = $this->formSucceeded;
@@ -58,7 +61,7 @@ class CompleteCv extends BaseControl
 		$candidateRepo = $this->em->getRepository(Candidate::getClassName());
 		$candidateRepo->save($this->candidate);
 
-		$this->onAfterSave($this, $this->candidate);
+		$this->onAfterSave($this, $this->candidate, $values->jobApplyId, $values->redirectUrl);
 	}
 
 	public function setCandidate(Candidate $candidate)

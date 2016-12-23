@@ -312,10 +312,18 @@ class JobPresenter extends BasePresenter
 	{
 		$control = $this->iCompleteCvFactory->create();
 		$control->setModal();
-		$control->onAfterSave[] = function () {
+		$control->onAfterSave[] = function (CompleteCv $control, Candidate $candidate, $jobApplyId, $redirectUrl) {
 			$message = $this->translator->translate('File was successfully uploaded.');
 			$this->flashMessage($message, 'success');
-			$this->handleApply($this->job->id);
+			if ($jobApplyId) {
+				$this->handleApply($jobApplyId, $redirectUrl);
+			} else if($this->job) {
+				$this->handleApply($this->job->id, $redirectUrl);
+			}
+			if ($redirectUrl) {
+				$this->redirectUrl($redirectUrl);
+			}
+			$this->redirect('this');
 		};
 		return $control;
 	}
