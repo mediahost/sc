@@ -298,7 +298,7 @@ class JobPresenter extends BasePresenter
 	public function createComponentJobCandidates()
 	{
 		return new Multiplier(function ($state) {
-			$control = $this->iCandidatesListFactory->create();;
+			$control = $this->iCandidatesListFactory->create();
 			$control->setTranslator($this->translator)
 				->setItemsPerPage(4, 15)
 				->setAjax()
