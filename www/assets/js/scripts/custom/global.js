@@ -129,6 +129,12 @@ var Global = function () {
 		});
 	};
 
+	var handleWysiwyg = function () {
+		$('.wysihtml5').summernote({
+			height: 200
+		});
+	};
+
 	var handleTagsInput = function () {
 		$('input[data-role="tagsinput"]').tagsinput({});
 	};
@@ -222,6 +228,7 @@ var Global = function () {
 
 			handleJobPage();
 			handleTagsInput();
+			handleWysiwyg();
 		},
 		handleRightbar: handleRightbar,
 		initAccordion: initAccordion,

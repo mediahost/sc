@@ -33,7 +33,7 @@ jQuery(document).ready(function () {
 	Global.init();
 	Global.handleJobPage();
 	Login.init();
-	PdfPreview.init();
+	// PdfPreview.init();
 });
 
 //$('.modal.ajax').on('loaded.bs.modal', function (e) {

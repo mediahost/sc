@@ -91,10 +91,10 @@ class BasicInfo extends BaseControl
 			->setAttribute('placeholder', 'add a tag');
 
 		$form->addGroup('Job Description');
-		$form->addTextArea('summary', 'Position Summary')
+		$form->addWysiHtml('summary', 'Position Summary')
 			->setAttribute('placeholder', 'Job summary')
 			->setAttribute('id', 'jobSummary');
-		$form->addTextArea('description', 'Position Description')
+		$form->addWysiHtml('description', 'Position Description')
 			->setAttribute('placeholder', 'Job description')
 			->setAttribute('id', 'jobDescription');
 
