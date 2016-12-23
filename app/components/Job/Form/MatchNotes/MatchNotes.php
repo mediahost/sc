@@ -66,7 +66,7 @@ class MatchNotes extends BaseControl
 			->setAttribute('placeholder', $this->translator->translate('Type a note here...'))
 			->getControlPrototype()->class = 'elastic form-control';
 
-		$form->addSubmit('send', 'Send')
+		$form->addSubmit('send', 'Save')
 			->getControlPrototype()->class = 'btn btn-info mt10';
 
 		$form->onSuccess[] = $this->formSucceeded;
