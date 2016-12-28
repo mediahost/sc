@@ -21,7 +21,7 @@
 				<h4 class="panel-title pull-left">
 					<span>{$job}</span>
 					<span n:if="$isCandidate && !$isMatched && $isInvited"
-							class="label label-warning">{_'You have invitation'}</span>
+							class="label label-warning">{_'You have been invited to apply'}</span>
 					<a n:href="Job:edit $job->id" n:if="$user->isAllowed('job', 'edit')">
 						<span class="fa fa-edit"></span>
 					</a>

@@ -144,7 +144,8 @@ class CommunicationFacade extends Object
 			} else {
 				$message = 'I just apply for job \'%job%\'';
 			}
-			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job]);
+			$message = 'I have applied for \'%job%\' position with \'%company%\'';
+			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
 			$state = Message::STATE_SYSTEM;
 			return $this->sendMessage($sender, $recipient, $message, $state, $match->job, $match->candidate);
 		}
@@ -159,9 +160,10 @@ class CommunicationFacade extends Object
 			if ($appliedBefore) {
 				$message = 'I just approved you for job \'%job%\'';
 			} else {
-				$message = 'I just invited you for job \'%job%\'';
+				$message = 'I just invited you to apply for the \'%job%\'';
+				$message = 'I have invited you to apply for the \'%job%\' position with \'%company%\'';
 			}
-			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job]);
+			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
 			$state = Message::STATE_SYSTEM;
 			return $this->sendMessage($sender, $recipient, $message, $state, $match->job, $match->candidate);
 		}
@@ -174,11 +176,11 @@ class CommunicationFacade extends Object
 
 		if ($sender && $recipient) {
 			if ($accept) {
-				$message = 'I just accepted You for job \'%job%\'';
+				$message = 'I just accepted you for job \'%job%\'';
 			} else {
-				$message = 'I just rejected You for job \'%job%\'';
+				$message = 'I just rejected you for job \'%job%\'';
 			}
-			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job]);
+			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
 			$message .= "\n\n";
 			$message .= $match->acceptReason;
 			$state = Message::STATE_SYSTEM;

@@ -12,7 +12,7 @@
 				<tr>
 					<td class="wrapper last">
 						<h4 style="font-size: 22px;display: block;margin: 5px 0 15px 0;">
-							{_'You have new message from %from%', NULL, ['from' => $sender->name]}
+							{_'You have received a new message from %from%', NULL, ['from' => $sender->name]}
 						</h4>
 						<p>
 							{$message->text|escape|striptags|nl2br|noescape}
