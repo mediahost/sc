@@ -100,14 +100,14 @@ class CompleteAccountPresenter extends BasePresenter
 					$this->flashMessage($message);
 					$this->redirect('default');
 				}
-				$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
+				$message = $this->translator->translate('Your candidate account is complete. Enjoy the ride!');
 				$this->flashMessage($message);
 				$this->redirect(':App:Dashboard:');
 			} else if ($this->user->isInRole(Role::COMPANY)) {
 				if (!$this->company) {
 					$this->redirect('default');
 				}
-				$message = $this->translator->translate('Your company account is complete. Enjoy your ride!');
+				$message = $this->translator->translate('Your company account is complete. Enjoy the ride!');
 				$this->flashMessage($message);
 				$this->redirect(':App:Dashboard:');
 			}
@@ -151,7 +151,7 @@ class CompleteAccountPresenter extends BasePresenter
 				$this->flashMessage($message, 'success');
 				$this->redirect('verify');
 			} else {
-				$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
+				$message = $this->translator->translate('Your candidate account is complete. Enjoy the ride!');
 				$this->flashMessage($message, 'success');
 				$this->redirect(':App:Dashboard:');
 			}
@@ -169,7 +169,7 @@ class CompleteAccountPresenter extends BasePresenter
 				$this->flashMessage($message, 'success');
 				$this->redirect('verify');
 			} else {
-				$message = $this->translator->translate('Your candidate account is complete. Enjoy your ride!');
+				$message = $this->translator->translate('Your candidate account is complete. Enjoy the ride!');
 				$this->flashMessage($message, 'success');
 				$this->redirect(':App:Dashboard:');
 			}
@@ -182,7 +182,7 @@ class CompleteAccountPresenter extends BasePresenter
 	{
 		$control = $this->iCompleteCompanyFactory->create();
 		$control->onSuccess[] = function (CompleteCompany $control, Company $company) {
-			$message = $this->translator->translate('Your company account is complete. Enjoy your ride!');
+			$message = $this->translator->translate('Your company account is complete. Enjoy the ride!');
 			$this->flashMessage($message, 'success');
 			$this->redirect(':App:Dashboard:');
 		};
