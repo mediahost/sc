@@ -1,8 +1,8 @@
 {snippet cvUpload}
 	{form form class => 'form-horizontal group-border stripped'}
 		<div class="form-group" n:if="$candidate->cvFile">
-			<label class="col-lg-2 col-md-3 control-label">{_'Actual CV file'}</label>
-			<div class="col-lg-10 col-md-9">
+			<label class="col-md-3 control-label">{_'Current CV'}</label>
+			<div class="col-md-9">
 				<p class="form-control-static">
 					<a href="{$basePath}/{$candidate->cvFile}" target="_blank">{_'Open Your File'}</a>
 				</p>
@@ -10,14 +10,14 @@
 		</div>
 
 		<div class="form-group">
-			{label cvFile class => 'col-lg-2 col-md-3 control-label' /}
-			<div class="col-lg-10 col-md-9">
+			{label cvFile class => 'col-md-3 control-label' /}
+			<div class="col-md-9">
 				{input cvFile}
 			</div>
 		</div>
 
 		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
+			<div class="col-md-offset-3 col-md-9">
 				{button send class => 'btn btn-primary'}{caption}{/button}
 				<button n:if="$isModal" type="button" class="btn btn-default" data-dismiss="modal">{_'Close'}</button>
 			</div>

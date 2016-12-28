@@ -42,7 +42,7 @@ class CompleteCv extends BaseControl
 			'application/msword',
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		];
-		$form->addUpload('cvFile', 'Your CV')
+		$form->addUpload('cvFile', 'Upload New CV')
 			->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles));
 
 		$form->addHidden('jobApplyId');
