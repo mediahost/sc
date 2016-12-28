@@ -253,6 +253,7 @@ class PrintCandidate extends BaseControl
 	public function createComponentAcceptReason()
 	{
 		$control = $this->iAcceptReasonFactory->create();
+		$control->setAccept();
 		$control->setMatch($this->candidate->findMatch($this->selectedJob));
 		$control->onAfterSave[] = function (Match $match) {
 			$this->handleAccept($match->job->id, TRUE);
@@ -263,6 +264,7 @@ class PrintCandidate extends BaseControl
 	public function createComponentRejectReason()
 	{
 		$control = $this->iAcceptReasonFactory->create();
+		$control->setAccept(FALSE);
 		$control->setMatch($this->candidate->findMatch($this->selectedJob));
 		$control->onAfterSave[] = function (Match $match) {
 			$this->handleAccept($match->job->id, FALSE);

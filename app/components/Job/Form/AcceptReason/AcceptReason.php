@@ -13,6 +13,9 @@ class AcceptReason extends BaseControl
 	/** @var Match */
 	private $match;
 
+	/** @var bool */
+	private $accept;
+
 	// <editor-fold desc="events">
 
 	/** @var array */
@@ -37,10 +40,12 @@ class AcceptReason extends BaseControl
 			$form->getElementPrototype()->class[] = 'sendOnChange';
 		}
 
-		$form->addTextArea('message')
-			->addRule(Form::FILLED, 'Must be filled', NULL, 3)
-			->setAttribute('placeholder', $this->translator->translate('Type a reason here...'))
-			->getControlPrototype()->class = 'elastic form-control';
+		$message = $form->addTextArea('message')
+			->addRule(Form::FILLED, 'Must be filled', NULL, 3);
+		if (!$this->accept) {
+			$message->setAttribute('placeholder', $this->translator->translate('Type reason for rejection here'));
+		}
+		$message->getControlPrototype()->class = 'elastic form-control';
 
 		$form->addSubmit('send', 'Send')
 			->getControlPrototype()->class = 'btn btn-info mt10';
@@ -74,6 +79,12 @@ class AcceptReason extends BaseControl
 	public function setMatch(Match $match)
 	{
 		$this->match = $match;
+		return $this;
+	}
+
+	public function setAccept($value = TRUE)
+	{
+		$this->accept = $value;
 		return $this;
 	}
 
