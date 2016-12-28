@@ -18,7 +18,7 @@
 			</div>
 			<div class="alert alert-info" n:if="!count($jobs)">
 				<i class="glyphicon glyphicon-info-sign alert-icon"></i>
-				{_'There are no jobs for you'}
+				{_'We are searching for interesting opportunities for you.'}
 			</div>
 		</div>
 
@@ -30,7 +30,7 @@
 				{include jobPreview jobs => $applied}
 			</div>
 			<div class="alert alert-info" n:if="!count($applied)">
-				{_'You have to applied for some job.'}
+				{_'You have not applied for any jobs.'}
 			</div>
 		</div>
 
@@ -54,7 +54,7 @@
 				{include jobPreview jobs => $matches}
 			</div>
 			<div class="alert alert-info" n:if="!count($matches)">
-				{_'No sitable applied job for you right now.'}
+				{_'We are searching for interesting opportunities for you.'}
 			</div>
 		</div>
 

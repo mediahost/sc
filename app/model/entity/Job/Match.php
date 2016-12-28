@@ -309,7 +309,7 @@ class Match extends BaseEntity
 			Match::STATE_INVITED_ONLY => 'Invited',
 			Match::STATE_MATCHED_ONLY => 'Matched',
 			Match::STATE_REJECTED => 'Rejected',
-			Match::STATE_ACCEPTED_ONLY => 'Accepted',
+			Match::STATE_ACCEPTED_ONLY => 'Shortlisted',
 			Match::STATE_INVITED_FOR_IV => 'Invited for IV',
 			Match::STATE_COMPLETE_IV => 'Completed IV',
 			Match::STATE_OFFERED => 'Offered',

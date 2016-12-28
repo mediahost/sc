@@ -28,7 +28,7 @@
 				</div>
 				<div class="mainnav">
 					<ul>
-						<li n:if="$user->isAllowed('dashboard', 'default')">
+						<li n:if="$user->isAllowed('dashboard', 'default') && !$user->isInRole(App\Model\Entity\Role::COMPANY)">
 							<a n:href="Dashboard:" n:class="$presenter->isLinkCurrent('Dashboard:*') ? active">
 								<i class="s16 icomoon-icon-screen-2"></i>
 								<span class="txt">{_'Dashboard'}</span>
@@ -36,6 +36,13 @@
 						</li>
 
 						{if $isCompleteAccount}
+
+							<li>
+								<a n:href="Jobs:" n:class="$presenter->isLinkCurrent('Jobs:*') || $presenter->isLinkCurrent('Job:*') ? active">
+									<i class="fa fa-briefcase"></i>
+									<span class="txt">{_'Jobs'}</span>
+								</a>
+							</li>
 
 							<li n:if="$user->isAllowed('messages', 'default')">
 								<a n:href="Messages:" n:class="$presenter->isLinkCurrent('Messages:*') && !$presenter->isLinkCurrent('Messages:MessagesList') ? active">
@@ -64,13 +71,6 @@
 								<a n:href="CvEditor:careerDocs" n:class="$presenter->isLinkCurrent('CvEditor:CareerDocs') ? active">
 									<i class="s16 brocco-icon-paperclip"></i>
 									<span class="txt">{_'Career Docs'}</span>
-								</a>
-							</li>
-
-							<li>
-								<a n:href="Jobs:" n:class="$presenter->isLinkCurrent('Jobs:*') || $presenter->isLinkCurrent('Job:*') ? active">
-									<i class="fa fa-briefcase"></i>
-									<span class="txt">{_'Jobs'}</span>
 								</a>
 							</li>
 

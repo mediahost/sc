@@ -94,7 +94,7 @@ class JobsGrid extends BaseControl
 			$grid->getColumn('invited')->getCellPrototype()->class[] = 'center';
 		}
 
-		$grid->addColumnText('matched', 'Matched')
+		$grid->addColumnText('matched', $this->user->isAllowed('job', 'showNotMatched') ? 'Matched' : 'Applied')
 			->setCustomRender(function (Job $item) {
 				return Html::el('a class="btn btn-xs"')
 					->setHref($this->presenter->link('Job:candidates', [

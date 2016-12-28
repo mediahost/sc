@@ -39,6 +39,9 @@ class DashboardPresenter extends BasePresenter
 			$this->template->candidate = $candidate;
 			$this->template->invitations = $this->candidateFacade->findApprovedJobs($candidate, FALSE);
 			$this->template->candidateFacade = $this->candidateFacade;
+		} else if ($this->user->isInRole(Role::COMPANY)) {
+			$action = $this->user->isAllowed('jobs', 'showAll') ? 'showAll' : 'default';
+			$this->redirect('Jobs:' . $action);
 		}
 	}
 
