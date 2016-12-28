@@ -165,7 +165,13 @@
 	{ifset $allowedStates}
 		<div class="col-md-12" n:foreach="$allowedStates as $stateKey => $name">
 			<div class="page-header">
-				<h4>{_$name}</h4>
+				<h4>
+					{if !$user->isAllowed('job', 'showNotMatched') && $stateKey === App\Model\Entity\Match::STATE_MATCHED_ONLY}
+						{_'Applied'}
+					{else}
+						{_$name}
+					{/if}
+				</h4>
 			</div>
 			{control jobCandidates-$stateKey}
 		</div>
