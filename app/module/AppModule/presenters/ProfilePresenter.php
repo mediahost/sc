@@ -106,15 +106,11 @@ class ProfilePresenter extends BasePresenter
 	public function actionDefault($id = NULL)
 	{
 		if (!$id) {
-			if (!$this->user->isInRole(Role::CANDIDATE)) {
-				$this->redirect('AccountSettings:');
-			} else {
-				$user = $this->user->identity;
-				$this->person = $user->person;
-				$this->candidate = $this->person->candidate;
-				if ($this->candidate->profileId) {
-					$this->redirect('this', $this->candidate->profileId);
-				}
+			$user = $this->user->identity;
+			$this->person = $user->person;
+			$this->candidate = $this->person->candidate;
+			if ($this->candidate->id && $this->candidate->profileId) {
+				$this->redirect('this', $this->candidate->profileId);
 			}
 		} else {
 			$candidateRepo = $this->em->getRepository(Candidate::getClassName());

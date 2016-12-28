@@ -43,8 +43,6 @@ class Photo extends BaseControl
 			->addCondition(Form::FILLED)
 			->addRule(Form::IMAGE, 'Photo must be valid image');
 
-		$form->addCheckBox('showPhoto', 'Show photo in CV');
-
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());

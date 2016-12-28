@@ -83,7 +83,7 @@
 							</li>
 							<li n:if="$user->isAllowed('candidates', 'default')">
 								<a n:href="Candidates:"
-										n:class="$presenter->isLinkCurrent('Candidates:*') || $presenter->isLinkCurrent('Profile:*') ? active">
+										n:class="$presenter->isLinkCurrent('Candidates:*') || ($presenter->isLinkCurrent('Profile:*') && (!isset($isMine) || !$isMine)) ? active">
 									<i class="fa entypo-icon-users"></i>
 									<span class="txt">{_'Candidates'}</span>
 								</a>
@@ -186,7 +186,7 @@
 				<!-- END SUPERADMIN -->
 
 				<!-- BEGIN TOGETHER AREA -->
-				{if $user->isAllowed('profile', 'default') && $isCompleteAccount && ($user->isInRole(App\Model\Entity\Role::CANDIDATE) || $user->isInRole(App\Model\Entity\Role::COMPANY))}
+				{if $user->isAllowed('profile', 'default') && $isCompleteAccount}
 					<div class="sidebar-widget mb0">
 						<h6 class="title mb0">{_'Profile'}</h6>
 					</div>
@@ -202,6 +202,12 @@
 								<a n:href="CompanyProfile:" n:class="$presenter->isLinkCurrent('CompanyProfile:*') ? active">
 									<i class="s16 fa fa-building"></i>
 									<span class="txt">{_'Company Profile'}</span>
+								</a>
+							</li>
+							<li n:if="$user->isInRole(App\Model\Entity\Role::ADMIN) || $user->isInRole(App\Model\Entity\Role::SUPERADMIN)">
+								<a n:href="Profile:" n:class="$presenter->isLinkCurrent('Profile:*') ? active">
+									<i class="s16 fa fa-user"></i>
+									<span class="txt">{_'Admin Profile'}</span>
 								</a>
 							</li>
 						</ul>

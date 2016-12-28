@@ -33,22 +33,32 @@
 				{include personalDetailsPanel}
 			{/snippet}
 
-			{snippet interestedIn}
-				{include interestedInPanel}
-			{/snippet}
+			{if $candidate->id}
+				{snippet interestedIn}
+					{include interestedInPanel}
+				{/snippet}
+			{/if}
 
-			{snippet profileId}
-				{include profileIdPanel}
-			{/snippet}
+			{if $candidate->id}
+				{snippet profileId}
+					{include profileIdPanel}
+				{/snippet}
+			{/if}
 		</div>
 		<div class="col-lg-6 col-md-12">
-			{include itSkillsPanel}
+			{if $candidate->id}
+				{include itSkillsPanel}
+			{/if}
 
-			{snippet socialLinks}
-				{include socialLinksPanel}
-			{/snippet}
+			{if $candidate->id}
+				{snippet socialLinks}
+					{include socialLinksPanel}
+				{/snippet}
+			{/if}
 
-			{include docsPanel}
+			{if $candidate->id}
+				{include docsPanel}
+			{/if}
 		</div>
 	</div>
 {/block}
