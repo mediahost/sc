@@ -29,10 +29,10 @@ trait UserPassword
 	/** @ORM\Column(type="datetime", nullable=true) */
 	private $recoveryExpiration;
 
-	/** @ORM\Column(type="string", length=256) */
+	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $verificationToken;
 
-	/** @ORM\Column(type="datetime") */
+	/** @ORM\Column(type="datetime", nullable=true) */
 	protected $verificationExpiration;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */

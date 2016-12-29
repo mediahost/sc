@@ -7,6 +7,7 @@ use App\Components\Auth\Linkedin;
 use App\Components\Auth\Twitter;
 use App\Extensions\Settings\SettingsStorage;
 use App\Mail\Messages\ICreateRegistrationMessageFactory;
+use App\Mail\Messages\IRecoverPasswordMessageFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -16,7 +17,6 @@ use App\Model\Storage\SignUpStorage;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
 use Kdyby\Translation\Translator;
-use Nette\Application\Application;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\Object;
@@ -27,6 +27,7 @@ class SignListener extends Object implements Subscriber
 	const REDIRECT_AFTER_LOGIN = ':App:Dashboard:';
 	const REDIRECT_AFTER_REGISTER = ':App:CompleteAccount:';
 	const REDIRECT_SIGN_IN_PAGE = ':Front:Sign:in';
+	const REDIRECT_SIGN_UP_PAGE = ':Front:Sign:up';
 	const REDIRECT_SIGN_UP_REQUIRED = ':Front:Sign:upRequired';
 
 	// <editor-fold desc="variables">
@@ -52,11 +53,20 @@ class SignListener extends Object implements Subscriber
 	/** @var IVerificationMessageFactory @inject */
 	public $verificationMessage;
 
-	/** @var Application @inject */
-	public $application;
+	/** @var IRecoverPasswordMessageFactory @inject */
+	public $resetPasswordMessage;
 
 	/** @var SettingsStorage @inject */
 	public $settingsStorage;
+
+	/** @var bool */
+	private $rememberMe = FALSE;
+
+	/** @var string */
+	private $redirectUrl;
+
+	/** @var int */
+	private $jobApplyId;
 
 	// </editor-fold>
 
@@ -82,19 +92,20 @@ class SignListener extends Object implements Subscriber
 	 * @param Control $control
 	 * @param User $user
 	 * @param bool $rememberMe
+	 * @param string $redirectUrl
+	 * @param int $jobApplyId
 	 */
 	public function onStartup(Control $control, User $user, $rememberMe = FALSE, $redirectUrl = NULL, $jobApplyId = NULL)
 	{
+		$this->rememberMe = $rememberMe;
+		$this->redirectUrl = $redirectUrl;
+		$this->jobApplyId = $jobApplyId;
+
 		if ($control instanceof Facebook || $control instanceof Linkedin || $control instanceof Twitter) {
 			$this->userFacade->importSocialData($user);
 		}
 		if ($user->id) {
-			$presenter = $this->application->presenter;
-			if ($presenter->name == 'Front:Sign' && $presenter->action == 'up') {
-				$this->onRegistered($control->presenter, $user);
-			} else {
-				$this->onSuccess($control->presenter, $user, $rememberMe, $redirectUrl, $jobApplyId);
-			}
+			$this->onSuccess($control, $user);
 		} else {
 			$this->session->user = $user;
 			$this->checkRequire($control, $user);
@@ -123,13 +134,10 @@ class SignListener extends Object implements Subscriber
 	public function onRequiredSuccess(Control $control, User $user)
 	{
 		$existedUser = $this->userFacade->findByMail($user->mail);
-		// nepodporuje automatické joinování účtů (nebylo v aplikaci požadováno)
 		if (!$existedUser) {
 			$this->verify($control, $user);
 		} else {
-			$message = $this->translator->translate('%mail% is already registered.', ['mail' => $user->mail]);
-			$control->presenter->flashMessage($message);
-			$control->presenter->redirect(self::REDIRECT_SIGN_IN_PAGE);
+			$this->join($control, $user, $existedUser);
 		}
 	}
 
@@ -141,105 +149,140 @@ class SignListener extends Object implements Subscriber
 	 */
 	private function verify(Control $control, User $user)
 	{
+		$userRepo = $this->em->getRepository(User::getClassName());
 		$role = $this->roleFacade->findByName(Role::CANDIDATE);
 		$user->addRole($role);
 
-		$userRepo = $this->em->getRepository(User::getClassName());
-		$this->userFacade->setVerification($user);
-		$userRepo->save($user);
-
 		$this->session->remove();
 
-		// Send verification e-mail
-		$message = $this->verificationMessage->create();
-		$message->addParameter('link', $this->application->presenter->link('//:Front:Sign:verify', $user->verificationToken));
-		$message->addTo($user->mail);
-		$message->send();
+		if ($user->verificated) {
+			$savedUser = $userRepo->save($user);
+			$this->onCreate($control->presenter, $savedUser);
+		} else {
+			$this->userFacade->setVerification($user);
+			$userRepo->save($user);
 
-		$messageText = $this->translator->translate('We have sent you a verification e-mail. Please check your inbox!');
-		$control->presenter->user->login($user);
-		$control->presenter->flashMessage($messageText, 'success');
-		$control->presenter->redirect(self::REDIRECT_AFTER_REGISTER);
+			// Send verification e-mail
+			$message = $this->verificationMessage->create();
+			$message->addParameter('link', $control->presenter->link('//:Front:Sign:verify', $user->verificationToken));
+			$message->addTo($user->mail);
+			$message->send();
+
+			$messageText = $this->translator->translate('We have sent you a verification e-mail. Please check your inbox!');
+			$control->presenter->user->login($user);
+			$control->presenter->flashMessage($messageText, 'success');
+			$control->presenter->redirect(self::REDIRECT_AFTER_REGISTER);
+		}
+	}
+
+	/**
+	 * Pro verifikované účty provede připojení
+	 * @param Control $control
+	 * @param User $user
+	 * @param User $existedUser
+	 */
+	private function join(Control $control, User $user, User $existedUser)
+	{
+		if ($existedUser->verificated) {
+			if ($control instanceof Facebook) {
+				$existedUser->facebook = $user->facebook;
+			} else if ($control instanceof Linkedin) {
+				$existedUser->linkedin = $user->linkedin;
+			} else if ($control instanceof Twitter) {
+				$existedUser->twitter = $user->twitter;
+			} else {
+				$message = $this->translator->translate('This method is not suppoorted.');
+				$control->presenter->flashMessage($message);
+				$control->presenter->redirect(self::REDIRECT_SIGN_IN_PAGE);
+			}
+
+			$message = $this->translator->translate('Your account was joined with existed account');
+			$control->presenter->flashMessage($message, 'success');
+
+			$this->userFacade->importSocialData($existedUser);
+			$this->onSuccess($control, $existedUser);
+		} else {
+			$userRepo = $this->em->getRepository(User::getClassName());
+			$this->userFacade->setVerification($user);
+			$userRepo->save($user);
+
+			// Send verification e-mail
+			$message = $this->verificationMessage->create();
+			$message->addParameter('link', $control->presenter->link('//:Front:Sign:verify', $user->verificationToken));
+			$message->addTo($user->mail);
+			$message->send();
+
+			$message = 'We cannot join your account automatically while you not verify your account. We send you mail with verification link.';
+			$message = $this->translator->translate($message);
+			$control->presenter->flashMessage($message);
+			$control->presenter->redirect(self::REDIRECT_SIGN_IN_PAGE);
+		}
 	}
 
 	/**
 	 * After recovery password
-	 * @param Presenter $presenter
+	 * @param Control $control
 	 * @param User $user
 	 */
-	public function onRecovery(Presenter $presenter, User $user)
+	public function onRecovery(Control $control, User $user)
 	{
 		$message = $this->translator->translate('We have sent you a verification e-mail. Please check your inbox!');
-		$presenter->flashMessage($message, 'success');
-		$this->onSuccess($presenter, $user);
+		$control->presenter->flashMessage($message, 'success');
+		$this->onSuccess($control, $user);
 	}
 
 	/**
 	 * After create account
-	 * @param Presenter $presenter
+	 * @param Control $control
 	 * @param User $user
 	 */
-	public function onCreate(Presenter $presenter, User $user)
+	public function onCreate(Control $control, User $user)
 	{
 		$message = $this->createRegistrationMessage->create();
 		$message->addTo($user->mail);
 		$message->send();
 
 		$messageText = $this->translator->translate('Your account has been seccessfully created.');
-		$presenter->flashMessage($messageText, 'success');
-		$this->onSuccess($presenter, $user);
-	}
-
-	/**
-	 * After user is registered
-	 * @param Presenter $presenter
-	 * @param User $user
-	 */
-	public function onRegistered(Presenter $presenter, User $user)
-	{
-		$message = $this->translator->translate('User \'%mail%\' is already registered.', [
-			'mail' => $user->mail,
-		]);
-		$presenter->flashMessage($message, 'info');
-		$presenter->redirect(self::REDIRECT_SIGN_IN_PAGE);
+		$control->presenter->flashMessage($messageText, 'success');
+		$this->onSuccess($control, $user);
 	}
 
 	/**
 	 * Only login and redirect to app
-	 * @param Presenter $presenter
+	 * @param Control $control
 	 * @param User $user
 	 * @param bool $rememberMe
 	 * @param string|NULL $redirectUrl
 	 * @param int|NULL $jobApplyId
 	 */
-	public function onSuccess(Presenter $presenter, User $user, $rememberMe = FALSE, $redirectUrl = NULL, $jobApplyId = NULL)
+	public function onSuccess(Control $control, User $user)
 	{
 		$this->session->remove();
 
-		if ($rememberMe) {
-			$presenter->user->setExpiration($this->settingsStorage->expiration->remember, FALSE);
+		if ($this->rememberMe) {
+			$control->presenter->user->setExpiration($this->settingsStorage->expiration->remember, FALSE);
 		} else {
-			$presenter->user->setExpiration($this->settingsStorage->expiration->notRemember, TRUE);
+			$control->presenter->user->setExpiration($this->settingsStorage->expiration->notRemember, TRUE);
 		}
 
-		$presenter->user->login($user);
+		$control->presenter->user->login($user);
 		$message = $this->translator->translate('You are logged in.');
-		$presenter->flashMessage($message, 'success');
+		$control->presenter->flashMessage($message, 'success');
 
 		// redirections
-		if ($jobApplyId) {
-			$presenter->redirect(":App:Job:view", [
-				'id' => $jobApplyId,
-				'jobId' => $jobApplyId,
-				'redirectUrl' => $redirectUrl,
+		if ($this->jobApplyId) {
+			$control->presenter->redirect(":App:Job:view", [
+				'id' => $this->jobApplyId,
+				'jobId' => $this->jobApplyId,
+				'redirectUrl' => $this->redirectUrl,
 				'do' => 'apply',
 			]);
 		}
-		if ($redirectUrl) {
-			$presenter->redirectUrl($redirectUrl);
+		if ($this->redirectUrl) {
+			$control->presenter->redirectUrl($this->redirectUrl);
 		}
-		$presenter->restoreRequest($presenter->backlink, FALSE);
-		$presenter->redirect(self::REDIRECT_AFTER_LOGIN);
+		$control->presenter->restoreRequest($control->presenter->backlink, FALSE);
+		$control->presenter->redirect(self::REDIRECT_AFTER_LOGIN);
 	}
 
 }
