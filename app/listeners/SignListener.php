@@ -7,7 +7,6 @@ use App\Components\Auth\Linkedin;
 use App\Components\Auth\Twitter;
 use App\Extensions\Settings\SettingsStorage;
 use App\Mail\Messages\ICreateRegistrationMessageFactory;
-use App\Mail\Messages\IRecoverPasswordMessageFactory;
 use App\Mail\Messages\IVerificationMessageFactory;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -18,7 +17,6 @@ use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
 use Kdyby\Translation\Translator;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Presenter;
 use Nette\Object;
 
 class SignListener extends Object implements Subscriber
@@ -52,9 +50,6 @@ class SignListener extends Object implements Subscriber
 
 	/** @var IVerificationMessageFactory @inject */
 	public $verificationMessage;
-
-	/** @var IRecoverPasswordMessageFactory @inject */
-	public $resetPasswordMessage;
 
 	/** @var SettingsStorage @inject */
 	public $settingsStorage;
