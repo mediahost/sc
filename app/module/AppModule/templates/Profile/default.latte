@@ -33,30 +33,30 @@
 				{include personalDetailsPanel}
 			{/snippet}
 
-			{if $candidate->id}
+			{if $candidate && $candidate->id}
 				{snippet interestedIn}
 					{include interestedInPanel}
 				{/snippet}
 			{/if}
 
-			{if $candidate->id}
+			{if $candidate && $candidate->id}
 				{snippet profileId}
 					{include profileIdPanel}
 				{/snippet}
 			{/if}
 		</div>
 		<div class="col-lg-6 col-md-12">
-			{if $candidate->id}
+			{if $candidate && $candidate->id}
 				{include itSkillsPanel}
 			{/if}
 
-			{if $candidate->id}
+			{if $candidate && $candidate->id}
 				{snippet socialLinks}
 					{include socialLinksPanel}
 				{/snippet}
 			{/if}
 
-			{if $candidate->id}
+			{if $candidate && $candidate->id}
 				{include docsPanel}
 			{/if}
 		</div>

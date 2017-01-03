@@ -192,7 +192,7 @@
 					</div>
 					<div class="mainnav">
 						<ul>
-							<li n:if="$user->isInRole(App\Model\Entity\Role::CANDIDATE)">
+							<li n:if="$user->isInRole(App\Model\Entity\Role::CANDIDATE) || $user->isInRole(App\Model\Entity\Role::COMPANY)">
 								<a n:href="Profile:" n:class="$presenter->isLinkCurrent('Profile:*') ? active">
 									<i class="s16 fa fa-user"></i>
 									<span class="txt">{_'My Profile'}</span>

@@ -62,7 +62,7 @@ class Sender extends BaseEntity
 	public function getName()
 	{
 		if ($this->company) {
-			return $this->company->name;
+			return $this->getUserName() . ' at ' . $this->company->name;
 		} else {
 			return $this->getUserName();
 		}
@@ -73,7 +73,7 @@ class Sender extends BaseEntity
 		if ($this->user->person && $this->user->person->fullName) {
 			return $this->user->person->fullName;
 		} else {
-			return $this->user->mail;
+			return 'User #' . $this->user->person->id;
 		}
 	}
 

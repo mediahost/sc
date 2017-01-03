@@ -15,18 +15,22 @@
 				<li n:class="list-group-item, clearfix, $activeCommunication && $communication->id === $activeCommunication->id ? comment-info : (!$communication->lastMessage->isReadBy($sender) ? comment-danger : comment-default)">
 					<a href="{link chooseCommunication $communication->id}">
 						<div class="avatar pull-left mr15">
-							<img src="{$communication->getOpposite($sender)|foto:50,50}"
-								 width="50" alt="{$communication->getOppositesName($sender)}">
+							{var contributors => $communication->getContributors($sender)}
+							<img src="{$contributors->first()|foto:50,50}"
+							     width="50" alt="{$communication->getContributorsName($sender)}">
 						</div>
 						<p class="text-ellipsis">
                             <span class="name strong">
-                                {$communication->getOppositesName($sender)}
+                                {$communication->getContributorsName($sender)|truncate:35}
                             </span>
-							| {$communication->lastMessage->text|truncate:50|mark|noescape}
+							| {$communication->subject|truncate:40|mark|noescape}
 						</p>
-						<span class="date text-muted small pull-left">
+						<span class="date text-muted small">
                             {$communication->lastMessage->createdAt|date:'H:i:s d.m.Y'}
-                        </span>
+                        </span><br/>
+						<span class="text-muted">
+							{$communication->lastMessage->text|striptags|truncate:60|mark}
+						</span>
 					</a>
 				</li>
 			{/foreach}

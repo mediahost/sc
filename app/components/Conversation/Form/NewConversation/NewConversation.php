@@ -5,6 +5,7 @@ namespace App\Components\Conversation\Form;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Entity\Communication;
 use App\Model\Entity\Sender;
 use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\CompanyFacade;
@@ -30,8 +31,10 @@ class NewConversation extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
 
-		$form->addSelect2('recipient', 'Recipient', $this->getRecipients())
+		$form->addMultiSelect2('recipients', 'Recipients', $this->getRecipients())
 			->addRule(Form::FILLED, 'Select recipient');
+		$form->addText('subject', 'Subject')
+			->addRule(Form::FILLED, 'Fill subject');
 		$form->addTextArea('message', 'Message', NULL, 5)
 			->addRule(Form::FILLED, 'Insert message');
 
@@ -44,13 +47,16 @@ class NewConversation extends BaseControl
 	public function processForm(Form $form, $values)
 	{
 		$senderRepo = $this->em->getRepository(Sender::getClassName());
-		$recipient = $senderRepo->find($values->recipient);
-		if ($recipient) {
-			$message = $values->message;
-			$communication = $this->communicationFacade->sendMessage($this->sender, $recipient, $message);
+		$recipients = [];
+		foreach ($values->recipients as $recipientId) {
+			$recipients[] = $senderRepo->find($recipientId);
+		}
+		if (count($recipients)) {
+			$communication = $this->communicationFacade->findOrCreate($this->sender, $recipients, $values->subject);
+			$this->communicationFacade->sendMessage($communication, $this->sender, $values->message);
 			$this->onSend($communication);
 		} else {
-			$form['recipient']->addError($this->translator->translate('Recipient not found'));
+			$form['recipients']->addError($this->translator->translate('Recipients not found'));
 		}
 	}
 

@@ -108,8 +108,10 @@ class ProfilePresenter extends BasePresenter
 		if (!$id) {
 			$user = $this->user->identity;
 			$this->person = $user->person;
-			$this->candidate = $this->person->candidate;
-			if ($this->candidate->id && $this->candidate->profileId) {
+			if ($this->user->isInRole(Role::CANDIDATE)) {
+				$this->candidate = $this->person->candidate;
+			}
+			if ($this->candidate && $this->candidate->id && $this->candidate->profileId) {
 				$this->redirect('this', $this->candidate->profileId);
 			}
 		} else {

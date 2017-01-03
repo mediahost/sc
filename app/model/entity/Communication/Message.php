@@ -26,7 +26,7 @@ class Message extends BaseEntity
 {
 
 	const STATE_NORMAL = 1;
-	const STATE_SYSTEM = 2;
+	const STATE_SYSTEM_JOB = 2;
 	const STATE_DEFAULT = self::STATE_NORMAL;
 
 	use Identifier;
@@ -84,7 +84,15 @@ class Message extends BaseEntity
 
 	public function isSystem()
 	{
-		return $this->state === self::STATE_SYSTEM;
+		$systemMessages = [
+			self::STATE_SYSTEM_JOB,
+		];
+		return in_array($this->state, $systemMessages);
+	}
+
+	public function isSystemJob()
+	{
+		return $this->state === self::STATE_SYSTEM_JOB;
 	}
 
 }

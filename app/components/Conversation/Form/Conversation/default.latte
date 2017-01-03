@@ -2,22 +2,8 @@
 	<div class="panel-heading">
 		<h4 class="panel-title">
 			<i class="s16 icomoon-icon-bubbles-6"></i>
-			{var sites => [
-				'one' => $sender->name,
-				'two' => $communication->getOppositesName($sender),
-			]}
-			{if $editMode}
-				{if $communication->subject}
-					{$communication->subject}
-				{else}
-					{_'Communication with %two%', NULL, $sites}
-				{/if}
-			{else}
-				{_'Communication %one% with %two%', NULL, $sites}
-				{if $communication->subject}
-					| {$communication->subject}
-				{/if}
-			{/if}
+			{$communication->subject|truncate:50} |
+			{$communication->getContributorsName($sender)|truncate:50}
 		</h4>
 	</div>
 	<div class="panel-body">
@@ -56,15 +42,15 @@
 							<p>
 								{!$message->text|escape|nl2br}
 							</p>
-							<p class="system-submessage" n:if="$message->job">
-								<a href="{plink :App:Job:view $message->job->id}">{$message->job}</a>
-								{if $message->candidate && $identity->isAllowed('profile', 'candidate')}
+							<p n:if="$message->isSystemJob() && $communication->job && $communication->candidate" class="system-submessage">
+								<a href="{plink :App:Job:view $communication->job->id}">{$communication->job}</a>
+								{if $communication->candidate && $identity->isAllowed('profile', 'candidate')}
 									|
-									<a href="{plink Profile:user $message->candidate->person->user->id}">
-										{if $message->candidate->person->fullName}
-											{$message->candidate->person->fullName}
+									<a href="{plink Profile:user $communication->candidate->person->user->id}">
+										{if $communication->candidate->person->fullName}
+											{$communication->candidate->person->fullName}
 										{else}
-											{_'Candidate #%id%', ['id' => $message->candidate->id]}
+											{_'Candidate #%id%', ['id' => $communication->candidate->id]}
 										{/if}
 									</a>
 								{/if}

@@ -113,13 +113,13 @@
 		<li n:foreach="$communications as $communication">
 		<span class="icon avatar">
 			<a n:href="Messages: $communication->id">
-				<img src="{$communication->getOpposite($sender)|foto:25,25}"
-					 alt="{$communication->getOppositesName($sender)}"/>
+				<img src="{$communication->getContributors($sender)->first()|foto:25,25}"
+					 alt="{$communication->getContributorsName($sender)}"/>
 			</a>
 		</span>
 			<span class="name">
 			<a n:href="Messages: $communication->id">
-				<strong>{$communication->getOppositesName($sender)}</strong>
+				<strong>{$communication->subject|truncate:15}</strong>
 			</a>
 			<span class="time">
 				<a n:href="Messages: $communication->id">
@@ -128,7 +128,9 @@
 			</span>
 		</span>
 			<span class="msg">
-			<a n:href="Messages: $communication->id">{$communication->lastMessage->text|truncate:30}</a>
+			<a n:href="Messages: $communication->id">
+				{$communication->lastMessage->text|striptags|truncate:30}
+			</a>
 		</span>
 		</li>
 		<li class="view-all">

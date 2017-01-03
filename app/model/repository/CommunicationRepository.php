@@ -2,54 +2,41 @@
 
 namespace App\Model\Repository;
 
+use App\Model\Entity\Candidate;
+use App\Model\Entity\Job;
 use App\Model\Entity\Sender;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 class CommunicationRepository extends BaseRepository
 {
 
-	public function findBySenders(Sender $one, Sender $two)
+	public function findOneByContributors(array $contributors, $subject, Job $job = NULL, Candidate $candidate = NULL)
 	{
-		$rsm = new ResultSetMapping();
-		$rsm->addScalarResult('communication_id', 'id');
-		$nqb = $this->createNativeQuery('SELECT t1.communication_id FROM
-										(SELECT * FROM `communication_sender` WHERE sender_id = :one) t1
-										INNER JOIN
-										(SELECT * FROM `communication_sender` WHERE sender_id = :two) t2
-										ON t1.communication_id = t2.communication_id', $rsm);
-		$nqb->setParameter('one', $one->id);
-		$nqb->setParameter('two', $two->id);
-		try {
-			$id = $nqb->getSingleScalarResult();
-			return $this->find($id);
-		} catch (NoResultException $e) {
-			return NULL;
+		$qb = $this->createQueryBuilder('c')
+			->innerJoin('c.contributors', 's')
+			->where('s IN (:contributors)')
+			->setParameter('contributors', $contributors);
+		if ($subject) {
+			$qb->andWhere('c.subject = :subject')
+				->setParameter('subject', $subject);
 		}
-	}
+		if ($job) {
+			$qb->andWhere('c.job = :job')
+				->setParameter('job', $job);
+		}
+		if ($candidate) {
+			$qb->andWhere('c.candidate = :candidate')
+				->setParameter('candidate', $candidate);
+		}
 
-	public function findBySender(Sender $sender)
-	{
-		$rsm = new ResultSetMapping();
-		$rsm->addScalarResult('communication_id', 'id');
-		$nqb = $this->createNativeQuery('SELECT communication_id FROM `communication_sender` WHERE sender_id = :sender', $rsm);
-		$nqb->setParameter('sender', $sender->id);
-		try {
-			$ids = array_map(function ($row) {
-				return reset($row);
-			}, $nqb->getArrayResult());
-			return $this->findBy([
-				'id IN' => $ids
-			]);
-		} catch (NoResultException $e) {
-			return [];
-		}
+		return $qb->setMaxResults(1)
+			->getQuery()->getOneOrNullResult();
 	}
 
 	public function findByFulltext(Sender $me, $text)
 	{
 		$criteria = [
 			'contributors.id' => $me,
+			'subject LIKE' => '%' . $text . '%',
 			'messages.text LIKE' => '%' . $text . '%',
 		];
 		return $this->findBy($criteria);

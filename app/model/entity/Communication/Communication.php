@@ -14,8 +14,9 @@ use Nette\Utils\DateTime;
  * @ORM\Entity(repositoryClass="App\Model\Repository\CommunicationRepository")
  * @property string $subject
  * @property ArrayCollection $messages
- * @property Sender $firstContributor
  * @property Message $lastMessage
+ * @property Job $job
+ * @property Candidate $candidate
  * @property DateTime $createdAt
  * @property DateTime $updatedAt
  */
@@ -40,73 +41,61 @@ class Communication extends BaseEntity
 	 */
 	protected $messages;
 
-	public function __construct(Sender $sender, Sender $reciever)
+	public function __construct(array $contributors)
 	{
 		$this->messages = new ArrayCollection();
 		$this->contributors = new ArrayCollection();
 		parent::__construct();
-		$this->addContributor($sender);
-		$this->addContributor($reciever);
+		foreach ($contributors as $contributor) {
+			$this->addContributor($contributor);
+		}
 	}
 
 	public function addContributor(Sender $sender)
 	{
-		$this->contributors->add($sender);
+		if (!$this->isContributor($sender)) {
+			$this->contributors->add($sender);
+		}
+		return $this;
 	}
 
-	public function removeSender(Sender $sender)
+	public function isContributor(Sender $sender)
+	{
+		$isContributor = function ($key, Sender $contributor) use ($sender) {
+			return $contributor->id === $sender->id;
+		};
+		return $this->contributors->exists($isContributor);
+	}
+
+	public function removeContributor(Sender $sender)
 	{
 		$this->contributors->removeElement($sender);
 	}
 
-	public function getFirstContributor()
+	public function getContributors(Sender $me = NULL)
 	{
-		return $this->contributors->first();
-	}
-
-	public function getContributors()
-	{
-		return $this->contributors;
-	}
-
-	public function getOpposites(Sender $me)
-	{
-		$opposites = new ArrayCollection();
-		$getOpposites = function ($key, Sender $sender) use ($opposites, $me) {
+		if (!$me) {
+			return $this->contributors;
+		}
+		$contributors = new ArrayCollection();
+		$getContributors = function ($key, Sender $sender) use ($contributors, $me) {
 			if ($me->id !== $sender->id) {
-				$opposites->add($sender);
+				$contributors->add($sender);
 			}
 			return TRUE;
 		};
-		$this->contributors->forAll($getOpposites);
-		return $opposites;
+		$this->contributors->forAll($getContributors);
+		return $contributors;
 	}
 
-	public function getOpposite(Sender $me)
+	public function getContributorsName(Sender $me = NULL)
 	{
-		$opposites = $this->getOpposites($me);
-		return $opposites->first();
-	}
-
-	public function getOppositesName(Sender $me)
-	{
-		$opposites = $this->getOpposites($me);
 		$names = NULL;
 		$concatNames = function ($key, Sender $sender) use (&$names) {
-			$names = Helpers::concatStrings(', ', $names, $sender->name);
+			$names = Helpers::concatStrings(', ', $names, (string)$sender);
 			return TRUE;
 		};
-		$opposites->forAll($concatNames);
-		return $names;
-	}
-
-	public function getContributorsName() {
-		$names = NULL;
-		$concatNames = function ($key, Sender $sender) use (&$names) {
-			$names = Helpers::concatStrings(', ', $names, $sender->name);
-			return TRUE;
-		};
-		$this->contributors->forAll($concatNames);
+		$this->getContributors($me)->forAll($concatNames);
 		return $names;
 	}
 
@@ -121,16 +110,11 @@ class Communication extends BaseEntity
 		return $this->messages->forAll($markAsRead);
 	}
 
-	public function addMessage(Sender $sender, $text, $state = Message::STATE_DEFAULT, Job $job = NULL, Candidate $candidate = NULL)
+	public function addMessage(Sender $sender, $text, $state = Message::STATE_DEFAULT)
 	{
 		$message = new Message($sender, $text, $state);
 		$message->communication = $this;
-		if ($job) {
-			$message->job = $job;
-		}
-		if ($candidate) {
-			$message->candidate = $candidate;
-		}
+		$this->addContributor($sender);
 		$this->messages->add($message);
 	}
 
@@ -155,14 +139,6 @@ class Communication extends BaseEntity
 		};
 		$this->messages->forAll($countUnread);
 		return $unread;
-	}
-
-	public function isContributor(Sender $sender)
-	{
-		$isContributor = function ($key, Sender $contributor) use ($sender) {
-			return $contributor->id === $sender->id;
-		};
-		return $this->contributors->exists($isContributor);
 	}
 
 }
