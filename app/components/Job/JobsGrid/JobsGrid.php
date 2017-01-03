@@ -69,7 +69,7 @@ class JobsGrid extends BaseControl
 		}
 
 		if ($this->user->isAllowed('job', 'showNotMatched')) {
-			$grid->addColumnText('applied', 'Applied')
+			$grid->addColumnText('applied', 'Requested')
 				->setCustomRender(function (Job $item) {
 					return Html::el('a class="btn btn-xs"')
 						->setHref($this->presenter->link('Job:candidates', [
@@ -94,7 +94,7 @@ class JobsGrid extends BaseControl
 			$grid->getColumn('invited')->getCellPrototype()->class[] = 'center';
 		}
 
-		$grid->addColumnText('matched', $this->user->isAllowed('job', 'showNotMatched') ? 'Matched' : 'Applied')
+		$grid->addColumnText('matched', 'Applied')
 			->setCustomRender(function (Job $item) {
 				return Html::el('a class="btn btn-xs"')
 					->setHref($this->presenter->link('Job:candidates', [

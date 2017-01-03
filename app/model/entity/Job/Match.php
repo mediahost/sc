@@ -305,9 +305,9 @@ class Match extends BaseEntity
 	public static function getStateName($state)
 	{
 		$states = [
-			Match::STATE_APPLIED_ONLY => 'Applied',
+			Match::STATE_APPLIED_ONLY => 'Requested',
 			Match::STATE_INVITED_ONLY => 'Invited',
-			Match::STATE_MATCHED_ONLY => 'Matched',
+			Match::STATE_MATCHED_ONLY => 'Applied',
 			Match::STATE_REJECTED => 'Rejected',
 			Match::STATE_ACCEPTED_ONLY => 'Shortlisted',
 			Match::STATE_INVITED_FOR_IV => 'Invited for IV',
