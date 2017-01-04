@@ -27,14 +27,6 @@ nette:
 #		username: user@gmail.com
 #		password: heslo
 
-# Při zakomentování bloku nette:mailer: je možné využít MailPanel níže
-#nette:
-#	debugger:
-#		bar:
-#			- JanDrabek\MailPanel\MailPanel
-#services:
-#	nette.mailer: JanDrabek\MailPanel\SessionMailer
-
 settings:
 	modules: # default FALSE for all
 		registrableRole: TRUE # for definition whitch role is registrable in RoleFacade

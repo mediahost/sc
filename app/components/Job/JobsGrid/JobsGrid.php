@@ -35,12 +35,7 @@ class JobsGrid extends BaseControl
 			'name' => 'ASC',
 		]);
 
-		$grid->addColumnNumber('id', 'Id')
-			->setSortable()
-			->setFilterNumber();
-		$grid->getColumn('id')->getHeaderPrototype()->setWidth('5%');
-
-		$grid->addColumnText('name', 'Name')
+		$grid->addColumnText('name', 'Job Title')
 			->setCustomRender(function (Job $item) {
 				return Html::el('a')
 					->setHref($this->presenter->link('Job:view', [
@@ -55,7 +50,7 @@ class JobsGrid extends BaseControl
 		if ($this->user->isAllowed('job', 'accountManager')) {
 			$userRepo = $this->em->getRepository(User::getClassName());
 			$accountManagers = $userRepo->findAccountManagers();
-			$grid->addColumnText('accountManager', 'Account Manager')
+			$grid->addColumnText('accountManager', 'Job Admin')
 				->setSortable()
 				->setFilterSelect([NULL => '--- any ---'] + $accountManagers);
 		}

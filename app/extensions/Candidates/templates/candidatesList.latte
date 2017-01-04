@@ -1,12 +1,12 @@
 <div n:snippet="candidatesList" class="row">
-	<!-- BEGIN PRODUCT LIST -->
+	<!-- BEGIN CANDIDATES LIST -->
 	{foreach $candidates as $candidate}
 		{var $candidateId => $candidate->id}
-		<!-- PRODUCT ITEM START -->
-		<div class="col-md-3">
+		<!-- CANDIDATE ITEM START -->
+		<div class="col-md-12">
 			{control candidate-$candidateId}
 		</div>
-		<!-- PRODUCT ITEM END -->
+		<!-- CANDIDATE ITEM END -->
 	{/foreach}
 	{if !count($candidates)}
 		<div class="col-md-12">
@@ -15,5 +15,5 @@
 			</div>
 		</div>
 	{/if}
-	<!-- END PRODUCT LIST -->
+	<!-- END CANDIDATES LIST -->
 </div>

@@ -145,7 +145,7 @@ class Person extends BaseEntity
 
 	public function getDegreeName()
 	{
-		return $this->degreeBefore . ' ' . $this->getFullName() . ' ' . $this->degreeAfter;
+		return Helpers::concatStrings(' ', $this->degreeBefore, $this->getFullName(), $this->degreeAfter);
 	}
 
 	public function isFilled()
@@ -194,6 +194,17 @@ class Person extends BaseEntity
 	public function getFullName()
 	{
 		return Helpers::concatStrings(' ', $this->firstname, $this->middlename, $this->surname);
+	}
+
+	public function getFullNameTitle()
+	{
+		if ($this->degreeBefore || $this->degreeAfter) {
+			return $this->degreeName;
+		} else if ($this->getTitleName()) {
+			return Helpers::concatStrings(' ', $this->getTitleName(), $this->getFullName());
+		} else {
+			return $this->getFullName();
+		}
 	}
 
 	public static function getGenderList()

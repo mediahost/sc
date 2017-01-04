@@ -1,141 +1,195 @@
 {snippet candidatePrint}
-	<div id="{$id}" class="panel panel-default plain candidate-item">
-		<div class="panel-heading">
-			<h4 class="panel-title ui-widget-content">
-				<span n:if="$candidate->cvFile"
-						data-toggle="tooltip" data-placement="top" data-original-title="{_'Download CV file'}">
-					<a href="{$basePath}/{$candidate->cvFile}"
-					   target="_blank" title="{_'CV file'}"><i class="icomoon-icon-file-download"></i></a>
-				</span>
-				<span n:if="!$candidate->cvFile && $identity->isAllowed('candidate', 'edit')"
-						data-toggle="tooltip" data-placement="top" data-original-title="{_'Upload CV file'}">
-					<a href="{plink CvEditor:file $user->id}"
-					   title="{_'Upload CV file'}"><i class="icomoon-icon-file-upload color-red"></i></a>
-				</span>
-				<strong n:if="$person->fullName">{$person->fullName}</strong>
-				<strong n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</strong>
-				<small n:if="$person && $person->address">
-					{$person->address->city}
-				</small>
-				<span n:if="isset($user) && $template->canAccess($identity, $user)"
-						data-toggle="tooltip" data-placement="top" data-original-title="{_'Access to account'}">
-					<a href="{plink Users:access $user->id}"><i class="fa fa-key"></i></a>
-				</span>
-				<span n:if="$showNotes && isset($match) && $identity->isAllowed('companyNotes', 'view')"
-						data-toggle="tooltip" data-placement="top" data-original-title="{_'Company notes'}">
-					<a href="#notes-company-{$id}" data-toggle="modal" class="btn btn-xs btn-primary">
-						{$match->companyNotes->count()}
+	<div id="{$id}" class="candidate-item">
+		<div class="row">
+			<div class="col-md-5">
+				<h4>
+					<a n:ifset="$user"
+							href="{plink Profile: $user->person->candidate->profileId}">
+						<strong n:if="$person->fullName">{$person->fullNameTitle}</strong><strong
+								n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</strong></a>
+					<small n:if="$person && $person->address">
+						{$person->address->city}
+					</small>
+					<a href="{plink Users:access $user->id}">
+						<span n:if="isset($user) && $template->canAccess($identity, $user)"
+								data-toggle="tooltip" data-placement="top" data-original-title="{_'Access to account'}">
+							<i class="fa fa-key"></i>
+						</span>
 					</a>
-				</span>
-				<span n:if="$showNotes && isset($match) && $identity->isAllowed('adminNotes', 'view')"
-						data-toggle="tooltip" data-placement="top" data-original-title="{_'Admin notes'}">
-					<a href="#notes-admin-{$id}" data-toggle="modal" class="btn btn-xs btn-warning">
-						{$match->adminNotes->count()}
-					</a>
-				</span>
-			</h4>
-		</div>
-
-		<div class="panel-body">
-			<div class="row mb10 candidate-content">
-				<div class="col-md-6">
-					<p n:if="$canShowAll">
-						<b>{_'E-mail'}:</b>
-						<br/>
-						<span class="tip">{$user->mail}</span>
-					</p>
-					<p n:if="count($candidate->jobCategories)">
-						<b>{_'Prefered job categories'}:</b>
-						<br/>
-						<span class="tip">{$preferedJobCategories|truncate:40,'...'}</span>
-					</p>
-					<p n:if="$skills">
-						<b>{_'IT Skills'}:</b>
-						<br/>
-						<span class="tip">{$skills|truncate:40,'...'}</span>
-					</p>
+				</h4>
+				<div n:if="count($skills)" class="skills">
+					<div class="skill-category" n:foreach="$skills as $skillCategory => $skill">
+						<h5>{_$skillCategory}</h5>
+						<ul class="skill-list">
+							<li n:foreach="$skill as $skillItem">
+								<span data-toggle="tooltip" data-placement="right" data-original-title="{_$skillItem['level']->name}">
+								{foreach [1,2,3,4,5] as $quality}
+									<i n:class="$quality <= $skillItem['level']->id ? qualified"></i>
+								{/foreach}
+								&nbsp;{$skillItem['name']}
+								</span>
+							</li>
+						</ul>
+					</div>
 				</div>
-				<div class="col-md-6">
-					<a n:ifset="$user" href="{plink Profile: $user->person->candidate->profileId}">
-						<img src="{$person|foto:150,150}"
+				<div n:if="$canShowAll" class="subtip">
+					<b>{_'E-mail'}:</b>
+					<br/>
+					<span class="tip">{$user->mail}</span>
+				</div>
+				<div n:if="count($candidate->jobCategories)" class="subtip">
+					<b>{_'Prefered job categories'}:</b>
+					<br/>
+					<span class="tip">{$preferedJobCategories|truncate:40,'...'}</span>
+				</div>
+				<div n:if="isset($match) && $match->state" class="subtip">
+					<b>{_'%state% at', ['state' => $match->getStateName($match->state)]}</b>
+					{$match->totalStateTime|date:'d.m.Y H:i:s'}
+				</div>
+			</div>
+			<div class="col-md-3 text-right">
+				<div class="social-links">
+					<a n:if="$candidate->person->facebookLink"
+							class="social ifacebook" target="_blank"
+							href="{$candidate->person->facebookLink}">
+						<span class="fa fa-facebook"></span>
+					</a>
+					<a n:if="$candidate->person->twitterLink"
+							class="social twitter" target="_blank"
+							href="{$candidate->person->twitterLink}">
+						<span class="fa fa-twitter"></span>
+					</a>
+					<a n:if="$candidate->person->googleLink"
+							class="social github" target="_blank"
+							href="{$candidate->person->googleLink}">
+						<span class="fa fa-github-alt"></span>
+					</a>
+					<a n:if="$candidate->person->linkedinLink"
+							class="social linkedin" target="_blank"
+							href="{$candidate->person->linkedinLink}">
+						<span class="fa fa-linkedin"></span>
+					</a>
+					<a n:if="$candidate->person->pinterestLink"
+							class="social stackoverflow" target="_blank"
+							href="{$candidate->person->pinterestLink}">
+						<span class="fa fa-stack-overflow"></span>
+					</a>
+					{if $showNotes && isset($match) && $identity->isAllowed('companyNotes', 'view')}
+						<span data-toggle="tooltip" data-placement="top" data-original-title="{_'Company notes'}">
+							<a class="link" href="#notes-company-{$id}" data-toggle="modal">
+								<img src="{$basePath}/images/socials/notes.png" alt=""/>
+								<span class="btn btn-xs btn-primary">
+									{$match->companyNotes->count()}
+								</span>
+							</a>
+						</span>
+					{/if}
+					{if $showNotes && isset($match) && $identity->isAllowed('adminNotes', 'view')}
+						<span data-toggle="tooltip" data-placement="top" data-original-title="{_'Admin notes'}">
+							<a class="link" href="#notes-admin-{$id}" data-toggle="modal">
+								<img src="{$basePath}/images/socials/notes.png" alt=""/>
+								<span class="btn btn-xs btn-warning">
+									{$match->adminNotes->count()}
+								</span>
+							</a>
+						</span>
+					{/if}
+				</div>
+				<div>
+					<a n:if="$candidate->cvFile"
+							href="{$basePath}/{$candidate->cvFile}"
+							target="_blank" title="{_'Download CV'}"
+							class="btn btn-primary">
+						<i class="icomoon-icon-file-download"></i>
+						{_'Download CV'}
+					</a>
+					<a n:if="!$candidate->cvFile && $identity->isAllowed('candidate', 'edit')"
+							href="{plink CvEditor:file $user->id}"
+							target="_blank" title="{_'Upload CV'}"
+							class="btn btn-primary">
+						<i class="icomoon-icon-file-upload"></i>
+						{_'Upload CV'}
+					</a>
+				</div>
+				<div class="row status-block">
+					{if $showJobList}
+						<div class="col-md-12">
+							<p>
+								<b>{_'Job matches'}</b>
+								| <a href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
+							</p>
+							<table class="jobs">
+								<tr n:foreach="$jobs as $job">
+									{var matchItem => $candidate->findMatch($job)}
+									<th>
+										<a href="{plink Job:view $job->id}">
+											{$job|truncate:20}
+										</a>
+									</th>
+									{if $matchItem && $matchItem->fullApprove}
+										<td class="match" colspan="2">
+											<span class="fa fa-check"></span> {_'Matched'}
+										</td>
+									{else}
+										<td class="apply">
+											{if $matchItem && $matchItem->candidateApprove}
+												<span class="fa fa-check"></span> {_'Applied'}
+											{else}
+												<span class="fa fa-times"></span> {_'Not applied'}
+											{/if}
+										</td>
+										<td class="invite">
+											{if $matchItem && $matchItem->adminApprove}
+												{if $matchItem->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
+												<span class="fa fa-check"></span>
+											{else}
+												<a n:href="match! $job->id" class="ajax">
+													{if $matchItem && $matchItem->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
+												</a>
+											{/if}
+										</td>
+									{/if}
+									{breakIf $iterator->counter >= $primaryJobsCount}
+								</tr>
+							</table>
+						</div>
+					{elseif $selectedJob && isset($match)}
+						{if $match->accept}
+							<div class="col-md-12 text-center">
+								<a n:foreach="$matchStates as $stateId => $stateName"
+										n:href="changeState! $selectedJob->id, $stateId"
+										n:class="ajax, btn, $stateId == $match->state ? btn-info">{_$stateName}</a>
+							</div>
+							<div class="col-md-12 pt5">
+								{control customState}
+							</div>
+						{elseif $match->fullApprove}
+							<div class="col-md-12">
+								<a href="#acceptReason-{$id}" data-toggle="modal" class="btn btn-success">{_'Accept'}</a>
+								<a href="#rejectReason-{$id}" data-toggle="modal"
+								   class="btn btn-danger" n:if="$match->accept !== FALSE">{_'Reject'}</a>
+							</div>
+						{elseif !$match->adminApprove}
+							<div class="col-md-12">
+								<a n:href="match! $selectedJob->id" class="ajax btn btn-success">
+									{if $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
+								</a>
+							</div>
+						{/if}
+					{/if}
+				</div>
+
+
+			</div>
+			<div class="col-md-4">
+				<a n:ifset="$user" href="{plink Profile: $user->person->candidate->profileId}">
+					<div class="photo-frame">
+						<img src="{$person|foto:200,200}"
 						     class="center img-responsive photo-rounded" alt="{$person->fullName}"
 						     data-toggle="tooltip" data-placement="top" data-original-title="{_'Visit profile'}"/>
-					</a>
-					<p n:if="isset($match) && $match->state" class="text-right">
-						{_'%state% at', ['state' => $match->getStateName($match->state)]}<br/>
-						{$match->totalStateTime|date:'d.m.Y'}&nbsp;{$match->totalStateTime|date:'H:i:s'}
-					</p>
-				</div>
-			</div>
-
-			<div n:class="row, bt, pt10, $showJobList ? sub-long : (isset($match) ? sub-middle : sub-short)">
-				{if $showJobList}
-					<div class="col-md-12">
-						<p>
-							<b>{_'Job matches'}</b>
-							| <a href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
-						</p>
-						<table class="jobs">
-							<tr n:foreach="$jobs as $job">
-								{var matchItem => $candidate->findMatch($job)}
-								<th>
-									<a href="{plink Job:view $job->id}">
-										{$job|truncate:20}
-									</a>
-								</th>
-								{if $matchItem && $matchItem->fullApprove}
-									<td colspan="2">
-										<span class="fa fa-check"></span> {_'Matched'}
-									</td>
-								{else}
-									<td>
-										{if $matchItem && $matchItem->candidateApprove}
-											<span class="fa fa-check"></span> {_'Applied'}
-										{else}
-											<span class="fa fa-times"></span> {_'Not applied'}
-										{/if}
-									</td>
-									<td>
-										{if $matchItem && $matchItem->adminApprove}
-											{if $matchItem->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
-											<span class="fa fa-check"></span>
-										{else}
-											<a n:href="match! $job->id" class="ajax">
-												{if $matchItem && $matchItem->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
-											</a>
-										{/if}
-									</td>
-								{/if}
-								{breakIf $iterator->counter >= $primaryJobsCount}
-							</tr>
-						</table>
 					</div>
-				{elseif $selectedJob && isset($match)}
-					{if $match->accept}
-						<div class="col-md-12 text-center">
-							<a n:foreach="$matchStates as $stateId => $stateName"
-									n:href="changeState! $selectedJob->id, $stateId"
-									n:class="ajax, btn, $stateId == $match->state ? btn-info">{_$stateName}</a>
-						</div>
-						<div class="col-md-12 pt5">
-							{control customState}
-						</div>
-					{elseif $match->fullApprove}
-						<div class="col-md-12">
-							<a href="#acceptReason-{$id}" data-toggle="modal" class="btn btn-success">{_'Accept'}</a>
-							<a href="#rejectReason-{$id}" data-toggle="modal"
-							   class="btn btn-danger" n:if="$match->accept !== FALSE">{_'Reject'}</a>
-						</div>
-					{elseif !$match->adminApprove}
-						<div class="col-md-12">
-							<a n:href="match! $selectedJob->id" class="ajax btn btn-success">
-								{if $match->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
-							</a>
-						</div>
-					{/if}
-				{/if}
+				</a>
 			</div>
-
 		</div>
 	</div>
 

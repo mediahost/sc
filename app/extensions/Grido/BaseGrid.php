@@ -54,7 +54,7 @@ class BaseGrid extends Grid
 			case self::THEME_SUPR:
 			default:
 				$this->templateFile = self::THEME_SUPR;
-				$this->getTablePrototype()->class[] = 'table-bordered dataTable';
+				$this->getTablePrototype()->class[] = 'dataTable';
 				break;
 		}
 	}

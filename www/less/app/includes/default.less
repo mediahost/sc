@@ -1,5 +1,28 @@
 @import "../definitions.less";
 
+#content, #footer, #wrapper {
+	background: white;
+}
+
+a, button {
+	color: #3554a5;
+	&.btn.btn-primary {
+		border-color: #3554a5;
+		background-image: linear-gradient(to bottom, #3554a5 0%, #3554a5 100%);
+		&:hover, &:focus {
+			background-color: #4766b7;
+		}
+	}
+}
+
+#sidebar .sidenav .mainnav ul li a:hover i {
+	color: #3554a5;
+}
+
+#sidebar.sidebar-fixed .active .indicator {
+	background-color: #3554a5;
+}
+
 .green-circle, .green-circle-o {
 	margin-right: 2px;
 	margin-left: 1px;

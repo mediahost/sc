@@ -19,10 +19,12 @@ use App\Model\Facade\UserFacade;
 use Nette\Application\UI\Multiplier;
 use Nette\Security\User;
 use Nette\Utils\Random;
+use Tracy\Debugger;
 
 class PrintCandidate extends BaseControl
 {
 
+	const MAX_IT_CATEGORIES = 2;
 	const PRIMARY_JOBS_COUNT = 3;
 
 	/** @var array */
@@ -156,12 +158,31 @@ class PrintCandidate extends BaseControl
 
 	private function getItSkills()
 	{
-		$skills = [];
-		foreach ($this->candidate->cv->skillKnows as $skillKnow) {
-			$skills[] = $skillKnow->skill->name;
+		if (!count($this->candidate->cv->skillKnows)) {
+			return [];
 		}
-		$result = implode(', ', $skills);
-		return $result;
+
+		$skills = $counts = [];
+		$counts = [];
+		foreach ($this->candidate->cv->skillKnows as $skillKnow) {
+			$skills[$skillKnow->skill->category->name][] = [
+				'name' => $skillKnow->skill->name,
+				'level' => $skillKnow->level,
+			];
+			$counts[$skillKnow->skill->category->name] =
+				array_key_exists($skillKnow->skill->category->name, $counts) ? $counts[$skillKnow->skill->category->name] + 1 : 1;
+		}
+		arsort($counts);
+		$i = 0;
+		foreach ($skills as $key => $skill) {
+			if ($i >= self::MAX_IT_CATEGORIES) {
+				unset($counts[$key]);
+			} else {
+				$counts[$key] = $skill;
+			}
+			$i++;
+		}
+		return $counts;
 	}
 
 	// </editor-fold>

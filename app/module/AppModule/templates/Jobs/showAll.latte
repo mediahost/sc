@@ -10,11 +10,13 @@
 	{var hasCompany => isset($company) && $company}
 	<div class="row">
 		<div class="col-md-12">
-			<a {if $hasCompany}href="{link Job:add $company->id}" {else}href="#addJob" data-toggle="modal"{/if}
-			   class="btn btn-success mr5 mb10">
-				<i class="fa fa-plus"></i>
-				{_'New Job'}
-			</a>
+			<p class="text-right">
+				<a {if $hasCompany}href="{link Job:add $company->id}" {else}href="#addJob" data-toggle="modal"{/if}
+				   class="btn btn-primary">
+					<i class="fa fa-plus"></i>
+					{_'New Job'}
+				</a>
+			</p>
 			{control jobsGrid}
 		</div>
 	</div>
