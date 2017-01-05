@@ -22,6 +22,7 @@ use Nette\Utils\Strings;
  * @property string $acceptReason
  * @property-read bool $matched
  * @property-read bool $matchedOnly
+ * @property-read bool $matchedNext
  * @property-read bool $rejected
  * @property-read bool $accepted
  * @property-read bool $acceptedOnly

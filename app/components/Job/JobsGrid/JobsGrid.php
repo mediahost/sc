@@ -91,11 +91,13 @@ class JobsGrid extends BaseControl
 
 		$grid->addColumnText('matched', 'Applied')
 			->setCustomRender(function (Job $item) {
+				$link = $this->presenter->link('Job:view', [
+					'id' => $item->id,
+					'detail' => FALSE,
+				]);
 				return Html::el('a class="btn btn-xs"')
-					->setHref($this->presenter->link('Job:candidates', [
-						'id' => $item->id,
-						'state' => Match::STATE_MATCHED_ONLY,
-					]))->setHtml($item->getMatchedCount());
+					->setHtml($item->getMatchedCount(FALSE))
+					->setHref($link);
 			});
 		$grid->getColumn('matched')->getHeaderPrototype()->setWidth('80px');
 		$grid->getColumn('matched')->getHeaderPrototype()->class[] = 'center';

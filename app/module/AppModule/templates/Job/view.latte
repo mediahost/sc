@@ -1,4 +1,7 @@
 {block pageTitle}
+	{if !$showDetail}
+		{_'Applied'} -
+	{/if}
 	{$job}
 {/block}
 
@@ -13,7 +16,7 @@
 {/block}
 
 {block content}
-<div class="row">
+<div class="row" n:if="$showDetail">
 	<div class="col-md-6">
 		<div class="panel panel-default invoice">
 			<!-- Start .panel -->
@@ -57,7 +60,8 @@
 							</div>
 							<div n:snippet="applyBox">
 								<div class="col-md-4 text-right" n:if="$isCandidate">
-									<a n:if="!$isApplied && !$candidate->cvFile" href="#fillCvModal" data-toggle="modal"
+									<a n:if="!$isApplied && !$candidate->cvFile"
+											href="#fillCvModal" data-toggle="modal"
 											class="btn btn-lg btn-success">{_'Apply'}</a>
 									<a n:if="!$isApplied && $candidate->cvFile" n:href="apply! $job->id"
 											class="btn btn-lg btn-success ajax">{_'Apply'}</a>
@@ -161,37 +165,39 @@
 			</div>
 		</div>
 	</div>
+</div>
 
+<div class="row">
 	{ifset $allowedStates}
 		<div class="col-md-12" n:foreach="$allowedStates as $stateKey => $name">
 			<div class="page-header">
-				<h4>
-					{if !$user->isAllowed('job', 'showNotMatched') && $stateKey === App\Model\Entity\Match::STATE_MATCHED_ONLY}
-						{_'Applied'}
-					{else}
-						{_$name}
-					{/if}
-				</h4>
+				{if $stateKey === App\Model\Entity\Match::STATE_MATCHED_ONLY}
+					<h1 class="mb20">{_'Applied candidates'}</h1>
+					<h4>{_'Waiting for your action'}</h4>
+				{else}
+					<h4>{_$name}</h4>
+				{/if}
 			</div>
 			{control jobCandidates-$stateKey}
 		</div>
 	{/ifset}
+</div>
 
-	<!-- Fill CV Modal -->
-	<div n:if="$isCandidate && !$candidate->cvFile" class="modal fade" id="fillCvModal" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span><span class="sr-only">{_'Close'}</span>
-					</button>
-					<h4 class="modal-title" id="mySmallModalLabel">{_'Upload your CV'}</h4>
-				</div>
-				<div class="modal-body">
-					{control uploadCv}
-				</div>
+<!-- Fill CV Modal -->
+<div n:if="$isCandidate && !$candidate->cvFile" class="modal fade" id="fillCvModal" tabindex="-1" role="dialog"
+                                                aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">{_'Close'}</span>
+				</button>
+				<h4 class="modal-title" id="mySmallModalLabel">{_'Upload your CV'}</h4>
+			</div>
+			<div class="modal-body">
+				{control uploadCv}
 			</div>
 		</div>
 	</div>
-	<!-- /.modal -->
 </div>
+<!-- /.modal -->

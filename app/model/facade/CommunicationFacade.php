@@ -178,7 +178,7 @@ class CommunicationFacade extends Object
 			$communication = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
 
 			if ($appliedBefore) {
-				$message = 'I have approved you for job \'%job%\'';
+				$message = 'I have approved you for job \'%job%\' position with \'%company%\'';
 			} else {
 				$message = 'I have invited you to apply for the \'%job%\' position with \'%company%\'';
 			}
@@ -197,9 +197,9 @@ class CommunicationFacade extends Object
 			$communication = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
 
 			if ($accept) {
-				$message = 'I have accepted you for job \'%job%\'';
+				$message = 'I have accepted you for job \'%job%\' position with \'%company%\'';
 			} else {
-				$message = 'I have rejected you for job \'%job%\'';
+				$message = 'I have rejected you for job \'%job%\' position with \'%company%\'';
 			}
 			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
 			$message .= "\n\n";

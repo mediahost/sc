@@ -76,7 +76,7 @@ class JobPresenter extends BasePresenter
 	 * @resource('job')
 	 * @privilege('view')
 	 */
-	public function actionView($id)
+	public function actionView($id, $detail)
 	{
 		$this->job = $this->jobRepo->find($id);
 		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
@@ -98,7 +98,6 @@ class JobPresenter extends BasePresenter
 					Match::STATE_INVITED_ONLY,
 				], $allowedStates);
 			}
-			$this->template->allowedStates = Match::getStateName($allowedStates);
 			foreach ($allowedStates as $stateKey) {
 				$this['jobCandidates-' . $stateKey]->setCandidateOnReload(function () use ($stateKey, $allowedStates) {
 					foreach ($allowedStates as $key) {
@@ -108,6 +107,7 @@ class JobPresenter extends BasePresenter
 					}
 				});
 			}
+			$this->template->allowedStates = Match::getStateName($allowedStates);
 		}
 
 		$this->actionFacade->addJobView($this->user->identity, $this->job);
@@ -118,7 +118,7 @@ class JobPresenter extends BasePresenter
 		}
 	}
 
-	public function renderView()
+	public function renderView($detail)
 	{
 		if ($this->job) {
 			$this->template->job = $this->job;
@@ -129,6 +129,7 @@ class JobPresenter extends BasePresenter
 				$this->template->isInvited = $this->candidateFacade->isApproved($candidate, $this->job);
 				$this->template->isMatched = $this->candidateFacade->isMatched($candidate, $this->job);
 			}
+			$this->template->showDetail = $detail;
 		}
 	}
 
