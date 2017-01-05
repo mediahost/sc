@@ -26,10 +26,10 @@
 			<div class="page-header">
 				<h4>{_'Jobs Applied For'}</h4>
 			</div>
-			<div class="list-group" n:if="count($applied)">
-				{include jobPreview jobs => $applied}
+			<div class="list-group" n:if="count($applied) || count($matches)">
+				{include jobPreview jobs => array_merge($applied, $matches)}
 			</div>
-			<div class="alert alert-info" n:if="!count($applied)">
+			<div class="alert alert-info" n:if="!count($applied) && !count($matches)">
 				{_'You have not applied for any jobs.'}
 			</div>
 		</div>
@@ -68,12 +68,13 @@
 			{$job->description|striptags|truncate:50}
 		</p>
 		{ifset $candidateFacade}
-			{if $candidateFacade->isMatched($candidate, $job)}
-				<span class="label label-danger">{_'Matched'}</span>
+			{if $candidateFacade->isApplied($candidate, $job)}
+				<span class="label label-warning">{_'Applied'}</span>
 			{elseif $candidateFacade->isApproved($candidate, $job)}
 				<span class="label label-success">{_'Invited'}</span>
-			{elseif $candidateFacade->isApplied($candidate, $job)}
-				<span class="label label-warning">{_'Applied'}</span>
+			{/if}
+			{if $candidateFacade->isMatched($candidate, $job)}
+				<span class="label label-danger">{_'Matched'}</span>
 			{/if}
 		{/ifset}
 	</a>

@@ -64,11 +64,9 @@
 											href="#fillCvModal" data-toggle="modal"
 											class="btn btn-lg btn-success">{_'Apply'}</a>
 									<a n:if="!$isApplied && $candidate->cvFile" n:href="apply! $job->id"
-											class="btn btn-lg btn-success ajax">{_'Apply'}</a>
-									<button n:if="!$isMatched && $isApplied"
+											class="btn btn-lg btn-primary ajax">{_'Apply'}</a>
+									<button n:if="$isApplied"
 											class="btn btn-lg btn-warning disabled">{_'Applied'}</button>
-									<button n:if="$isMatched"
-											class="btn btn-lg btn-danger disabled">{_'Matched'}</button>
 								</div>
 							</div>
 						</div>

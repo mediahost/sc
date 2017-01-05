@@ -76,7 +76,7 @@ class JobPresenter extends BasePresenter
 	 * @resource('job')
 	 * @privilege('view')
 	 */
-	public function actionView($id, $detail)
+	public function actionView($id, $detail = TRUE)
 	{
 		$this->job = $this->jobRepo->find($id);
 		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
@@ -118,7 +118,7 @@ class JobPresenter extends BasePresenter
 		}
 	}
 
-	public function renderView($detail)
+	public function renderView($detail = TRUE)
 	{
 		if ($this->job) {
 			$this->template->job = $this->job;
