@@ -101,7 +101,7 @@ class JobsGrid extends BaseControl
 		$grid->getColumn('matched')->getHeaderPrototype()->class[] = 'center';
 		$grid->getColumn('matched')->getCellPrototype()->class[] = 'center';
 
-		$grid->addColumnText('accepted', 'Accepted')
+		$grid->addColumnText('accepted', 'Shortlisted')
 			->setCustomRender(function (Job $item) {
 				return Html::el('a class="btn btn-xs"')
 					->setHref($this->presenter->link('Job:candidates', [
@@ -155,7 +155,7 @@ class JobsGrid extends BaseControl
 				return sprintf($message, (string)$item);
 			})
 			->getElementPrototype()->class[] = 'red';
-		$grid->setActionWidth("300px");
+		$grid->setActionWidth('270px');
 
 		return $grid;
 	}
