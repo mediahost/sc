@@ -52,7 +52,7 @@ class Conversation extends BaseControl
 			->setAttribute('placeholder', $this->translator->translate('Type a message here...'))
 			->getControlPrototype()->class = 'elastic form-control';
 		$form->addSubmit('send', 'Send message')
-			->getControlPrototype()->class = 'btn btn-info mt10';
+			->getControlPrototype()->class = 'btn btn-primary mt10';
 
 		$form->onSuccess[] = $this->processForm;
 		return $form;

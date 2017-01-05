@@ -73,7 +73,7 @@ class UsersGrid extends BaseControl
 			->setDisable([$this, 'checkDelete'])
 			->getElementPrototype()->class[] = 'red';
 
-		$grid->setActionWidth($this->asCompany ? '180px' : '280px');
+		$grid->setActionWidth($this->asCompany ? '180px' : '200px');
 		$grid->setExport('users');
 		return $grid;
 	}

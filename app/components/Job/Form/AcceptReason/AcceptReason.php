@@ -48,7 +48,7 @@ class AcceptReason extends BaseControl
 		$message->getControlPrototype()->class = 'elastic form-control';
 
 		$form->addSubmit('send', 'Send')
-			->getControlPrototype()->class = 'btn btn-info mt10';
+			->getControlPrototype()->class = 'btn btn-primary mt10';
 
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;

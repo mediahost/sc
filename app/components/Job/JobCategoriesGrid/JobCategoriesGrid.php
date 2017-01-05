@@ -49,7 +49,7 @@ class JobCategoriesGrid extends BaseControl
 			})
 			->getElementPrototype()->class[] = 'red';
 
-		$grid->setActionWidth("20%");
+		$grid->setActionWidth('170px');
 
 		return $grid;
 	}

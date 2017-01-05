@@ -39,7 +39,7 @@ class ConversationsGrid extends BaseControl {
 	    $grid->addActionHref('view', 'Messages', ':App:Messages:')
 		    ->setIcon('fa fa-edit');
 	    
-	    $grid->setActionWidth("20%");
+	    $grid->setActionWidth('170px');
 	    return $grid;
     }
 

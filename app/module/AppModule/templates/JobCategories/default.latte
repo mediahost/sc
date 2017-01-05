@@ -7,17 +7,15 @@
 {/block}
 
 {block content}
-	<a href="{plink JobCategories:add}" class="btn btn-default DTTT_button_copy">
-		<span>{_'Add Job category'}</span>
-	</a>
-
 	<div class="row">
 		<div class="col-md-12">
-			<div class="portlet light">
-				<div class="portlet-body">
-					{control jobCategoriesGrid}
-				</div>
-			</div>
+			<p class="text-right">
+				<a n:href="JobCategories:add" class="btn btn-primary">
+					<i class="fa fa-plus"></i>
+					{_'New Job category'}
+				</a>
+			</p>
+			{control jobCategoriesGrid}
 		</div>
 	</div>
 {/block content}

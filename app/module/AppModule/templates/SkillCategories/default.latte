@@ -7,16 +7,15 @@
 {/block}
 
 {block content}
-	<a href="{plink SkillCategories:add}" class="btn btn-default DTTT_button_copy">
-		<span>{_'Add Skill category'}</span>
-	</a>
 	<div class="row">
 		<div class="col-md-12">
-			<div class="portlet light">
-				<div class="portlet-body">
-					{control skillCategoriesGrid}
-				</div>
-			</div>
+			<p class="text-right">
+				<a n:href="SkillCategories:add" class="btn btn-primary">
+					<i class="fa fa-plus"></i>
+					{_'New Skill category'}
+				</a>
+			</p>
+			{control skillCategoriesGrid}
 		</div>
 	</div>
 {/block content}
