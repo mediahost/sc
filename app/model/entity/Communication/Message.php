@@ -47,12 +47,6 @@ class Message extends BaseEntity
 	/** @ORM\Column(type="smallint", nullable=true) */
 	protected $state;
 
-	/** @ORM\ManyToOne(targetEntity="Candidate") */
-	protected $candidate;
-
-	/** @ORM\ManyToOne(targetEntity="Job") */
-	protected $job;
-
 	public function __construct(Sender $sender, $text, $state = self::STATE_DEFAULT)
 	{
 		$this->reads = new ArrayCollection();

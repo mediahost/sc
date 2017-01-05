@@ -2,7 +2,6 @@
 
 namespace App\Model\Facade;
 
-use App\Components\Conversation\Form\Conversation;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Company;
@@ -106,7 +105,7 @@ class CommunicationFacade extends Object
 		return $this->senderRepo->findAssoc($criteria, 'id');
 	}
 
-	public function createConversation(Sender $sender, array $recipients, $subject, $message = NULL, Job $job = NULL, Candidate $candidate = NULL)
+	public function createCommunication(Sender $sender, array $recipients, $subject, $message = NULL, Job $job = NULL, Candidate $candidate = NULL)
 	{
 		$recipients[] = $sender;
 		$communication = new Communication($recipients);
@@ -124,7 +123,7 @@ class CommunicationFacade extends Object
 		return $communication;
 	}
 
-	public function findConversation(Sender $sender, array $recipients, $subject, Job $job = NULL, Candidate $candidate = NULL)
+	public function findCommunication(Sender $sender, array $recipients, $subject, Job $job = NULL, Candidate $candidate = NULL)
 	{
 		$recipients[] = $sender;
 		return $this->communicationRepo->findOneByContributors($recipients, $subject, $job, $candidate);
@@ -132,18 +131,18 @@ class CommunicationFacade extends Object
 
 	public function findOrCreate(Sender $sender, array $recipients, $subject, Job $job = NULL, Candidate $candidate = NULL)
 	{
-		$conversation = $this->findConversation($sender, $recipients, $subject, $job, $candidate);
-		if (!$conversation) {
-			$this->createConversation($sender, $recipients, $subject, NULL, $job, $candidate);
+		$communication = $this->findCommunication($sender, $recipients, $subject, $job, $candidate);
+		if (!$communication) {
+			$communication = $this->createCommunication($sender, $recipients, $subject, NULL, $job, $candidate);
 		}
-		return $conversation;
+		return $communication;
 	}
 
-	public function sendMessage(Conversation $conversation, Sender $sender, $message, $state = Message::STATE_DEFAULT)
+	public function sendMessage(Communication $communication, Sender $sender, $message, $state = Message::STATE_DEFAULT)
 	{
-		$conversation->addMessage($sender, $message, $state);
-		$this->communicationRepo->save($conversation);
-		return $conversation;
+		$communication->addMessage($sender, $message, $state);
+		$this->communicationRepo->save($communication);
+		return $communication;
 	}
 
 	public function sendMatchMessage(Match $match)
@@ -161,12 +160,12 @@ class CommunicationFacade extends Object
 		$recipient = $this->findSender($match->job->accountManager);
 
 		if ($sender && $recipient) {
-			$conversation = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
+			$communication = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
 
 			$message = 'I have applied for \'%job%\' position with \'%company%\'';
 			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
 			$state = Message::STATE_SYSTEM_JOB;
-			return $this->sendMessage($conversation, $sender, $message, $state);
+			return $this->sendMessage($communication, $sender, $message, $state);
 		}
 	}
 
@@ -176,7 +175,7 @@ class CommunicationFacade extends Object
 		$recipient = $this->findSender($match->candidate->person->user);
 
 		if ($sender && $recipient) {
-			$conversation = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
+			$communication = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
 
 			if ($appliedBefore) {
 				$message = 'I have approved you for job \'%job%\'';
@@ -185,7 +184,7 @@ class CommunicationFacade extends Object
 			}
 			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
 			$state = Message::STATE_SYSTEM_JOB;
-			return $this->sendMessage($conversation, $sender, $message, $state);
+			return $this->sendMessage($communication, $sender, $message, $state);
 		}
 	}
 
@@ -195,7 +194,7 @@ class CommunicationFacade extends Object
 		$recipient = $this->findSender($match->candidate->person->user);
 
 		if ($sender && $recipient) {
-			$conversation = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
+			$communication = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
 
 			if ($accept) {
 				$message = 'I have accepted you for job \'%job%\'';
@@ -206,7 +205,7 @@ class CommunicationFacade extends Object
 			$message .= "\n\n";
 			$message .= $match->acceptReason;
 			$state = Message::STATE_SYSTEM_JOB;
-			return $this->sendMessage($conversation, $sender, $message, $state);
+			return $this->sendMessage($communication, $sender, $message, $state);
 		}
 	}
 

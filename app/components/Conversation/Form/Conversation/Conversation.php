@@ -60,7 +60,7 @@ class Conversation extends BaseControl
 
 	public function processForm(Form $form, $values)
 	{
-		$this->communicationFacade->sendMessage($this->sender, $this->communication, $values->message);
+		$this->communicationFacade->sendMessage($this->communication, $this->sender, $values->message);
 		$form['message']->setValue('');
 		$this->onSend();
 	}

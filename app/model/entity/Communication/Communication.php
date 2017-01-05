@@ -41,6 +41,12 @@ class Communication extends BaseEntity
 	 */
 	protected $messages;
 
+	/** @ORM\ManyToOne(targetEntity="Candidate") */
+	protected $candidate;
+
+	/** @ORM\ManyToOne(targetEntity="Job") */
+	protected $job;
+
 	public function __construct(array $contributors)
 	{
 		$this->messages = new ArrayCollection();
