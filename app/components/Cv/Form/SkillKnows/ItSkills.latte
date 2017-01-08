@@ -1,11 +1,11 @@
 {form form}
     {? $form->errors}
     {var existSkills => count($categories) && count($skills)}
-    <div n:if="$existSkills" class="panel-group accordion expandFirst col-lg-6" id="skills">
+    <div n:if="$existSkills" class="panel-group accordion expandFirst col-lg-6" id="skills1">
         <div n:foreach="$categories as $key=>$category" n:if="$iterator->isOdd()" class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#skills"
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#skills1"
                        href="#{$category->name|webalize}_{$category->id}">{$category->name}</a>
                 </h4>
             </div>
@@ -28,11 +28,11 @@
         </div>
     </div>
 
-    <div n:if="$existSkills" class="panel-group accordion expandFirst col-lg-6">
+    <div n:if="$existSkills" class="panel-group accordion expandFirst col-lg-6" id="skills2">
         <div n:foreach="$categories as $key=>$category" n:if="$iterator->isEven()" class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#skills"
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#skills2"
                        href="#{$category->name|webalize}_{$category->id}">{$category->name}</a>
                 </h4>
             </div>

@@ -68,7 +68,7 @@ var Global = function () {
 	};
 
 	var initAccordion = function () {
-		$('.expandFirst').find('.accordion-toggle').first().click();
+		$('.expandFirst').find('.accordion-toggle').click();
 	};
 
 	var handleSocialLinks = function () {
