@@ -1,0 +1,42 @@
+{**
+ * AddresControl control template
+ *
+*}
+
+{form form class => "ajax form-horizontal group-border stripped"}
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'House No.'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="house" type="text" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Street address'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="street" type="text" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Postal code'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="zipcode" type="text" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'City'}</label>
+		<div class="col-lg-9 col-md-9">
+			<input n:name="city" type="text" class="form-control">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-3 col-md-3 control-label">{_'Country'}</label>
+		<div class="col-lg-9 col-md-9">
+			<select n:name="country" class="form-control"></select>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-lg-offset-3">
+			<input type="submit" class="form-control btn btn-primary ml15 input-small" value="Save" />
+		</div>
+	</div>
+{/form}

@@ -9,7 +9,9 @@
 {block content}
 	<div class="row">
 		<div class="col-lg-6 col-md-12">
-			{include companyDetailsPanel}
+			{snippet companyDetails}
+				{include companyDetailsPanel}
+			{/snippet}
 		</div>
 	</div>
 {/block}
@@ -19,8 +21,38 @@
 		<div class="panel-heading">
 			<h4 class="panel-title">{_'Company Details'}</h4>
 		</div>
-		<div class="panel-body">
-			{control companyDetails:preview}
+		<div class="panel-body" data-editable="">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="editable-preview profile-avatar">
+						<img alt="{$company}" class="responsive" src="{$company|foto:150,150}">
+						<i n:if="$canEdit" class="fa fa-edit editable-icon" data-target="photoForm"></i>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<h3 class="editable-preview">{$company}
+						<i n:if="$canEdit" class="fa fa-edit editable-icon" data-target="companyForm"></i>
+					</h3>
+
+					<p class="editable-preview">
+						<i class="fa fa-building"></i>
+						{$company->address->format()}
+						<i n:if="$canEdit" class="fa fa-edit editable-icon" data-target="addressForm"></i>
+					</p>
+				</div>
+			</div>
+
+			<div n:if="$canEdit" class="row editable-form" data-form="photoForm">
+				{control photoForm}
+			</div>
+
+			<div n:if="$canEdit" class="row editable-form" data-form="addressForm">
+				{control addressForm}
+			</div>
+
+			<div n:if="$canEdit" class="row editable-form" data-form="companyForm">
+				{control companyDetails}
+			</div>
 		</div>
 	</div>
 {/define}

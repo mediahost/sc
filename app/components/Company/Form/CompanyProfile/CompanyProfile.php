@@ -11,35 +11,25 @@ use Nette\Utils\ArrayHash;
 
 class CompanyProfile extends BaseControl
 {
-	/** @var Company */
-	private $company;
+	/** @var array */
+	public $onAfterSave = [];
 
 	/** @var CompanyFacade @inject */
 	public $companyFacade;
 
-	public function render()
-	{
-		$this->setTemplateFile('company');
-		parent::render();
-	}
+	/** @var Company */
+	private $company;
 
-	public function renderPreview()
-	{
-		$this->template->company = $this->company;
-		$this->setTemplateFile('companyPreview');
-		parent::render();
-	}
-
-	public function handleEdit()
-	{
-		$this->redrawControl('companyBlock');
-	}
 
 	protected function createComponentForm()
 	{
 		$form = new Form();
 		$form->setRenderer(new MetronicFormRenderer());
 		$form->setTranslator($this->translator);
+
+		if ($this->isAjax) {
+			$form->elementPrototype->class = 'ajax';
+		}
 
 		$form->addText('name', 'Company')
 			->setAttribute('placeholder', 'Company name')
@@ -48,14 +38,6 @@ class CompanyProfile extends BaseControl
 		$form->addText('companyId', 'Company ID')
 			->setAttribute('placeholder', 'Company identification')
 			->setRequired('Please enter company identification.');
-
-		$form->addTextArea('address', 'Address')
-			->setAttribute('placeholder', 'Company full address')
-			->setRequired();
-
-		$form->addUpload('logo', 'Logo')
-			->addRule(Form::IMAGE, 'Logo must be image')
-			->setRequired($this->company->isNew());
 
 		$form->addSubmit('save', 'Save');
 		$form->setDefaults($this->getDefaults());
@@ -67,10 +49,9 @@ class CompanyProfile extends BaseControl
 	{
 		$this->company->name = $values->name;
 		$this->company->companyId = $values->companyId;
-		$this->company->address = $values->address;
-		$this->company->logo = $values->logo;
 		$this->em->getRepository(Company::getClassName())
 			->save($this->company);
+		$this->onAfterSave($this->company);
 	}
 
 	private function getDefaults()
@@ -80,9 +61,7 @@ class CompanyProfile extends BaseControl
 			$result = [
 				'id' => $this->company->id,
 				'name' => $this->company->name,
-				'companyId' => $this->company->companyId,
-				'address' => $this->company->address,
-				'logo' => $this->company->logo
+				'companyId' => $this->company->companyId
 			];
 		}
 		return $result;

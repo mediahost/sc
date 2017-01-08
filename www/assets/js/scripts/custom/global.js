@@ -204,6 +204,20 @@ var Global = function () {
 		}
 	};
 
+	var handleEditable = function() {
+		$(document).on('mouseover', '.editable-preview', function() {
+			$(this).find('.editable-icon').show();
+		});
+		$(document).on('mouseout', '.editable-preview', function() {
+			$(this).find('.editable-icon').hide();
+		});
+		$(document).on('click', '.editable-icon', function() {
+			var target = $(this).attr('data-target');
+			$('[data-form="' + target + '"]').show();
+			$(this).closest('[data-editable]').find('.editable-preview').hide();
+		});
+	}
+
 	return {
 		init: function () {
 			$(document).ready(function () {
@@ -220,6 +234,7 @@ var Global = function () {
 				handleDropzone();
 				onModalLoad();
 				handleImagUpload();
+				handleEditable();
 
 				// Global components
 				CustomTrees.init();

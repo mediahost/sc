@@ -2,122 +2,152 @@
    Custom.css - put your own changes here 
 ----------------------------------------- */
 .right {
-    float: right;
+	float: right;
 }
+
 .left {
-    float: left;
+	float: left;
 }
+
 .center {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 }
 
 .dl-horizontal dt {
-    float: left;
-    width: 230px;
-    clear: left;
-    text-align: right;
-    overflow: hidden;
+	float: left;
+	width: 230px;
+	clear: left;
+	text-align: right;
+	overflow: hidden;
 }
+
 .dl-horizontal dd {
-    margin-left: 240px;
+	margin-left: 240px;
 }
 
 .bootstrap-tagsinput {
-    border: none;
+	border: none;
 }
 
 .mapView {
-    height: 250px;
+	height: 250px;
 
-    margin-bottom: 20px;
-    border: 1px solid black;
+	margin-bottom: 20px;
+	border: 1px solid black;
 }
 
 .message-header {
-    margin-bottom: 15px;
-    width: 100%;
+	margin-bottom: 15px;
+	width: 100%;
 }
+
 .message-search {
-    width: 100%;
+	width: 100%;
 }
 
 .gallery-item .panel-body {
-    height: 350px;
-    padding-top: 0px;
+	height: 350px;
+	padding-top: 0px;
 }
+
 .gallery-item .panel-heading {
-    height: 50px;
+	height: 50px;
 }
+
 .gallery-nav ul {
-    -webkit-padding-start: 20px;
+	-webkit-padding-start: 20px;
 }
+
 .gallery-category-nav ul {
-    list-style-type: none;
-    -webkit-padding-start: 0px;
+	list-style-type: none;
+	-webkit-padding-start: 0px;
 }
+
 .gallery-category-nav .list-group li {
-    cursor: pointer;
+	cursor: pointer;
 }
+
 .job .matched {
-    float: left;
-    display: none;
+	float: left;
+	display: none;
 }
+
 .droppable .matched {
-    display: block;
-    padding: 0px;
-    margin: 0px;
+	display: block;
+	padding: 0px;
+	margin: 0px;
 }
-.droppable .label  {
-    display: none;
+
+.droppable .label {
+	display: none;
 }
-.droppable .title  {
-    margin-bottom: 10px;
-    font-weight: bold;
+
+.droppable .title {
+	margin-bottom: 10px;
+	font-weight: bold;
 }
+
 .droppable .panel-body {
-    padding: 5px;
-    height: auto;
+	padding: 5px;
+	height: auto;
 }
+
 .droppable {
-    min-height: 200px;
+	min-height: 200px;
 }
+
 .draggable {
-    cursor: move;
+	cursor: move;
 }
+
 .ui-draggable-dragging {
-    z-index: 100;
+	z-index: 100;
 }
+
 .matched .btn, .matched p, .matched h4 {
-    display: none !important;
+	display: none !important;
 }
+
 section.content {
-    flex: 3;
+	flex: 3;
 }
+
 .flex-container {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .cv-filter-container {
-    margin-left: 30px;
+	margin-left: 30px;
 }
+
 .cv-filter-container .checkbox-inline {
-    margin-left: 0px !important;
+	margin-left: 0px !important;
 }
+
 .gallery-item .btn-group {
-    margin-left: 20px;
+	margin-left: 20px;
 }
 
 .gallery-nav .search {
-    width: 100%;
+	width: 100%;
 }
 
 .checkbox-custom {
-    display: inline-block;
+	display: inline-block;
 }
 
 .slider .tooltip-min, .slider .tooltip-max {
+	display: none;
+}
+
+.editable-icon {
+	display: none;
+	cursor: pointer;
+}
+.editable-form {
+	padding: 15px;
 	display: none;
 }

@@ -3,7 +3,10 @@
 namespace App\AppModule\Presenters;
 
 use App\Components\Company\CompanyProfile;
+use App\Components\Company\ICompanyAddressFactory;
 use App\Components\Company\ICompanyProfileFactory;
+use App\Components\Company\IPhotoFactory;
+use App\Model\Entity\Address;
 use App\Model\Entity\Company;
 use App\Model\Facade\UserFacade;
 
@@ -15,6 +18,12 @@ class CompanyProfilePresenter extends BasePresenter
 
 	/** @var ICompanyProfileFactory @inject */
 	public $companyProfileFactory;
+
+	/** @var ICompanyAddressFactory @inject */
+	public $companyAddressFactory;
+
+	/** @var IPhotoFactory @inject */
+	public $photoFactory;
 
 	/** @var Company */
 	private $companyEntity;
@@ -66,9 +75,41 @@ class CompanyProfilePresenter extends BasePresenter
 	/**  @return CompanyProfile */
 	public function createComponentCompanyDetails()
 	{
-		$control = $this->companyProfileFactory->create();
-		$control->setAjax(true, true);
-		$control->setCompany($this->company);
+		$control = $this->companyProfileFactory->create()
+			->setAjax(true, true)
+			->setCompany($this->company);
+		$control->onAfterSave = function (Company $saved) {
+			$this->redrawControl('companyDetails');
+		};
+		return $control;
+	}
+
+	public function createComponentAddressForm()
+	{
+		$control = $this->companyAddressFactory->create()
+			->setAjax(true, true)
+			->setAddress($this->company->getAddress())
+			->canEdit($this->canEdit);
+		$control->onAfterSave = function (Address $saved) {
+			if (!$this->company->address) {
+				$this->company->address = $saved;
+				$this->em->persist($this->company);
+			}
+			$this->redrawControl('companyDetails');
+		};
+		return $control;
+	}
+
+	public function createComponentPhotoForm()
+	{
+		$control = $this->photoFactory->create()
+			->setCompany($this->company)
+			->canEdit($this->canEdit);
+		$control->onAfterSave = function (Company $saved) {
+			$message = $this->translator->translate('Photo for \'%candidate%\' was successfully saved.', ['candidate' => (string)$saved]);
+			$this->flashMessage($message, 'success');
+			$this->redrawControl('companyDetails');
+		};
 		return $control;
 	}
 

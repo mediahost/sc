@@ -16,9 +16,9 @@ use Nette\Utils\Strings;
  *
  * @property string $name
  * @property string $companyId
- * @property string $address
  * @property Image $logo
  * @property ArrayCollection $jobs
+ * @property Address $address
  * @property-read User $delegate
  */
 class Company extends BaseEntity
@@ -37,7 +37,7 @@ class Company extends BaseEntity
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $mail;
 
-	/** @ORM\Column(type="text", nullable=true) */
+	/** @ORM\OneToOne(targetEntity="Address", cascade="all", fetch="LAZY") */
 	protected $address;
 
 	/** @ORM\OneToOne(targetEntity="Image", cascade="all") */
@@ -79,4 +79,11 @@ class Company extends BaseEntity
 		return $this;
 	}
 
+	public function getAddress()
+	{
+		if (!$this->address) {
+			$this->address = new Address();
+		}
+		return $this->address;
+	}
 }
