@@ -68,7 +68,6 @@ var Global = function () {
 	};
 
 	var initAccordion = function () {
-		$('.expandAll').find('.panel-collapse').removeClass('collapse');
 		$('.expandFirst').find('.accordion-toggle').first().click();
 	};
 
