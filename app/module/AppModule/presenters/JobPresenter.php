@@ -248,7 +248,7 @@ class JobPresenter extends BasePresenter
 
 					$this->actionFacade->addJobApply($this->user->identity, $job);
 				} else {
-					$message = $this->translator->translate('You cannot apply for this job. You must upload your CV file at first.');
+					$message = $this->translator->translate('You cannot apply for this job. You must upload your CV file first.');
 					$this->flashMessage($message, 'warning');
 					$redirectUrl = NULL;
 				}
