@@ -67,7 +67,7 @@ class JobsGrid extends BaseControl
 			$grid->addColumnText('applied', 'Requested')
 				->setCustomRender(function (Job $item) {
 					return Html::el('a class="btn btn-xs"')
-						->setHref($this->presenter->link('Job:candidates', [
+						->setHref($this->presenter->link('Job:view', [
 							'id' => $item->id,
 							'state' => Match::STATE_APPLIED_ONLY,
 						]))->setHtml($item->getAppliedCount());
@@ -79,7 +79,7 @@ class JobsGrid extends BaseControl
 			$grid->addColumnText('invited', 'Invited')
 				->setCustomRender(function (Job $item) {
 					return Html::el('a class="btn btn-xs"')
-						->setHref($this->presenter->link('Job:candidates', [
+						->setHref($this->presenter->link('Job:view', [
 							'id' => $item->id,
 							'state' => Match::STATE_INVITED_ONLY,
 						]))->setHtml($item->getInvitedCount());
@@ -91,13 +91,11 @@ class JobsGrid extends BaseControl
 
 		$grid->addColumnText('matched', 'Applied')
 			->setCustomRender(function (Job $item) {
-				$link = $this->presenter->link('Job:view', [
-					'id' => $item->id,
-					'detail' => FALSE,
-				]);
 				return Html::el('a class="btn btn-xs"')
-					->setHtml($item->getMatchedCount(FALSE))
-					->setHref($link);
+					->setHref($this->presenter->link('Job:view', [
+						'id' => $item->id,
+						'state' => NULL,
+					]))->setHtml($item->getMatchedCount(FALSE));
 			});
 		$grid->getColumn('matched')->getHeaderPrototype()->setWidth('80px');
 		$grid->getColumn('matched')->getHeaderPrototype()->class[] = 'center';
@@ -106,7 +104,7 @@ class JobsGrid extends BaseControl
 		$grid->addColumnText('accepted', 'Shortlisted')
 			->setCustomRender(function (Job $item) {
 				return Html::el('a class="btn btn-xs"')
-					->setHref($this->presenter->link('Job:candidates', [
+					->setHref($this->presenter->link('Job:view', [
 						'id' => $item->id,
 						'state' => Match::STATE_ACCEPTED_ONLY,
 					]))->setHtml($item->getAcceptedCount());
@@ -118,7 +116,7 @@ class JobsGrid extends BaseControl
 		$grid->addColumnText('rejected', 'Rejected')
 			->setCustomRender(function (Job $item) {
 				return Html::el('a class="btn btn-xs"')
-					->setHref($this->presenter->link('Job:candidates', [
+					->setHref($this->presenter->link('Job:view', [
 						'id' => $item->id,
 						'state' => Match::STATE_REJECTED,
 					]))->setHtml($item->getRejectedCount());
@@ -131,7 +129,7 @@ class JobsGrid extends BaseControl
 			$grid->addColumnText('state' . $id, $name)
 				->setCustomRender(function (Job $item) use ($id) {
 					return Html::el('a class="btn btn-xs"')
-						->setHref($this->presenter->link('Job:candidates', [
+						->setHref($this->presenter->link('Job:view', [
 							'id' => $item->id,
 							'state' => $id,
 						]))->setHtml($item->getInStateCount($id));
@@ -140,12 +138,6 @@ class JobsGrid extends BaseControl
 			$grid->getColumn('state' . $id)->getHeaderPrototype()->class[] = 'center';
 			$grid->getColumn('state' . $id)->getCellPrototype()->class[] = 'center';
 		}
-
-		$grid->addActionHref('view', 'View', 'Job:view')
-			->setIcon('fa fa-eye');
-
-		$grid->addActionHref('candidates', 'Candidates', 'Job:candidates')
-			->setIcon('fa fa-users');
 
 		$grid->addActionHref('edit', 'Edit', 'Job:edit')
 			->setIcon('fa fa-edit');

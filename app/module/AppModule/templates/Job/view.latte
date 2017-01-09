@@ -1,7 +1,7 @@
 {block pageTitle}
-	{if !$showDetail}
-		{_'Applied'} -
-	{/if}
+	{ifset $stateName}
+		{$stateName} -
+	{/ifset}
 	{$job}
 {/block}
 
@@ -16,7 +16,7 @@
 {/block}
 
 {block content}
-<div class="row" n:if="$showDetail">
+<div class="row">
 	<div class="col-md-6">
 		<div class="panel panel-default invoice">
 			<!-- Start .panel -->
@@ -164,7 +164,18 @@
 </div>
 
 <div class="row">
-	{ifset $allowedStates}
+	{if $currentState}
+		<div class="col-md-12">
+			<div class="page-header">
+				{if $stateName === App\Model\Entity\Match::STATE_MATCHED_ONLY}
+					<h4>{_'Waiting for your action'}</h4>
+				{else}
+					<h4>{_$stateName}</h4>
+				{/if}
+			</div>
+			{control jobCandidates-$currentState}
+		</div>
+	{elseif isset($allowedStates)}
 		<div class="col-md-12" n:foreach="$allowedStates as $stateKey => $name">
 			<div class="page-header">
 				{if $stateKey === App\Model\Entity\Match::STATE_MATCHED_ONLY}
@@ -176,7 +187,7 @@
 			</div>
 			{control jobCandidates-$stateKey}
 		</div>
-	{/ifset}
+	{/if}
 </div>
 
 <!-- Fill CV Modal -->

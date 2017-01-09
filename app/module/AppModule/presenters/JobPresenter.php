@@ -76,14 +76,19 @@ class JobPresenter extends BasePresenter
 	 * @resource('job')
 	 * @privilege('view')
 	 */
-	public function actionView($id, $detail = TRUE)
+	public function actionView($id, $state = NULL)
 	{
+
 		$this->job = $this->jobRepo->find($id);
 		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
 			$this->redirect('Jobs:');
 		} else if ($this->user->isAllowed('match')) {
+			if (!Match::isAcceptedState($state)) {
+				$state = NULL;
+			}
+
 			$allowedStates = [
 				Match::STATE_MATCHED_ONLY,
 				Match::STATE_REJECTED,
@@ -98,16 +103,24 @@ class JobPresenter extends BasePresenter
 					Match::STATE_INVITED_ONLY,
 				], $allowedStates);
 			}
+
 			foreach ($allowedStates as $stateKey) {
-				$this['jobCandidates-' . $stateKey]->setCandidateOnReload(function () use ($stateKey, $allowedStates) {
-					foreach ($allowedStates as $key) {
-						if ($key != $stateKey) {
-							$this['jobCandidates-' . $key]->reload();
+				if (($state && $state === $stateKey) || $state === NULL) {
+					$this['jobCandidates-' . $stateKey]->setCandidateOnReload(function () use ($stateKey, $allowedStates) {
+						foreach ($allowedStates as $key) {
+							if ($key != $stateKey) {
+								$this['jobCandidates-' . $key]->reload();
+							}
 						}
-					}
-				});
+					});
+				}
 			}
+
 			$this->template->allowedStates = Match::getStateName($allowedStates);
+			$this->template->currentState = $state;
+			if ($state) {
+				$this->template->stateName = Match::getStateName($state);
+			}
 		}
 
 		$this->actionFacade->addJobView($this->user->identity, $this->job);
@@ -118,7 +131,7 @@ class JobPresenter extends BasePresenter
 		}
 	}
 
-	public function renderView($detail = TRUE)
+	public function renderView()
 	{
 		if ($this->job) {
 			$this->template->job = $this->job;
@@ -128,31 +141,6 @@ class JobPresenter extends BasePresenter
 				$this->template->isApplied = $this->candidateFacade->isApplied($candidate, $this->job);
 				$this->template->isInvited = $this->candidateFacade->isApproved($candidate, $this->job);
 				$this->template->isMatched = $this->candidateFacade->isMatched($candidate, $this->job);
-			}
-			$this->template->showDetail = $detail;
-		}
-	}
-
-	/**
-	 * @secured
-	 * @resource('job')
-	 * @privilege('candidates')
-	 */
-	public function actionCandidates($id, $state = NULL)
-	{
-		$this->job = $this->jobRepo->find($id);
-		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
-			$message = $this->translator->translate('Finded job isn\'t exists.');
-			$this->flashMessage($message, 'danger');
-			$this->redirect('Jobs:');
-		} else {
-			if (!Match::isAcceptedState($state)) {
-				$state = Match::STATE_APPROVED;
-			}
-			$this['candidatesList']->addFilterJob($this->job, TRUE, $state);
-			$this->template->job = $this->job;
-			if ($state) {
-				$this->template->stateName = Match::getStateName($state);
 			}
 		}
 	}
@@ -318,7 +306,7 @@ class JobPresenter extends BasePresenter
 			$this->flashMessage($message, 'success');
 			if ($jobApplyId) {
 				$this->handleApply($jobApplyId, $redirectUrl);
-			} else if($this->job) {
+			} else if ($this->job) {
 				$this->handleApply($this->job->id, $redirectUrl);
 			}
 			if ($redirectUrl) {
