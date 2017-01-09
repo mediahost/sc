@@ -115,6 +115,26 @@ class CandidateFacade extends Object
 		return FALSE;
 	}
 
+	public function isRejected(Candidate $candidate, Job $job)
+	{
+		/** @var Match $match */
+		$match = $candidate->findMatch($job);
+		if ($match) {
+			return $match->candidateApprove && $match->adminApprove && $match->rejected;
+		}
+		return FALSE;
+	}
+
+	public function isAccepted(Candidate $candidate, Job $job)
+	{
+		/** @var Match $match */
+		$match = $candidate->findMatch($job);
+		if ($match) {
+			return $match->candidateApprove && $match->adminApprove && $match->accepted;
+		}
+		return FALSE;
+	}
+
 	public function findAppliedJobs(Candidate $candidate, $approved = NULL)
 	{
 		$criteria = [
