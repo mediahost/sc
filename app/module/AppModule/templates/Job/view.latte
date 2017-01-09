@@ -81,7 +81,7 @@
 							<h5 class="text-muted">{_'Position Summary'}</h5>
 							{$job->summary|noescape}
 						</div>
-						<div class="profile-tags">
+						<div n:if="count($job->tags)" class="profile-tags">
 							<h5 class="text-muted">{_'Benefits'}</h5>
 							<div>
 								<span n:foreach="$job->tags as $tag"
@@ -89,7 +89,7 @@
 										class="tag label label-info">{$tag}</span>
 							</div>
 						</div>
-						<div class="profile-tags mb20">
+						<div n:if="count($job->tags)" class="profile-tags mb20">
 							<h5 class="text-muted">{_'Technical Requirements'}</h5>
 							<div>
 								<span n:foreach="$job->tags as $tag"
@@ -97,12 +97,10 @@
 										class="tag label label-info">{$tag}</span>
 							</div>
 						</div>
-						{if $job->questions}
-							<div class="profile-info bt">
-								<h5 class="text-muted">{_'Pre-Screening Questions'}</h5>
-								<p n:foreach="$job->questions as $question">{$question}</p>
-							</div>
-						{/if}
+						<div n:if="count($job->questions)" class="profile-info bt">
+							<h5 class="text-muted">{_'Pre-Screening Questions'}</h5>
+							<p n:foreach="$job->questions as $question">{$question}</p>
+						</div>
 						{*<div class="profile-info bt">*}
 						{*<h5 class="text-muted">{_'Notes'}</h5>*}
 						{*<p>{$job->notes}</p>*}

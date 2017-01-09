@@ -131,7 +131,12 @@ class BasicInfo extends BaseControl
 		$this->job->type = $this->jobFacade->findJobType($values->type);
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
 //		$this->job->notes = $values->notes;
-		$this->job->questions = (array)$values->questions;
+		$this->job->questions = [];
+		foreach ($values->questions as $question) {
+			if ($question && !empty($question)) {
+				$this->job->questions[] = $question;
+			}
+		}
 
 		$salaryFrom = $salaryTo = 0;
 		sscanf($values['salary'], '%d,%d', $salaryFrom, $salaryTo);
