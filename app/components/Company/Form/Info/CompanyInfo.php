@@ -109,6 +109,7 @@ class CompanyInfo extends BaseControl
 		$form->addSubmit('save', 'Save');
 
 		$form->setDefaults($this->getDefaults());
+
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;
 	}
@@ -123,6 +124,10 @@ class CompanyInfo extends BaseControl
 		if (!$this->companyFacade->isUniqueName($values->name, $id)) {
 			$message = $this->translator->translate('\'%name%\' is already registered.', ['name' => $values->name]);
 			$form['name']->addError($message);
+		}
+		if ($values->add && isset($values->userMail) && !$this->userFacade->isUnique($values->userMail)) {
+			$message = $this->translator->translate('E-mail \'%mail%\' is already registered.', ['mail' => $values->userMail]);
+			$form['userMail']->addError($message);
 		}
 
 		if (!$form->hasErrors()) {
