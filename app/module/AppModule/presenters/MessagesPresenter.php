@@ -9,9 +9,7 @@ use App\Components\Conversation\Form\IConversationListFactory;
 use App\Components\Conversation\Form\INewConversationFactory;
 use App\Components\Conversation\Form\NewConversation;
 use App\Components\IConversationsGridFactory;
-use App\Model\Entity\Candidate;
 use App\Model\Entity\Communication;
-use App\Model\Entity\Role;
 use App\Model\Entity\Sender;
 use App\Model\Facade\UserFacade;
 

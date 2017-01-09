@@ -25,9 +25,24 @@ trait CompanyAccess
 	/** @return User */
 	public function getDelegate()
 	{
-		$adminPermissions = $this->getAdminAccesses();
-		$adminPermission = $adminPermissions->first();
-		return $adminPermission->user;
+		$permissions = $this->getAdminAccesses();
+		if ($permissions->count()) {
+			$permission = $permissions->first();
+		} else {
+			$permissions = $this->getManagerAccesses();
+			if ($permissions->count()) {
+				$permission = $permissions->first();
+			} else {
+				$permissions = $this->getJobberAccesses();
+				if ($permissions->count()) {
+					$permission = $permissions->first();
+				} else {
+					$permissions = $this->getEditorAccesses();
+					$permission = $permissions->first();
+				}
+			}
+		}
+		return $permission->user;
 	}
 
 	/** @return Collection */

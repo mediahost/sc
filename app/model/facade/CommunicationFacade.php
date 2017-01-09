@@ -160,7 +160,8 @@ class CommunicationFacade extends Object
 		$recipient = $this->findSender($match->job->accountManager);
 
 		if ($sender && $recipient) {
-			$communication = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
+			$subject = $this->translator->translate('Apply to job \'%job%\'', NULL, ['job' => (string)$match->job]);
+			$communication = $this->findOrCreate($sender, [$recipient], $subject, $match->job, $match->candidate);
 
 			$message = 'I have applied for \'%job%\' position with \'%company%\'';
 			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
@@ -175,7 +176,8 @@ class CommunicationFacade extends Object
 		$recipient = $this->findSender($match->candidate->person->user);
 
 		if ($sender && $recipient) {
-			$communication = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
+			$subject = $this->translator->translate('Apply to job \'%job%\'', NULL, ['job' => (string)$match->job]);
+			$communication = $this->findOrCreate($sender, [$recipient], $subject, $match->job, $match->candidate);
 
 			if ($appliedBefore) {
 				$message = 'I have approved you for job \'%job%\' position with \'%company%\'';
@@ -194,7 +196,8 @@ class CommunicationFacade extends Object
 		$recipient = $this->findSender($match->candidate->person->user);
 
 		if ($sender && $recipient) {
-			$communication = $this->findOrCreate($sender, [$recipient], NULL, $match->job, $match->candidate);
+			$subject = $this->translator->translate('Apply to job \'%job%\'', NULL, ['job' => (string)$match->job]);
+			$communication = $this->findOrCreate($sender, [$recipient], $subject, $match->job, $match->candidate);
 
 			if ($accept) {
 				$message = 'I have accepted you for job \'%job%\' position with \'%company%\'';

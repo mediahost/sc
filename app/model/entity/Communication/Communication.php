@@ -32,6 +32,12 @@ class Communication extends BaseEntity
 	/** @ORM\ManyToMany(targetEntity="Sender", inversedBy="communication", cascade={"persist"}, orphanRemoval=true) */
 	private $contributors;
 
+	/** @ORM\Column(type="smallint") */
+	private $contributorsCount = 0;
+
+	/** @ORM\Column(type="simple_array") */
+	private $contributorsArray = [];
+
 	/** @ORM\OneToMany(targetEntity="Notification", mappedBy="communication") */
 	protected $notifications;
 
@@ -62,6 +68,17 @@ class Communication extends BaseEntity
 		if (!$this->isContributor($sender)) {
 			$this->contributors->add($sender);
 		}
+		$this->recountContributors();
+		return $this;
+	}
+
+	private function recountContributors()
+	{
+		$this->contributorsCount = $this->contributors->count();
+		$this->contributorsArray = [];
+		foreach ($this->contributors as $contributor) {
+			$this->contributorsArray[] = $contributor->id;
+		}
 		return $this;
 	}
 
@@ -76,6 +93,7 @@ class Communication extends BaseEntity
 	public function removeContributor(Sender $sender)
 	{
 		$this->contributors->removeElement($sender);
+		$this->recountContributors();
 	}
 
 	public function getContributors(Sender $me = NULL)
