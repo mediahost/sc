@@ -73,6 +73,14 @@ class CompanyFacade extends Object
 		return $company;
 	}
 
+	public function findPermission(Company $company, User $user)
+	{
+		return $this->companyPermissionRepo->findOneBy([
+			'company' => $company,
+			'user' => $user,
+		]);
+	}
+
 	public function createPermission(Company $company, User $user, $role = CompanyRole::ADMIN)
 	{
 		$adminAccess = new CompanyPermission();

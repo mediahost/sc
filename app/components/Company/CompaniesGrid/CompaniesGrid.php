@@ -50,14 +50,16 @@ class CompaniesGrid extends BaseControl
 		return $grid;
 	}
 
-	private function getModel() {
+	private function getModel()
+	{
 		$repo = $this->em->getRepository(Company::getClassName());
 		$qb = $repo->createQueryBuilder('c');
 		$model = new Doctrine($qb);
 		return $model;
 	}
 
-	public function getConfirmMessage($item) {
+	public function getConfirmMessage($item)
+	{
 		$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
 		return sprintf($message, (string)$item);
 	}

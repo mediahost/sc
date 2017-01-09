@@ -9,7 +9,7 @@
 			</div>
 			<div id="navbar-no-collapse" class="navbar-no-collapse">
 				<ul class="nav navbar-nav">
-					<li>
+					<li n:if="$showLeftSidebar">
 						<a href="#" class="collapseBtn leftbar">
 							<i class="s16 minia-icon-list-3"></i>
 						</a>
@@ -27,6 +27,12 @@
 								{include messageViewer}
 							</li>
 						</ul>
+					</li>
+					<li  n:if="$user->isAllowed('jobs', 'default') && $isCompleteAccount">
+						<a n:href="Jobs:">
+							<i class="s16 fa fa-briefcase"></i>
+							<span class="txt">{_'Jobs'}</span>
+						</a>
 					</li>
 					<li class="button" n:if="$user->isAllowed('profile') && $isCompleteAccount">
 						<a href="{link Profile:}">

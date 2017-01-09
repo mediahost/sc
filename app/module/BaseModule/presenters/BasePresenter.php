@@ -52,6 +52,9 @@ abstract class BasePresenter extends Presenter
 
 	// </editor-fold>
 
+	/** @@var Entity\CompanyPermission */
+	protected $companyPermission;
+
 	protected function startup()
 	{
 		parent::startup();
@@ -72,6 +75,8 @@ abstract class BasePresenter extends Presenter
 		$this->template->isCandidate = $this->user->isInRole(Entity\Role::CANDIDATE);
 		$this->template->isCompany = $this->user->isInRole(Entity\Role::COMPANY);
 		$this->template->isAdmin = $this->user->isInRole(Entity\Role::ADMIN) || $this->user->isInRole(Entity\Role::SUPERADMIN);
+
+		$this->template->companyPermission = $this->companyPermission;
 	}
 
 	// <editor-fold desc="requirments">

@@ -52,6 +52,7 @@ abstract class BasePresenter extends BaseBasePresenter
 	{
 		parent::beforeRender();
 		$this->template->isCompleteAccount = $this->isCompleteAccount();
+		$this->template->showLeftSidebar = !$this->companyPermission || $this->companyPermission->isAllowed('sidebar-menu');
 		$this->template->showRightSidebar = $this->showRightSideBar;
 
 		$this->template->sender = $this->sender;
@@ -89,6 +90,9 @@ abstract class BasePresenter extends BaseBasePresenter
 					$this->company = $this->allowedCompanies->first();
 				}
 			}
+		}
+		if ($this->company) {
+			$this->companyPermission = $this->companyFacade->findPermission($this->company, $this->user->identity);
 		}
 	}
 

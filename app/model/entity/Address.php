@@ -42,6 +42,7 @@ class Address extends BaseEntity
 	// TODO: do this method
 	public function parseFromText($text)
 	{
+		$this->street = $text;
 		return $this;
 	}
 

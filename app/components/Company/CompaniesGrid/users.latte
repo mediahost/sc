@@ -2,6 +2,7 @@
     {foreach $item->accesses as $access}
 		<a href="{plink Users:access, $access->user->id}"><span class="fa fa-key"></span></a>
 		<a href="{plink Users:edit, $access->user->id}">{$access->user}</a>
+	    <span n:foreach="$access->roles as $role">({$role})</span>
 		{if !$iterator->last}<br/>{/if}
     {/foreach}
 {/if}

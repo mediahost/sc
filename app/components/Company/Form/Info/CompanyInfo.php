@@ -69,7 +69,7 @@ class CompanyInfo extends BaseControl
 			$form->addText('name', 'Name')
 				->setAttribute('placeholder', 'Company name')
 				->setRequired('Please enter your company\'s name.');
-			$form->addTextArea('address', 'Address')
+			$form->addText('street', 'Street')
 				->setAttribute('placeholder', 'Company Address');
 		}
 
@@ -79,15 +79,15 @@ class CompanyInfo extends BaseControl
 				->addCondition($form::EQUAL, TRUE)
 				->toggle('user-name')
 				->toggle('user-password')
-				->toggle('user-role')
-				->toggle('admins', FALSE)
+//				->toggle('user-role')
+//				->toggle('admins', FALSE)
 				->toggle('jobbers', FALSE);
 
 			$companyUsers = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
-			$admins = $form->addMultiSelect2('admins', 'Administrators', $companyUsers)
-				->setOption('id', 'admins');
-			$admins->addConditionOn($form['add'], Form::EQUAL, FALSE)
-				->setRequired('Company must have administrator');
+//			$admins = $form->addMultiSelect2('admins', 'Administrators', $companyUsers)
+//				->setOption('id', 'admins');
+//			$admins->addConditionOn($form['add'], Form::EQUAL, FALSE)
+//				->setRequired('Company must have administrator');
 
 			$form->addMultiSelect2('jobbers', 'Job managers', $companyUsers)
 				->setOption('id', 'jobbers');
@@ -101,9 +101,9 @@ class CompanyInfo extends BaseControl
 				->setOption('id', 'user-password');
 			$password->addConditionOn($form['add'], Form::EQUAL, TRUE)
 				->addRule(Form::FILLED, 'Must be filled');
-			$roles = $this->companyFacade->getRolesNames();
-			$form->addSelect2('companyRole', 'Role', $roles)
-				->setOption('id', 'user-role');
+//			$roles = $this->companyFacade->getRolesNames();
+//			$form->addSelect2('companyRole', 'Role', $roles)
+//				->setOption('id', 'user-role');
 		}
 
 		$form->addSubmit('save', 'Save');
@@ -137,7 +137,7 @@ class CompanyInfo extends BaseControl
 		if ($this->user->isAllowed('company', 'edit')) {
 			$this->company->name = $values->name;
 			$this->company->companyId = $values->companyId;
-			$this->company->address = $values->address;
+			$this->company->address->street = $values->street;
 
 			if ($values->add) {
 				$roleRepo = $this->em->getRepository(Role::getClassName());
@@ -149,13 +149,17 @@ class CompanyInfo extends BaseControl
 				$admin->addRole($role);
 				$userRepo->save($admin);
 
-				$this->usersRoles[$admin->id][] = CompanyRole::ADMIN;
+				$this->usersRoles[$admin->id][] = CompanyRole::JOBBER;
 			} else {
-				foreach ($values->admins as $userId) {
-					$this->usersRoles[$userId][] = CompanyRole::ADMIN;
+				if (isset($values->admins)) {
+					foreach ($values->admins as $userId) {
+						$this->usersRoles[$userId][] = CompanyRole::ADMIN;
+					}
 				}
-				foreach ($values->jobbers as $userId) {
-					$this->usersRoles[$userId][] = CompanyRole::JOBBER;
+				if (isset($values->jobbers)) {
+					foreach ($values->jobbers as $userId) {
+						$this->usersRoles[$userId][] = CompanyRole::JOBBER;
+					}
 				}
 			}
 		}
@@ -185,7 +189,7 @@ class CompanyInfo extends BaseControl
 		$values = [
 			'name' => $this->company->name,
 			'companyId' => $this->company->companyId,
-			'address' => $this->company->address,
+			'street' => $this->company->address->street,
 			'companyRole' => $companyRole->id,
 		];
 		foreach ($this->company->adminAccesses as $permission) {

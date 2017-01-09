@@ -109,7 +109,7 @@ class User extends BaseControl
 			}
 		}
 
-		if ($this->user->isCompany() && !$this->company) {
+		if ($this->identity->isAllowed('companies', 'edit')) {
 			$compayRepo = $this->em->getRepository(Entity\Company::getClassName());
 			$companies = $compayRepo->findPairs('name');
 			$form->addMultiSelect('companyAdmin', 'Admin for companies', $companies);
