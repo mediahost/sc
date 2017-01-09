@@ -69,8 +69,6 @@ class CompanyInfo extends BaseControl
 			$form->addText('name', 'Name')
 				->setAttribute('placeholder', 'Company name')
 				->setRequired('Please enter your company\'s name.');
-			$form->addText('street', 'Street')
-				->setAttribute('placeholder', 'Company Address');
 		}
 
 		if ($this->user->isAllowed('company', 'edit')) {
@@ -137,7 +135,6 @@ class CompanyInfo extends BaseControl
 		if ($this->user->isAllowed('company', 'edit')) {
 			$this->company->name = $values->name;
 			$this->company->companyId = $values->companyId;
-			$this->company->address->street = $values->street;
 
 			if ($values->add) {
 				$roleRepo = $this->em->getRepository(Role::getClassName());

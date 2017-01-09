@@ -29,7 +29,8 @@ class CompaniesGrid extends BaseControl
 		$col->setCustomRender(__DIR__ . '/companyName.latte');
 
 		$col = $grid->addColumnText('address', 'Address');
-		$col->setSortable()->setFilterText()->setSuggestion();;
+		$col->setCustomRender([$this, 'formatAddress']);
+		$col->setSortable()->setFilterText()->setSuggestion();
 
 		$col = $grid->addColumnText('users', 'Users');
 		$col->setCustomRender(__DIR__ . '/users.latte');
@@ -50,11 +51,16 @@ class CompaniesGrid extends BaseControl
 		return $grid;
 	}
 
-	private function getModel()
-	{
+	public function formatAddress($row) {
+		return (string) $row->address->format();
+	}
+
+	private function getModel() {
 		$repo = $this->em->getRepository(Company::getClassName());
-		$qb = $repo->createQueryBuilder('c');
-		$model = new Doctrine($qb);
+		$qb = $repo->createQueryBuilder('c')
+			->select('c, a')
+			->leftJoin('c.address', 'a');
+		$model = new Doctrine($qb, ['address', 'a.street']);
 		return $model;
 	}
 
