@@ -149,7 +149,7 @@ class JobsGrid extends BaseControl
 				return sprintf($message, (string)$item);
 			})
 			->getElementPrototype()->class[] = 'red';
-		$grid->setActionWidth('270px');
+		$grid->setActionWidth('200px');
 
 		return $grid;
 	}
