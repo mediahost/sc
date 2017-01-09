@@ -38,7 +38,7 @@ abstract class BasePresenter extends BaseBasePresenter
 	protected $allowedCompanies = [];
 
 	/** @var bool */
-	private $showRightSideBar = false;
+	private $openRightSideBar = FALSE;
 
 	protected function startup()
 	{
@@ -53,7 +53,8 @@ abstract class BasePresenter extends BaseBasePresenter
 		parent::beforeRender();
 		$this->template->isCompleteAccount = $this->isCompleteAccount();
 		$this->template->showLeftSidebar = !$this->companyPermission || $this->companyPermission->isAllowed('sidebar-menu');
-		$this->template->showRightSidebar = $this->showRightSideBar;
+		$this->template->showRightSidebar = !$this->companyPermission || $this->companyPermission->isAllowed('sidebar-menu');
+		$this->template->openRightSidebar = $this->openRightSideBar;
 
 		$this->template->sender = $this->sender;
 		$this->template->company = $this->company;
@@ -126,7 +127,7 @@ abstract class BasePresenter extends BaseBasePresenter
 
 	protected function hideRightSidebar()
 	{
-		$this->showRightSideBar = false;
+		$this->openRightSideBar = false;
 	}
 
 	public function handleSwitchCompany($companyId)

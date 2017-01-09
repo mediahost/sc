@@ -1,6 +1,9 @@
 {block sidebar}
+<!--Sidebar background-->
+<div n:if="$showRightSidebar" id="right-sidebarbg" class="hidden-lg hidden-md hidden-sm hidden-xs" data-show="{$openRightSidebar}"></div>
+
 <!-- BEGIN RIGHT SIDEBAR -->
-<aside id="right-sidebar" class="right-sidebar hidden-lg hidden-md hidden-sm hidden-xs">
+<aside n:if="$showRightSidebar" id="right-sidebar" class="right-sidebar hidden-lg hidden-md hidden-sm hidden-xs">
 	<!-- Start .sidebar-inner -->
 	<div class="sidebar-inner">
 		<!-- Start .sidebar-scrollarea -->
