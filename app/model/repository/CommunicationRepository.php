@@ -11,10 +11,18 @@ class CommunicationRepository extends BaseRepository
 
 	public function findOneByContributors(array $contributors, $subject, Job $job = NULL, Candidate $candidate = NULL)
 	{
-		$qb = $this->createQueryBuilder('c')
-			->innerJoin('c.contributors', 's')
-			->where('s IN (:contributors)')
-			->setParameter('contributors', $contributors);
+		$qb = $this->createQueryBuilder('c');
+		if (count($contributors) > 1) {
+			$qb
+				->innerJoin('c.contributors', 's')
+				->where('s IN (:contributors)')
+				->setParameter('contributors', $contributors);
+		} else {
+			$qb
+				->innerJoin('c.contributors', 's')
+				->where('s = :contributor')
+				->setParameter('contributor', current($contributors));
+		}
 		if ($subject) {
 			$qb->andWhere('c.subject = :subject')
 				->setParameter('subject', $subject);
@@ -30,6 +38,24 @@ class CommunicationRepository extends BaseRepository
 
 		return $qb->setMaxResults(1)
 			->getQuery()->getOneOrNullResult();
+	}
+
+	public function findByContributors(array $contributors)
+	{
+		$qb = $this->createQueryBuilder('c');
+		if (count($contributors) > 1) {
+			$qb
+				->innerJoin('c.contributors', 's')
+				->where('s IN (:contributors)')
+				->setParameter('contributors', $contributors);
+		} else {
+			$qb
+				->innerJoin('c.contributors', 's')
+				->where('s = :contributor')
+				->setParameter('contributor', current($contributors));
+		}
+
+		return $qb->getQuery()->getResult();
 	}
 
 	public function findByFulltext(Sender $me, $text)

@@ -227,7 +227,7 @@ class CommunicationFacade extends Object
 
 	public function delete(Sender $sender)
 	{
-		$communications = $this->communicationRepo->findBySender($sender);
+		$communications = $this->communicationRepo->findByContributors([$sender]);
 		foreach ($communications as $communication) {
 			$this->communicationRepo->delete($communication);
 		}

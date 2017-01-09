@@ -85,9 +85,28 @@ class CompanyInfo extends BaseControl
 		}
 
 		if ($this->canEditUsers) {
+			$form->addCheckbox('add', 'Create Company user')
+				->setDefaultValue(TRUE)
+				->addCondition($form::EQUAL, TRUE)
+				->toggle('user-name')
+				->toggle('user-password')
+				->toggle('admins', FALSE);
+
 			$users = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
 			$admins = $form->addMultiSelect2('admins', 'Administrators', $users)
+				->setOption('id', 'admins');
+			$admins->addConditionOn($form['add'], Form::EQUAL, FALSE)
 				->setRequired('Company must have administrator');
+
+			$mail = $form->addText('userMail', 'User Mail')
+				->setOption('id', 'user-name');
+			$mail->addConditionOn($form['add'], Form::EQUAL, TRUE)
+				->addRule(Form::FILLED, 'Must be filled')
+				->addRule(Form::EMAIL, 'Must be email');
+			$password = $form->addText('userPassword', 'User password')
+				->setOption('id', 'user-password');
+			$password->addConditionOn($form['add'], Form::EQUAL, TRUE)
+				->addRule(Form::FILLED, 'Must be filled');
 		}
 
 		$form->addSubmit('save', 'Save');
@@ -123,9 +142,23 @@ class CompanyInfo extends BaseControl
 			$this->company->companyId = $values->companyId;
 			$this->company->address = $values->address;
 		}
+
 		if ($this->canEditUsers) {
-			foreach ($values->admins as $adminId) {
-				$this->usersRoles[$adminId][] = CompanyRole::ADMIN;
+			if ($values->add) {
+				$roleRepo = $this->em->getRepository(Role::getClassName());
+				$userRepo = $this->em->getRepository(Entity\User::getClassName());
+				$role = $roleRepo->findOneByName(Role::COMPANY);
+
+				$admin = new Entity\User($values->userMail, TRUE);
+				$admin->setPassword($values->userPassword);
+				$admin->addRole($role);
+				$userRepo->save($admin);
+
+				$this->usersRoles[$admin->id][] = CompanyRole::ADMIN;
+			} else {
+				foreach ($values->admins as $adminId) {
+					$this->usersRoles[$adminId][] = CompanyRole::ADMIN;
+				}
 			}
 		}
 		return $this;

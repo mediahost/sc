@@ -3,6 +3,7 @@
 namespace App\Model\Facade;
 
 use App\Extensions\Settings\SettingsStorage;
+use App\Model\Entity\Action;
 use App\Model\Entity\CompanyPermission;
 use App\Model\Entity\Registration;
 use App\Model\Entity\Role;
@@ -16,6 +17,7 @@ use App\Model\Facade\Traits\UserFacadeRecovery;
 use App\Model\Facade\Traits\UserFacadeSetters;
 use App\Model\Repository\CompanyPermissionRepository;
 use App\Model\Repository\UserRepository;
+use Doctrine\ORM\EntityRepository;
 use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
@@ -51,6 +53,9 @@ class UserFacade extends Object
 	/** @var CompanyPermissionRepository */
 	private $companyPermissionRepo;
 
+	/** @var EntityRepository @inject */
+	private $actionRepo;
+
 	/** @var EntityDao */
 	private $roleDao;
 
@@ -59,6 +64,7 @@ class UserFacade extends Object
 		$this->em = $em;
 		$this->userRepo = $this->em->getRepository(User::getClassName());
 		$this->companyPermissionRepo = $this->em->getRepository(CompanyPermission::getClassName());
+		$this->actionRepo = $this->em->getRepository(Action::getClassName());
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
