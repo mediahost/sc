@@ -157,7 +157,6 @@ class CompaniesPresenter extends BasePresenter
 	public function createComponentCompanyInfoForm()
 	{
 		$control = $this->iCompanyInfoFactory->create();
-		$control->setUser($this->user);
 		$control->onAfterSave = function (Company $saved) {
 			$message = $this->translator->translate('Company \'%company%\' was successfully saved.', ['company' => (string)$saved]);
 			$this->flashMessage($message, 'success');

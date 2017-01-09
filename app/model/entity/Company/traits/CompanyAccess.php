@@ -12,6 +12,8 @@ use Doctrine\Common\Collections\Collection;
  * @property-read User $delegate
  * @property-read Collection $adminAccesses
  * @property-read Collection $managerAccesses
+ * @property-read Collection $mesengerAccesses
+ * @property-read Collection $jobberAccesses
  * @property-read Collection $editorAccesses
  */
 trait CompanyAccess
@@ -57,6 +59,16 @@ trait CompanyAccess
 	public function getEditorAccesses()
 	{
 		return $this->getAccessesFilter(CompanyRole::EDITOR);
+	}
+
+	public function getJobberAccesses()
+	{
+		return $this->getAccessesFilter(CompanyRole::JOBBER);
+	}
+
+	public function getMessengerAccesses()
+	{
+		return $this->getAccessesFilter(CompanyRole::MESSENGER);
 	}
 
 	private function getAccessesFilter($roleName)

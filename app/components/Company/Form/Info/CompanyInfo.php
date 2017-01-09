@@ -13,25 +13,11 @@ use App\Model\Entity\Role;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
-use Nette\Forms\IControl;
 use Nette\Security\User;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Html;
 
 class CompanyInfo extends BaseControl
 {
-
-	/** @var Company */
-	private $company;
-
-	/** @var User */
-	private $user;
-
-	/** @var Entity\User */
-	private $selectedUser;
-
-	/** @var array */
-	private $usersRoles = [];
 
 	// <editor-fold desc="events">
 
@@ -40,6 +26,9 @@ class CompanyInfo extends BaseControl
 
 	// </editor-fold>
 	// <editor-fold desc="injects">
+
+	/** @var User @inject */
+	public $user;
 
 	/** @var ICompanyUserFactory @inject */
 	public $iCompanyUserFactory;
@@ -56,11 +45,11 @@ class CompanyInfo extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
-	/** @var bool */
-	private $canEditInfo = FALSE;
+	/** @var Company */
+	private $company;
 
-	/** @var bool */
-	private $canEditUsers = FALSE;
+	/** @var array */
+	private $usersRoles = [];
 
 	// </editor-fold>
 
@@ -73,7 +62,7 @@ class CompanyInfo extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		if ($this->canEditInfo) {
+		if ($this->user->isAllowed('company', 'edit')) {
 			$form->addText('companyId', 'Company ID')
 				->setAttribute('placeholder', 'Company identification')
 				->setRequired('Please enter company\'s identification.');
@@ -84,19 +73,24 @@ class CompanyInfo extends BaseControl
 				->setAttribute('placeholder', 'Company Address');
 		}
 
-		if ($this->canEditUsers) {
+		if ($this->user->isAllowed('company', 'edit')) {
 			$form->addCheckbox('add', 'Create Company user')
-				->setDefaultValue(TRUE)
+				->setDefaultValue($this->company->isNew())
 				->addCondition($form::EQUAL, TRUE)
 				->toggle('user-name')
 				->toggle('user-password')
-				->toggle('admins', FALSE);
+				->toggle('user-role')
+				->toggle('admins', FALSE)
+				->toggle('jobbers', FALSE);
 
-			$users = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
-			$admins = $form->addMultiSelect2('admins', 'Administrators', $users)
+			$companyUsers = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
+			$admins = $form->addMultiSelect2('admins', 'Administrators', $companyUsers)
 				->setOption('id', 'admins');
 			$admins->addConditionOn($form['add'], Form::EQUAL, FALSE)
 				->setRequired('Company must have administrator');
+
+			$form->addMultiSelect2('jobbers', 'Job managers', $companyUsers)
+				->setOption('id', 'jobbers');
 
 			$mail = $form->addText('userMail', 'User Mail')
 				->setOption('id', 'user-name');
@@ -107,6 +101,9 @@ class CompanyInfo extends BaseControl
 				->setOption('id', 'user-password');
 			$password->addConditionOn($form['add'], Form::EQUAL, TRUE)
 				->addRule(Form::FILLED, 'Must be filled');
+			$roles = $this->companyFacade->getRolesNames();
+			$form->addSelect2('companyRole', 'Role', $roles)
+				->setOption('id', 'user-role');
 		}
 
 		$form->addSubmit('save', 'Save');
@@ -137,13 +134,11 @@ class CompanyInfo extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		if ($this->canEditInfo) {
+		if ($this->user->isAllowed('company', 'edit')) {
 			$this->company->name = $values->name;
 			$this->company->companyId = $values->companyId;
 			$this->company->address = $values->address;
-		}
 
-		if ($this->canEditUsers) {
 			if ($values->add) {
 				$roleRepo = $this->em->getRepository(Role::getClassName());
 				$userRepo = $this->em->getRepository(Entity\User::getClassName());
@@ -156,8 +151,11 @@ class CompanyInfo extends BaseControl
 
 				$this->usersRoles[$admin->id][] = CompanyRole::ADMIN;
 			} else {
-				foreach ($values->admins as $adminId) {
-					$this->usersRoles[$adminId][] = CompanyRole::ADMIN;
+				foreach ($values->admins as $userId) {
+					$this->usersRoles[$userId][] = CompanyRole::ADMIN;
+				}
+				foreach ($values->jobbers as $userId) {
+					$this->usersRoles[$userId][] = CompanyRole::JOBBER;
 				}
 			}
 		}
@@ -168,30 +166,33 @@ class CompanyInfo extends BaseControl
 	{
 		$this->em->persist($this->company);
 		$this->em->flush();
-		if ($this->canEditUsers) {
+
+		if ($this->user->isAllowed('company', 'edit')) {
 			$this->companyFacade->clearPermissions($this->company);
 			foreach ($this->usersRoles as $userId => $userRoles) {
 				$this->companyFacade->addPermission($this->company, $userId, $userRoles);
 			}
 		}
+
 		return $this;
 	}
 
 	/** @return array */
 	protected function getDefaults()
 	{
+		$companyRoleRepo = $this->em->getRepository(CompanyRole::getClassName());
+		$companyRole = $companyRoleRepo->findOneByName(CompanyRole::ADMIN);
 		$values = [
 			'name' => $this->company->name,
 			'companyId' => $this->company->companyId,
 			'address' => $this->company->address,
+			'companyRole' => $companyRole->id,
 		];
-		if ($this->canEditUsers) {
-			foreach ($this->company->adminAccesses as $adminPermission) {
-				$values['admins'][] = $adminPermission->user->id;
-			}
-			if ($this->selectedUser) {
-				$values['admins'][] = $this->selectedUser->id;
-			}
+		foreach ($this->company->adminAccesses as $permission) {
+			$values['admins'][] = $permission->user->id;
+		}
+		foreach ($this->company->jobberAccesses as $permission) {
+			$values['jobbers'][] = $permission->user->id;
 		}
 		return $values;
 	}
@@ -211,32 +212,7 @@ class CompanyInfo extends BaseControl
 		return $this;
 	}
 
-	public function setUser(User $user)
-	{
-		$this->user = $user;
-		$this->canEditInfo = $this->user->isAllowed('company', 'edit');
-		$this->canEditUsers = $this->user->isAllowed('company', 'edit');
-	}
-
-	public function selectUser(Entity\User $user)
-	{
-		$this->selectedUser = $user;
-	}
-
 	// </editor-fold>
-
-	/** @return CompanyUser */
-	public function createComponentEditUserForm()
-	{
-		$control = $this->iCompanyUserFactory->create();
-		$control->onAfterSave = function (Entity\User $saved) {
-			$this->selectUser($saved);
-			$message = $this->translator->translate('User \'%user%\' was successfully saved.', ['user' => (string)$saved]);
-			$this->flashMessage($message, 'success');
-			$this->redrawControl('companyInfo');
-		};
-		return $control;
-	}
 }
 
 interface ICompanyInfoFactory
