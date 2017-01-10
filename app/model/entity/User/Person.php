@@ -34,11 +34,11 @@ use Nette\Utils\Strings;
  * @property string $mailHome
  * @property Address $address
  * @property Image $photo
- * @property string $facebookLink
- * @property string $twitterLink
- * @property string $googleLink
+ * @property string $behanceLink
+ * @property string $dribbbleLink
+ * @property string $githubLink
  * @property string $linkedinLink
- * @property string $pinterestLink
+ * @property string $stackOverflowLink
  */
 class Person extends BaseEntity
 {
@@ -97,19 +97,19 @@ class Person extends BaseEntity
 	protected $address;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $facebookLink;
+	protected $behanceLink;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $twitterLink;
+	protected $dribbbleLink;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $googleLink;
+	protected $githubLink;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
 	protected $linkedinLink;
 
 	/** @ORM\Column(type="string", length=256, nullable=true) */
-	protected $pinterestLink;
+	protected $stackOverflowLink;
 
 	public function __toString()
 	{

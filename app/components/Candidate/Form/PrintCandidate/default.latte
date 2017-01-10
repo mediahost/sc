@@ -49,19 +49,19 @@
 			</div>
 			<div class="col-md-3 text-right">
 				<div class="social-links">
-					<a n:if="$candidate->person->facebookLink"
-							class="social ifacebook" target="_blank"
-							href="{$candidate->person->facebookLink}">
-						<span class="fa fa-facebook"></span>
+					<a n:if="$candidate->person->behanceLink"
+							class="social behance" target="_blank"
+							href="{$candidate->person->behanceLink}">
+						<span class="fa fa-behance"></span>
 					</a>
-					<a n:if="$candidate->person->twitterLink"
-							class="social twitter" target="_blank"
-							href="{$candidate->person->twitterLink}">
-						<span class="fa fa-twitter"></span>
+					<a n:if="$candidate->person->dribbbleLink"
+							class="social dribbble" target="_blank"
+							href="{$candidate->person->dribbbleLink}">
+						<span class="fa fa-dribbble"></span>
 					</a>
-					<a n:if="$candidate->person->googleLink"
+					<a n:if="$candidate->person->githubLink"
 							class="social github" target="_blank"
-							href="{$candidate->person->googleLink}">
+							href="{$candidate->person->githubLink}">
 						<span class="fa fa-github-alt"></span>
 					</a>
 					<a n:if="$candidate->person->linkedinLink"
@@ -69,9 +69,9 @@
 							href="{$candidate->person->linkedinLink}">
 						<span class="fa fa-linkedin"></span>
 					</a>
-					<a n:if="$candidate->person->pinterestLink"
+					<a n:if="$candidate->person->stackOverflowLink"
 							class="social stackoverflow" target="_blank"
-							href="{$candidate->person->pinterestLink}">
+							href="{$candidate->person->stackOverflowLink}">
 						<span class="fa fa-stack-overflow"></span>
 					</a>
 					{if $showNotes && isset($match) && $identity->isAllowed('companyNotes', 'view')}

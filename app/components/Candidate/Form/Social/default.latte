@@ -1,112 +1,24 @@
 {form form class => "ajax form-horizontal group-border stripped"}
 	<table>
-		<tr>
+		<tr n:foreach="$items as $key => $item">
 			<th>
-				<i class="fa fa-facebook-square"></i>
-				Facebook:
+				<i class="{$item['icon']}"></i>
+				{$item['name']}:
 			</th>
 			<td>
 				<div class="data">
-					<a n:if="$editable  &&  !$links['facebook']" href="#" class="edit empty">
+					<a n:if="$editable && !$item['link']" href="#" class="edit empty">
 						<em>{_'Click here to add your link'}</em>
 					</a>
-					<a n:if="$links['facebook']" href="{$links['facebook']}" target="_blank">
-						{$links['facebook']|truncate:50}
+					<a n:if="$item['link']" href="{$item['link']}" target="_blank">
+						{$item['link']|truncate:50}
 					</a>
 					<a n:if="$editable" href="#" class="edit">
 						<i class="fa fa-edit"></i>
 					</a>
 				</div>
 				<div class="editor">
-					<input n:name="facebook" type="text" class="form-control" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<i class="fa fa-twitter"></i>
-				Twitter:
-			</th>
-			<td>
-				<div class="data">
-					<a n:if="$editable  &&  !$links['twitter']" href="#" class="edit empty">
-						<em>{_'Click here to add your link'}</em>
-					</a>
-					<a n:if="$links['twitter']" href="{$links['twitter']}" target="_blank">
-						{$links['twitter']|truncate:50}
-					</a>
-					<a n:if="$editable" href="#" class="edit">
-						<i class="fa fa-edit"></i>
-					</a>
-				</div>
-				<div class="editor">
-					<input n:name="twitter" type="text" class="form-control" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<i class="fa fa-github"></i>
-				Github:
-			</th>
-			<td>
-				<div class="data">
-					<a n:if="$editable  &&  !$links['google']" href="#" class="edit empty">
-						<em>{_'Click here to add your link'}</em>
-					</a>
-					<a  n:if="$links['google']" href="{$links['google']}" target="_blank">
-						{$links['google']|truncate:50}
-					</a>
-					<a n:if="$editable" href="#" class="edit">
-						<i class="fa fa-edit"></i>
-					</a>
-				</div>
-				<div class="editor">
-					<input n:name="google" type="text" class="form-control" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<i class="fa fa-linkedin"></i>
-				LinkedIn:
-			</th>
-			<td>
-				<div class="data">
-					<a n:if="$editable  &&  !$links['linkedin']" href="#" class="edit empty">
-						<em>{_'Click here to add your link'}</em>
-					</a>
-					<a  n:if="$links['linkedin']" href="{$links['linkedin']}" target="_blank">
-						{$links['linkedin']|truncate:50}
-					</a>
-					<a n:if="$editable" href="#" class="edit">
-						<i class="fa fa-edit"></i>
-					</a>
-				</div>
-				<div class="editor">
-					<input n:name="linkedin" type="text" class="form-control" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<i class="fa fa-stack-overflow"></i>
-				Stack Overflow:
-			</th>
-			<td>
-				<div class="data">
-					<a n:if="$editable  &&  !$links['pinterest']" href="" class="edit empty">
-						<em>{_'Click here to add your link'}</em>
-					</a>
-					<a  n:if="$links['pinterest']" href="{$links['pinterest']}" target="_blank">
-						{$links['pinterest']|truncate:50}
-					</a>
-					<a n:if="$editable" href="#" class="edit">
-						<i class="fa fa-edit"></i>
-					</a>
-				</div>
-				<div class="editor">
-					<input n:name="pinterest" type="text" class="form-control" />
+					<input n:name="$key" type="text" class="form-control"/>
 				</div>
 			</td>
 		</tr>
@@ -114,7 +26,7 @@
 			<th></th>
 			<td>
 				<div>
-					<input type="submit" class="form-control btn btn-primary input-small" value="Save" />
+					<input type="submit" class="form-control btn btn-primary input-small" value="Save"/>
 				</div>
 			</td>
 		</tr>

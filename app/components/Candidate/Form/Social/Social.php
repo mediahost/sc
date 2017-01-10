@@ -23,7 +23,7 @@ class Social extends BaseControl
 
 	public function render()
 	{
-		$this->template->links = $this->getLinks();
+		$this->template->items = $this->getItems();
 		$this->template->editable = $this->editable;
 		parent::render();
 	}
@@ -36,11 +36,11 @@ class Social extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new MetronicFormRenderer());
 
-		$form->addText('facebook', 'Facebook');
-		$form->addText('twitter', 'Twitter');
-		$form->addText('google', 'Github:');
-		$form->addText('linkedin', 'LinkedIn');
-		$form->addText('pinterest', 'Stack Overflow');
+		$form->addText('behanceLink', 'Behance');
+		$form->addText('dribbbleLink', 'Dribbble');
+		$form->addText('githubLink', 'Github');
+		$form->addText('linkedinLink', 'LinkedIn');
+		$form->addText('stackOverflowLink', 'Stack Overflow');
 
 		$form->addSubmit('save', 'Save');
 
@@ -58,11 +58,11 @@ class Social extends BaseControl
 
 	protected function load(ArrayHash $values)
 	{
-		$this->person->facebookLink = $values['facebook'];
-		$this->person->twitterLink = $values['twitter'];
-		$this->person->googleLink = $values['google'];
-		$this->person->linkedinLink = $values['linkedin'];
-		$this->person->pinterestLink = $values['pinterest'];
+		$this->person->behanceLink = $values['behanceLink'];
+		$this->person->dribbbleLink = $values['dribbbleLink'];
+		$this->person->githubLink = $values['githubLink'];
+		$this->person->linkedinLink = $values['linkedinLink'];
+		$this->person->stackOverflowLink = $values['stackOverflowLink'];
 	}
 
 	protected function save()
@@ -75,11 +75,11 @@ class Social extends BaseControl
 	protected function getDefaults()
 	{
 		$values = [];
-		$values['facebook'] = $this->person->facebookLink;
-		$values['twitter'] = $this->person->twitterLink;
-		$values['google'] = $this->person->googleLink;
-		$values['linkedin'] = $this->person->linkedinLink;
-		$values['pinterest'] = $this->person->pinterestLink;
+		$values['behanceLink'] = $this->person->behanceLink;
+		$values['dribbbleLink'] = $this->person->dribbbleLink;
+		$values['githubLink'] = $this->person->githubLink;
+		$values['linkedinLink'] = $this->person->linkedinLink;
+		$values['stackOverflowLink'] = $this->person->stackOverflowLink;
 		return $values;
 	}
 
@@ -90,32 +90,49 @@ class Social extends BaseControl
 		}
 	}
 
-	private function getLinks()
+	private function getItems()
 	{
-		$links = [
-			'facebook' => $this->person->facebookLink,
-			'twitter' => $this->person->twitterLink,
-			'google' => $this->person->googleLink,
-			'linkedin' => $this->person->linkedinLink,
-			'pinterest' => $this->person->pinterestLink
+		$items = [
+			'behanceLink' => [
+				'icon' => 'fa fa-behance-square',
+				'name' => 'Behance',
+				'link' => $this->normalizeLink($this->person->behanceLink),
+			],
+			'dribbbleLink' => [
+				'icon' => 'fa fa-dribbble',
+				'name' => 'Dribble',
+				'link' => $this->normalizeLink($this->person->dribbbleLink),
+			],
+			'githubLink' => [
+				'icon' => 'fa fa-github',
+				'name' => 'Github',
+				'link' => $this->normalizeLink($this->person->githubLink),
+			],
+			'linkedinLink' => [
+				'icon' => 'fa fa-linkedin',
+				'name' => 'LinkedIn',
+				'link' => $this->normalizeLink($this->person->linkedinLink),
+			],
+			'stackOverflowLink' => [
+				'icon' => 'fa fa-stack-overflow',
+				'name' => 'Stack Overflow',
+				'link' => $this->normalizeLink($this->person->stackOverflowLink),
+			],
 		];
-		$links = $this->normalizeLinks($links);
-		return $links;
+		return $items;
 	}
 
 	/**
 	 * Add http protocol
-	 * @param array $links
+	 * @param array $link
 	 * @return array
 	 */
-	private function normalizeLinks($links)
+	private function normalizeLink($link)
 	{
-		foreach ($links as &$link) {
-			if (strlen($link) && strpos($link, 'http') === FALSE) {
-				$link = 'http://' . $link;
-			}
+		if (strlen($link) && strpos($link, 'http') === FALSE) {
+			$link = 'http://' . $link;
 		}
-		return $links;
+		return $link;
 	}
 
 	public function setPerson(Person $person)
