@@ -51,9 +51,16 @@ class Skills extends BaseControl
 		parent::render();
 	}
 
-	public function handleInputChange($name, $value)
+	public function handleResetSkill($skillId, $snippet)
 	{
-		//TODO handle only one field
+		foreach ($this->cv->skillKnows as $skillKnow) {
+			if ($skillKnow->skill->id == $skillId) {
+				$this->cv->removeSkill($skillKnow);
+				break;
+			}
+		}
+		$cvRepo = $this->em->getRepository(Cv::getClassName());
+		$cvRepo->save($this->cv);
 	}
 
 	protected function createComponentForm()

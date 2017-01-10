@@ -24,7 +24,7 @@
 
 {block content}
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-6">
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -41,6 +41,28 @@
 				</div>
 			</div>
 
+		</div>
+
+
+		<div class="col-md-6" n:if="!$companyEntity->isNew()">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">{_'Company address'}</h4>
+				</div>
+				<div n:snippet="companyAddress" class="panel-body" data-editable="">
+					<div class="row">
+						<p class="editable-preview">
+							<i class="fa fa-building"></i>
+							{$companyEntity->address->format()}
+							<i  class="fa fa-edit editable-icon" data-target="addressForm"></i>
+						</p>
+					</div>
+					<div class="row editable-form" data-form="addressForm">
+						{control companyAddress}
+					</div>
+
+				</div>
+			</div>
 		</div>
 	</div>
 {/block}

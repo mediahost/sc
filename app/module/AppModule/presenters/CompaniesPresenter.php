@@ -2,12 +2,15 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\Company\CompanyAddress;
 use App\Components\Company\CompanyImages;
 use App\Components\Company\CompanyInfo;
+use App\Components\Company\ICompanyAddressFactory;
 use App\Components\Company\ICompanyImagesFactory;
 use App\Components\Company\ICompanyInfoFactory;
 use App\Components\Grids\Company\CompaniesGrid;
 use App\Components\Grids\Company\ICompaniesGridFactory;
+use App\Model\Entity\Address;
 use App\Model\Entity\Company;
 use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
@@ -33,6 +36,9 @@ class CompaniesPresenter extends BasePresenter
 
 	/** @var ICompaniesGridFactory @inject */
 	public $iCompaniesGridFactory;
+
+	/** @var ICompanyAddressFactory @inject */
+	public $companyAddresFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -160,7 +166,28 @@ class CompaniesPresenter extends BasePresenter
 		$control->onAfterSave = function (Company $saved) {
 			$message = $this->translator->translate('Company \'%company%\' was successfully saved.', ['company' => (string)$saved]);
 			$this->flashMessage($message, 'success');
-			$this->redirect('default');
+			if ($saved->isNew()) {
+				$this->redirect('edit', $saved->id);
+			} else {
+				$this->redirect('default');
+			}
+
+		};
+		return $control;
+	}
+
+	/** @return CompanyAddress */
+	public function createComponentCompanyAddress()
+	{
+		$control = $this->companyAddresFactory->create()
+			->setAjax(true, true)
+			->setAddress($this->companyEntity->address);
+		$control->onAfterSave = function (Address $saved) {
+			if (!$this->companyEntity->address) {
+				$this->companyEntity->address = $saved;
+				$this->em->persist($this->companyEntity);
+			}
+			$this->redrawControl('companyAddress');
 		};
 		return $control;
 	}
