@@ -143,6 +143,9 @@ class JobsGrid extends BaseControl
 			->setIcon('fa fa-edit');
 
 		$grid->addActionHref('delete', 'Delete')
+			->setCustomHref(function (Job $item) {
+				return $this->presenter->link('Job:delete', $item->id);
+			})
 			->setIcon('fa fa-trash-o')
 			->setConfirm(function ($item) {
 				$message = $this->translator->translate('Are you sure you want to delete \'%s\'?');
