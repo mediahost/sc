@@ -53,7 +53,7 @@ abstract class BasePresenter extends BaseBasePresenter
 		parent::beforeRender();
 		$this->template->isCompleteAccount = $this->isCompleteAccount();
 		$this->template->showLeftSidebar = !$this->companyPermission || $this->companyPermission->isAllowed('sidebar-menu');
-		$this->template->showRightSidebar = !$this->companyPermission || $this->companyPermission->isAllowed('sidebar-menu');
+		$this->template->showRightSidebar = FALSE;
 		$this->template->openRightSidebar = $this->openRightSideBar;
 
 		$this->template->sender = $this->sender;
