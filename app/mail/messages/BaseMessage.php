@@ -5,12 +5,13 @@ namespace App\Mail\Messages;
 use App\Extensions\Settings\SettingsStorage;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Translation\Translator;
-use Latte\Engine;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\ITemplateFactory;
 use Nette\Http\Request;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
+use Nette\Mail\SmtpException;
+use Tracy\Debugger;
 
 abstract class BaseMessage extends Message
 {
@@ -103,7 +104,11 @@ abstract class BaseMessage extends Message
 	public function send()
 	{
 		$this->beforeSend();
-		$this->mailer->send($this);
+		try {
+			$this->mailer->send($this);
+		} catch (SmtpException $e) {
+			Debugger::log($e->getMessage(), 'smtp');
+		}
 		$this->afterSend();
 	}
 
