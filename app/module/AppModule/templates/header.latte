@@ -57,7 +57,7 @@
 											n:if="$company->id !== $allowedCompany->id">
 
 										<a n:href="switchCompany! 'companyId' => $allowedCompany->id">
-											<img src="{$allowedCompany|foto:25}"
+											<img src="{$allowedCompany|foto:25,25}"
 												 alt="{$allowedCompany}"
 												 class="image mr10"/>{$allowedCompany}
 										</a>
@@ -68,7 +68,7 @@
 					</li>
 					<li n:class="$isCompleteAccount ? dropdown">
 						<a href="#" n:class="$isCompleteAccount ? dropdown-toggle, avatar"{if $isCompleteAccount} data-toggle="dropdown"{/if}>
-							<img src="{$person|foto:50,50}" alt="" class="image"/>
+							<img src="{$person|foto:50}" alt="" class="image"/>
 							<span class="txt">{$identity->mail}</span>
 							<b class="caret" n:if="$isCompleteAccount"></b>
 						</a>

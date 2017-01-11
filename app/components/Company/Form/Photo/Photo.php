@@ -82,7 +82,7 @@ class Photo extends BaseControl
 	private function checkEntityExistsBeforeRender()
 	{
 		if (!$this->company) {
-			throw new BaseControlException('Use setPerson(\App\Model\Entity\Person) before render');
+			throw new BaseControlException('Use setCompany(\App\Model\Entity\Company) before render');
 		}
 	}
 
