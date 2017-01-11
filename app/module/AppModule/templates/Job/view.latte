@@ -164,7 +164,7 @@
 </div>
 
 <div class="row">
-	{if $currentState}
+	{if isset($currentState) && $currentState}
 		<div class="col-md-12">
 			<div class="page-header">
 				{if $stateName === App\Model\Entity\Match::STATE_MATCHED_ONLY}

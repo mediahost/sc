@@ -53,7 +53,7 @@
 					<div class="row">
 						<p class="editable-preview">
 							<i class="fa fa-building"></i>
-							{$companyEntity->address->format()}
+							{if $companyEntity->address}{$companyEntity->address->format()}{/if}
 							<i  class="fa fa-edit editable-icon" data-target="addressForm"></i>
 						</p>
 					</div>

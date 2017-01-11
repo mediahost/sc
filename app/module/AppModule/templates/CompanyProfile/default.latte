@@ -36,7 +36,7 @@
 
 					<p class="editable-preview">
 						<i class="fa fa-building"></i>
-						{$company->address->format()}
+						{if $company && $company->address}{$company->address->format()}{/if}
 						<i n:if="$canEdit" class="fa fa-edit editable-icon" data-target="addressForm"></i>
 					</p>
 				</div>
