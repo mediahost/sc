@@ -5,7 +5,7 @@ namespace App\Components\Cv;
 use App\Components\BaseControl;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Skill;
-use App\Model\Facade\SkillFacade;
+use App\Model\Entity\SkillCategory;
 use Nette\Application\UI\Multiplier;
 
 class SkillKnowList extends BaseControl
@@ -16,25 +16,29 @@ class SkillKnowList extends BaseControl
 	/** @var ISkillKnowControlFactory @inject */
 	public $skillKnowControlFactory;
 
-	/** @var SkillFacade @inject */
-	public $skillFacade;
-
 	/** @var Cv */
 	private $cv;
+
+	/** @var SkillCategory[] */
+	private $categories;
 
 
 
 	public function render() {
 		$this->setTemplateFile('SkillKnowList');
-		$categories = $this->skillFacade->getTopCategories();
-
-		$this->template->categories = $categories;
+		$this->template->categories = $this->categories;
 		parent::render();
 	}
 
 	public function setCv(Cv $cv)
 	{
 		$this->cv = $cv;
+		return $this;
+	}
+
+	public function setCategories($categories)
+	{
+		$this->categories = $categories;
 		return $this;
 	}
 

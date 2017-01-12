@@ -9,6 +9,7 @@ use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity;
 use App\Model\Facade\CvFacade;
+use App\Model\Facade\SkillFacade;
 use Doctrine\ORM\EntityNotFoundException;
 
 class CvEditorPresenter extends BasePresenter
@@ -66,6 +67,9 @@ class CvEditorPresenter extends BasePresenter
 
 	/** @var Cv\ISkillKnowListFactory @inject */
 	public $skillKnowListFactory;
+
+	/** @var SkillFacade @inject */
+	public $skillFacade;
 
 	/** @var Entity\Cv */
 	private $cv;
@@ -222,7 +226,9 @@ class CvEditorPresenter extends BasePresenter
 	/** @return SkillKnowList */
 	public function createComponentSkillKnowList()
 	{
+		$categories = $this->skillFacade->getTopCategories();
 		$control = $this->skillKnowListFactory->create()
+			->setCategories($categories)
 			->setCv($this->cv);
 		return $control;
 	}
