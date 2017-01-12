@@ -64,6 +64,9 @@ class CvEditorPresenter extends BasePresenter
 	/** @var ICompleteCvFactory @inject */
 	public $iCompleteCvFactory;
 
+	/** @var Cv\ISkillKnowListFactory @inject */
+	public $skillKnowListFactory;
+
 	/** @var Entity\Cv */
 	private $cv;
 
@@ -213,6 +216,14 @@ class CvEditorPresenter extends BasePresenter
 		$control->setCv($this->cv);
 		$control->setAjax(TRUE, TRUE);
 		$control->onAfterSave = $this->afterCvSave;
+		return $control;
+	}
+
+	/** @return SkillKnowList */
+	public function createComponentSkillKnowList()
+	{
+		$control = $this->skillKnowListFactory->create()
+			->setCv($this->cv);
 		return $control;
 	}
 
