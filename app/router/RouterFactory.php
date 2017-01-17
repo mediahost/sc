@@ -25,6 +25,7 @@ class RouterFactory
 		$router[] = $fotoRouter = new RouteList('Foto');
 		$router[] = $apiRouter = new RouteList('Api');
 		$router[] = $adminRouter = new RouteList('App');
+		$router[] = $wpRouter = new RouteList('Front');
 		$router[] = $frontRouter = new RouteList('Front');
 
 		// <editor-fold desc="Foto">
@@ -82,6 +83,8 @@ class RouterFactory
 			'action' => 'default',
 			'id' => NULL,
 		]);
+
+		$wpRouter[] = new Route('<slug>', 'Homepage:');
 
 		// </editor-fold>
 
