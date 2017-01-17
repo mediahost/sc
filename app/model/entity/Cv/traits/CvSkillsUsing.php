@@ -2,6 +2,7 @@
 
 namespace App\Model\Entity\Traits;
 
+use App\Model\Entity\Skill;
 use App\Model\Entity\SkillKnow;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -33,6 +34,15 @@ trait CvSkillsUsing
 		$this->newSkills->add($skillKnow);
 
 		return $this;
+	}
+
+	public function getSkillKnow(Skill $skill)
+	{
+		foreach ($this->skillKnows as $skillKnow) {
+			if ($skillKnow->skill->id == $skill->id) {
+				return $skillKnow;
+			}
+		}
 	}
 
 	public function clearSkills()

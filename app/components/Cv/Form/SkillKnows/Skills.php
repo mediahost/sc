@@ -3,7 +3,6 @@
 namespace App\Components\Cv;
 
 use App\Components\BaseControl;
-use App\Forms\Controls\TextInputBased\TouchSpin;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Cv;
@@ -61,6 +60,7 @@ class Skills extends BaseControl
 		}
 		$cvRepo = $this->em->getRepository(Cv::getClassName());
 		$cvRepo->save($this->cv);
+		$this->presenter->redirect('skills');
 	}
 
 	protected function createComponentForm()
@@ -115,7 +115,6 @@ class Skills extends BaseControl
 			$newSkillKnow->cv = $this->cv;
 			$this->cv->skillKnow = $newSkillKnow;
 		}
-		$this->cv->removeOldSkillKnows();
 		return $this;
 	}
 

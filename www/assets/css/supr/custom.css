@@ -151,3 +151,8 @@ section.content {
 	padding: 15px;
 	display: none;
 }
+.btn-round {
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+}

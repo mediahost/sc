@@ -79,6 +79,8 @@ services:
 	- {implement: App\Components\Cv\ILivePreviewFactory, inject: yes}
 	- {implement: App\Components\Cv\ISendEmailFactory, inject: yes}
 	- {implement: App\Components\Cv\ICvDocumentFactory, inject: yes}
+	- {implement: App\Components\Cv\ISkillKnowControlFactory, inject: yes}
+	- {implement: App\Components\Cv\ISkillKnowListFactory, inject: yes}
 
 	# Skills
 	- {implement: App\Components\Skills\ISkillFactory, inject: yes}
