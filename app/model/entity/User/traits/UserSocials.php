@@ -56,6 +56,14 @@ trait UserSocials
 		return $this;
 	}
 
+	public function clearSocials()
+	{
+		$this->clearFacebook();
+		$this->clearTwitter();
+		$this->clearLinkedin();
+		return $this;
+	}
+
 	public function getSocialName()
 	{
 		if ($this->linkedin) { // prefer LinkedIn

@@ -63,12 +63,9 @@ class User extends BaseControl
 		$form->setRenderer(new MetronicHorizontalFormRenderer(2, 10));
 
 		$form->addGroup();
-		$mail = $form->addText('mail', 'E-mail')
+		$form->addText('mail', 'E-mail')
 			->addRule(Form::EMAIL, 'Fill right format')
 			->addRule(Form::FILLED, 'Mail must be filled');
-		if (!$this->user->isNew()) {
-			$mail->setDisabled();
-		}
 
 		$password = $form->addText('password', 'Password');
 		if ($this->user->isNew()) {
@@ -128,7 +125,10 @@ class User extends BaseControl
 	public function formValidate(Form $form)
 	{
 		$values = $form->getValues();
-		if ($this->user->isNew() && !$this->userFacade->isUnique($values['mail'])) {
+		if (!($this->user->isNew() ?
+			$this->userFacade->isUnique($values['mail']) :
+			$this->userFacade->isUnique($values['mail'], $this->user->mail))
+		) {
 			$message = $this->translator->translate('E-mail \'%mail%\' is already registered.', ['mail' => $values['mail']]);
 			$form['mail']->addError($message);
 		}
@@ -148,8 +148,9 @@ class User extends BaseControl
 
 	private function load(ArrayHash $values)
 	{
-		if (isset($values->mail)) {
+		if (isset($values->mail) && $values->mail != $this->user->mail) {
 			$this->user->mail = $values->mail;
+			$this->user->clearSocials();
 		}
 		if ($values->password !== NULL && $values->password !== "") {
 			$this->user->setPassword($values->password);
