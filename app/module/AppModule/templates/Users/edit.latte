@@ -9,7 +9,15 @@
 	<span class="divider"><i class="s16 icomoon-icon-arrow-right-3"></i></span>
 	<li class="active">
 		{if $userEntity->isNew()}
-			{_'New user'}
+			{if $userEntity->isAdmin()}
+				{_'New Admin'}
+			{elseif $userEntity->isCompany()}
+				{_'New Company user'}
+			{elseif $userEntity->isCandidate()}
+				{_'New Candidate'}
+			{else}
+				{_'New User'}
+			{/if}
 		{else}
 			{_'User #%id%', ['id' => $userEntity->id]}
 		{/if}
@@ -24,7 +32,15 @@
 				<div class="panel-heading">
 					<h4 class="panel-title">
 						{if $userEntity->isNew()}
-							{_'New user'}
+							{if $userEntity->isAdmin()}
+								{_'New Admin'}
+							{elseif $userEntity->isCompany()}
+								{_'New Company user'}
+							{elseif $userEntity->isCandidate()}
+								{_'New Candidate'}
+							{else}
+								{_'New User'}
+							{/if}
 						{else}
 							{_'User #%id%', ['id' => $userEntity->id]}
 						{/if}

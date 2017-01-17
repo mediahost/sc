@@ -1,19 +1,23 @@
 {if $item->roles}
-    {foreach $item->roles as $role}
-        {if $role == 'signed'}
-            {var $color = 'label-info'}
-        {elseif $role == 'candidate'}
-            {var $color = 'label-primary'}
-        {elseif $role == 'company'}
-            {var $color = 'label-success'}
-        {elseif $role == 'admin'}
-            {var $color = 'label-warning'}
-        {elseif $role == 'superadmin'}
-            {var $color = 'label-danger'}
-        {else}
-            {var $color = 'label-default'}
-        {/if}
+	{foreach $item->roles as $role}
+		{if $role == 'signed'}
+			{var $color = 'label-info'}
+		{elseif $role == 'candidate'}
+			{var $color = 'label-primary'}
+		{elseif $role == 'company'}
+			{var $color = 'label-success'}
+		{elseif $role == 'admin'}
+			{var $color = 'label-warning'}
+		{elseif $role == 'superadmin'}
+			{var $color = 'label-danger'}
+		{else}
+			{var $color = 'label-default'}
+		{/if}
 
-        <span class="label {$color}">{$role}</span>
-    {/foreach}
+		<a href="{plink Profile: $item->person->candidate->profileId}"
+				n:tag-if="$item->isInRole(App\Model\Entity\Role::CANDIDATE)"
+				data-toggle="tooltip" data-placement="top" data-original-title="{_'Visit profile'}">
+			<span class="label {$color}">{$role}</span>
+		</a>
+	{/foreach}
 {/if}
