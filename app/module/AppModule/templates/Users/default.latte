@@ -10,11 +10,11 @@
 	<div class="row">
 		<div class="col-md-12">
 			<p class="text-right">
-				<a n:href="Users:addAdmin"
-						n:if="$user->isAllowed('users', 'addAdmin')"
+				<a n:href="Users:addCandidate"
+						n:if="$user->isAllowed('users', 'addCandidate')"
 						class="btn btn-primary">
 					<i class="fa fa-plus"></i>
-					{_'New Admin'}
+					{_'New Candidate'}
 				</a>
 				<a n:href="Users:addCompany"
 						n:if="$user->isAllowed('users', 'addCompany')"
@@ -22,11 +22,11 @@
 					<i class="fa fa-plus"></i>
 					{_'New Company user'}
 				</a>
-				<a n:href="Users:addCandidate"
-						n:if="$user->isAllowed('users', 'addCandidate')"
+				<a n:href="Users:addAdmin"
+						n:if="$user->isAllowed('users', 'addAdmin')"
 						class="btn btn-primary">
 					<i class="fa fa-plus"></i>
-					{_'New Candidate'}
+					{_'New Admin'}
 				</a>
 			</p>
 			{control usersGrid}
