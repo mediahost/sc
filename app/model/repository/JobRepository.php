@@ -18,4 +18,14 @@ class JobRepository extends BaseRepository
 		return $finder->getResult();
 	}
 
+	/**
+	 * @deprecated Use JobFacade::delete() instead
+	 * @param User $entity
+	 */
+	public function delete($entity)
+	{
+		$className = 'App\Model\Facade\JobFacade';
+		throw new RepositoryException('Use ' . $className . '::delete() instead.');
+	}
+
 }

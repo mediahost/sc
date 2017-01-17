@@ -51,7 +51,7 @@ class UserRepository extends BaseRepository
 	 */
 	public function delete($entity)
 	{
-		$className = UserRepository::getClassName();
+		$className = 'App\Model\Facade\UserFacade';
 		throw new RepositoryException('Use ' . $className . '::delete() instead.');
 	}
 

@@ -51,14 +51,6 @@ class Match extends BaseEntity
 
 	use Identifier;
 
-	public function __construct(Job $job, Candidate $candidate)
-	{
-		parent::__construct();
-		$this->job = $job;
-		$this->candidate = $candidate;
-		$this->notes = new ArrayCollection();
-	}
-
 	/** @ORM\ManyToOne(targetEntity="Candidate", inversedBy="matches") */
 	protected $candidate;
 
@@ -97,6 +89,14 @@ class Match extends BaseEntity
 
 	/** @ORM\OneToMany(targetEntity="Note", mappedBy="match", cascade="all") */
 	private $notes;
+
+	public function __construct(Job $job, Candidate $candidate)
+	{
+		parent::__construct();
+		$this->job = $job;
+		$this->candidate = $candidate;
+		$this->notes = new ArrayCollection();
+	}
 
 	public function addAdminNote(User $user, $text)
 	{
