@@ -62,47 +62,41 @@ class CompanyInfo extends BaseControl
 		$form->setTranslator($this->translator);
 		$form->setRenderer(new Bootstrap3FormRenderer());
 
-		if ($this->user->isAllowed('company', 'edit')) {
-			$form->addText('companyId', 'Company ID')
-				->setAttribute('placeholder', 'Company identification')
-				->setRequired('Please enter company\'s identification.');
-			$form->addText('name', 'Name')
-				->setAttribute('placeholder', 'Company name')
-				->setRequired('Please enter your company\'s name.');
-		}
+		$form->addText('companyId', 'Company ID')
+			->setAttribute('placeholder', 'Company identification')
+			->setRequired('Please enter company\'s identification.');
+		$form->addText('name', 'Name')
+			->setAttribute('placeholder', 'Company name')
+			->setRequired('Please enter your company\'s name.');
 
-		if ($this->user->isAllowed('company', 'edit')) {
-			$form->addCheckbox('add', 'Create Company user')
-				->setDefaultValue($this->company->isNew())
-				->addCondition($form::EQUAL, TRUE)
-				->toggle('user-name')
-				->toggle('user-password')
-//				->toggle('user-role')
-//				->toggle('admins', FALSE)
-				->toggle('jobbers', FALSE);
-
-			$companyUsers = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
 //			$admins = $form->addMultiSelect2('admins', 'Administrators', $companyUsers)
 //				->setOption('id', 'admins');
+		$companyUsers = $this->userFacade->getUserMailsInRole($this->roleFacade->findByName(Role::COMPANY));
+		$form->addMultiSelect2('jobbers', 'Job managers', $companyUsers);
+
+		$form->addCheckbox('add', 'Create Company user')
+			->setDefaultValue($this->company->isNew())
+			->addCondition($form::EQUAL, TRUE)
+			->toggle('user-name')
+			->toggle('user-password');
+//				->toggle('user-role')
+//				->toggle('admins', FALSE);
+
 //			$admins->addConditionOn($form['add'], Form::EQUAL, FALSE)
 //				->setRequired('Company must have administrator');
 
-			$form->addMultiSelect2('jobbers', 'Job managers', $companyUsers)
-				->setOption('id', 'jobbers');
-
-			$mail = $form->addText('userMail', 'User Mail')
-				->setOption('id', 'user-name');
-			$mail->addConditionOn($form['add'], Form::EQUAL, TRUE)
-				->addRule(Form::FILLED, 'Must be filled')
-				->addRule(Form::EMAIL, 'Must be email');
-			$password = $form->addText('userPassword', 'User password')
-				->setOption('id', 'user-password');
-			$password->addConditionOn($form['add'], Form::EQUAL, TRUE)
-				->addRule(Form::FILLED, 'Must be filled');
+		$mail = $form->addText('userMail', 'User Mail')
+			->setOption('id', 'user-name');
+		$mail->addConditionOn($form['add'], Form::EQUAL, TRUE)
+			->addRule(Form::FILLED, 'Must be filled')
+			->addRule(Form::EMAIL, 'Must be email');
+		$password = $form->addText('userPassword', 'User password')
+			->setOption('id', 'user-password');
+		$password->addConditionOn($form['add'], Form::EQUAL, TRUE)
+			->addRule(Form::FILLED, 'Must be filled');
 //			$roles = $this->companyFacade->getRolesNames();
 //			$form->addSelect2('companyRole', 'Role', $roles)
 //				->setOption('id', 'user-role');
-		}
 
 		$form->addSubmit('save', 'Save');
 
@@ -141,28 +135,28 @@ class CompanyInfo extends BaseControl
 			$this->company->name = $values->name;
 			$this->company->companyId = $values->companyId;
 
+			if (isset($values->admins)) {
+				foreach ($values->admins as $userId) {
+					$this->usersRoles[$userId][] = CompanyRole::ADMIN;
+				}
+			}
+			if (isset($values->jobbers)) {
+				foreach ($values->jobbers as $userId) {
+					$this->usersRoles[$userId][] = CompanyRole::JOBBER;
+				}
+			}
+
 			if ($values->add) {
 				$roleRepo = $this->em->getRepository(Role::getClassName());
 				$userRepo = $this->em->getRepository(Entity\User::getClassName());
 				$role = $roleRepo->findOneByName(Role::COMPANY);
 
-				$admin = new Entity\User($values->userMail, TRUE);
-				$admin->setPassword($values->userPassword);
-				$admin->addRole($role);
-				$userRepo->save($admin);
+				$companyUser = new Entity\User($values->userMail, TRUE);
+				$companyUser->setPassword($values->userPassword);
+				$companyUser->addRole($role);
+				$userRepo->save($companyUser);
 
-				$this->usersRoles[$admin->id][] = CompanyRole::JOBBER;
-			} else {
-				if (isset($values->admins)) {
-					foreach ($values->admins as $userId) {
-						$this->usersRoles[$userId][] = CompanyRole::ADMIN;
-					}
-				}
-				if (isset($values->jobbers)) {
-					foreach ($values->jobbers as $userId) {
-						$this->usersRoles[$userId][] = CompanyRole::JOBBER;
-					}
-				}
+				$this->usersRoles[$companyUser->id][] = CompanyRole::JOBBER;
 			}
 		}
 		return $this;

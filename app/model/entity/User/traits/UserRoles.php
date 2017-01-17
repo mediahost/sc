@@ -59,6 +59,11 @@ trait UserRoles
 		return $this;
 	}
 
+	public function isAdmin()
+	{
+		return $this->isInRole(Role::ADMIN);
+	}
+
 	public function isCompany()
 	{
 		return !$this->isInRole(Role::CANDIDATE) && $this->isInRole(Role::COMPANY);
@@ -69,7 +74,7 @@ trait UserRoles
 		return $this->isInRole(Role::CANDIDATE);
 	}
 
-	private function isInRole($role)
+	public function isInRole($role)
 	{
 		return in_array($role, $this->getRoles(), TRUE);
 	}

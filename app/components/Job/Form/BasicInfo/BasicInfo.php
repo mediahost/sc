@@ -143,8 +143,11 @@ class BasicInfo extends BaseControl
 		$this->job->salaryFrom = $salaryFrom;
 		$this->job->salaryTo = $salaryTo;
 
-		$accountManager = $this->getAccountManager(isset($values->accountManager) ? $values->accountManager : NULL);
-		$this->job->accountManager = $accountManager;
+		if (isset($values->accountManager) && $values->accountManager) {
+			$this->job->accountManager = $this->getAccountManager($values->accountManager);
+		} else if (!$this->job->accountManager) {
+			$this->job->accountManager = $this->getAccountManager();
+		}
 
 		foreach (explode(',', $values['offers']) as $offer) {
 			if ($offer != '') {
@@ -231,7 +234,7 @@ class BasicInfo extends BaseControl
 		return $users;
 	}
 
-	private function getAccountManager($id)
+	private function getAccountManager($id = NULL)
 	{
 		$userRepo = $this->em->getRepository(User::getClassName());
 		return $userRepo->find($id ? $id : $this->settings->modules->jobs->defaultAccountManagerId);

@@ -62,31 +62,45 @@ class UsersPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('users')
-	 * @privilege('add')
+	 * @privilege('addCandidate')
 	 */
-	public function actionAdd()
+	public function actionAddCandidate()
+	{
+		$this->_actionAddUser(Entity\Role::CANDIDATE);
+	}
+
+	/**
+	 * @secured
+	 * @resource('users')
+	 * @privilege('addCompany')
+	 */
+	public function actionAddCompany()
+	{
+		$this->_actionAddUser(Entity\Role::COMPANY, TRUE);
+	}
+
+	/**
+	 * @secured
+	 * @resource('users')
+	 * @privilege('addAdmin')
+	 */
+	public function actionAddAdmin()
+	{
+		$this->_actionAddUser(Entity\Role::ADMIN);
+	}
+
+	private function _actionAddUser($roleName, $company = FALSE)
 	{
 		$this->userEntity = new Entity\User(NULL, TRUE);
-		$disabledRoles = [
-			Entity\Role::GUEST,
-			Entity\Role::SIGNED,
-			Entity\Role::CANDIDATE,
-			Entity\Role::COMPANY,
-		];
 
-		if ($this->company) {
-			$disabledRoles = [
-				Entity\Role::GUEST,
-				Entity\Role::SIGNED,
-				Entity\Role::CANDIDATE,
-			];
-		}
+		$roleRepo = $this->em->getRepository(Entity\Role::getClassName());
+		$role = $roleRepo->findOneByName($roleName);
+		$this->userEntity->addRole($role);
 
 		/** @var User\User $form */
 		$form = $this['userForm'];
 		$form->setUser($this->userEntity);
-		$form->setDisabledRoles($disabledRoles, (bool)$this->company);
-		if ($this->company) {
+		if ($company && $this->company) {
 			$form->setCompany($this->company);
 		}
 
@@ -184,10 +198,14 @@ class UsersPresenter extends BasePresenter
 	public function createComponentUserForm()
 	{
 		$control = $this->iUserFactory->create();
-		$control->onAfterSave = function (Entity\User $savedUser) {
+		$control->onAfterSave = function (Entity\User $savedUser, $goToCandidate) {
 			$message = $this->translator->translate('User \'%user%\' was successfully saved.', ['user' => (string)$savedUser]);
 			$this->flashMessage($message, 'success');
-			$this->redirect('default');
+			if ($goToCandidate && $savedUser->isCandidate()) {
+				$this->redirect('Profile:', $savedUser->person->candidate->profileId);
+			} else {
+				$this->redirect('default');
+			}
 		};
 		return $control;
 	}

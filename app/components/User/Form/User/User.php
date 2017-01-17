@@ -4,7 +4,7 @@ namespace App\Components\User;
 
 use App\Components\BaseControl;
 use App\Forms\Form;
-use App\Forms\Renderers\Bootstrap3FormRenderer;
+use App\Forms\Renderers\MetronicHorizontalFormRenderer;
 use App\Model\Entity;
 use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\CompanyFacade;
@@ -12,9 +12,7 @@ use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
 use Exception;
 use Kdyby\Doctrine\DuplicateEntryException;
-use Nette\Forms\IControl;
 use Nette\Utils\ArrayHash;
-use Tracy\Debugger;
 
 class User extends BaseControl
 {
@@ -48,14 +46,8 @@ class User extends BaseControl
 	/** @var Entity\Company */
 	private $company;
 
-	/** @var array */
-	private $disabledRoles = [];
-
-	/** @var bool */
-	private $disableChangeRoles = FALSE;
-
-	/** @var array */
-	private $roles;
+	/** @var string */
+	private $companyRole = Entity\CompanyRole::JOBBER;
 
 	/** @var array */
 	private $loadedCompanies = [];
@@ -68,8 +60,9 @@ class User extends BaseControl
 
 		$form = new Form();
 		$form->setTranslator($this->translator);
-		$form->setRenderer(new Bootstrap3FormRenderer());
+		$form->setRenderer(new MetronicHorizontalFormRenderer(2, 10));
 
+		$form->addGroup();
 		$mail = $form->addText('mail', 'E-mail')
 			->addRule(Form::EMAIL, 'Fill right format')
 			->addRule(Form::FILLED, 'Mail must be filled');
@@ -85,40 +78,47 @@ class User extends BaseControl
 				->setOption('description', $helpText);
 		}
 
-		if ($this->user->isNew()) {
-			$role = $form->addMultiSelect('roles', 'Roles', $this->getAllRoles())
-				->setRequired('Select any role');
-			if ($this->disabledRoles) {
-				$role->setDisabled();
-				$role->setOmitted(FALSE);
-			}
-
-			$form->setDefaults($this->getDefaults());
-			$defaultRole = $this->roleFacade->findByName(Entity\Role::CANDIDATE);
-			$firstRole = $this->roleFacade->findByName(current($this->getAllRoles()));
-			if ($defaultRole && array_key_exists($defaultRole->id, $this->getAllRoles())) {
-				$role->setDefaultValue($defaultRole->id);
-				if ($role->isDisabled()) {
-					$role->setValue($defaultRole->id);
-				}
-			} else if ($firstRole && array_key_exists($firstRole->id, $this->getAllRoles())) {
-				$role->setDefaultValue($firstRole->id);
-				if ($role->isDisabled()) {
-					$role->setValue($firstRole->id);
-				}
-			}
-		}
-
-		if ($this->identity->isAllowed('companies', 'edit')) {
+		if ($this->identity->isAllowed('companies', 'edit') && $this->user->isCompany()) {
 			$compayRepo = $this->em->getRepository(Entity\Company::getClassName());
 			$companies = $compayRepo->findPairs('name');
-			$form->addMultiSelect('companyAdmin', 'Admin for companies', $companies);
+			$form->addMultiSelect('companyAccess', 'Access for companies', $companies);
+		}
+
+		if ($this->identity->isAllowed('candidates', 'edit') && $this->user->isCandidate()) {
+			$form->addGroup('Candidate info');
+
+			$form->addSelect('title', 'Title', Entity\Person::getTitleList())
+				->getControlPrototype()->class[] = 'input-small';
+
+			$form->addText('firstname', 'First Name(s)', NULL, 100)
+				->setRequired('Please enter your First Name(s).');
+
+			$form->addText('surname', 'Surname(s)', NULL, 100)
+				->setRequired('Please enter your Surname(s).');
+
+			$form->addRadioList('gender', 'Gender', Entity\Person::getGenderList())
+				->setDefaultValue('x');
+
+			$form->addText('phone', 'Mobile number');
+
+			if ($this->user->isNew()) {
+				$acceptedFiles = [
+					'application/pdf',
+					'application/msword',
+					'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+				];
+				$form->addUpload('cvFile', 'Upload New CV')
+					->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles));
+			}
 		}
 
 		if (!$this->user->isNew()) {
 			$form->setDefaults($this->getDefaults());
 		}
 		$form->addSubmit('save', 'Save');
+		if ($this->identity->isAllowed('candidates', 'edit') && $this->user->isCandidate()) {
+			$form->addSubmit('saveAndCandidate', 'Save & Go to candidate');
+		}
 
 		$form->onValidate[] = $this->formValidate;
 		$form->onSuccess[] = $this->formSucceeded;
@@ -139,7 +139,7 @@ class User extends BaseControl
 		$this->load($values);
 		try {
 			$this->save();
-			$this->onAfterSave($this->user);
+			$this->onAfterSave($this->user, isset($form['saveAndCandidate']) && $form['saveAndCandidate']->submittedBy);
 		} catch (DuplicateEntryException $exc) {
 			$message = $this->translator->translate('E-mail \'%mail%\' is already registred', ['mail' => $values->mail]);
 			$form['mail']->addError($message);
@@ -155,19 +155,24 @@ class User extends BaseControl
 			$this->user->setPassword($values->password);
 		}
 
-		if (isset($values->roles)) {
-			$this->user->clearRoles();
-			foreach ($values->roles as $id) {
-				$roleDao = $this->em->getDao(Entity\Role::getClassName());
-				$item = $roleDao->find($id);
-				if ($item) {
-					$this->user->addRole($item);
-				}
-			}
+		if (isset($values->companyAccess)) {
+			$this->loadedCompanies[$this->companyRole] = $values->companyAccess;
 		}
 
-		if (isset($values->companyAdmin)) {
-			$this->loadedCompanies[Entity\CompanyRole::ADMIN] = $values->companyAdmin;
+		if (isset($values->firstname)) {
+			$this->user->person->firstname = $values->firstname;
+		}
+		if (isset($values->surname)) {
+			$this->user->person->surname = $values->surname;
+		}
+		if (isset($values->gender)) {
+			$this->user->person->gender = $values->gender;
+		}
+		if (isset($values->phone)) {
+			$this->user->person->phoneMobile = $values->phone;
+		}
+		if (isset($values->cvFile) && $values->cvFile->isOk()) {
+			$this->user->person->candidate->cvFile = $values->cvFile;
 		}
 
 		return $this;
@@ -185,25 +190,27 @@ class User extends BaseControl
 			$this->communicationFacade->createSender($this->user);
 		}
 
-		$companies = [];
-		if ($this->company) {
-			$companies[$this->company->id] = $this->company;
-		} else if(isset($this->loadedCompanies[Entity\CompanyRole::ADMIN])) {
-			foreach ($this->loadedCompanies[Entity\CompanyRole::ADMIN] as $companyId) {
-				$companyRepo = $this->em->getRepository(Entity\Company::getClassName());
-				$company = $companyRepo->find($companyId);
-				if ($company) {
-					$companies[$company->id] = $company;
+		if ($this->user->isCompany()) {
+			$companies = [];
+			if ($this->company) {
+				$companies[$this->company->id] = $this->company;
+			} else if (isset($this->loadedCompanies[$this->companyRole])) {
+				foreach ($this->loadedCompanies[$this->companyRole] as $companyId) {
+					$companyRepo = $this->em->getRepository(Entity\Company::getClassName());
+					$company = $companyRepo->find($companyId);
+					if ($company) {
+						$companies[$company->id] = $company;
+					}
 				}
 			}
-		}
-		foreach ($companies as $company) {
-			$companyPermission = $this->companyFacade->findPermission($company, $this->user);
-			if (!$companyPermission) {
-				$this->companyFacade->createPermission($company, $this->user);
-			}
-			if (!$this->communicationFacade->findSender($this->user, $company)) {
-				$this->communicationFacade->createSender($this->user, $company);
+			foreach ($companies as $company) {
+				$companyPermission = $this->companyFacade->findPermission($company, $this->user);
+				if (!$companyPermission) {
+					$this->companyFacade->createPermission($company, $this->user, $this->companyRole);
+				}
+				if (!$this->communicationFacade->findSender($this->user, $company)) {
+					$this->communicationFacade->createSender($this->user, $company);
+				}
 			}
 		}
 
@@ -212,11 +219,15 @@ class User extends BaseControl
 
 	protected function getDefaults()
 	{
-		$adminRole = $this->companyFacade->findRoleByName(Entity\CompanyRole::ADMIN);
+		$role = $this->companyFacade->findRoleByName($this->companyRole);
 		$values = [
 			'mail' => $this->user->mail,
-			'roles' => $this->user->getRolesKeys(),
-			'companyAdmin' => $adminRole ? array_keys($this->user->getCompanies($adminRole)) : [],
+			'companyAccess' => $role ? array_keys($this->user->getCompanies($role)) : [],
+			'title' => $this->user->person->title,
+			'firstname' => $this->user->person->firstname,
+			'surname' => $this->user->person->surname,
+			'gender' => $this->user->person->gender,
+			'phone' => $this->user->person->phoneMobile,
 		];
 		return $values;
 	}
@@ -240,22 +251,6 @@ class User extends BaseControl
 	{
 		$this->company = $company;
 		return $this;
-	}
-
-	public function setDisabledRoles(array $roles, $disableChange = FALSE)
-	{
-		$this->disabledRoles = $roles;
-		$this->disableChangeRoles = $disableChange;
-		return $this;
-	}
-
-	private function getAllRoles()
-	{
-		if ($this->roles === NULL) {
-			$this->roles = $this->userFacade->findLowerRoles($this->identity->roles, TRUE);
-			$this->roles = array_diff($this->roles, $this->disabledRoles);
-		}
-		return $this->roles;
 	}
 
 	// </editor-fold>
