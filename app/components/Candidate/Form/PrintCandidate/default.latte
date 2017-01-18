@@ -1,7 +1,7 @@
 {snippet candidatePrint}
 	<div id="{$id}" class="candidate-item">
 		<div class="row">
-			<div class="col-md-5">
+			<div class="col-md-4">
 				<h4>
 					<a n:ifset="$user"
 							href="{plink Profile: $user->person->candidate->profileId}">
@@ -47,7 +47,7 @@
 					{$match->totalStateTime|date:'d.m.Y H:i:s'}
 				</div>
 			</div>
-			<div class="col-md-3 text-right">
+			<div class="col-md-4 text-right">
 				<div class="social-links">
 					<a n:if="$candidate->person->behanceLink"
 							class="social behance" target="_blank"
@@ -155,10 +155,17 @@
 						</div>
 					{elseif $selectedJob && isset($match)}
 						{if $match->accept}
-							<div class="col-md-12 text-center">
-								<a n:foreach="$matchStates as $stateId => $stateName"
-										n:href="changeState! $selectedJob->id, $stateId"
-										n:class="ajax, btn, $stateId == $match->state ? btn-info">{_$stateName}</a>
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-2">
+										<a href="#rejectReason-{$id}" data-toggle="modal" class="btn btn-danger">{_'Reject'}</a>
+									</div>
+									<div class="col-md-10">
+										<a n:foreach="$matchStates as $stateId => $stateName"
+												n:href="changeState! $selectedJob->id, $stateId"
+												n:class="ajax, btn, $stateId == $match->state ? btn-info">{_$stateName}</a>
+									</div>
+								</div>
 							</div>
 							<div class="col-md-12 pt5">
 								{control customState}
@@ -314,7 +321,7 @@
 		</div>
 	</div>
 
-	<div n:if="$selectedJob && isset($match) && !$match->accept && $match->fullApprove && $match->accept !== FALSE"
+	<div n:if="$selectedJob && isset($match) && $match->fullApprove && $match->accept !== FALSE"
 			class="modal fade jobNotes" id="rejectReason-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
