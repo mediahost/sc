@@ -38,7 +38,7 @@
 								<dl>
 									<dt class="text-muted">{_'Category'}</dt>
 									<dd>{$job->category}</dd>
-									{if $user->isAllowed('job', 'accountManager')}
+									{if $user->isAllowed('job', 'accountManager') || $job->accountManager->id === $user->id}
 										<dt class="text-muted">{_'Account Manager'}</dt>
 										<dd>{$job->accountManager}</dd>
 									{/if}

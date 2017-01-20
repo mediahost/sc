@@ -9,10 +9,12 @@
 {block content}
 	<div class="row">
 		<div class="col-md-12">
-			<a n:href="Job:add 'companyId' => $company->id" data-toggle="modal" class="btn btn-success mr5 mb10">
-				<i class="fa fa-plus"></i>
-				{_'New Job'}
-			</a>
+			<p class="text-right">
+				<a n:href="Job:add 'companyId' => $company->id" class="btn btn-primary">
+					<i class="fa fa-plus"></i>
+					{_'New Job'}
+				</a>
+			</p>
 			{control jobsGrid}
 		</div>
 	</div>

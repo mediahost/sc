@@ -228,8 +228,12 @@ class BasicInfo extends BaseControl
 		$roleRepo = $this->em->getRepository(Role::getClassName());
 		$userRepo = $this->em->getRepository(User::getClassName());
 
-		$role = $roleRepo->findOneByName(Role::ADMIN);
-		$users = $userRepo->findPairsByRoleId($role->id, 'mail');
+		$adminRole = $roleRepo->findOneByName(Role::ADMIN);
+		$users = $userRepo->findPairsByRoleId($adminRole->id, 'mail');
+
+		foreach ($this->job->company->accesses as $access) {
+			$users[$access->user->id] = $access->user->mail;
+		}
 
 		return $users;
 	}
