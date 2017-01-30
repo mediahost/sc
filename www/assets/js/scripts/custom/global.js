@@ -218,6 +218,14 @@ var Global = function () {
 		});
 	}
 
+	var handleConfirm = function () {
+		$(document).on('click', 'a[data-confirm]', function (e) {
+			var $target = $(e.target);
+			var question = $target.attr('data-confirm');
+			return confirm(question);
+		});
+	}
+
 	return {
 		init: function () {
 			$(document).ready(function () {
@@ -235,6 +243,7 @@ var Global = function () {
 				onModalLoad();
 				handleImagUpload();
 				handleEditable();
+				handleConfirm();
 
 				// Global components
 				CustomTrees.init();

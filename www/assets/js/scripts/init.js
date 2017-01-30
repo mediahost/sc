@@ -32,6 +32,7 @@ jQuery(document).ready(function () {
 	Global.handleRightbar();
 	Global.init();
 	Global.handleJobPage();
+	GridoStart.init();
 	Login.init();
 	// PdfPreview.init();
 });
