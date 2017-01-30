@@ -51,8 +51,9 @@ abstract class BasePresenter extends BaseBasePresenter
 	protected function beforeRender()
 	{
 		parent::beforeRender();
+		$showLeftSidebar = $this->user->isAllowed('sidebar-menu') && (!$this->companyPermission || $this->companyPermission->isAllowed('sidebar-menu'));
 		$this->template->isCompleteAccount = $this->isCompleteAccount();
-		$this->template->showLeftSidebar = !$this->companyPermission || $this->companyPermission->isAllowed('sidebar-menu');
+		$this->template->showLeftSidebar = $showLeftSidebar;
 		$this->template->showRightSidebar = FALSE;
 		$this->template->openRightSidebar = $this->openRightSideBar;
 

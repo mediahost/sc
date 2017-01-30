@@ -34,7 +34,7 @@
 							<span class="txt">{_'Jobs'}</span>
 						</a>
 					</li>
-					<li class="button" n:if="$user->isAllowed('profile') && $isCompleteAccount">
+					<li class="button" n:if="$user->isAllowed('profile', 'default') && $isCompleteAccount">
 						<a href="{link Profile:}">
 							<i class="s16 fa fa-user"></i>
 							<span class="txt">{_'Profile'}</span>
@@ -75,18 +75,28 @@
 						<ul class="dropdown-menu right" n:if="$isCompleteAccount">
 							<li class="menu">
 								<ul>
-									<li n:if="$user->isAllowed('profile', 'default')">
-										<a n:href="Profile:">
-											<i class="s16 fa fa-user"></i>
-											{_'My Profile'}
-										</a>
-									</li>
-									<li n:if="$user->isAllowed('profile', 'settings')">
-										<a n:href="AccountSettings:">
-											<i class="s16 fa fa-gears"></i>
-											{_'Settings'}
-										</a>
-									</li>
+									{if $user->isAllowed('profile', 'settings')}
+										<li>
+											<a n:href="AccountSettings:connectManager">
+												<i class="s16 icomoon-icon-connection-2"></i>{_'Social Sign In'}
+											</a>
+										</li>
+										<li>
+											<a n:href="AccountSettings:setPassword">
+												<i class="s16 icomoon-icon-key-2"></i>{_'Set password'}
+											</a>
+										</li>
+										<li>
+											<a n:href="AccountSettings:notifications">
+												<i class="s16 icomoon-icon-bubble-notification"></i>{_'Notifications'}
+											</a>
+										</li>
+										<li>
+											<a n:href="AccountSettings:delete">
+												<i class="s16 icomoon-icon-shield"></i>{_'Delete account'}
+											</a>
+										</li>
+									{/if}
 								</ul>
 							</li>
 						</ul>
