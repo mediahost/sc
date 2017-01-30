@@ -6,6 +6,7 @@ use App\FrontModule\Presenters\SignPresenter;
 use Nette\Application\IRouter;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
+use Nette\Configurator;
 
 /**
  * Router factory.
@@ -18,6 +19,10 @@ class RouterFactory
 	 */
 	public function createRouter()
 	{
+		if (!Configurator::detectDebugMode()) {
+			Route::$defaultFlags = Route::SECURED;
+		}
+
 		$router = new RouteList();
 
 		$router[] = new Route('index.php', 'Front:Default:default', Route::ONE_WAY);
