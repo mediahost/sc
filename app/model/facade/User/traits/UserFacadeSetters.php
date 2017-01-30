@@ -43,6 +43,9 @@ trait UserFacadeSetters
 				$image = Image::fromString($source);
 				$user->person->photo = $image;
 			}
+			if ($user->linkedin->publicProfileUrl && !$user->person->linkedinLink) {
+				$user->person->linkedinLink = $user->linkedin->publicProfileUrl;
+			}
 		}
 
 		if ($user->id) {
