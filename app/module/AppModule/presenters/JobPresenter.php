@@ -79,7 +79,9 @@ class JobPresenter extends BasePresenter
 	public function actionView($id, $state = NULL)
 	{
 
-		$this->job = $this->jobRepo->find($id);
+		if ($id) {
+			$this->job = $this->jobRepo->find($id);
+		}
 		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
