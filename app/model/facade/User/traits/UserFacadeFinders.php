@@ -4,13 +4,14 @@ namespace App\Model\Facade\Traits;
 
 use App\Model\Entity\Registration;
 use Nette\Utils\DateTime;
+use Nette\Utils\Strings;
 
 trait UserFacadeFinders
 {
 
 	public function findByMail($mail)
 	{
-		return $this->userRepo->findOneBy(['mail' => $mail]);
+		return $this->userRepo->findOneBy(['mail' => Strings::lower($mail)]);
 	}
 
 	public function findByFacebookId($id)
