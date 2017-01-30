@@ -11,6 +11,7 @@ use App\Helpers;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
+use App\Model\Entity\Note;
 use App\Model\Entity\Role;
 use App\Model\Entity\User as UserEntity;
 use App\Model\Facade\CandidateFacade;
@@ -261,9 +262,21 @@ class PrintCandidate extends BaseControl
 	// </editor-fold>
 	// <editor-fold desc="forms">
 
-	public function createComponentNotes()
+	public function createComponentCompanyNotes()
 	{
 		$control = $this->iMatchNotesFactory->create();
+		$control->setType(Note::TYPE_COMPANY);
+		$control->setMatch($this->candidate->findMatch($this->selectedJob));
+		$control->onAfterSave[] = function (Match $match) {
+			$this->reload();
+		};
+		return $control;
+	}
+
+	public function createComponentAdminNotes()
+	{
+		$control = $this->iMatchNotesFactory->create();
+		$control->setType(Note::TYPE_ADMIN);
 		$control->setMatch($this->candidate->findMatch($this->selectedJob));
 		$control->onAfterSave[] = function (Match $match) {
 			$this->reload();

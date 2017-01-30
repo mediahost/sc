@@ -5,6 +5,7 @@ namespace App\Components\Job;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Model\Entity\Match;
+use App\Model\Entity\Note;
 use Nette\Utils\ArrayHash;
 
 class MatchNotes extends BaseControl
@@ -12,6 +13,9 @@ class MatchNotes extends BaseControl
 
 	/** @var Match */
 	private $match;
+
+	/** @var string */
+	private $type;
 
 	// <editor-fold desc="events">
 
@@ -28,25 +32,18 @@ class MatchNotes extends BaseControl
 
 	public function render()
 	{
-		if ($this->user->isAllowed('adminNotes', 'view')) {
+		$this->template->editable = FALSE;
+		if ($this->type === Note::TYPE_ADMIN) {
+			$this->template->notes = $this->match->adminNotes;
+			$this->template->editable = $this->user->isAllowed('adminNotes', 'add');
+		} else if ($this->type === Note::TYPE_COMPANY) {
+			$this->template->notes = $this->match->companyNotes;
+			$this->template->editable = $this->user->isAllowed('companyNotes', 'add');
+		} else if ($this->user->isAllowed('adminNotes', 'view')) {
 			$this->template->notes = $this->match->adminNotes;
 		} else if ($this->user->isAllowed('companyNotes', 'view')) {
 			$this->template->notes = $this->match->companyNotes;
 		}
-		parent::render();
-	}
-
-	public function renderAdmin()
-	{
-		$this->template->notes = $this->match->adminNotes;
-		$this->template->editable = $this->user->isAllowed('adminNotes', 'add');
-		parent::render();
-	}
-
-	public function renderCompany()
-	{
-		$this->template->notes = $this->match->companyNotes;
-		$this->template->editable = $this->user->isAllowed('companyNotes', 'add');
 		parent::render();
 	}
 
@@ -84,9 +81,9 @@ class MatchNotes extends BaseControl
 	{
 		$user = $this->user->getIdentity();
 		$text = $values->message;
-		if ($this->user->isAllowed('adminNotes')) {
+		if ($this->type === Note::TYPE_ADMIN && $this->user->isAllowed('adminNotes')) {
 			$this->match->addAdminNote($user, $text);
-		} else if ($this->user->isAllowed('companyNotes')) {
+		} else if ($this->type === Note::TYPE_COMPANY && $this->user->isAllowed('companyNotes')) {
 			$this->match->addCompanyNote($user, $text);
 		}
 
@@ -101,6 +98,12 @@ class MatchNotes extends BaseControl
 	}
 
 	// <editor-fold desc="setters & getters">
+
+	public function setType($type)
+	{
+		$this->type = $type;
+		return $this;
+	}
 
 	public function setMatch(Match $match)
 	{
