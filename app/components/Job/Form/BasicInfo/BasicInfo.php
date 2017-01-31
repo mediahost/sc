@@ -200,13 +200,16 @@ class BasicInfo extends BaseControl
 			'category' => $this->job->category ? $this->job->category->id : NULL,
 			'salary' => $salary,
 			'accountManager' => $this->job->accountManager ? $this->job->accountManager->id : NULL,
-			'accountManager' => $this->job->getCompanyAccountManager(TRUE) ? $this->job->companyAccountManager->id : NULL,
 			'offers' => $this->getTags(TagJob::TYPE_OFFERS),
 			'requirements' => $this->getTags(TagJob::TYPE_REQUIREMENTS),
 //			'notes' => $this->job->notes,
 			'description' => $this->job->description,
 			'summary' => $this->job->summary,
 		];
+		$companyAccountManager = $this->job->getCompanyAccountManager(TRUE);
+		if ($companyAccountManager && array_key_exists($companyAccountManager->id, $this->getCompanyAccountManagers())) {
+			$values['companyAccountManager'] = $companyAccountManager->id;
+		}
 		if ($this->job->questions) {
 			$i = 1;
 			foreach ($this->job->questions as $question) {
