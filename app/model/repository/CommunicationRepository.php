@@ -49,11 +49,13 @@ class CommunicationRepository extends BaseRepository
 			->getQuery()->getOneOrNullResult();
 	}
 
-	public function findByContributors(array $contributors)
+	public function findByContributors(array $contributors, $exactContributors = TRUE)
 	{
-		$qb = $this->createQueryBuilder('c')
-			->where('c.contributorsCount = :contributorsCount')
-			->setParameter('contributorsCount', count($contributors));
+		$qb = $this->createQueryBuilder('c');
+		if ($exactContributors) {
+			$qb->where('c.contributorsCount = :contributorsCount')
+				->setParameter('contributorsCount', count($contributors));
+		}
 
 		$andx = new Andx();
 		foreach ($contributors as $key => $contributor) {

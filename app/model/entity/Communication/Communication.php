@@ -42,7 +42,7 @@ class Communication extends BaseEntity
 	protected $notifications;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Message", mappedBy="communication", cascade={"persist"}, orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="Message", mappedBy="communication", cascade={"persist", "remove"}, orphanRemoval=true)
 	 * @ORM\OrderBy({"id" = "ASC"})
 	 */
 	protected $messages;
