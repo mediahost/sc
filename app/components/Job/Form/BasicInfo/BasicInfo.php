@@ -68,9 +68,11 @@ class BasicInfo extends BaseControl
 			->setAttribute('placeholder', 'Wordpress ID');
 
 		if ($this->user->isAllowed('job', 'accountManager')) {
-			$form->addSelect('accountManager', 'Account manager', $this->getAccountManagers())
+			$form->addSelect('accountManager', 'Admin account manager', $this->getAdminAccountManagers())
 				->setRequired($this->translator->translate('Manager is required'));
 		}
+		$form->addSelect('companyAccountManager', 'Account manager', $this->getCompanyAccountManagers())
+			->setRequired($this->translator->translate('Manager is required'));
 
 		$form->addSelect('type', 'Type', $this->jobFacade->getJobTypes())
 			->setRequired($this->translator->translate('Type is required'));
@@ -144,9 +146,15 @@ class BasicInfo extends BaseControl
 		$this->job->salaryTo = $salaryTo;
 
 		if (isset($values->accountManager) && $values->accountManager) {
-			$this->job->accountManager = $this->getAccountManager($values->accountManager);
+			$this->job->accountManager = $this->getAdminAccountManager($values->accountManager);
 		} else if (!$this->job->accountManager) {
-			$this->job->accountManager = $this->getAccountManager();
+			$this->job->accountManager = $this->getAdminAccountManager();
+		}
+
+		if (isset($values->companyAccountManager) && $values->companyAccountManager) {
+			$this->job->companyAccountManager = $this->getCompanyAccountManager($values->companyAccountManager);
+		} else if (!$this->job->companyAccountManager) {
+			$this->job->companyAccountManager = $this->getCompanyAccountManager();
 		}
 
 		foreach (explode(',', $values['offers']) as $offer) {
@@ -192,6 +200,7 @@ class BasicInfo extends BaseControl
 			'category' => $this->job->category ? $this->job->category->id : NULL,
 			'salary' => $salary,
 			'accountManager' => $this->job->accountManager ? $this->job->accountManager->id : NULL,
+			'accountManager' => $this->job->getCompanyAccountManager(TRUE) ? $this->job->companyAccountManager->id : NULL,
 			'offers' => $this->getTags(TagJob::TYPE_OFFERS),
 			'requirements' => $this->getTags(TagJob::TYPE_REQUIREMENTS),
 //			'notes' => $this->job->notes,
@@ -223,7 +232,7 @@ class BasicInfo extends BaseControl
 		return $this;
 	}
 
-	private function getAccountManagers()
+	private function getAdminAccountManagers()
 	{
 		$roleRepo = $this->em->getRepository(Role::getClassName());
 		$userRepo = $this->em->getRepository(User::getClassName());
@@ -231,6 +240,12 @@ class BasicInfo extends BaseControl
 		$adminRole = $roleRepo->findOneByName(Role::ADMIN);
 		$users = $userRepo->findPairsByRoleId($adminRole->id, 'mail');
 
+		return $users;
+	}
+
+	private function getCompanyAccountManagers()
+	{
+		$users = [];
 		foreach ($this->job->company->accesses as $access) {
 			$users[$access->user->id] = $access->user->mail;
 		}
@@ -238,10 +253,20 @@ class BasicInfo extends BaseControl
 		return $users;
 	}
 
-	private function getAccountManager($id = NULL)
+	private function getAdminAccountManager($id = NULL)
 	{
 		$userRepo = $this->em->getRepository(User::getClassName());
 		return $userRepo->find($id ? $id : $this->settings->modules->jobs->defaultAccountManagerId);
+	}
+
+	private function getCompanyAccountManager($id = NULL)
+	{
+		$userRepo = $this->em->getRepository(User::getClassName());
+		if ($id) {
+			return $userRepo->find($id);
+		} else {
+			return $this->job->company->delegate;
+		}
 	}
 
 	private function getTags($tagType)

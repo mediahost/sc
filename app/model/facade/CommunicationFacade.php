@@ -192,7 +192,7 @@ class CommunicationFacade extends Object
 
 	public function sendAcceptMessage(Match $match, $accept = TRUE)
 	{
-		$sender = $this->findSender($match->job->company->delegate);
+		$sender = $this->findSender($match->job->companyAccountManager);
 		$recipient = $this->findSender($match->candidate->person->user);
 
 		if ($sender && $recipient) {

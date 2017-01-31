@@ -29,6 +29,8 @@ use Knp\DoctrineBehaviors\Model;
  * @property-write TagJob $tag
  * @property array $questions
  * @property ArrayCollection $matches
+ * @property User $accountManager
+ * @property User $companyAccountManager
  */
 class Job extends BaseEntity
 {
@@ -43,6 +45,9 @@ class Job extends BaseEntity
 
 	/** @ORM\ManyToOne(targetEntity="User") */
 	protected $accountManager;
+
+	/** @ORM\ManyToOne(targetEntity="User") */
+	protected $companyAccountManager;
 
 	/** @ORM\Column(type="string", length=512, nullable=false) */
 	protected $name;
@@ -102,6 +107,16 @@ class Job extends BaseEntity
 	public function isNew()
 	{
 		return $this->id === NULL;
+	}
+
+	public function getCompanyAccountManager($raw = FALSE)
+	{
+		if ($this->companyAccountManager) {
+			return $this->companyAccountManager;
+		} else if (!$raw) {
+			return $this->company->delegate;
+		}
+		return NULL;
 	}
 
 	public function getAppliedCount()
