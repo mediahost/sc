@@ -20,10 +20,7 @@ class NewMatch extends BaseMessage
 		$company = $job->company;
 		$candidate = $match->candidate;
 
-		$admins = $company->getAdminAccesses();
-		foreach ($admins as $companyPermission) {
-			$this->addTo($companyPermission->user->mail);
-		}
+		$this->addTo($company->delegate->mail);
 
 		$this->addParameter('job', $job);
 		$this->addParameter('candidate', $candidate);
