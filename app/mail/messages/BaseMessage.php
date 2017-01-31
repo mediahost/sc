@@ -106,9 +106,6 @@ abstract class BaseMessage extends Message
 		$this->beforeSend();
 		try {
 			$this->mailer->send($this);
-			$from = is_array($this->getFrom()) ? implode(';', $this->getFrom()) : $this->getFrom();
-			$to = is_array($this->getHeader('To')) ? implode(';', $this->getHeader('To')) : $this->getHeader('To');
-			Debugger::log('FROM: ' . $from . '; TO: ' . $to, 'smtp-ok');
 		} catch (SmtpException $e) {
 			$from = is_array($this->getFrom()) ? implode(';', $this->getFrom()) : $this->getFrom();
 			$to = is_array($this->getHeader('To')) ? implode(';', $this->getHeader('To')) : $this->getHeader('To');

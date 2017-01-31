@@ -4,7 +4,6 @@ namespace App\Mail\Messages;
 
 use App\Model\Entity\Message;
 use App\Model\Entity\Sender;
-use App\Model\Entity\User;
 
 class Notification extends BaseMessage
 {
