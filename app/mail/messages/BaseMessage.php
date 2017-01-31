@@ -107,7 +107,9 @@ abstract class BaseMessage extends Message
 		try {
 			$this->mailer->send($this);
 		} catch (SmtpException $e) {
-			Debugger::log($e->getMessage(), 'smtp');
+			$from = $this->getFrom();
+			$to = $this->getHeader('To');
+			Debugger::log($e->getMessage() . '; FROM: ' . $from . '; TO: ' . $to, 'smtp');
 		}
 		$this->afterSend();
 	}
