@@ -22,7 +22,8 @@ class SkillKnowControl extends BaseControl
 	private $cv;
 
 
-	public function render() {
+	public function render()
+	{
 		$this->setTemplateFile('SkillKnowControl');
 		$this->template->skill = $this->skill;
 		parent::render();
@@ -39,7 +40,8 @@ class SkillKnowControl extends BaseControl
 			->setType('number')
 			->setAttribute('min', 0);
 
-		$form->addSubmit('reset', 'X');
+		$form->addSubmit('reset', 'x')
+			->getControlPrototype()->class = 'btn btn-default btn-xs btn-round mr5 mb10';
 
 		$form->setDefaults($this->getDefaults());
 		return $form;
@@ -50,7 +52,7 @@ class SkillKnowControl extends BaseControl
 		$result = ['skillLevel' => 0];
 		if ($this->skillKnow) {
 			$result['skillLevel'] = $this->skillKnow->level->id;
-			$result['skillYears'] = $this->skillKnow->level->id > 1  ?  $this->skillKnow->years : 0;
+			$result['skillYears'] = $this->skillKnow->level->id > 1 ? $this->skillKnow->years : 0;
 		}
 		return $result;
 	}
@@ -99,7 +101,7 @@ class SkillKnowControl extends BaseControl
 		return $this;
 	}
 
-	public function setSkillKnow(SkillKnow $skillKnow=null)
+	public function setSkillKnow(SkillKnow $skillKnow = null)
 	{
 		$this->skillKnow = $skillKnow;
 		return $this;
