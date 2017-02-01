@@ -44,11 +44,12 @@
 				{var $person => $identity->getPerson()}
 				<ul class="nav navbar-right usernav" n:if="$user->loggedIn">
 					{var showCompanyDropdown => count($allowedCompanies) > 1}
-					<li n:if="$isCompleteAccount && $company && $identity->isCompany()" n:class="$showCompanyDropdown ? dropdown">
+					<li n:if="$isCompleteAccount && $company && $identity->isCompany()"
+							n:class="$showCompanyDropdown ? dropdown : dropdown-none">
 						<a href="#" class="dropdown-toggle avatar"{if $showCompanyDropdown} data-toggle="dropdown"{/if}>
 							<img src="{$company|foto:50,50}" alt="" class="image"/>
 							<span class="txt">{$company}</span>
-							<b class="caret" n:if="$showCompanyDropdown"></b>
+							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu right" n:if="$showCompanyDropdown">
 							<li class="menu">
