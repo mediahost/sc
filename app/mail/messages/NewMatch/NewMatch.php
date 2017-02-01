@@ -24,7 +24,6 @@ class NewMatch extends BaseMessage
 
 		$user->setAccess('now + ' . $this->settings->expiration->linkAccess);
 		$this->em->persist($user);
-		$this->em->flush();
 
 		$this->addParameter('job', $job);
 		$this->addParameter('candidate', $candidate);
