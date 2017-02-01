@@ -18,11 +18,17 @@ class NewMatch extends BaseMessage
 	{
 		$job = $match->job;
 		$candidate = $match->candidate;
+		$user = $job->companyAccountManager;
 
 		$this->addTo($job->companyAccountManager->mail);
 
+		$user->setAccess('now + ' . $this->settings->expiration->linkAccess);
+		$this->em->persist($user);
+		$this->em->flush();
+
 		$this->addParameter('job', $job);
 		$this->addParameter('candidate', $candidate);
+		$this->addParameter('token', $user->accessToken);
 		return $this;
 	}
 
