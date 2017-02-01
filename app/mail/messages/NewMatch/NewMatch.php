@@ -17,10 +17,9 @@ class NewMatch extends BaseMessage
 	public function setMatch(Match $match)
 	{
 		$job = $match->job;
-		$company = $job->company;
 		$candidate = $match->candidate;
 
-		$this->addTo($company->delegate->mail);
+		$this->addTo($job->companyAccountManager->mail);
 
 		$this->addParameter('job', $job);
 		$this->addParameter('candidate', $candidate);

@@ -15,6 +15,28 @@
 							{_'\'%candidate%\' has applied for your open \'%job%\' position.', NULL, ['candidate' => $candidate, 'job' => $job]}
 							{_'Please log in to Source-Code to review this candidate and shortlist or reject them.'}
 						</p>
+						<table border="0" cellpadding="0" cellspacing="0"
+						       style="background-color:#3554a5; border:1px solid #3554a5; border-radius:5px;">
+							<tr>
+								<td align="center"
+								    valign="middle"
+								    style="color:#FFFFFF; font-family: Verdana,Tahoma,Arial,Helvetica,Chicago,Sans-serif;
+									font-size:15px; font-weight:normal; letter-spacing:-.5px; line-height:150%;
+									padding-top:5px; padding-right:30px; padding-bottom:5px; padding-left:30px;">
+									<a n:href="{$colon}App:Job:view $job->id, App\BaseModule\Presenters\BasePresenter::ACCESS_ID_PARAM => $token"
+											target="_blank"
+											style="color:#FFFFFF; text-decoration:none;">
+										{$job}
+									</a>
+								</td>
+							</tr>
+						</table>
+						<p>
+							{_'Or copy this URL and insert it in your browser:'}<br/>
+							<a n:href="{$colon}App:Job:view $job->id, App\BaseModule\Presenters\BasePresenter::ACCESS_ID_PARAM => $token">
+								{link {$colon}App:Job:view $job->id, App\BaseModule\Presenters\BasePresenter::ACCESS_ID_PARAM => $token}
+							</a>
+						</p>
 					</td>
 				</tr>
 			</table>
