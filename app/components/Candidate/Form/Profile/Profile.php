@@ -7,6 +7,8 @@ use App\Components\BaseControlException;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Person;
+use App\Model\Entity\Role;
+use Nette\Security\User;
 use Nette\Utils\ArrayHash;
 
 class Profile extends BaseControl
@@ -14,6 +16,9 @@ class Profile extends BaseControl
 
 	/** @var array */
 	public $onAfterSave = [];
+
+	/** @var User @inject */
+	public $user;
 
 	/** @var Person */
 	public $person;
@@ -46,8 +51,10 @@ class Profile extends BaseControl
 
 		$form->addText('middlename', 'Middle Name', NULL, 100);
 
-		$form->addText('surname', 'Surname(s)', NULL, 100)
-			->setRequired('Please enter your Surname(s).');
+		$surname = $form->addText('surname', 'Surname(s)', NULL, 100);
+		if ($this->user->isInRole(Role::CANDIDATE)) {
+			$surname->setRequired('Please enter your Surname(s).');
+		}
 
 		$form->addText('degreeafter', 'Degree after name', NULL, 50)
 			->getControlPrototype()->class[] = 'input-small';
