@@ -153,6 +153,15 @@ class Person extends BaseEntity
 		return $this->firstname && $this->surname;
 	}
 
+	public function isSocialLinksFilled()
+	{
+		return !empty($this->behanceLink) ||
+			!empty($this->dribbbleLink) ||
+			!empty($this->githubLink) ||
+			!empty($this->linkedinLink) ||
+			!empty($this->stackOverflowLink);
+	}
+
 	public function isRequiredOtherFilled()
 	{
 		return count($this->workLocations) && count($this->jobCategories);

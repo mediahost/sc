@@ -2,12 +2,12 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\AfterRegistration\CompleteCv;
+use App\Components\AfterRegistration\ICompleteCvFactory;
 use App\Components\Candidate\ISocialFactory;
 use App\Components\Candidate\Social;
 use App\Components\Conversation\Form\ConversationList;
 use App\Components\Conversation\Form\IConversationListFactory;
-use App\Components\User\CareerDocs;
-use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity\Person;
 use App\Model\Entity\Role;
 use App\Model\Facade\CandidateFacade;
@@ -24,8 +24,8 @@ class DashboardPresenter extends BasePresenter
 	/** @var ISocialFactory @inject */
 	public $socialFactory;
 
-	/** @var ICareerDocsFactory @inject */
-	public $careerDocFactory;
+	/** @var ICompleteCvFactory @inject */
+	public $iCompleteCvFactory;
 
 	/**
 	 * @secured
@@ -35,7 +35,9 @@ class DashboardPresenter extends BasePresenter
 	public function actionDefault()
 	{
 		if ($this->user->isInRole(Role::CANDIDATE)) {
-			$candidate = $this->user->getIdentity()->person->candidate;
+			$person = $this->user->getIdentity()->person;
+			$candidate = $person->candidate;
+			$this->template->person = $person;
 			$this->template->candidate = $candidate;
 			$this->template->invitations = $this->candidateFacade->findApprovedJobs($candidate, FALSE);
 			$this->template->candidateFacade = $this->candidateFacade;
@@ -60,20 +62,25 @@ class DashboardPresenter extends BasePresenter
 	/** @return Social */
 	public function createComponentSocialForm()
 	{
-		$control = $this->socialFactory->create();
-		$control->setPerson($this->person);
+		$control = $this->socialFactory->create()
+			->setPerson($this->user->getIdentity()->person)
+			->canEdit(TRUE);
 		$control->onAfterSave = function (Person $saved) {
 			$this->redrawControl('socialLinks');
 		};
 		return $control;
 	}
 
-	/** @return CareerDocs */
-	public function createComponentDocsForm()
+	/** @return CompleteCv */
+	public function createComponentChangeCv()
 	{
-		$control = $this->careerDocFactory->create();
-		$control->setCandidate($this->person->getCandidate());
-		$control->setTemplateFile('overView');
+		$control = $this->iCompleteCvFactory->create()
+			->setCandidate($this->user->getIdentity()->person->candidate);
+		$control->onAfterSave[] = function () {
+			$message = $this->translator->translate('File was successfully uploaded.');
+			$this->flashMessage($message, 'success');
+			$this->redirect('this');
+		};
 		return $control;
 	}
 

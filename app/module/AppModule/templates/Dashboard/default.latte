@@ -32,6 +32,17 @@
 
 {define candidateDashboard}
 	<div class="row">
+		<div class="col-md-6">
+			{if !$candidate->isCvFilled()}
+				{include cvPanel}
+			{elseif !$person->isSocialLinksFilled()}
+				{include socialLinksPanel}
+			{elseif !$candidate->isSkillsFilled()}
+				{include itSkillsPanel}
+			{/if}
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-lg-6 col-md-12">
 			{control recentMessages}
 		</div>
@@ -75,5 +86,38 @@
 	</a>
 {/block}
 
+{define cvPanel}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">{_'Add your CV file'}</h4>
+		</div>
+		<div class="panel-body docs-tab">
+			{control changeCv}
+		</div>
+	</div>
+{/define}
 
+{define socialLinksPanel}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">{_'Upload your profile links'}</h4>
+		</div>
+		<div class="panel-body social-editor">
+			<div class="alert alert-info fade in">
+				<i class="glyphicon glyphicon-info-sign alert-icon "></i>
+				{_'Candidates who include their StackOverflow, LinkedIn and/or Github profile links, for review by employers, receive 30% higher response rates from companies on average.'}
+			</div>
+			{control socialForm}
+		</div>
+	</div>
+{/define}
+
+{define itSkillsPanel}
+	<div class="alert alert-info fade in">
+		<i class="glyphicon glyphicon-info-sign alert-icon "></i>
+		<a n:href="CvEditor:skills">
+			{_'Upload your technical skills'}
+		</a>
+	</div>
+{/define}
 
