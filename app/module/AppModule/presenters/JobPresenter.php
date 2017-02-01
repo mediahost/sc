@@ -4,6 +4,8 @@ namespace App\AppModule\Presenters;
 
 use App\Components\AfterRegistration\CompleteCv;
 use App\Components\AfterRegistration\ICompleteCvFactory;
+use App\Components\Candidate\ISocialFactory;
+use App\Components\Candidate\Social;
 use App\Components\Job\BasicInfo;
 use App\Components\Job\IBasicInfoFactory;
 use App\Components\Job\ISkillsFactory;
@@ -13,6 +15,7 @@ use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
+use App\Model\Entity\Person;
 use App\Model\Entity\Role;
 use App\Model\Facade\ActionFacade;
 use App\Model\Facade\CandidateFacade;
@@ -51,6 +54,9 @@ class JobPresenter extends BasePresenter
 	/** @var ICompleteCvFactory @inject */
 	public $iCompleteCvFactory;
 
+	/** @var ISocialFactory @inject */
+	public $socialFactory;
+
 	// </editor-fold>
 	// <editor-fold desc="variables">
 
@@ -78,7 +84,6 @@ class JobPresenter extends BasePresenter
 	 */
 	public function actionView($id, $state = NULL)
 	{
-
 		if ($id) {
 			$this->job = $this->jobRepo->find($id);
 		}
@@ -138,11 +143,15 @@ class JobPresenter extends BasePresenter
 		if ($this->job) {
 			$this->template->job = $this->job;
 			if ($this->user->isInRole(Role::CANDIDATE)) {
-				$candidate = $this->user->getIdentity()->person->candidate;
+				$person = $this->user->getIdentity()->person;
+				$candidate = $person->candidate;
+				$this->template->person = $person;
 				$this->template->candidate = $candidate;
 				$this->template->isApplied = $this->candidateFacade->isApplied($candidate, $this->job);
 				$this->template->isInvited = $this->candidateFacade->isApproved($candidate, $this->job);
 				$this->template->isMatched = $this->candidateFacade->isMatched($candidate, $this->job);
+				$section = $this->getSession('afterApply');
+				$this->template->showNotice = (bool)$section->showNotice;
 			}
 		}
 	}
@@ -237,6 +246,8 @@ class JobPresenter extends BasePresenter
 					$this->em->refresh($candidate);
 
 					$this->actionFacade->addJobApply($this->user->identity, $job);
+					$section = $this->getSession('afterApply');
+					$section->showNotice = TRUE;
 				} else {
 					$message = $this->translator->translate('You cannot apply for this job. You must upload your CV file first.');
 					$this->flashMessage($message, 'warning');
@@ -314,6 +325,18 @@ class JobPresenter extends BasePresenter
 			if ($redirectUrl) {
 				$this->redirectUrl($redirectUrl);
 			}
+			$this->redirect('this');
+		};
+		return $control;
+	}
+
+	/** @return Social */
+	public function createComponentSocialForm()
+	{
+		$control = $this->socialFactory->create()
+			->setPerson($this->user->getIdentity()->person)
+			->canEdit(TRUE);
+		$control->onAfterSave = function (Person $saved) {
 			$this->redirect('this');
 		};
 		return $control;

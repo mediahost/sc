@@ -16,195 +16,233 @@
 {/block}
 
 {block content}
-<div class="row">
-	<div class="col-md-6">
-		<div class="panel panel-default invoice">
-			<!-- Start .panel -->
-			<div class="panel-heading clearfix">
-				<h4 class="panel-title pull-left">
-					<span>{$job}</span>
-					<span n:if="$isCandidate && !$isMatched && $isInvited"
-							class="label label-warning">{_'You have been invited to apply'}</span>
-					<a n:href="Job:edit $job->id" n:if="$user->isAllowed('job', 'edit')">
-						<span class="fa fa-edit"></span>
-					</a>
-				</h4>
-				<div class="invoice-info">
-					<strong class="color-red">{$job->company}</strong>
-					<span class="data color-gray">{$job->createdAt|date:'F d, Y'}</span>
-					<div class="clearfix"></div>
-				</div>
+	{snippet showNotice}
+		<div class="row" n:if="$showNotice">
+			<div class="col-md-12">
+				{if !$person->isSocialLinksFilled()}
+					{include socialLinksPanel}
+				{elseif !$candidate->isSkillsFilled()}
+					{include itSkillsPanel}
+				{/if}
 			</div>
-			<div class="panel-body">
-				<div class="row profile">
-					<!-- Start .row -->
-					<div class="col-md-12 contact-info">
-						<div class="row">
-							<div class="col-md-4">
-								<dl>
-									<dt class="text-muted">{_'Type'}</dt>
-									<dd>{$job->type}</dd>
-									<dt class="text-muted">{_'Salary (per mth)'}</dt>
-									<dd>{$job->salaryFrom}&nbsp;€ - {$job->salaryTo}&nbsp;€</dd>
-								</dl>
-							</div>
-							<div class="col-md-4">
-								<dl>
-									<dt class="text-muted">{_'Category'}</dt>
-									<dd>{$job->category}</dd>
-									{if $user->isAllowed('job', 'accountManager')}
-										<dt class="text-muted">{_'Account Manager'}</dt>
-										<dd>{$job->accountManager}</dd>
-									{/if}
-								</dl>
-							</div>
-							<div n:snippet="applyBox">
-								<div class="col-md-4 text-right" n:if="$isCandidate">
-									<a n:if="!$isApplied && !$candidate->cvFile"
-											href="#fillCvModal" data-toggle="modal"
-											class="btn btn-lg btn-success">{_'Apply'}</a>
-									<a n:if="!$isApplied && $candidate->cvFile" n:href="apply! $job->id"
-											class="btn btn-lg btn-primary ajax">{_'Apply'}</a>
-									<button n:if="$isApplied"
-											class="btn btn-lg btn-warning disabled">{_'Applied'}</button>
+		</div>
+	{/snippet}
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default invoice">
+				<!-- Start .panel -->
+				<div class="panel-heading clearfix">
+					<h4 class="panel-title pull-left">
+						<span>{$job}</span>
+						<span n:if="$isCandidate && !$isMatched && $isInvited"
+								class="label label-warning">{_'You have been invited to apply'}</span>
+						<a n:href="Job:edit $job->id" n:if="$user->isAllowed('job', 'edit')">
+							<span class="fa fa-edit"></span>
+						</a>
+					</h4>
+					<div class="invoice-info">
+						<strong class="color-red">{$job->company}</strong>
+						<span class="data color-gray">{$job->createdAt|date:'F d, Y'}</span>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="row profile">
+						<!-- Start .row -->
+						<div class="col-md-12 contact-info">
+							<div class="row">
+								<div class="col-md-4">
+									<dl>
+										<dt class="text-muted">{_'Type'}</dt>
+										<dd>{$job->type}</dd>
+										<dt class="text-muted">{_'Salary (per mth)'}</dt>
+										<dd>{$job->salaryFrom}&nbsp;€ - {$job->salaryTo}&nbsp;€</dd>
+									</dl>
+								</div>
+								<div class="col-md-4">
+									<dl>
+										<dt class="text-muted">{_'Category'}</dt>
+										<dd>{$job->category}</dd>
+										{if $user->isAllowed('job', 'accountManager')}
+											<dt class="text-muted">{_'Account Manager'}</dt>
+											<dd>{$job->accountManager}</dd>
+										{/if}
+									</dl>
+								</div>
+								<div n:snippet="applyBox">
+									<div class="col-md-4 text-right" n:if="$isCandidate">
+										<a n:if="!$isApplied && !$candidate->cvFile"
+												href="#fillCvModal" data-toggle="modal"
+												class="btn btn-lg btn-success">{_'Apply'}</a>
+										<a n:if="!$isApplied && $candidate->cvFile" n:href="apply! $job->id"
+												class="btn btn-lg btn-primary ajax">{_'Apply'}</a>
+										<button n:if="$isApplied"
+												class="btn btn-lg btn-warning disabled">{_'Applied'}</button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="col-md-12">
-						<div class="profile-info bt">
-							<h5 class="text-muted">{_'Position Description'}</h5>
-							{$job->description|noescape}
-						</div>
-						<div class="profile-info">
-							<h5 class="text-muted">{_'Position Summary'}</h5>
-							{$job->summary|noescape}
-						</div>
-						<div n:if="count($job->tags)" class="profile-tags">
-							<h5 class="text-muted">{_'Benefits'}</h5>
-							<div>
+						<div class="col-md-12">
+							<div class="profile-info bt">
+								<h5 class="text-muted">{_'Position Description'}</h5>
+								{$job->description|noescape}
+							</div>
+							<div class="profile-info">
+								<h5 class="text-muted">{_'Position Summary'}</h5>
+								{$job->summary|noescape}
+							</div>
+							<div n:if="count($job->tags)" class="profile-tags">
+								<h5 class="text-muted">{_'Benefits'}</h5>
+								<div>
 								<span n:foreach="$job->tags as $tag"
 										n:if="$tag->type === \App\Model\Entity\TagJob::TYPE_OFFERS"
 										class="tag label label-info">{$tag}</span>
+								</div>
 							</div>
-						</div>
-						<div n:if="count($job->tags)" class="profile-tags mb20">
-							<h5 class="text-muted">{_'Technical Requirements'}</h5>
-							<div>
+							<div n:if="count($job->tags)" class="profile-tags mb20">
+								<h5 class="text-muted">{_'Technical Requirements'}</h5>
+								<div>
 								<span n:foreach="$job->tags as $tag"
 										n:if="$tag->type === \App\Model\Entity\TagJob::TYPE_REQUIREMENTS"
 										class="tag label label-info">{$tag}</span>
+								</div>
 							</div>
+							<div n:if="count($job->questions)" class="profile-info bt">
+								<h5 class="text-muted">{_'Pre-Screening Questions'}</h5>
+								<p n:foreach="$job->questions as $question">{$question}</p>
+							</div>
+							{*<div class="profile-info bt">*}
+							{*<h5 class="text-muted">{_'Notes'}</h5>*}
+							{*<p>{$job->notes}</p>*}
+							{*</div>*}
 						</div>
-						<div n:if="count($job->questions)" class="profile-info bt">
-							<h5 class="text-muted">{_'Pre-Screening Questions'}</h5>
-							<p n:foreach="$job->questions as $question">{$question}</p>
+
+					</div>
+					<!-- End .row -->
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<span>{_'IT skills requirements'}</span>
+					</h4>
+				</div>
+				<div class="panel-body">
+					<div n:if="!count($job->skillRequests)"
+							class="note note-warning">
+						<div class="alert alert-info">
+							{_'This job has no skill requests'}
 						</div>
-						{*<div class="profile-info bt">*}
-						{*<h5 class="text-muted">{_'Notes'}</h5>*}
-						{*<p>{$job->notes}</p>*}
-						{*</div>*}
 					</div>
-
+					<table n:if="count($job->skillRequests)"
+							class="table table-bordered table-striped">
+						<thead>
+						<tr>
+							<th>{_'Skill'}</th>
+							<th>{_'Level from'}</th>
+							<th>{_'Level to'}</th>
+							<th>{_'Years from'}</th>
+							<th>{_'Years to'}</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr n:foreach="$job->skillRequests as $skillKnow">
+							<td>
+								{$skillKnow->skill}
+							</td>
+							<td>
+								{$skillKnow->levelFrom}
+							</td>
+							<td>
+								{$skillKnow->levelTo}
+							</td>
+							<td>
+								{$skillKnow->yearsFrom}
+							</td>
+							<td>
+								{$skillKnow->yearsTo}{$skillKnow->yearsTo == App\Components\Job\Skills::YEARS_MAX ? App\Components\Job\Skills::YEARS_POSTFIX}
+							</td>
+						</tr>
+						</tbody>
+					</table>
 				</div>
-				<!-- End .row -->
 			</div>
 		</div>
 	</div>
 
-	<div class="col-md-6">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title">
-					<span>{_'IT skills requirements'}</span>
-				</h4>
-			</div>
-			<div class="panel-body">
-				<div n:if="!count($job->skillRequests)"
-						class="note note-warning">
-					<div class="alert alert-info">
-						{_'This job has no skill requests'}
-					</div>
+	<div class="row">
+		{if isset($currentState) && $currentState}
+			<div class="col-md-12">
+				<div class="page-header">
+					{if $stateName === App\Model\Entity\Match::STATE_MATCHED_ONLY}
+						<h4>{_'Waiting for your action'}</h4>
+					{else}
+						<h4>{_$stateName}</h4>
+					{/if}
 				</div>
-				<table n:if="count($job->skillRequests)"
-						class="table table-bordered table-striped">
-					<thead>
-					<tr>
-						<th>{_'Skill'}</th>
-						<th>{_'Level from'}</th>
-						<th>{_'Level to'}</th>
-						<th>{_'Years from'}</th>
-						<th>{_'Years to'}</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr n:foreach="$job->skillRequests as $skillKnow">
-						<td>
-							{$skillKnow->skill}
-						</td>
-						<td>
-							{$skillKnow->levelFrom}
-						</td>
-						<td>
-							{$skillKnow->levelTo}
-						</td>
-						<td>
-							{$skillKnow->yearsFrom}
-						</td>
-						<td>
-							{$skillKnow->yearsTo}{$skillKnow->yearsTo == App\Components\Job\Skills::YEARS_MAX ? App\Components\Job\Skills::YEARS_POSTFIX}
-						</td>
-					</tr>
-					</tbody>
-				</table>
+				{control jobCandidates-$currentState}
+			</div>
+		{elseif isset($allowedStates)}
+			<div class="col-md-12" n:foreach="$allowedStates as $stateKey => $name">
+				<div class="page-header">
+					{if $stateKey === App\Model\Entity\Match::STATE_MATCHED_ONLY}
+						<h1 class="mb20">{_'Applied candidates'}</h1>
+						<h4>{_'Waiting for your action'}</h4>
+					{else}
+						<h4>{_$name}</h4>
+					{/if}
+				</div>
+				{control jobCandidates-$stateKey}
+			</div>
+		{/if}
+	</div>
+
+	<!-- Fill CV Modal -->
+	<div n:if="$isCandidate && !$candidate->cvFile" class="modal fade" id="fillCvModal" tabindex="-1" role="dialog"
+	                                                aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title" id="mySmallModalLabel">{_'Upload your CV'}</h4>
+				</div>
+				<div class="modal-body">
+					{control uploadCv}
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+	<!-- /.modal -->
+{/block}
 
-<div class="row">
-	{if isset($currentState) && $currentState}
-		<div class="col-md-12">
-			<div class="page-header">
-				{if $stateName === App\Model\Entity\Match::STATE_MATCHED_ONLY}
-					<h4>{_'Waiting for your action'}</h4>
-				{else}
-					<h4>{_$stateName}</h4>
-				{/if}
-			</div>
-			{control jobCandidates-$currentState}
-		</div>
-	{elseif isset($allowedStates)}
-		<div class="col-md-12" n:foreach="$allowedStates as $stateKey => $name">
-			<div class="page-header">
-				{if $stateKey === App\Model\Entity\Match::STATE_MATCHED_ONLY}
-					<h1 class="mb20">{_'Applied candidates'}</h1>
-					<h4>{_'Waiting for your action'}</h4>
-				{else}
-					<h4>{_$name}</h4>
-				{/if}
-			</div>
-			{control jobCandidates-$stateKey}
-		</div>
-	{/if}
-</div>
 
-<!-- Fill CV Modal -->
-<div n:if="$isCandidate && !$candidate->cvFile" class="modal fade" id="fillCvModal" tabindex="-1" role="dialog"
-                                                aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span aria-hidden="true">&times;</span><span class="sr-only">{_'Close'}</span>
-				</button>
-				<h4 class="modal-title" id="mySmallModalLabel">{_'Upload your CV'}</h4>
+{define socialLinksPanel}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title">{_'Upload your profile links'}</h4>
+		</div>
+		<div class="panel-body social-editor">
+			<div class="alert alert-info fade in">
+				<i class="glyphicon glyphicon-info-sign alert-icon "></i>
+				{_'Candidates who include their StackOverflow, LinkedIn and/or Github profile links, for review by employers, receive 30% higher response rates from companies on average.'}
 			</div>
-			<div class="modal-body">
-				{control uploadCv}
-			</div>
+			{control socialForm}
 		</div>
 	</div>
-</div>
-<!-- /.modal -->
+{/define}
+
+{define itSkillsPanel}
+	<div class="alert alert-info fade in">
+		<i class="glyphicon glyphicon-info-sign alert-icon "></i>
+		<a n:href="CvEditor:skills">
+			{_'Upload your technical skills'}
+		</a>
+	</div>
+{/define}
