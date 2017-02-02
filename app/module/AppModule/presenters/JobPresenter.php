@@ -242,7 +242,7 @@ class JobPresenter extends BasePresenter
 				if ($candidate->isApplyable()) {
 					$this->candidateFacade->matchApply($candidate, $job);
 					$message = $this->translator->translate('Thank you for applying for this job, someone will be in touch with you soon');
-					$this->flashMessage($message, 'info');
+					$this->flashMessage($message, 'success');
 					$this->em->refresh($candidate);
 
 					$this->actionFacade->addJobApply($this->user->identity, $job);
@@ -337,6 +337,7 @@ class JobPresenter extends BasePresenter
 			->setPerson($this->user->getIdentity()->person)
 			->canEdit(TRUE);
 		$control->onAfterSave = function (Person $saved) {
+			$this->flashMessage($this->translator->translate('Thank you! Your profile links has been saved.'), 'success');
 			$this->redirect('this');
 		};
 		return $control;

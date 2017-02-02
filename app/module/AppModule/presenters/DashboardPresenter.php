@@ -66,7 +66,8 @@ class DashboardPresenter extends BasePresenter
 			->setPerson($this->user->getIdentity()->person)
 			->canEdit(TRUE);
 		$control->onAfterSave = function (Person $saved) {
-			$this->redrawControl('socialLinks');
+			$this->flashMessage($this->translator->translate('Thank you! Your profile links has been saved.'), 'success');
+			$this->redirect('this');
 		};
 		return $control;
 	}
