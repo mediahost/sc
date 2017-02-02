@@ -172,8 +172,8 @@ class CommunicationFacade extends Object
 			$subject = $this->translator->translate('Apply to job \'%job%\'', NULL, ['job' => (string)$match->job]);
 			$communication = $this->findOrCreate($sender, [$recipient], $subject, $match->job, $match->candidate);
 
-			$message = 'I have applied for \'%job%\' position with \'%company%\'';
-			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
+			$message = 'I have applied for \'%job%\' position';
+			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job]);
 			$state = Message::STATE_SYSTEM_JOB;
 			return $this->sendMessage($communication, $sender, $message, $state);
 		}
@@ -189,11 +189,11 @@ class CommunicationFacade extends Object
 			$communication = $this->findOrCreate($sender, [$recipient], $subject, $match->job, $match->candidate);
 
 			if ($appliedBefore) {
-				$message = 'I have approved you for job \'%job%\' position with \'%company%\'';
+				$message = 'I have approved you for job \'%job%\' position';
 			} else {
-				$message = 'I have invited you to apply for the \'%job%\' position with \'%company%\'';
+				$message = 'I have invited you to apply for the \'%job%\' position';
 			}
-			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
+			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job]);
 			$state = Message::STATE_SYSTEM_JOB;
 			return $this->sendMessage($communication, $sender, $message, $state);
 		}
@@ -209,11 +209,11 @@ class CommunicationFacade extends Object
 			$communication = $this->findOrCreate($sender, [$recipient], $subject, $match->job, $match->candidate);
 
 			if ($accept) {
-				$message = 'I have accepted you for job \'%job%\' position with \'%company%\'';
+				$message = 'I have accepted you for job \'%job%\' position';
 			} else {
-				$message = 'I have rejected you for job \'%job%\' position with \'%company%\'';
+				$message = 'I have rejected you for job \'%job%\' position';
 			}
-			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job, 'company' => (string)$match->job->company]);
+			$message = $this->translator->translate($message, NULL, ['job' => (string)$match->job]);
 			$message .= "\n\n";
 			$message .= $match->acceptReason;
 			$state = Message::STATE_SYSTEM_JOB;
