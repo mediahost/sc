@@ -17,7 +17,7 @@
 
 {block content}
 	{snippet showNotice}
-		<div class="row" n:if="$showNotice">
+		<div class="row" n:if="isset($showNotice) && $showNotice">
 			<div class="col-md-12">
 				{if !$person->isSocialLinksFilled()}
 					{include socialLinksPanel}
