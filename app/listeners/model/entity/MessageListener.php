@@ -20,13 +20,13 @@ class MessageListener extends Object implements Subscriber
 	public function getSubscribedEvents()
 	{
 		return array(
-			Events::prePersist,
+			Events::postPersist,
 		);
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="listeners redirectors">
 
-	public function prePersist($params)
+	public function postPersist($params)
 	{
 		$this->sendNotification($params);
 	}

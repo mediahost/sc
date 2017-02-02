@@ -21,6 +21,7 @@ class Notification extends BaseMessage
 
 		$user->setAccess('now + ' . $this->settings->expiration->linkAccess);
 		$this->em->persist($user);
+		$this->em->flush();
 
 		$this->addParameter('token', $user->accessToken);
 		return $this;
