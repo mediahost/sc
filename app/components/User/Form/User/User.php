@@ -81,8 +81,12 @@ class User extends BaseControl
 			$form->addMultiSelect('companyAccess', 'Access for companies', $companies);
 		}
 
-		if ($this->identity->isAllowed('candidates', 'edit') && $this->user->isCandidate()) {
-			$form->addGroup('Candidate info');
+		if ($this->identity->isAllowed('persons', 'edit')) {
+			if ($this->user->isCandidate()) {
+				$form->addGroup('Candidate info');
+			} else {
+				$form->addGroup('Person info');
+			}
 
 			$form->addSelect('title', 'Title', Entity\Person::getTitleList())
 				->getControlPrototype()->class[] = 'input-small';
@@ -90,15 +94,17 @@ class User extends BaseControl
 			$form->addText('firstname', 'First Name(s)', NULL, 100)
 				->setRequired('Please enter your First Name(s).');
 
-			$form->addText('surname', 'Surname(s)', NULL, 100)
-				->setRequired('Please enter your Surname(s).');
+			$surname = $form->addText('surname', 'Surname(s)', NULL, 100);
+			if ($this->user->isCandidate()) {
+				$surname->setRequired('Please enter your Surname(s).');
+			}
 
 			$form->addRadioList('gender', 'Gender', Entity\Person::getGenderList())
 				->setDefaultValue('x');
 
 			$form->addText('phone', 'Mobile number');
 
-			if ($this->user->isNew()) {
+			if ($this->identity->isAllowed('candidates', 'edit') && $this->user->isCandidate() && $this->user->isNew()) {
 				$acceptedFiles = [
 					'application/pdf',
 					'application/msword',

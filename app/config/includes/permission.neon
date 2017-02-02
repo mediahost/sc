@@ -17,6 +17,7 @@ services:
 			- addResource('profile')
 
 			- addResource('sidebar-menu')
+			- addResource('persons')
 			- addResource('candidate')
 			- addResource('candidates')
 			- addResource('candidatesList')
@@ -73,6 +74,7 @@ services:
 			- allow('admin', 'users')
 			- allow('admin', 'skills')
 			- allow('admin', 'skillCategories')
+			- allow('admin', 'persons')
 			- allow('admin', 'candidate')
 			- allow('admin', 'candidates')
 			- allow('admin', 'candidatesList')
