@@ -71,6 +71,15 @@ class CommunicationFacade extends Object
 		return $this->senderRepo->findOneBy($criteria);
 	}
 
+	public function findOrCreateSender(User $user, Company $company = NULL)
+	{
+		$sender = $this->findSender($user, $company);
+		if (!$sender) {
+			$sender = $this->createSender($user, $company);
+		}
+		return $sender;
+	}
+
 	public function findSenders(User $user, Company $company = NULL)
 	{
 		$criteria = [
@@ -192,7 +201,7 @@ class CommunicationFacade extends Object
 
 	public function sendAcceptMessage(Match $match, $accept = TRUE)
 	{
-		$sender = $this->findSender($match->job->companyAccountManager);
+		$sender = $this->findOrCreateSender($match->job->companyAccountManager, $match->job->company);
 		$recipient = $this->findSender($match->candidate->person->user);
 
 		if ($sender && $recipient) {

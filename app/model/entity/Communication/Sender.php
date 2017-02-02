@@ -73,7 +73,7 @@ class Sender extends BaseEntity
 		if ($this->user->person && $this->user->person->fullName) {
 			return $this->user->person->fullName;
 		} else {
-			return 'User #' . $this->user->person->id;
+			return 'User #' . $this->user->id;
 		}
 	}
 
