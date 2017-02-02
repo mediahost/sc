@@ -80,6 +80,7 @@ services:
 			- allow('admin', 'candidatesList')
 			- allow('admin', 'company')
 			- allow('admin', 'companies')
+			- allow('admin', 'companyNotes')
 			- allow('admin', 'jobs')
 			- allow('admin', 'job')
 			- allow('admin', 'match')
