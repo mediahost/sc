@@ -17,12 +17,9 @@ class CompleteCv extends BaseControl
 	public $onAfterSave = [];
 
 	// </editor-fold>
-	// <editor-fold desc="injects">
 
 	/** @var Candidate */
 	private $candidate;
-
-	// </editor-fold>
 
 	public function render()
 	{
