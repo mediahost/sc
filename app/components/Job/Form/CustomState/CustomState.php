@@ -42,7 +42,7 @@ class CustomState extends BaseControl
 			->getControlPrototype()->class = 'form-control';
 
 		$form->addSubmit('send', 'Custom Status')
-			->getControlPrototype()->class[] = 'btn ' . ($customValue ? 'btn-info' : 'btn-default');
+			->getControlPrototype()->class[] = 'loadingOnClick btn ' . ($customValue ? 'btn-info' : 'btn-default');
 
 		$form->onSuccess[] = $this->formSucceeded;
 		return $form;

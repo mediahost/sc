@@ -10,6 +10,8 @@ jQuery(document).ready(function () {
 				if (el.is('input')) {
 					el.val(message);
 					el.addClass('disabled');
+				} else if (el.is('button')) {
+					el.addClass('disabled');
 				}
 			}
 		},
