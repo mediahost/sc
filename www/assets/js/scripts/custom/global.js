@@ -226,12 +226,27 @@ var Global = function () {
 		});
 	}
 
+	var handleEditMatchNotes = function () {
+		$(document).on('click', '.message a.edit-note', function (e) {
+			e.preventDefault();
+			var messageBlock = $(e.target).closest('.message');
+			var noteId = messageBlock.data('noteId');
+			var noteIdInput = $(e.target).closest('ul.messages').find('form input[type=hidden][name=noteId]');
+			noteIdInput.val(noteId);
+
+			var content = $(messageBlock.find('.message-content')).html();
+			var contentTextbox = $(e.target).closest('ul.messages').find('form textarea[name=message]');
+			contentTextbox.val($.trim(content).replace(/<br>/g, "\r"));
+		});
+	};
+
 	return {
 		init: function () {
 			$(document).ready(function () {
 				handleInitSelect2();
 				handleInitPickers();
 				handleRating();
+				handleEditMatchNotes();
 				hadleSlider();
 				handleFBSharer();
 				handleSocialLinks();

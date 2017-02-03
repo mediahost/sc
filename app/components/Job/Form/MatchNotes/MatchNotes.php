@@ -63,6 +63,8 @@ class MatchNotes extends BaseControl
 			->setAttribute('placeholder', $this->translator->translate('Type a note here...'))
 			->getControlPrototype()->class = 'elastic form-control';
 
+		$form->addHidden('noteId');
+
 		$form->addSubmit('send', 'Save')
 			->getControlPrototype()->class = 'btn btn-primary mt10';
 
@@ -82,9 +84,9 @@ class MatchNotes extends BaseControl
 		$user = $this->user->getIdentity();
 		$text = $values->message;
 		if ($this->type === Note::TYPE_ADMIN && $this->user->isAllowed('adminNotes')) {
-			$this->match->addAdminNote($user, $text);
+			$this->match->addAdminNote($user, $text, $values->noteId);
 		} else if ($this->type === Note::TYPE_COMPANY && $this->user->isAllowed('companyNotes')) {
-			$this->match->addCompanyNote($user, $text);
+			$this->match->addCompanyNote($user, $text, $values->noteId);
 		}
 
 		return $this;

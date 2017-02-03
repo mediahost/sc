@@ -98,13 +98,19 @@ class Match extends BaseEntity
 		$this->notes = new ArrayCollection();
 	}
 
-	public function addAdminNote(User $user, $text)
+	public function addAdminNote(User $user, $text, $existId = NULL)
 	{
+		if ($existId) {
+			return $this->editNote($existId, $text);
+		}
 		return $this->addNote($user, $text, Note::TYPE_ADMIN);
 	}
 
-	public function addCompanyNote(User $user, $text)
+	public function addCompanyNote(User $user, $text, $existId = NULL)
 	{
+		if ($existId) {
+			return $this->editNote($existId, $text);
+		}
 		return $this->addNote($user, $text, Note::TYPE_COMPANY);
 	}
 
@@ -116,6 +122,19 @@ class Match extends BaseEntity
 		$note->text = $text;
 		$note->type = $type;
 		$this->notes->add($note);
+		return $this;
+	}
+
+	private function editNote($id, $text)
+	{
+		$editNote = function ($key, Note $note) use ($id, $text) {
+			if ($note->id == $id) {
+				$note->text = $text;
+				return FALSE;
+			}
+			return TRUE;
+		};
+		$this->notes->forAll($editNote);
 		return $this;
 	}
 
