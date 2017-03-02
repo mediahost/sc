@@ -198,13 +198,13 @@ class SignListener extends Object implements Subscriber
 			$this->onSuccess($control, $existedUser);
 		} else {
 			$userRepo = $this->em->getRepository(User::getClassName());
-			$this->userFacade->setVerification($user);
-			$userRepo->save($user);
+			$this->userFacade->setVerification($existedUser);
+			$userRepo->save($existedUser);
 
 			// Send verification e-mail
 			$message = $this->verificationMessage->create();
-			$message->addParameter('link', $control->presenter->link('//:Front:Sign:verify', $user->verificationToken));
-			$message->addTo($user->mail);
+			$message->addParameter('link', $control->presenter->link('//:Front:Sign:verify', $existedUser->verificationToken));
+			$message->addTo($existedUser->mail);
 			$message->send();
 
 			$message = 'We cannot join your account automatically while you not verify your account. We send you mail with verification link.';
