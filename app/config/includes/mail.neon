@@ -5,3 +5,4 @@ services:
 	- {implement: App\Mail\Messages\IShareMessageFactory, inject: yes}
 	- {implement: App\Mail\Messages\INotificationFactory, inject: yes}
 	- {implement: App\Mail\Messages\INewMatchFactory, inject: yes}
+	- {implement: App\Mail\Messages\INewApplyFactory, inject: yes}

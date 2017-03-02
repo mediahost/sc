@@ -20,6 +20,8 @@ use Nette\Security\IIdentity;
  * @method self setMail(string $mail)
  * @property bool|null $beNotified
  * @property bool $verificated
+ * @property bool $createdByAdmin
+ * @property bool $isDealer
  */
 class User extends BaseEntity implements IIdentity, IUserSocials
 {
@@ -33,6 +35,12 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 
 	/** @ORM\Column(type="boolean", nullable=true) */
 	protected $beNotified;
+
+	/** @ORM\Column(type="boolean", nullable=false) */
+	private $createdByAdmin = FALSE;
+
+	/** @ORM\Column(type="boolean", nullable=false) */
+	protected $isDealer = FALSE;
 
 	public function __construct($mail = NULL, $verificated = FALSE)
 	{
@@ -68,6 +76,11 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 	public function isNew()
 	{
 		return $this->id === NULL;
+	}
+
+	public function isCreatedByAdmin($checkVerification = TRUE)
+	{
+		return $this->createdByAdmin && (!$checkVerification || $this->verificated);
 	}
 
 }

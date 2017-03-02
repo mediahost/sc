@@ -26,4 +26,14 @@ trait UserFacadeGetters
 		return $this->userRepo->findPairsByRoleId($role->id, 'mail');
 	}
 
+	public function getDealers()
+	{
+		$admin = $this->roleDao->findOneByName(Role::ADMIN);
+		$user = $this->userRepo->findBy([
+			'isDealer' => TRUE,
+			'roles.id' => $admin,
+		]);
+		return $user;
+	}
+
 }

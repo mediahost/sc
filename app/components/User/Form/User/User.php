@@ -113,6 +113,10 @@ class User extends BaseControl
 				$form->addUpload('cvFile', 'Upload New CV')
 					->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles));
 			}
+
+			if ($this->user->isInRole(Entity\Role::ADMIN)) {
+				$form->addCheckSwitch('isDealer', 'Dealer');
+			}
 		}
 
 		if (!$this->user->isNew()) {
@@ -181,6 +185,9 @@ class User extends BaseControl
 		if (isset($values->cvFile) && $values->cvFile->isOk()) {
 			$this->user->person->candidate->cvFile = $values->cvFile;
 		}
+		if (isset($values->isDealer)) {
+			$this->user->isDealer = $values->isDealer;
+		}
 
 		return $this;
 	}
@@ -235,6 +242,7 @@ class User extends BaseControl
 			'surname' => $this->user->person->surname,
 			'gender' => $this->user->person->gender,
 			'phone' => $this->user->person->phoneMobile,
+			'isDealer' => $this->user->isDealer,
 		];
 		return $values;
 	}
