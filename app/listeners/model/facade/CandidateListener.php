@@ -5,7 +5,6 @@ namespace App\Listeners\Model\Facade;
 use App\Mail\Messages\INewApplyFactory;
 use App\Mail\Messages\INewMatchFactory;
 use App\Model\Entity\Match;
-use App\Model\Entity\User;
 use App\Model\Facade\CommunicationFacade;
 use App\Model\Facade\UserFacade;
 use Kdyby\Events\Subscriber;
