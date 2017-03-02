@@ -28,10 +28,11 @@ trait UserFacadeFinders
 	{
 		return $this->userRepo->findOneBy(['linkedin.id' => $id]);
 	}
-    
-    public function findById($id) {
-        return $this->userRepo->findOneBy(['id' => $id]);
-    }
+
+	public function findById($id)
+	{
+		return $this->userRepo->findOneBy(['id' => $id]);
+	}
 
 	/**
 	 * Find only valid entities
