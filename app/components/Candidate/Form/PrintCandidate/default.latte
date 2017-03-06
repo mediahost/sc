@@ -1,5 +1,5 @@
 {snippet candidatePrint}
-	<div id="{$id}" class="candidate-item">
+	<div id="{$id}" n:class="candidate-item, $user->isUnregistered() ? unregistered">
 		<div class="row">
 			<div class="col-md-4">
 				<h4>
@@ -123,7 +123,7 @@
 									{var matchItem => $candidate->findMatch($job)}
 									<th>
 										<a href="{plink Job:view $job->id}">
-											{$job|truncate:20}
+											{$job|truncate:35}
 										</a>
 									</th>
 									{if $matchItem && $matchItem->fullApprove}

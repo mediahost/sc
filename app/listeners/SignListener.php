@@ -100,7 +100,11 @@ class SignListener extends Object implements Subscriber
 			$this->userFacade->importSocialData($user);
 		}
 		if ($user->id) {
-			$this->onSuccess($control, $user);
+			if ($user->isUnregistered()) {
+				$this->verify($control, $user);
+			} else {
+				$this->onSuccess($control, $user);
+			}
 		} else {
 			$this->session->user = $user;
 			$this->checkRequire($control, $user);
@@ -145,8 +149,10 @@ class SignListener extends Object implements Subscriber
 	private function verify(Control $control, User $user)
 	{
 		$userRepo = $this->em->getRepository(User::getClassName());
-		$role = $this->roleFacade->findByName(Role::CANDIDATE);
-		$user->addRole($role);
+		if (!$user->id) {
+			$role = $this->roleFacade->findByName(Role::CANDIDATE);
+			$user->addRole($role);
+		}
 
 		$this->session->remove();
 

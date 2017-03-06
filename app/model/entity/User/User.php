@@ -21,6 +21,7 @@ use Nette\Security\IIdentity;
  * @property bool|null $beNotified
  * @property bool $verificated
  * @property bool $createdByAdmin
+ * @property-read bool $isUnregistered
  * @property bool $isDealer
  */
 class User extends BaseEntity implements IIdentity, IUserSocials
@@ -37,7 +38,7 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 	protected $beNotified;
 
 	/** @ORM\Column(type="boolean", nullable=false) */
-	private $createdByAdmin = FALSE;
+	protected $createdByAdmin = FALSE;
 
 	/** @ORM\Column(type="boolean", nullable=false) */
 	protected $isDealer = FALSE;
@@ -78,9 +79,14 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 		return $this->id === NULL;
 	}
 
-	public function isCreatedByAdmin($checkVerification = TRUE)
+	public function isUnregistered()
 	{
-		return $this->createdByAdmin && (!$checkVerification || $this->verificated);
+		return $this->createdByAdmin && !$this->verificated;
+	}
+
+	public function isAlreadyRegistered()
+	{
+		return $this->verificated;
 	}
 
 }

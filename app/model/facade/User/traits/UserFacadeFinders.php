@@ -3,6 +3,7 @@
 namespace App\Model\Facade\Traits;
 
 use App\Model\Entity\Registration;
+use App\Model\Entity\User;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 
@@ -89,6 +90,22 @@ trait UserFacadeFinders
 		}
 
 		return NULL;
+	}
+
+	public function findUnregisteredOrCreate($mail = NULL, $verificated = FALSE)
+	{
+		$user = NULL;
+		if ($mail) {
+			$user = $this->userRepo->findOneBy([
+				'mail' => $mail,
+				'verificated' => FALSE,
+				'createdByAdmin' => TRUE,
+			]);
+		}
+		if (!$user) {
+			$user = new User($mail, $verificated);
+		}
+		return $user;
 	}
 
 }

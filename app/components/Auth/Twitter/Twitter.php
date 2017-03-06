@@ -95,7 +95,7 @@ class Twitter extends BaseControl
 	 */
 	protected function createUser(array $data)
 	{
-		$user = new Entity\User();
+		$user = $this->userFacade->findUnregisteredOrCreate();
 
 		$userData = $data['user'];
 		$twitter = new Entity\Twitter($userData->id_str);

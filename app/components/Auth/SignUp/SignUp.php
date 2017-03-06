@@ -95,7 +95,7 @@ class SignUp extends BaseControl
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$user = new User($values->mail, FALSE);
+		$user = $this->userFacade->findUnregisteredOrCreate($values->mail, FALSE);
 		$user->setPassword($values->password);
 		$user->person->firstname = $values->firstname;
 		$user->person->surname = $values->surname;
@@ -110,7 +110,7 @@ class SignUp extends BaseControl
 	public function formValidate(Form $form)
 	{
 		$values = $form->getValues();
-		if (!$this->userFacade->isUnique($values['mail'])) {
+		if (!$this->userFacade->isUnique($values['mail'], NULL, TRUE)) {
 			$form->addError($this->translator->translate('E-mail \'%mail%\' is already registered.', ['mail' => $values['mail']]));
 		}
 	}

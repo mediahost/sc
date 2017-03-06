@@ -67,12 +67,21 @@ class User extends BaseControl
 			->addRule(Form::EMAIL, 'Fill right format')
 			->addRule(Form::FILLED, 'Mail must be filled');
 
-		$password = $form->addText('password', 'Password');
+		if ($this->user->isNew()) {
+			$form->addCheckSwitch('createRegistration', 'Create registration')
+				->addCondition($form::EQUAL, TRUE)
+				->toggle('password');
+		}
+
+		$password = $form->addText('password', 'Password')
+			->setOption('id', 'password');
 		if ($this->user->isNew()) {
 			$helpText = $this->translator->translate('At least %count% characters long.', $this->settings->passwords->length);
-			$password->addRule(Form::FILLED, 'Password must be filled')
-				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length)
-				->setOption('description', $helpText);
+			$password
+				->addConditionOn($form['createRegistration'], $form::EQUAL, TRUE)
+				->addRule(Form::FILLED, 'Password must be filled')
+				->addRule(Form::MIN_LENGTH, 'Password must be at least %d characters long.', $this->settings->passwords->length);
+			$password->setOption('description', $helpText);
 		}
 
 		if ($this->identity->isAllowed('companies', 'edit') && $this->user->isCompany()) {
@@ -162,8 +171,14 @@ class User extends BaseControl
 			$this->user->mail = $values->mail;
 			$this->user->clearSocials();
 		}
-		if ($values->password !== NULL && $values->password !== "") {
-			$this->user->setPassword($values->password);
+
+		if (!isset($values->createRegistration) || $values->createRegistration) {
+			if ($values->password !== NULL && $values->password !== "") {
+				$this->user->setPassword($values->password);
+			}
+		} else {
+			$this->user->createdByAdmin = TRUE;
+			$this->user->verificated = FALSE;
 		}
 
 		if (isset($values->companyAccess)) {

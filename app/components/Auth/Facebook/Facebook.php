@@ -111,11 +111,9 @@ class Facebook extends BaseControl
 	 */
 	protected function createUser(ArrayHash $me)
 	{
-		if (isset($me->email)) {
-			$user = new Entity\User($me->email, TRUE);
-		} else {
-			$user = new Entity\User();
-		}
+		$verified = isset($me->email);
+		$mail = $verified ? $me->email : NULL;
+		$user = $this->userFacade->findUnregisteredOrCreate($mail, $verified);
 
 		$fb = new Entity\Facebook($me->id);
 		$this->loadFacebookEntity($fb, $me);

@@ -68,9 +68,15 @@ class UserFacade extends Object
 		$this->roleDao = $this->em->getDao(Role::getClassName());
 	}
 
-	public function isUnique($mail, $tolerate = NULL)
+	public function isUnique($mail, $tolerate = NULL, $tolerateUnregistered = FALSE)
 	{
 		$finded = $this->userRepo->findByMail($mail);
+		if ($tolerateUnregistered && count($finded) === 1) {
+			$findedEntity = current($finded);
+			if ($findedEntity->isUnregistered()) {
+				return TRUE;
+			}
+		}
 		if ($tolerate && count($finded) === 1) {
 			$findedEntity = current($finded);
 			return $findedEntity->mail === $tolerate;

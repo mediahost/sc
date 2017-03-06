@@ -54,6 +54,14 @@ class UsersGrid extends BaseControl
 		]);
 		$col->getHeaderPrototype()->width = '90px';
 
+		$col = $grid->addColumnBoolean('createdByAdmin', 'Created');
+		$col->setSortable()->setFilterSelect([
+			NULL => '--- all ---',
+			TRUE => 'Yes',
+			FALSE => 'No',
+		]);
+		$col->getHeaderPrototype()->width = '90px';
+
 		if (!$this->asCompany) {
 			$col = $grid->addColumnText('roles', 'Roles');
 			$col->setSortable()->setFilterSelect($this->getRoles());

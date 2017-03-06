@@ -127,11 +127,9 @@ class Linkedin extends BaseControl
 	 */
 	protected function createUser(ArrayHash $me)
 	{
-		if (isset($me->emailAddress)) {
-			$user = new Entity\User($me->emailAddress, TRUE);
-		} else {
-			$user = new Entity\User();
-		}
+		$verified = isset($me->emailAddress);
+		$mail = $verified ? $me->emailAddress : NULL;
+		$user = $this->userFacade->findUnregisteredOrCreate($mail, $verified);
 
 		$linkedin = new Entity\Linkedin($me->id);
 		$this->loadLinkedinEntity($linkedin, $me);
