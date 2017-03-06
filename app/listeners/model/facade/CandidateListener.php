@@ -47,7 +47,7 @@ class CandidateListener extends Object implements Subscriber
 
 			$users = $this->userFacade->getDealers();
 			foreach ($users as $user) {
-				$notificationMessage = $this->iNewMatchFactory->create();
+				$notificationMessage = $this->iNewApplyFactory->create();
 				$notificationMessage->setMatch($match);
 				$notificationMessage->setUser($user);
 				$notificationMessage->send();
