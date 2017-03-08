@@ -1,5 +1,27 @@
 <?php
 
+$purge = array(
+	'temp/deployment',
+);
+
+$before = array(
+	'local:composer install --no-dev -d ./../',
+);
+
+$after = array();
+if (!isset($allowInstall) || $allowInstall) {
+	$after[] = $domain . '/install?printHtml=0';
+}
+$after[] = 'local:composer install --dev -d ./../';
+
+if (!isset($allowDeleteCache) || $allowDeleteCache) {
+	$purge[] = 'temp/cache';
+	$purge[] = 'temp/install';
+}
+if (!isset($allowDeleteTmp) || $allowDeleteTmp) {
+	$purge[] = 'tmp/';
+}
+
 return array(
 	'my site' => array(
 		'remote' => 'ftp://' . $username . ':' . $password . '@' . $server,
@@ -43,19 +65,9 @@ return array(
 			*.rst
 		',
 		'allowdelete' => TRUE,
-		'before' => array(
-				'local:composer install --no-dev -d ./../',
-		),
-		'after' => array(
-				$domain . '/install?printHtml=0',
-				'local:composer install --dev -d ./../',
-		),
-		'purge' => array(
-			'temp/cache',
-			'temp/install',
-			'temp/deployment',
-			'tmp/',
-		),
+		'before' => $before,
+		'after' => $after,
+		'purge' => $purge,
 		'preprocess' => FALSE,
 	),
 	
