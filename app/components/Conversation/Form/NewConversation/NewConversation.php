@@ -76,7 +76,11 @@ class NewConversation extends BaseControl
 		} else {
 			$recipients = $this->communicationFacade->getSenders($this->sender);
 		}
-		return $recipients;
+		$stringRecipients = [];
+		foreach ($recipients as $key => $recepient) {
+			$stringRecipients[$key] = (string)$recepient;
+		}
+		return $stringRecipients;
 	}
 }
 
