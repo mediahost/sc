@@ -24,7 +24,7 @@
 							<li n:foreach="$skill as $skillItem">
 								<span data-toggle="tooltip" data-placement="right" data-original-title="{_$skillItem['level']->name}">
 								{foreach [1,2,3,4,5] as $quality}
-									<i n:class="$quality <= $skillItem['level']->id ? qualified"></i>
+									<i n:class="$quality <= $skillItem['level']->id ? qualified, $skillItem['level']->id === 6 ? not-defined"></i>
 								{/foreach}
 								&nbsp;{$skillItem['name']}
 								</span>

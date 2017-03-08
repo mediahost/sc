@@ -130,6 +130,7 @@ class Installer extends Object
 			3 => 'Intermediate',
 			4 => 'Advanced',
 			5 => 'Expert',
+			6 => 'Not defined',
 		];
 	}
 

@@ -20,6 +20,7 @@ class SkillLevel extends BaseEntity
 
 	const FIRST_PRIORITY = 1;
 	const LAST_PRIORITY = 5;
+	const NOT_DEFINED = 6;
 	const IRELEVANT_PRIORITY = -1; //self::FIRST_PRIORITY;
 
 	use Identifier;
@@ -56,6 +57,11 @@ class SkillLevel extends BaseEntity
 	public function isRelevant()
 	{
 		return (bool) ($this->priority !== self::IRELEVANT_PRIORITY);
+	}
+
+	public function isNotDefined()
+	{
+		return (bool) ($this->priority === self::NOT_DEFINED);
 	}
 
 	public function isInRange(SkillLevel $from, SkillLevel $to)

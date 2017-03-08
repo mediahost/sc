@@ -7,6 +7,7 @@ use App\Model\Entity\JobCategory;
 use App\Model\Entity\Match;
 use App\Model\Entity\Role;
 use App\Model\Entity\Skill;
+use App\Model\Entity\SkillLevel;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Orx;
 
@@ -175,11 +176,12 @@ class CandidateRepository extends BaseRepository
 						foreach ($value['skillRange'] as $id => $levels) {
 							$partAnd = new Andx();
 							$partAnd->add('sk.skill = :skill');
-							$partAnd->add('sk.level >= :levelFrom AND sk.level <= :levelTo');
+							$partAnd->add('((sk.level >= :levelFrom AND sk.level <= :levelTo) OR sk.level = :levelAll)');
 
 							$params[':skill'] = $this->_em->getRepository(Skill::getClassName())->find($id);
 							$params[':levelFrom'] = $levels[0];
 							$params[':levelTo'] = $levels[1];
+							$params[':levelAll'] = SkillLevel::NOT_DEFINED;
 
 							if (isset($value['yearRange']) && isset($value['yearRange'][$id])) {
 								$condition->add('sk.years >= :yearsFrom AND sk.years <= :yearsTo');

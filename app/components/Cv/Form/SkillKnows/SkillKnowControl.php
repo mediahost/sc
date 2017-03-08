@@ -40,7 +40,7 @@ class SkillKnowControl extends BaseControl
 			->setType('number')
 			->setAttribute('min', 0);
 
-		$form->addSubmit('reset', 'x')
+		$form->addSubmit('reset', '')
 			->getControlPrototype()->class = 'btn btn-default btn-xs btn-round mr5 mb10';
 
 		$form->setDefaults($this->getDefaults());
@@ -50,7 +50,7 @@ class SkillKnowControl extends BaseControl
 	public function getDefaults()
 	{
 		$result = ['skillLevel' => 0];
-		if ($this->skillKnow) {
+		if ($this->skillKnow && $this->skillKnow->level) {
 			$result['skillLevel'] = $this->skillKnow->level->id;
 			$result['skillYears'] = $this->skillKnow->level->id > 1 ? $this->skillKnow->years : 0;
 		}
