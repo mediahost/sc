@@ -165,6 +165,12 @@
 									</a>
 									<ul n:class="sub, $presenter->isLinkCurrent('Service:*') ? show">
 										<li>
+											<a n:href="Service:imports" n:class="$presenter->isLinkCurrent('Service:imports') ? active">
+												<i class="s16 icomoon-icon-folder-download"></i>
+												<span class="txt">{_'Imports'}</span>
+											</a>
+										</li>
+										<li>
 											<a n:href="Service:tools" n:class="$presenter->isLinkCurrent('Service:tools') ? active">
 												<i class="s16 icomoon-icon-tools"></i>
 												<span class="txt">{_'Tools'}</span>

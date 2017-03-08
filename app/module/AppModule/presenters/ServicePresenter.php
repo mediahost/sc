@@ -2,6 +2,8 @@
 
 namespace App\AppModule\Presenters;
 
+use App\Components\User\Form\CsvUserImport;
+use App\Components\User\Form\ICsvUserImportFactory;
 use App\Extensions\Installer;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
@@ -50,6 +52,9 @@ class ServicePresenter extends BasePresenter
 	/** @var CandidateCleaner @inject */
 	public $candidateCleaner;
 
+	/** @var ICsvUserImportFactory @inject */
+	public $iCsvUserImportFactory;
+
 	/**
 	 * @secured
 	 * @resource('service')
@@ -58,6 +63,16 @@ class ServicePresenter extends BasePresenter
 	public function actionDefault()
 	{
 		$this->redirect('tools');
+	}
+
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('imports')
+	 */
+	public function actionImports()
+	{
+
 	}
 
 	/**
@@ -348,6 +363,30 @@ class ServicePresenter extends BasePresenter
 			$this->em->persist($candidate);
 		}
 		$this->em->flush();
+	}
+
+	/** @return CsvUserImport */
+	public function createComponentCsvImportForm()
+	{
+		$control = $this->iCsvUserImportFactory->create();
+		$control->onSuccess = function (array $importedUsers) {
+			$count = count($importedUsers);
+			if ($count) {
+				$message = $this->translator->translate('%count% users was successfully updated.', $count, ['count' => $count]);
+				$type = 'success';
+			} else {
+				$message = $this->translator->translate('No user was updated');
+				$type = 'warning';
+			}
+			$this->flashMessage($message, $type);
+		};
+		$control->onFail = function ($message) {
+			$this->flashMessage($message, 'danger');
+		};
+		$control->onDone = function () {
+			$this->redirect('this');
+		};
+		return $control;
 	}
 
 }

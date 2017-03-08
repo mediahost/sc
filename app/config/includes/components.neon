@@ -2,6 +2,7 @@
 # !!!must have "crete:" for components with events!!!
 
 services:
+	- {implement: App\Extensions\Csv\IParserFactory, inject: yes}
 	- {implement: App\Extensions\Candidates\ICandidatesListFactory, inject: yes}
 	- {implement: App\Extensions\Candidates\Components\ISortingFormFactory, inject: yes}
 	- {create: App\Model\Service\CandidateGenerator, inject: yes}
@@ -32,6 +33,7 @@ services:
 	- {implement: App\Components\User\IUserFactory, inject: yes}
 	- {implement: App\Components\User\ICompanyUserFactory, inject: yes}
 	- {implement: App\Components\User\ICareerDocsFactory, inject: yes}
+	- {implement: App\Components\User\Form\ICsvUserImportFactory, inject: yes}
 	- {implement: App\Components\Grids\User\IUsersGridFactory, inject: yes}
 
 	# Company

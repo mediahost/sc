@@ -1,0 +1,28 @@
+{block pageTitle}
+	{_'Service imports'}
+{/block}
+
+{block breadcrumbItems}
+	<li>
+		<a n:href="Service:">{_'Services'}</a>
+	</li>
+	<li><span>{_'Imports'}</span></li>
+{/block}
+
+{block content}
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="portlet light">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-upload"></i>
+					<span class="caption-subject bold uppercase">{_'CSV Update'}</span>
+				</div>
+			</div>
+			<div class="portlet-body">
+				{control csvImportForm}
+			</div>
+		</div>
+	</div>
+</div>
