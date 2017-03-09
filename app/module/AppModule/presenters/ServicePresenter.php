@@ -4,15 +4,20 @@ namespace App\AppModule\Presenters;
 
 use App\Components\User\Form\CsvUserImport;
 use App\Components\User\Form\ICsvUserImportFactory;
+use App\Extensions\Csv\Exceptions\InternalException;
 use App\Extensions\Installer;
+use App\Model\Entity\Address;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
+use App\Model\Entity\Cv;
 use App\Model\Entity\ImportedUser;
 use App\Model\Entity\Job;
 use App\Model\Entity\Role;
 use App\Model\Entity\Skill;
 use App\Model\Entity\SkillCategory;
+use App\Model\Entity\SkillKnow;
+use App\Model\Entity\SkillLevel;
 use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
@@ -448,7 +453,67 @@ class ServicePresenter extends BasePresenter
 			$user->person->surname = $imported->surname;
 			$change = TRUE;
 		}
+		if ($imported->linkedinLink && ($loadAll || !$user->person->linkedinLink)) {
+			$user->person->linkedinLink = $imported->linkedinLink;
+			$this->parseImageFromLinkedin($user);
+			$change = TRUE;
+		}
+		if ($imported->country && ($loadAll || !$user->person->address || !$user->person->address->country)) {
+			if (!$user->person->address) {
+				$user->person->address = new Address();
+			}
+			switch ($imported->country) {
+				case 'Portugal':
+				case 'Portugal-UK':
+				case 'Portugal/Germany':
+					$user->person->address->country = 23;
+					break;
+				default:
+					throw new InternalException('Unexpected "country" value: "' . $imported->country . '"');
+			}
+			$change = TRUE;
+		}
+		if ($imported->coreSkill && ($loadAll || !count($user->person->candidate->cv->skillKnows))) {
+			$this->addSkill($user->person->candidate->cv, $imported->coreSkill);
+			$cvRepo = $this->em->getRepository(Cv::getClassName());
+			$cvRepo->save($user->person->candidate->cv);
+			$change = TRUE;
+		}
+		if ($imported->otherSkill && ($loadAll || !count($user->person->candidate->cv->skillKnows))) {
+			$this->addSkill($user->person->candidate->cv, $imported->otherSkill);
+			$cvRepo = $this->em->getRepository(Cv::getClassName());
+			$cvRepo->save($user->person->candidate->cv);
+			$change = TRUE;
+		}
 		return $change;
+	}
+
+	private function parseImageFromLinkedin(User $user)
+	{
+
+	}
+
+	private function addSkill(Cv $cv, $skillName)
+	{
+		switch ($skillName) {
+			case 'FULL-STACK':
+				$skillName = '...';
+				break;
+		}
+		$skillRepo = $this->em->getRepository(Skill::getClassName());
+		$skill = $skillRepo->findOneByName($skillName);
+
+		if ($skill) {
+			$skillLevel = $this->em->getRepository(SkillLevel::getClassName())->find(SkillLevel::NOT_DEFINED);
+			$skillKnow = new SkillKnow();
+			$skillKnow->skill = $skill;
+			$skillKnow->level = $skillLevel;
+			$skillKnow->years = 0;
+			$skillKnow->cv = $cv;
+			$cv->skillKnow = $skillKnow;
+		} else {
+			throw new InternalException('Unexpected "skill" value: "' . $skillName . '"');
+		}
 	}
 
 	/** @return CsvUserImport */
