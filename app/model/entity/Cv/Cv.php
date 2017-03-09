@@ -46,7 +46,7 @@ class Cv extends BaseEntity
 
 	use Identifier;
 	use CvSkillsUsing;
-    use CvMatching;
+	use CvMatching;
 
 	/** @ORM\OneToOne(targetEntity="Candidate", inversedBy="cv") */
 	protected $candidate;
@@ -119,12 +119,11 @@ class Cv extends BaseEntity
 
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $additionalInfo;
-	
+
 	/** @ORM\Column(type="boolean") */
 	protected $additionalIsPublic = FALSE;
 
 	public function __construct($name = NULL)
-
 	{
 		if ($name) {
 			$this->name = $name;
@@ -140,14 +139,14 @@ class Cv extends BaseEntity
 	public function setIsPublic($value = TRUE)
 	{
 		// TODO: set URL for public access
-		return $this->isPublic = (bool) $value;
+		return $this->isPublic = (bool)$value;
 	}
 
 	public function __toString()
 	{
-		return (string) $this->name;
+		return (string)$this->name;
 	}
-	
+
 	public function addWork(Work $work)
 	{
 		if (!$work->id) {
@@ -156,26 +155,27 @@ class Cv extends BaseEntity
 		$work->cv = $this;
 		return $this;
 	}
-	
-	public function deleteWork(Work $work) {
+
+	public function deleteWork(Work $work)
+	{
 		$this->works->removeElement($work);
 		return $this;
 	}
-	
-	public function deleteEducation(Education $edu) {
+
+	public function deleteEducation(Education $edu)
+	{
 		$this->educations->removeElement($edu);
 		return $this;
 	}
 
-
 	public function existsWorkId($id)
 	{
 		$exists = function ($key, Work $work) use ($id) {
-			return $work->id === (int) $id;
+			return $work->id === (int)$id;
 		};
 		return $this->works->exists($exists);
 	}
-	
+
 	public function addExperience(Work $experience)
 	{
 		if (!$experience->id) {
@@ -184,15 +184,15 @@ class Cv extends BaseEntity
 		$experience->cv = $this;
 		return $this;
 	}
-	
+
 	public function existsExperienceId($id)
 	{
 		$exists = function ($key, Work $experience) use ($id) {
-			return $experience->id === (int) $id;
+			return $experience->id === (int)$id;
 		};
 		return $this->experiences->exists($exists);
 	}
-	
+
 	public function addEducation(Education $education)
 	{
 		if (!$education->id) {
@@ -201,15 +201,15 @@ class Cv extends BaseEntity
 		$education->cv = $this;
 		return $this;
 	}
-	
+
 	public function existsEducationId($id)
 	{
 		$exists = function ($key, Education $education) use ($id) {
-			return $education->id === (int) $id;
+			return $education->id === (int)$id;
 		};
 		return $this->educations->exists($exists);
 	}
-	
+
 	public function addLanguage(Language $language)
 	{
 		if (!$language->id) {
@@ -218,20 +218,21 @@ class Cv extends BaseEntity
 		$language->cv = $this;
 		return $this;
 	}
-	
-	public function deleteLanguage(Language $language) {
+
+	public function deleteLanguage(Language $language)
+	{
 		$this->languages->removeElement($language);
 		return $this;
 	}
-	
+
 	public function existsLanguageId($id)
 	{
 		$exists = function ($key, Language $language) use ($id) {
-			return $language->id === (int) $id;
+			return $language->id === (int)$id;
 		};
 		return $this->languages->exists($exists);
 	}
-	
+
 	public function getMotherLanguageName()
 	{
 		return Language::getLanguageNameById($this->motherLanguage);

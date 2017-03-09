@@ -48,7 +48,7 @@ class SkillKnow extends BaseEntity
 
 	public function isEmpty()
 	{
-		return (bool) (!$this->level  ||  !$this->level->isRelevant());
+		return (bool)(!$this->level || !$this->level->isRelevant());
 	}
 
 	public function hasYearsInRange($from = NULL, $to = NULL)
@@ -67,7 +67,7 @@ class SkillKnow extends BaseEntity
 
 	private function isFilledYearsValue($value)
 	{
-		return (bool) ($value !== NULL);
+		return (bool)($value !== NULL);
 	}
 
 }
