@@ -6,3 +6,4 @@ services:
 	- {implement: App\Mail\Messages\INotificationFactory, inject: yes}
 	- {implement: App\Mail\Messages\INewMatchFactory, inject: yes}
 	- {implement: App\Mail\Messages\INewApplyFactory, inject: yes}
+	- {implement: App\Mail\Messages\IJobInvitationFactory, inject: yes}

@@ -13,6 +13,7 @@ use App\Model\Facade\UserFacade;
 use Exception;
 use Kdyby\Doctrine\DuplicateEntryException;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\Html;
 
 class User extends BaseControl
 {
@@ -123,9 +124,25 @@ class User extends BaseControl
 					->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles));
 			}
 
-			if ($this->user->isInRole(Entity\Role::ADMIN)) {
-				$form->addCheckSwitch('isDealer', 'Dealer');
+			if ($this->user->isAdmin()) {
+				$form->addCheckSwitch('isDealer', 'Dealer')
+					->addCondition(Form::EQUAL, TRUE)
+					->toggle('smtp-container');
 			}
+		}
+
+		if ($this->user->isAdmin()) {
+			$fieldsetHide = Html::el('div', [
+				'id' => 'smtp-container',
+			]);
+
+			$form->addGroup('SMTP account')
+				->setOption('container', $fieldsetHide);
+
+			$form->addText('smtpHost', 'Host');
+			$form->addText('smtpUsername', 'Username');
+			$form->addText('smtpPassword', 'Password');
+			$form->addCheckSwitch('smtpSsl', 'SSL');
 		}
 
 		if (!$this->user->isNew()) {
@@ -202,6 +219,26 @@ class User extends BaseControl
 		}
 		if (isset($values->isDealer)) {
 			$this->user->isDealer = $values->isDealer;
+
+			if ($this->user->isDealer) {
+				if (!$this->user->smtpAccount) {
+					$this->user->smtpAccount = new Entity\SmtpAccount();
+				}
+				if (isset($values->smtpUsername)) {
+					$this->user->smtpAccount->username = $values->smtpUsername;
+				}
+				if (isset($values->smtpHost)) {
+					$this->user->smtpAccount->host = $values->smtpHost;
+				}
+				if (isset($values->smtpPassword)) {
+					$this->user->smtpAccount->password = $values->smtpPassword;
+				}
+				if (isset($values->smtpSsl)) {
+					$this->user->smtpAccount->secure = $values->smtpSsl;
+				}
+			} else {
+				$this->user->smtpAccount = NULL;
+			}
 		}
 
 		return $this;
@@ -258,6 +295,10 @@ class User extends BaseControl
 			'gender' => $this->user->person->gender,
 			'phone' => $this->user->person->phoneMobile,
 			'isDealer' => $this->user->isDealer,
+			'smtpHost' => $this->user->smtpAccount ? $this->user->smtpAccount->host : NULL,
+			'smtpUsername' => $this->user->smtpAccount ? $this->user->smtpAccount->username : NULL,
+			'smtpPassword' => $this->user->smtpAccount ? $this->user->smtpAccount->password : NULL,
+			'smtpSsl' => $this->user->smtpAccount ? $this->user->smtpAccount->secure : FALSE,
 		];
 		return $values;
 	}

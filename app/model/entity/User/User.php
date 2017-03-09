@@ -23,6 +23,7 @@ use Nette\Security\IIdentity;
  * @property bool $createdByAdmin
  * @property-read bool $isUnregistered
  * @property bool $isDealer
+ * @property SmtpAccount $stmpAccount
  */
 class User extends BaseEntity implements IIdentity, IUserSocials
 {
@@ -42,6 +43,9 @@ class User extends BaseEntity implements IIdentity, IUserSocials
 
 	/** @ORM\Column(type="boolean", nullable=false) */
 	protected $isDealer = FALSE;
+
+	/** @ORM\OneToOne(targetEntity="SmtpAccount", cascade="all", fetch="LAZY", orphanRemoval=true) */
+	protected $smtpAccount;
 
 	public function __construct($mail = NULL, $verificated = FALSE)
 	{

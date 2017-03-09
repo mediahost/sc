@@ -5,6 +5,7 @@ namespace App\Components\Candidate\Form;
 use App\Components\BaseControl;
 use App\Components\Job\IAcceptReasonFactory;
 use App\Components\Job\ICustomStateFactory;
+use App\Components\Job\IInviteByMailFactory;
 use App\Components\Job\IMatchNotesFactory;
 use App\Extensions\Candidates\CandidatesList;
 use App\Helpers;
@@ -51,6 +52,9 @@ class PrintCandidate extends BaseControl
 
 	/** @var ICustomStateFactory @inject */
 	public $iCustomStateFactory;
+
+	/** @var IInviteByMailFactory @inject */
+	public $iInviteByMailFactory;
 
 	/** @var Candidate */
 	private $candidate;
@@ -315,6 +319,23 @@ class PrintCandidate extends BaseControl
 			$message = 'Candidate state was changed';
 			$this->presenter->flashMessage($this->translator->translate($message), 'success');
 			$this->reload();
+		};
+		return $control;
+	}
+
+	public function createComponentInviteByMail()
+	{
+		$control = $this->iInviteByMailFactory->create();
+		$control->setCandidate($this->candidate);
+		$control->onAfterSave[] = function (Match $match) {
+			$message = 'Candidate was ' . ($match->candidateApprove ? 'approved' : 'invited');
+			$this->presenter->flashMessage($this->translator->translate($message), 'success');
+			$this->redirect('this');
+		};
+		$control->onAfterFail[] = function () {
+			$message = 'Missing dealer or job';
+			$this->presenter->flashMessage($this->translator->translate($message), 'warning');
+			$this->redirect('this');
 		};
 		return $control;
 	}

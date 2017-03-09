@@ -22,11 +22,12 @@
 						<h5>{_$skillCategory}</h5>
 						<ul class="skill-list">
 							<li n:foreach="$skill as $skillItem">
-								<span data-toggle="tooltip" data-placement="right" data-original-title="{_$skillItem['level']->name}">
+								<span data-toggle="tooltip" data-placement="right"
+								      data-original-title="{_$skillItem['level']->name}">
 								{foreach [1,2,3,4,5] as $quality}
 									<i n:class="$quality <= $skillItem['level']->id ? qualified, $skillItem['level']->id === 6 ? not-defined"></i>
 								{/foreach}
-								&nbsp;{$skillItem['name']}
+									&nbsp;{$skillItem['name']}
 								</span>
 							</li>
 						</ul>
@@ -115,41 +116,28 @@
 					{if $showJobList}
 						<div class="col-md-12">
 							<p>
-								<b>{_'Job matches'}</b>
-								| <a href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
+								<b>{_'Job matches'}</b> |
+								<a n:if="!$user->isUnregistered()" href="#matches-{$id}" data-toggle="modal">{_'Show all'}</a>
+								<a n:if="$user->isUnregistered()" href="#inviteByMail-{$id}" data-toggle="modal">{_'Invite for job'}</a>
 							</p>
 							<table class="jobs">
+								{var displayedCount => 0}
 								<tr n:foreach="$jobs as $job">
 									{var matchItem => $candidate->findMatch($job)}
-									<th>
-										<a href="{plink Job:view $job->id}">
-											{$job|truncate:35}
-										</a>
-									</th>
-									{if $matchItem && $matchItem->fullApprove}
-										<td class="match" colspan="2">
-											<span class="fa fa-check"></span> {_'Matched'}
-										</td>
-									{else}
-										<td class="apply">
-											{if $matchItem && $matchItem->candidateApprove}
-												<span class="fa fa-check"></span> {_'Applied'}
-											{else}
-												<span class="fa fa-times"></span> {_'Not applied'}
-											{/if}
-										</td>
-										<td class="invite">
-											{if $matchItem && $matchItem->adminApprove}
-												{if $matchItem->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
-												<span class="fa fa-check"></span>
-											{else}
-												<a n:href="match! $job->id" class="ajax">
-													{if $matchItem && $matchItem->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
-												</a>
-											{/if}
-										</td>
+									{if $matchItem}
+										{include jobItem 'matchItem' => $matchItem, 'job' => $job, 'truncate' => TRUE}
+										{? $displayedCount++}
 									{/if}
-									{breakIf $iterator->counter >= $primaryJobsCount}
+									{breakIf $displayedCount >= $primaryJobsCount}
+								</tr>
+								<tr n:if="!$user->isUnregistered() && $displayedCount < $primaryJobsCount"
+										n:foreach="$jobs as $job">
+									{var matchItem => $candidate->findMatch($job)}
+									{if !$matchItem}
+										{include jobItem 'matchItem' => $matchItem, 'job' => $job, 'truncate' => TRUE}
+										{? $displayedCount++}
+									{/if}
+									{breakIf $displayedCount >= $primaryJobsCount}
 								</tr>
 							</table>
 						</div>
@@ -158,7 +146,8 @@
 							<div class="col-md-12">
 								<div class="row">
 									<div class="col-md-2">
-										<a href="#rejectReason-{$id}" data-toggle="modal" class="btn btn-danger">{_'Reject'}</a>
+										<a href="#rejectReason-{$id}" data-toggle="modal"
+										   class="btn btn-danger">{_'Reject'}</a>
 									</div>
 									<div class="col-md-10">
 										<a n:foreach="$matchStates as $stateId => $stateName"
@@ -172,7 +161,8 @@
 							</div>
 						{elseif $match->fullApprove}
 							<div class="col-md-12">
-								<a href="#acceptReason-{$id}" data-toggle="modal" class="btn btn-success">{_'Accept'}</a>
+								<a href="#acceptReason-{$id}" data-toggle="modal"
+								   class="btn btn-success">{_'Accept'}</a>
 								<a href="#rejectReason-{$id}" data-toggle="modal"
 								   class="btn btn-danger" n:if="$match->accept !== FALSE">{_'Reject'}</a>
 							</div>
@@ -203,7 +193,7 @@
 	<div n:if="$showJobList"
 			class="modal fade jobMatches" id="matches-{$id}" tabindex="-1" role="dialog"
 			aria-hidden="true">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
@@ -220,34 +210,7 @@
 					<table class="jobs">
 						<tr n:foreach="$jobs as $job">
 							{var matchItem => $candidate->findMatch($job)}
-							<th>
-								<a href="{plink Job:view $job->id}">
-									{$job}
-								</a>
-							</th>
-							{if $matchItem && $matchItem->fullApprove}
-								<td colspan="2">
-									<span class="fa fa-check"></span> {_'Matched'}
-								</td>
-							{else}
-								<td>
-									{if $matchItem && $matchItem->candidateApprove}
-										<span class="fa fa-check"></span> {_'Applied'}
-									{else}
-										<span class="fa fa-times"></span> {_'Not applied'}
-									{/if}
-								</td>
-								<td>
-									{if $matchItem && $matchItem->adminApprove}
-										{if $matchItem->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
-										<span class="fa fa-check"></span>
-									{else}
-										<a n:href="match! $job->id">
-											{if $matchItem && $matchItem->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
-										</a>
-									{/if}
-								</td>
-							{/if}
+							{include jobItem 'matchItem' => $matchItem, 'job' => $job, 'truncate' => FALSE}
 						</tr>
 					</table>
 				</div>
@@ -341,4 +304,61 @@
 		</div>
 	</div>
 
+	<div n:if="$user->isUnregistered()"
+			class="modal fade inviteByMail" id="inviteByMail-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Send invitation to the candidate'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control inviteByMail}
+				</div>
+			</div>
+		</div>
+	</div>
+
 {/snippet}
+
+{define jobItem}
+	<th>
+		<a href="{plink Job:view $job->id}">
+			{if $truncate}
+				{$job|truncate:35}
+			{else}
+				{$job}
+			{/if}
+		</a>
+	</th>
+	{if $matchItem && $matchItem->fullApprove}
+		<td colspan="2" class="match">
+			<span class="fa fa-check"></span> {_'Matched'}
+		</td>
+	{else}
+		<td class="apply">
+			{if $matchItem && $matchItem->candidateApprove}
+				<span class="fa fa-check"></span> {_'Applied'}
+			{else}
+				<span class="fa fa-times"></span> {_'Not applied'}
+			{/if}
+		</td>
+		<td class="invite">
+			{if $matchItem && $matchItem->adminApprove}
+				{if $matchItem->candidateApprove}{_'Approved'}{else}{_'Invited'}{/if}
+				<span class="fa fa-check"></span>
+			{elseif $user->isUnregistered()}
+				<a href="#inviteByMail-{$id}" data-toggle="modal">{_'Invite'}</a>
+			{else}
+				<a n:href="match! $job->id" class="ajax">
+					{if $matchItem && $matchItem->candidateApprove}{_'Approve'}{else}{_'Invite'}{/if}
+				</a>
+			{/if}
+		</td>
+	{/if}
+{/define}

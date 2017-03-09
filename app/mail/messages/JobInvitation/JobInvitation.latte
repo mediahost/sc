@@ -1,0 +1,40 @@
+{layout '../@layout.latte'}
+
+{block subtitle}
+	<font size="+1" color="#00285A">{_'Job Invitation'}</font>
+{/block}
+
+{block content}
+<table class="container content" align="center">
+	<tr>
+		<td>
+			<table class="row note">
+				<tr>
+					<td class="wrapper last">
+						<p>
+							{_'Hi %name%', NULL, ['name' => $candidate->person->firstname]},
+						</p>
+						<p>
+							{$mainText|striptags|nl2br|noescape}
+						</p>
+						<p>
+							{_'You can find more details about this role and apply directly here if you like:'}
+						</p>
+						<p>
+							<a n:href="{$colon}App:Job:view $job->id">
+								{link {$colon}App:Job:view $job->id}
+							</a>
+						</p>
+						<p>
+							{_'Alternatively, if you would be interested to discuss through in a bit more detail just let me know.'}
+						</p>
+						<p>
+							{_'Best regards'},<br/>
+							{$sender->person->fullName}
+						</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>

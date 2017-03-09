@@ -29,11 +29,21 @@ trait UserFacadeGetters
 	public function getDealers()
 	{
 		$admin = $this->roleDao->findOneByName(Role::ADMIN);
-		$user = $this->userRepo->findBy([
+		$dealers = $this->userRepo->findBy([
 			'isDealer' => TRUE,
 			'roles.id' => $admin,
 		]);
-		return $user;
+		return $dealers;
+	}
+
+	public function getDealersPairs()
+	{
+		$pairs = [];
+		$dealers = $this->getDealers();
+		foreach ($dealers as $dealer) {
+			$pairs[$dealer->id] = (string)$dealer;
+		}
+		return $pairs;
 	}
 
 }

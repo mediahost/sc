@@ -3,6 +3,7 @@
 namespace App\Model\Facade;
 
 use App\Model\Entity\Action;
+use App\Model\Entity\Candidate;
 use App\Model\Entity\Communication;
 use App\Model\Entity\Cv;
 use App\Model\Entity\Job;
@@ -88,6 +89,23 @@ class JobFacade extends Object
 	{
 		$categoryRepo = $this->em->getDao(JobCategory::getClassName());
 		return $categoryRepo->findPairs('name');
+	}
+
+	public function getUnmatched(Candidate $candidate, $toString = FALSE)
+	{
+		$jobs = $this->jobRepo->findAll();
+		$unmatched = [];
+		foreach ($jobs as $job) {
+			$match = $this->matchRepo->findOneBy([
+				'job' => $job,
+				'candidate' => $candidate,
+				'adminApprove' => TRUE,
+			]);
+			if (!$match) {
+				$unmatched[$job->id] = $toString ? (string)$job : $job;
+			}
+		}
+		return $unmatched;
 	}
 
 	public function delete($id)

@@ -35,6 +35,10 @@ class CandidateListener extends Object implements Subscriber
 
 	public function onMatch(Match $match)
 	{
+		if ($match->candidate->person->user->isUnregistered()) {
+			return;
+		}
+
 		if ($match->fullApprove) {
 			$this->communicationFacade->sendMatchMessage($match);
 
@@ -60,6 +64,10 @@ class CandidateListener extends Object implements Subscriber
 
 	public function onAccept(Match $match)
 	{
+		if ($match->candidate->person->user->isUnregistered()) {
+			return;
+		}
+
 		if ($match->accepted) {
 			$this->communicationFacade->sendAcceptMessage($match);
 		} else if ($match->rejected) {
