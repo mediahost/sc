@@ -5,6 +5,7 @@ namespace App\Model\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Knp\DoctrineBehaviors\Model;
 
 /**
  * @ORM\Entity
@@ -22,6 +23,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 class ImportedUser extends BaseEntity
 {
 	use Identifier;
+	use Model\Timestampable\Timestampable;
 
 	/** @ORM\Column(type="string", nullable=false, unique=true) */
 	protected $mail;

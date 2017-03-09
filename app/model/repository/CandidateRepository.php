@@ -58,8 +58,9 @@ class CandidateRepository extends BaseRepository
 				case self::CRITERIA_KEY_ACTIVE:
 					$joins['c.person'] = 'p';
 					$joins['p.user'] = 'u';
-					$condition->add('u.verificated = :verificated');
-					$params[':verificated'] = (bool)$value;
+					$condition->add('u.verificated = :verificated OR u.createdByAdmin = :createdByAdmin');
+					$params['verificated'] = (bool)$value;
+					$params['createdByAdmin'] = (bool)$value;
 					break;
 				case self::CRITERIA_KEY_ROLE:
 					if ($value instanceof Role) {
@@ -67,7 +68,7 @@ class CandidateRepository extends BaseRepository
 						$joins['p.user'] = 'u';
 						$joins['u.roles'] = 'r';
 						$condition->add('r = :role');
-						$params[':role'] = $value;
+						$params['role'] = $value;
 					}
 					break;
 				case self::CRITERIA_KEY_FULLTEXT:
@@ -85,7 +86,7 @@ class CandidateRepository extends BaseRepository
 							$partOr->add($rule . ' :word' . $i);
 						}
 						$condition->add($partOr);
-						$params[':word' . $i] = '%' . $word . '%';
+						$params['word' . $i] = '%' . $word . '%';
 					}
 					break;
 				case self::CRITERIA_KEY_JOB:

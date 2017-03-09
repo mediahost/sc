@@ -8,10 +8,12 @@ use App\Extensions\Installer;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\CompanyRole;
+use App\Model\Entity\ImportedUser;
 use App\Model\Entity\Job;
 use App\Model\Entity\Role;
 use App\Model\Entity\Skill;
 use App\Model\Entity\SkillCategory;
+use App\Model\Entity\User;
 use App\Model\Facade\CompanyFacade;
 use App\Model\Facade\RoleFacade;
 use App\Model\Facade\UserFacade;
@@ -224,6 +226,30 @@ class ServicePresenter extends BasePresenter
 		$this->redirect('this');
 	}
 
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('importUsers')
+	 */
+	public function handleImportUsers()
+	{
+		$count = $this->importExistedUsers();
+		$this->flashMessage($this->translator->translate('%count% users was edited.', $count), 'success');
+		$this->redirect('this');
+	}
+
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('importNewUsers')
+	 */
+	public function handleImportNewUsers()
+	{
+		$count = $this->importNewUsers();
+		$this->flashMessage($this->translator->translate('%count% users was inserted.', $count), 'success');
+		$this->redirect('this');
+	}
+
 	private function reinstall()
 	{
 		$this->uninstall();
@@ -363,6 +389,66 @@ class ServicePresenter extends BasePresenter
 			$this->em->persist($candidate);
 		}
 		$this->em->flush();
+	}
+
+	private function importExistedUsers()
+	{
+		$importedUserRepo = $this->em->getRepository(ImportedUser::getClassName());
+		$userRepo = $this->em->getRepository(User::getClassName());
+
+		$count = 0;
+		$importedUsers = $importedUserRepo->findAll();
+		foreach ($importedUsers as $importedUser) {
+			$user = $userRepo->findOneByMail($importedUser->mail);
+			if ($user) {
+				$change = $this->loadUserData($user, $importedUser, FALSE);
+				if ($change) {
+					$userRepo->save($user);
+					$count++;
+				}
+			}
+		}
+		return $count;
+	}
+
+	private function importNewUsers()
+	{
+		$importedUserRepo = $this->em->getRepository(ImportedUser::getClassName());
+		$userRepo = $this->em->getRepository(User::getClassName());
+		$roleRepo = $this->em->getRepository(Role::getClassName());
+		$role = $roleRepo->findOneByName(Role::CANDIDATE);
+
+		$count = 0;
+		$importedUsers = $importedUserRepo->findAll();
+		foreach ($importedUsers as $importedUser) {
+			$user = $userRepo->findOneByMail($importedUser->mail);
+			if (!$user) {
+				$user = new User($importedUser->mail);
+				$user->createdByAdmin = TRUE;
+
+				$user->addRole($role);
+
+				$this->loadUserData($user, $importedUser);
+
+				$userRepo->save($user);
+				$count++;
+			}
+		}
+		return $count;
+	}
+
+	private function loadUserData(User &$user, ImportedUser $imported, $loadAll = TRUE)
+	{
+		$change = FALSE;
+		if ($imported->firstname && ($loadAll || !$user->person->firstname)) {
+			$user->person->firstname = $imported->firstname;
+			$change = TRUE;
+		}
+		if ($imported->surname && ($loadAll || !$user->person->surname)) {
+			$user->person->surname = $imported->surname;
+			$change = TRUE;
+		}
+		return $change;
 	}
 
 	/** @return CsvUserImport */
