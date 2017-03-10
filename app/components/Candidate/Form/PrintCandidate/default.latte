@@ -10,9 +10,8 @@
 					<small n:if="$person && $person->address">
 						{$person->address->city}
 					</small>
-					<a href="{plink Users:access $user->id}">
-						<span n:if="isset($user) && $template->canAccess($identity, $user)"
-								data-toggle="tooltip" data-placement="top" data-original-title="{_'Access to account'}">
+					<a href="{plink Users:access $user->id}" n:if="isset($user) && $template->canAccess($identity, $user)">
+						<span data-toggle="tooltip" data-placement="top" data-original-title="{_'Access to account'}">
 							<i class="fa fa-key"></i>
 						</span>
 					</a>

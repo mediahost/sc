@@ -21,6 +21,8 @@ trait UserFacadeAccess
 			return FALSE; // cant acces to myself
 		} else if ($identityUser->isInRole(Role::COMPANY)) {
 			return FALSE;
+		} else if ($user->isUnregistered()) {
+			return FALSE;
 		} else {
 			$identityLowerRoles = $this->findLowerRoles($identityUser->roles); // can acces to only lower roles
 			return in_array($user->maxRole->name, $identityLowerRoles);
