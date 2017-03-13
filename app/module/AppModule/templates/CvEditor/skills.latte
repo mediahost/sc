@@ -1,5 +1,11 @@
 {block pageTitle}
-	{_'IT Skills'}
+	{if $isMine}
+		{_'IT Skills'}
+	{elseif $isAdmin}
+		{_'IT Skills of %candidate% (%mail%)', NULL, ['candidate' => $candidate, 'mail' => $person->user->mail]}
+	{else}
+		{_'IT Skills of %candidate%', NULL, ['candidate' => $candidate]}
+	{/if}
 {/block}
 
 {block breadcrumbItems}

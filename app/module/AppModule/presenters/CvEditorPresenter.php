@@ -74,6 +74,12 @@ class CvEditorPresenter extends BasePresenter
 	/** @var Entity\Cv */
 	private $cv;
 
+	/** @var bool */
+	private $isMine;
+
+	/** @var bool */
+	private $canEdit;
+
 	protected function startup()
 	{
 		parent::startup();
@@ -106,11 +112,11 @@ class CvEditorPresenter extends BasePresenter
 		$candidate = $user->person->candidate;
 
 		if ($id) {
-			$cvDao = $this->em->getDao(Entity\Cv::getClassName());
-			$findedCv = $cvDao->find($id);
-			$isOwnCv = $candidate && $findedCv->candidate->id === $candidate->id;
-			$canEditForeignCv = $findedCv && $this->user->isAllowed('cvEditor', 'editForeign');
-			if ($isOwnCv || $canEditForeignCv) {
+			$cvRepo = $this->em->getRepository(Entity\Cv::getClassName());
+			$findedCv = $cvRepo->find($id);
+			$this->isMine = $candidate && $findedCv->candidate->id === $candidate->id;
+			$this->canEdit = $findedCv && $this->user->isAllowed('cvEditor', 'editForeign');
+			if ($this->isMine || $this->canEdit) {
 				$this->cv = $findedCv;
 			}
 		} else if ($candidate) {
@@ -144,6 +150,10 @@ class CvEditorPresenter extends BasePresenter
 	{
 		$this->getCv($id);
 		$this['skillsForm']->setTemplateFile('ItSkills');
+		$this->template->isMine = $this->isMine;
+		$this->template->canEdit = $this->canEdit;
+		$this->template->candidate = $this->cv->candidate;
+		$this->template->person = $this->cv->candidate->person;
 	}
 
 	/**

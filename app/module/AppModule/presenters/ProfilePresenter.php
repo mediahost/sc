@@ -24,6 +24,7 @@ use App\Components\Cv\Skills;
 use App\Components\User\CareerDocs;
 use App\Components\User\ICareerDocsFactory;
 use App\Model\Entity\Candidate;
+use App\Model\Entity\Cv;
 use App\Model\Entity\Person;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -124,6 +125,11 @@ class ProfilePresenter extends BasePresenter
 				$this->flashMessage($message, 'warning');
 				$this->redirect('Dashboard:');
 			}
+		}
+
+		if (!$this->candidate->cv->id) {
+			$cvRepo = $this->em->getRepository(Cv::getClassName());
+			$cvRepo->save($this->candidate->cv);
 		}
 
 		$this->isMine = $this->user->id === $this->person->user->id;

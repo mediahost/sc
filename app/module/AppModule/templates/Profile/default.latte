@@ -119,7 +119,20 @@
 {define itSkillsPanel}
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4 class="panel-title">{_'IT Skills'}</h4>
+			<h4 class="panel-title">
+				{_'IT Skills'}
+				{if $canEdit}
+					{if $isAdmin}
+						<a n:href="CvEditor:skills $candidate->cv->id">
+							<span class="fa fa-edit"></span>
+						</a>
+					{else}
+						<a n:href="CvEditor:skills">
+							<span class="fa fa-edit"></span>
+						</a>
+					{/if}
+				{/if}
+			</h4>
 		</div>
 		<div class="panel-body pb0">
 			{control skillsForm}
