@@ -70,6 +70,7 @@ class User extends BaseControl
 
 		if ($this->user->isNew()) {
 			$form->addCheckSwitch('createRegistration', 'Create registration')
+				->setDefaultValue(TRUE)
 				->addCondition($form::EQUAL, TRUE)
 				->toggle('password');
 		}
@@ -121,6 +122,7 @@ class User extends BaseControl
 					'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 				];
 				$form->addUpload('cvFile', 'Upload New CV')
+					->addConditionOn($form['createRegistration'], Form::EQUAL, TRUE)
 					->addRule(Form::MIME_TYPE, 'File must be PDF or DOC', implode(',', $acceptedFiles));
 			}
 
@@ -145,9 +147,8 @@ class User extends BaseControl
 			$form->addCheckSwitch('smtpSsl', 'SSL');
 		}
 
-		if (!$this->user->isNew()) {
-			$form->setDefaults($this->getDefaults());
-		}
+		$form->setDefaults($this->getDefaults());
+
 		$form->addSubmit('save', 'Save');
 		if ($this->identity->isAllowed('candidates', 'edit') && $this->user->isCandidate()) {
 			$form->addSubmit('saveAndCandidate', 'Save & Go to candidate');
@@ -295,8 +296,8 @@ class User extends BaseControl
 			'gender' => $this->user->person->gender,
 			'phone' => $this->user->person->phoneMobile,
 			'isDealer' => $this->user->isDealer,
-			'smtpHost' => $this->user->smtpAccount ? $this->user->smtpAccount->host : NULL,
-			'smtpUsername' => $this->user->smtpAccount ? $this->user->smtpAccount->username : NULL,
+			'smtpHost' => $this->user->smtpAccount ? $this->user->smtpAccount->host : 'mail.source-code.com',
+			'smtpUsername' => $this->user->smtpAccount ? $this->user->smtpAccount->username : $this->user->mail,
 			'smtpPassword' => $this->user->smtpAccount ? $this->user->smtpAccount->password : NULL,
 			'smtpSsl' => $this->user->smtpAccount ? $this->user->smtpAccount->secure : FALSE,
 		];

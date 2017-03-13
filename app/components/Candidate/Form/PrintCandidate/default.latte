@@ -10,6 +10,9 @@
 					<small n:if="$person && $person->address">
 						{$person->address->city}
 					</small>
+					<small n:if="$user->isUnregistered()">
+						{_'not registred'}
+					</small>
 					<a href="{plink Users:access $user->id}" n:if="isset($user) && $template->canAccess($identity, $user)">
 						<span data-toggle="tooltip" data-placement="top" data-original-title="{_'Access to account'}">
 							<i class="fa fa-key"></i>

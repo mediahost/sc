@@ -1,74 +1,85 @@
 {snippet candidatesFilter}
 	{form filterForm}
 		{? $form->render('begin')}
-		<div class="panel panel-default panel-closed toggle candidate-filter">
-			<div class="panel-heading">
-				<h4 class="panel-title">{_'Filter'}</h4>
-			</div>
-			<div class="panel-body p0">
-				<table class="table table-hover">
-					<tbody>
-					<tr>
-						<td colspan="2">
-							{input search}
-						</td>
-						<td>
-							{input send}
-							<a n:href="resetFilter!" class="btn btn-default">{_'Reset filter'}</a>
-						</td>
-					</tr>
-					<tr n:if="!$denyCompany">
-						<td class="name">
-							{label job/}
-						</td>
-						<td>
-							{input job}
-						</td>
-						<td>
-							{input send}
-						</td>
-					</tr>
-					<tr n:if="!$denyCompany">
-						<td class="name">
-							{label manager/}
-						</td>
-						<td>
-							{input manager}
-						</td>
-						<td>
-							{input send}
-						</td>
-					</tr>
-					<tr>
-						<td class="name">
-							{_'Category'}
-						</td>
-						<td class="tags">
-							<div>
+		<div class="panel-group accordion candidate-filter" id="candidateFilterPanel">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a class="accordion-toggle"
+						   data-toggle="collapse"
+						   data-parent="#candidateFilterPanel"
+						   href="#candidateFilterContent">
+							{_'Filter'}
+						</a>
+					</h4>
+				</div>
+				<div id="candidateFilterContent" class="panel-collapse collapse">
+					<div class="panel-body p0">
+						<table class="table table-hover" id="candidateFilter">
+							<tbody>
+							<tr>
+								<td colspan="2">
+									{input search}
+								</td>
+								<td>
+									{input send}
+									<a n:href="resetFilter!" class="btn btn-default">{_'Reset filter'}</a>
+								</td>
+							</tr>
+							<tr n:if="!$denyCompany">
+								<td class="name">
+									{label job/}
+								</td>
+								<td>
+									{input job}
+								</td>
+								<td>
+									{input send}
+								</td>
+							</tr>
+							<tr n:if="!$denyCompany">
+								<td class="name">
+									{label manager/}
+								</td>
+								<td>
+									{input manager}
+								</td>
+								<td>
+									{input send}
+								</td>
+							</tr>
+							<tr>
+								<td class="name">
+									{_'Category'}
+								</td>
+								<td class="tags">
+									<div>
 								<span n:foreach="$selectedCategories as $tag"
 										class="tag label label-info">{$tag}</span>
-							</div>
-						</td>
-						<td>
-							<a href="#categoryFilter" data-toggle="modal">{_'Set'}</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="name">
-							{_'IT skills'}
-						</td>
-						<td class="tags">
-							<div>
+									</div>
+								</td>
+								<td>
+									<a href="#categoryFilter" data-toggle="modal" class="btn btn-primary">{_'Set'}</a>
+								</td>
+							</tr>
+							<tr>
+								<td class="name">
+									{_'IT skills'}
+								</td>
+								<td class="tags">
+									<div>
 								<span n:foreach="$selectedSkills as $tag"
 										class="tag label label-info">{$tag}</span>
-							</div>
-						</td>
-						<td>
-							<a href="#skillsFilter" data-toggle="modal">{_'Set'}</a>
-						</td>
-					</tr>
-					</tbody>
-				</table>
+									</div>
+								</td>
+								<td>
+									<a href="#skillsFilter" data-toggle="modal" class="btn btn-primary">{_'Set'}</a>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
 		{? $form->render('end')}

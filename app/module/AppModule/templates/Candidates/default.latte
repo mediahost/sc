@@ -1,10 +1,17 @@
 {block pageTitle}
 	{_'Candidates'}
+	<small>
+		<a n:href="Users:addCandidate">
+			{_'New candidate'}
+		</a>
+	</small>
 {/block}
 
 {block breadcrumbItems}
 	<li>
-		<a n:href="Candidates:">{_'Candidates'}</a>
+		<a n:href="Candidates:">
+			{_'Candidates'}
+		</a>
 	</li>
 {/block}
 
