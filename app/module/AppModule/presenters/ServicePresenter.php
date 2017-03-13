@@ -455,7 +455,6 @@ class ServicePresenter extends BasePresenter
 		}
 		if ($imported->linkedinLink && ($loadAll || !$user->person->linkedinLink)) {
 			$user->person->linkedinLink = $imported->linkedinLink;
-			$this->parseImageFromLinkedin($user);
 			$change = TRUE;
 		}
 		if ($imported->country && ($loadAll || !$user->person->address || !$user->person->address->country)) {
@@ -486,11 +485,6 @@ class ServicePresenter extends BasePresenter
 			$change = TRUE;
 		}
 		return $change;
-	}
-
-	private function parseImageFromLinkedin(User $user)
-	{
-
 	}
 
 	private function addSkill(Cv $cv, $skillName)
