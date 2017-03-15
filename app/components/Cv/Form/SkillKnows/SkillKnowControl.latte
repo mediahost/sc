@@ -1,23 +1,28 @@
 {snippet}
-{form form, class=>'ajax sendOnChange'}
-<div class="col-md-12 row">
-	<div class="col-md-4">{$skill}</div>
-	<div n:class="col-md-4, max_w_120, rating-circles, $form['skillLevel']->value >= 6 ? rating-full">
-		{if $form['skillLevel']->value > 0}
-			{input reset class=>"btn btn-danger btn-xs btn-round rating-delete"}
-		{/if}
-		{input skillLevel class => "rating",
-			data-filled => "fa fa-circle green-circle",
-			data-empty => "fa fa-circle green-circle-o",
-            data-start => "0", data-stop => "6"}
-	</div>
-	<div class="col-md-4">
-		<div class="input-group max_w_110">
-			{input skillYears class => "form-control"}
-			<span class="input-group-addon">{_'years'}</span>
+	{form form, class=>'ajax sendOnChange'}
+		<div class="col-md-12 row">
+			<div class="col-md-4">{$skill}</div>
+			{var skillLevel => $skillKnow ? $skillKnow->level->id : $form['skillLevel']->value}
+			<div n:class="col-md-4, max_w_120, rating-circles, $skillLevel >= 6 ? rating-full">
+				{if $form['skillLevel']->value > 0}
+					{button reset}
+						<span class="icomoon-icon-close"></span>
+					{/button}
+				{/if}
+				{input skillLevel class => "rating",
+					data-filled => "fa fa-circle green-circle",
+					data-empty => "fa fa-circle green-circle-o"}
+				{button all}
+					<span class="icomoon-icon-arrow-right-12"></span>
+				{/button}
+			</div>
+			<div class="col-md-4">
+				<div class="input-group max_w_110">
+					{input skillYears class => "form-control"}
+					<span class="input-group-addon">{_'years'}</span>
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
-<div class="col-md-2"></div>
-{/form}
+		<div class="col-md-2"></div>
+	{/form}
 {/snippet}

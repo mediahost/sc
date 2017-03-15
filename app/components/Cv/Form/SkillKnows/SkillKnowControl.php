@@ -26,6 +26,7 @@ class SkillKnowControl extends BaseControl
 	{
 		$this->setTemplateFile('SkillKnowControl');
 		$this->template->skill = $this->skill;
+		$this->template->skillKnow = $this->skillKnow;
 		parent::render();
 	}
 
@@ -41,7 +42,10 @@ class SkillKnowControl extends BaseControl
 			->setAttribute('min', 0);
 
 		$form->addSubmit('reset', '')
-			->getControlPrototype()->class = 'btn btn-default btn-xs btn-round mr5 mb10';
+			->getControlPrototype()->class = 'rating-delete';
+
+		$form->addSubmit('all', '')
+			->getControlPrototype()->class = 'rating-all';
 
 		$form->setDefaults($this->getDefaults());
 		return $form;
@@ -51,7 +55,11 @@ class SkillKnowControl extends BaseControl
 	{
 		$result = ['skillLevel' => 0];
 		if ($this->skillKnow && $this->skillKnow->level) {
-			$result['skillLevel'] = $this->skillKnow->level->id;
+			if (SkillLevel::FIRST_PRIORITY <= $this->skillKnow->level->id && $this->skillKnow->level->id <= SkillLevel::LAST_PRIORITY) {
+				$result['skillLevel'] = $this->skillKnow->level->id;
+			} else {
+				$result['skillLevel'] = SkillLevel::LAST_PRIORITY;
+			}
 			$result['skillYears'] = $this->skillKnow->level->id > 1 ? $this->skillKnow->years : 0;
 		}
 		return $result;
@@ -62,6 +70,8 @@ class SkillKnowControl extends BaseControl
 		$this->redrawControl();
 		if ($form['reset']->isSubmittedBy()) {
 			$this->remove();
+		} else if ($form['all']->isSubmittedBy()) {
+			$this->addAll();
 		} else {
 			$this->load($values);
 		}
@@ -79,9 +89,25 @@ class SkillKnowControl extends BaseControl
 	{
 		if ($this->skillKnow) {
 			$this->cv->removeSkill($this->skillKnow);
-			$this['form']['skillLevel']->value = 0;
+			$this['form']['skillLevel']->value = SkillLevel::NONE;
 			$this['form']['skillYears']->value = '';
 		}
+	}
+
+	private function addAll()
+	{
+		$level = $this->em->getRepository(SkillLevel::getClassName())->find(SkillLevel::NOT_DEFINED);
+		if ($level) {
+			if (!$this->skillKnow) {
+				$this->skillKnow = new SkillKnow();
+				$this->skillKnow->skill = $this->skill;
+				$this->skillKnow->years = 0;
+				$this->skillKnow->cv = $this->cv;
+			}
+			$this->skillKnow->level = $level;
+			$this->cv->setSkillKnow($this->skillKnow);
+		}
+		$this['form']['skillLevel']->value = SkillLevel::LAST_PRIORITY;
 	}
 
 	private function load(ArrayHash $values)
@@ -90,7 +116,7 @@ class SkillKnowControl extends BaseControl
 			$this->skillKnow = new SkillKnow();
 		}
 
-		$level = $this->em->getDao(SkillLevel::getClassName())->find($values->skillLevel);
+		$level = $this->em->getRepository(SkillLevel::getClassName())->find($values->skillLevel);
 		$years = isset($values->skillYears) ? $values->skillYears : 0;
 
 		$this->skillKnow->skill = $this->skill;

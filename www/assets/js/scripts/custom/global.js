@@ -18,18 +18,7 @@ var Global = function () {
 	};
 
 	var handleRating = function () {
-		$('input.rating').rating({
-			extendSymbol: function () {
-				$(this).on('rating.rateenter', function (e, rate) {
-					var $parent = $(e.target).closest('rating-circles');
-					if (rate == 6) {
-						$parent.addClass('rating-full');
-					} else {
-						$parent.removeClass('rating-full');
-					}
-				});
-			}
-		});
+		$('input.rating').rating();
 	};
 
 	var hadleSlider = function () {

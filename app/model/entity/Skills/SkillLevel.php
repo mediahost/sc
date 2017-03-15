@@ -18,6 +18,7 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 class SkillLevel extends BaseEntity
 {
 
+	const NONE = 0;
 	const FIRST_PRIORITY = 1;
 	const LAST_PRIORITY = 5;
 	const NOT_DEFINED = 6;

@@ -47,6 +47,7 @@ class Skills extends BaseControl
 		$this->template->skills = $skills;
 		$this->template->categories = $categories;
 		$this->template->editable = $this->editable;
+		$this->template->cv = $this->cv;
 		parent::render();
 	}
 
@@ -95,6 +96,8 @@ class Skills extends BaseControl
 		$this->load($values);
 		$this->save();
 		$this->invalidateControl();
+		$this->redrawControl();
+		$this->presenter->redrawControl();
 		$this->onAfterSave();
 	}
 
@@ -107,6 +110,11 @@ class Skills extends BaseControl
 			$skill = $this->em->getDao(Skill::getClassName())->find($skillId);
 			$level = $this->em->getDao(SkillLevel::getClassName())->find($levelId);
 			$years = isset($values->skillYear[$skillId]) ? $values->skillYear[$skillId] : 0;
+
+			$skillKnow = $this->cv->getSkillKnow($skill);
+			if ($skillKnow->level->id === SkillLevel::NOT_DEFINED && $level->id === SkillLevel::LAST_PRIORITY) {
+				continue;
+			}
 
 			$newSkillKnow = new SkillKnow();
 			$newSkillKnow->skill = $skill;
@@ -132,7 +140,11 @@ class Skills extends BaseControl
 			'skillYear' => [],
 		];
 		foreach ($this->cv->skillKnows as $skillKnow) {
-			$values['skillLevel'][$skillKnow->skill->id] = $skillKnow->level->id;
+			if (SkillLevel::FIRST_PRIORITY <= $skillKnow->level->id && $skillKnow->level->id <= SkillLevel::LAST_PRIORITY) {
+				$values['skillLevel'][$skillKnow->skill->id] = $skillKnow->level->id;
+			} else {
+				$values['skillLevel'][$skillKnow->skill->id] = SkillLevel::LAST_PRIORITY;
+			}
 			$values['skillYear'][$skillKnow->skill->id] = $skillKnow->level->id > 1 ? $skillKnow->years : 0;
 		}
 		return $values;

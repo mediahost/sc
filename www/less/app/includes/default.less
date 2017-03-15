@@ -346,12 +346,24 @@ span {
 			}
 		}
 	}
-	.btn.btn-round.rating-delete {
+	.rating-delete, .rating-all {
 		border: none;
-		line-height: 0;
+		background: none;
 		padding: 0px;
-		width: 13px;
-		height: 13px;
-		margin-left: -16px;
+		span {
+			margin: 0px;
+		}
+	}
+	.rating-delete {
+		margin-left: -14px;
+		span {
+			color: #c12e2a;
+			font-size: 11px;
+		}
+	}
+	.rating-all {
+		span {
+			color: #ff9800;
+		}
 	}
 }
