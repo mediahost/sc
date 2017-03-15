@@ -74,7 +74,7 @@ class CsvUserImport extends BaseControl
 		$row = ArrayHash::from($rowArray);
 		$userRepo = $this->em->getRepository(ImportedUser::getClassName());
 		/* @var $user ImportedUser */
-		if ($row->mail) {
+		if (isset($row->mail) && $row->mail) {
 			$user = $userRepo->findOneByMail($row->mail);
 			if (!$user) {
 				$user = new ImportedUser($row->mail);
