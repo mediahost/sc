@@ -74,7 +74,7 @@ class Address extends BaseEntity
 		foreach ($replacements as $pattern => $replacement) {
 			$format = preg_replace('/%' . $pattern . '%/', $this->{$replacement}, $format);
 		}
-		return $format;
+		return trim($format, ', ');
 	}
 	
 	public static function getCountriesList()

@@ -7,8 +7,9 @@
 							href="{plink Profile: $user->person->candidate->profileId}">
 						<strong n:if="$person->fullName">{$person->fullNameTitle}</strong><strong
 								n:if="!$person->fullName">{_'Candidate #%id%', ['id' => $candidate->id]}</strong></a>
-					<small n:if="$person && $person->address">
-						{$person->address->city}
+					<small n:if="$person && $person->address && $person->address->format('%city%, %country%')">
+						{$person->address->format('%city%, %country%')}
+						<span n:if="$user->isUnregistered()">|</span>
 					</small>
 					<small n:if="$user->isUnregistered()">
 						{_'not registred'}
