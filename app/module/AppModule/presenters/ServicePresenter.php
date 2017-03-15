@@ -420,6 +420,7 @@ class ServicePresenter extends BasePresenter
 	{
 		$importedUserRepo = $this->em->getRepository(ImportedUser::getClassName());
 		$userRepo = $this->em->getRepository(User::getClassName());
+		$candidateRepo = $this->em->getRepository(Candidate::getClassName());
 		$roleRepo = $this->em->getRepository(Role::getClassName());
 		$role = $roleRepo->findOneByName(Role::CANDIDATE);
 
@@ -432,6 +433,8 @@ class ServicePresenter extends BasePresenter
 				$user->createdByAdmin = TRUE;
 
 				$user->addRole($role);
+				$userRepo->save($user);
+				$candidateRepo->save($user->person->candidate);
 
 				$this->loadUserData($user, $importedUser);
 
@@ -457,28 +460,25 @@ class ServicePresenter extends BasePresenter
 			$user->person->linkedinLink = $imported->linkedinLink;
 			$change = TRUE;
 		}
-		if ($imported->country && ($loadAll || !$user->person->address || !$user->person->address->country)) {
-			if (!$user->person->address) {
-				$user->person->address = new Address();
+		$countryId = $this->checkCountry($imported->country);
+		if ($countryId) {
+			if ($loadAll || !$user->person->address || !$user->person->address->country) {
+				if (!$user->person->address) {
+					$user->person->address = new Address();
+				}
+				$user->person->address->country = $countryId;
+				$change = TRUE;
 			}
-			switch ($imported->country) {
-				case 'Portugal':
-				case 'Portugal-UK':
-				case 'Portugal/Germany':
-					$user->person->address->country = 23;
-					break;
-				default:
-					throw new InternalException('Unexpected "country" value: "' . $imported->country . '"');
-			}
-			$change = TRUE;
+		} else {
+			throw new InternalException('Unexpected "country" value: "' . $imported->country . '"');
 		}
-		if ($imported->coreSkill && ($loadAll || !count($user->person->candidate->cv->skillKnows))) {
+		if ($imported->coreSkill && $this->checkSkill($imported->coreSkill) && ($loadAll || !count($user->person->candidate->cv->skillKnows))) {
 			$this->addSkill($user->person->candidate->cv, $imported->coreSkill);
 			$cvRepo = $this->em->getRepository(Cv::getClassName());
 			$cvRepo->save($user->person->candidate->cv);
 			$change = TRUE;
 		}
-		if ($imported->otherSkill && ($loadAll || !count($user->person->candidate->cv->skillKnows))) {
+		if ($imported->otherSkill && $this->checkSkill($imported->otherSkill)  && ($loadAll || !count($user->person->candidate->cv->skillKnows))) {
 			$this->addSkill($user->person->candidate->cv, $imported->otherSkill);
 			$cvRepo = $this->em->getRepository(Cv::getClassName());
 			$cvRepo->save($user->person->candidate->cv);
@@ -489,14 +489,7 @@ class ServicePresenter extends BasePresenter
 
 	private function addSkill(Cv $cv, $skillName)
 	{
-		switch ($skillName) {
-			case 'FULL-STACK':
-				$skillName = '...';
-				break;
-		}
-		$skillRepo = $this->em->getRepository(Skill::getClassName());
-		$skill = $skillRepo->findOneByName($skillName);
-
+		$skill = $this->checkSkill($skillName);
 		if ($skill) {
 			$skillLevel = $this->em->getRepository(SkillLevel::getClassName())->find(SkillLevel::NOT_DEFINED);
 			$skillKnow = new SkillKnow();
@@ -508,6 +501,64 @@ class ServicePresenter extends BasePresenter
 		} else {
 			throw new InternalException('Unexpected "skill" value: "' . $skillName . '"');
 		}
+	}
+
+	private function checkSkill($skillName)
+	{
+		$skillName = Strings::lower($skillName);
+		switch ($skillName) {
+			case 'full-stack':
+			case 'frontend':
+			case 'frontend dev':
+			case 'front end':
+			case 'big data':
+			case 'web developer':
+			case 'lead developer':
+			case 'devops':
+			case 'android':
+			case 'sql':
+			case 'html':
+			case 'htm':
+			case 'css':
+				return;
+			case 'angular.js':
+			case 'angular js':
+				$skillName = 'AngularJS';
+				break;
+			case '.net':
+			case 'asp.net':
+				$skillName = 'ASP.NET MVC';
+				break;
+			case 'javascript/css/html':
+				$skillName = 'Javascript';
+				break;
+			case 'postgre':
+				$skillName = 'Postgre SQL';
+				break;
+			case 'ios':
+				$skillName = 'OSX';
+				break;
+		}
+		$skillRepo = $this->em->getRepository(Skill::getClassName());
+		$skill = $skillRepo->findOneByName($skillName);
+		return $skill;
+	}
+
+	private function checkCountry($countryName)
+	{
+		$countryId = NULL;
+		$countryName = Strings::lower($countryName);
+		switch ($countryName) {
+			case 'portugal':
+			case 'portugal-uk':
+			case 'portugal/uk':
+			case 'portugal/germany':
+			case 'porugal':
+			case 'porygal':
+				$countryId = 'PT';
+				break;
+		}
+		return $countryId;
 	}
 
 	/** @return CsvUserImport */
