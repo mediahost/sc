@@ -177,6 +177,7 @@ class SignListener extends Object implements Subscriber
 	}
 
 	/**
+	 * Přichází do metody existující uživatel a neexistující sociální uživatel
 	 * Pro verifikované účty provede připojení
 	 * @param Control $control
 	 * @param User $user
@@ -184,7 +185,7 @@ class SignListener extends Object implements Subscriber
 	 */
 	private function join(Control $control, User $user, User $existedUser)
 	{
-		if ($existedUser->verificated) {
+		if ($user->verificated && $existedUser->verificated) {
 			if ($control instanceof Facebook) {
 				$existedUser->facebook = $user->facebook;
 			} else if ($control instanceof Linkedin) {
@@ -202,7 +203,7 @@ class SignListener extends Object implements Subscriber
 
 			$this->userFacade->importSocialData($existedUser);
 			$this->onSuccess($control, $existedUser);
-		} else {
+		} else if (!$existedUser->verificated) {
 			$userRepo = $this->em->getRepository(User::getClassName());
 			$this->userFacade->setVerification($existedUser);
 			$userRepo->save($existedUser);
@@ -214,6 +215,11 @@ class SignListener extends Object implements Subscriber
 			$message->send();
 
 			$message = 'We cannot join your account automatically while you not verify your account. We send you mail with verification link.';
+			$message = $this->translator->translate($message);
+			$control->presenter->flashMessage($message);
+			$control->presenter->redirect(self::REDIRECT_SIGN_IN_PAGE);
+		} else if (!$user->verificated) {
+			$message = 'We cannot join your account automatically for this method. Please join this method after log in.';
 			$message = $this->translator->translate($message);
 			$control->presenter->flashMessage($message);
 			$control->presenter->redirect(self::REDIRECT_SIGN_IN_PAGE);
