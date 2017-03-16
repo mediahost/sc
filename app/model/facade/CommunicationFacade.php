@@ -114,6 +114,16 @@ class CommunicationFacade extends Object
 		return $this->senderRepo->findAssoc($criteria, 'id');
 	}
 
+	public function getSendersPairs()
+	{
+		$pairs = [];
+		$senders = $this->senderRepo->findAll();
+		foreach ($senders as $sender) {
+			$pairs[$sender->id] = (string)$sender;
+		}
+		return $pairs;
+	}
+
 	public function createCommunication(Sender $sender, array $recipients, $subject, $message = NULL, Job $job = NULL, Candidate $candidate = NULL)
 	{
 		$recipients[] = $sender;

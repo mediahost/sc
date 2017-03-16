@@ -49,12 +49,21 @@
 								</li>
 
 								<li n:if="$user->isAllowed('messages', 'default')">
-									<a n:href="Messages:" n:class="$presenter->isLinkCurrent('Messages:*') && !$presenter->isLinkCurrent('Messages:MessagesList') ? active">
+									<a n:href="Messages:" n:class="clickable, $presenter->isLinkCurrent('Messages:*') ? active">
 										<i class="s16 icomoon-icon-envelop"></i>
 										<span class="txt">{_'Messages'}</span>
 										<span n:if="$unreadMessagesCount"
 												class="notification red">{$unreadMessagesCount}</span>
 									</a>
+									<ul n:if="$user->isAllowed('messages', 'list')"
+											n:class="sub, $presenter->isLinkCurrent('Messages:*') ? show">
+										<li>
+											<a n:href="Messages:list" n:class="$presenter->isLinkCurrent('Messages:list') ? active">
+												<i class="s16 fa fa-inbox"></i>
+												<span class="txt">{_'All users'}</span>
+											</a>
+										</li>
+									</ul>
 								</li>
 
 								<li n:if="$isCandidate">
@@ -132,12 +141,12 @@
 						</div>
 						<div class="mainnav">
 							<ul>
-								<li n:if="$user->isAllowed('messagesList')">
-									<a n:href="Messages:MessagesList" n:class="$presenter->isLinkCurrent('Messages:MessagesList') ? active">
-										<i class="s16 icomoon-icon-envelop"></i>
-										<span class="txt">{_'Messages list'}</span>
-									</a>
-								</li>
+								{*<li n:if="$user->isAllowed('messagesList')">*}
+									{*<a n:href="Messages:MessagesList" n:class="$presenter->isLinkCurrent('Messages:MessagesList') ? active">*}
+										{*<i class="s16 icomoon-icon-envelop"></i>*}
+										{*<span class="txt">{_'Messages list'}</span>*}
+									{*</a>*}
+								{*</li>*}
 								<li n:if="$user->isAllowed('jobCategories', 'default')">
 									<a n:href="JobCategories:" n:class="$presenter->isLinkCurrent('JobCategories:*') ? active">
 										<i class="fa fa-briefcase"></i>

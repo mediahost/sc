@@ -88,6 +88,9 @@ class Job extends BaseEntity
 	/** @ORM\OneToMany(targetEntity="Match", mappedBy="job") */
 	protected $matches;
 
+	/** @ORM\OneToMany(targetEntity="Communication", mappedBy="job") */
+	protected $communications;
+
 	public function __construct($name = NULL)
 	{
 		if ($name) {

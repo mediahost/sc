@@ -537,9 +537,12 @@
             navSub.closest('li').addClass('hasSub');
 
             //put notExpand class
-            if(!navSub.prev('a').hasClass('notExpand')) {
-                navSub.prev('a').addClass('notExpand');
-            }
+	        $.each(navSub.prev('a'), function (key, item) {
+	            var $item = $(item);
+	            if (!$item.hasClass('notExpand') && !$item.hasClass('clickable')) {
+	                $item.addClass('notExpand');
+                }
+	        });
 
             if(plugin.settings.sideNav.showArrows) {
                 if(!$('.mainnav').hasClass('show-arrows')) {

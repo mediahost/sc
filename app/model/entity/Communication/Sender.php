@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
+use Nette\Utils\Strings;
 
 /**
  * @ORM\Entity
@@ -61,17 +62,17 @@ class Sender extends BaseEntity
 
 	public function getName()
 	{
-		if ($this->company) {
+		$name = $this->getUserName();
+		if ($this->company && $this->company->name) {
 			return $this->getUserName() . ' at ' . $this->company->name;
-		} else {
-			return $this->getUserName();
 		}
+		return $name;
 	}
 
 	public function getUserName()
 	{
 		if ($this->user->person && $this->user->person->fullName) {
-			return $this->user->person->fullName;
+			return Strings::trim($this->user->person->fullName);
 		} else {
 			return 'User #' . $this->user->id;
 		}

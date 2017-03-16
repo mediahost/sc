@@ -33,7 +33,6 @@ services:
 			- addResource('adminNotes')
 			- addResource('editForeign')
 			- addResource('messages')
-			- addResource('messagesList')
 
 			- addResource('users')
 			- addResource('skills')

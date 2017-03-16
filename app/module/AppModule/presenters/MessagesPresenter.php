@@ -77,17 +77,17 @@ class MessagesPresenter extends BasePresenter
 			$communicationRepo = $this->em->getRepository(Communication::getClassName());
 			$communication = $communicationRepo->find($id);
 			if ($communication) {
-				$this['conversation']->setSender($communication->firstContributor);
+				$this['conversation']->setSender($communication->contributors->first());
 				$this['conversation']->setCommunication($communication);
 				$this['conversation']->diableEdit();
 				$this->template->conversation = $communication;
 			} else {
 				$message = $this->translator->translate('Requested conversation was\'t find.');
 				$this->flashMessage($message, 'danger');
-				$this->redirect('this', NULL);
+				$this->redirect('list', NULL);
 			}
 		} else {
-			$this->redirect('default', NULL);
+			$this->redirect('list', NULL);
 		}
 	}
 
@@ -102,16 +102,6 @@ class MessagesPresenter extends BasePresenter
 		$senderRepo = $this->em->getRepository(Sender::getClassName());
 		$senderRepo->save($this->sender);
 		$this->redrawControl('notifyButtons');
-	}
-
-	/**
-	 * @secured
-	 * @resource('messagesList')
-	 * @privilege('default')
-	 */
-	public function actionMessagesList()
-	{
-
 	}
 
 	/** @return NewConversation */
@@ -150,7 +140,7 @@ class MessagesPresenter extends BasePresenter
 	}
 
 	/** @return ConversationsGrid */
-	public function createComponentCommunicationGrid()
+	public function createComponentConversationsGrid()
 	{
 		$control = $this->iConversationsGridFactory->create();
 		return $control;

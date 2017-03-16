@@ -50,7 +50,7 @@ class Communication extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="Candidate") */
 	protected $candidate;
 
-	/** @ORM\ManyToOne(targetEntity="Job") */
+	/** @ORM\ManyToOne(targetEntity="Job", inversedBy="communications") */
 	protected $job;
 
 	public function __construct(array $contributors)
