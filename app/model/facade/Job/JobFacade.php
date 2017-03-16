@@ -81,13 +81,13 @@ class JobFacade extends Object
 
 	public function getJobTypes()
 	{
-		$typeRepo = $this->em->getDao(JobType::getClassName());
+		$typeRepo = $this->em->getRepository(JobType::getClassName());
 		return $typeRepo->findPairs('name');
 	}
 
 	public function getJobCategories()
 	{
-		$categoryRepo = $this->em->getDao(JobCategory::getClassName());
+		$categoryRepo = $this->em->getRepository(JobCategory::getClassName());
 		return $categoryRepo->findPairs('name');
 	}
 
