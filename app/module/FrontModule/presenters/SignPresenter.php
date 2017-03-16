@@ -160,7 +160,7 @@ class SignPresenter extends BasePresenter
 	{
 		$user = $this->userFacade->findByAccessToken($token);
 		if ($user) {
-			$this->onAccess($this, $user);
+			$this->onAccess($this, $user, TRUE);
 		} else {
 			$message = $this->translator->translate('Access token is incorrect.');
 			$this->flashMessage($message, 'warning');
