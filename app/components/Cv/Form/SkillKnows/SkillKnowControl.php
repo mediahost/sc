@@ -12,6 +12,7 @@ use Nette\Utils\ArrayHash;
 
 class SkillKnowControl extends BaseControl
 {
+
 	/** @var SkillKnow */
 	private $skillKnow;
 
@@ -20,7 +21,6 @@ class SkillKnowControl extends BaseControl
 
 	/** @var Cv */
 	private $cv;
-
 
 	public function render()
 	{
@@ -41,11 +41,7 @@ class SkillKnowControl extends BaseControl
 			->setType('number')
 			->setAttribute('min', 0);
 
-		$form->addSubmit('reset', '')
-			->getControlPrototype()->class = 'rating-delete';
-
-		$form->addSubmit('all', '')
-			->getControlPrototype()->class = 'rating-all';
+		$form->addCheckbox('allSkills');
 
 		$form->setDefaults($this->getDefaults());
 		return $form;
@@ -58,8 +54,9 @@ class SkillKnowControl extends BaseControl
 			if (SkillLevel::FIRST_PRIORITY <= $this->skillKnow->level->id && $this->skillKnow->level->id <= SkillLevel::LAST_PRIORITY) {
 				$result['skillLevel'] = $this->skillKnow->level->id;
 			} else {
-				$result['skillLevel'] = SkillLevel::LAST_PRIORITY;
+				$result['skillLevel'] = SkillLevel::NONE;
 			}
+			$result['allSkills'] = TRUE;
 			$result['skillYears'] = $this->skillKnow->level->id > 1 ? $this->skillKnow->years : 0;
 		}
 		return $result;
@@ -67,15 +64,22 @@ class SkillKnowControl extends BaseControl
 
 	public function formSucceeded(Form $form, ArrayHash $values)
 	{
-		$this->redrawControl();
-		if ($form['reset']->isSubmittedBy()) {
+		if (!$values->allSkills && $values->skillLevel) {
+			if ($values->skillLevel && $this->isSameSkilllevel($values->skillLevel)) {
+				$this->remove();
+			} else {
+				$this->load($values);
+			}
+		} else if (!$values->allSkills) {
 			$this->remove();
-		} else if ($form['all']->isSubmittedBy()) {
-			$this->addAll();
-		} else {
+		} else if ($values->skillLevel) {
 			$this->load($values);
+		} else {
+			$this->addAll();
 		}
+
 		$this->save();
+		$this->redrawControl();
 	}
 
 	private function save()
@@ -107,7 +111,7 @@ class SkillKnowControl extends BaseControl
 			$this->skillKnow->level = $level;
 			$this->cv->setSkillKnow($this->skillKnow);
 		}
-		$this['form']['skillLevel']->value = SkillLevel::LAST_PRIORITY;
+		$this['form']['skillLevel']->value = SkillLevel::NONE;
 	}
 
 	private function load(ArrayHash $values)
@@ -125,6 +129,14 @@ class SkillKnowControl extends BaseControl
 		$this->skillKnow->cv = $this->cv;
 		$this->cv->skillKnow = $this->skillKnow;
 		return $this;
+	}
+
+	private function isSameSkilllevel($level)
+	{
+		if (!$this->skillKnow || !$this->skillKnow->level) {
+			return FALSE;
+		}
+		return $this->skillKnow->level->id == $level;
 	}
 
 	public function setSkillKnow(SkillKnow $skillKnow = null)

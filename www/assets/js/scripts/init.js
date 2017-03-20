@@ -17,6 +17,7 @@ jQuery(document).ready(function () {
 		},
 		complete: function (data) {
 			Global.init();
+			Global.afterAjax();
 		}
 	});
 

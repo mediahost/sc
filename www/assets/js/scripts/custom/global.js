@@ -240,6 +240,46 @@ var Global = function () {
 		});
 	};
 
+	// ta samá fce je v supr, je potřeba ji správně ze supr zavolat
+	var checkBoxesAndRadios = function () {
+		var chboxes = $('input[type=checkbox]');
+		var radios = $('input[type=radio]');
+
+		chboxes.each(function(index) {
+			if (typeof $(this).data('class') == "undefined"){
+				chboxClass = "checkbox-custom";
+			} else {chboxClass = $(this).data('class');}
+			if (typeof $(this).attr('id') == "undefined" ) {
+				chboxId = "chbox"+index;
+				$(this).attr('id', chboxId);
+			} else { chboxId = $(this).attr('id'); }
+			if (typeof $(this).data('label') == "undefined") {
+				chboxLabeltxt = "";
+			} else {  chboxLabeltxt = $(this).data('label'); }
+			if (!$(this).parent().hasClass(chboxClass)&& !$(this).parent().hasClass('toggle')) {
+				$(this).wrap('<div class="'+ chboxClass +'">');
+				$(this).parent().append('<label for="'+ chboxId +'">'+ chboxLabeltxt +'</label>');
+			}
+		});
+
+		radios.each(function(index) {
+			if (typeof $(this).data('class') == "undefined"){
+				radioClass = "radio-custom";
+			} else {radioClass = $(this).data('class');}
+			if (typeof $(this).attr('id') == "undefined" ) {
+				radioId = "radio"+index;
+				$(this).attr('id', radioId);
+			} else { radioId = $(this).attr('id'); }
+			if (typeof $(this).data('label') == "undefined") {
+				radioLabeltxt = "";
+			} else {  radioLabeltxt = $(this).data('label'); }
+			if (!$(this).parent().hasClass(radioClass)&& !$(this).parent().hasClass('toggle')) {
+				$(this).wrap('<div class="'+ radioClass +'">');
+				$(this).parent().append('<label for="'+ radioId +'">'+ radioLabeltxt +'</label>');
+			}
+		});
+	}
+
 	return {
 		init: function () {
 			$(document).ready(function () {
@@ -267,6 +307,9 @@ var Global = function () {
 			handleJobPage();
 			handleTagsInput();
 			handleWysiwyg();
+		},
+		afterAjax: function () {
+			checkBoxesAndRadios(); // ta samá fce je v supr, je potřeba ji správně ze supr zavolat
 		},
 		handleRightbar: handleRightbar,
 		initAccordion: initAccordion,
