@@ -7,6 +7,7 @@ use App\Model\Entity\Communication;
 use App\Model\Entity\Job;
 use App\Model\Facade\CommunicationFacade;
 use Grido\DataSources\Doctrine;
+use Tracy\Debugger;
 
 class ConversationsGrid extends BaseControl
 {
@@ -42,9 +43,11 @@ class ConversationsGrid extends BaseControl
 		$col->setFilterSelect([NULL => '---'] + $jobs);
 		$col->getHeaderPrototype()->width = '280px';
 
+		$communicationRepo = $this->em->getRepository(Communication::getClassName());
 		$senders = $this->communicationFacade->getSendersPairs();
 		$col = $grid->addColumnText('contributors', 'Contributors');
-		$col->setCustomRender(function (Communication $communication) {
+		$col->setCustomRender(function (Communication $communication) use ($communicationRepo) {
+			$this->em->refresh($communication);
 			return $communication->getContributorsName();
 		});
 		$col->setFilterSelect([NULL => '---'] + $senders);
