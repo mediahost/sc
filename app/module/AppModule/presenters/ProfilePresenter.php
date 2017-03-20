@@ -127,7 +127,7 @@ class ProfilePresenter extends BasePresenter
 			}
 		}
 
-		if (!$this->candidate->cv->id) {
+		if ($this->candidate && $this->candidate->cv && !$this->candidate->cv->id) {
 			$cvRepo = $this->em->getRepository(Cv::getClassName());
 			$cvRepo->save($this->candidate->cv);
 		}

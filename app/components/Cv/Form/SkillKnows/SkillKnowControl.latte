@@ -2,7 +2,7 @@
 	{form form, class=>'ajax sendOnChange'}
 		<div class="col-md-12 row">
 			<div class="col-md-4">{$skill}</div>
-			{var skillLevel => $skillKnow ? $skillKnow->level->id : $form['skillLevel']->value}
+			{var skillLevel => ($skillKnow && $skillKnow->level) ? $skillKnow->level->id : $form['skillLevel']->value}
 			<div n:class="col-md-4, max_w_120, rating-circles, $skillLevel >= 6 ? rating-full">
 				{if $form['skillLevel']->value > 0}
 					{button reset}
