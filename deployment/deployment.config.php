@@ -1,18 +1,15 @@
 <?php
 
-$purge = array(
+$purge = [
 	'temp/deployment',
-);
+];
 
-$before = array(
-	'local:composer install --no-dev -d ./../',
-);
+$before = [];
 
-$after = array();
+$after = [];
 if (!isset($allowInstall) || $allowInstall) {
 	$after[] = $domain . '/install?printHtml=0';
 }
-$after[] = 'local:composer install --dev -d ./../';
 
 if (!isset($allowDeleteCache) || $allowDeleteCache) {
 	$purge[] = 'temp/cache';
@@ -30,7 +27,11 @@ return array(
 		'test' => FALSE,
 		'ignore' => '
 			.git*
+			!.gitignore
+			!.gitattributes
+			!.gitkeep
 			.composer*
+			composer.lock
 			project.pp[jx]
 			/.idea
 			/nbproject
@@ -56,13 +57,11 @@ return array(
 			*.server_ver21.neon
 			*.server_ver22.neon
 			*.local.example.neon
-			composer.lock
-			composer.json
-			*.md
-			.bowerrc
 			/app/config/deployment.*
 			/vendor/dg/ftp-deployment
-			*.rst
+			/vendor/nette/tester
+			/vendor/kdyby/tester-extras
+			/vendor/mockery/mockery
 		',
 		'allowdelete' => TRUE,
 		'before' => $before,
