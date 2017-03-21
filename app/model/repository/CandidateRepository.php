@@ -21,7 +21,10 @@ class CandidateRepository extends BaseRepository
 	const CRITERIA_KEY_MATCH = 'match';
 	const CRITERIA_KEY_NOT_REJECT = 'notReject';
 	const CRITERIA_KEY_CATEGORIES = 'categories';
+	const CRITERIA_KEY_CANDIDATES = 'candidates';
 	const CRITERIA_KEY_SKILLS = 'skills';
+	const CANDIDATE_VALUE_REGISTERED = 1;
+	const CANDIDATE_VALUE_NONREGISTERED = 2;
 
 	public function findByFilter(array $criteria, array $orderBy = null, $limit = null, $offset = null)
 	{
@@ -61,6 +64,21 @@ class CandidateRepository extends BaseRepository
 					$condition->add('u.verificated = :verificated OR u.createdByAdmin = :createdByAdmin');
 					$params['verificated'] = (bool)$value;
 					$params['createdByAdmin'] = (bool)$value;
+					break;
+				case self::CRITERIA_KEY_CANDIDATES:
+					switch ($value) {
+						case self::CANDIDATE_VALUE_REGISTERED:
+							$joins['p.user'] = 'u';
+							$condition->add('u.verificated = :verificated');
+							$params['verificated'] = TRUE;
+							break;
+						case self::CANDIDATE_VALUE_NONREGISTERED:
+							$joins['p.user'] = 'u';
+							$condition->add('u.verificated = :verificated AND u.createdByAdmin = :createdByAdmin');
+							$params['verificated'] = FALSE;
+							$params['createdByAdmin'] = TRUE;
+							break;
+					}
 					break;
 				case self::CRITERIA_KEY_ROLE:
 					if ($value instanceof Role) {

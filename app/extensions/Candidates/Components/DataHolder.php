@@ -147,6 +147,12 @@ class DataHolder extends Object
 		return $this;
 	}
 
+	public function filterCandidates($value = NULL)
+	{
+		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_CANDIDATES] = $value;
+		return $this;
+	}
+
 	public function filterItSkills(array $skills)
 	{
 		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_SKILLS] = $skills;
