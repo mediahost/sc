@@ -17,18 +17,14 @@ var Global = function () {
 		}
 	};
 
-	var handleRating = function () {
-		$('input.rating').rating();
-	};
-
 	var hadleSlider = function () {
 		$('input.slider[data-skill]:not([data])').slider({
-			formatter: function(val) {
-				if (typeof val == "number"  &&  skillLevels[val] != undefined) {
+			formatter: function (val) {
+				if (typeof val == "number" && skillLevels[val] != undefined) {
 					return skillLevels[val];
 				}
-				var val1 = skillLevels[val[0]-1];
-				var val2 = skillLevels[val[1]-1];
+				var val1 = skillLevels[val[0] - 1];
+				var val2 = skillLevels[val[1] - 1];
 				if (val1 != undefined && val2 != undefined) {
 					return val1 + ' - ' + val2;
 				}
@@ -36,8 +32,8 @@ var Global = function () {
 			}
 		});
 		$('input.slider[data-postfix]:not([data])').slider({
-			formatter: function(val) {
-				if(val[1] == this.max) {
+			formatter: function (val) {
+				if (val[1] == this.max) {
 					return val[0] + ' - ' + val[1] + '+';
 				}
 				return val[0] + ' - ' + val[1];
@@ -204,14 +200,14 @@ var Global = function () {
 		}
 	};
 
-	var handleEditable = function() {
-		$(document).on('mouseover', '.editable-preview', function() {
+	var handleEditable = function () {
+		$(document).on('mouseover', '.editable-preview', function () {
 			$(this).find('.editable-icon').show();
 		});
-		$(document).on('mouseout', '.editable-preview', function() {
+		$(document).on('mouseout', '.editable-preview', function () {
 			$(this).find('.editable-icon').hide();
 		});
-		$(document).on('click', '.editable-icon', function() {
+		$(document).on('click', '.editable-icon', function () {
 			var target = $(this).attr('data-target');
 			$('[data-form="' + target + '"]').show();
 			$(this).closest('[data-editable]').find('.editable-preview').hide();
@@ -245,40 +241,74 @@ var Global = function () {
 		var chboxes = $('input[type=checkbox]');
 		var radios = $('input[type=radio]');
 
-		chboxes.each(function(index) {
-			if (typeof $(this).data('class') == "undefined"){
+		chboxes.each(function (index) {
+			if (typeof $(this).data('class') == "undefined") {
 				chboxClass = "checkbox-custom";
-			} else {chboxClass = $(this).data('class');}
-			if (typeof $(this).attr('id') == "undefined" ) {
-				chboxId = "chbox"+index;
+			} else {
+				chboxClass = $(this).data('class');
+			}
+			if (typeof $(this).attr('id') == "undefined") {
+				chboxId = "chbox" + index;
 				$(this).attr('id', chboxId);
-			} else { chboxId = $(this).attr('id'); }
+			} else {
+				chboxId = $(this).attr('id');
+			}
 			if (typeof $(this).data('label') == "undefined") {
 				chboxLabeltxt = "";
-			} else {  chboxLabeltxt = $(this).data('label'); }
-			if (!$(this).parent().hasClass(chboxClass)&& !$(this).parent().hasClass('toggle')) {
-				$(this).wrap('<div class="'+ chboxClass +'">');
-				$(this).parent().append('<label for="'+ chboxId +'">'+ chboxLabeltxt +'</label>');
+			} else {
+				chboxLabeltxt = $(this).data('label');
+			}
+			if (!$(this).parent().hasClass(chboxClass) && !$(this).parent().hasClass('toggle')) {
+				$(this).wrap('<div class="' + chboxClass + '">');
+				$(this).parent().append('<label for="' + chboxId + '">' + chboxLabeltxt + '</label>');
 			}
 		});
 
-		radios.each(function(index) {
-			if (typeof $(this).data('class') == "undefined"){
+		radios.each(function (index) {
+			if (typeof $(this).data('class') == "undefined") {
 				radioClass = "radio-custom";
-			} else {radioClass = $(this).data('class');}
-			if (typeof $(this).attr('id') == "undefined" ) {
-				radioId = "radio"+index;
+			} else {
+				radioClass = $(this).data('class');
+			}
+			if (typeof $(this).attr('id') == "undefined") {
+				radioId = "radio" + index;
 				$(this).attr('id', radioId);
-			} else { radioId = $(this).attr('id'); }
+			} else {
+				radioId = $(this).attr('id');
+			}
 			if (typeof $(this).data('label') == "undefined") {
 				radioLabeltxt = "";
-			} else {  radioLabeltxt = $(this).data('label'); }
-			if (!$(this).parent().hasClass(radioClass)&& !$(this).parent().hasClass('toggle')) {
-				$(this).wrap('<div class="'+ radioClass +'">');
-				$(this).parent().append('<label for="'+ radioId +'">'+ radioLabeltxt +'</label>');
+			} else {
+				radioLabeltxt = $(this).data('label');
+			}
+			if (!$(this).parent().hasClass(radioClass) && !$(this).parent().hasClass('toggle')) {
+				$(this).wrap('<div class="' + radioClass + '">');
+				$(this).parent().append('<label for="' + radioId + '">' + radioLabeltxt + '</label>');
 			}
 		});
-	}
+	};
+
+	var handleRating = function () {
+		$('input.rating').rating();
+	};
+
+	var handleRateSkills = function () {
+		$(document)
+			.off('change')
+			.on('change', '.rating-circles input[type=checkbox]', function () {
+				if (!this.checked) {
+					var parent = $(this).closest('.rating-circles');
+					var rating = parent.find('input.rating');
+					rating.rating('rate', 0);
+				}
+			}).on('change', 'input.rating', function () {
+			if ($(this).val()) {
+				var parent = $(this).closest('.rating-circles');
+				var checkbox = parent.find('input[type=checkbox]');
+				$(checkbox).prop('checked', true);
+			}
+		});
+	};
 
 	return {
 		init: function () {
@@ -299,6 +329,7 @@ var Global = function () {
 				handleImagUpload();
 				handleEditable();
 				handleConfirm();
+				handleRateSkills();
 
 				// Global components
 				CustomTrees.init();
@@ -310,6 +341,7 @@ var Global = function () {
 		},
 		afterAjax: function () {
 			checkBoxesAndRadios(); // ta samá fce je v supr, je potřeba ji správně ze supr zavolat
+			handleRateSkills();
 		},
 		handleRightbar: handleRightbar,
 		initAccordion: initAccordion,

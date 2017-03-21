@@ -68,12 +68,12 @@ class SkillKnowControl extends BaseControl
 			if ($values->skillLevel && $this->isSameSkilllevel($values->skillLevel)) {
 				$this->remove();
 			} else {
-				$this->load($values);
+				$this->load($form, $values);
 			}
 		} else if (!$values->allSkills) {
 			$this->remove();
 		} else if ($values->skillLevel) {
-			$this->load($values);
+			$this->load($form, $values);
 		} else {
 			$this->addAll();
 		}
@@ -114,7 +114,7 @@ class SkillKnowControl extends BaseControl
 		$this['form']['skillLevel']->value = SkillLevel::NONE;
 	}
 
-	private function load(ArrayHash $values)
+	private function load(Form $form, ArrayHash $values)
 	{
 		if (!$this->skillKnow) {
 			$this->skillKnow = new SkillKnow();
@@ -128,6 +128,9 @@ class SkillKnowControl extends BaseControl
 		$this->skillKnow->years = $years;
 		$this->skillKnow->cv = $this->cv;
 		$this->cv->skillKnow = $this->skillKnow;
+
+		$form['allSkills']->setValue(TRUE);
+
 		return $this;
 	}
 
