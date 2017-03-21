@@ -1,0 +1,23 @@
+{block pageTitle}
+	{_'My Jobs'}
+{/block}
+
+{block breadcrumbItems}
+	<li class="active">{_'My Jobs'}</li>
+{/block}
+
+{block content}
+
+	<div class="row">
+		{control approvedJobsList}
+	</div>
+
+	<div class="row">
+		{control appliedJobsList}
+	</div>
+
+	<div class="row">
+		{control allJobsList}
+	</div>
+
+{/block}

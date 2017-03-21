@@ -31,6 +31,7 @@ use Knp\DoctrineBehaviors\Model;
  * @property ArrayCollection $matches
  * @property User $accountManager
  * @property User $companyAccountManager
+ * @property-read Image $image
  */
 class Job extends BaseEntity
 {
@@ -110,6 +111,11 @@ class Job extends BaseEntity
 	public function isNew()
 	{
 		return $this->id === NULL;
+	}
+
+	public function getImage()
+	{
+		return $this->company->logo;
 	}
 
 	public function getCompanyAccountManager($raw = FALSE)

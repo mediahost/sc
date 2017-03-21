@@ -1,0 +1,120 @@
+{snippet list}
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<div class="cs-element-title">
+			<h3>{_$headline}</h3>
+		</div>
+	</div>
+
+	<div n:if="$showFilter" class="col-md-12">
+		{form form, class => 'ajax'}
+			<div class="job-filter">
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-6">
+						{input fulltext}
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-12">
+						{input search}
+					</div>
+				</div>
+			</div>
+		{/form}
+	</div>
+
+	<ul n:if="$jobs" class="jobs-listing grid">
+		<li n:foreach="$jobs as $job"
+				n:if="$showRejected || !$candidateFacade->isRejected($candidate, $job)"
+				class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+			<div class="jobs-content">
+				<div class="cs-media">
+					<figure>
+						<a href="{plink Job:view $job->id}">
+							<img src="{$job|foto:180,120}" alt="{$job}"/>
+						</a>
+					</figure>
+					<div class="listing-featered">
+						{if $candidateFacade->isApplied($candidate, $job)}
+							<span class="applied">{_'Applied'}</span>
+						{elseif $candidateFacade->isApproved($candidate, $job)}
+							<span class="invited">{_'Invited'}</span>
+						{/if}
+						{if $candidateFacade->isRejected($candidate, $job)}
+							<span class="rejected">{_'Rejected'}</span>
+						{elseif $candidateFacade->isMatched($candidate, $job)}
+							<span class="matched">{_'Matched'}</span>
+						{/if}
+					</div>
+				</div>
+				<div class="cs-text">
+				<span class="cs-categories cs-color">
+					{$job->company}
+				</span>
+					<div class="cs-post-title">
+						<h4>
+							<a href="{plink Job:view $job->id}">
+								{$job}
+							</a>
+						</h4>
+					</div>
+					<div class="cs-grid-job-type">
+						{$job->type}
+					</div>
+					<div class="post-options">
+						<span class="cs-category">{$job->category}</span>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+
+	<div n:if="!count($jobs)" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<div class="alert alert-info">
+			<i class="glyphicon glyphicon-info-sign alert-icon"></i>
+			{_$noMatchText}
+		</div>
+	</div>
+{/snippet}
+
+{snippet paginator}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="text-center">
+				<ul n:block="paginator"
+						class="pagination paginator"
+						n:if="$paginator->steps && $paginator->pageCount > 1">
+
+					{var $steps = $paginator->getSteps()}
+					<li n:class="prev, $control->page == 1 ? disabled : ajax">
+						<a n:href="page! page => reset($steps)" class="ajax">
+							<i class="fa fa-angle-double-left"></i>
+						</a>
+					</li>
+					{var $prevStep = $paginator->getPage() > reset($steps) ? $paginator->getPage() - 1 : reset($steps)}
+					<li n:class="prev, $control->page == 1 ? disabled : ajax">
+						<a n:href="page! page => $prevStep" class="ajax">
+							<i class="fa fa-angle-left"></i>
+						</a>
+					</li>
+					{foreach $steps as $step}
+						<li n:class="$step == $control->page ? active">
+							<a n:href="page! page => $step" class="ajax">{$step}</a>
+						</li>
+						<li n:if="$iterator->nextValue > $step + 1">
+							<span class="prompt">...</span>
+						</li>
+					{/foreach}
+					{var $nextStep = $paginator->getPage() < end($steps) ? $paginator->getPage() + 1 : end($steps)}
+					<li n:class="next, $control->page == $paginator->getPageCount() ? disabled : ajax">
+						<a n:href="page! page => $nextStep" class="ajax">
+							<i class="fa fa-angle-right"></i>
+						</a>
+					</li>
+					<li n:class="next, $control->page == $paginator->getPageCount() ? disabled : ajax">
+						<a n:href="page! page => end($steps)" class="ajax">
+							<i class="fa fa-angle-double-right"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+{/snippet}

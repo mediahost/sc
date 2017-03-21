@@ -3834,11 +3834,11 @@ body #wrapper {
 }
 .pagination > li.active a,
 .pagination > li.active a:hover {
-  box-shadow: 0 1px 0 #eaeaea ,0 1px 0 #67c3da inset !important;
-  background-image: linear-gradient(to bottom, #4faede 0%, #3399cc 100%);
+  box-shadow: 0 1px 0 #eaeaea ,0 1px 0 #3554a5 inset !important;
+  background-image: linear-gradient(to bottom, #536eb3 0%, #3554a5 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4faede', endColorstr='#ff3399cc', GradientType=0);
-  border-color: #1e86ba;
+  border-color: #3554a5;
   color: #ffffff;
 }
 .pagination > li:last-child a,

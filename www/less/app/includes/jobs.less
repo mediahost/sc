@@ -1,0 +1,96 @@
+.jobs-listing {
+	display: block;
+	margin: 0 0 0;
+	padding: 0px;
+	li {
+		list-style: none;
+		padding: 0 15px;
+		margin-right: -4px !important;
+		&:first-child {
+			.jobs-content {
+				margin-top: 0;
+			}
+		}
+		.jobs-content {
+			background-color: #fff;
+			border: 1px solid #f2f2f2 !important;
+			margin-bottom: 30px;
+			padding: 0;
+			position: relative;
+			.cs-media {
+				padding: 30px 0;
+				text-align: center;
+				width: 100%;
+				.listing-featered {
+					position: absolute;
+					top: 6px;
+					left: 5px;
+					span {
+						display: inline-block;
+						background-color: #ff9e06;
+						border-radius: 3px;
+						color: #fff;
+						font-size: 10px;
+						font-weight: 700;
+						line-height: 15px;
+						margin: 0 0 0 5px;
+						padding: 2px 6px;
+						vertical-align: middle;
+						text-transform: uppercase;
+						&.applied {
+							background-color: #f4ae4b;
+						}
+						&.invited {
+							background-color: #4faede;
+						}
+						&.rejected {
+							background-color: #ed7a53;
+						}
+						&.matched {
+							background-color: #adcf7e;
+						}
+					}
+				}
+			}
+			.cs-text {
+				background: #f6f6f6;
+				height: 150px;
+				padding: 15px;
+				.cs-categories {
+					font-size: 12px;
+					line-height: 13px;
+					text-transform: uppercase;
+					color: #3554a6;
+				}
+				.cs-post-title {
+					h4 {
+						margin: 5px 0 10px 0;
+						font: 700 Normal 14px/20px sans-serif !important;
+						text-transform: uppercase;
+						height: 55px;
+						a {
+							color: #424242;
+							&:hover {
+								color: #3554a6;
+							}
+						}
+					}
+				}
+				.cs-grid-job-type {
+					color: #666;
+					font-size: 13px;
+				}
+				.post-options {
+					color: #999999;
+				}
+			}
+		}
+	}
+}
+
+.job-filter {
+	background: #f5f6f8;
+	padding: 20px;
+	margin-right: 20px;
+	margin-bottom: 25px;
+}

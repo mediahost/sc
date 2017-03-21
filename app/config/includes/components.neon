@@ -96,6 +96,7 @@ services:
 	- {implement: App\Components\Grids\Company\ICompaniesGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Job\IJobsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Job\IJobCategoriesGridFactory, inject: yes}
+	- {implement: App\Components\Grids\Job\IJobsListFactory, inject: yes}
 	- {implement: App\Components\Grids\Cv\ICvsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Skill\ISkillsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Skill\ISkillCategoriesGridFactory, inject: yes}

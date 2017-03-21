@@ -6,6 +6,7 @@ use App\Helpers;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Company;
 use App\Model\Entity\Image as ImageEntity;
+use App\Model\Entity\Job;
 use App\Model\Entity\Person;
 use App\Model\Entity\Sender;
 use Exception;
@@ -316,6 +317,9 @@ class FotoPathHelper extends Object
 			$defaultImg = ImageEntity::getDefaultImage($entity->user->getId());
 		} else if ($entity instanceof Company) {
 			$image = $entity->getLogo();
+			$defaultImg = 'avatars/company.png';
+		} else if ($entity instanceof Job) {
+			$image = $entity->getImage();
 			$defaultImg = 'avatars/company.png';
 		} else {
 			$image = $entity;

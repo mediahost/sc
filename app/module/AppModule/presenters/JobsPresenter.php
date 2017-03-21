@@ -5,7 +5,9 @@ namespace App\AppModule\Presenters;
 use App\Components\Company\CompanySelector;
 use App\Components\Company\ICompanySelectorFactory;
 use App\Components\Grids\Job\IJobsGridFactory;
+use App\Components\Grids\Job\IJobsListFactory;
 use App\Components\Grids\Job\JobsGrid;
+use App\Components\Grids\Job\JobsList;
 use App\Model\Entity\Company;
 use App\Model\Entity\Job;
 use App\Model\Entity\Role;
@@ -13,7 +15,6 @@ use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
 use App\Model\Repository\CompanyRepository;
 use App\Model\Repository\JobRepository;
-use Kdyby\Doctrine\EntityDao;
 use Kdyby\Doctrine\EntityManager;
 
 class JobsPresenter extends BasePresenter
@@ -35,6 +36,9 @@ class JobsPresenter extends BasePresenter
 
 	/** @var IJobsGridFactory @inject */
 	public $iJobsGridFactory;
+
+	/** @var IJobsListFactory @inject */
+	public $iJobsListFactory;
 
 	// </editor-fold>
 	// <editor-fold desc="variables">
@@ -108,6 +112,29 @@ class JobsPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('jobs')
+	 * @privilege('myList')
+	 */
+	public function actionMyList2()
+	{
+		if (!$this->user->isInRole(Role::CANDIDATE)) {
+			$this->flashMessage($this->translator->translate('This section is only for candidate'));
+			$this->redirect('Dashboard:');
+		}
+
+		$candidate = $this->user->getIdentity()->candidate;
+		$this['allJobsList']
+			->setCandidate($candidate);
+		$this['approvedJobsList']
+			->setCandidate($candidate);
+		$this['appliedJobsList']
+			->setCandidate($candidate);
+		$this['matchedJobsList']
+			->setCandidate($candidate);
+	}
+
+	/**
+	 * @secured
+	 * @resource('jobs')
 	 * @privilege('company')
 	 */
 	public function actionCompany($id)
@@ -146,6 +173,48 @@ class JobsPresenter extends BasePresenter
 	public function createComponentJobsGrid()
 	{
 		$control = $this->iJobsGridFactory->create();
+		return $control;
+	}
+
+	/** @return JobsList */
+	public function createComponentAllJobsList()
+	{
+		$control = $this->iJobsListFactory->create()
+			->setShowFilter()
+			->setHeadline('All Jobs')
+			->setNoMatchText('We are searching for interesting opportunities for you');
+		return $control;
+	}
+
+	/** @return JobsList */
+	public function createComponentApprovedJobsList()
+	{
+		$control = $this->iJobsListFactory->create()
+			->setOnlyApproved()
+			->setHeadline('Job Invitations')
+			->setNoMatchText('We are searching for interesting opportunities for you.');
+		return $control;
+	}
+
+	/** @return JobsList */
+	public function createComponentAppliedJobsList()
+	{
+		$control = $this->iJobsListFactory->create()
+			->setOnlyApplied()
+			->setOnlyMatched()
+			->setShowRejected(TRUE)
+			->setHeadline('Jobs Applied For')
+			->setNoMatchText('You have not applied for any jobs');
+		return $control;
+	}
+
+	/** @return JobsList */
+	public function createComponentMatchedJobsList()
+	{
+		$control = $this->iJobsListFactory->create()
+			->setOnlyMatched()
+			->setHeadline('Matched')
+			->setNoMatchText('You have not matched for any jobs');
 		return $control;
 	}
 
