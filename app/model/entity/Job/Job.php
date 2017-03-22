@@ -9,15 +9,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
 use Knp\DoctrineBehaviors\Model;
+use Tracy\Debugger;
 
 /**
  * @ORM\Entity(repositoryClass="App\Model\Repository\JobRepository")
  *
  * @property Company $company
  * @property string $name
- * @property integer $wordpressId
- * @property integer $salaryFrom
- * @property integer $salaryTo
+ * @property int $wordpressId
+ * @property string $wordpressLink
+ * @property string $wordpressImageLink
+ * @property int $salaryFrom
+ * @property int $salaryTo
  * @property string $description
  * @property string $summary
  * @property JobType $type
@@ -55,6 +58,12 @@ class Job extends BaseEntity
 
 	/** @ORM\Column(type="integer", nullable=true) */
 	protected $wordpressId;
+
+	/** @ORM\Column(type="string", length=256) */
+	protected $wordpressLink;
+
+	/** @ORM\Column(type="string", length=256) */
+	protected $wordpressImageLink;
 
 	/** @ORM\Column(type="integer", nullable=true) */
 	protected $salaryFrom;
@@ -111,6 +120,23 @@ class Job extends BaseEntity
 	public function isNew()
 	{
 		return $this->id === NULL;
+	}
+
+	public function setWordpressLink($value)
+	{
+		$this->wordpressLink = $this->removeBaseUrl($value);
+		return $this;
+	}
+
+	public function setWordpressImageLink($value)
+	{
+		$this->wordpressImageLink = $this->removeBaseUrl($value);
+		return $this;
+	}
+
+	private function removeBaseUrl($value)
+	{
+		return preg_replace('/^\w+:\/\/[^\/]+/i', NULL, $value);
 	}
 
 	public function getImage()

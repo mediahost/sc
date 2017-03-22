@@ -66,6 +66,10 @@ class BasicInfo extends BaseControl
 		$form->addText('wp_id', 'Wordpress ID')
 			->addRule(Form::INTEGER, 'Id must be numeric value')
 			->setAttribute('placeholder', 'Wordpress ID');
+		$form->addText('wp_link', 'Wordpress Link')
+			->setAttribute('placeholder', 'Wordpress Link URL');
+		$form->addText('wp_image', 'Wordpress Image')
+			->setAttribute('placeholder', 'Wordpress Image URL');
 
 		if ($this->user->isAllowed('job', 'accountManager')) {
 			$form->addSelect('accountManager', 'Admin account manager', $this->getAdminAccountManagers())
@@ -130,6 +134,8 @@ class BasicInfo extends BaseControl
 	{
 		$this->job->name = $values->name;
 		$this->job->wordpressId = $values->wp_id;
+		$this->job->wordpressLink = $values->wp_link;
+		$this->job->wordpressImageLink = $values->wp_image;
 		$this->job->type = $this->jobFacade->findJobType($values->type);
 		$this->job->category = $this->jobFacade->findJobCategory($values->category);
 //		$this->job->notes = $values->notes;
@@ -196,6 +202,8 @@ class BasicInfo extends BaseControl
 		$values = [
 			'name' => $this->job->name,
 			'wp_id' => $this->job->wordpressId,
+			'wp_link' => $this->job->wordpressLink,
+			'wp_image' => $this->job->wordpressImageLink,
 			'type' => $this->job->type ? $this->job->type->id : NULL,
 			'category' => $this->job->category ? $this->job->category->id : NULL,
 			'salary' => $salary,

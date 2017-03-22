@@ -50,6 +50,9 @@ class JobsList extends BaseControl
 	protected $showFilter = FALSE;
 
 	/** @var bool */
+	protected $showPaginator = FALSE;
+
+	/** @var bool */
 	protected $showRejected = FALSE;
 
 	/** @var bool */
@@ -60,9 +63,6 @@ class JobsList extends BaseControl
 
 	/** @var bool */
 	protected $onlyMatched = FALSE;
-
-	/** @var string */
-	protected $headline;
 
 	/** @var string */
 	protected $noMatchText;
@@ -88,6 +88,17 @@ class JobsList extends BaseControl
 
 	private function applyMatched()
 	{
+		if (array_key_exists('onlyInvitations', $this->filter) && $this->filter['onlyInvitations']) {
+			$this->onlyApproved = TRUE;
+			$this->onlyApplied = FALSE;
+			$this->onlyMatched = FALSE;
+		}
+		if (array_key_exists('onlyAppliedFor', $this->filter) && $this->filter['onlyAppliedFor']) {
+			$this->onlyApproved = FALSE;
+			$this->onlyApplied = TRUE;
+			$this->onlyMatched = TRUE;
+		}
+
 		if ($this->onlyApplied || $this->onlyApproved || $this->onlyMatched) {
 			$this->qb->join(Match::getClassName(), 'm', 'WITH', 'j = m.job');
 
@@ -166,12 +177,12 @@ class JobsList extends BaseControl
 
 		$countQuery->setParameters(clone $model->getParameters());
 
-        $countQuery->setFirstResult(null)->setMaxResults(null);
+		$countQuery->setFirstResult(null)->setMaxResults(null);
 
 		$countQuery->resetDQLPart('select')
 			->select('COUNT(j) AS counter');
 
-        return (int)$countQuery->getQuery()->getSingleScalarResult();
+		return (int)$countQuery->getQuery()->getSingleScalarResult();
 	}
 
 	public function setCandidate(Candidate $candidate)
@@ -204,15 +215,15 @@ class JobsList extends BaseControl
 		return $this;
 	}
 
-	public function setShowRejected($value = TRUE)
+	public function setShowPaginator($value = TRUE)
 	{
-		$this->showRejected = $value;
+		$this->showPaginator = $value;
 		return $this;
 	}
 
-	public function setHeadline($value)
+	public function setShowRejected($value = TRUE)
 	{
-		$this->headline = $value;
+		$this->showRejected = $value;
 		return $this;
 	}
 
@@ -233,6 +244,8 @@ class JobsList extends BaseControl
 		$values = $button->form->values;
 
 		$this->filter['fulltext'] = urlencode($values->fulltext);
+		$this->filter['onlyInvitations'] = !!$values->onlyInvitations;
+		$this->filter['onlyAppliedFor'] = !!$values->onlyAppliedFor;
 
 		$this->page = 1;
 		$this->reload();
@@ -250,6 +263,7 @@ class JobsList extends BaseControl
 	public function reload()
 	{
 		if ($this->presenter->isAjax()) {
+			$this->presenter->redrawControl();
 			$this->redrawControl();
 		} else {
 			$this->redirect('this');
@@ -262,10 +276,21 @@ class JobsList extends BaseControl
 		$this->template->paginator = $this->getPaginator();
 		$this->template->candidate = $this->candidate;
 		$this->template->candidateFacade = $this->candidateFacade;
-		$this->template->showFilter = $this->showFilter;
 		$this->template->showRejected = $this->showRejected;
-		$this->template->headline = $this->headline;
+		$this->template->showPaginator = $this->showPaginator;
 		$this->template->noMatchText = $this->noMatchText;
+		$this->templateRender();
+	}
+
+	public function renderFilter()
+	{
+		$this->template->showFilter = $this->showFilter;
+		$this->templateRender('filter');
+	}
+
+	private function templateRender($template = self::DEFAULT_TEMPLATE)
+	{
+		$this->setTemplateFile($template);
 		parent::render();
 	}
 
@@ -286,7 +311,11 @@ class JobsList extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 
 		$form->addText('fulltext', 'Fulltext')
+			->setAttribute('placeholder', 'Search Keywords')
 			->getControlPrototype()->class = 'form-control';
+
+		$form->addCheckbox('onlyInvitations', 'Only Invitations');
+		$form->addCheckbox('onlyAppliedFor', 'Only Applied For');
 
 		$button = $form->addSubmit('search', 'Find Job');
 		$button->onClick[] = $this->handleFilter;
@@ -306,6 +335,10 @@ class JobsList extends BaseControl
 			switch ($key) {
 				case 'fulltext':
 					$values[$key] = $item;
+					break;
+				case 'onlyInvitations':
+				case 'onlyAppliedFor':
+					$values[$key] = !!$item;
 					break;
 			}
 		}

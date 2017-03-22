@@ -77,6 +77,7 @@ webloader:
 				- %wwwDir%/assets/js/addones/bootstrap-rating.js
 				- %wwwDir%/assets/js/jstree/jstree.min.js
 				- %wwwDir%/assets/js/nette.ajax/nette.ajax.min.js
+				- %wwwDir%/assets/js/nette.ajax/extensions/scrollTo.ajax.js
 				- %wwwDir%/assets/js/live-form-validation.js
 				- %wwwDir%/assets/js/nette.serversidevalidation.js
 				- %wwwDir%/assets/js/scripts/custom/mapView.js

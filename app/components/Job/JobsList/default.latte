@@ -1,34 +1,18 @@
-{snippet list}
-	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<div class="cs-element-title">
-			<h3>{_$headline}</h3>
-		</div>
-	</div>
-
-	<div n:if="$showFilter" class="col-md-12">
-		{form form, class => 'ajax'}
-			<div class="job-filter">
-				<div class="row">
-					<div class="col-lg-3 col-md-3 col-sm-6">
-						{input fulltext}
-					</div>
-					<div class="col-lg-2 col-md-3 col-sm-12">
-						{input search}
-					</div>
-				</div>
-			</div>
-		{/form}
-	</div>
-
+<div n:snippet="list" class="scrollHere">
 	<ul n:if="$jobs" class="jobs-listing grid">
 		<li n:foreach="$jobs as $job"
 				n:if="$showRejected || !$candidateFacade->isRejected($candidate, $job)"
 				class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+			{var jobLink => $job->wordpressLink ? $basePath . $job->wordpressLink : $control->presenter->link('Job:view', [$job->id])}
 			<div class="jobs-content">
 				<div class="cs-media">
 					<figure>
-						<a href="{plink Job:view $job->id}">
-							<img src="{$job|foto:180,120}" alt="{$job}"/>
+						<a href="{$jobLink}">
+							{if $job->wordpressImageLink}
+								<img src="{$basePath . $job->wordpressImageLink}" alt="{$job}"/>
+							{else}
+								<img src="{$job|foto:180,120}" alt="{$job}"/>
+							{/if}
 						</a>
 					</figure>
 					<div class="listing-featered">
@@ -50,7 +34,7 @@
 				</span>
 					<div class="cs-post-title">
 						<h4>
-							<a href="{plink Job:view $job->id}">
+							<a href="{$jobLink}">
 								{$job}
 							</a>
 						</h4>
@@ -72,10 +56,10 @@
 			{_$noMatchText}
 		</div>
 	</div>
-{/snippet}
+</div>
 
 {snippet paginator}
-	<div class="row">
+	<div class="row" n:if="$showPaginator">
 		<div class="col-md-12">
 			<div class="text-center">
 				<ul n:block="paginator"

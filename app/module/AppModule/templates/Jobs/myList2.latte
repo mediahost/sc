@@ -9,14 +9,35 @@
 {block content}
 
 	<div class="row">
-		{control approvedJobsList}
+		{control allJobsList:filter}
+	</div>
+
+	<div n:snippet="jobSections">
+		<div class="row" n:if="$showJobSections">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="cs-element-title">
+					<h3>{_'Job Invitations'}</h3>
+				</div>
+			</div>
+			{control approvedJobsList}
+		</div>
+
+		<div class="row" n:if="$showJobSections">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="cs-element-title">
+					<h3>{_'Jobs Applied For'}</h3>
+				</div>
+			</div>
+			{control appliedJobsList}
+		</div>
 	</div>
 
 	<div class="row">
-		{control appliedJobsList}
-	</div>
-
-	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="cs-element-title">
+				<h3>{_'All Jobs'}</h3>
+			</div>
+		</div>
 		{control allJobsList}
 	</div>
 

@@ -1,0 +1,21 @@
+{snippet filter}
+	<div n:if="$showFilter" class="col-md-12">
+		{form form, class => 'ajax'}
+			<div class="job-filter">
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-6">
+						{input fulltext}
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-6 text-center">
+						{input onlyInvitations}
+						&nbsp;
+						{input onlyAppliedFor}
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-6">
+						{input search}
+					</div>
+				</div>
+			</div>
+		{/form}
+	</div>
+{/snippet}

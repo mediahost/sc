@@ -132,6 +132,11 @@ class JobsPresenter extends BasePresenter
 			->setCandidate($candidate);
 	}
 
+	public function renderMyList2()
+	{
+		$this->template->showJobSections = !count($this['allJobsList']->filter);
+	}
+
 	/**
 	 * @secured
 	 * @resource('jobs')
@@ -181,7 +186,7 @@ class JobsPresenter extends BasePresenter
 	{
 		$control = $this->iJobsListFactory->create()
 			->setShowFilter()
-			->setHeadline('All Jobs')
+			->setShowPaginator()
 			->setNoMatchText('We are searching for interesting opportunities for you');
 		return $control;
 	}
@@ -191,7 +196,6 @@ class JobsPresenter extends BasePresenter
 	{
 		$control = $this->iJobsListFactory->create()
 			->setOnlyApproved()
-			->setHeadline('Job Invitations')
 			->setNoMatchText('We are searching for interesting opportunities for you.');
 		return $control;
 	}
@@ -203,7 +207,6 @@ class JobsPresenter extends BasePresenter
 			->setOnlyApplied()
 			->setOnlyMatched()
 			->setShowRejected(TRUE)
-			->setHeadline('Jobs Applied For')
 			->setNoMatchText('You have not applied for any jobs');
 		return $control;
 	}
@@ -213,7 +216,6 @@ class JobsPresenter extends BasePresenter
 	{
 		$control = $this->iJobsListFactory->create()
 			->setOnlyMatched()
-			->setHeadline('Matched')
 			->setNoMatchText('You have not matched for any jobs');
 		return $control;
 	}
