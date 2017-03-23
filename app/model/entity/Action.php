@@ -12,6 +12,7 @@ use Knp\DoctrineBehaviors\Model;
  *
  * @property User $user
  * @property int $type
+ * @property string $typeFormated
  * @property Job $job
  */
 class Action extends BaseEntity
@@ -36,6 +37,25 @@ class Action extends BaseEntity
 		parent::__construct();
 		$this->user = $user;
 		$this->type = $type;
+	}
+
+	public function getTypeFormated()
+	{
+		$names = self::getTypes();
+		return array_key_exists($this->type, $names) ? $names[$this->type] : $this->type;
+	}
+
+	public function __toString()
+	{
+		return $this->user . '|' . $this->job . '|' . $this->createdAt->format('d.m.Y H:i:s');
+	}
+
+	public static function getTypes()
+	{
+		return [
+			self::TYPE_JOB_VIEW => 'View',
+			self::TYPE_JOB_APPLY => 'Apply',
+		];
 	}
 
 }

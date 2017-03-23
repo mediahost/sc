@@ -100,6 +100,7 @@ services:
 	- {implement: App\Components\Grids\Cv\ICvsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Skill\ISkillsGridFactory, inject: yes}
 	- {implement: App\Components\Grids\Skill\ISkillCategoriesGridFactory, inject: yes}
+	- {implement: App\Components\Grids\Action\IActionsGridFactory, inject: yes}
 
 	# Communication
 	- {implement: App\Components\Conversation\Form\INewConversationFactory, inject: yes}

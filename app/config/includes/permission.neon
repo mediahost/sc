@@ -37,6 +37,7 @@ services:
 			- addResource('users')
 			- addResource('skills')
 			- addResource('skillCategories')
+			- addResource('actions')
 
 			- addResource('examples')
 			- addResource('service')
@@ -88,5 +89,6 @@ services:
 			- allow('admin', 'messages')
 			- allow('admin', 'profile')
 			- allow('admin', 'adminNotes')
+			- allow('admin', 'actions')
 
 			- allow('superadmin') # Full access for superadmin

@@ -127,6 +127,12 @@
 										</li>
 									</ul>
 								</li>
+								<li n:if="$user->isAllowed('actions', 'default')">
+									<a n:href="Actions:" n:class="$presenter->isLinkCurrent('Actions:*') ? active">
+										<i class="fa fa-flash"></i>
+										<span class="txt">{_'Activity'}</span>
+									</a>
+								</li>
 								<!-- END ADMIN -->
 
 							{/if}
