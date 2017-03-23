@@ -1,4 +1,4 @@
-<div n:snippet="list" class="scrollHere">
+<div n:snippet="list" class="scrollHere" data-target="#allJobsHeadline">
 	<ul n:if="$jobs" class="jobs-listing grid">
 		<li n:foreach="$jobs as $job"
 				n:if="$showRejected || !$candidateFacade->isRejected($candidate, $job)"
