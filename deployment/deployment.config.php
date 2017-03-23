@@ -19,8 +19,8 @@ if (!isset($allowDeleteTmp) || $allowDeleteTmp) {
 	$purge[] = 'tmp/';
 }
 
-return array(
-	'my site' => array(
+return [
+	'my site' => [
 		'remote' => 'ftp://' . $username . ':' . $password . '@' . $server,
 		'passivemode' => TRUE,
 		'local' => '..',
@@ -62,14 +62,15 @@ return array(
 			/vendor/nette/tester
 			/vendor/kdyby/tester-extras
 			/vendor/mockery/mockery
+			/vendor/bin
 		',
 		'allowdelete' => TRUE,
 		'before' => $before,
 		'after' => $after,
 		'purge' => $purge,
 		'preprocess' => FALSE,
-	),
+	],
 	
 	'tempdir' => __DIR__ . '/temp',
 	'colors' => TRUE,
-);
+];
