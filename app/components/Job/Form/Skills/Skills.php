@@ -63,14 +63,11 @@ class Skills extends BaseControl
 		$form->setRenderer(new MetronicFormRenderer());
 
 		$defaultValues = $this->getDefaults();
-		$skills = $this->em->getDao(Skill::getClassName())->findAll();
-		$skillLevels = $this->em->getDao(SkillLevel::getClassName())->findPairsName();
+		$skills = $this->em->getRepository(Skill::getClassName())->findAll();
 		$ranges = $form->addContainer('skillRange');
 		$yearRange = $form->addContainer('yearRange');
-		reset($skillLevels);
-		$levelFromId = key($skillLevels);
-		end($skillLevels);
-		$levelToId = key($skillLevels);
+		$levelFromId = SkillLevel::FIRST_PRIORITY;
+		$levelToId = SkillLevel::LAST_PRIORITY;
 
 		foreach ($skills as $skill) {
 			if (isset($defaultValues['skillRange'][$skill->id])) {

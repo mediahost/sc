@@ -8,6 +8,7 @@ use App\Model\Entity\Action;
 use App\Model\Entity\Job;
 use App\Model\Entity\User;
 use Grido\DataSources\Doctrine;
+use Nette\Utils\Html;
 
 class ActionsGrid extends BaseControl
 {
@@ -34,6 +35,12 @@ class ActionsGrid extends BaseControl
 
 		$jobs = $this->em->getRepository(Job::getClassName())->findPairs('name');
 		$grid->addColumnText('job', 'Job')
+			->setCustomRender(function (Action $item) {
+				return Html::el('a class="btn btn-xs"')
+					->setHref($this->presenter->link('Job:view', [
+						'id' => $item->job->id,
+					]))->setHtml($item->job);
+			})
 			->setSortable()
 			->setFilterSelect([NULL => '---'] + $jobs);
 
