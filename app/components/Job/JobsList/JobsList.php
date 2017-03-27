@@ -74,7 +74,7 @@ class JobsList extends Control
 	protected $paginator;
 
 	/** @var int */
-	protected $perPage = 18;
+	protected $perPage = 16;
 
 	/** @var Candidate */
 	protected $candidate;
@@ -140,7 +140,7 @@ class JobsList extends Control
 			$this->onlyMatched = TRUE;
 		}
 
-		if ($this->onlyApplied || $this->onlyApproved || $this->onlyMatched) {
+		if ($this->candidate && ($this->onlyApplied || $this->onlyApproved || $this->onlyMatched)) {
 			$this->qb->join(Match::getClassName(), 'm', 'WITH', 'j = m.job');
 
 			$params = [
@@ -440,8 +440,12 @@ class JobsList extends Control
 		$values = $button->form->values;
 
 		$this->persistFilter(self::FILTER_SEARCH, $values->fulltext);
-		$this->persistFilter(self::FILTER_INVITATIONS, !!$values->onlyInvitations);
-		$this->persistFilter(self::FILTER_APPLIED, !!$values->onlyAppliedFor);
+		if (isset($values->onlyInvitations)) {
+			$this->persistFilter(self::FILTER_INVITATIONS, !!$values->onlyInvitations);
+		}
+		if (isset($values->onlyAppliedFor)) {
+			$this->persistFilter(self::FILTER_APPLIED, !!$values->onlyAppliedFor);
+		}
 
 		$this->page = 1;
 		$this->reload();
@@ -490,7 +494,6 @@ class JobsList extends Control
 	{
 		$this->template->jobs = $this->getJobs();
 		$this->template->paginator = $this->getPaginator();
-		$this->template->candidate = $this->candidate;
 		$this->template->candidateFacade = $this->candidateFacade;
 		$this->template->showRejected = $this->showRejected;
 		$this->template->showPaginator = $this->showPaginator;
@@ -510,6 +513,7 @@ class JobsList extends Control
 	{
 		$dir = dirname($this->getReflection()->getFileName());
 		$this->template->setFile($dir . '/' . $template . '.latte');
+		$this->template->candidate = $this->candidate;
 		$this->template->render();
 	}
 
@@ -544,8 +548,10 @@ class JobsList extends Control
 		$categories = [];
 		$form->addSelect('category', 'Category', $categories);
 
-		$form->addCheckbox('onlyInvitations', 'Only Invitations');
-		$form->addCheckbox('onlyAppliedFor', 'Only Applied For');
+		if ($this->candidate) {
+			$form->addCheckbox('onlyInvitations', 'Only Invitations');
+			$form->addCheckbox('onlyAppliedFor', 'Only Applied For');
+		}
 
 		$button = $form->addSubmit('search', 'Find Job');
 		$button->onClick[] = $this->handleFilter;

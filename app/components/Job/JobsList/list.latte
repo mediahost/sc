@@ -1,7 +1,7 @@
 <div n:snippet="jobList" class="scrollHere" data-target="#allJobsHeadline">
 	<ul n:if="$jobs" class="jobs-listing grid">
 		<li n:foreach="$jobs as $job"
-				n:if="$showRejected || !$candidateFacade->isRejected($candidate, $job)"
+				n:if="!$candidate || $showRejected || !$candidateFacade->isRejected($candidate, $job)"
 				class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 			{var jobLink => $job->wordpressLink ? $basePath . $job->wordpressLink : $control->presenter->link('Job:view', [$job->id])}
 			<div class="jobs-content">
@@ -15,7 +15,7 @@
 							{/if}
 						</a>
 					</figure>
-					<div class="listing-featered">
+					<div class="listing-featered" n:if="$candidate">
 						{if $candidateFacade->isApplied($candidate, $job)}
 							<span class="applied">{_'Applied'}</span>
 						{elseif $candidateFacade->isApproved($candidate, $job)}

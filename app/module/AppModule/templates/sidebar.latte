@@ -42,10 +42,19 @@
 							{if $isCompleteAccount}
 
 								<li>
-									<a n:href="Jobs:" n:class="$presenter->isLinkCurrent('Jobs:*') || $presenter->isLinkCurrent('Job:*') ? active">
+									<a n:href="Jobs:" n:class="clickable, $presenter->isLinkCurrent('Jobs:*') || $presenter->isLinkCurrent('Job:*') ? active">
 										<i class="fa fa-briefcase"></i>
 										<span class="txt">{_'Jobs'}</span>
 									</a>
+									<ul n:if="$user->isAllowed('jobs', 'filter')"
+											n:class="sub, $presenter->isLinkCurrent('Jobs:*') ? show">
+										<li>
+											<a n:href="Jobs:filter" n:class="$presenter->isLinkCurrent('Jobs:filter') ? active">
+												<i class="s16 fa fa-filter"></i>
+												<span class="txt">{_'Filter'}</span>
+											</a>
+										</li>
+									</ul>
 								</li>
 
 								<li n:if="$user->isAllowed('messages', 'default')">

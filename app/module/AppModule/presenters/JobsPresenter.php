@@ -138,6 +138,21 @@ class JobsPresenter extends BasePresenter
 	/**
 	 * @secured
 	 * @resource('jobs')
+	 * @privilege('filter')
+	 */
+	public function actionFilter()
+	{
+
+	}
+
+	public function renderFilter()
+	{
+		$this->template->showJobSections = !$this['allJobs']->isFiltered();
+	}
+
+	/**
+	 * @secured
+	 * @resource('jobs')
 	 * @privilege('company')
 	 */
 	public function actionCompany($id)
@@ -185,7 +200,7 @@ class JobsPresenter extends BasePresenter
 		$control = $this->iJobsListFactory->create()
 			->setShowFilter()
 			->setShowPaginator()
-			->setNoMatchText('We are searching for interesting opportunities for you');
+			->setNoMatchText('There is no jobs for your criteria.');
 		return $control;
 	}
 
