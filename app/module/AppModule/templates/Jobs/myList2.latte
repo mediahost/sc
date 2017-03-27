@@ -9,7 +9,7 @@
 {block content}
 
 	<div class="row">
-		{control allJobsList:filter}
+		{control allJobs:filter}
 	</div>
 
 	<div n:snippet="jobSections">
@@ -19,7 +19,7 @@
 					<h3>{_'Job Invitations'}</h3>
 				</div>
 			</div>
-			{control approvedJobsList}
+			{control approvedJobs:list}
 		</div>
 
 		<div class="row" n:if="$showJobSections">
@@ -28,7 +28,7 @@
 					<h3>{_'Jobs Applied For'}</h3>
 				</div>
 			</div>
-			{control appliedJobsList}
+			{control appliedJobs:list}
 		</div>
 	</div>
 
@@ -38,7 +38,7 @@
 				<h3 id="allJobsHeadline">{_'All Jobs'}</h3>
 			</div>
 		</div>
-		{control allJobsList}
+		{control allJobs:list}
 	</div>
 
 {/block}

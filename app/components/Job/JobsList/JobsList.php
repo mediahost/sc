@@ -2,22 +2,40 @@
 
 namespace App\Components\Grids\Job;
 
-use App\Components\BaseControl;
+use App\Components\Cv\ISkillsFilterFactory;
+use App\Components\Cv\SkillsFilter;
+use App\Components\Job\IJobCategoryFilterFactory;
 use App\Forms\Renderers\MetronicFormRenderer;
 use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
+use App\Model\Entity\JobCategory;
 use App\Model\Entity\Match;
+use App\Model\Entity\Skill;
+use App\Model\Entity\SkillKnowRequest;
+use App\Model\Entity\SkillLevel;
 use App\Model\Facade\CandidateFacade;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Orx;
 use Grido\Components\Paginator;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Doctrine\QueryBuilder;
+use Kdyby\Translation\Translator;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
+use Nette\Utils\ArrayHash;
 
-class JobsList extends BaseControl
+class JobsList extends Control
 {
+
+	const FILTER_SEARCH = 'search';
+	const FILTER_CATEGORIES = 'categories';
+	const FILTER_SKILLS = 'skills';
+	const FILTER_INVITATIONS = 'onlyInvitations';
+	const FILTER_APPLIED = 'onlyAppliedFor';
 
 	/** @var int @persistent */
 	public $page = 1;
@@ -25,11 +43,26 @@ class JobsList extends BaseControl
 	/** @var array @persistent */
 	public $filter = [];
 
+	/** @var EntityManager @inject */
+	public $em;
+
+	/** @var Translator @inject */
+	public $translator;
+
 	/** @var \Nette\Security\User @inject */
 	public $user;
 
+	/** @var Session @inject */
+	public $session;
+
 	/** @var CandidateFacade @inject */
 	public $candidateFacade;
+
+	/** @var IJobCategoryFilterFactory @inject */
+	public $jobCategoryFilterFactory;
+
+	/** @var ISkillsFilterFactory @inject */
+	public $skillsFilterFactory;
 
 	/** @var QueryBuilder */
 	protected $qb;
@@ -79,21 +112,29 @@ class JobsList extends BaseControl
 		return $this->qb;
 	}
 
+	/** @return SessionSection */
+	private function getSession()
+	{
+		return $this->session->getSection(get_class($this) . get_class($this->presenter));
+	}
+
 	private function applyFilter()
 	{
 		$this->applyMatched();
 		$this->filterFulltext();
+		$this->filterCategories();
+		$this->filterSkills();
 		$this->qb->setParameters($this->queryParams);
 	}
 
 	private function applyMatched()
 	{
-		if (array_key_exists('onlyInvitations', $this->filter) && $this->filter['onlyInvitations']) {
+		if ($this->getSerializedFilter(self::FILTER_INVITATIONS)) {
 			$this->onlyApproved = TRUE;
 			$this->onlyApplied = FALSE;
 			$this->onlyMatched = FALSE;
 		}
-		if (array_key_exists('onlyAppliedFor', $this->filter) && $this->filter['onlyAppliedFor']) {
+		if ($this->getSerializedFilter(self::FILTER_APPLIED)) {
 			$this->onlyApproved = FALSE;
 			$this->onlyApplied = TRUE;
 			$this->onlyMatched = TRUE;
@@ -127,12 +168,11 @@ class JobsList extends BaseControl
 
 	private function filterFulltext()
 	{
-		if (array_key_exists('fulltext', $this->filter) && $this->filter['fulltext']) {
-			$words = preg_split('/\s+/', $this->filter['fulltext'], -1, PREG_SPLIT_NO_EMPTY);
+		$fulltextValue = $this->getSerializedFilter(self::FILTER_SEARCH);
+		if ($fulltextValue) {
+			$words = preg_split('/\s+/', $fulltextValue, -1, PREG_SPLIT_NO_EMPTY);
 
-			$rules = [
-				'j.name LIKE',
-			];
+			$rules = ['j.name LIKE',];
 			$params = [];
 			$conditions = new Andx();
 			foreach ($words as $i => $word) {
@@ -141,7 +181,7 @@ class JobsList extends BaseControl
 					$partOr->add($rule . ' :word' . $i);
 				}
 				$conditions->add($partOr);
-				$this->queryParams['word' . $i] = '%' . $word . '%';
+				$params['word' . $i] = '%' . $word . '%';
 			}
 
 			if ($conditions->count()) {
@@ -149,6 +189,162 @@ class JobsList extends BaseControl
 				$this->queryParams = $this->queryParams + $params;
 			}
 		}
+	}
+
+	private function filterCategories()
+	{
+		$categories = $this->getSerializedFilter(self::FILTER_CATEGORIES);
+		if (is_array($categories) && count($categories)) {
+			$categoryRepo = $this->em->getRepository(JobCategory::getClassName());
+			$params = [];
+			$conditions = new Orx();
+			foreach ($categories as $categoryId => $categoryName) {
+				$category = $categoryRepo->find($categoryId);
+				if ($category) {
+					$conditions->add('j.category = :category' . $categoryId);
+					$params['category' . $categoryId] = $category;
+				}
+			}
+			if ($conditions->count()) {
+				$this->qb->andWhere($conditions);
+				$this->queryParams = $this->queryParams + $params;
+			}
+		}
+	}
+
+	private function filterSkills()
+	{
+		$skills = $this->getSerializedFilter(self::FILTER_SKILLS);
+		if (is_array($skills) && array_key_exists('skillRange', $skills) && array_key_exists('yearRange', $skills)) {
+			$skillRanges = $skills['skillRange'];
+			$yearRanges = $skills['yearRange'];
+			if ($skillRanges && $yearRanges) {
+				$skillRepo = $this->em->getRepository(Skill::getClassName());
+				$skillLevelRepo = $this->em->getRepository(SkillLevel::getClassName());
+				$params = [];
+				$conditions = new Andx();
+				foreach ($skillRanges as $id => $skillRange) {
+					$skill = $skillRepo->find($id);
+					if ($skill) {
+						$yearRange = array_key_exists($id, $yearRanges) ? $yearRanges[$id] : '1,10';
+						if ($yearRange && preg_match('/^(\d+)\,(\d+)$/', $yearRange, $matches)) {
+							$yearLow = (int)$matches[1];
+							$yearHigh = (int)$matches[2];
+						}
+						if ($skillRange && preg_match('/^(\d+)\,(\d+)$/', $skillRange, $matches)) {
+							$skillLow = (int)$matches[1];
+							$skillHigh = (int)$matches[2];
+						}
+						if ($skillLow !== SkillLevel::FIRST_PRIORITY || $skillHigh !== SkillLevel::LAST_PRIORITY) {
+							$condition = new Andx();
+							$condition->add('r.skill = :skill' . $id);
+							$params['skill' . $id] = $skill;
+
+							$skillLevelFrom = $skillLevelRepo->find($skillLow);
+							$skillLevelTo = $skillLevelRepo->find($skillHigh);
+							if ($skillLevelFrom && $skillLevelTo) {
+								$condition->add('r.levelFrom <= :levelFrom' . $id);
+								$condition->add('r.levelTo >= :levelTo' . $id);
+								$params['levelFrom' . $id] = $skillLevelFrom;
+								$params['levelTo' . $id] = $skillLevelTo;
+							}
+
+							if ($yearLow !== 1) {
+								$condition->add('r.yearFrom <= :yearFrom' . $id);
+								$params['yearFrom' . $id] = $yearLow;
+							}
+							if ($yearHigh !== 10) {
+								$condition->add('r.yearTo >= :yearTo' . $id);
+								$params['yearTo' . $id] = $yearHigh;
+							}
+
+							$conditions->add($condition);
+						}
+					}
+				}
+				if ($conditions->count()) {
+					$this->qb->join(SkillKnowRequest::getClassName(), 'r', 'WITH', 'j = r.job');
+					$this->qb->andWhere($conditions);
+					$this->queryParams = $this->queryParams + $params;
+				}
+			}
+		}
+	}
+
+	protected function persistFilter($filter, $value)
+	{
+		$session = $this->getSession();
+		$session[$filter] = $value;
+	}
+
+	protected function resetFilter($filter = null)
+	{
+		$session = $this->getSession();
+		if ($filter) {
+			if (isset($session[$filter])) {
+				unset($session[$filter]);
+			}
+		} else {
+			$session->remove();
+		}
+	}
+
+	protected function getSerializedFilter($filter = null)
+	{
+		$session = $this->getSession();
+		$result = [];
+		$result[self::FILTER_SEARCH] = isset($session[self::FILTER_SEARCH]) ? $session[self::FILTER_SEARCH] : NULL;
+		$result[self::FILTER_INVITATIONS] = isset($session[self::FILTER_INVITATIONS]) ? $session[self::FILTER_INVITATIONS] : FALSE;
+		$result[self::FILTER_APPLIED] = isset($session[self::FILTER_APPLIED]) ? $session[self::FILTER_APPLIED] : FALSE;
+		$result[self::FILTER_SKILLS] = isset($session[self::FILTER_SKILLS]) ? $session[self::FILTER_SKILLS] : [];
+		$result[self::FILTER_CATEGORIES] = isset($session[self::FILTER_CATEGORIES]) ? $session[self::FILTER_CATEGORIES] : [];
+
+		if ($filter) {
+			return $result[$filter];
+		} else {
+			return $result;
+		}
+	}
+
+	protected function loadSerializedSkills()
+	{
+		$defaultRange = SkillsFilter::getDefaultRangeValue();
+		$defaultYears = SkillsFilter::getDefaultYearsValue();
+		$skillRepo = $this->em->getRepository(Skill::getClassName());
+		$skillLevelRepo = $this->em->getRepository(SkillLevel::getClassName());
+		$loaded = [];
+		$serializedSkills = $this->getSerializedFilter(self::FILTER_SKILLS);
+		if (isset($serializedSkills['skillRange'])) {
+			foreach ($serializedSkills['skillRange'] as $skillId => $skillValues) {
+				if ($skillValues !== $defaultRange) {
+					$loadedSkill = $skillRepo->find($skillId);
+					$separatedSkillValues = SkillsFilter::separateValues($skillValues);
+					$skillFrom = $skillLevelRepo->find($separatedSkillValues[0]);
+					$skillTo = $skillLevelRepo->find($separatedSkillValues[1]);
+					$loaded[$skillId] = (string)$loadedSkill . ' (' . $skillFrom . ' - ' . $skillTo;
+					if ($serializedSkills['yearRange'][$skillId] !== $defaultYears) {
+						$separatedYearsValues = SkillsFilter::separateValues($serializedSkills['yearRange'][$skillId]);
+						if ($separatedYearsValues[1] == SkillsFilter::YEARS_MAX) {
+							$separatedYearsValues[1] .= SkillsFilter::YEARS_POSTFIX;
+						}
+						$loaded[$skillId] .= ' | ' . $separatedYearsValues[0] . '-' . $separatedYearsValues[1] . ' years';
+					}
+					$loaded[$skillId] .= ')';
+				}
+			}
+		}
+		return $loaded;
+	}
+
+	public function isFiltered()
+	{
+		$seralized = $this->getSerializedFilter();
+		$isSerializedFilled = $seralized[self::FILTER_SEARCH] ||
+			$seralized[self::FILTER_INVITATIONS] ||
+			$seralized[self::FILTER_APPLIED] ||
+			count($seralized[self::FILTER_SKILLS]) ||
+			count($seralized[self::FILTER_CATEGORIES]);
+		return count($this->filter) || $isSerializedFilled;
 	}
 
 	public function getJobs()
@@ -243,9 +439,9 @@ class JobsList extends BaseControl
 	{
 		$values = $button->form->values;
 
-		$this->filter['fulltext'] = urlencode($values->fulltext);
-		$this->filter['onlyInvitations'] = !!$values->onlyInvitations;
-		$this->filter['onlyAppliedFor'] = !!$values->onlyAppliedFor;
+		$this->persistFilter(self::FILTER_SEARCH, $values->fulltext);
+		$this->persistFilter(self::FILTER_INVITATIONS, !!$values->onlyInvitations);
+		$this->persistFilter(self::FILTER_APPLIED, !!$values->onlyAppliedFor);
 
 		$this->page = 1;
 		$this->reload();
@@ -253,11 +449,17 @@ class JobsList extends BaseControl
 
 	public function handleReset(SubmitButton $button)
 	{
-		$this->filter = [];
+		$this->resetFilter();
 
 		$button->form->setValues([], TRUE);
 
 		$this->handlePage(1);
+	}
+
+	public function handleResetFilter($part)
+	{
+		$this->resetFilter($part);
+		$this->redirect('this');
 	}
 
 	public function reload()
@@ -272,6 +474,20 @@ class JobsList extends BaseControl
 
 	public function render()
 	{
+		if ($this->presenter->isAjax()) {
+			if ($this->isControlInvalid('jobList')) {
+				$this->renderList();
+			}
+			if ($this->isControlInvalid('jobFilter')) {
+				$this->renderFilter();
+			}
+		} else {
+			$this->renderList();
+		}
+	}
+
+	public function renderList()
+	{
 		$this->template->jobs = $this->getJobs();
 		$this->template->paginator = $this->getPaginator();
 		$this->template->candidate = $this->candidate;
@@ -279,19 +495,30 @@ class JobsList extends BaseControl
 		$this->template->showRejected = $this->showRejected;
 		$this->template->showPaginator = $this->showPaginator;
 		$this->template->noMatchText = $this->noMatchText;
-		$this->templateRender();
+		$this->templateRender('list');
 	}
 
 	public function renderFilter()
 	{
+		$this->template->selectedSkills = $this->loadSerializedSkills();
+		$this->template->selectedCategories = $this->getSerializedFilter(self::FILTER_CATEGORIES);
 		$this->template->showFilter = $this->showFilter;
 		$this->templateRender('filter');
 	}
 
-	private function templateRender($template = self::DEFAULT_TEMPLATE)
+	private function templateRender($template = 'default')
 	{
-		$this->setTemplateFile($template);
-		parent::render();
+		$dir = dirname($this->getReflection()->getFileName());
+		$this->template->setFile($dir . '/' . $template . '.latte');
+		$this->template->render();
+	}
+
+	public function createTemplate()
+	{
+		$template = parent::createTemplate();
+		$template->registerHelper('translate', callback($this->translator, 'translate'));
+
+		return $template;
 	}
 
 	public function getPaginator()
@@ -312,7 +539,10 @@ class JobsList extends BaseControl
 
 		$form->addText('fulltext', 'Fulltext')
 			->setAttribute('placeholder', 'Search Keywords')
-			->getControlPrototype()->class = 'form-control';
+			->getControlPrototype()->class = 'form-control text-filter';
+
+		$categories = [];
+		$form->addSelect('category', 'Category', $categories);
 
 		$form->addCheckbox('onlyInvitations', 'Only Invitations');
 		$form->addCheckbox('onlyAppliedFor', 'Only Applied For');
@@ -330,19 +560,36 @@ class JobsList extends BaseControl
 
 	private function getDefaults()
 	{
-		$values = [];
-		foreach ($this->filter as $key => $item) {
-			switch ($key) {
-				case 'fulltext':
-					$values[$key] = $item;
-					break;
-				case 'onlyInvitations':
-				case 'onlyAppliedFor':
-					$values[$key] = !!$item;
-					break;
-			}
-		}
+		$values = [
+			'fulltext' => $this->getSerializedFilter(self::FILTER_SEARCH),
+			'onlyInvitations' => $this->getSerializedFilter(self::FILTER_INVITATIONS),
+			'onlyAppliedFor' => $this->getSerializedFilter(self::FILTER_APPLIED),
+		];
 		return $values;
+	}
+
+	public function createComponentCategoryFilter()
+	{
+		$control = $this->jobCategoryFilterFactory->create();
+		$control->setAjax(true, true);
+		$control->setCategoryRequests($this->getSerializedFilter(self::FILTER_CATEGORIES));
+		$control->onAfterSend = function (array $categoryRequests) {
+			$this->persistFilter(self::FILTER_CATEGORIES, $categoryRequests);
+			$this->reload();
+		};
+		return $control;
+	}
+
+	public function createComponentSkillsFilter()
+	{
+		$control = $this->skillsFilterFactory->create();
+		$control->setAjax(true, true);
+		$control->setSkillRequests(ArrayHash::from($this->getSerializedFilter(self::FILTER_SKILLS)));
+		$control->onAfterSend = function ($skillRequests) {
+			$this->persistFilter(self::FILTER_SKILLS, (array)$skillRequests);
+			$this->reload();
+		};
+		return $control;
 	}
 
 }

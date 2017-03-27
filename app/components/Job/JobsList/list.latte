@@ -1,8 +1,8 @@
-<div n:snippet="list" class="scrollHere" data-target="#allJobsHeadline">
+<div n:snippet="jobList" class="scrollHere" data-target="#allJobsHeadline">
 	<ul n:if="$jobs" class="jobs-listing grid">
 		<li n:foreach="$jobs as $job"
 				n:if="$showRejected || !$candidateFacade->isRejected($candidate, $job)"
-				class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+				class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
 			{var jobLink => $job->wordpressLink ? $basePath . $job->wordpressLink : $control->presenter->link('Job:view', [$job->id])}
 			<div class="jobs-content">
 				<div class="cs-media">
@@ -58,7 +58,7 @@
 	</div>
 </div>
 
-{snippet paginator}
+{snippet jobPaginator}
 	<div class="row" n:if="$showPaginator">
 		<div class="col-md-12">
 			<div class="text-center">

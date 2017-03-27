@@ -122,19 +122,17 @@ class JobsPresenter extends BasePresenter
 		}
 
 		$candidate = $this->user->getIdentity()->candidate;
-		$this['allJobsList']
+		$this['allJobs']
 			->setCandidate($candidate);
-		$this['approvedJobsList']
+		$this['approvedJobs']
 			->setCandidate($candidate);
-		$this['appliedJobsList']
-			->setCandidate($candidate);
-		$this['matchedJobsList']
+		$this['appliedJobs']
 			->setCandidate($candidate);
 	}
 
 	public function renderMyList2()
 	{
-		$this->template->showJobSections = !count($this['allJobsList']->filter);
+		$this->template->showJobSections = !$this['allJobs']->isFiltered();
 	}
 
 	/**
@@ -182,7 +180,7 @@ class JobsPresenter extends BasePresenter
 	}
 
 	/** @return JobsList */
-	public function createComponentAllJobsList()
+	public function createComponentAllJobs()
 	{
 		$control = $this->iJobsListFactory->create()
 			->setShowFilter()
@@ -192,7 +190,7 @@ class JobsPresenter extends BasePresenter
 	}
 
 	/** @return JobsList */
-	public function createComponentApprovedJobsList()
+	public function createComponentApprovedJobs()
 	{
 		$control = $this->iJobsListFactory->create()
 			->setOnlyApproved()
@@ -201,22 +199,13 @@ class JobsPresenter extends BasePresenter
 	}
 
 	/** @return JobsList */
-	public function createComponentAppliedJobsList()
+	public function createComponentAppliedJobs()
 	{
 		$control = $this->iJobsListFactory->create()
 			->setOnlyApplied()
 			->setOnlyMatched()
 			->setShowRejected(TRUE)
 			->setNoMatchText('You have not applied for any jobs');
-		return $control;
-	}
-
-	/** @return JobsList */
-	public function createComponentMatchedJobsList()
-	{
-		$control = $this->iJobsListFactory->create()
-			->setOnlyMatched()
-			->setNoMatchText('You have not matched for any jobs');
 		return $control;
 	}
 

@@ -1,21 +1,87 @@
-{snippet filter}
+{snippet jobFilter}
 	<div n:if="$showFilter" class="col-md-12">
 		{form form, class => 'ajax'}
 			<div class="job-filter">
 				<div class="row">
-					<div class="col-lg-3 col-md-3 col-sm-6">
+					<div class="col-md-6">
 						{input fulltext}
+						<div class="checkers">
+							{input onlyInvitations}
+							&nbsp;
+							{input onlyAppliedFor}
+						</div>
 					</div>
-					<div class="col-lg-3 col-md-3 col-sm-6 text-center">
-						{input onlyInvitations}
-						&nbsp;
-						{input onlyAppliedFor}
+					<div class="col-md-4 tags">
+						<div>
+							<a href="#categoryFilter" data-toggle="modal" class="btn btn-default">{_'Select categories'}</a>
+							<div class="tag-block" n:if="count($selectedCategories)">
+								<span n:foreach="$selectedCategories as $tag" class="tag label label-info">{$tag}</span>
+							</div>
+						</div>
+						<div>
+							<a href="#skillsFilter" data-toggle="modal" class="btn btn-default">{_'Select Skills'}</a>
+							<div class="tag-block" n:if="count($selectedSkills)">
+								<span n:foreach="$selectedSkills as $tag" class="tag label label-info">{$tag}</span>
+							</div>
+						</div>
 					</div>
-					<div class="col-lg-2 col-md-3 col-sm-6">
+					<div class="col-md-2 buttons">
 						{input search}
+						<br>
+						{input reset}
 					</div>
 				</div>
 			</div>
 		{/form}
+	</div>
+
+	<div class="modal fade" id="categoryFilter">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Category filter'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control categoryFilter}
+				</div>
+				<div class="modal-footer">
+					<a href="{link resetFilter! 'categories'}" class="btn btn-warning"
+					   data-dismiss="modal" data-action="modal">{_'Reset'}</a>
+					<button type="button" class="btn btn-primary"
+					        data-dismiss="modal" data-action="modal">{_'Filter'}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="skillsFilter">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+						<span class="sr-only">{_'Close'}</span>
+					</button>
+					<h4 class="modal-title">
+						{_'Skills filter'}
+					</h4>
+				</div>
+				<div class="modal-body">
+					{control skillsFilter}
+				</div>
+				<div class="modal-footer">
+					<a href="{link resetFilter! 'skills'}" class="btn btn-warning"
+					   data-dismiss="modal" data-action="modal">{_'Reset'}</a>
+					<button type="button" class="btn btn-primary"
+					        data-dismiss="modal" data-action="modal">{_'Filter'}</button>
+				</div>
+			</div>
+		</div>
 	</div>
 {/snippet}
