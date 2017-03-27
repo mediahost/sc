@@ -255,6 +255,18 @@ class ServicePresenter extends BasePresenter
 		$this->redirect('this');
 	}
 
+	/**
+	 * @secured
+	 * @resource('service')
+	 * @privilege('deleteImported')
+	 */
+	public function handleDeleteImported()
+	{
+		$count = $this->deleteImportedUsers();
+		$this->flashMessage($this->translator->translate('%count% users was deleted.', $count), 'success');
+		$this->redirect('this');
+	}
+
 	private function reinstall()
 	{
 		$this->uninstall();
@@ -441,6 +453,19 @@ class ServicePresenter extends BasePresenter
 				$userRepo->save($user);
 				$count++;
 			}
+		}
+		return $count;
+	}
+
+	private function deleteImportedUsers()
+	{
+		$importedUserRepo = $this->em->getRepository(ImportedUser::getClassName());
+
+		$count = 0;
+		$importedUsers = $importedUserRepo->findAll();
+		foreach ($importedUsers as $importedUser) {
+			$importedUserRepo->delete($importedUser);
+			$count++;
 		}
 		return $count;
 	}
