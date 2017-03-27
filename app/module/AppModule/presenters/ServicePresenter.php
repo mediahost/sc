@@ -417,7 +417,7 @@ class ServicePresenter extends BasePresenter
 		$importedUsers = $importedUserRepo->findAll();
 		foreach ($importedUsers as $importedUser) {
 			$user = $userRepo->findOneByMail($importedUser->mail);
-			if ($user) {
+			if ($user && $user->isUnregistered()) {
 				$change = $this->loadUserData($user, $importedUser, FALSE);
 				if ($change) {
 					$userRepo->save($user);
