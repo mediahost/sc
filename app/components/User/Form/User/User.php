@@ -70,7 +70,7 @@ class User extends BaseControl
 
 		if ($this->user->isNew()) {
 			$form->addCheckSwitch('createRegistration', 'Create registration')
-				->setDefaultValue(TRUE)
+				->setDefaultValue(FALSE)
 				->addCondition($form::EQUAL, TRUE)
 				->toggle('password');
 		}
