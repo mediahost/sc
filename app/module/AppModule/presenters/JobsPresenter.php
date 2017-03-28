@@ -200,7 +200,7 @@ class JobsPresenter extends BasePresenter
 		$control = $this->iJobsListFactory->create()
 			->setShowFilter()
 			->setShowPaginator()
-			->setNoMatchText('There is no jobs for your criteria.');
+			->setNoMatchText('There are no jobs matching your criteria.');
 		return $control;
 	}
 
