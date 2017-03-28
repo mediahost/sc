@@ -105,9 +105,16 @@
 								</li>
 								<li n:if="$user->isAllowed('candidates', 'default')">
 									<a n:href="Candidates:"
-											n:class="$presenter->isLinkCurrent('Candidates:*') || ($presenter->isLinkCurrent('Profile:*') && (!isset($isMine) || !$isMine)) ? active">
+											n:class="$presenter->isLinkCurrent('Candidates:') || ($presenter->isLinkCurrent('Profile:*') && (!isset($isMine) || !$isMine)) ? active">
 										<i class="fa entypo-icon-users"></i>
 										<span class="txt">{_'Candidates'}</span>
+									</a>
+								</li>
+								<li n:if="$user->isAllowed('candidates', 'unregistered')">
+									<a n:href="Candidates:unregistered"
+											n:class="$presenter->isLinkCurrent('Candidates:unregistered') ? active">
+										<i class="fa entypo-icon-users"></i>
+										<span class="txt">{_'Candidates (unreg)'}</span>
 									</a>
 								</li>
 								<li n:if="$user->isAllowed('companies', 'default')">

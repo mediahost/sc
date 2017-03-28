@@ -12,7 +12,17 @@ class CandidatesPresenter extends BasePresenter
 	 */
 	public function actionDefault()
 	{
+		$this['candidatesList']->setRegisteredCandidates(TRUE);
+	}
 
+	/**
+	 * @secured
+	 * @resource('candidates')
+	 * @privilege('unregistered')
+	 */
+	public function actionUnregistered()
+	{
+		$this['candidatesList']->setRegisteredCandidates(FALSE);
 	}
 
 }

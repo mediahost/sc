@@ -3,7 +3,6 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Job;
-use App\Model\Entity\JobCategory;
 use App\Model\Entity\Match;
 use App\Model\Entity\Role;
 use App\Model\Entity\Skill;
@@ -22,6 +21,7 @@ class CandidateRepository extends BaseRepository
 	const CRITERIA_KEY_NOT_REJECT = 'notReject';
 	const CRITERIA_KEY_CATEGORIES = 'categories';
 	const CRITERIA_KEY_CANDIDATES = 'candidates';
+	const CRITERIA_KEY_COUNTRY = 'country';
 	const CRITERIA_KEY_SKILLS = 'skills';
 	const CANDIDATE_VALUE_REGISTERED = 1;
 	const CANDIDATE_VALUE_NONREGISTERED = 2;
@@ -105,6 +105,15 @@ class CandidateRepository extends BaseRepository
 						}
 						$condition->add($partOr);
 						$params['word' . $i] = '%' . $word . '%';
+					}
+					break;
+				case self::CRITERIA_KEY_COUNTRY:
+					if ($value) {
+						$joins['c.person'] = 'p';
+						$joins['p.address'] = 'a';
+
+						$condition->add('a.country = :country');
+						$params['country'] = $value;
 					}
 					break;
 				case self::CRITERIA_KEY_JOB:

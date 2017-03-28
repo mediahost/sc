@@ -11,6 +11,7 @@ use App\Extensions\Candidates\Components\ISortingFormFactory;
 use App\Extensions\Candidates\Components\Paginator;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicFormRenderer;
+use App\Model\Entity\Address;
 use App\Model\Entity\Job;
 use App\Model\Entity\JobCategory;
 use App\Model\Entity\Skill;
@@ -39,6 +40,7 @@ class CandidatesList extends Control
 	const FILTER_CATEGORIES = 'categories';
 	const FILTER_SKILLS = 'skills';
 	const FILTER_CANDIDATES = 'candidates';
+	const FILTER_COUNTRY = 'country';
 
 	// <editor-fold defaultstate="collapsed" desc="injects">
 
@@ -123,6 +125,9 @@ class CandidatesList extends Control
 	/** @var bool */
 	protected $prefilteredJob = FALSE;
 
+	/** @var bool */
+	protected $onlyRegistered = TRUE;
+
 	/** @var array */
 	protected $candidateOnReload = [];
 
@@ -139,7 +144,7 @@ class CandidatesList extends Control
 	/** @return SessionSection */
 	private function getSession()
 	{
-		return $this->session->getSection(get_class($this) . get_class($this->presenter));
+		return $this->session->getSection(get_class($this) . get_class($this->presenter) . $this->presenter->action);
 	}
 
 	/* 	 ADD FILTERS *************************************************************************************** */
@@ -186,6 +191,7 @@ class CandidatesList extends Control
 		$result[self::FILTER_SKILLS] = isset($session[self::FILTER_SKILLS]) ? $session[self::FILTER_SKILLS] : [];
 		$result[self::FILTER_CATEGORIES] = isset($session[self::FILTER_CATEGORIES]) ? $session[self::FILTER_CATEGORIES] : [];
 		$result[self::FILTER_CANDIDATES] = isset($session[self::FILTER_CANDIDATES]) ? $session[self::FILTER_CANDIDATES] : NULL;
+		$result[self::FILTER_COUNTRY] = isset($session[self::FILTER_COUNTRY]) ? $session[self::FILTER_COUNTRY] : NULL;
 
 		if ($filter) {
 			return $result[$filter];
@@ -255,8 +261,11 @@ class CandidatesList extends Control
 		$fulltext = $this->getSerializedFilter(self::FILTER_SEARCH);
 		$this->getHolder()->filterFulltext($fulltext);
 
-		$candidates = $this->getSerializedFilter(self::FILTER_CANDIDATES);
+		$candidates = $this->onlyRegistered ? CandidateRepository::CANDIDATE_VALUE_REGISTERED : CandidateRepository::CANDIDATE_VALUE_NONREGISTERED;
 		$this->getHolder()->filterCandidates($candidates);
+
+		$country = $this->getSerializedFilter(self::FILTER_COUNTRY);
+		$this->getHolder()->filterCountry($country);
 
 		$jobId = $this->getSerializedFilter(self::FILTER_JOB);
 		if ($jobId) {
@@ -365,6 +374,12 @@ class CandidatesList extends Control
 	public function setAjax($value = TRUE)
 	{
 		$this->ajax = $value;
+		return $this;
+	}
+
+	public function setRegisteredCandidates($onlyRegistered = TRUE)
+	{
+		$this->onlyRegistered = $onlyRegistered;
 		return $this;
 	}
 
@@ -604,20 +619,23 @@ class CandidatesList extends Control
 
 		$jobRepo = $this->em->getRepository(Job::getClassName());
 		$jobs = $jobRepo->findPairs('name');
-		$form->addSelect('job', 'Job', [NULL => '--- All Jobs ---'] + $jobs)
+		$form->addSelect2('job', 'Job', [NULL => '--- All Jobs ---'] + $jobs)
 			->setDefaultValue($this->getSerializedFilter(self::FILTER_JOB));
 
 		$userRepo = $this->em->getRepository(UserEntity::getClassName());
 		$managers = $userRepo->findAccountManagers();
-		$form->addSelect('manager', 'Account manager', [NULL => '--- All Managers ---'] + $managers)
+		$form->addSelect2('manager', 'Account manager', [NULL => '--- All Managers ---'] + $managers)
 			->setDefaultValue($this->getSerializedFilter(self::FILTER_MANAGER));
 
-		$form->addSelect('candidates', 'Candidates', [
-			NULL => '--- All ---',
-			CandidateRepository::CANDIDATE_VALUE_REGISTERED => 'Registered',
-			CandidateRepository::CANDIDATE_VALUE_NONREGISTERED => 'Non-Registered',
-		])
-			->setDefaultValue($this->getSerializedFilter(self::FILTER_MANAGER));
+		$form->addSelect2('country', 'Country', [NULL => '--- All ---'] + Address::getCountriesList())
+			->setDefaultValue($this->getSerializedFilter(self::FILTER_COUNTRY));
+
+//		$form->addSelect('candidates', 'Candidates', [
+//			NULL => '--- All ---',
+//			CandidateRepository::CANDIDATE_VALUE_REGISTERED => 'Registered',
+//			CandidateRepository::CANDIDATE_VALUE_NONREGISTERED => 'Non-Registered',
+//		])
+//			->setDefaultValue($this->getSerializedFilter(self::FILTER_CANDIDATES));
 
 		$form->addSubmit('send', 'Search')
 			->getControlPrototype()->setClass('loadingOnClick');
@@ -633,7 +651,8 @@ class CandidatesList extends Control
 		$this->persistFilter(self::FILTER_SEARCH, $values->search);
 		$this->persistFilter(self::FILTER_JOB, $values->job);
 		$this->persistFilter(self::FILTER_MANAGER, $values->manager);
-		$this->persistFilter(self::FILTER_CANDIDATES, $values->candidates);
+		$this->persistFilter(self::FILTER_COUNTRY, $values->country);
+//		$this->persistFilter(self::FILTER_CANDIDATES, $values->candidates);
 		$this->reload();
 	}
 

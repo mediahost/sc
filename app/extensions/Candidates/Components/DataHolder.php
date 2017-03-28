@@ -159,6 +159,12 @@ class DataHolder extends Object
 		return $this;
 	}
 
+	public function filterCountry($value = NULL)
+	{
+		$this->candidateCriteria[CandidateRepository::CRITERIA_KEY_COUNTRY] = $value;
+		return $this;
+	}
+
 	// </editor-fold>
 
 }
