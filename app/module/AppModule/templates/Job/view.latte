@@ -37,9 +37,8 @@
 						<span>{$job}</span>
 						<span n:if="$isCandidate && !$isMatched && $isInvited"
 								class="label label-warning">{_'You have been invited to apply'}</span>
-						<a n:href="Job:edit $job->id" n:if="$user->isAllowed('job', 'edit')">
-							<span class="fa fa-edit"></span>
-						</a>
+						<a href="{$basePath}{$job->wordpressLink}" n:if="$job->wordpressLink"><span class="fa fa-wordpress"></span></a>
+						<a n:href="Job:edit $job->id" n:if="$user->isAllowed('job', 'edit')"><span class="fa fa-edit"></span></a>
 					</h4>
 					<div class="invoice-info">
 						<strong class="color-red">{$job->company}</strong>

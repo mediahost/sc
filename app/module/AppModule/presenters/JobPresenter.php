@@ -87,6 +87,7 @@ class JobPresenter extends BasePresenter
 		if ($id) {
 			$this->job = $this->jobRepo->find($id);
 		}
+
 		if (!$this->job || ($this->company && $this->job->company->id !== $this->company->id)) {
 			$message = $this->translator->translate('Finded job isn\'t exists.');
 			$this->flashMessage($message, 'danger');
@@ -128,6 +129,8 @@ class JobPresenter extends BasePresenter
 			if ($state) {
 				$this->template->stateName = Match::getStateName($state);
 			}
+		} else if ($this->job->wordpressLink && $this->user->isInRole(Role::CANDIDATE)) {
+			$this->redirectUrl($this->job->wordpressLink);
 		}
 
 		$this->actionFacade->addJobView($this->user->identity, $this->job);
