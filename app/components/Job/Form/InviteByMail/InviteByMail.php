@@ -74,6 +74,9 @@ class InviteByMail extends BaseControl
 		$form->addSelect2('dealer', 'Sender', $dealers)
 			->setRequired('Must be filled');
 
+		$form->addText('subject', 'Subject')
+			->setAttribute('placeholder', 'Job Invitation');
+
 		$form->addTextArea('message', 'Invitation message')
 			->addRule(Form::FILLED, 'Must be filled', NULL, 3);
 
@@ -108,7 +111,7 @@ class InviteByMail extends BaseControl
 			$invitationMessage = $this->iJobInvitationFactory->create();
 			$invitationMessage->setSender($dealer);
 			$invitationMessage->setMatch($match);
-			$invitationMessage->setText($values->message);
+			$invitationMessage->setText($values->message, $values->subject);
 			$invitationMessage->send();
 
 			$this->onAfterSave($match);

@@ -8,9 +8,11 @@ use App\Model\Entity\User;
 class JobInvitation extends BaseMessage
 {
 
+	private $subject = 'Job Invitation';
+
 	protected function beforeSend()
 	{
-		$this->setSubject($this->translator->translate('Job Invitation'));
+		$this->setSubject($this->subject);
 		parent::beforeSend();
 	}
 
@@ -33,9 +35,12 @@ class JobInvitation extends BaseMessage
 		return $this;
 	}
 
-	public function setText($text)
+	public function setText($text, $subject = NULL)
 	{
 		$this->addParameter('mainText', $text);
+		if ($subject) {
+			$this->subject = $subject;
+		}
 		return $this;
 	}
 
