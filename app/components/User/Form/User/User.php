@@ -154,6 +154,7 @@ class User extends BaseControl
 
 		$form->addSubmit('save', 'Save');
 		if ($this->identity->isAllowed('candidates', 'edit') && $this->user->isCandidate()) {
+			$form->addSubmit('saveAndItSkills', 'Save & Go to IT skills');
 			$form->addSubmit('saveAndCandidate', 'Save & Go to candidate');
 		}
 
@@ -179,7 +180,14 @@ class User extends BaseControl
 		$this->load($values);
 		try {
 			$this->save();
-			$this->onAfterSave($this->user, isset($form['saveAndCandidate']) && $form['saveAndCandidate']->submittedBy);
+			$action = null;
+			if (isset($form['saveAndCandidate']) && $form['saveAndCandidate']->submittedBy) {
+				$action = 'goToCandidate';
+			}
+			if (isset($form['saveAndItSkills']) && $form['saveAndItSkills']->submittedBy) {
+				$action = 'goToItSkills';
+			}
+			$this->onAfterSave($this->user, $action);
 		} catch (DuplicateEntryException $exc) {
 			$message = $this->translator->translate('E-mail \'%mail%\' is already registred', ['mail' => $values->mail]);
 			$form['mail']->addError($message);

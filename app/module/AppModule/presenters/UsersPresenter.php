@@ -198,10 +198,12 @@ class UsersPresenter extends BasePresenter
 	public function createComponentUserForm()
 	{
 		$control = $this->iUserFactory->create();
-		$control->onAfterSave = function (Entity\User $savedUser, $goToCandidate) {
+		$control->onAfterSave = function (Entity\User $savedUser, $action) {
 			$message = $this->translator->translate('User \'%user%\' was successfully saved.', ['user' => (string)$savedUser]);
 			$this->flashMessage($message, 'success');
-			if ($goToCandidate && $savedUser->isCandidate()) {
+			if ($action && $action == 'goToItSkills' && $savedUser->isCandidate()) {
+				$this->redirect('CvEditor:skills', $savedUser->person->candidate->cv->id);
+			} elseif ($action && $action == 'goToCandidate' && $savedUser->isCandidate()) {
 				$this->redirect('Profile:', $savedUser->person->candidate->profileId);
 			} else {
 				$this->redirect('default');
