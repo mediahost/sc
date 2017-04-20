@@ -110,6 +110,9 @@ class User extends BaseControl
 				$surname->setRequired('Please enter your Surname(s).');
 			}
 
+			$form->addSelect2('country', 'Country', Entity\Address::getCountriesList())
+				->setPrompt('Not disclosed');
+
 			$form->addRadioList('gender', 'Gender', Entity\Person::getGenderList())
 				->setDefaultValue('x');
 
@@ -209,6 +212,12 @@ class User extends BaseControl
 		if (isset($values->surname)) {
 			$this->user->person->surname = $values->surname;
 		}
+		if (isset($values->country)) {
+			if (!$this->user->person->address) {
+				$this->user->person->address = new Entity\Address();
+			}
+			$this->user->person->address->country = $values->country;
+		}
 		if (isset($values->gender)) {
 			$this->user->person->gender = $values->gender;
 		}
@@ -293,6 +302,7 @@ class User extends BaseControl
 			'title' => $this->user->person->title,
 			'firstname' => $this->user->person->firstname,
 			'surname' => $this->user->person->surname,
+			'country' => isset($this->user->person->address->country) ? $this->user->person->address->country : null,
 			'gender' => $this->user->person->gender,
 			'phone' => $this->user->person->phoneMobile,
 			'isDealer' => $this->user->isDealer,
