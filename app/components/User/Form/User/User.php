@@ -2,6 +2,7 @@
 
 namespace App\Components\User;
 
+use App\Components\AfterRegistration\ICompleteCandidateFactory;
 use App\Components\BaseControl;
 use App\Forms\Form;
 use App\Forms\Renderers\MetronicHorizontalFormRenderer;
@@ -32,6 +33,9 @@ class User extends BaseControl
 
 	/** @var CommunicationFacade @inject */
 	public $communicationFacade;
+
+	/** @var ICompleteCandidateFactory @inject */
+	public $iCompleteCandidateFactory;
 
 	// <editor-fold desc="events">
 
@@ -154,6 +158,12 @@ class User extends BaseControl
 
 		$form->addSubmit('save', 'Save');
 		if ($this->identity->isAllowed('candidates', 'edit') && $this->user->isCandidate()) {
+			$btn = $form->addButton('categories', 'Categories')
+				->setAttribute('href', "#categories")
+				->setAttribute('data-toggle', 'modal');
+			if ($this->user->isNew()) {
+				$btn->setDisabled();
+			}
 			$form->addSubmit('saveAndItSkills', 'Save & Go to IT skills');
 			$form->addSubmit('saveAndCandidate', 'Save & Go to candidate');
 		}
@@ -341,6 +351,13 @@ class User extends BaseControl
 	{
 		$this->company = $company;
 		return $this;
+	}
+
+	public function createComponentCategories()
+	{
+		$control = $this->iCompleteCandidateFactory->create()
+			->setCandidate($this->user->getCandidate());
+		return $control;
 	}
 
 	// </editor-fold>

@@ -206,7 +206,7 @@ class UsersPresenter extends BasePresenter
 			} elseif ($action && $action == 'goToCandidate' && $savedUser->isCandidate()) {
 				$this->redirect('Profile:', $savedUser->person->candidate->profileId);
 			} else {
-				$this->redirect('default');
+				$this->redirect('edit', $savedUser->id);
 			}
 		};
 		return $control;
