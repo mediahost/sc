@@ -77,7 +77,7 @@ class InviteByMail extends BaseControl
 		$form->addText('subject', 'Subject')
 			->setAttribute('placeholder', 'Job Invitation');
 
-		$form->addTextArea('message', 'Invitation message')
+		$form->addWysiHtml('message', 'Invitation message')
 			->addRule(Form::FILLED, 'Must be filled', NULL, 3);
 
 		$form->addSubmit('send', 'Send');
