@@ -34,13 +34,13 @@ class MatchNotes extends BaseControl
 	{
 		$this->template->editable = FALSE;
 		if ($this->type === Note::TYPE_ADMIN) {
-			$this->template->notes = $this->match->adminNotes;
+			$this->template->notes = $this->match->candidate->getAdminNotes();
 			$this->template->editable = $this->user->isAllowed('adminNotes', 'add');
 		} else if ($this->type === Note::TYPE_COMPANY) {
 			$this->template->notes = $this->match->companyNotes;
 			$this->template->editable = $this->user->isAllowed('companyNotes', 'add');
 		} else if ($this->user->isAllowed('adminNotes', 'view')) {
-			$this->template->notes = $this->match->adminNotes;
+			$this->template->notes = $this->match->candidate->getAdminNotes();
 		} else if ($this->user->isAllowed('companyNotes', 'view')) {
 			$this->template->notes = $this->match->companyNotes;
 		}

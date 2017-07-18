@@ -163,4 +163,15 @@ class Candidate extends BaseEntity
 		}
 		return null;
 	}
+
+	public function getAdminNotes()
+	{
+		$notes = new ArrayCollection();
+		foreach ($this->matches as $match) {
+			foreach ($match->getAdminNotes() as $note) {
+				$notes->add($note);
+			}
+		}
+		return $notes;
+	}
 }
