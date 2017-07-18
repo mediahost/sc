@@ -3,6 +3,7 @@
 namespace App\Model\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 use Kdyby\Doctrine\Entities\BaseEntity;
@@ -172,6 +173,12 @@ class Candidate extends BaseEntity
 				$notes->add($note);
 			}
 		}
-		return $notes;
+
+		$sort = Criteria::create();
+		$sort->orderBy([
+			'createdAt' => Criteria::DESC
+		]);
+
+		return $notes->matching($sort);
 	}
 }
