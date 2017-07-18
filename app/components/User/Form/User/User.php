@@ -117,6 +117,8 @@ class User extends BaseControl
 			$form->addSelect2('country', 'Country', Entity\Address::getCountriesList())
 				->setPrompt('Not disclosed');
 
+			$form->addText('city', 'City');
+
 			$form->addRadioList('gender', 'Gender', Entity\Person::getGenderList())
 				->setDefaultValue('x');
 
@@ -236,6 +238,13 @@ class User extends BaseControl
 			}
 			$this->user->person->address->country = $values->country;
 		}
+		if (isset($values->city)) {
+			if (!$this->user->person->address) {
+				$this->user->person->address = new Entity\Address();
+			}
+			$this->user->person->address->city = $values->city;
+		}
+
 		if (isset($values->gender)) {
 			$this->user->person->gender = $values->gender;
 		}
@@ -321,6 +330,7 @@ class User extends BaseControl
 			'firstname' => $this->user->person->firstname,
 			'surname' => $this->user->person->surname,
 			'country' => isset($this->user->person->address->country) ? $this->user->person->address->country : null,
+			'city' => isset($this->user->person->address->city) ? $this->user->person->address->city : null,
 			'gender' => $this->user->person->gender,
 			'phone' => $this->user->person->phoneMobile,
 			'isDealer' => $this->user->isDealer,
