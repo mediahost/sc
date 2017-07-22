@@ -3,6 +3,7 @@
 namespace App\Components\Candidate\Form;
 
 use App\Components\BaseControl;
+use App\Components\Candidate\ICandidateNotesFactory;
 use App\Components\Job\IAcceptReasonFactory;
 use App\Components\Job\ICustomStateFactory;
 use App\Components\Job\IInviteByMailFactory;
@@ -13,7 +14,6 @@ use App\Model\Entity\Candidate;
 use App\Model\Entity\Job;
 use App\Model\Entity\Match;
 use App\Model\Entity\Note;
-use App\Model\Entity\Role;
 use App\Model\Entity\User as UserEntity;
 use App\Model\Facade\CandidateFacade;
 use App\Model\Facade\JobFacade;
@@ -21,7 +21,6 @@ use App\Model\Facade\UserFacade;
 use Nette\Application\UI\Multiplier;
 use Nette\Security\User;
 use Nette\Utils\Random;
-use Tracy\Debugger;
 
 class PrintCandidate extends BaseControl
 {
@@ -46,6 +45,9 @@ class PrintCandidate extends BaseControl
 
 	/** @var IMatchNotesFactory @inject */
 	public $iMatchNotesFactory;
+
+	/** @var ICandidateNotesFactory @inject */
+	public $iCandidateNotesFactory;
 
 	/** @var IAcceptReasonFactory @inject */
 	public $iAcceptReasonFactory;
@@ -279,10 +281,9 @@ class PrintCandidate extends BaseControl
 
 	public function createComponentAdminNotes()
 	{
-		$control = $this->iMatchNotesFactory->create();
-		$control->setType(Note::TYPE_ADMIN);
-		$control->setMatch($this->candidate->findMatch($this->selectedJob));
-		$control->onAfterSave[] = function (Match $match) {
+		$control = $this->iCandidateNotesFactory->create();
+		$control->setCandidate($this->candidate);
+		$control->onAfterSave[] = function (Candidate $candidate) {
 			$this->reload();
 		};
 		return $control;

@@ -54,6 +54,12 @@ class Candidate extends BaseEntity
 	/** @ORM\OneToMany(targetEntity="Match", mappedBy="candidate") */
 	protected $matches;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="Note", mappedBy="user", cascade="all")
+	 * @ORM\OrderBy({"createdAt" = "DESC"})
+	 */
+	private $notes;
+
 	/** @ORM\Column(type="string", length=64, nullable=true) */
 	protected $profileId;
 
@@ -63,6 +69,7 @@ class Candidate extends BaseEntity
 		$this->jobCategories = new ArrayCollection();
 		$this->documents = new ArrayCollection();
 		$this->profileId = Random::generate(20);
+		$this->notes = new ArrayCollection();
 		parent::__construct($name);
 	}
 
@@ -167,18 +174,37 @@ class Candidate extends BaseEntity
 
 	public function getAdminNotes()
 	{
-		$notes = new ArrayCollection();
-		foreach ($this->matches as $match) {
-			foreach ($match->getAdminNotes() as $note) {
-				$notes->add($note);
-			}
+		return $this->notes;
+	}
+
+	public function addAdminNote(User $user, $text, $existId = NULL)
+	{
+		if ($existId) {
+			return $this->editNote($existId, $text);
 		}
+		return $this->addNote($user, $text, Note::TYPE_ADMIN);
+	}
 
-		$sort = Criteria::create();
-		$sort->orderBy([
-			'createdAt' => Criteria::DESC
-		]);
+	private function addNote(User $user, $text, $type)
+	{
+		$note = new Note();
+		$note->user = $user;
+		$note->text = $text;
+		$note->type = $type;
+		$this->notes->add($note);
+		return $this;
+	}
 
-		return $notes->matching($sort);
+	private function editNote($id, $text)
+	{
+		$editNote = function ($key, Note $note) use ($id, $text) {
+			if ($note->id == $id) {
+				$note->text = $text;
+				return FALSE;
+			}
+			return TRUE;
+		};
+		$this->notes->forAll($editNote);
+		return $this;
 	}
 }

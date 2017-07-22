@@ -1,0 +1,29 @@
+<ul class="messages" n:ifset="$notes">
+	<li n:foreach="$notes as $note" class="user clearfix">
+		<a href="#" class="avatar">
+			<img src="{$note->user|foto:50,50}" alt=""/>
+		</a>
+		<div class="message" id="edit-note-{$note->id}" data-note-id="{$note->id}">
+			<div class="head clearfix">
+				<span class="name">
+					<strong>
+						{$note->user}
+					</strong>
+					<a n:href="this" class="btn btn-warning btn-xs edit-note">
+						<span class="fa fa-edit"></span>
+					</a>
+				</span>
+				<span class="time">{$note->createdAt|date:'H:i d.m.Y'}</span>
+			</div>
+			<div class="message-content">
+				{$note->text|escape|stripTags|nl2br|noescape}
+			</div>
+		</div>
+	</li>
+	<li n:if="$editable" class="sendMsg">
+		{form form}
+			{input message}
+			{input send}
+		{/form}
+	</li>
+</ul>

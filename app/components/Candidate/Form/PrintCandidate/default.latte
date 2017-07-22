@@ -88,12 +88,12 @@
 							</a>
 						</span>
 					{/if}
-					{if $showNotes && isset($match) && $identity->isAllowed('adminNotes', 'view')}
+					{if $showNotes && $identity->isAllowed('adminNotes', 'view')}
 						<span data-toggle="tooltip" data-placement="top" data-original-title="{_'Admin notes'}">
 							<a class="link" href="#notes-admin-{$id}" data-toggle="modal">
 								<img src="{$basePath}/images/socials/notes.png" alt=""/>
 								<span class="btn btn-xs btn-warning">
-									{$match->candidate->getAdminNotes()->count()}
+									{$candidate->getAdminNotes()->count()}
 								</span>
 							</a>
 						</span>
@@ -244,7 +244,7 @@
 		</div>
 	</div>
 
-	<div n:if="$showNotes && isset($match) && $identity->isAllowed('adminNotes', 'view')"
+	<div n:if="$showNotes && $identity->isAllowed('adminNotes', 'view')"
 			class="modal fade jobNotes" id="notes-admin-{$id}" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">

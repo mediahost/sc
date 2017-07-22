@@ -380,12 +380,14 @@ class CandidatesList extends Control
 	public function setRegisteredCandidates($onlyRegistered = TRUE)
 	{
 		$this->onlyRegistered = $onlyRegistered;
+		$this->prefilteredJob = TRUE;
 		return $this;
 	}
 
 	public function setCandidateOnReload($callable)
 	{
 		$this->candidateOnReload = $callable;
+		$this->prefilteredJob = TRUE;
 		return $this;
 	}
 

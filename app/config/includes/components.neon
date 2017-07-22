@@ -64,6 +64,7 @@ services:
 	- {implement: App\Components\Candidate\ISearchFilterFactory, inject: yes}
 	- {implement: App\Components\Candidate\IProfileIdFactory, inject: yes}
 	- {implement: App\Components\Candidate\Form\IPrintCandidateFactory, inject: yes}
+	- {implement: App\Components\Candidate\ICandidateNotesFactory, inject: yes}
 
 	# Cv
 	- {implement: App\Components\Cv\IAdditionalFactory, inject: yes}
