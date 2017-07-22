@@ -26,6 +26,9 @@ class Note extends BaseEntity
 	/** @ORM\ManyToOne(targetEntity="Match", inversedBy="notes") */
 	protected $match;
 
+	/** @ORM\ManyToOne(targetEntity="Candidate", inversedBy="notes") */
+	protected $candidate;
+
 	/** @ORM\Column(type="smallint") */
 	protected $type;
 

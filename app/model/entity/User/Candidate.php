@@ -55,7 +55,7 @@ class Candidate extends BaseEntity
 	protected $matches;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Note", mappedBy="user", cascade="all")
+	 * @ORM\OneToMany(targetEntity="Note", mappedBy="candidate", cascade="all")
 	 * @ORM\OrderBy({"createdAt" = "DESC"})
 	 */
 	private $notes;
@@ -69,7 +69,6 @@ class Candidate extends BaseEntity
 		$this->jobCategories = new ArrayCollection();
 		$this->documents = new ArrayCollection();
 		$this->profileId = Random::generate(20);
-		$this->notes = new ArrayCollection();
 		parent::__construct($name);
 	}
 
@@ -189,6 +188,7 @@ class Candidate extends BaseEntity
 	{
 		$note = new Note();
 		$note->user = $user;
+		$note->candidate = $this;
 		$note->text = $text;
 		$note->type = $type;
 		$this->notes->add($note);
