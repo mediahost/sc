@@ -16,7 +16,7 @@
 				<span class="time">{$note->createdAt|date:'H:i d.m.Y'}</span>
 			</div>
 			<div class="message-content">
-				{$note->text|escape|stripTags|nl2br|noescape}
+				{$note->text|noescape}
 			</div>
 		</div>
 	</li>

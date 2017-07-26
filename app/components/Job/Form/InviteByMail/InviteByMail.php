@@ -88,6 +88,9 @@ class InviteByMail extends BaseControl
 
 	public function formSucceeded(Form $form, $values)
 	{
+		$user = $this->user->getIdentity();
+		$this->candidate->addAdminNote($user, $values->message);
+
 		$userRepo = $this->em->getRepository(User::getClassName());
 		$jobRepo = $this->em->getRepository(Job::getClassName());
 

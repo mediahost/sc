@@ -56,7 +56,7 @@ class Candidate extends BaseEntity
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Note", mappedBy="candidate", cascade="all")
-	 * @ORM\OrderBy({"createdAt" = "DESC"})
+	 * @ORM\OrderBy({"createdAt" = "ASC"})
 	 */
 	private $notes;
 
